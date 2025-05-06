@@ -12,6 +12,17 @@ public class PlayerVoice : PlayerCaller
 
     public delegate bool RelayVoiceCullingHandler(PlayerVoice speaker, PlayerVoice listener);
 
+    private struct SendPlayVoiceChatWriteParameters
+    {
+        public ushort compressedSize;
+
+        public bool shouldBroadcastOverRadio;
+
+        public byte[] source;
+
+        public int sourceOffset;
+    }
+
     /// <summary>
     /// Speaker writes compressed audio to this buffer.
     /// Listener copies network buffer here for decompression.
@@ -413,9 +424,9 @@ public class PlayerVoice : PlayerCaller
             return;
         }
         NetPakReader reader = context.reader;
-        reader.ReadUInt16(out var compressedSize);
-        reader.ReadBit(out var value);
-        if (!reader.ReadBytesPtr(compressedSize, out var source, out var sourceOffset) || compressedSize < 1)
+        reader.ReadUInt16(out var value);
+        reader.ReadBit(out var value2);
+        if (!reader.ReadBytesPtr(value, out var source, out var bufferOffset) || value < 1)
         {
             return;
         }
@@ -423,13 +434,13 @@ public class PlayerVoice : PlayerCaller
         if (num > 2f)
         {
             recentVoiceCalls = 1u;
-            recentVoiceBytes = compressedSize;
+            recentVoiceBytes = value;
             recentVoiceDuration = RECORDING_POLL_INTERVAL;
         }
         else
         {
             recentVoiceCalls++;
-            recentVoiceBytes += compressedSize;
+            recentVoiceBytes += value;
             recentVoiceDuration += num;
         }
         lastAskVoiceRealtime = Time.realtimeSinceStartup;
@@ -444,7 +455,7 @@ public class PlayerVoice : PlayerCaller
         }
         bool shouldAllow;
         bool shouldBroadcastOverRadio;
-        if (value)
+        if (value2)
         {
             if (hasUseableWalkieTalkie)
             {
@@ -463,7 +474,7 @@ public class PlayerVoice : PlayerCaller
             shouldBroadcastOverRadio = false;
         }
         RelayVoiceCullingHandler cullingHandler = null;
-        PlayerVoice.onRelayVoice?.Invoke(this, value, ref shouldAllow, ref shouldBroadcastOverRadio, ref cullingHandler);
+        PlayerVoice.onRelayVoice?.Invoke(this, value2, ref shouldAllow, ref shouldBroadcastOverRadio, ref cullingHandler);
         if (!shouldAllow)
         {
             return;
@@ -472,6 +483,12 @@ public class PlayerVoice : PlayerCaller
         {
             cullingHandler = (shouldBroadcastOverRadio ? new RelayVoiceCullingHandler(handleRelayVoiceCulling_RadioFrequency) : new RelayVoiceCullingHandler(handleRelayVoiceCulling_Proximity));
         }
+        SendPlayVoiceChatWriteParameters sendPlayVoiceChatWriteParameters = default(SendPlayVoiceChatWriteParameters);
+        sendPlayVoiceChatWriteParameters.compressedSize = value;
+        sendPlayVoiceChatWriteParameters.shouldBroadcastOverRadio = shouldBroadcastOverRadio;
+        sendPlayVoiceChatWriteParameters.source = source;
+        sendPlayVoiceChatWriteParameters.sourceOffset = bufferOffset;
+        SendPlayVoiceChatWriteParameters arg = sendPlayVoiceChatWriteParameters;
         SendPlayVoiceChat.Invoke(GetNetId(), ENetReliability.Unreliable, Provider.GatherRemoteClientConnectionsMatchingPredicate(delegate(SteamPlayer potentialRecipient)
         {
             if (potentialRecipient == null || potentialRecipient.player == null || potentialRecipient.player.voice == null)
@@ -479,12 +496,14 @@ public class PlayerVoice : PlayerCaller
                 return false;
             }
             return potentialRecipient != base.channel.owner && cullingHandler(this, potentialRecipient.player.voice);
-        }), delegate(NetPakWriter writer)
-        {
-            writer.WriteUInt16(compressedSize);
-            writer.WriteBit(shouldBroadcastOverRadio);
-            writer.WriteBytes(source, sourceOffset, compressedSize);
-        });
+        }), SendPlayVoiceChat_Write, arg);
+    }
+
+    private void SendPlayVoiceChat_Write(NetPakWriter writer, SendPlayVoiceChatWriteParameters p)
+    {
+        writer.WriteUInt16(p.compressedSize);
+        writer.WriteBit(p.shouldBroadcastOverRadio);
+        writer.WriteBytes(p.source, p.sourceOffset, p.compressedSize);
     }
 
     /// <summary>
@@ -600,28 +619,31 @@ public class PlayerVoice : PlayerCaller
             UnturnedLog.info($"Resizing compressed voice buffer ({compressedVoiceBuffer.Length}) to fit available size ({pcbCompressed})");
             compressedVoiceBuffer = new byte[pcbCompressed];
         }
-        uint compressedSize;
-        EVoiceResult voice = SteamUser.GetVoice(bWantCompressed: true, compressedVoiceBuffer, pcbCompressed, out compressedSize);
+        uint nBytesWritten;
+        EVoiceResult voice = SteamUser.GetVoice(bWantCompressed: true, compressedVoiceBuffer, pcbCompressed, out nBytesWritten);
         if (voice != 0 && voice != EVoiceResult.k_EVoiceResultNoData)
         {
             UnturnedLog.error("GetVoice result: " + voice);
         }
-        if (voice != 0 || compressedSize < 1 || !_inputWantsToRecord)
+        if (voice == EVoiceResult.k_EVoiceResultOK && nBytesWritten >= 1 && _inputWantsToRecord)
         {
-            return;
+            if (Provider.isServer)
+            {
+                AppendVoiceData(compressedVoiceBuffer, nBytesWritten, hasUseableWalkieTalkie);
+            }
+            else
+            {
+                SendVoiceChatRelay.Invoke(GetNetId(), ENetReliability.Unreliable, SendVoiceChatRelay_Write, nBytesWritten);
+            }
         }
-        if (Provider.isServer)
-        {
-            AppendVoiceData(compressedVoiceBuffer, compressedSize, hasUseableWalkieTalkie);
-            return;
-        }
-        SendVoiceChatRelay.Invoke(GetNetId(), ENetReliability.Unreliable, delegate(NetPakWriter writer)
-        {
-            ushort num = (ushort)compressedSize;
-            writer.WriteUInt16(num);
-            writer.WriteBit(hasUseableWalkieTalkie);
-            writer.WriteBytes(compressedVoiceBuffer, num);
-        });
+    }
+
+    private void SendVoiceChatRelay_Write(NetPakWriter writer, uint compressedSize)
+    {
+        ushort num = (ushort)compressedSize;
+        writer.WriteUInt16(num);
+        writer.WriteBit(hasUseableWalkieTalkie);
+        writer.WriteBytes(compressedVoiceBuffer, num);
     }
 
     /// <summary>

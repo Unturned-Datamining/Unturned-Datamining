@@ -238,9 +238,9 @@ public class LevelLighting
 
     private static Camera reflectionCamera;
 
-    private static Cubemap reflectionMap;
+    private static RenderTexture reflectionMap;
 
-    private static Cubemap reflectionMapVision;
+    private static RenderTexture reflectionMapVision;
 
     private static int reflectionIndex;
 
@@ -1136,10 +1136,16 @@ public class LevelLighting
             UpdateBubblesActive();
             _windZone = lighting.Find("WindZone").GetComponent<WindZone>();
             reflectionCamera = lighting.Find("Reflection").GetComponent<Camera>();
-            reflectionMap = new Cubemap(16, TextureFormat.ARGB32, mipChain: false);
-            reflectionMap.name = "Skybox_Reflection";
-            reflectionMapVision = new Cubemap(16, TextureFormat.ARGB32, mipChain: false);
-            reflectionMapVision.name = "Skybox_Reflection_Vision";
+            if (reflectionMap == null)
+            {
+                reflectionMap = new RenderTexture(32, 32, 0);
+                reflectionMap.dimension = TextureDimension.Cube;
+            }
+            if (reflectionMapVision == null)
+            {
+                reflectionMapVision = new RenderTexture(32, 32, 0);
+                reflectionMapVision.dimension = TextureDimension.Cube;
+            }
             RenderSettings.defaultReflectionMode = DefaultReflectionMode.Custom;
             reflectionIndex = 0;
             reflectionIndexVision = 0;
@@ -1815,10 +1821,14 @@ public class LevelLighting
         updateSkyboxReflections();
     }
 
-    private static void renderSkyboxReflection(Cubemap target, ref int index, ref bool isBuilding)
+    private static void renderSkyboxReflection(RenderTexture target, ref int index, ref bool isBuilding)
     {
         if (isBuilding && !(target == null) && !(reflectionCamera == null))
         {
+            if (!target.IsCreated())
+            {
+                target.Create();
+            }
             int faceMask = 1 << index;
             index++;
             if (index > 5)

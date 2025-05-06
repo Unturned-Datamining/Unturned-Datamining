@@ -1,3 +1,5 @@
+using System;
+
 namespace SDG.Unturned;
 
 public class NPCExperienceReward : INPCReward
@@ -19,6 +21,37 @@ public class NPCExperienceReward : INPCReward
         return Local.FormatText(text, arg);
     }
 
+    internal override void PopulateV2(in PopulateRewardParameters p)
+    {
+        base.PopulateV2(in p);
+        if (p.data.TryParseUInt32("Value", out var num))
+        {
+            value = num;
+        }
+        else
+        {
+            p.ReportRequiredOptionInvalid("Value");
+        }
+    }
+
+    internal override void PopulateLegacy(in PopulateRewardParameters p)
+    {
+        base.PopulateLegacy(in p);
+        if (p.data.TryParseUInt32(p.legacyPrefix + "_Value", out var num))
+        {
+            value = num;
+        }
+        else
+        {
+            p.ReportRequiredOptionInvalid("Value");
+        }
+    }
+
+    public NPCExperienceReward()
+    {
+    }
+
+    [Obsolete]
     public NPCExperienceReward(uint newValue, string newText)
         : base(newText)
     {

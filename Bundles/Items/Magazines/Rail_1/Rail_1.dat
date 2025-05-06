@@ -1,4 +1,4 @@
-GUID c40426849b294778aeca0d74d4c0d5da
+﻿GUID c40426849b294778aeca0d74d4c0d5da
 Type Magazine
 Rarity Legendary
 ID 301
@@ -24,14 +24,22 @@ Object_Damage 75
 Explosion 54
 Explosive
 
-Blueprints 1
-Blueprint_0_Type Tool
-Blueprint_0_Supplies 1
-Blueprint_0_Supply_0_ID this
-Blueprint_0_Supply_0_AllowEmpty true
-Blueprint_0_Supply_0_Prioritization LowestAmount
-Blueprint_0_Product "285" // Metal Bar
-Blueprint_0_Products 2
-Blueprint_0_Build 27
+Blueprints
+[
+	{
+		Name Salvage
+		CategoryTag "7ed29f9101ae4523a3b2e389414b7bd9" // Salvage
+		InputItems
+		[
+			{
+				ID this
+				Prioritization LowestAmount
+				CountEmptyAsOne true
+			}
+		]
+		OutputItems "656f319d2d194813b390edc6edd8a697 x 2" // Metal Bar
+		Effect "84347b13028340b8976033c08675d458" // Wrench
+	}
+]
 
 Tracer 50

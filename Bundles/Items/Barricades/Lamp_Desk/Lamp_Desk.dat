@@ -1,0 +1,45 @@
+﻿GUID f4e0733ec78f4229b42402acda1c4cbe
+Type Barricade
+Rarity Rare
+Useable Barricade
+Build Spot
+ID 1918
+
+Size_X 1
+Size_Y 2
+Size_Z 0.4
+
+Health 200
+Range 4
+Radius 0.2
+Offset 0.4
+
+Explosion 36
+
+Blueprints
+[
+	{
+		CategoryTag "bfac6026305f4737a95fd275ebff65a6" // Utilities
+		InputItems
+		[
+			"ebb61f2e64f24351a6ab905b5516060b x2" // Wire
+			"656f319d2d194813b390edc6edd8a697 x2" // Metal Bar
+			"c0b0f4a9f46c49a59f4558210bf36da5"    // Metal Can
+			{
+				ID "5830b84bf8074caa91cf3f4dde0dd19e" // Blowtorch
+				Delete false
+			}
+		]
+		OutputItems this
+		Skill Craft
+		Skill_Level 1
+		RequiresNearbyCraftingTags
+		[
+			"7b82c125a5a54984b8bb26576b59e977" // Workbench
+		]
+		Effect "84347b13028340b8976033c08675d458" // Wrench
+	}
+]
+
+PlacementAudioClip Sounds/MetalPlacement.mp3
+Has_Clip_Prefab false

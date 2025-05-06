@@ -1,4 +1,4 @@
-GUID 5f609a8593504f2c88402cf2c45b49d3
+﻿GUID 5f609a8593504f2c88402cf2c45b49d3
 Type Supply
 Rarity Rare
 ID 119
@@ -11,10 +11,14 @@ Amount 40
 Count_Min 10
 Count_Max 30
 
-Blueprints 1
-Blueprint_0_Type Ammo
-Blueprint_0_Supplies 1
-Blueprint_0_Supply_0_ID 119
-Blueprint_0_Build 30
+Blueprints
+[
+	{
+		CategoryTag "d739926736374e5ba34b4ac6ffbb5c8f" // Ammunition
+		Operation FillTargetItem
+		InputItems this
+		Effect "03caec479dd2475c92e1c326e1720140" // Casing
+	}
+]
 
 InventoryAudio Sounds/Inventory/SmallGunAttachment.asset

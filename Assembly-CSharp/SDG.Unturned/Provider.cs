@@ -2290,8 +2290,8 @@ public class Provider : MonoBehaviour
             CachedUGCDetails cachedDetails;
             bool cachedDetails2 = TempSteamworksWorkshop.getCachedDetails(serverPendingID, out cachedDetails);
             string text = ((!cachedDetails2) ? $"Unknown File ID {serverPendingID}" : cachedDetails.GetTitle());
-            _connectionFailureInfo = ESteamConnectionFailureInfo.CUSTOM;
             string text2 = ((!(details.timestamp > dateTime)) ? ("Server is running an older version of the \"" + text + "\" workshop file.") : ("Server is running a newer version of the \"" + text + "\" workshop file."));
+            bool flag;
             if (cachedDetails2)
             {
                 DateTime dateTime2 = DateTimeEx.FromUtcUnixTimeSeconds(cachedDetails.updateTimestamp);
@@ -2299,22 +2299,27 @@ public class Provider : MonoBehaviour
                 {
                     text2 += "\nYour installed copy of the file matches the most recent version on Steam.";
                     text2 += $"\nLocal and Steam timestamp: {dateTime.ToLocalTime()} Server timestamp: {details.timestamp.ToLocalTime()}";
+                    flag = false;
                 }
                 else if (details.timestamp == dateTime2)
                 {
                     text2 += "\nThe server's installed copy of the file matches the most recent version on Steam.";
                     text2 += $"\nLocal timestamp: {dateTime.ToLocalTime()} Server and Steam timestamp: {details.timestamp.ToLocalTime()}";
+                    flag = true;
                 }
                 else
                 {
                     text2 += $"\nLocal timestamp: {dateTime.ToLocalTime()} Server timestamp: {details.timestamp.ToLocalTime()} Steam timestamp: {dateTime2}";
+                    flag = true;
                 }
             }
             else
             {
                 text2 += $"\nLocal timestamp: {dateTime.ToLocalTime()} Server timestamp: {details.timestamp.ToLocalTime()}";
+                flag = details.timestamp > dateTime;
             }
             _connectionFailureReason = text2;
+            _connectionFailureInfo = (flag ? ESteamConnectionFailureInfo.CUSTOM_SHOULD_VERIFY_GAME_FILES : ESteamConnectionFailureInfo.CUSTOM);
             RequestDisconnect($"Loaded workshop file timestamp mismatch (File ID: {serverPendingID} Local timestamp: {dateTime.ToLocalTime()} Server timestamp: {details.timestamp.ToLocalTime()})");
             return false;
         }
@@ -4151,6 +4156,7 @@ public class Provider : MonoBehaviour
             writer.WriteBit(modeConfigData.Gameplay.Allow_Freeform_Buildables_On_Vehicles);
             writer.WriteBit(modeConfigData.Gameplay.Enable_Damage_Flinch);
             writer.WriteBit(modeConfigData.Gameplay.Enable_Explosion_Camera_Shake);
+            writer.WriteBit(modeConfigData.Gameplay.Enable_Workstation_Requirements);
             writer.WriteUInt16((ushort)modeConfigData.Gameplay.Timer_Exit);
             writer.WriteUInt16((ushort)modeConfigData.Gameplay.Timer_Respawn);
             writer.WriteUInt16((ushort)modeConfigData.Gameplay.Timer_Home);
@@ -4704,26 +4710,29 @@ public class Provider : MonoBehaviour
 
     private static void OnGetTicketForWebApiResponse(GetTicketForWebApiResponse_t callback)
     {
-        if (!pluginTicketHandles.TryGetValue(callback.m_hAuthTicket, out var identity))
+        if (!pluginTicketHandles.TryGetValue(callback.m_hAuthTicket, out var value))
         {
             UnturnedLog.info($"Received Steam auth ticket for web API for handle {callback.m_hAuthTicket}, but no linked identity (Result: {callback.m_eResult})");
             SteamUser.CancelAuthTicket(callback.m_hAuthTicket);
-            return;
         }
-        if (callback.m_eResult != EResult.k_EResultOK)
+        else if (callback.m_eResult != EResult.k_EResultOK)
         {
-            UnturnedLog.warn($"Error getting Steam auth ticket for web API identity \"{identity}\": {callback.m_eResult}");
+            UnturnedLog.warn($"Error getting Steam auth ticket for web API identity \"{value}\": {callback.m_eResult}");
             pluginTicketHandles.Remove(callback.m_hAuthTicket);
             SteamUser.CancelAuthTicket(callback.m_hAuthTicket);
-            return;
         }
-        UnturnedLog.info($"Received Steam web API ticket response for identity \"{identity}\" (length: {callback.m_cubTicket})");
-        SteamPlayer.SendGetSteamAuthTicketForWebApiResponse.Invoke(ENetReliability.Reliable, delegate(NetPakWriter writer)
+        else
         {
-            writer.WriteString(identity, 5);
-            writer.WriteUInt16((ushort)callback.m_cubTicket);
-            writer.WriteBytes(callback.m_rgubTicket, callback.m_cubTicket);
-        });
+            UnturnedLog.info($"Received Steam web API ticket response for identity \"{value}\" (length: {callback.m_cubTicket})");
+            SteamPlayer.SendGetSteamAuthTicketForWebApiResponse.Invoke(ENetReliability.Reliable, SendGetSteamAuthTicketForWebApiResponse_Write, value, callback.m_rgubTicket, callback.m_cubTicket);
+        }
+    }
+
+    private static void SendGetSteamAuthTicketForWebApiResponse_Write(NetPakWriter writer, string identity, byte[] ticketData, int ticketLength)
+    {
+        writer.WriteString(identity, 5);
+        writer.WriteUInt16((ushort)ticketLength);
+        writer.WriteBytes(ticketData, ticketLength);
     }
 
     private static void onGameServerChangeRequested(GameServerChangeRequested_t callback)

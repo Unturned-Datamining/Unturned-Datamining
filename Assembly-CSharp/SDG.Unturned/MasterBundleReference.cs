@@ -49,36 +49,36 @@ public struct MasterBundleReference<T> : IFormattedFileReadable, IFormattedFileW
 
     public bool TryParse(IDatNode node)
     {
-        if (node is DatValue datValue)
+        if (node is IDatValue datValue)
         {
-            if (string.IsNullOrEmpty(datValue.value))
+            if (string.IsNullOrEmpty(datValue.Value))
             {
                 return false;
             }
-            if (datValue.value.Length < 2)
+            if (datValue.Value.Length < 2)
             {
                 return false;
             }
-            int num = datValue.value.IndexOf(':');
+            int num = datValue.Value.IndexOf(':');
             if (num < 0)
             {
                 if (Assets.currentMasterBundle != null)
                 {
                     name = Assets.currentMasterBundle.assetBundleName;
                 }
-                path = datValue.value;
+                path = datValue.Value;
             }
             else
             {
-                name = datValue.value.Substring(0, num);
-                path = datValue.value.Substring(num + 1);
+                name = datValue.Value.Substring(0, num);
+                path = datValue.Value.Substring(num + 1);
             }
             return true;
         }
-        if (node is DatDictionary datDictionary)
+        if (node is IDatDictionary dictionary)
         {
-            name = datDictionary.GetString("MasterBundle");
-            path = datDictionary.GetString("AssetPath");
+            name = dictionary.GetString("MasterBundle");
+            path = dictionary.GetString("AssetPath");
             return true;
         }
         return false;
@@ -112,24 +112,31 @@ public struct MasterBundleReference<T> : IFormattedFileReadable, IFormattedFileW
 
     public T loadAsset(bool logWarnings = true)
     {
+        T val;
         if (isNull)
         {
-            return null;
+            val = null;
         }
-        MasterBundleConfig masterBundleConfig = Assets.findMasterBundleByName(name);
-        if (masterBundleConfig == null || masterBundleConfig.assetBundle == null)
+        else
         {
-            if (logWarnings)
+            MasterBundleConfig masterBundleConfig = Assets.findMasterBundleByName(name);
+            if (masterBundleConfig == null || masterBundleConfig.assetBundle == null)
             {
-                UnturnedLog.warn("Unable to find master bundle '{0}' when loading asset '{1}' as {2}", name, path, typeof(T).Name);
+                if (logWarnings)
+                {
+                    UnturnedLog.warn("Unable to find master bundle '{0}' when loading asset '{1}' as {2}", name, path, typeof(T).Name);
+                }
+                val = null;
             }
-            return null;
-        }
-        string text = masterBundleConfig.formatAssetPath(path);
-        T val = masterBundleConfig.assetBundle.LoadAsset<T>(text);
-        if (val == null && logWarnings)
-        {
-            UnturnedLog.warn("Failed to load asset '{0}' from master bundle '{1}' as {2}", text, name, typeof(T).Name);
+            else
+            {
+                string text = masterBundleConfig.FormatAssetPathAndCache(path);
+                val = masterBundleConfig.assetBundle.LoadAsset<T>(text);
+                if (val == null && logWarnings)
+                {
+                    UnturnedLog.warn("Failed to load asset '{0}' from master bundle '{1}' as {2}", text, name, typeof(T).Name);
+                }
+            }
         }
         return val;
     }
@@ -149,7 +156,7 @@ public struct MasterBundleReference<T> : IFormattedFileReadable, IFormattedFileW
             }
             return null;
         }
-        string text = masterBundleConfig.formatAssetPath(path);
+        string text = masterBundleConfig.FormatAssetPathAndCache(path);
         return masterBundleConfig.assetBundle.LoadAssetAsync<T>(text);
     }
 

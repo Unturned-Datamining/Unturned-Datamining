@@ -26,7 +26,7 @@ public class LiveConfigData
 
     public long craftingPromotionId = -1L;
 
-    public void Parse(DatDictionary data)
+    public void Parse(IDatDictionary data)
     {
         if (data.TryGetDictionary("MainMenuAlert", out var node))
         {

@@ -54,6 +54,53 @@ public class INPCReward
         return sleekBox;
     }
 
+    /// <summary>
+    /// Intended to replace filling data from constructor.
+    /// </summary>
+    internal virtual void PopulateV2(in PopulateRewardParameters p)
+    {
+        string @string = p.data.GetString("TextId");
+        if (!string.IsNullOrEmpty(@string))
+        {
+            string text = p.localization.read(@string);
+            if (!string.IsNullOrEmpty(text))
+            {
+                text = ItemTool.filterRarityRichText(text);
+                this.text = text;
+            }
+            else
+            {
+                p.ReportError("no text for reward text ID \"" + @string + "\"");
+            }
+        }
+        grantDelaySeconds = p.data.ParseFloat("GrantDelaySeconds", -1f);
+        if (grantDelaySeconds > 0f)
+        {
+            grantDelayApplyWhenInterrupted = p.data.ParseBool("GrantDelayApplyWhenInterrupted");
+        }
+    }
+
+    /// <summary>
+    /// Intended to replace filling data from constructor. Legacy is for backwards compatibility with Reward_#_Key
+    /// format, whereas V2 uses the list and dictionary features.
+    /// </summary>
+    internal virtual void PopulateLegacy(in PopulateRewardParameters p)
+    {
+        string desc = p.localization.read(p.legacyPrefix);
+        desc = ItemTool.filterRarityRichText(desc);
+        text = desc;
+        grantDelaySeconds = p.data.ParseFloat(p.legacyPrefix + "_GrantDelaySeconds", -1f);
+        if (grantDelaySeconds > 0f)
+        {
+            grantDelayApplyWhenInterrupted = p.data.ParseBool(p.legacyPrefix + "_GrantDelayApplyWhenInterrupted");
+        }
+    }
+
+    public INPCReward()
+    {
+    }
+
+    [Obsolete]
     public INPCReward(string newText)
     {
         text = newText;

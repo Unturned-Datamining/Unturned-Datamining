@@ -1,4 +1,4 @@
-GUID cba173169b314a16be5a1ab44f25fcf2
+﻿GUID cba173169b314a16be5a1ab44f25fcf2
 Type Barricade
 Rarity Legendary
 Useable Barricade
@@ -18,20 +18,37 @@ Explosion 36
 Vulnerable
 Proof_Explosion
 
-Blueprints 1
-Blueprint_0_Type Utilities
-Blueprint_0_Supplies 4
-Blueprint_0_Supply_0_ID 65
-Blueprint_0_Supply_0_Amount 2
-Blueprint_0_Supply_1_ID 66
-Blueprint_0_Supply_1_Amount 2
-Blueprint_0_Supply_2_ID 70
-Blueprint_0_Supply_2_Amount 1
-Blueprint_0_Supply_3_ID 75
-Blueprint_0_Supply_3_Amount 1
-Blueprint_0_Tool 76
-Blueprint_0_Level 3
-Blueprint_0_Skill Craft
-Blueprint_0_Build 27
+Blueprints
+[
+	{
+		CategoryTag "bfac6026305f4737a95fd275ebff65a6" // Utilities
+		InputItems
+		[
+			{
+				ID "ebb61f2e64f24351a6ab905b5516060b" // Wire
+				Amount 2
+			}
+			{
+				ID "14901f32cd3240179fd6124324cc27e5" // Cloth
+				Amount 2
+			}
+			{
+				ID "ae1fc8674d0b4443b3ad9a68776dcf0f" // Glue
+			}
+			{
+				ID "7aee55ea2abf4f3fb70c4b2677da0e14" // Chemicals
+			}
+			{
+				ID "5830b84bf8074caa91cf3f4dde0dd19e" // Blowtorch
+				Delete false
+			}
+		]
+		OutputItems this
+		Skill Craft
+		Skill_Level 3
+		Effect "84347b13028340b8976033c08675d458" // Wrench
+	}
+]
+
 PlacementAudioClip Sounds/MetalPlacement.mp3
 Has_Clip_Prefab false

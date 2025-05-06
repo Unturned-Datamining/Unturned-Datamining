@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 
 namespace SDG.Unturned;
 
@@ -9,8 +8,6 @@ namespace SDG.Unturned;
 public class VendorBuying : VendorElement
 {
     private static InventorySearchQualityAscendingComparator qualityAscendingComparator = new InventorySearchQualityAscendingComparator();
-
-    private static List<InventorySearch> search = new List<InventorySearch>();
 
     public override string displayName => FindItemAsset()?.itemName;
 
@@ -40,14 +37,14 @@ public class VendorBuying : VendorElement
         {
             return false;
         }
-        search.Clear();
-        player.inventory.search(search, itemAsset.id, findEmpty: false, findHealthy: true);
+        using ScopedPlayerInventorySearchResultPool scopedPlayerInventorySearchResultPool = default(ScopedPlayerInventorySearchResultPool);
+        player.inventory.FindItemsByAsset(scopedPlayerInventorySearchResultPool.PooledResults, itemAsset, includeEmpty: false, includeMaxQuality: true);
         ushort num = 0;
-        foreach (InventorySearch item in search)
+        foreach (PlayerInventorySearchResultV2 pooledResult in scopedPlayerInventorySearchResultPool.PooledResults)
         {
-            num += item.jar.item.amount;
+            num += pooledResult.Jar.item.amount;
         }
-        return num >= itemAsset.amount;
+        return num >= itemAsset.MaxAmount;
     }
 
     public void sell(Player player)
@@ -57,28 +54,14 @@ public class VendorBuying : VendorElement
         {
             return;
         }
-        search.Clear();
-        player.inventory.search(search, itemAsset.id, findEmpty: false, findHealthy: true);
-        search.Sort(qualityAscendingComparator);
-        ushort num = itemAsset.amount;
-        foreach (InventorySearch item in search)
+        using ScopedPlayerInventorySearchResultPool scopedPlayerInventorySearchResultPool = default(ScopedPlayerInventorySearchResultPool);
+        player.inventory.FindItemsByAsset(scopedPlayerInventorySearchResultPool.PooledResults, itemAsset, includeEmpty: false, includeMaxQuality: true);
+        scopedPlayerInventorySearchResultPool.PooledResults.Sort(qualityAscendingComparator);
+        int num = itemAsset.MaxAmount;
+        foreach (PlayerInventorySearchResultV2 pooledResult in scopedPlayerInventorySearchResultPool.PooledResults)
         {
-            if (player.equipment.checkSelection(item.page, item.jar.x, item.jar.y))
-            {
-                player.equipment.dequip();
-            }
-            if (item.jar.item.amount > num)
-            {
-                player.inventory.sendUpdateAmount(item.page, item.jar.x, item.jar.y, (byte)(item.jar.item.amount - num));
-                break;
-            }
-            num -= item.jar.item.amount;
-            player.inventory.sendUpdateAmount(item.page, item.jar.x, item.jar.y, 0);
-            player.crafting.removeItem(item.page, item.jar);
-            if (item.page < PlayerInventory.SLOTS)
-            {
-                player.equipment.sendSlot(item.page);
-            }
+            uint num2 = pooledResult.DeleteAmount(player, (uint)num);
+            num -= (int)num2;
             if (num == 0)
             {
                 break;
@@ -103,18 +86,18 @@ public class VendorBuying : VendorElement
             amount = 0;
             return;
         }
-        search.Clear();
-        player.inventory.search(search, itemAsset.id, findEmpty: false, findHealthy: true);
+        using ScopedPlayerInventorySearchResultPool scopedPlayerInventorySearchResultPool = default(ScopedPlayerInventorySearchResultPool);
+        player.inventory.FindItemsByAsset(scopedPlayerInventorySearchResultPool.PooledResults, itemAsset, includeEmpty: false, includeMaxQuality: true);
         total = 0;
-        for (byte b = 0; b < search.Count; b++)
+        for (byte b = 0; b < scopedPlayerInventorySearchResultPool.PooledResults.Count; b++)
         {
-            total += search[b].jar.item.amount;
+            total += scopedPlayerInventorySearchResultPool.PooledResults[b].Jar.item.amount;
         }
-        amount = itemAsset.amount;
+        amount = itemAsset.MaxAmountAsByte;
     }
 
-    public VendorBuying(VendorAsset newOuterAsset, byte newIndex, Guid newTargetAssetGuid, ushort newTargetAssetLegacyId, uint newCost, INPCCondition[] newConditions, NPCRewardsList newRewardsList, string newDescriptionOverride)
-        : base(newOuterAsset, newIndex, newTargetAssetGuid, newTargetAssetLegacyId, newCost, newConditions, newRewardsList, newDescriptionOverride)
+    public VendorBuying(VendorAsset newOuterAsset, byte newIndex, Guid newTargetAssetGuid, ushort newTargetAssetLegacyId, uint newCost, NPCConditionsList newConditionsList, NPCRewardsList newRewardsList, string newDescriptionOverride)
+        : base(newOuterAsset, newIndex, newTargetAssetGuid, newTargetAssetLegacyId, newCost, newConditionsList, newRewardsList, newDescriptionOverride)
     {
     }
 }

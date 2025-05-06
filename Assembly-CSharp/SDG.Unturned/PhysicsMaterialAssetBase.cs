@@ -9,10 +9,10 @@ public class PhysicsMaterialAssetBase : Asset
 {
     public Dictionary<string, MasterBundleReference<OneShotAudioDefinition>> audioDefs;
 
-    public override void PopulateAsset(Bundle bundle, DatDictionary data, Local localization)
+    public override void PopulateAsset(in PopulateAssetParameters p)
     {
-        base.PopulateAsset(bundle, data, localization);
-        DatDictionary dictionary = data.GetDictionary("AudioDefs");
+        base.PopulateAsset(in p);
+        IDatDictionary dictionary = p.data.GetDictionary("AudioDefs");
         if (dictionary == null)
         {
             return;

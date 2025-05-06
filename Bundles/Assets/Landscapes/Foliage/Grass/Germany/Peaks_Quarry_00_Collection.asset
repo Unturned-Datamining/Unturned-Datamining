@@ -1,26 +1,26 @@
-"Metadata"
+﻿Metadata
 {
-	"GUID" "f3f9036c50f342c9be9b383e18fec9eb"
-	"Type" "SDG.Framework.Foliage.FoliageInfoCollectionAsset, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null"
+	GUID f3f9036c50f342c9be9b383e18fec9eb
+	Type SDG.Framework.Foliage.FoliageInfoCollectionAsset, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
 }
-"Asset"
+Asset
 {
-	"ID" "0"
-	"Foliage"
+	ID 0
+	Foliage
 	[
 		{
-			"Asset"
+			Asset
 			{
-				"GUID" "e145629762c3442782d40a2fcd15e306"
+				GUID e145629762c3442782d40a2fcd15e306
 			}
-			"Weight" "0.5"
+			Weight 0.5
 		}
 		{
-			"Asset"
+			Asset
 			{
-				"GUID" "f23febe76f9b4170a49bc7b170518eab"
+				GUID f23febe76f9b4170a49bc7b170518eab
 			}
-			"Weight" "0.005"
+			Weight 0.005
 		}
 	]
 }

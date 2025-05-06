@@ -1,24 +1,24 @@
-"Metadata"
+﻿Metadata
 {
-	"GUID" "c64e7de7ae7c42cb883001cb708a7ff4"
-	"Type" "SDG.Unturned.LandscapeMaterialAsset, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null"
+	GUID c64e7de7ae7c42cb883001cb708a7ff4
+	Type SDG.Unturned.LandscapeMaterialAsset, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
 }
-"Asset"
+Asset
 {
-	"ID" "0"
-	"Texture"
+	ID 0
+	Texture
 	{
-		"Name" "core.masterbundle"
-		"Path" "Terrain/Materials/Peaks/Quarry_00.png"
+		Name core.masterbundle
+		Path Terrain/Materials/Peaks/Quarry_00.png
 	}
-	"Mask"
+	Mask
 	{
-		"Name" ""
-		"Path" ""
+		Name
+		Path
 	}
-	"Physics_Material" "CONCRETE_STATIC"
-	"Foliage"
+	Physics_Material CONCRETE_STATIC
+	Foliage
 	{
-		"GUID" "f3f9036c50f342c9be9b383e18fec9eb"
+		GUID f3f9036c50f342c9be9b383e18fec9eb
 	}
 }

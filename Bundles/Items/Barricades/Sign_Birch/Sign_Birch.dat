@@ -1,4 +1,4 @@
-GUID ea3b8cfa98e2414db949026b12f10139
+﻿GUID ea3b8cfa98e2414db949026b12f10139
 Type Barricade
 Useable Barricade
 Build Sign
@@ -15,13 +15,19 @@ Offset 1.25
 
 Explosion 28
 
-Blueprints 1
-Blueprint_0_Type Furniture
-Blueprint_0_Supplies 2
-Blueprint_0_Supply_0_ID 62
-Blueprint_0_Supply_0_Amount 5
-Blueprint_0_Supply_1_ID 38
-Blueprint_0_Supply_1_Amount 1
-Blueprint_0_Build 27
+Blueprints
+[
+	{
+		CategoryTag "b0c6cc0a8b4346be89aef697ecdb8e46" // Furniture
+		InputItems
+		[
+			"5a3c4302400e400b9b9486fbb5178eca x 5" // Birch Plank
+			"9c563bf14d4641a18873f338beaed128" // Birch Stick
+		]
+		OutputItems this
+		Effect "84347b13028340b8976033c08675d458" // Wrench
+	}
+]
+
 PlacementAudioClip Sounds/WoodenPlacement.mp3
 Has_Clip_Prefab false

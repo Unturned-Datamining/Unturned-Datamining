@@ -1,4 +1,4 @@
-GUID 7f27c1926fbf458093993106880e6c4a
+﻿GUID 7f27c1926fbf458093993106880e6c4a
 Type Barricade
 Rarity Epic
 Useable Barricade
@@ -18,26 +18,33 @@ Explosion 43
 Vulnerable
 Unsalvageable
 
-Blueprints 4
-Blueprint_0_Type Barricade
-Blueprint_0_Supplies 1
-Blueprint_0_Supply_0_ID 1492
-Blueprint_0_Products 4
-Blueprint_0_Build 32
-Blueprint_1_Type Barricade
-Blueprint_1_Supplies 1
-Blueprint_1_Supply_0_ID 1493
-Blueprint_1_Products 4
-Blueprint_1_Build 32
-Blueprint_2_Type Barricade
-Blueprint_2_Supplies 1
-Blueprint_2_Supply_0_ID 1494
-Blueprint_2_Products 4
-Blueprint_2_Build 32
-Blueprint_3_Type Barricade
-Blueprint_3_Supplies 1
-Blueprint_3_Supply_0_ID 1495
-Blueprint_3_Products 4
-Blueprint_3_Build 32
+Blueprints
+[
+	{
+		CategoryTag "31a59b5fec3f4ec5b2887b1ce4acb029" // Barricades
+		InputItems "45b67df661ac46d1b2612a300b3bae74" // Ghillie Top
+		OutputItems this x 4
+		Effect "7eceb9f7751d4634b572c8e236355104" // Rip
+	}
+	{
+		CategoryTag "31a59b5fec3f4ec5b2887b1ce4acb029" // Barricades
+		InputItems "8ba43c7bf9d84a4db560a1717667ac58" // Ghillie Bottom
+		OutputItems this x 4
+		Effect "7eceb9f7751d4634b572c8e236355104" // Rip
+	}
+	{
+		CategoryTag "31a59b5fec3f4ec5b2887b1ce4acb029" // Barricades
+		InputItems "029e932392304d7ea6ddc69618c3e39a" // Ghillie Hood
+		OutputItems this x 4
+		Effect "7eceb9f7751d4634b572c8e236355104" // Rip
+	}
+	{
+		CategoryTag "31a59b5fec3f4ec5b2887b1ce4acb029" // Barricades
+		InputItems "cfa2f7468ff94751a2c1b3d1585bd375" // Ghillie Vest
+		OutputItems this x 4
+		Effect "7eceb9f7751d4634b572c8e236355104" // Rip
+	}
+]
+
 PlacementAudioClip Sounds/FoliagePlacement.mp3
 Has_Clip_Prefab false

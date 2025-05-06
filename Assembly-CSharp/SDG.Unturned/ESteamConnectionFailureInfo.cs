@@ -151,5 +151,9 @@ public enum ESteamConnectionFailureInfo
     /// <summary>
     /// Received too many invalid messages from connection in a short window.
     /// </summary>
-    BAD_PACKET_RATE_LIMITING
+    BAD_PACKET_RATE_LIMITING,
+    /// <summary>
+    /// Same as CUSTOM, but shows the "verify game files" prompt.
+    /// </summary>
+    CUSTOM_SHOULD_VERIFY_GAME_FILES
 }

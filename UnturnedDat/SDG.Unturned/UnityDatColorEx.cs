@@ -5,30 +5,30 @@ namespace SDG.Unturned;
 
 public static class UnityDatColorEx
 {
-    public static bool TryParseColor32RGB(this DatValue node, out Color32 value)
+    public static bool TryParseColor32RGB(this IDatValue node, out Color32 value)
     {
-        if (string.IsNullOrEmpty(node.value))
+        if (string.IsNullOrEmpty(node.Value))
         {
             value = new Color32(0, 0, 0, byte.MaxValue);
             return false;
         }
-        int num = ((node.value[0] == '#') ? 1 : 0);
-        if (node.value.Length != 6 + num)
+        int num = ((node.Value[0] == '#') ? 1 : 0);
+        if (node.Value.Length != 6 + num)
         {
             value = new Color32(0, 0, 0, byte.MaxValue);
             return false;
         }
-        if (!byte.TryParse(node.value.Substring(num, 2), NumberStyles.HexNumber, CultureInfo.InvariantCulture, out var result))
+        if (!byte.TryParse(node.Value.Substring(num, 2), NumberStyles.HexNumber, CultureInfo.InvariantCulture, out var result))
         {
             value = new Color32(0, 0, 0, byte.MaxValue);
             return false;
         }
-        if (!byte.TryParse(node.value.Substring(num + 2, 2), NumberStyles.HexNumber, CultureInfo.InvariantCulture, out var result2))
+        if (!byte.TryParse(node.Value.Substring(num + 2, 2), NumberStyles.HexNumber, CultureInfo.InvariantCulture, out var result2))
         {
             value = new Color32(0, 0, 0, byte.MaxValue);
             return false;
         }
-        if (!byte.TryParse(node.value.Substring(num + 4, 2), NumberStyles.HexNumber, CultureInfo.InvariantCulture, out var result3))
+        if (!byte.TryParse(node.Value.Substring(num + 4, 2), NumberStyles.HexNumber, CultureInfo.InvariantCulture, out var result3))
         {
             value = new Color32(0, 0, 0, byte.MaxValue);
             return false;
@@ -37,7 +37,7 @@ public static class UnityDatColorEx
         return true;
     }
 
-    public static Color32 ParseColor32RGB(this DatValue node, Color32 defaultValue = default(Color32))
+    public static Color32 ParseColor32RGB(this IDatValue node, Color32 defaultValue = default(Color32))
     {
         if (!node.TryParseColor32RGB(out var value))
         {
@@ -46,22 +46,22 @@ public static class UnityDatColorEx
         return value;
     }
 
-    public static bool TryParseColor32RGB(this DatDictionary dictionary, string key, out Color32 value)
+    public static bool TryParseColor32RGB(this IDatDictionary dictionary, string key, out Color32 value)
     {
         if (!dictionary.TryGetNode(key, out var node))
         {
             value = new Color32(0, 0, 0, byte.MaxValue);
             return false;
         }
-        if (node is DatValue node2)
+        if (node is IDatValue node2)
         {
             return node2.TryParseColor32RGB(out value);
         }
-        if (node is DatDictionary datDictionary)
+        if (node is IDatDictionary dictionary2)
         {
-            datDictionary.TryParseUInt8("R", out var value2);
-            datDictionary.TryParseUInt8("G", out var value3);
-            datDictionary.TryParseUInt8("B", out var value4);
+            dictionary2.TryParseUInt8("R", out var value2);
+            dictionary2.TryParseUInt8("G", out var value3);
+            dictionary2.TryParseUInt8("B", out var value4);
             value = new Color32(value2, value3, value4, byte.MaxValue);
             return true;
         }
@@ -69,7 +69,7 @@ public static class UnityDatColorEx
         return false;
     }
 
-    public static Color32 ParseColor32RGB(this DatDictionary dictionary, string key, Color32 defaultValue = default(Color32))
+    public static Color32 ParseColor32RGB(this IDatDictionary dictionary, string key, Color32 defaultValue = default(Color32))
     {
         if (!dictionary.TryParseColor32RGB(key, out var value))
         {
@@ -78,39 +78,39 @@ public static class UnityDatColorEx
         return value;
     }
 
-    public static bool TryParseColor32RGBA(this DatValue node, out Color32 value)
+    public static bool TryParseColor32RGBA(this IDatValue node, out Color32 value)
     {
-        if (string.IsNullOrEmpty(node.value))
+        if (string.IsNullOrEmpty(node.Value))
         {
             value = default(Color32);
             return false;
         }
-        int num = ((node.value[0] == '#') ? 1 : 0);
+        int num = ((node.Value[0] == '#') ? 1 : 0);
         bool flag;
-        if (node.value.Length == 8 + num)
+        if (node.Value.Length == 8 + num)
         {
             flag = true;
         }
         else
         {
-            if (node.value.Length != 6 + num)
+            if (node.Value.Length != 6 + num)
             {
                 value = default(Color32);
                 return false;
             }
             flag = false;
         }
-        if (!byte.TryParse(node.value.Substring(num, 2), NumberStyles.HexNumber, CultureInfo.InvariantCulture, out var result))
+        if (!byte.TryParse(node.Value.Substring(num, 2), NumberStyles.HexNumber, CultureInfo.InvariantCulture, out var result))
         {
             value = default(Color32);
             return false;
         }
-        if (!byte.TryParse(node.value.Substring(num + 2, 2), NumberStyles.HexNumber, CultureInfo.InvariantCulture, out var result2))
+        if (!byte.TryParse(node.Value.Substring(num + 2, 2), NumberStyles.HexNumber, CultureInfo.InvariantCulture, out var result2))
         {
             value = default(Color32);
             return false;
         }
-        if (!byte.TryParse(node.value.Substring(num + 4, 2), NumberStyles.HexNumber, CultureInfo.InvariantCulture, out var result3))
+        if (!byte.TryParse(node.Value.Substring(num + 4, 2), NumberStyles.HexNumber, CultureInfo.InvariantCulture, out var result3))
         {
             value = default(Color32);
             return false;
@@ -118,7 +118,7 @@ public static class UnityDatColorEx
         byte result4;
         if (flag)
         {
-            if (!byte.TryParse(node.value.Substring(num + 6, 2), NumberStyles.HexNumber, CultureInfo.InvariantCulture, out result4))
+            if (!byte.TryParse(node.Value.Substring(num + 6, 2), NumberStyles.HexNumber, CultureInfo.InvariantCulture, out result4))
             {
                 value = default(Color32);
                 return false;
@@ -132,7 +132,7 @@ public static class UnityDatColorEx
         return true;
     }
 
-    public static Color32 ParseColor32RGBA(this DatValue node, Color32 defaultValue = default(Color32))
+    public static Color32 ParseColor32RGBA(this IDatValue node, Color32 defaultValue = default(Color32))
     {
         if (!node.TryParseColor32RGBA(out var value))
         {
@@ -141,23 +141,23 @@ public static class UnityDatColorEx
         return value;
     }
 
-    public static bool TryParseColor32RGBA(this DatDictionary dictionary, string key, out Color32 value)
+    public static bool TryParseColor32RGBA(this IDatDictionary dictionary, string key, out Color32 value)
     {
         if (!dictionary.TryGetNode(key, out var node))
         {
             value = default(Color32);
             return false;
         }
-        if (node is DatValue node2)
+        if (node is IDatValue node2)
         {
             return node2.TryParseColor32RGBA(out value);
         }
-        if (node is DatDictionary datDictionary)
+        if (node is IDatDictionary dictionary2)
         {
-            datDictionary.TryParseUInt8("R", out var value2);
-            datDictionary.TryParseUInt8("G", out var value3);
-            datDictionary.TryParseUInt8("B", out var value4);
-            datDictionary.TryParseUInt8("A", out var value5);
+            dictionary2.TryParseUInt8("R", out var value2);
+            dictionary2.TryParseUInt8("G", out var value3);
+            dictionary2.TryParseUInt8("B", out var value4);
+            dictionary2.TryParseUInt8("A", out var value5);
             value = new Color32(value2, value3, value4, value5);
             return true;
         }
@@ -165,7 +165,7 @@ public static class UnityDatColorEx
         return false;
     }
 
-    public static Color32 ParseColor32RGBA(this DatDictionary dictionary, string key, Color32 defaultValue = default(Color32))
+    public static Color32 ParseColor32RGBA(this IDatDictionary dictionary, string key, Color32 defaultValue = default(Color32))
     {
         if (!dictionary.TryParseColor32RGBA(key, out var value))
         {
@@ -174,7 +174,7 @@ public static class UnityDatColorEx
         return value;
     }
 
-    public static Color LegacyParseColor(this DatDictionary dict, string key, Color defaultValue)
+    public static Color LegacyParseColor(this IDatDictionary dict, string key, Color defaultValue)
     {
         if (dict.TryParseColor32RGB(key, out var value))
         {
@@ -185,7 +185,7 @@ public static class UnityDatColorEx
         return new Color(dict.ParseFloat(key + "_R", defaultValue.r), dict.ParseFloat(key + "_G", defaultValue.g), dict.ParseFloat(key + "_B", defaultValue.b));
     }
 
-    public static Color32 LegacyParseColor32RGB(this DatDictionary dict, string key, Color32 defaultValue)
+    public static Color32 LegacyParseColor32RGB(this IDatDictionary dict, string key, Color32 defaultValue)
     {
         if (dict.TryParseColor32RGB(key, out var value))
         {

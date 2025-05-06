@@ -39,11 +39,11 @@ public class ItemTankAsset : ItemBarricadeAsset
         }
     }
 
-    public override void PopulateAsset(Bundle bundle, DatDictionary data, Local localization)
+    public override void PopulateAsset(in PopulateAssetParameters p)
     {
-        base.PopulateAsset(bundle, data, localization);
-        _source = (ETankSource)Enum.Parse(typeof(ETankSource), data.GetString("Source"), ignoreCase: true);
-        _resource = data.ParseUInt16("Resource", 0);
+        base.PopulateAsset(in p);
+        _source = (ETankSource)Enum.Parse(typeof(ETankSource), p.data.GetString("Source"), ignoreCase: true);
+        _resource = p.data.ParseUInt16("Resource", 0);
         resourceState = BitConverter.GetBytes(resource);
     }
 

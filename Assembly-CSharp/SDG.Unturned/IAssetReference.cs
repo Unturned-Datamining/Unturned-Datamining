@@ -2,6 +2,7 @@ using System;
 
 namespace SDG.Unturned;
 
+[Obsolete("This interface was essentially pointless/unused.")]
 public interface IAssetReference
 {
     /// <summary>

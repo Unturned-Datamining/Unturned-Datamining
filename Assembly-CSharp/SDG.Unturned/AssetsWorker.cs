@@ -26,16 +26,16 @@ internal class AssetsWorker
 
         public byte[] hash;
 
-        public DatDictionary assetData;
+        public IDatDictionary assetData;
 
-        public DatDictionary translationData;
+        public IDatDictionary translationData;
 
-        public DatDictionary fallbackTranslationData;
+        public IDatDictionary fallbackTranslationData;
 
         /// <summary>
         /// Parser error messages, if any.
         /// </summary>
-        public string assetError;
+        public List<string> assetErrors;
 
         /// <summary>
         /// Warning: on worker thread this only acts as handle. Do not access.
@@ -71,7 +71,7 @@ internal class AssetsWorker
         /// </summary>
         public AssetOrigin origin;
 
-        public DatDictionary ReadFileWithoutHash(string path)
+        public IDatDictionary ReadFileWithoutHash(string path)
         {
             using FileStream stream = new FileStream(path, FileMode.Open, FileAccess.Read, FileShare.Read);
             using StreamReader inputReader = new StreamReader(stream);
@@ -162,11 +162,11 @@ internal class AssetsWorker
             using FileStream underlyingStream = new FileStream(filePath, FileMode.Open, FileAccess.Read, FileShare.Read);
             using SHA1Stream sHA1Stream = new SHA1Stream(underlyingStream);
             using StreamReader inputReader = new StreamReader(sHA1Stream);
-            DatDictionary assetData = datParser.Parse(inputReader);
-            string errorMessage = datParser.ErrorMessage;
+            IDatDictionary assetData = datParser.Parse(inputReader);
+            List<string> assetErrors = (datParser.HasError ? new List<string>(datParser.ErrorMessages) : null);
             byte[] hash = sHA1Stream.Hash;
-            DatDictionary translationData = null;
-            DatDictionary fallbackTranslationData = null;
+            IDatDictionary translationData = null;
+            IDatDictionary fallbackTranslationData = null;
             if (checkForTranslations)
             {
                 string path = Path.Combine(directoryName, owner.language + ".dat");
@@ -189,7 +189,7 @@ internal class AssetsWorker
             {
                 path = filePath,
                 assetData = assetData,
-                assetError = errorMessage,
+                assetErrors = assetErrors,
                 hash = hash,
                 translationData = translationData,
                 fallbackTranslationData = fallbackTranslationData,
@@ -265,7 +265,7 @@ internal class AssetsWorker
     public void RequestSearch(string path, AssetOrigin origin)
     {
         totalSearchLocationRequests++;
-        WorkerThreadState state = new WorkerThreadState
+        WorkerThreadState workerThreadState = new WorkerThreadState
         {
             owner = this,
             rootPath = path,
@@ -275,8 +275,9 @@ internal class AssetsWorker
             datParser = new DatParser(),
             origin = origin
         };
-        ThreadPool.QueueUserWorkItem(SearcherThreadMain, state);
-        ThreadPool.QueueUserWorkItem(ReaderThreadMain, state);
+        workerThreadState.datParser.EnableMetadata = Assets.shouldParseMetadata;
+        ThreadPool.QueueUserWorkItem(SearcherThreadMain, workerThreadState);
+        ThreadPool.QueueUserWorkItem(ReaderThreadMain, workerThreadState);
         isWorking = true;
     }
 
@@ -350,7 +351,7 @@ internal class AssetsWorker
             {
                 try
                 {
-                    DatDictionary data = state.ReadFileWithoutHash(mbConfigPath);
+                    IDatDictionary data = state.ReadFileWithoutHash(mbConfigPath);
                     string directoryName = Path.GetDirectoryName(mbConfigPath);
                     MasterBundleConfig config = new MasterBundleConfig(directoryName, data, state.origin);
                     byte[] assetBundleData;

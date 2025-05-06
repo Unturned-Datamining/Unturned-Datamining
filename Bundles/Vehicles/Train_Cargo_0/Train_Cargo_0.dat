@@ -1,4 +1,4 @@
-GUID 7496377d88a5477b92ce7be3f063ba11
+﻿GUID 7496377d88a5477b92ce7be3f063ba11
 Type Vehicle
 Rarity Epic
 ID 186
@@ -26,7 +26,6 @@ Pitch_Drive 0.01
 
 // Allowing beds on trains was problematic because they could be extended off the sides into tunnel walls using plates.
 // Supports_Mobile_Buildables
-
 Trunk_Storage_X 8
 Trunk_Storage_Y 7
 

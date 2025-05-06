@@ -42,7 +42,7 @@ public class LiveConfigManager : MonoBehaviour
     {
         string uri = "https://smartlydressedgames.com/UnturnedLiveConfig.dat";
         using UnityWebRequest request = UnityWebRequest.Get(uri);
-        request.timeout = 10;
+        request.timeout = 60;
         yield return request.SendWebRequest();
         if (request.result != UnityWebRequest.Result.Success)
         {
@@ -53,10 +53,13 @@ public class LiveConfigManager : MonoBehaviour
             try
             {
                 DatParser datParser = new DatParser();
-                DatDictionary data = datParser.Parse(request.downloadHandler.data);
+                IDatDictionary data = datParser.Parse(request.downloadHandler.data);
                 if (datParser.HasError)
                 {
-                    Debug.LogError("Error parsing live config: \"" + datParser.ErrorMessage + "\"");
+                    foreach (string errorMessage in datParser.ErrorMessages)
+                    {
+                        Debug.LogError("Error parsing live config: \"" + errorMessage + "\"");
+                    }
                 }
                 config = new LiveConfigData();
                 config.Parse(data);

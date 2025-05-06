@@ -100,6 +100,7 @@ public class FoliageTile : IFormattedFileReadable, IFormattedFileWritable
         {
             value = PoolablePool<FoliageInstanceList>.claim();
             value.assetReference = assetReference;
+            value.loadAsset();
             instances.Add(assetReference, value);
         }
         return value;

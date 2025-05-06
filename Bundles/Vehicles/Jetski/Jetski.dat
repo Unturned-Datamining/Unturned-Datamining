@@ -1,4 +1,4 @@
-GUID 66261510c9b04cbab68fd28789122632
+﻿GUID 66261510c9b04cbab68fd28789122632
 Type Vehicle
 
 Speed_Min -4
@@ -30,18 +30,18 @@ Has_Clip_Prefab false
 
 PaintableSections
 [
-    {
-        Path Model_0
-        MaterialIndex 0
-    }
+	{
+		Path Model_0
+		MaterialIndex 0
+	}
 ]
 
 DefaultPaintColor_Mode RandomHueOrGrayscale
 DefaultPaintColor_Configuration
 {
-    MinSaturation 0.15
-    MaxSaturation 0.7
-    MinValue 0.15
-    MaxValue 0.9
-    GrayscaleChance 0.1
+	MinSaturation 0.15
+	MaxSaturation 0.7
+	MinValue 0.15
+	MaxValue 0.9
+	GrayscaleChance 0.1
 }

@@ -1,4 +1,4 @@
-GUID fc698d6d05a244518427207a4213fc4b
+﻿GUID fc698d6d05a244518427207a4213fc4b
 Type Barricade
 Useable Barricade
 Build Ladder
@@ -14,12 +14,19 @@ Offset 0.125
 
 Explosion 28
 
-Blueprints 1
-Blueprint_0_Type Barricade
-Blueprint_0_Supplies 2
-Blueprint_0_Supply_0_ID 38
-Blueprint_0_Supply_0_Amount 6
-Blueprint_0_Supply_1_ID 69
-Blueprint_0_Build 27
+Blueprints
+[
+	{
+		CategoryTag "31a59b5fec3f4ec5b2887b1ce4acb029" // Barricades
+		InputItems
+		[
+			"9c563bf14d4641a18873f338beaed128 x 6" // Birch Stick
+			"8c25cf28c76a4634855f404c8972c0ae" // Tape
+		]
+		OutputItems this
+		Effect "84347b13028340b8976033c08675d458" // Wrench
+	}
+]
+
 PlacementAudioClip Sounds/WoodenPlacement.mp3
 Has_Clip_Prefab false

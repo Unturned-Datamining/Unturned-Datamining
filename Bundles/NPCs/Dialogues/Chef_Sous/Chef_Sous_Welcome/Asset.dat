@@ -1,4 +1,4 @@
-GUID f19bc396c0c44c799963e862aca41f45
+﻿GUID f19bc396c0c44c799963e862aca41f45
 Type Dialogue
 ID 92
 
@@ -22,7 +22,7 @@ Response_1_Reward_0_ID 184
 Response_1_Reward_0_Value True
 Response_1_Reward_0_Modification Assign
 
-//XMAS Cooking Quest
+// XMAS Cooking Quest
 Response_2_Quest 318
 Response_2_Rewards 1
 Response_2_Reward_0_Type Quest
@@ -36,7 +36,7 @@ Response_2_Condition_1_Type Holiday
 Response_2_Condition_1_Value Christmas
 Response_2_Dialogue 332
 
-//XMAS Cooking Quest Complete
+// XMAS Cooking Quest Complete
 Response_3_Dialogue 331
 Response_3_Quest 318
 Response_3_Conditions 2

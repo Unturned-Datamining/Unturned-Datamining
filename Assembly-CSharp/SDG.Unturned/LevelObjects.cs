@@ -89,7 +89,7 @@ public class LevelObjects : MonoBehaviour
     /// </summary>
     public static byte[] hash { get; private set; }
 
-    public static bool shouldInstantlyLoad { get; private set; }
+    public static bool shouldInstantlyLoad { get; internal set; }
 
     private static uint generateUniqueInstanceID()
     {
@@ -794,6 +794,7 @@ public class LevelObjects : MonoBehaviour
     private static void onPlayerTeleported(Player player, Vector3 position)
     {
         shouldInstantlyLoad = true;
+        LevelRoads.shouldInstantlyLoad = true;
     }
 
     private static void onRegionUpdated(Player player, byte old_x, byte old_y, byte new_x, byte new_y, byte step, ref bool canIncrementIndex)
@@ -801,16 +802,6 @@ public class LevelObjects : MonoBehaviour
         if (step != 0)
         {
             return;
-        }
-        regionTracker.CameraCoord = new Vector2Int(new_x, new_y);
-        skyboxRegionTracker.CameraCoord = regionTracker.CameraCoord;
-        if (LevelRoads.regionTracker != null)
-        {
-            LevelRoads.regionTracker.CameraCoord = regionTracker.CameraCoord;
-        }
-        if (shouldInstantlyLoad)
-        {
-            ImmediatelySyncRegionalVisibility();
         }
         for (byte b = 0; b < Regions.WORLD_SIZE; b++)
         {
@@ -857,7 +848,6 @@ public class LevelObjects : MonoBehaviour
             Player.player.adjustStanceOrTeleportIfStuck();
         }
         Level.isLoadingArea = false;
-        shouldInstantlyLoad = false;
     }
 
     private static void onPlayerCreated(Player player)
@@ -924,7 +914,6 @@ public class LevelObjects : MonoBehaviour
             }
         }
         skyboxRegionTracker.FlushProgress();
-        LevelRoads.ImmediatelySyncRegionalVisibility();
     }
 
     /// <summary>
@@ -932,6 +921,16 @@ public class LevelObjects : MonoBehaviour
     /// </summary>
     private void tickRegionalVisibility()
     {
+        Vector2Int coordinateVector2Int = Regions.GetCoordinateVector2Int(MainCamera.RenderingPosition);
+        shouldInstantlyLoad |= (coordinateVector2Int - regionTracker.CameraCoord).sqrMagnitude >= 4;
+        regionTracker.CameraCoord = coordinateVector2Int;
+        skyboxRegionTracker.CameraCoord = coordinateVector2Int;
+        if (shouldInstantlyLoad)
+        {
+            shouldInstantlyLoad = false;
+            ImmediatelySyncRegionalVisibility();
+            return;
+        }
         regionTrackerData.Clear();
         regionTracker.MaxDistance = RegularObjectMaxDistance;
         regionTracker.UpdateRegions(regionTrackerData);
@@ -979,7 +978,7 @@ public class LevelObjects : MonoBehaviour
 
     private void Update()
     {
-        if (Level.isLoaded && !Dedicator.IsDedicatedServer && regions != null && objects != null && isHierarchyReady)
+        if (Level.isLoaded && !Dedicator.IsDedicatedServer && regions != null && objects != null && isHierarchyReady && !(MainCamera.instance == null))
         {
             tickRegionalVisibility();
             LevelRoads.UpdateRegionalVisibility();

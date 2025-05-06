@@ -1,4 +1,4 @@
-GUID a6808af5335f4c60b92793f20247002d
+﻿GUID a6808af5335f4c60b92793f20247002d
 Type Box
 ID 781
 
@@ -13,7 +13,6 @@ Drops 17
 Drop_0 -1
 
 // Legendary:
-
 // Elemental Zubeknakov
 Drop_1 500400
 
@@ -24,7 +23,6 @@ Drop_2 81800
 Drop_3 500700
 
 // Epic:
-
 // Lavalamp Baseball Bat
 Drop_4 81400
 
@@ -38,7 +36,6 @@ Drop_6 82100
 Drop_7 81900
 
 // Rare:
-
 // Blood Dragon Katana
 Drop_8 82000
 

@@ -1169,179 +1169,179 @@ public class VehicleAsset : Asset, ISkinableAsset
         return 0f;
     }
 
-    public override void PopulateAsset(Bundle bundle, DatDictionary data, Local localization)
+    public override void PopulateAsset(in PopulateAssetParameters p)
     {
-        base.PopulateAsset(bundle, data, localization);
-        _vehicleName = localization.format("Name");
-        _pitchIdle = data.ParseFloat("Pitch_Idle", -1f);
-        _pitchDrive = data.ParseFloat("Pitch_Drive", -1f);
-        _engine = data.ParseEnum("Engine", EEngine.CAR);
-        physicsProfileRef = data.readAssetReference<VehiclePhysicsProfileAsset>("Physics_Profile");
+        base.PopulateAsset(in p);
+        _vehicleName = p.localization.format("Name");
+        _pitchIdle = p.data.ParseFloat("Pitch_Idle", -1f);
+        _pitchDrive = p.data.ParseFloat("Pitch_Drive", -1f);
+        _engine = p.data.ParseEnum("Engine", EEngine.CAR);
+        physicsProfileRef = p.data.readAssetReference<VehiclePhysicsProfileAsset>("Physics_Profile");
         int defaultValue = ((engine != 0) ? 1 : 2);
-        _hasCrawler = data.ContainsKey("Crawler");
+        _hasCrawler = p.data.ContainsKey("Crawler");
         if (hasCrawler)
         {
             defaultValue = 0;
         }
-        numSteeringTires = data.ParseInt32("Num_Steering_Tires", defaultValue);
+        numSteeringTires = p.data.ParseInt32("Num_Steering_Tires", defaultValue);
         steeringTireIndices = new int[numSteeringTires];
         for (int i = 0; i < numSteeringTires; i++)
         {
-            steeringTireIndices[i] = data.ParseInt32("Steering_Tire_" + i, i);
+            steeringTireIndices[i] = p.data.ParseInt32("Steering_Tire_" + i, i);
         }
-        if (Dedicator.IsDedicatedServer && data.ParseBool("Has_Clip_Prefab", defaultValue: true))
+        if (Dedicator.IsDedicatedServer && p.data.ParseBool("Has_Clip_Prefab", defaultValue: true))
         {
-            bundle.loadDeferred("Clip", out legacyServerModel, (LoadedAssetDeferredCallback<GameObject>)OnServerModelLoaded);
+            p.bundle.loadDeferred("Clip", out legacyServerModel, (LoadedAssetDeferredCallback<GameObject>)OnServerModelLoaded);
         }
-        bundle.loadDeferred("Vehicle", out clientModel, (LoadedAssetDeferredCallback<GameObject>)OnClientModelLoaded);
-        _size2_z = data.ParseFloat("Size2_Z");
-        _sharedSkinName = data.GetString("Shared_Skin_Name");
-        if (data.ContainsKey("Shared_Skin_Lookup_ID"))
+        p.bundle.loadDeferred("Vehicle", out clientModel, (LoadedAssetDeferredCallback<GameObject>)OnClientModelLoaded);
+        _size2_z = p.data.ParseFloat("Size2_Z");
+        _sharedSkinName = p.data.GetString("Shared_Skin_Name");
+        if (p.data.ContainsKey("Shared_Skin_Lookup_ID"))
         {
-            _sharedSkinLookupID = data.ParseGuidOrLegacyId("Shared_Skin_Lookup_ID", out _sharedSkinLookupGuid);
+            _sharedSkinLookupID = p.data.ParseGuidOrLegacyId("Shared_Skin_Lookup_ID", out _sharedSkinLookupGuid);
         }
         else
         {
             _sharedSkinLookupGuid = GUID;
             _sharedSkinLookupID = id;
         }
-        if (data.ContainsKey("Rarity"))
+        if (p.data.ContainsKey("Rarity"))
         {
-            _rarity = (EItemRarity)Enum.Parse(typeof(EItemRarity), data.GetString("Rarity"), ignoreCase: true);
+            _rarity = (EItemRarity)Enum.Parse(typeof(EItemRarity), p.data.GetString("Rarity"), ignoreCase: true);
         }
         else
         {
             _rarity = EItemRarity.COMMON;
         }
-        _hasZip = data.ContainsKey("Zip");
-        _hasBicycle = data.ContainsKey("Bicycle");
-        isReclined = data.ContainsKey("Reclined");
-        _hasLockMouse = data.ContainsKey("LockMouse");
-        _hasTraction = data.ContainsKey("Traction");
-        _hasSleds = data.ContainsKey("Sleds");
-        canSpawnWithBattery = !data.ContainsKey("Cannot_Spawn_With_Battery");
-        if (data.ContainsKey("Battery_Spawn_Charge_Multiplier"))
+        _hasZip = p.data.ContainsKey("Zip");
+        _hasBicycle = p.data.ContainsKey("Bicycle");
+        isReclined = p.data.ContainsKey("Reclined");
+        _hasLockMouse = p.data.ContainsKey("LockMouse");
+        _hasTraction = p.data.ContainsKey("Traction");
+        _hasSleds = p.data.ContainsKey("Sleds");
+        canSpawnWithBattery = !p.data.ContainsKey("Cannot_Spawn_With_Battery");
+        if (p.data.ContainsKey("Battery_Spawn_Charge_Multiplier"))
         {
-            batterySpawnChargeMultiplier = data.ParseFloat("Battery_Spawn_Charge_Multiplier");
+            batterySpawnChargeMultiplier = p.data.ParseFloat("Battery_Spawn_Charge_Multiplier");
         }
         else
         {
             batterySpawnChargeMultiplier = 1f;
         }
-        if (data.ContainsKey("Battery_Burn_Rate"))
+        if (p.data.ContainsKey("Battery_Burn_Rate"))
         {
-            batteryBurnRate = data.ParseFloat("Battery_Burn_Rate");
+            batteryBurnRate = p.data.ParseFloat("Battery_Burn_Rate");
         }
         else
         {
             batteryBurnRate = 20f;
         }
-        if (data.ContainsKey("Battery_Charge_Rate"))
+        if (p.data.ContainsKey("Battery_Charge_Rate"))
         {
-            batteryChargeRate = data.ParseFloat("Battery_Charge_Rate");
+            batteryChargeRate = p.data.ParseFloat("Battery_Charge_Rate");
         }
         else
         {
             batteryChargeRate = 20f;
         }
-        batteryDriving = data.ParseEnum("BatteryMode_Driving", EBatteryMode.Charge);
-        batteryEmpty = data.ParseEnum("BatteryMode_Empty", EBatteryMode.None);
-        batteryHeadlights = data.ParseEnum("BatteryMode_Headlights", EBatteryMode.Burn);
-        batterySirens = data.ParseEnum("BatteryMode_Sirens", EBatteryMode.Burn);
-        defaultBatteryGuid = data.ParseGuid("Default_Battery", VANILLA_BATTERY_ITEM);
+        batteryDriving = p.data.ParseEnum("BatteryMode_Driving", EBatteryMode.Charge);
+        batteryEmpty = p.data.ParseEnum("BatteryMode_Empty", EBatteryMode.None);
+        batteryHeadlights = p.data.ParseEnum("BatteryMode_Headlights", EBatteryMode.Burn);
+        batterySirens = p.data.ParseEnum("BatteryMode_Sirens", EBatteryMode.Burn);
+        defaultBatteryGuid = p.data.ParseGuid("Default_Battery", VANILLA_BATTERY_ITEM);
         float defaultValue2 = ((engine == EEngine.CAR) ? 2.05f : 4.2f);
-        fuelBurnRate = data.ParseFloat("Fuel_Burn_Rate", defaultValue2);
-        _ignition = LoadRedirectableAsset<AudioClip>(bundle, "Ignition", data, "IgnitionAudioClip");
-        _horn = LoadRedirectableAsset<AudioClip>(bundle, "Horn", data, "HornAudioClip");
-        hasHorn = data.ParseBool("Has_Horn", _horn != null);
-        TargetReverseVelocity = data.ParseFloat("Speed_Min");
-        TargetForwardVelocity = data.ParseFloat("Speed_Max");
+        fuelBurnRate = p.data.ParseFloat("Fuel_Burn_Rate", defaultValue2);
+        _ignition = LoadRedirectableAsset<AudioClip>(p.bundle, "Ignition", p.data, "IgnitionAudioClip");
+        _horn = LoadRedirectableAsset<AudioClip>(p.bundle, "Horn", p.data, "HornAudioClip");
+        hasHorn = p.data.ParseBool("Has_Horn", _horn != null);
+        TargetReverseVelocity = p.data.ParseFloat("Speed_Min");
+        TargetForwardVelocity = p.data.ParseFloat("Speed_Max");
         if (engine != EEngine.TRAIN)
         {
             TargetForwardVelocity *= 1.25f;
         }
-        _steerMin = data.ParseFloat("Steer_Min");
-        _steerMax = data.ParseFloat("Steer_Max") * 0.75f;
-        CrawlerTrackSteeringTorque = data.ParseFloat("CrawlerTrackSteering_Torque");
-        CrawlerTrackSteeringSidewaysFrictionMultiplier = data.ParseFloat("CrawlerTrackSteering_SidewaysFrictionMultiplier", 1f);
-        CrawlerTrackSteeringMaxSpeedScale = data.ParseFloat("CrawlerTrackSteering_MaxSpeedScale", 1f);
-        SteeringAngleTurnSpeed = data.ParseFloat("Steering_Angle_Turn_Speed", _steerMax * 5f);
-        steeringLeaningForceMultiplier = data.ParseFloat("Steering_LeaningForceMultiplier", -1f);
-        steeringLeaningForceShouldScaleWithSpeed = data.ParseBool("Steering_LeaningForce_ScaleWithSpeed");
+        _steerMin = p.data.ParseFloat("Steer_Min");
+        _steerMax = p.data.ParseFloat("Steer_Max") * 0.75f;
+        CrawlerTrackSteeringTorque = p.data.ParseFloat("CrawlerTrackSteering_Torque");
+        CrawlerTrackSteeringSidewaysFrictionMultiplier = p.data.ParseFloat("CrawlerTrackSteering_SidewaysFrictionMultiplier", 1f);
+        CrawlerTrackSteeringMaxSpeedScale = p.data.ParseFloat("CrawlerTrackSteering_MaxSpeedScale", 1f);
+        SteeringAngleTurnSpeed = p.data.ParseFloat("Steering_Angle_Turn_Speed", _steerMax * 5f);
+        steeringLeaningForceMultiplier = p.data.ParseFloat("Steering_LeaningForceMultiplier", -1f);
+        steeringLeaningForceShouldScaleWithSpeed = p.data.ParseBool("Steering_LeaningForce_ScaleWithSpeed");
         if (steeringLeaningForceShouldScaleWithSpeed)
         {
-            steeringLeaningForceSpeedExponent = data.ParseFloat("Steering_LeaningForce_SpeedExponent", 1f);
+            steeringLeaningForceSpeedExponent = p.data.ParseFloat("Steering_LeaningForce_SpeedExponent", 1f);
         }
-        _brake = data.ParseFloat("Brake");
-        _lift = data.ParseFloat("Lift");
-        _fuelMin = data.ParseUInt16("Fuel_Min", 0);
-        _fuelMax = data.ParseUInt16("Fuel_Max", 0);
-        _fuel = data.ParseUInt16("Fuel", 0);
-        _healthMin = data.ParseUInt16("Health_Min", 0);
-        _healthMax = data.ParseUInt16("Health_Max", 0);
-        _health = data.ParseUInt16("Health", 0);
-        _explosion = data.ParseGuidOrLegacyId("Explosion", out _explosionEffectGuid);
+        _brake = p.data.ParseFloat("Brake");
+        _lift = p.data.ParseFloat("Lift");
+        _fuelMin = p.data.ParseUInt16("Fuel_Min", 0);
+        _fuelMax = p.data.ParseUInt16("Fuel_Max", 0);
+        _fuel = p.data.ParseUInt16("Fuel", 0);
+        _healthMin = p.data.ParseUInt16("Health_Min", 0);
+        _healthMax = p.data.ParseUInt16("Health_Max", 0);
+        _health = p.data.ParseUInt16("Health", 0);
+        _explosion = p.data.ParseGuidOrLegacyId("Explosion", out _explosionEffectGuid);
         bool defaultValue3 = !IsExplosionEffectRefNull();
-        ShouldExplosionCauseDamage = data.ParseBool("ShouldExplosionCauseDamage", defaultValue3);
-        ShouldExplosionBurnMaterials = data.ParseBool("ShouldExplosionBurnMaterials", defaultValue3);
+        ShouldExplosionCauseDamage = p.data.ParseBool("ShouldExplosionCauseDamage", defaultValue3);
+        ShouldExplosionBurnMaterials = p.data.ParseBool("ShouldExplosionBurnMaterials", defaultValue3);
         if (ShouldExplosionBurnMaterials)
         {
-            explosionBurnMaterialSections = data.ParseArrayOfStructs<PaintableVehicleSection>("ExplosionBurnMaterialSections");
+            explosionBurnMaterialSections = p.data.ParseArrayOfStructs<PaintableVehicleSection>("ExplosionBurnMaterialSections");
         }
-        float num = data.ParseFloat("Explosion_Force_Multiplier", 1f);
-        if (data.TryParseVector3("Explosion_Min_Force", out var value))
+        float num = p.data.ParseFloat("Explosion_Force_Multiplier", 1f);
+        if (p.data.TryParseVector3("Explosion_Min_Force", out var value))
         {
             minExplosionForce = value * num;
         }
-        else if (data.ContainsKey("Explosion_Min_Force_Y"))
+        else if (p.data.ContainsKey("Explosion_Min_Force_Y"))
         {
-            minExplosionForce = data.LegacyParseVector3("Explosion_Min_Force") * num;
+            minExplosionForce = p.data.LegacyParseVector3("Explosion_Min_Force") * num;
         }
         else
         {
             minExplosionForce = new Vector3(0f, 1024f * num, 0f);
         }
-        if (data.TryParseVector3("Explosion_Max_Force", out var value2))
+        if (p.data.TryParseVector3("Explosion_Max_Force", out var value2))
         {
             maxExplosionForce = value2 * num;
         }
-        else if (data.ContainsKey("Explosion_Max_Force_Y"))
+        else if (p.data.ContainsKey("Explosion_Max_Force_Y"))
         {
-            maxExplosionForce = data.LegacyParseVector3("Explosion_Max_Force") * num;
+            maxExplosionForce = p.data.LegacyParseVector3("Explosion_Max_Force") * num;
         }
         else
         {
             maxExplosionForce = new Vector3(0f, 1024f * num, 0f);
         }
-        if (data.ContainsKey("Exit"))
+        if (p.data.ContainsKey("Exit"))
         {
-            _exit = data.ParseFloat("Exit");
+            _exit = p.data.ParseFloat("Exit");
         }
         else
         {
             _exit = 2f;
         }
-        if (data.ContainsKey("Cam_Follow_Distance"))
+        if (p.data.ContainsKey("Cam_Follow_Distance"))
         {
-            _camFollowDistance = data.ParseFloat("Cam_Follow_Distance");
+            _camFollowDistance = p.data.ParseFloat("Cam_Follow_Distance");
         }
         else
         {
             _camFollowDistance = 5.5f;
         }
-        camDriverOffset = data.ParseFloat("Cam_Driver_Offset");
-        camPassengerOffset = data.ParseFloat("Cam_Passenger_Offset");
-        if (data.ContainsKey("Bumper_Multiplier"))
+        camDriverOffset = p.data.ParseFloat("Cam_Driver_Offset");
+        camPassengerOffset = p.data.ParseFloat("Cam_Passenger_Offset");
+        if (p.data.ContainsKey("Bumper_Multiplier"))
         {
-            _bumperMultiplier = data.ParseFloat("Bumper_Multiplier");
+            _bumperMultiplier = p.data.ParseFloat("Bumper_Multiplier");
         }
         else
         {
             _bumperMultiplier = 1f;
         }
-        if (data.ContainsKey("Passenger_Explosion_Armor"))
+        if (p.data.ContainsKey("Passenger_Explosion_Armor"))
         {
-            _passengerExplosionArmor = data.ParseFloat("Passenger_Explosion_Armor");
+            _passengerExplosionArmor = p.data.ParseFloat("Passenger_Explosion_Armor");
         }
         else
         {
@@ -1355,9 +1355,9 @@ public class VehicleAsset : Asset, ISkinableAsset
         {
             _sqrDelta = MathfEx.Square(TargetForwardVelocity * 0.1f);
         }
-        if (data.ContainsKey("Valid_Speed_Horizontal"))
+        if (p.data.ContainsKey("Valid_Speed_Horizontal"))
         {
-            float x = data.ParseFloat("Valid_Speed_Horizontal") * PlayerInput.RATE;
+            float x = p.data.ParseFloat("Valid_Speed_Horizontal") * PlayerInput.RATE;
             _sqrDelta = MathfEx.Square(x);
         }
         float defaultValue4;
@@ -1377,63 +1377,63 @@ public class VehicleAsset : Asset, ISkinableAsset
             defaultValue5 = 100f;
             break;
         }
-        validSpeedUp = data.ParseFloat("Valid_Speed_Up", defaultValue4);
-        validSpeedDown = data.ParseFloat("Valid_Speed_Down", defaultValue5);
-        ValidHitDistanceMultiplier = data.ParseFloat("Valid_Hit_Distance_Multiplier", 1f);
-        _turrets = new TurretInfo[data.ParseUInt8("Turrets", 0)];
+        validSpeedUp = p.data.ParseFloat("Valid_Speed_Up", defaultValue4);
+        validSpeedDown = p.data.ParseFloat("Valid_Speed_Down", defaultValue5);
+        ValidHitDistanceMultiplier = p.data.ParseFloat("Valid_Hit_Distance_Multiplier", 1f);
+        _turrets = new TurretInfo[p.data.ParseUInt8("Turrets", 0)];
         for (byte b = 0; b < turrets.Length; b++)
         {
             TurretInfo turretInfo = new TurretInfo();
-            turretInfo.seatIndex = data.ParseUInt8("Turret_" + b + "_Seat_Index", 0);
-            turretInfo.itemID = data.ParseUInt16("Turret_" + b + "_Item_ID", 0);
-            turretInfo.yawMin = data.ParseFloat("Turret_" + b + "_Yaw_Min");
-            turretInfo.yawMax = data.ParseFloat("Turret_" + b + "_Yaw_Max");
-            turretInfo.pitchMin = data.ParseFloat("Turret_" + b + "_Pitch_Min");
-            turretInfo.pitchMax = data.ParseFloat("Turret_" + b + "_Pitch_Max");
-            turretInfo.useAimCamera = !data.ContainsKey("Turret_" + b + "_Ignore_Aim_Camera");
+            turretInfo.seatIndex = p.data.ParseUInt8("Turret_" + b + "_Seat_Index", 0);
+            turretInfo.itemID = p.data.ParseUInt16("Turret_" + b + "_Item_ID", 0);
+            turretInfo.yawMin = p.data.ParseFloat("Turret_" + b + "_Yaw_Min");
+            turretInfo.yawMax = p.data.ParseFloat("Turret_" + b + "_Yaw_Max");
+            turretInfo.pitchMin = p.data.ParseFloat("Turret_" + b + "_Pitch_Min");
+            turretInfo.pitchMax = p.data.ParseFloat("Turret_" + b + "_Pitch_Max");
+            turretInfo.useAimCamera = !p.data.ContainsKey("Turret_" + b + "_Ignore_Aim_Camera");
             _turrets[b] = turretInfo;
         }
-        isVulnerable = !data.ContainsKey("Invulnerable");
-        isVulnerableToExplosions = !data.ContainsKey("Explosions_Invulnerable");
-        isVulnerableToEnvironment = !data.ContainsKey("Environment_Invulnerable");
-        isVulnerableToBumper = !data.ContainsKey("Bumper_Invulnerable");
-        canTiresBeDamaged = !data.ContainsKey("Tires_Invulnerable");
-        canRepairWhileSeated = data.ParseBool("Can_Repair_While_Seated");
-        childExplosionArmorMultiplier = data.ParseFloat("Child_Explosion_Armor_Multiplier", 0.2f);
-        if (data.ContainsKey("Air_Turn_Responsiveness"))
+        isVulnerable = !p.data.ContainsKey("Invulnerable");
+        isVulnerableToExplosions = !p.data.ContainsKey("Explosions_Invulnerable");
+        isVulnerableToEnvironment = !p.data.ContainsKey("Environment_Invulnerable");
+        isVulnerableToBumper = !p.data.ContainsKey("Bumper_Invulnerable");
+        canTiresBeDamaged = !p.data.ContainsKey("Tires_Invulnerable");
+        canRepairWhileSeated = p.data.ParseBool("Can_Repair_While_Seated");
+        childExplosionArmorMultiplier = p.data.ParseFloat("Child_Explosion_Armor_Multiplier", 0.2f);
+        if (p.data.ContainsKey("Air_Turn_Responsiveness"))
         {
-            airTurnResponsiveness = data.ParseFloat("Air_Turn_Responsiveness");
+            airTurnResponsiveness = p.data.ParseFloat("Air_Turn_Responsiveness");
         }
         else
         {
             airTurnResponsiveness = 2f;
         }
-        if (data.ContainsKey("Air_Steer_Min"))
+        if (p.data.ContainsKey("Air_Steer_Min"))
         {
-            airSteerMin = data.ParseFloat("Air_Steer_Min");
+            airSteerMin = p.data.ParseFloat("Air_Steer_Min");
         }
         else
         {
             airSteerMin = steerMin;
         }
-        if (data.ContainsKey("Air_Steer_Max"))
+        if (p.data.ContainsKey("Air_Steer_Max"))
         {
-            airSteerMax = data.ParseFloat("Air_Steer_Max");
+            airSteerMax = p.data.ParseFloat("Air_Steer_Max");
         }
         else
         {
             airSteerMax = steerMax;
         }
-        bicycleAnimSpeed = data.ParseFloat("Bicycle_Anim_Speed");
-        staminaBoost = data.ParseFloat("Stamina_Boost");
-        useStaminaBoost = data.ContainsKey("Stamina_Boost");
-        isStaminaPowered = data.ContainsKey("Stamina_Powered");
-        isBatteryPowered = data.ContainsKey("Battery_Powered");
-        if (data.TryParseEnum<EVehicleBuildablePlacementRule>("Buildable_Placement_Rule", out var value3))
+        bicycleAnimSpeed = p.data.ParseFloat("Bicycle_Anim_Speed");
+        staminaBoost = p.data.ParseFloat("Stamina_Boost");
+        useStaminaBoost = p.data.ContainsKey("Stamina_Boost");
+        isStaminaPowered = p.data.ContainsKey("Stamina_Powered");
+        isBatteryPowered = p.data.ContainsKey("Battery_Powered");
+        if (p.data.TryParseEnum<EVehicleBuildablePlacementRule>("Buildable_Placement_Rule", out var value3))
         {
             BuildablePlacementRule = value3;
         }
-        else if (data.ContainsKey("Supports_Mobile_Buildables"))
+        else if (p.data.ContainsKey("Supports_Mobile_Buildables"))
         {
             BuildablePlacementRule = EVehicleBuildablePlacementRule.AlwaysAllow;
         }
@@ -1441,59 +1441,59 @@ public class VehicleAsset : Asset, ISkinableAsset
         {
             BuildablePlacementRule = EVehicleBuildablePlacementRule.None;
         }
-        shouldSpawnSeatCapsules = data.ParseBool("Should_Spawn_Seat_Capsules");
-        canBeLocked = data.ParseBool("Can_Be_Locked", defaultValue: true);
-        canStealBattery = data.ParseBool("Can_Steal_Battery", defaultValue: true);
-        trunkStorage_X = data.ParseUInt8("Trunk_Storage_X", 0);
-        trunkStorage_Y = data.ParseUInt8("Trunk_Storage_Y", 0);
-        dropsTableId = data.ParseUInt16("Drops_Table_ID", 962);
-        dropsMin = data.ParseUInt8("Drops_Min", 3);
-        dropsMax = data.ParseUInt8("Drops_Max", 7);
-        tireID = data.ParseUInt16("Tire_ID", 1451);
-        hasCenterOfMassOverride = data.ParseBool("Override_Center_Of_Mass");
+        shouldSpawnSeatCapsules = p.data.ParseBool("Should_Spawn_Seat_Capsules");
+        canBeLocked = p.data.ParseBool("Can_Be_Locked", defaultValue: true);
+        canStealBattery = p.data.ParseBool("Can_Steal_Battery", defaultValue: true);
+        trunkStorage_X = p.data.ParseUInt8("Trunk_Storage_X", 0);
+        trunkStorage_Y = p.data.ParseUInt8("Trunk_Storage_Y", 0);
+        dropsTableId = p.data.ParseUInt16("Drops_Table_ID", 962);
+        dropsMin = p.data.ParseUInt8("Drops_Min", 3);
+        dropsMax = p.data.ParseUInt8("Drops_Max", 7);
+        tireID = p.data.ParseUInt16("Tire_ID", 1451);
+        hasCenterOfMassOverride = p.data.ParseBool("Override_Center_Of_Mass");
         if (hasCenterOfMassOverride)
         {
-            centerOfMass = data.LegacyParseVector3("Center_Of_Mass");
+            centerOfMass = p.data.LegacyParseVector3("Center_Of_Mass");
         }
-        carjackForceMultiplier = data.ParseFloat("Carjack_Force_Multiplier", 1f);
-        engineForceMultiplier = data.ParseFloat("Engine_Force_Multiplier", 1f);
-        if (data.ContainsKey("Wheel_Collider_Mass_Override"))
+        carjackForceMultiplier = p.data.ParseFloat("Carjack_Force_Multiplier", 1f);
+        engineForceMultiplier = p.data.ParseFloat("Engine_Force_Multiplier", 1f);
+        if (p.data.ContainsKey("Wheel_Collider_Mass_Override"))
         {
-            wheelColliderMassOverride = data.ParseFloat("Wheel_Collider_Mass_Override", 1f);
+            wheelColliderMassOverride = p.data.ParseFloat("Wheel_Collider_Mass_Override", 1f);
         }
         else
         {
             wheelColliderMassOverride = null;
         }
-        trainTrackOffset = data.ParseFloat("Train_Track_Offset");
-        trainWheelOffset = data.ParseFloat("Train_Wheel_Offset");
-        trainCarLength = data.ParseFloat("Train_Car_Length");
-        _shouldVerifyHash = !data.ContainsKey("Bypass_Hash_Verification");
+        trainTrackOffset = p.data.ParseFloat("Train_Track_Offset");
+        trainWheelOffset = p.data.ParseFloat("Train_Wheel_Offset");
+        trainCarLength = p.data.ParseFloat("Train_Car_Length");
+        _shouldVerifyHash = !p.data.ContainsKey("Bypass_Hash_Verification");
         if (!Dedicator.IsDedicatedServer && id < 2000)
         {
-            _albedoBase = bundle.load<Texture2D>("Albedo_Base");
-            _metallicBase = bundle.load<Texture2D>("Metallic_Base");
-            _emissionBase = bundle.load<Texture2D>("Emission_Base");
+            _albedoBase = p.bundle.load<Texture2D>("Albedo_Base");
+            _metallicBase = p.bundle.load<Texture2D>("Metallic_Base");
+            _emissionBase = p.bundle.load<Texture2D>("Emission_Base");
         }
         CanDecay = engine != EEngine.TRAIN && (isVulnerable | isVulnerableToExplosions | isVulnerableToEnvironment | isVulnerableToBumper);
-        PaintableVehicleSections = data.ParseArrayOfStructs<PaintableVehicleSection>("PaintableSections");
+        PaintableVehicleSections = p.data.ParseArrayOfStructs<PaintableVehicleSection>("PaintableSections");
         if (SupportsPaintColor)
         {
-            IsPaintable = data.ParseBool("IsPaintable", defaultValue: true);
+            IsPaintable = p.data.ParseBool("IsPaintable", defaultValue: true);
         }
         else
         {
             IsPaintable = false;
         }
-        crawlerTrackTilingMaterials = data.ParseArrayOfStructs<CrawlerTrackTilingMaterial>("CrawlerTrackTilingMaterials");
-        if (data.TryGetList("AdditionalTransparentSections", out var node))
+        crawlerTrackTilingMaterials = p.data.ParseArrayOfStructs<CrawlerTrackTilingMaterial>("CrawlerTrackTilingMaterials");
+        if (p.data.TryGetList("AdditionalTransparentSections", out var node))
         {
             List<string> list = new List<string>(node.Count);
             foreach (IDatNode item in node)
             {
-                if (item is DatValue datValue)
+                if (item is IDatValue datValue)
                 {
-                    list.Add(datValue.value);
+                    list.Add(datValue.Value);
                 }
                 else
                 {
@@ -1505,15 +1505,15 @@ public class VehicleAsset : Asset, ISkinableAsset
                 extraTransparentSections = list.ToArray();
             }
         }
-        DatList node2;
-        bool flag = data.TryGetList("DefaultPaintColors", out node2);
-        defaultPaintColorMode = data.ParseEnum("DefaultPaintColor_Mode", flag ? EVehicleDefaultPaintColorMode.List : EVehicleDefaultPaintColorMode.None);
+        IDatList node2;
+        bool flag = p.data.TryGetList("DefaultPaintColors", out node2);
+        defaultPaintColorMode = p.data.ParseEnum("DefaultPaintColor_Mode", flag ? EVehicleDefaultPaintColorMode.List : EVehicleDefaultPaintColorMode.None);
         if (defaultPaintColorMode == EVehicleDefaultPaintColorMode.List)
         {
             DefaultPaintColors = new List<Color32>(node2.Count);
             foreach (IDatNode item2 in node2)
             {
-                if (item2 is DatValue node3 && node3.TryParseColor32RGB(out var value4))
+                if (item2 is IDatValue node3 && node3.TryParseColor32RGB(out var value4))
                 {
                     DefaultPaintColors.Add(value4);
                 }
@@ -1522,7 +1522,7 @@ public class VehicleAsset : Asset, ISkinableAsset
         else if (defaultPaintColorMode == EVehicleDefaultPaintColorMode.RandomHueOrGrayscale)
         {
             randomPaintColorConfiguration = new VehicleRandomPaintColorConfiguration();
-            if (data.TryGetDictionary("DefaultPaintColor_Configuration", out var node4))
+            if (p.data.TryGetDictionary("DefaultPaintColor_Configuration", out var node4))
             {
                 if (!randomPaintColorConfiguration.TryParse(node4))
                 {
@@ -1534,10 +1534,10 @@ public class VehicleAsset : Asset, ISkinableAsset
                 Assets.ReportError(this, "missing DefaultPaintColor_Configuration");
             }
         }
-        wheelBalancingForceMultiplier = data.ParseFloat("WheelBalancing_ForceMultiplier", -1f);
-        wheelBalancingUprightExponent = data.ParseFloat("WheelBalancing_UprightExponent", 1.5f);
-        rollAngularVelocityDamping = data.ParseFloat("RollAngularVelocityDamping", -1f);
-        if (data.TryGetList("WheelConfigurations", out var node5))
+        wheelBalancingForceMultiplier = p.data.ParseFloat("WheelBalancing_ForceMultiplier", -1f);
+        wheelBalancingUprightExponent = p.data.ParseFloat("WheelBalancing_UprightExponent", 1.5f);
+        rollAngularVelocityDamping = p.data.ParseFloat("RollAngularVelocityDamping", -1f);
+        if (p.data.TryGetList("WheelConfigurations", out var node5))
         {
             List<VehicleWheelConfiguration> list2 = new List<VehicleWheelConfiguration>();
             List<int> list3 = new List<int>();
@@ -1574,13 +1574,13 @@ public class VehicleAsset : Asset, ISkinableAsset
                 poweredWheelIndices = list4.ToArray();
             }
         }
-        reverseGearRatio = data.ParseFloat("ReverseGearRatio", 1f);
-        if (data.TryGetList("ForwardGearRatios", out var node6))
+        reverseGearRatio = p.data.ParseFloat("ReverseGearRatio", 1f);
+        if (p.data.TryGetList("ForwardGearRatios", out var node6))
         {
             List<float> list5 = new List<float>();
             foreach (IDatNode item4 in node6)
             {
-                if (item4 is DatValue datValue2 && datValue2.TryParseFloat(out var value5))
+                if (item4 is IDatValue valueNode && valueNode.TryParseFloat(out var value5))
                 {
                     list5.Add(value5);
                 }
@@ -1588,23 +1588,23 @@ public class VehicleAsset : Asset, ISkinableAsset
             if (list5.Count > 0)
             {
                 forwardGearRatios = list5.ToArray();
-                AllowsEngineRpmAndGearsInHud = data.ParseBool("GearShift_VisibleInHUD", defaultValue: true);
+                AllowsEngineRpmAndGearsInHud = p.data.ParseBool("GearShift_VisibleInHUD", defaultValue: true);
             }
         }
-        GearShiftDownThresholdRpm = data.ParseFloat("GearShift_DownThresholdRPM", 1500f);
-        GearShiftUpThresholdRpm = data.ParseFloat("GearShift_UpThresholdRPM", 5500f);
-        GearShiftDuration = data.ParseFloat("GearShift_Duration", 0.5f);
-        GearShiftInterval = data.ParseFloat("GearShift_Interval", 1f);
-        EngineIdleRpm = data.ParseFloat("EngineIdleRPM", 1000f);
-        EngineMaxRpm = data.ParseFloat("EngineMaxRPM", 7000f);
-        EngineRpmIncreaseRate = data.ParseFloat("EngineRPM_IncreaseRate", 10000f);
-        EngineRpmDecreaseRate = data.ParseFloat("EngineRPM_DecreaseRate", 10000f);
-        EngineMaxTorque = data.ParseFloat("EngineMaxTorque", 1f);
-        engineSoundType = data.ParseEnum("EngineSound_Type", EVehicleEngineSoundType.Legacy);
+        GearShiftDownThresholdRpm = p.data.ParseFloat("GearShift_DownThresholdRPM", 1500f);
+        GearShiftUpThresholdRpm = p.data.ParseFloat("GearShift_UpThresholdRPM", 5500f);
+        GearShiftDuration = p.data.ParseFloat("GearShift_Duration", 0.5f);
+        GearShiftInterval = p.data.ParseFloat("GearShift_Interval", 1f);
+        EngineIdleRpm = p.data.ParseFloat("EngineIdleRPM", 1000f);
+        EngineMaxRpm = p.data.ParseFloat("EngineMaxRPM", 7000f);
+        EngineRpmIncreaseRate = p.data.ParseFloat("EngineRPM_IncreaseRate", 10000f);
+        EngineRpmDecreaseRate = p.data.ParseFloat("EngineRPM_DecreaseRate", 10000f);
+        EngineMaxTorque = p.data.ParseFloat("EngineMaxTorque", 1f);
+        engineSoundType = p.data.ParseEnum("EngineSound_Type", EVehicleEngineSoundType.Legacy);
         if (engineSoundType == EVehicleEngineSoundType.EngineRPMSimple)
         {
             engineSoundConfiguration = new RpmEngineSoundConfiguration();
-            if (data.TryGetDictionary("EngineSound", out var node7))
+            if (p.data.TryGetDictionary("EngineSound", out var node7))
             {
                 engineSoundConfiguration.TryParse(node7);
             }

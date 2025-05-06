@@ -37,17 +37,17 @@ public class ItemGeneratorAsset : ItemBarricadeAsset
         }
     }
 
-    public override void PopulateAsset(Bundle bundle, DatDictionary data, Local localization)
+    public override void PopulateAsset(in PopulateAssetParameters p)
     {
-        base.PopulateAsset(bundle, data, localization);
-        _capacity = data.ParseUInt16("Capacity", 0);
-        _wirerange = data.ParseFloat("Wirerange");
+        base.PopulateAsset(in p);
+        _capacity = p.data.ParseUInt16("Capacity", 0);
+        _wirerange = p.data.ParseFloat("Wirerange");
         if (wirerange > PowerTool.MAX_POWER_RANGE + 0.1f)
         {
             float mAX_POWER_RANGE = PowerTool.MAX_POWER_RANGE;
             Assets.ReportError(this, "Wirerange is further than the max supported power range of " + mAX_POWER_RANGE);
         }
-        _burn = data.ParseFloat("Burn");
+        _burn = p.data.ParseFloat("Burn");
     }
 
     internal override void BuildCargoData(CargoBuilder builder)

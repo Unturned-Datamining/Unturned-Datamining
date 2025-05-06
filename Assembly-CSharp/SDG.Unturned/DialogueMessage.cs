@@ -38,8 +38,8 @@ public class DialogueMessage : DialogueElement
         return Assets.FindNpcAssetByGuidOrLegacyId<DialogueAsset>(prevGuid, prev);
     }
 
-    public DialogueMessage(byte newID, DialoguePage[] newPages, byte[] newResponses, ushort newPrev, Guid newPrevGuid, byte? faceOverride, INPCCondition[] newConditions, NPCRewardsList newRewardsList)
-        : base(newID, newConditions, newRewardsList)
+    public DialogueMessage(byte newID, DialoguePage[] newPages, byte[] newResponses, ushort newPrev, Guid newPrevGuid, byte? faceOverride, NPCConditionsList newConditionsList, NPCRewardsList newRewardsList)
+        : base(newID, newConditionsList, newRewardsList)
     {
         pages = newPages;
         responses = newResponses;

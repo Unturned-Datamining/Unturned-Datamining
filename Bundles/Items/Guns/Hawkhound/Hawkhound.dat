@@ -1,4 +1,4 @@
-GUID 851bdc8130ea44bd80605d896937a5ec
+﻿GUID 851bdc8130ea44bd80605d896937a5ec
 Type Gun
 Rarity Uncommon
 Useable Gun
@@ -53,7 +53,7 @@ Vehicle_Damage 30
 Resource_Damage 20
 Object_Damage 25
 
-Durability 0.3
+Durability 0.25
 
 Spread_Aim 0.01
 Spread_Angle_Degrees 14.04
@@ -75,17 +75,28 @@ Shake_Max_Z -0.1
 
 Muzzle 4
 
-Blueprints 2
-Blueprint_0_Type Repair
-Blueprint_0_Supply_0_ID 67
-Blueprint_0_Supply_0_Amount 3
-Blueprint_0_Build 27
-Blueprint_1_Type Tool
-Blueprint_1_Supplies 1
-Blueprint_1_Supply_0_ID 109
-Blueprint_1_Outputs 2
-Blueprint_1_Output_0_ID 67
-Blueprint_1_Output_0_Amount 1
-Blueprint_1_Output_1_ID 61
-Blueprint_1_Output_1_Amount 1
-Blueprint_1_Build 27
+Blueprints
+[
+	{
+		Name Repair
+		CategoryTag "732ee6ffeb18418985cf4f9fde33dd11" // Repair
+		Operation RepairTargetItem
+		InputItems "21ede8ebffb14c5580e8c7ad149e335e x 3" // Metal Scrap
+		RequiresNearbyCraftingTags
+		[
+			"7b82c125a5a54984b8bb26576b59e977" // Workbench
+		]
+		Effect "84347b13028340b8976033c08675d458" // Wrench
+	}
+	{
+		Name Salvage
+		CategoryTag "7ed29f9101ae4523a3b2e389414b7bd9" // Salvage
+		InputItems this
+		OutputItems
+		[
+			"21ede8ebffb14c5580e8c7ad149e335e" // Metal Scrap
+			"e73a23b102f24520a32ec0b2afaa6157" // Maple Plank
+		]
+		Effect "84347b13028340b8976033c08675d458" // Wrench
+	}
+]

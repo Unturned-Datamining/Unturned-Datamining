@@ -148,99 +148,63 @@ public class Items
         return byte.MaxValue;
     }
 
-    public List<InventorySearch> search(List<InventorySearch> search, EItemType type)
+    public void SearchContents(in PlayerInventorySearchParameters parameters)
     {
-        for (byte b = 0; b < items.Count; b++)
+        foreach (ItemJar item2 in items)
         {
-            ItemJar itemJar = items[b];
-            if (itemJar.item.amount > 0)
+            Item item = item2?.item;
+            if (item == null || item2 == parameters.ItemToIgnore || (item.amount < 1 && !parameters.IncludeEmpty) || (item.quality >= 100 && !parameters.IncludeMaxQuality))
             {
-                ItemAsset asset = itemJar.GetAsset();
-                if (asset != null && asset.type == type)
-                {
-                    search.Add(new InventorySearch(page, itemJar));
-                }
+                continue;
             }
-        }
-        return search;
-    }
-
-    [Obsolete]
-    public List<InventorySearch> search(List<InventorySearch> search, EItemType type, ushort caliber)
-    {
-        return this.search(search, type, caliber, allowZeroCaliber: true);
-    }
-
-    public List<InventorySearch> search(List<InventorySearch> search, EItemType type, ushort caliber, bool allowZeroCaliber)
-    {
-        for (byte b = 0; b < items.Count; b++)
-        {
-            ItemJar itemJar = items[b];
-            if (itemJar.item.amount > 0)
+            ItemAsset asset = item.GetAsset();
+            if (asset == null || (parameters.ExcludeFullAmount && item.amount >= asset.MaxAmount) || (parameters.ItemType.HasValue && asset.type != parameters.ItemType.Value) || (parameters.AssetRef.HasValue && !parameters.AssetRef.Value.IsReferenceTo(asset)))
             {
-                bool flag = false;
-                for (int i = 0; i < search.Count; i++)
+                continue;
+            }
+            if (parameters.CaliberId.HasValue || parameters.AnyCaliberIds != null)
+            {
+                if (!(asset is ItemCaliberAsset itemCaliberAsset))
                 {
-                    if (search[i].page == page && search[i].jar.x == itemJar.x && search[i].jar.y == itemJar.y)
+                    continue;
+                }
+                if (itemCaliberAsset.calibers == null || itemCaliberAsset.calibers.Length < 1)
+                {
+                    if (!parameters.IncludeUnspecifiedCaliber)
                     {
-                        flag = true;
-                        break;
+                        continue;
                     }
                 }
-                if (!flag)
+                else if (parameters.CaliberId.HasValue)
                 {
-                    ItemAsset asset = itemJar.GetAsset();
-                    if (asset != null && asset.type == type)
+                    if (!itemCaliberAsset.CalibersContainId(parameters.CaliberId.Value))
                     {
-                        if (((ItemCaliberAsset)asset).calibers.Length == 0)
-                        {
-                            if (allowZeroCaliber)
-                            {
-                                search.Add(new InventorySearch(page, itemJar));
-                            }
-                        }
-                        else
-                        {
-                            for (byte b2 = 0; b2 < ((ItemCaliberAsset)asset).calibers.Length; b2++)
-                            {
-                                if (((ItemCaliberAsset)asset).calibers[b2] == caliber)
-                                {
-                                    search.Add(new InventorySearch(page, itemJar));
-                                    break;
-                                }
-                            }
-                        }
+                        continue;
                     }
                 }
+                else if (!itemCaliberAsset.CalibersContainAnyOfIds(parameters.AnyCaliberIds))
+                {
+                    continue;
+                }
+            }
+            parameters.Results.Add(new PlayerInventorySearchResultV2(this, item2));
+            if (parameters.MaxResultsCount > 0 && parameters.Results.Count >= parameters.MaxResultsCount)
+            {
+                break;
             }
         }
-        return search;
     }
 
-    public List<InventorySearch> search(List<InventorySearch> search, ushort id, bool findEmpty, bool findHealthy)
+    internal void GatherUniqueItems(HashSet<ItemAsset> results)
     {
-        for (byte b = 0; b < items.Count; b++)
+        foreach (ItemJar item in items)
         {
-            ItemJar itemJar = items[b];
-            if ((findEmpty || itemJar.item.amount > 0) && (findHealthy || itemJar.item.quality < 100) && itemJar.item.id == id)
+            ItemAsset itemAsset = item?.GetAsset();
+            if (itemAsset != null)
             {
-                search.Add(new InventorySearch(page, itemJar));
+                results.Add(itemAsset);
             }
         }
-        return search;
-    }
-
-    public InventorySearch has(ushort id)
-    {
-        for (byte b = 0; b < items.Count; b++)
-        {
-            ItemJar itemJar = items[b];
-            if (itemJar.item.amount > 0 && itemJar.item.id == id)
-            {
-                return new InventorySearch(page, itemJar);
-            }
-        }
-        return null;
     }
 
     public void loadItem(byte x, byte y, byte rot, Item item)
@@ -575,5 +539,131 @@ public class Items
     {
         _page = newPage;
         items = new List<ItemJar>();
+    }
+
+    [Obsolete]
+    public List<InventorySearch> search(List<InventorySearch> search, EItemType type, ushort caliber)
+    {
+        return this.search(search, type, caliber, allowZeroCaliber: true);
+    }
+
+    /// <summary>
+    /// Please use SearchContents instead! To perform an equivalent search:
+    /// • Set ItemType to type.
+    /// • Set IncludeEmpty to false.
+    /// • Set IncludeMaxQuality to true.
+    /// </summary>
+    [Obsolete("Please use new search API instead! Refer to this method's comment for more information.")]
+    public List<InventorySearch> search(List<InventorySearch> search, EItemType type)
+    {
+        for (byte b = 0; b < items.Count; b++)
+        {
+            ItemJar itemJar = items[b];
+            if (itemJar.item.amount > 0)
+            {
+                ItemAsset asset = itemJar.GetAsset();
+                if (asset != null && asset.type == type)
+                {
+                    search.Add(new InventorySearch(page, itemJar));
+                }
+            }
+        }
+        return search;
+    }
+
+    /// <summary>
+    /// Please use SearchContents instead! To perform an equivalent search:
+    /// • Set ItemType to type.
+    /// • Set IncludeEmpty to false.
+    /// • Set IncludeMaxQuality to true.
+    /// • Set CaliberId to caliber.
+    /// • Set IncludeUnspecifiedCaliber to allowZeroCaliber.
+    /// </summary>
+    [Obsolete("Please use new search API instead! Refer to this method's comment for more information.")]
+    public List<InventorySearch> search(List<InventorySearch> search, EItemType type, ushort caliber, bool allowZeroCaliber)
+    {
+        for (byte b = 0; b < items.Count; b++)
+        {
+            ItemJar itemJar = items[b];
+            if (itemJar.item.amount > 0)
+            {
+                bool flag = false;
+                for (int i = 0; i < search.Count; i++)
+                {
+                    if (search[i].page == page && search[i].jar.x == itemJar.x && search[i].jar.y == itemJar.y)
+                    {
+                        flag = true;
+                        break;
+                    }
+                }
+                if (!flag)
+                {
+                    ItemAsset asset = itemJar.GetAsset();
+                    if (asset != null && asset.type == type)
+                    {
+                        if (((ItemCaliberAsset)asset).calibers.Length == 0)
+                        {
+                            if (allowZeroCaliber)
+                            {
+                                search.Add(new InventorySearch(page, itemJar));
+                            }
+                        }
+                        else
+                        {
+                            for (byte b2 = 0; b2 < ((ItemCaliberAsset)asset).calibers.Length; b2++)
+                            {
+                                if (((ItemCaliberAsset)asset).calibers[b2] == caliber)
+                                {
+                                    search.Add(new InventorySearch(page, itemJar));
+                                    break;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        return search;
+    }
+
+    /// <summary>
+    /// Please use SearchContents instead! To perform an equivalent search:
+    /// • Set AssetRef to id.
+    /// • Set IncludeEmpty to findEmpty.
+    /// • Set IncludeMaxQuality to findHealthy.
+    /// </summary>
+    [Obsolete("Please use new search API instead! Refer to this method's comment for more information.")]
+    public List<InventorySearch> search(List<InventorySearch> search, ushort id, bool findEmpty, bool findHealthy)
+    {
+        for (byte b = 0; b < items.Count; b++)
+        {
+            ItemJar itemJar = items[b];
+            if ((findEmpty || itemJar.item.amount > 0) && (findHealthy || itemJar.item.quality < 100) && itemJar.item.id == id)
+            {
+                search.Add(new InventorySearch(page, itemJar));
+            }
+        }
+        return search;
+    }
+
+    /// <summary>
+    /// Please use SearchContents instead! To perform an equivalent search:
+    /// • Set MaxResultsCount to 1.
+    /// • Set AssetRef to id.
+    /// • Set IncludeEmpty to false.
+    /// • Set IncludeMaxQuality to true.
+    /// </summary>
+    [Obsolete("Please use new search API instead! Refer to this method's comment for more information.")]
+    public InventorySearch has(ushort id)
+    {
+        for (byte b = 0; b < items.Count; b++)
+        {
+            ItemJar itemJar = items[b];
+            if (itemJar.item.amount > 0 && itemJar.item.id == id)
+            {
+                return new InventorySearch(page, itemJar);
+            }
+        }
+        return null;
     }
 }

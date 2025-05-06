@@ -218,15 +218,15 @@ public class UseableGun : Useable
 
     private EFiremode firemode;
 
-    private List<InventorySearch> sightSearch;
+    private static List<PlayerInventorySearchResultV2> sightSearchResults = new List<PlayerInventorySearchResultV2>();
 
-    private List<InventorySearch> tacticalSearch;
+    private static List<PlayerInventorySearchResultV2> tacticalSearchResults = new List<PlayerInventorySearchResultV2>();
 
-    private List<InventorySearch> gripSearch;
+    private static List<PlayerInventorySearchResultV2> gripSearchResults = new List<PlayerInventorySearchResultV2>();
 
-    private List<InventorySearch> barrelSearch;
+    private static List<PlayerInventorySearchResultV2> barrelSearchResults = new List<PlayerInventorySearchResultV2>();
 
-    private List<InventorySearch> magazineSearch;
+    private static List<PlayerInventorySearchResultV2> magazineSearchResults = new List<PlayerInventorySearchResultV2>();
 
     /// <summary>
     /// Factor e.g. 2 is a 2x multiplier.
@@ -616,6 +616,11 @@ public class UseableGun : Useable
             rocket.penetrateBuildables = equippedGunAsset.projectilePenetrateBuildables;
             rocket.explosionLaunchSpeed = equippedGunAsset.projectileExplosionLaunchSpeed;
             rocket.ragdollEffect = base.player.equipment.getUseableRagdollEffect();
+            Grenade component4 = transform.gameObject.GetComponent<Grenade>();
+            if (component4 != null)
+            {
+                component4.killer = rocket.killer;
+            }
         }
         UnityEngine.Object.Destroy(transform.gameObject, equippedGunAsset.projectileLifespan);
         lastShot = Time.realtimeSinceStartup;
@@ -2123,12 +2128,12 @@ public class UseableGun : Useable
             return;
         }
         Item item = null;
-        if (thirdAttachments.magazineAsset != null && (ammo > 0 || (!equippedGunAsset.shouldDeleteEmptyMagazines && !thirdAttachments.magazineAsset.deleteEmpty)))
+        if (thirdAttachments.magazineAsset != null && (ammo > 0 || (!equippedGunAsset.shouldDeleteEmptyMagazines && !thirdAttachments.magazineAsset.ShouldDeleteAtZeroAmount)))
         {
             byte newAmount = base.player.equipment.state[10];
             if (thirdAttachments.magazineAsset.shouldFillAfterDetach)
             {
-                newAmount = thirdAttachments.magazineAsset.amount;
+                newAmount = thirdAttachments.magazineAsset.MaxAmountAsByte;
             }
             item = new Item(thirdAttachments.magazineID, newAmount, base.player.equipment.state[17]);
         }
@@ -2468,7 +2473,7 @@ public class UseableGun : Useable
             if (firstAttachments.ejectHook != null && equippedGunAsset.action != EAction.String && equippedGunAsset.action != EAction.Rocket)
             {
                 EffectAsset effectAsset = equippedGunAsset.FindShellEffectAsset();
-                if (effectAsset != null)
+                if (effectAsset != null && effectAsset.effect != null)
                 {
                     Transform transform2 = EffectManager.InstantiateFromPool(effectAsset).transform;
                     transform2.name = "Emitter";
@@ -2483,7 +2488,7 @@ public class UseableGun : Useable
             if (firstAttachments.barrelHook != null)
             {
                 EffectAsset effectAsset2 = equippedGunAsset.FindMuzzleEffectAsset();
-                if (effectAsset2 != null)
+                if (effectAsset2 != null && effectAsset2.effect != null)
                 {
                     Transform transform3 = EffectManager.InstantiateFromPool(effectAsset2).transform;
                     transform3.name = "Emitter";
@@ -2553,7 +2558,7 @@ public class UseableGun : Useable
         if (thirdAttachments.ejectHook != null && equippedGunAsset.action != EAction.String && equippedGunAsset.action != EAction.Rocket)
         {
             EffectAsset effectAsset3 = equippedGunAsset.FindShellEffectAsset();
-            if (effectAsset3 != null)
+            if (effectAsset3 != null && effectAsset3.effect != null)
             {
                 Transform transform5 = EffectManager.InstantiateFromPool(effectAsset3).transform;
                 transform5.name = "Emitter";
@@ -2585,7 +2590,7 @@ public class UseableGun : Useable
         if (thirdAttachments.barrelHook != null)
         {
             EffectAsset effectAsset4 = equippedGunAsset.FindMuzzleEffectAsset();
-            if (effectAsset4 != null)
+            if (effectAsset4 != null && effectAsset4.effect != null)
             {
                 Transform transform6 = EffectManager.InstantiateFromPool(effectAsset4).transform;
                 transform6.name = "Emitter";
@@ -2600,7 +2605,7 @@ public class UseableGun : Useable
                     component2.cullingMask = -2049;
                 }
             }
-            if (base.channel.IsLocalPlayer && effectAsset4 != null)
+            if (base.channel.IsLocalPlayer && effectAsset4 != null && effectAsset4.effect != null)
             {
                 firstFakeLight = UnityEngine.Object.Instantiate(effectAsset4.effect).transform;
                 firstFakeLight.name = "Emitter";
@@ -3013,26 +3018,27 @@ public class UseableGun : Useable
                 }
                 if (InputEx.GetKeyDown(ControlsSettings.reload) && !isShooting && !isReloading && !isHammering && !isUnjamming && !isSprinting && !isAttaching && !isAiming && !needsRechamber)
                 {
-                    bool allowZeroCaliber = !equippedGunAsset.requiresNonZeroAttachmentCaliber;
-                    magazineSearch = base.player.inventory.search(EItemType.MAGAZINE, equippedGunAsset.magazineCalibers, allowZeroCaliber);
-                    if (magazineSearch.Count > 0)
+                    bool includeUnspecifiedCaliber = !equippedGunAsset.requiresNonZeroAttachmentCaliber;
+                    magazineSearchResults.Clear();
+                    base.player.inventory.FindAttachmentsByCaliber(magazineSearchResults, EItemType.MAGAZINE, equippedGunAsset.magazineCalibers, includeUnspecifiedCaliber);
+                    if (magazineSearchResults.Count > 0)
                     {
                         byte b = 0;
                         byte b2 = byte.MaxValue;
-                        for (byte b3 = 0; b3 < magazineSearch.Count; b3++)
+                        for (byte b3 = 0; b3 < magazineSearchResults.Count; b3++)
                         {
-                            if (magazineSearch[b3].jar.item.amount > b)
+                            if (magazineSearchResults[b3].Jar.item.amount > b)
                             {
-                                b = magazineSearch[b3].jar.item.amount;
+                                b = magazineSearchResults[b3].Jar.item.amount;
                                 b2 = b3;
                             }
                         }
                         if (b2 != byte.MaxValue)
                         {
-                            ItemAsset asset = magazineSearch[b2].GetAsset();
+                            ItemAsset asset = magazineSearchResults[b2].GetAsset();
                             if (asset != null)
                             {
-                                SendAttachMagazine.Invoke(GetNetId(), ENetReliability.Unreliable, magazineSearch[b2].page, magazineSearch[b2].jar.x, magazineSearch[b2].jar.y, asset.hash);
+                                SendAttachMagazine.Invoke(GetNetId(), ENetReliability.Unreliable, magazineSearchResults[b2].Page, magazineSearchResults[b2].Jar.x, magazineSearchResults[b2].Jar.y, asset.hash);
                             }
                         }
                     }
@@ -3703,7 +3709,7 @@ public class UseableGun : Useable
                     tracerEmitter = null;
                 }
                 currentTracerEffectAsset = effectAsset;
-                if (effectAsset != null)
+                if (effectAsset != null && effectAsset.effect != null)
                 {
                     Transform transform5 = EffectManager.InstantiateFromPool(effectAsset).transform;
                     transform5.name = "Tracer";
@@ -3927,13 +3933,14 @@ public class UseableGun : Useable
     {
         if (sightButton != null)
         {
-            bool allowZeroCaliber = !equippedGunAsset.requiresNonZeroAttachmentCaliber;
-            sightSearch = base.player.inventory.search(EItemType.SIGHT, equippedGunAsset.attachmentCalibers, allowZeroCaliber);
+            bool includeUnspecifiedCaliber = !equippedGunAsset.requiresNonZeroAttachmentCaliber;
+            sightSearchResults.Clear();
+            base.player.inventory.FindAttachmentsByCaliber(sightSearchResults, EItemType.SIGHT, equippedGunAsset.attachmentCalibers, includeUnspecifiedCaliber);
             if (sightJars != null)
             {
                 sightButton.RemoveChild(sightJars);
             }
-            sightJars = new SleekJars(100f, sightSearch);
+            sightJars = new SleekJars(100f, sightSearchResults);
             sightJars.SizeScale_X = 1f;
             sightJars.SizeScale_Y = 1f;
             sightJars.onClickedJar = onClickedSightJar;
@@ -3956,13 +3963,14 @@ public class UseableGun : Useable
         }
         if (tacticalButton != null)
         {
-            bool allowZeroCaliber2 = !equippedGunAsset.requiresNonZeroAttachmentCaliber;
-            tacticalSearch = base.player.inventory.search(EItemType.TACTICAL, equippedGunAsset.attachmentCalibers, allowZeroCaliber2);
+            bool includeUnspecifiedCaliber2 = !equippedGunAsset.requiresNonZeroAttachmentCaliber;
+            tacticalSearchResults.Clear();
+            base.player.inventory.FindAttachmentsByCaliber(tacticalSearchResults, EItemType.TACTICAL, equippedGunAsset.attachmentCalibers, includeUnspecifiedCaliber2);
             if (tacticalJars != null)
             {
                 tacticalButton.RemoveChild(tacticalJars);
             }
-            tacticalJars = new SleekJars(100f, tacticalSearch);
+            tacticalJars = new SleekJars(100f, tacticalSearchResults);
             tacticalJars.SizeScale_X = 1f;
             tacticalJars.SizeScale_Y = 1f;
             tacticalJars.onClickedJar = onClickedTacticalJar;
@@ -3985,13 +3993,14 @@ public class UseableGun : Useable
         }
         if (gripButton != null)
         {
-            bool allowZeroCaliber3 = !equippedGunAsset.requiresNonZeroAttachmentCaliber;
-            gripSearch = base.player.inventory.search(EItemType.GRIP, equippedGunAsset.attachmentCalibers, allowZeroCaliber3);
+            bool includeUnspecifiedCaliber3 = !equippedGunAsset.requiresNonZeroAttachmentCaliber;
+            gripSearchResults.Clear();
+            base.player.inventory.FindAttachmentsByCaliber(gripSearchResults, EItemType.GRIP, equippedGunAsset.attachmentCalibers, includeUnspecifiedCaliber3);
             if (gripJars != null)
             {
                 gripButton.RemoveChild(gripJars);
             }
-            gripJars = new SleekJars(100f, gripSearch);
+            gripJars = new SleekJars(100f, gripSearchResults);
             gripJars.SizeScale_X = 1f;
             gripJars.SizeScale_Y = 1f;
             gripJars.onClickedJar = onClickedGripJar;
@@ -4014,13 +4023,14 @@ public class UseableGun : Useable
         }
         if (barrelButton != null)
         {
-            bool allowZeroCaliber4 = !equippedGunAsset.requiresNonZeroAttachmentCaliber;
-            barrelSearch = base.player.inventory.search(EItemType.BARREL, equippedGunAsset.attachmentCalibers, allowZeroCaliber4);
+            bool includeUnspecifiedCaliber4 = !equippedGunAsset.requiresNonZeroAttachmentCaliber;
+            barrelSearchResults.Clear();
+            base.player.inventory.FindAttachmentsByCaliber(barrelSearchResults, EItemType.BARREL, equippedGunAsset.attachmentCalibers, includeUnspecifiedCaliber4);
             if (barrelJars != null)
             {
                 barrelButton.RemoveChild(barrelJars);
             }
-            barrelJars = new SleekJars(100f, barrelSearch);
+            barrelJars = new SleekJars(100f, barrelSearchResults);
             barrelJars.SizeScale_X = 1f;
             barrelJars.SizeScale_Y = 1f;
             barrelJars.onClickedJar = onClickedBarrelJar;
@@ -4056,13 +4066,14 @@ public class UseableGun : Useable
         }
         if (magazineButton != null)
         {
-            bool allowZeroCaliber5 = !equippedGunAsset.requiresNonZeroAttachmentCaliber;
-            magazineSearch = base.player.inventory.search(EItemType.MAGAZINE, equippedGunAsset.magazineCalibers, allowZeroCaliber5);
+            bool includeUnspecifiedCaliber5 = !equippedGunAsset.requiresNonZeroAttachmentCaliber;
+            magazineSearchResults.Clear();
+            base.player.inventory.FindAttachmentsByCaliber(magazineSearchResults, EItemType.MAGAZINE, equippedGunAsset.magazineCalibers, includeUnspecifiedCaliber5);
             if (magazineJars != null)
             {
                 magazineButton.RemoveChild(magazineJars);
             }
-            magazineJars = new SleekJars(100f, magazineSearch);
+            magazineJars = new SleekJars(100f, magazineSearchResults);
             magazineJars.SizeScale_X = 1f;
             magazineJars.SizeScale_Y = 1f;
             magazineJars.onClickedJar = onClickedMagazineJar;
@@ -4101,7 +4112,7 @@ public class UseableGun : Useable
     private void updateInfo()
     {
         ammoLabel.TextColor = ((ammo < equippedGunAsset.ammoPerShot) ? ESleekTint.BAD : ESleekTint.FONT);
-        ammoLabel.Text = localization.format("Ammo", ammo, (thirdAttachments.magazineAsset != null) ? thirdAttachments.magazineAsset.amount : 0);
+        ammoLabel.Text = localization.format("Ammo", ammo, (thirdAttachments.magazineAsset != null) ? thirdAttachments.magazineAsset.MaxAmount : 0);
         if (firstAmmoCounter != null)
         {
             firstAmmoCounter.text = ammo.ToString();
@@ -4225,46 +4236,46 @@ public class UseableGun : Useable
 
     private void onClickedSightJar(SleekJars jars, int index)
     {
-        ItemAsset asset = sightSearch[index].GetAsset();
+        ItemAsset asset = sightSearchResults[index].GetAsset();
         if (asset != null)
         {
-            SendAttachSight.Invoke(GetNetId(), ENetReliability.Unreliable, sightSearch[index].page, sightSearch[index].jar.x, sightSearch[index].jar.y, asset.hash);
+            SendAttachSight.Invoke(GetNetId(), ENetReliability.Unreliable, sightSearchResults[index].Page, sightSearchResults[index].Jar.x, sightSearchResults[index].Jar.y, asset.hash);
         }
     }
 
     private void onClickedTacticalJar(SleekJars jars, int index)
     {
-        ItemAsset asset = tacticalSearch[index].GetAsset();
+        ItemAsset asset = tacticalSearchResults[index].GetAsset();
         if (asset != null)
         {
-            SendAttachTactical.Invoke(GetNetId(), ENetReliability.Unreliable, tacticalSearch[index].page, tacticalSearch[index].jar.x, tacticalSearch[index].jar.y, asset.hash);
+            SendAttachTactical.Invoke(GetNetId(), ENetReliability.Unreliable, tacticalSearchResults[index].Page, tacticalSearchResults[index].Jar.x, tacticalSearchResults[index].Jar.y, asset.hash);
         }
     }
 
     private void onClickedGripJar(SleekJars jars, int index)
     {
-        ItemAsset asset = gripSearch[index].GetAsset();
+        ItemAsset asset = gripSearchResults[index].GetAsset();
         if (asset != null)
         {
-            SendAttachGrip.Invoke(GetNetId(), ENetReliability.Unreliable, gripSearch[index].page, gripSearch[index].jar.x, gripSearch[index].jar.y, asset.hash);
+            SendAttachGrip.Invoke(GetNetId(), ENetReliability.Unreliable, gripSearchResults[index].Page, gripSearchResults[index].Jar.x, gripSearchResults[index].Jar.y, asset.hash);
         }
     }
 
     private void onClickedBarrelJar(SleekJars jars, int index)
     {
-        ItemAsset asset = barrelSearch[index].GetAsset();
+        ItemAsset asset = barrelSearchResults[index].GetAsset();
         if (asset != null)
         {
-            SendAttachBarrel.Invoke(GetNetId(), ENetReliability.Unreliable, barrelSearch[index].page, barrelSearch[index].jar.x, barrelSearch[index].jar.y, asset.hash);
+            SendAttachBarrel.Invoke(GetNetId(), ENetReliability.Unreliable, barrelSearchResults[index].Page, barrelSearchResults[index].Jar.x, barrelSearchResults[index].Jar.y, asset.hash);
         }
     }
 
     private void onClickedMagazineJar(SleekJars jars, int index)
     {
-        ItemAsset asset = magazineSearch[index].GetAsset();
+        ItemAsset asset = magazineSearchResults[index].GetAsset();
         if (asset != null)
         {
-            SendAttachMagazine.Invoke(GetNetId(), ENetReliability.Unreliable, magazineSearch[index].page, magazineSearch[index].jar.x, magazineSearch[index].jar.y, asset.hash);
+            SendAttachMagazine.Invoke(GetNetId(), ENetReliability.Unreliable, magazineSearchResults[index].Page, magazineSearchResults[index].Jar.x, magazineSearchResults[index].Jar.y, asset.hash);
         }
     }
 

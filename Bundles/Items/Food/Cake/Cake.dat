@@ -1,4 +1,4 @@
-GUID 8e3bffce28494c3db54eee126b92fcdb
+﻿GUID 8e3bffce28494c3db54eee126b92fcdb
 Type Food
 Rarity Epic
 Useable Consumeable
@@ -11,16 +11,26 @@ Size_Z 0.45
 Food 100
 Water 25
 
-Blueprints 1
-Blueprint_0_Type Supply
-Blueprint_0_Supplies 3
-Blueprint_0_Supply_0_ID 344
-Blueprint_0_Supply_0_Amount 3
-Blueprint_0_Supply_1_ID 462
-Blueprint_0_Supply_1_Amount 1
-Blueprint_0_Supply_2_ID 470
-Blueprint_0_Supply_2_Amount 1
-Blueprint_0_Level 3
-Blueprint_0_Skill Cook
-Blueprint_0_Build 27
+Blueprints
+[
+	{
+		CategoryTag "d089feb7e43f40c5a7dfcefc36998cfb" // Supplies
+		InputItems
+		[
+			"375ee1fb16a848ff8bc5be5d4fafb4fc x 3" // Wheat
+			"72ca2f3c6d2f41dab406d09c1253a3da" // Milk Box
+			"67d687f8e6974d0290343d21294940f9" // Eggs
+		]
+		OutputItems this
+		Skill Cook
+		Skill_Level 3
+		RequiresNearbyCraftingTags
+		[
+			"20f30322bbcc4b01a4f116d22b24c21a" // Heat Source
+			"d2cc65b749e5477f95103601df89cdbc" // Oven
+		]
+		Effect "84347b13028340b8976033c08675d458" // Wrench
+	}
+]
+
 ConsumeAudioClip Sounds/EatCrunchy.mp3

@@ -1,4 +1,4 @@
-GUID 7384ac31f76941798bb2eae6c78e71b5
+﻿GUID 7384ac31f76941798bb2eae6c78e71b5
 Type Structure
 Rarity Epic
 Useable Structure
@@ -14,14 +14,22 @@ Range 8
 
 Explosion 36
 
-Blueprints 1
-Blueprint_0_Type Structure
-Blueprint_0_Supplies 1
-Blueprint_0_Supply_0_ID 68
-Blueprint_0_Supply_0_Amount 5
-Blueprint_0_Level 2
-Blueprint_0_Skill Craft
-Blueprint_0_Build 27
+Blueprints
+[
+	{
+		CategoryTag "71d9e182c18b4aad8e87778e4f621995" // Structures
+		InputItems "7f06b16642724683bd61584a52fde981 x 5" // Metal Sheet
+		OutputItems this
+		Skill Craft
+		Skill_Level 2
+		RequiresNearbyCraftingTags
+		[
+			"7b82c125a5a54984b8bb26576b59e977" // Workbench
+		]
+		Effect "84347b13028340b8976033c08675d458" // Wrench
+	}
+]
+
 PlacementAudioClip Sounds/MetalPlacement.mp3
 
 Has_Clip_Prefab false

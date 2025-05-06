@@ -1090,7 +1090,8 @@ public class PlayerLook : PlayerCaller
             }
             else
             {
-                instance.fieldOfView = Mathf.Lerp(instance.fieldOfView, (mainCameraZoomFactor > 0f) ? (zoomBaseFieldOfView / mainCameraZoomFactor) : (OptionsSettings.DesiredVerticalFieldOfView + (float)((base.player.stance.stance == EPlayerStance.SPRINT) ? 10 : 0)), 8f * Time.deltaTime);
+                float num4 = ((base.player.stance.stance == EPlayerStance.SPRINT) ? (OptionsSettings.sprintFovBoostIntensity * 10f) : 0f);
+                instance.fieldOfView = Mathf.Lerp(instance.fieldOfView, (mainCameraZoomFactor > 0f) ? (zoomBaseFieldOfView / mainCameraZoomFactor) : (OptionsSettings.DesiredVerticalFieldOfView + num4), 8f * Time.deltaTime);
             }
             if (isScopeActive && scopeCamera != null && scopeCameraZoomFactor > 0f)
             {
@@ -1104,7 +1105,7 @@ public class PlayerLook : PlayerCaller
                 {
                     if (!base.player.workzone.isBuilding || InputEx.GetKey(ControlsSettings.secondary))
                     {
-                        float num4 = 1f;
+                        float num5 = 1f;
                         switch (ControlsSettings.sensitivityScalingMode)
                         {
                         case ESensitivityScalingMode.ProjectionRatio:
@@ -1112,28 +1113,28 @@ public class PlayerLook : PlayerCaller
                             float f = MathF.PI / 180f * instance.fieldOfView * 0.5f;
                             float f2 = MathF.PI / 180f * OptionsSettings.DesiredVerticalFieldOfView * 0.5f;
                             float projectionRatioCoefficient = ControlsSettings.projectionRatioCoefficient;
-                            num4 = Mathf.Atan(projectionRatioCoefficient * Mathf.Tan(f)) / Mathf.Atan(projectionRatioCoefficient * Mathf.Tan(f2));
+                            num5 = Mathf.Atan(projectionRatioCoefficient * Mathf.Tan(f)) / Mathf.Atan(projectionRatioCoefficient * Mathf.Tan(f2));
                             break;
                         }
                         case ESensitivityScalingMode.ZoomFactor:
                         case ESensitivityScalingMode.Legacy:
                         {
-                            float num5 = OptionsSettings.DesiredVerticalFieldOfView / instance.fieldOfView;
-                            if (num5 > 0f)
+                            float num6 = OptionsSettings.DesiredVerticalFieldOfView / instance.fieldOfView;
+                            if (num6 > 0f)
                             {
-                                num4 = 1f / num5;
+                                num5 = 1f / num6;
                             }
                             break;
                         }
                         }
-                        _orbitYaw += ControlsSettings.mouseAimSensitivity * num4 * Input.GetAxis("mouse_x") * yawInputMultiplier;
+                        _orbitYaw += ControlsSettings.mouseAimSensitivity * num5 * Input.GetAxis("mouse_x") * yawInputMultiplier;
                         if (ControlsSettings.invert)
                         {
-                            _orbitPitch += ControlsSettings.mouseAimSensitivity * num4 * Input.GetAxis("mouse_y") * pitchInputMultiplier;
+                            _orbitPitch += ControlsSettings.mouseAimSensitivity * num5 * Input.GetAxis("mouse_y") * pitchInputMultiplier;
                         }
                         else
                         {
-                            _orbitPitch -= ControlsSettings.mouseAimSensitivity * num4 * Input.GetAxis("mouse_y") * pitchInputMultiplier;
+                            _orbitPitch -= ControlsSettings.mouseAimSensitivity * num5 * Input.GetAxis("mouse_y") * pitchInputMultiplier;
                         }
                     }
                 }
@@ -1164,16 +1165,16 @@ public class PlayerLook : PlayerCaller
                     {
                         _look_y *= -1f;
                     }
-                    float num6 = 1f;
+                    float num7 = 1f;
                     switch (ControlsSettings.sensitivityScalingMode)
                     {
                     case ESensitivityScalingMode.ProjectionRatio:
                     {
-                        float num7 = ((shouldUseZoomFactorForSensitivity && isScopeActive && perspective == EPlayerPerspective.FIRST && scopeCameraZoomFactor > 0f) ? scopeCamera.fieldOfView : instance.fieldOfView);
-                        float f3 = MathF.PI / 180f * num7 * 0.5f;
+                        float num8 = ((shouldUseZoomFactorForSensitivity && isScopeActive && perspective == EPlayerPerspective.FIRST && scopeCameraZoomFactor > 0f) ? scopeCamera.fieldOfView : instance.fieldOfView);
+                        float f3 = MathF.PI / 180f * num8 * 0.5f;
                         float f4 = MathF.PI / 180f * OptionsSettings.DesiredVerticalFieldOfView * 0.5f;
                         float projectionRatioCoefficient2 = ControlsSettings.projectionRatioCoefficient;
-                        num6 = Mathf.Atan(projectionRatioCoefficient2 * Mathf.Tan(f3)) / Mathf.Atan(projectionRatioCoefficient2 * Mathf.Tan(f4));
+                        num7 = Mathf.Atan(projectionRatioCoefficient2 * Mathf.Tan(f3)) / Mathf.Atan(projectionRatioCoefficient2 * Mathf.Tan(f4));
                         break;
                     }
                     case ESensitivityScalingMode.ZoomFactor:
@@ -1182,11 +1183,11 @@ public class PlayerLook : PlayerCaller
                         {
                             if (isScopeActive && perspective == EPlayerPerspective.FIRST && scopeCameraZoomFactor > 0f)
                             {
-                                num6 = 1f / scopeCameraZoomFactor;
+                                num7 = 1f / scopeCameraZoomFactor;
                             }
                             else if (mainCameraZoomFactor > 0f)
                             {
-                                num6 = 1f / mainCameraZoomFactor;
+                                num7 = 1f / mainCameraZoomFactor;
                             }
                         }
                         break;
@@ -1198,7 +1199,7 @@ public class PlayerLook : PlayerCaller
                     }
                     else if (base.player.movement.getVehicle() == null || !base.player.movement.getVehicle().asset.hasLockMouse || !base.player.movement.getVehicle().isDriver)
                     {
-                        _yaw += ControlsSettings.mouseAimSensitivity * num6 * Input.GetAxis("mouse_x") * yawInputMultiplier;
+                        _yaw += ControlsSettings.mouseAimSensitivity * num7 * Input.GetAxis("mouse_x") * yawInputMultiplier;
                     }
                     if (base.player.movement.getVehicle() != null && perspective == EPlayerPerspective.THIRD)
                     {
@@ -1215,11 +1216,11 @@ public class PlayerLook : PlayerCaller
                     {
                         if (ControlsSettings.invert)
                         {
-                            _pitch += ControlsSettings.mouseAimSensitivity * num6 * Input.GetAxis("mouse_y") * pitchInputMultiplier;
+                            _pitch += ControlsSettings.mouseAimSensitivity * num7 * Input.GetAxis("mouse_y") * pitchInputMultiplier;
                         }
                         else
                         {
-                            _pitch -= ControlsSettings.mouseAimSensitivity * num6 * Input.GetAxis("mouse_y") * pitchInputMultiplier;
+                            _pitch -= ControlsSettings.mouseAimSensitivity * num7 * Input.GetAxis("mouse_y") * pitchInputMultiplier;
                         }
                     }
                 }
@@ -1240,14 +1241,14 @@ public class PlayerLook : PlayerCaller
             {
                 _orbitPitch = 0f;
             }
-            float num8 = Mathf.Lerp(recoil_x, 0f, 4f * Time.deltaTime);
-            float num9 = num8 - recoil_x;
-            recoil_x = num8;
-            float num10 = Mathf.Lerp(recoil_y, 0f, 4f * Time.deltaTime);
-            float num11 = num10 - recoil_y;
-            recoil_y = num10;
-            _yaw += num9;
-            _pitch -= num11;
+            float num9 = Mathf.Lerp(recoil_x, 0f, 4f * Time.deltaTime);
+            float num10 = num9 - recoil_x;
+            recoil_x = num9;
+            float num11 = Mathf.Lerp(recoil_y, 0f, 4f * Time.deltaTime);
+            float num12 = num11 - recoil_y;
+            recoil_y = num11;
+            _yaw += num10;
+            _pitch -= num12;
             flinchLocalRotation = Quaternion.Lerp(flinchLocalRotation, Quaternion.identity, 4f * Time.deltaTime);
             smoothedExplosionLocalRotation = Quaternion.Lerp(smoothedExplosionLocalRotation, targetExplosionLocalRotation.currentRotation, explosionSmoothingSpeed * Time.deltaTime);
             targetExplosionLocalRotation.Update(Time.deltaTime);
@@ -1368,33 +1369,33 @@ public class PlayerLook : PlayerCaller
                     {
                         origin2 = transform.position;
                     }
-                    float num12 = ((base.player.movement.getVehicle().asset.engine != 0) ? base.player.movement.getVehicle().AnimatedVelocityInput : base.player.movement.getVehicle().AnimatedForwardVelocity);
-                    float length2 = base.player.movement.getVehicle().asset.camFollowDistance + num12 * 0.1f;
+                    float num13 = ((base.player.movement.getVehicle().asset.engine != 0) ? base.player.movement.getVehicle().AnimatedVelocityInput : base.player.movement.getVehicle().AnimatedForwardVelocity);
+                    float length2 = base.player.movement.getVehicle().asset.camFollowDistance + num13 * 0.1f;
                     Vector3 direction2 = -instance.transform.forward;
                     instance.transform.position = sphereCastCamera(origin2, direction2, length2, RayMasks.BLOCK_VEHICLECAM);
                 }
                 else if (base.player.stance.stance == EPlayerStance.DRIVING)
                 {
-                    float num13 = base.player.movement.getVehicle().asset.camDriverOffset + base.player.movement.getVehicle().asset.camPassengerOffset;
+                    float num14 = base.player.movement.getVehicle().asset.camDriverOffset + base.player.movement.getVehicle().asset.camPassengerOffset;
                     if (yaw > 0f)
                     {
-                        instance.transform.localPosition = Vector3.Lerp(instance.transform.localPosition, Vector3.up * (heightLook + num13) - Vector3.left * yaw / 360f, 4f * Time.deltaTime);
+                        instance.transform.localPosition = Vector3.Lerp(instance.transform.localPosition, Vector3.up * (heightLook + num14) - Vector3.left * yaw / 360f, 4f * Time.deltaTime);
                     }
                     else
                     {
-                        instance.transform.localPosition = Vector3.Lerp(instance.transform.localPosition, Vector3.up * (heightLook + num13) - Vector3.left * yaw / 240f, 4f * Time.deltaTime);
+                        instance.transform.localPosition = Vector3.Lerp(instance.transform.localPosition, Vector3.up * (heightLook + num14) - Vector3.left * yaw / 240f, 4f * Time.deltaTime);
                     }
                 }
                 else if (perspective == EPlayerPerspective.FIRST)
                 {
-                    float num14;
+                    float num15;
                     if (base.player.stance.stance == EPlayerStance.SITTING && base.player.movement.getVehicle() != null)
                     {
-                        num14 = base.player.movement.getVehicle().asset.camPassengerOffset;
+                        num15 = base.player.movement.getVehicle().asset.camPassengerOffset;
                     }
                     else
                     {
-                        num14 = 0f;
+                        num15 = 0f;
                         Vector3 origin3 = base.player.first.position + new Vector3(0f, HEIGHT_LOOK_PRONE - 0.25f, 0f);
                         Vector3 up = Vector3.up;
                         float maxDistance = PlayerMovement.HEIGHT_STAND - HEIGHT_LOOK_PRONE - 0.25f;
@@ -1404,7 +1405,7 @@ public class PlayerLook : PlayerCaller
                             eyes = Mathf.Min(eyes, b);
                         }
                     }
-                    instance.transform.localPosition = new Vector3(0f, eyes + num14, 0f);
+                    instance.transform.localPosition = new Vector3(0f, eyes + num15, 0f);
                 }
                 else
                 {

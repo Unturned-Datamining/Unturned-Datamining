@@ -545,7 +545,7 @@ public class PlayerSkills : PlayerCaller
             _experience -= hordePurchaseVolume.cost;
             SendExperience.Invoke(GetNetId(), ENetReliability.Reliable, base.channel.GetOwnerTransportConnection(), experience);
             ItemAsset itemAsset = Assets.find(EAssetType.ITEM, hordePurchaseVolume.id) as ItemAsset;
-            if (itemAsset.type == EItemType.GUN && base.player.inventory.has(hordePurchaseVolume.id) != null)
+            if (itemAsset.type == EItemType.GUN && base.player.inventory.HasItemByAsset(itemAsset))
             {
                 base.player.inventory.tryAddItem(new Item(((ItemGunAsset)itemAsset).GetDefaultMagazineLegacyId(), EItemOrigin.ADMIN), auto: true);
             }

@@ -1,4 +1,4 @@
-GUID e7e57754760b4dcb9be212d8c9ed9280
+﻿GUID e7e57754760b4dcb9be212d8c9ed9280
 Type Cloud
 Rarity Uncommon
 Useable Cloud
@@ -11,8 +11,30 @@ Use_Auto_Icon_Measurements false
 
 Gravity 0.25
 
-Blueprints 1
-Blueprint_0_Type Apparel
-Blueprint_0_Supply_0_ID 1125
-Blueprint_0_Product 66
-Blueprint_0_Build 32
+Blueprints
+[
+	{
+		Name Salvage
+		CategoryTag "7ed29f9101ae4523a3b2e389414b7bd9" // Salvage
+		InputItems this
+		OutputItems "14901f32cd3240179fd6124324cc27e5" // Cloth
+		Effect "7eceb9f7751d4634b572c8e236355104" // Rip
+	}
+	{
+		CategoryTag "ad1804b6945145f3b308738b0b8ea447" // Tool
+		InputItems
+		[
+			{
+				ID "7f346e50d65c4adda99d0ff42157b4a5" // White Umbrella
+				Critical true
+			}
+			"4477326c7a1c4ff3bbfe5943e724f73a" // Purple Flare
+		]
+		RequiresNearbyCraftingTags
+		[
+			"8e86b740dafc46f7bf98c5040c9b223e" // DyeVat
+		]
+		OutputItems this
+		Effect "61edeaee95b742a3a0b589f769261cdb" // DyeVatCraftingEffect
+	}
+]

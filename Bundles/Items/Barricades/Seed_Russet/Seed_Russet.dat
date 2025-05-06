@@ -1,4 +1,4 @@
-GUID ecd403dc06ea4e5bbf3d3416c9bba045
+﻿GUID ecd403dc06ea4e5bbf3d3416c9bba045
 Type Farm
 Useable Barricade
 Build Farm
@@ -19,9 +19,15 @@ Grow 273
 Explosion 43
 Vulnerable
 
-Blueprints 1
-Blueprint_0_Type Utilities
-Blueprint_0_Supply_0_ID 273
-Blueprint_0_Build 27
+Blueprints
+[
+	{
+		CategoryTag "bfac6026305f4737a95fd275ebff65a6" // Utilities
+		InputItems "543567f329764dbd970c27cf0c42b6d4" // Raw Russet Berries
+		OutputItems this
+		Effect "84347b13028340b8976033c08675d458" // Wrench
+	}
+]
+
 PlacementAudioClip Sounds/FoliagePlacement.mp3
 Has_Clip_Prefab false

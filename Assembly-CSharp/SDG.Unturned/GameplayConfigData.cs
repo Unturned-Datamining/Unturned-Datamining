@@ -78,6 +78,13 @@ public class GameplayConfigData
     /// </summary>
     public bool Enable_Explosion_Camera_Shake;
 
+    /// <summary>
+    /// If true, crafting blueprints can require nearby workstations. Defaults to true.
+    /// If false, only the backwards-compatibility "Heat Source" vanilla crafting tag can be required. This
+    /// functions identically to the cooking-skill-also-requires-heat behavior from before.
+    /// </summary>
+    public bool Enable_Workstation_Requirements;
+
     internal const uint MAX_TIMER_EXIT = 60u;
 
     public uint Timer_Exit;
@@ -160,6 +167,7 @@ public class GameplayConfigData
         Allow_Freeform_Buildables_On_Vehicles = true;
         Enable_Damage_Flinch = true;
         Enable_Explosion_Camera_Shake = true;
+        Enable_Workstation_Requirements = true;
     }
 
     public void InitSingleplayerDefaults()

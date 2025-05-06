@@ -1,4 +1,4 @@
-GUID 7111694330cc403cb76f3e9344ac9001
+﻿GUID 7111694330cc403cb76f3e9344ac9001
 Type Vehicle
 Rarity Epic
 ID 142
@@ -36,19 +36,19 @@ Explosion_Force_Multiplier 2
 
 PaintableSections
 [
-    {
-        Path Model_0
-        MaterialIndex 0
-    }
-    {
-        Path Model_1
-        MaterialIndex 0
-    }
+	{
+		Path Model_0
+		MaterialIndex 0
+	}
+	{
+		Path Model_1
+		MaterialIndex 0
+	}
 ]
 
 DefaultPaintColors
 [
-    #1e1e1e
+	#1e1e1e
 ]
 
 WheelConfigurations

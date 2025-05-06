@@ -84,18 +84,18 @@ public class ItemFarmAsset : ItemBarricadeAsset
         }
     }
 
-    public override void PopulateAsset(Bundle bundle, DatDictionary data, Local localization)
+    public override void PopulateAsset(in PopulateAssetParameters p)
     {
-        base.PopulateAsset(bundle, data, localization);
-        _growth = data.ParseUInt32("Growth");
-        _grow = data.ParseUInt16("Grow", 0);
-        growSpawnTableGuid = data.ParseGuid("Grow_SpawnTable");
-        ignoreSoilRestrictions = data.ContainsKey("Ignore_Soil_Restrictions");
-        canFertilize = data.ParseBool("Allow_Fertilizer", defaultValue: true);
-        harvestRewardExperience = data.ParseUInt32("Harvest_Reward_Experience", 1u);
-        isAffectedByAgricultureSkill = data.ParseBool("Affected_By_Agriculture_Skill", defaultValue: true);
-        shouldRainAffectGrowth = data.ParseBool("Rain_Affects_Growth", defaultValue: true);
-        harvestRewardsList.Parse(data, localization, this, "Harvest_Rewards", "Harvest_Reward_");
+        base.PopulateAsset(in p);
+        _growth = p.data.ParseUInt32("Growth");
+        _grow = p.data.ParseUInt16("Grow", 0);
+        growSpawnTableGuid = p.data.ParseGuid("Grow_SpawnTable");
+        ignoreSoilRestrictions = p.data.ContainsKey("Ignore_Soil_Restrictions");
+        canFertilize = p.data.ParseBool("Allow_Fertilizer", defaultValue: true);
+        harvestRewardExperience = p.data.ParseUInt32("Harvest_Reward_Experience", 1u);
+        isAffectedByAgricultureSkill = p.data.ParseBool("Affected_By_Agriculture_Skill", defaultValue: true);
+        shouldRainAffectGrowth = p.data.ParseBool("Rain_Affects_Growth", defaultValue: true);
+        harvestRewardsList.Parse(p.data, p.localization, this, "Harvest_Rewards", "Harvest_Reward_");
     }
 
     internal override void BuildCargoData(CargoBuilder builder)

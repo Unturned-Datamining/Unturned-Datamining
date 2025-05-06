@@ -1,4 +1,4 @@
-GUID 6582d36942ac40b88f0081fea872d2d2
+﻿GUID 6582d36942ac40b88f0081fea872d2d2
 Type Farm
 Useable Barricade
 Build Farm
@@ -19,9 +19,15 @@ Grow 275
 Explosion 43
 Vulnerable
 
-Blueprints 1
-Blueprint_0_Type Utilities
-Blueprint_0_Supply_0_ID 275
-Blueprint_0_Build 27
+Blueprints
+[
+	{
+		CategoryTag "bfac6026305f4737a95fd275ebff65a6" // Utilities
+		InputItems "f892a49670c145db940a92261d6f91bf" // Raw Vermillion Berries
+		OutputItems this
+		Effect "84347b13028340b8976033c08675d458" // Wrench
+	}
+]
+
 PlacementAudioClip Sounds/FoliagePlacement.mp3
 Has_Clip_Prefab false

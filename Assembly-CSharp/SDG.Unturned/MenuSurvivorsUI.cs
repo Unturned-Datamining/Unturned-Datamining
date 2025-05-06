@@ -24,7 +24,7 @@ public class MenuSurvivorsUI
 
     private MenuSurvivorsGroupUI groupUI;
 
-    private MenuSurvivorsClothingUI clothingUI;
+    internal static MenuSurvivorsClothingUI clothingUI;
 
     public static void open()
     {

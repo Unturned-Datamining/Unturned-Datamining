@@ -1,4 +1,4 @@
-GUID b2ad25fcad7a4f109e6dcc76a4d285de
+﻿GUID b2ad25fcad7a4f109e6dcc76a4d285de
 Type Medical
 Rarity Uncommon
 Useable Consumeable
@@ -12,8 +12,12 @@ Aid
 Bones_Modifier Heal
 Health 10
 
-Blueprints 1
-Blueprint_0_Type Supply
-Blueprint_0_Supply_0_ID 67
-Blueprint_0_Supply_0_Amount 2
-Blueprint_0_Build 27
+Blueprints
+[
+	{
+		CategoryTag "d089feb7e43f40c5a7dfcefc36998cfb" // Supplies
+		InputItems "21ede8ebffb14c5580e8c7ad149e335e x 2" // Metal Scrap
+		OutputItems this
+		Effect "84347b13028340b8976033c08675d458" // Wrench
+	}
+]

@@ -1,28 +1,28 @@
-"Metadata"
+﻿Metadata
 {
-	"GUID" "b4ffe0d7b8ed4ff2b4c302c489108b02"
-	"Type" "SDG.Unturned.LandscapeMaterialAsset, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null"
+	GUID b4ffe0d7b8ed4ff2b4c302c489108b02
+	Type SDG.Unturned.LandscapeMaterialAsset, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
 }
-"Asset"
+Asset
 {
-	"ID" "0"
-	"Texture"
+	ID 0
+	Texture
 	{
-		"Name" "core.masterbundle"
-		"Path" "Terrain/Materials/Russia/Leaves_00.png"
+		Name core.masterbundle
+		Path Terrain/Materials/Russia/Leaves_00.png
 	}
-	"Mask"
+	Mask
 	{
-		"Name" ""
-		"Path" ""
+		Name
+		Path
 	}
-	"Physics_Material" "Russia_Leaves"
-	"Foliage"
+	Physics_Material Russia_Leaves
+	Foliage
 	{
-		"GUID" "7378d43d58b84e5885867b52f4dbd9ae"
+		GUID 7378d43d58b84e5885867b52f4dbd9ae
 	}
-	"Christmas_Redirect"
+	Christmas_Redirect
 	{
-		"GUID" "e25f0351181f4ad1a9c0dc31d2fedade"
+		GUID e25f0351181f4ad1a9c0dc31d2fedade
 	}
 }

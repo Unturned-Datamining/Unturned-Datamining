@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
 
@@ -23,6 +24,13 @@ public class MasterBundleConfig
     internal AssetBundleCreateRequest assetBundleCreateRequest;
 
     private double loadStartTime;
+
+    /// <summary>
+    /// On the surface level this is rather silly.
+    /// The primary reason for it is reducing garbage created by repeated calls to formatAssetPath.
+    /// Theoretically we could use this for caching redirected paths if/when that feature is added.
+    /// </summary>
+    private Dictionary<string, string> formattedPaths = new Dictionary<string, string>();
 
     /// <summary>
     /// If true, the associated asset bundle couldn't be loaded and was instead copied from another config.
@@ -69,7 +77,7 @@ public class MasterBundleConfig
     /// </summary>
     public byte[] hash { get; protected set; }
 
-    public MasterBundleConfig(string absoluteDirectory, DatDictionary data, AssetOrigin origin)
+    public MasterBundleConfig(string absoluteDirectory, IDatDictionary data, AssetOrigin origin)
     {
         directoryPath = absoluteDirectory;
         this.origin = origin;
@@ -144,6 +152,20 @@ public class MasterBundleConfig
             return assetPrefix + assetPath;
         }
         return assetPrefix + "/" + assetPath;
+    }
+
+    /// <summary>
+    /// When to use this instead of formatAssetPath? MasterBundleReference and AudioReference repeatedly invoke
+    /// this string formatting (e.g., footstep sounds) and benefit from not generating that garbage.
+    /// </summary>
+    public string FormatAssetPathAndCache(string assetPath)
+    {
+        if (!formattedPaths.TryGetValue(assetPath, out var value))
+        {
+            value = formatAssetPath(assetPath);
+            formattedPaths[assetPath] = value;
+        }
+        return value;
     }
 
     internal void CopyAssetBundleFromDuplicateConfig(MasterBundleConfig otherConfig)

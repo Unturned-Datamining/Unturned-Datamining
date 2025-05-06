@@ -1,4 +1,4 @@
-GUID e79bf4b498344051b59732ccc0fcf2b9
+﻿GUID e79bf4b498344051b59732ccc0fcf2b9
 Type Melee
 Useable Melee
 Slot Secondary
@@ -36,26 +36,40 @@ Vehicle_Damage 30
 Resource_Damage 30
 Object_Damage 30
 
-Durability 0.25
+Durability 0.2
 
-Blueprints 3
-Blueprint_0_Type Tool
-Blueprint_0_Supplies 2
-Blueprint_0_Supply_0_ID 71
-Blueprint_0_Supply_0_Amount 4
-Blueprint_0_Supply_1_ID 105
-Blueprint_0_Supply_1_Amount 1
-Blueprint_0_Level 1
-Blueprint_0_Skill Craft
-Blueprint_0_Build 27
-Blueprint_1_Type Repair
-Blueprint_1_Supply_0_ID 71
-Blueprint_1_Supply_0_Amount 2
-Blueprint_1_Build 27
-Blueprint_2_Type Tool
-Blueprint_2_Supplies 1
-Blueprint_2_Supply_0_ID 487
-Blueprint_2_Product 71
-Blueprint_2_Products 1
-Blueprint_2_Build 27
+Blueprints
+[
+	{
+		CategoryTag "ad1804b6945145f3b308738b0b8ea447" // Tools
+		InputItems
+		[
+			"4b68587f5cad45eaab5e07ed0e6fd3b3 x 4" // Nails
+			"bdb0a99f009c42bf92ef8764095f4bae" // Baseball Bat
+		]
+		OutputItems this
+		Skill Craft
+		Skill_Level 1
+		Effect "84347b13028340b8976033c08675d458" // Wrench
+	}
+	{
+		Name Repair
+		CategoryTag "732ee6ffeb18418985cf4f9fde33dd11" // Repair
+		Operation RepairTargetItem
+		InputItems "4b68587f5cad45eaab5e07ed0e6fd3b3 x 2" // Nails
+		RequiresNearbyCraftingTags
+		[
+			"7b82c125a5a54984b8bb26576b59e977" // Workbench
+		]
+		Effect "84347b13028340b8976033c08675d458" // Wrench
+	}
+	{
+		Name Salvage
+		CategoryTag "7ed29f9101ae4523a3b2e389414b7bd9" // Salvage
+		InputItems this
+		OutputItems "4b68587f5cad45eaab5e07ed0e6fd3b3" // Nails
+		Effect "84347b13028340b8976033c08675d458" // Wrench
+	}
+]
+
 AttackAudioClip Sounds/MeleeAttack_01.mp3

@@ -17,12 +17,12 @@ public class SleekJars : SleekWrapper
         }
     }
 
-    public SleekJars(float radius, List<InventorySearch> search, float startAngle = 0f)
+    public SleekJars(float radius, List<PlayerInventorySearchResultV2> search, float startAngle = 0f)
     {
         float num = MathF.PI * 2f / (float)search.Count;
         for (int i = 0; i < search.Count; i++)
         {
-            ItemJar jar = search[i].jar;
+            ItemJar jar = search[i].Jar;
             if (jar.GetAsset() != null)
             {
                 SleekItem sleekItem = new SleekItem(jar);

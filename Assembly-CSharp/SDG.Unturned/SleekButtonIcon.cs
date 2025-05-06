@@ -55,6 +55,29 @@ public class SleekButtonIcon : SleekWrapper
         }
     }
 
+    public TextAnchor TextAlignment
+    {
+        get
+        {
+            if (label == null)
+            {
+                return button.TextAlignment;
+            }
+            return label.TextAlignment;
+        }
+        set
+        {
+            if (label != null)
+            {
+                label.TextAlignment = value;
+            }
+            else
+            {
+                button.TextAlignment = value;
+            }
+        }
+    }
+
     public string tooltip
     {
         get

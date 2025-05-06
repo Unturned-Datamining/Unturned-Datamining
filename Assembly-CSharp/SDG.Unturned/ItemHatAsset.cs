@@ -10,12 +10,12 @@ public class ItemHatAsset : ItemGearAsset
 
     internal override GameObject ClothingPrefab => hat;
 
-    public override void PopulateAsset(Bundle bundle, DatDictionary data, Local localization)
+    public override void PopulateAsset(in PopulateAssetParameters p)
     {
-        base.PopulateAsset(bundle, data, localization);
+        base.PopulateAsset(in p);
         if (!Dedicator.IsDedicatedServer)
         {
-            _hat = loadRequiredAsset<GameObject>(bundle, "Hat");
+            _hat = loadRequiredAsset<GameObject>(p.bundle, "Hat");
             if ((bool)Assets.shouldValidateAssets)
             {
                 AssetValidation.ValidateLayersEqual(this, _hat, 10);

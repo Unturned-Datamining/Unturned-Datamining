@@ -89,15 +89,15 @@ public class UseableHousingPlanner : Useable
 
     private ISleekLabel selectedItemQuantityLabel;
 
-    private List<InventorySearch> itemSearch;
+    private List<PlayerInventorySearchResultV2> itemSearchResults;
 
-    private List<InventorySearch> floors;
+    private List<PlayerInventorySearchResultV2> floors;
 
-    private List<InventorySearch> roofs;
+    private List<PlayerInventorySearchResultV2> roofs;
 
-    private List<InventorySearch> walls;
+    private List<PlayerInventorySearchResultV2> walls;
 
-    private List<InventorySearch> pillars;
+    private List<PlayerInventorySearchResultV2> pillars;
 
     private Dictionary<ushort, int> itemAmounts;
 
@@ -156,8 +156,7 @@ public class UseableHousingPlanner : Useable
         {
             return false;
         }
-        InventorySearch inventorySearch = base.player.inventory.has(itemStructureAsset.id);
-        if (inventorySearch == null)
+        if (!base.player.inventory.FindFirstItemByAsset(itemStructureAsset, out var result))
         {
             return false;
         }
@@ -170,7 +169,7 @@ public class UseableHousingPlanner : Useable
         if (num)
         {
             base.player.sendStat(EPlayerStat.FOUND_BUILDABLES);
-            inventorySearch.deleteAmount(base.player, 1u);
+            result.DeleteAmount(base.player, 1u);
         }
         return num;
     }
@@ -220,11 +219,11 @@ public class UseableHousingPlanner : Useable
         base.player.animator.play("Equip", smooth: true);
         if (base.channel.IsLocalPlayer)
         {
-            itemSearch = new List<InventorySearch>();
-            floors = new List<InventorySearch>();
-            roofs = new List<InventorySearch>();
-            walls = new List<InventorySearch>();
-            pillars = new List<InventorySearch>();
+            itemSearchResults = new List<PlayerInventorySearchResultV2>();
+            floors = new List<PlayerInventorySearchResultV2>();
+            roofs = new List<PlayerInventorySearchResultV2>();
+            walls = new List<PlayerInventorySearchResultV2>();
+            pillars = new List<PlayerInventorySearchResultV2>();
             itemAmounts = new Dictionary<ushort, int>();
             selectedItemBox = Glazier.Get().CreateBox();
             selectedItemBox.PositionOffset_Y = -50f;
@@ -487,25 +486,25 @@ public class UseableHousingPlanner : Useable
         roofs.Clear();
         walls.Clear();
         pillars.Clear();
-        foreach (InventorySearch item in itemSearch)
+        foreach (PlayerInventorySearchResultV2 itemSearchResult in itemSearchResults)
         {
-            switch (item.GetAsset<ItemStructureAsset>().construct)
+            switch (itemSearchResult.GetAsset<ItemStructureAsset>().construct)
             {
             case EConstruct.FLOOR:
             case EConstruct.FLOOR_POLY:
-                floors.Add(item);
+                floors.Add(itemSearchResult);
                 break;
             case EConstruct.ROOF:
             case EConstruct.ROOF_POLY:
-                roofs.Add(item);
+                roofs.Add(itemSearchResult);
                 break;
             case EConstruct.WALL:
             case EConstruct.RAMPART:
-                walls.Add(item);
+                walls.Add(itemSearchResult);
                 break;
             case EConstruct.PILLAR:
             case EConstruct.POST:
-                pillars.Add(item);
+                pillars.Add(itemSearchResult);
                 break;
             }
         }
@@ -632,17 +631,17 @@ public class UseableHousingPlanner : Useable
     /// </summary>
     private void RefreshAvailableItems()
     {
-        itemSearch.Clear();
+        itemSearchResults.Clear();
         itemAmounts.Clear();
-        base.player.inventory.search(itemSearch, EItemType.STRUCTURE);
-        for (int num = itemSearch.Count - 1; num >= 0; num--)
+        base.player.inventory.FindItemsByType(itemSearchResults, EItemType.STRUCTURE);
+        for (int num = itemSearchResults.Count - 1; num >= 0; num--)
         {
-            InventorySearch inventorySearch = itemSearch[num];
-            if (itemAmounts.TryGetValue(inventorySearch.jar.item.id, out var value))
+            PlayerInventorySearchResultV2 playerInventorySearchResultV = itemSearchResults[num];
+            if (itemAmounts.TryGetValue(playerInventorySearchResultV.Jar.item.id, out var value))
             {
-                itemSearch.RemoveAtFast(num);
+                itemSearchResults.RemoveAtFast(num);
             }
-            itemAmounts[inventorySearch.jar.item.id] = value + inventorySearch.jar.item.amount;
+            itemAmounts[playerInventorySearchResultV.Jar.item.id] = value + playerInventorySearchResultV.Jar.item.amount;
         }
         if (selectedAsset != null)
         {
@@ -657,7 +656,7 @@ public class UseableHousingPlanner : Useable
         }
     }
 
-    private int CompareItemNames(InventorySearch lhs, InventorySearch rhs)
+    private int CompareItemNames(PlayerInventorySearchResultV2 lhs, PlayerInventorySearchResultV2 rhs)
     {
         ItemAsset asset = lhs.GetAsset();
         ItemAsset asset2 = rhs.GetAsset();

@@ -1,3 +1,5 @@
+using System;
+
 namespace SDG.Unturned;
 
 public class NPCTimeOfDayCondition : NPCLogicCondition
@@ -39,6 +41,37 @@ public class NPCTimeOfDayCondition : NPCLogicCondition
         return string.Format(text, arg);
     }
 
+    internal override void PopulateV2(in PopulateConditionParameters p)
+    {
+        base.PopulateV2(in p);
+        if (p.data.TryParseInt32("Second", out var value))
+        {
+            second = value;
+        }
+        else
+        {
+            p.ReportRequiredOptionInvalid("Second");
+        }
+    }
+
+    internal override void PopulateLegacy(in PopulateConditionParameters p)
+    {
+        base.PopulateLegacy(in p);
+        if (p.data.TryParseInt32(p.legacyPrefix + "_Second", out var value))
+        {
+            second = value;
+        }
+        else
+        {
+            p.ReportRequiredOptionInvalid("Second");
+        }
+    }
+
+    public NPCTimeOfDayCondition()
+    {
+    }
+
+    [Obsolete]
     public NPCTimeOfDayCondition(int newSecond, ENPCLogicType newLogicType, string newText, bool newShouldReset)
         : base(newLogicType, newText, newShouldReset)
     {

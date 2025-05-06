@@ -1,4 +1,4 @@
-GUID 68b893410eeb48ea936b483ec652119d
+﻿GUID 68b893410eeb48ea936b483ec652119d
 Type Magazine
 Rarity Legendary
 ID 1302
@@ -12,15 +12,15 @@ Amount 1
 Calibers 1
 Caliber_0 29
 
-Blueprints 1
-Blueprint_0_Type Tool
-Blueprint_0_Supplies 1
-Blueprint_0_Supply_0_ID this
-Blueprint_1_Supply_0_AllowEmpty true
-Blueprint_1_Supply_0_Prioritization LowestAmount
-Blueprint_0_Supply_0_Amount 1
-Blueprint_0_Product "73" // Explosives
-Blueprint_0_Products 2
-Blueprint_0_Level 2
-Blueprint_0_Skill Craft
-Blueprint_0_Build 27
+Blueprints
+[
+	{
+		Name Salvage
+		CategoryTag "7ed29f9101ae4523a3b2e389414b7bd9" // Salvage
+		InputItems this
+		OutputItems "8ce5c560166545499432d6e01ce399cc x 2" // Raw Explosives
+		Skill Craft
+		Skill_Level 2
+		Effect "84347b13028340b8976033c08675d458" // Wrench
+	}
+]

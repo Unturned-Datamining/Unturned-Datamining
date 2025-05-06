@@ -3,31 +3,142 @@ using System.Collections.Generic;
 using SDG.NetTransport;
 using Steamworks;
 using UnityEngine;
+using UnityEngine.Profiling;
 
 namespace SDG.Unturned;
 
 public class PlayerCrafting : PlayerCaller
 {
-    private static readonly byte SAVEDATA_VERSION = 1;
+    private const byte SAVEDATA_VERSION_BLUEPRINT_IGNORE_BY_GUID = 2;
+
+    private const byte SAVEDATA_VERSION_NEWEST = 2;
 
     private static InventorySearchQualityAscendingComparator qualityAscendingComparator = new InventorySearchQualityAscendingComparator();
 
+    private static InventorySearchQualityDescendingComparator qualityDescendingComparator = new InventorySearchQualityDescendingComparator();
+
     private static InventorySearchAmountAscendingComparator amountAscendingComparator = new InventorySearchAmountAscendingComparator();
+
+    private static InventorySearchAmountDescendingComparator amountDescendingComparator = new InventorySearchAmountDescendingComparator();
 
     [Obsolete("Use the static onCraftBlueprintRequested for ease-of-use instead.")]
     public PlayerCraftingRequestHandler onCraftingRequested;
 
+    [Obsolete("Please use V2 which takes a reference to the underlying blueprint")]
     public static PlayerCraftingRequestHandler onCraftBlueprintRequested;
 
+    public static PlayerCraftingRequestHandlerV2 OnCraftBlueprintRequestedV2;
+
     public CraftingUpdated onCraftingUpdated;
+
+    internal static System.Action OnLocalPlayerIgnoredBlueprintsChanged;
 
     private static readonly ServerInstanceMethod<byte, byte, byte> SendStripAttachments = ServerInstanceMethod<byte, byte, byte>.Get(typeof(PlayerCrafting), "ReceiveStripAttachments");
 
     private static readonly ClientInstanceMethod SendRefreshCrafting = ClientInstanceMethod.Get(typeof(PlayerCrafting), "ReceiveRefreshCrafting");
 
-    private static readonly ServerInstanceMethod<ushort, byte, bool> SendCraft = ServerInstanceMethod<ushort, byte, bool>.Get(typeof(PlayerCrafting), "ReceiveCraft");
+    private static readonly ServerInstanceMethod<Guid, byte, bool> SendCraft = ServerInstanceMethod<Guid, byte, bool>.Get(typeof(PlayerCrafting), "ReceiveCraft");
 
-    private List<IgnoredCraftingBlueprint> ignoredBlueprints = new List<IgnoredCraftingBlueprint>();
+    private Dictionary<Guid, List<byte>> ignoredBlueprints = new Dictionary<Guid, List<byte>>();
+
+    private bool isLoadingIgnoredBlueprints;
+
+    /// <summary>
+    /// Why isn't tags list public visibility? Because if adding features to (for example) consume a resource when
+    /// crafting tag provider is used that will require an API change.
+    /// </summary>
+    private HashSet<TagAsset> nearbyCraftingTags = new HashSet<TagAsset>();
+
+    internal static List<NearbyCraftingTagProvider> localPlayerNearbyTagProviders = new List<NearbyCraftingTagProvider>();
+
+    private static HashSet<ICraftingTagProvider> tempTagProviders = new HashSet<ICraftingTagProvider>();
+
+    private static HashSet<TagAsset> tempTags = new HashSet<TagAsset>();
+
+    private static Stack<HashSet<TagAsset>> tagPool = new Stack<HashSet<TagAsset>>();
+
+    private static BlueprintStatus activeBlueprintStatus = new BlueprintStatus();
+
+    private static CustomSampler updateBlueprintDynamicStatusSampler = CustomSampler.Create("UpdateBlueprintDynamicStatus");
+
+    public bool IsIgnoringAnyBlueprints => ignoredBlueprints.Count > 0;
+
+    /// <summary>
+    /// Find nearby crafting tag providers and query their tags.
+    /// </summary>
+    public void UpdateAvailableCraftingTags()
+    {
+        Vector3 position = base.transform.position;
+        float radius = 16f;
+        nearbyCraftingTags.Clear();
+        if (!base.channel.IsLocalPlayer)
+        {
+            CraftingTagPhysicsUtil.QueryAvailableTags(position, radius, nearbyCraftingTags);
+            return;
+        }
+        foreach (NearbyCraftingTagProvider localPlayerNearbyTagProvider in localPlayerNearbyTagProviders)
+        {
+            tagPool.Push(localPlayerNearbyTagProvider.tags);
+        }
+        localPlayerNearbyTagProviders.Clear();
+        tempTagProviders.Clear();
+        CraftingTagPhysicsUtil.QueryTagProviders(position, radius, tempTagProviders);
+        CraftingTagProviderGetAvailableTagsParameters p = default(CraftingTagProviderGetAvailableTagsParameters);
+        foreach (ICraftingTagProvider tempTagProvider in tempTagProviders)
+        {
+            Asset tagProviderAsset = tempTagProvider.GetTagProviderAsset();
+            if (tagProviderAsset == null)
+            {
+                if (tempTagProvider is Component component)
+                {
+                    UnturnedLog.warn("Crafting tag provider without asset: " + component.GetSceneHierarchyPath());
+                }
+                else
+                {
+                    UnturnedLog.warn($"Crafting tag provider without asset: {tempTagProvider}");
+                }
+                continue;
+            }
+            tempTags.Clear();
+            p.ResultTags = tempTags;
+            tempTagProvider.GetAvailableTags(ref p);
+            if (tempTags.Count <= 0)
+            {
+                continue;
+            }
+            foreach (TagAsset tempTag in tempTags)
+            {
+                nearbyCraftingTags.Add(tempTag);
+            }
+            NearbyCraftingTagProvider nearbyCraftingTagProvider = default(NearbyCraftingTagProvider);
+            nearbyCraftingTagProvider.component = tempTagProvider;
+            nearbyCraftingTagProvider.asset = tagProviderAsset;
+            nearbyCraftingTagProvider.tags = tempTags;
+            NearbyCraftingTagProvider item = nearbyCraftingTagProvider;
+            if (!localPlayerNearbyTagProviders.Contains(item))
+            {
+                localPlayerNearbyTagProviders.Add(item);
+                if (!tagPool.TryPop(out tempTags))
+                {
+                    tempTags = new HashSet<TagAsset>();
+                }
+            }
+        }
+        localPlayerNearbyTagProviders.Sort((NearbyCraftingTagProvider lhs, NearbyCraftingTagProvider rhs) => lhs.asset.FriendlyName.CompareTo(rhs.asset.FriendlyName));
+    }
+
+    /// <summary>
+    /// Tests whether nearby tags include specified tag.
+    /// Doesn't update nearby tags, so call UpdateAvailableCraftingTags if out-of-date.
+    /// </summary>
+    public bool IsCraftingTagAvailable(TagAsset tag)
+    {
+        if (tag == null)
+        {
+            return false;
+        }
+        return nearbyCraftingTags.Contains(tag);
+    }
 
     public bool isBlueprintBlacklisted(Blueprint blueprint)
     {
@@ -164,255 +275,427 @@ public class PlayerCrafting : PlayerCaller
         SendRefreshCrafting.Invoke(GetNetId(), ENetReliability.Reliable, base.channel.GetOwnerTransportConnection());
     }
 
-    [Obsolete]
-    public void askCraft(CSteamID steamID, ushort id, byte index, bool force)
+    internal bool IsBlueprintPermanentlyDisabled(Blueprint blueprint)
     {
+        if (isBlueprintBlacklisted(blueprint))
+        {
+            return true;
+        }
+        if (blueprint.skill == EBlueprintSkill.REPAIR && blueprint.level > Provider.modeConfigData.Gameplay.Repair_Level_Max)
+        {
+            return true;
+        }
+        if (!string.IsNullOrEmpty(blueprint.map) && !blueprint.map.Equals(Level.info.name, StringComparison.InvariantCultureIgnoreCase))
+        {
+            return true;
+        }
+        if (!Provider.modeConfigData.Gameplay.Allow_Freeform_Buildables && !Provider.modeConfigData.Gameplay.Allow_Freeform_Buildables_On_Vehicles && blueprint.IsOutputFreeformBuildable)
+        {
+            return true;
+        }
+        if (blueprint.Operation != 0 && (blueprint.TargetItem == null || blueprint.TargetItem.FindItemAsset() == null))
+        {
+            return true;
+        }
+        return false;
     }
 
-    [SteamCall(ESteamCallValidation.ONLY_FROM_OWNER, ratelimitHz = 10)]
-    public void ReceiveCraft(in ServerInvocationContext context, ushort id, byte index, bool force)
+    /// <summary>
+    /// Update anything that will not change as blueprint is invoked repeatedly on server.
+    /// </summary>
+    internal void UpdateBlueprintStaticStatus(in UpdateBlueprintStatusParameters p)
     {
-        if ((Level.info != null && Level.info.configData != null && !Level.info.configData.Allow_Crafting) || base.player.equipment.isBusy)
-        {
-            return;
-        }
-        bool shouldAllow = true;
-        if (onCraftBlueprintRequested != null)
-        {
-            onCraftBlueprintRequested(this, ref id, ref index, ref shouldAllow);
-        }
-        else
-        {
-            onCraftingRequested?.Invoke(this, ref id, ref index, ref shouldAllow);
-        }
-        if (!shouldAllow || !(Assets.find(EAssetType.ITEM, id) is ItemAsset itemAsset) || index >= itemAsset.blueprints.Count)
-        {
-            return;
-        }
-        Blueprint blueprint = itemAsset.blueprints[index];
-        if (isBlueprintBlacklisted(blueprint) || (blueprint.skill == EBlueprintSkill.REPAIR && blueprint.level > Provider.modeConfigData.Gameplay.Repair_Level_Max) || (!string.IsNullOrEmpty(blueprint.map) && !blueprint.map.Equals(Level.info.name, StringComparison.InvariantCultureIgnoreCase)) || (!Provider.modeConfigData.Gameplay.Allow_Freeform_Buildables && !Provider.modeConfigData.Gameplay.Allow_Freeform_Buildables_On_Vehicles && blueprint.IsOutputFreeformBuildable) || (blueprint.tool != 0 && base.player.inventory.has(blueprint.tool) == null))
-        {
-            return;
-        }
+        Blueprint blueprint = p.status.blueprint;
         if (blueprint.skill != 0)
         {
-            bool flag = PowerTool.checkFires(base.transform.position, 16f);
-            if ((blueprint.skill == EBlueprintSkill.CRAFT && base.player.skills.skills[2][1].level < blueprint.level) || (blueprint.skill == EBlueprintSkill.COOK && (!flag || base.player.skills.skills[2][3].level < blueprint.level)) || (blueprint.skill == EBlueprintSkill.REPAIR && base.player.skills.skills[2][7].level < blueprint.level))
+            int num = 0;
+            switch (blueprint.skill)
+            {
+            case EBlueprintSkill.CRAFT:
+                num = base.player.skills.skills[2][1].level;
+                break;
+            case EBlueprintSkill.COOK:
+                num = base.player.skills.skills[2][3].level;
+                break;
+            case EBlueprintSkill.REPAIR:
+                num = base.player.skills.skills[2][7].level;
+                break;
+            }
+            if (num < blueprint.level)
+            {
+                p.status.isMissingRequiredSkill = true;
+                p.logCallback?.Invoke($"skill {blueprint.skill} level {num}) is less than required {blueprint.level}");
+                if (p.shouldExitEarly)
+                {
+                    return;
+                }
+            }
+        }
+        CachingAssetRef[] applicableRequiredNearbyCraftingTags = blueprint.GetApplicableRequiredNearbyCraftingTags();
+        if (applicableRequiredNearbyCraftingTags == null)
+        {
+            return;
+        }
+        for (int i = 0; i < applicableRequiredNearbyCraftingTags.Length; i++)
+        {
+            TagAsset tagAsset = applicableRequiredNearbyCraftingTags[i].Get<TagAsset>();
+            if (tagAsset != null && !IsCraftingTagAvailable(tagAsset))
+            {
+                p.status.missingCraftingTagsCount++;
+                p.logCallback?.Invoke("requires nearby crafting tag \"" + tagAsset.PlainTextName + "\"");
+                if (p.shouldExitEarly)
+                {
+                    break;
+                }
+            }
+        }
+    }
+
+    /// <summary>
+    /// Update anything that can change as blueprint is invoked repeatedly on server.
+    /// </summary>
+    internal void UpdateBlueprintDynamicStatus(in UpdateBlueprintStatusParameters p)
+    {
+        Blueprint blueprint = p.status.blueprint;
+        if (!blueprint.areConditionsMet(base.player))
+        {
+            p.status.isMissingAnyNpcConditions = true;
+            p.logCallback?.Invoke("NPC conditions not met");
+            if (p.shouldExitEarly)
             {
                 return;
             }
         }
-        bool flag2 = false;
-        for (int i = 0; i < 64; i++)
+        PlayerInventorySearchResultV2? playerInventorySearchResultV = null;
+        if (blueprint.TargetItem != null)
         {
-            if (!blueprint.areConditionsMet(base.player))
+            BlueprintInputItemStatus blueprintInputItemStatus = p.status.AddTargetItem();
+            UpdateBlueprintInputItemStatus(in p, blueprint.TargetItem, blueprintInputItemStatus, null);
+            if (blueprintInputItemStatus.isMissingRequiredAmount)
+            {
+                p.status.isMissingTargetItem = true;
+                p.logCallback?.Invoke("missing target item");
+                if (p.shouldExitEarly)
+                {
+                    return;
+                }
+            }
+            playerInventorySearchResultV = blueprintInputItemStatus.FirstResultOrNull;
+        }
+        BlueprintSupply[] supplies = blueprint.supplies;
+        int num = ((supplies != null) ? supplies.Length : 0);
+        ItemJar ignoreTargetItem = playerInventorySearchResultV?.Jar;
+        for (int i = 0; i < num; i++)
+        {
+            BlueprintSupply inputItemConfig = blueprint.supplies[i];
+            BlueprintInputItemStatus inputStatus = p.status.AddInputItem();
+            if (UpdateBlueprintInputItemStatus(in p, inputItemConfig, inputStatus, ignoreTargetItem) && p.shouldExitEarly)
             {
                 break;
             }
-            List<InventorySearch>[] array = new List<InventorySearch>[blueprint.supplies.Length];
+        }
+    }
+
+    /// <summary>
+    /// Returns true if should exit early.
+    /// If updating behavior here please remember to update <see cref="M:SDG.Unturned.PlayerCrafting.GatherUniqueInputItems(System.Collections.Generic.HashSet{SDG.Unturned.ItemAsset})" />.
+    /// </summary>
+    private bool UpdateBlueprintInputItemStatus(in UpdateBlueprintStatusParameters p, BlueprintSupply inputItemConfig, BlueprintInputItemStatus inputStatus, ItemJar ignoreTargetItem)
+    {
+        _ = p.status.blueprint;
+        ItemAsset itemAsset = inputItemConfig.FindItemAsset();
+        if (itemAsset == null)
+        {
+            p.status.totalMissingInputItemsCount += inputItemConfig.amount;
+            p.status.isMissingAnyCriticalInputItem |= inputItemConfig.isCritical;
+            inputStatus.isMissingRequiredAmount = true;
+            p.logCallback?.Invoke($"no asset for input item {inputItemConfig.ItemRef}");
+            return true;
+        }
+        PlayerInventorySearchParameters playerInventorySearchParameters = default(PlayerInventorySearchParameters);
+        playerInventorySearchParameters.Results = inputStatus.searchResults;
+        playerInventorySearchParameters.IncludeEquipmentSlots = !inputItemConfig.ShouldConsume;
+        playerInventorySearchParameters.IncludeActiveStorageContainer = !inputItemConfig.ShouldConsume;
+        playerInventorySearchParameters.AssetRef = inputItemConfig.ItemRef;
+        playerInventorySearchParameters.IncludeEmpty = inputItemConfig.ShouldIncludeEmptyAmount;
+        playerInventorySearchParameters.ExcludeFullAmount = inputItemConfig.ShouldExcludeFullAmount;
+        playerInventorySearchParameters.IncludeMaxQuality = inputItemConfig.ShouldIncludeMaxQuality;
+        playerInventorySearchParameters.ItemToIgnore = ignoreTargetItem;
+        PlayerInventorySearchParameters parameters = playerInventorySearchParameters;
+        base.player.inventory.SearchContents(in parameters);
+        if (inputStatus.searchResults.Count < 1)
+        {
+            p.status.totalMissingInputItemsCount += inputItemConfig.amount;
+            p.status.isMissingAnyCriticalInputItem |= inputItemConfig.isCritical;
+            inputStatus.isMissingRequiredAmount = true;
+            p.logCallback?.Invoke($"no results for supply item {itemAsset}");
+            return true;
+        }
+        p.status.hasAnyInputItem = true;
+        switch (inputItemConfig.CountingMethod)
+        {
+        case ECraftingInputCountingMethod.TotalItems:
+            inputStatus.totalAmount = inputStatus.searchResults.Count;
+            break;
+        case ECraftingInputCountingMethod.TotalAmount:
+            foreach (PlayerInventorySearchResultV2 searchResult in inputStatus.searchResults)
+            {
+                inputStatus.totalAmount += (inputItemConfig.ShouldCountEmptyAsOne ? Mathf.Max(1, searchResult.Jar.item.amount) : searchResult.Jar.item.amount);
+            }
+            break;
+        default:
+            UnturnedLog.warn($"unhandled crafting input counting method ({inputItemConfig.CountingMethod})");
+            return true;
+        }
+        if (inputStatus.totalAmount < inputItemConfig.amount)
+        {
+            p.status.totalMissingInputItemsCount += inputItemConfig.amount - inputStatus.totalAmount;
+            p.status.isMissingAnyCriticalInputItem |= inputItemConfig.isCritical;
+            inputStatus.isMissingRequiredAmount = true;
+            p.logCallback?.Invoke($"input item ({itemAsset}) x{inputStatus.totalAmount} less than required {inputItemConfig.amount}");
+            if (p.shouldExitEarly)
+            {
+                return true;
+            }
+        }
+        if (!inputItemConfig.ShouldConsume)
+        {
+            inputStatus.totalAmount = Mathf.Min(inputStatus.totalAmount, inputItemConfig.amount);
+        }
+        switch (inputItemConfig.Prioritization)
+        {
+        case ECraftingInputPrioritization.LowestAmount:
+            inputStatus.searchResults.Sort(amountAscendingComparator);
+            break;
+        case ECraftingInputPrioritization.HighestAmount:
+            inputStatus.searchResults.Sort(amountDescendingComparator);
+            break;
+        case ECraftingInputPrioritization.LowestQuality:
+            inputStatus.searchResults.Sort(qualityAscendingComparator);
+            break;
+        case ECraftingInputPrioritization.HighestQuality:
+            inputStatus.searchResults.Sort(qualityDescendingComparator);
+            break;
+        default:
+            UnturnedLog.warn($"unhandled crafting input prioritization ({inputItemConfig.Prioritization})");
+            return true;
+        }
+        return false;
+    }
+
+    /// <summary>
+    /// Find all item assets available to the player for crafting.
+    /// Used to more quickly identify blueprints that might be craftable, rather than testing all blueprints.
+    /// If updating behavior here please remember to update <see cref="M:SDG.Unturned.PlayerCrafting.UpdateBlueprintInputItemStatus(SDG.Unturned.UpdateBlueprintStatusParameters@,SDG.Unturned.BlueprintSupply,SDG.Unturned.BlueprintInputItemStatus,SDG.Unturned.ItemJar)" />.
+    /// </summary>
+    internal void GatherUniqueInputItems(HashSet<ItemAsset> results)
+    {
+        for (int i = 0; i <= PlayerInventory.STORAGE; i++)
+        {
+            base.player.inventory.items[i]?.GatherUniqueItems(results);
+        }
+    }
+
+    [SteamCall(ESteamCallValidation.ONLY_FROM_OWNER, ratelimitHz = 10)]
+    public void ReceiveCraft(in ServerInvocationContext context, Guid assetGuid, byte index, bool asManyAsPossible)
+    {
+        if (!Level.IsCraftingAllowedByLevel || base.player.equipment.isBusy)
+        {
+            return;
+        }
+        Asset asset = Assets.find(assetGuid);
+        if (asset == null)
+        {
+            return;
+        }
+        ushort id = asset.id;
+        ushort itemID = id;
+        bool shouldAllow = true;
+        if (onCraftBlueprintRequested != null)
+        {
+            onCraftBlueprintRequested(this, ref itemID, ref index, ref shouldAllow);
+        }
+        else
+        {
+            onCraftingRequested?.Invoke(this, ref itemID, ref index, ref shouldAllow);
+        }
+        if (!shouldAllow)
+        {
+            return;
+        }
+        if (itemID != id)
+        {
+            asset = Assets.find(EAssetType.ITEM, itemID);
+            if (asset == null)
+            {
+                return;
+            }
+        }
+        if (!(asset is IBlueprintOwner blueprintOwner))
+        {
+            return;
+        }
+        Blueprint blueprint = blueprintOwner.GetBlueprintByIndex(index);
+        if (blueprint == null)
+        {
+            return;
+        }
+        if (OnCraftBlueprintRequestedV2 != null)
+        {
+            try
+            {
+                OnCraftBlueprintRequestedV2(this, ref blueprint, ref shouldAllow);
+            }
+            catch (Exception e)
+            {
+                UnturnedLog.exception(e, $"Caught plugin exception during OnCraftBlueprintRequestedV2 for {asset}[{index}]:");
+            }
+        }
+        if (!shouldAllow || blueprint == null || IsBlueprintPermanentlyDisabled(blueprint))
+        {
+            return;
+        }
+        if (blueprint.GetApplicableRequiredNearbyCraftingTags() != null)
+        {
+            UpdateAvailableCraftingTags();
+        }
+        activeBlueprintStatus.Reset();
+        activeBlueprintStatus.blueprint = blueprint;
+        UpdateBlueprintStatusParameters p = default(UpdateBlueprintStatusParameters);
+        p.status = activeBlueprintStatus;
+        p.shouldExitEarly = true;
+        UpdateBlueprintStaticStatus(in p);
+        if (!activeBlueprintStatus.IsCraftable)
+        {
+            return;
+        }
+        bool flag = false;
+        for (int i = 0; i < 64; i++)
+        {
+            UpdateBlueprintDynamicStatus(in p);
+            if (!activeBlueprintStatus.IsCraftable)
+            {
+                break;
+            }
+            PlayerInventorySearchResultV2? playerInventorySearchResultV = null;
+            if (blueprint.Operation != 0)
+            {
+                if (blueprint.TargetItem == null)
+                {
+                    break;
+                }
+                BlueprintInputItemStatus targetStatus = activeBlueprintStatus.targetStatus;
+                if (targetStatus.searchResults.Count < 1)
+                {
+                    break;
+                }
+                playerInventorySearchResultV = targetStatus.searchResults[0];
+            }
+            if (blueprint.Operation == EBlueprintOperation.FillTargetItem)
+            {
+                PlayerInventorySearchResultV2 value = playerInventorySearchResultV.Value;
+                int a = value.GetAsset().MaxAmount - value.Jar.item.amount;
+                if (activeBlueprintStatus.inputItems.Count > 0)
+                {
+                    BlueprintInputItemStatus blueprintInputItemStatus = activeBlueprintStatus.inputItems[0];
+                    a = (blueprintInputItemStatus.requiredAmountOverride = Mathf.Min(a, blueprintInputItemStatus.totalAmount));
+                    base.player.inventory.sendUpdateAmount(value.Page, value.Jar.x, value.Jar.y, (byte)(value.Jar.item.amount + a));
+                }
+            }
             for (int j = 0; j < blueprint.supplies.Length; j++)
             {
                 BlueprintSupply blueprintSupply = blueprint.supplies[j];
-                List<InventorySearch> list = base.player.inventory.search(blueprintSupply.id, blueprintSupply.ShouldTreatEmptyAsOne, findHealthy: true);
-                if (list.Count == 0)
+                if (!blueprintSupply.ShouldConsume)
                 {
-                    return;
+                    continue;
                 }
-                int num = 0;
-                foreach (InventorySearch item2 in list)
+                BlueprintInputItemStatus blueprintInputItemStatus2 = activeBlueprintStatus.inputItems[j];
+                List<PlayerInventorySearchResultV2> searchResults = blueprintInputItemStatus2.searchResults;
+                int num = ((blueprintInputItemStatus2.requiredAmountOverride > 0) ? blueprintInputItemStatus2.requiredAmountOverride : blueprintSupply.amount);
+                switch (blueprintSupply.CountingMethod)
                 {
-                    num += (blueprintSupply.ShouldTreatEmptyAsOne ? Mathf.Max(1, item2.jar.item.amount) : item2.jar.item.amount);
-                }
-                if (num < blueprintSupply.amount && blueprint.type != EBlueprintType.AMMO)
-                {
-                    return;
-                }
-                switch (blueprintSupply.Prioritization)
-                {
-                default:
-                    return;
-                case ECraftingInputPrioritization.LowestAmount:
-                    list.Sort(amountAscendingComparator);
-                    break;
-                case ECraftingInputPrioritization.LowestQuality:
-                    list.Sort(qualityAscendingComparator);
-                    break;
-                }
-                array[j] = list;
-            }
-            if (blueprint.type == EBlueprintType.REPAIR)
-            {
-                List<InventorySearch> list2 = base.player.inventory.search(itemAsset.id, findEmpty: false, findHealthy: false);
-                byte b = byte.MaxValue;
-                int num2 = -1;
-                for (int k = 0; k < list2.Count; k++)
-                {
-                    if (list2[k].jar.item.quality < b)
+                case ECraftingInputCountingMethod.TotalItems:
+                    foreach (PlayerInventorySearchResultV2 item2 in searchResults)
                     {
-                        b = list2[k].jar.item.quality;
-                        num2 = k;
-                    }
-                }
-                if (num2 < 0)
-                {
-                    break;
-                }
-                InventorySearch inventorySearch = list2[num2];
-                if (base.player.equipment.checkSelection(inventorySearch.page, inventorySearch.jar.x, inventorySearch.jar.y))
-                {
-                    base.player.equipment.dequip();
-                }
-                for (byte b2 = 0; b2 < array.Length; b2++)
-                {
-                    BlueprintSupply blueprintSupply2 = blueprint.supplies[b2];
-                    List<InventorySearch> list3 = array[b2];
-                    for (byte b3 = 0; b3 < blueprintSupply2.amount; b3++)
-                    {
-                        InventorySearch inventorySearch2 = list3[b3];
-                        if (base.player.equipment.checkSelection(inventorySearch2.page, inventorySearch2.jar.x, inventorySearch2.jar.y))
-                        {
-                            base.player.equipment.dequip();
-                        }
-                        removeItem(inventorySearch2.page, inventorySearch2.jar);
-                        if (inventorySearch2.page < PlayerInventory.SLOTS)
-                        {
-                            base.player.equipment.sendSlot(inventorySearch2.page);
-                        }
-                    }
-                }
-                base.player.inventory.sendUpdateQuality(inventorySearch.page, inventorySearch.jar.x, inventorySearch.jar.y, 100);
-                if (itemAsset.type == EItemType.REFILL && inventorySearch.jar.item.state.Length == 1 && inventorySearch.jar.item.state[0] == 3)
-                {
-                    inventorySearch.jar.item.state[0] = 1;
-                    base.player.inventory.sendUpdateInvState(inventorySearch.page, inventorySearch.jar.x, inventorySearch.jar.y, inventorySearch.jar.item.state);
-                }
-                blueprint.ApplyConditions(base.player);
-                blueprint.GrantRewards(base.player);
-                SendRefreshCrafting.Invoke(GetNetId(), ENetReliability.Reliable, base.channel.GetOwnerTransportConnection());
-            }
-            else if (blueprint.type == EBlueprintType.AMMO)
-            {
-                List<InventorySearch> list4 = base.player.inventory.search(itemAsset.id, findEmpty: true, findHealthy: true);
-                int num3 = -1;
-                int num4 = -1;
-                for (int l = 0; l < list4.Count; l++)
-                {
-                    if (list4[l].jar.item.amount > num3 && list4[l].jar.item.amount < itemAsset.amount)
-                    {
-                        num3 = list4[l].jar.item.amount;
-                        num4 = l;
-                    }
-                }
-                if (num4 < 0)
-                {
-                    break;
-                }
-                InventorySearch inventorySearch3 = list4[num4];
-                int num5 = itemAsset.amount - num3;
-                if (base.player.equipment.checkSelection(inventorySearch3.page, inventorySearch3.jar.x, inventorySearch3.jar.y))
-                {
-                    base.player.equipment.dequip();
-                }
-                List<InventorySearch> list5 = array[0];
-                for (byte b4 = 0; b4 < list5.Count; b4++)
-                {
-                    InventorySearch inventorySearch4 = list5[b4];
-                    if (inventorySearch4.jar != inventorySearch3.jar)
-                    {
-                        if (base.player.equipment.checkSelection(inventorySearch4.page, inventorySearch4.jar.x, inventorySearch4.jar.y))
-                        {
-                            base.player.equipment.dequip();
-                        }
-                        if (inventorySearch4.jar.item.amount > num5)
-                        {
-                            base.player.inventory.sendUpdateAmount(inventorySearch4.page, inventorySearch4.jar.x, inventorySearch4.jar.y, (byte)(inventorySearch4.jar.item.amount - num5));
-                            num5 = 0;
-                            break;
-                        }
-                        num5 -= inventorySearch4.jar.item.amount;
-                        base.player.inventory.sendUpdateAmount(inventorySearch4.page, inventorySearch4.jar.x, inventorySearch4.jar.y, 0);
-                        Asset asset = inventorySearch4.GetAsset();
-                        if (asset == null || asset is ItemSupplyAsset || !(asset is ItemMagazineAsset itemMagazineAsset) || itemMagazineAsset.deleteEmpty)
-                        {
-                            removeItem(inventorySearch4.page, inventorySearch4.jar);
-                            if (inventorySearch4.page < PlayerInventory.SLOTS)
-                            {
-                                base.player.equipment.sendSlot(inventorySearch4.page);
-                            }
-                        }
-                        if (num5 == 0)
+                        item2.Delete(base.player);
+                        num--;
+                        if (num == 0)
                         {
                             break;
                         }
                     }
-                }
-                base.player.inventory.sendUpdateAmount(inventorySearch3.page, inventorySearch3.jar.x, inventorySearch3.jar.y, (byte)(itemAsset.amount - num5));
-                blueprint.ApplyConditions(base.player);
-                blueprint.GrantRewards(base.player);
-                SendRefreshCrafting.Invoke(GetNetId(), ENetReliability.Reliable, base.channel.GetOwnerTransportConnection());
-            }
-            else
-            {
-                for (byte b5 = 0; b5 < array.Length; b5++)
-                {
-                    BlueprintSupply blueprintSupply3 = blueprint.supplies[b5];
-                    List<InventorySearch> list6 = array[b5];
-                    if (list6.Count < blueprintSupply3.amount)
+                    break;
+                case ECraftingInputCountingMethod.TotalAmount:
+                    foreach (PlayerInventorySearchResultV2 item3 in searchResults)
                     {
-                        return;
-                    }
-                    for (byte b6 = 0; b6 < blueprintSupply3.amount; b6++)
-                    {
-                        InventorySearch inventorySearch5 = list6[b6];
-                        if (base.player.equipment.checkSelection(inventorySearch5.page, inventorySearch5.jar.x, inventorySearch5.jar.y))
+                        if (item3.Jar.item.amount == 0 && blueprintSupply.ShouldCountEmptyAsOne)
                         {
-                            base.player.equipment.dequip();
-                        }
-                        removeItem(inventorySearch5.page, inventorySearch5.jar);
-                        if (inventorySearch5.page < PlayerInventory.SLOTS)
-                        {
-                            base.player.equipment.sendSlot(inventorySearch5.page);
-                        }
-                    }
-                }
-                BlueprintOutput[] outputs = blueprint.outputs;
-                foreach (BlueprintOutput blueprintOutput in outputs)
-                {
-                    ItemAsset itemAsset2 = Assets.find(EAssetType.ITEM, blueprintOutput.id) as ItemAsset;
-                    for (int n = 0; n < blueprintOutput.amount; n++)
-                    {
-                        if (blueprint.transferState)
-                        {
-                            Item item = new Item(blueprintOutput.id, array[0][0].jar.item.amount, array[0][0].jar.item.quality, array[0][0].jar.item.state);
-                            if (itemAsset.type == EItemType.GUN && itemAsset2 != null && itemAsset2.type == EItemType.GUN && item.state.Length >= 12)
-                            {
-                                if (blueprint.withoutAttachments)
-                                {
-                                    for (int num6 = 0; num6 < item.state.Length; num6++)
-                                    {
-                                        item.state[num6] = 0;
-                                    }
-                                }
-                                if (itemAsset2 is ItemGunAsset itemGunAsset)
-                                {
-                                    item.state[11] = (byte)itemGunAsset.firemode;
-                                }
-                            }
-                            base.player.inventory.forceAddItem(item, auto: true);
+                            item3.Delete(base.player);
+                            num--;
                         }
                         else
                         {
-                            base.player.inventory.forceAddItem(new Item(blueprintOutput.id, blueprintOutput.origin), auto: true);
+                            uint num2 = item3.DeleteAmount(base.player, (uint)num);
+                            num -= (int)num2;
+                        }
+                        if (num == 0)
+                        {
+                            break;
                         }
                     }
+                    break;
                 }
-                blueprint.ApplyConditions(base.player);
-                blueprint.GrantRewards(base.player);
-                SendRefreshCrafting.Invoke(GetNetId(), ENetReliability.Reliable, base.channel.GetOwnerTransportConnection());
             }
-            if (!flag2)
+            if (blueprint.Operation == EBlueprintOperation.RepairTargetItem)
             {
-                flag2 = true;
+                PlayerInventorySearchResultV2 value2 = playerInventorySearchResultV.Value;
+                base.player.inventory.sendUpdateQuality(value2.Page, value2.Jar.x, value2.Jar.y, 100);
+                ItemAsset asset2 = value2.GetAsset();
+                if (asset2 != null && asset2.type == EItemType.REFILL && value2.Jar.item.state.Length == 1 && value2.Jar.item.state[0] == 3)
+                {
+                    value2.Jar.item.state[0] = 1;
+                    base.player.inventory.sendUpdateInvState(value2.Page, value2.Jar.x, value2.Jar.y, value2.Jar.item.state);
+                }
+            }
+            BlueprintOutput[] outputs = blueprint.outputs;
+            foreach (BlueprintOutput blueprintOutput in outputs)
+            {
+                ItemAsset itemAsset = blueprintOutput.FindItemAsset();
+                for (int l = 0; l < blueprintOutput.amount; l++)
+                {
+                    if (blueprint.transferState)
+                    {
+                        PlayerInventorySearchResultV2 playerInventorySearchResultV2 = p.status.inputItems[0].searchResults[0];
+                        ItemAsset asset3 = playerInventorySearchResultV2.GetAsset();
+                        Item item = new Item(itemAsset.id, playerInventorySearchResultV2.Jar.item.amount, playerInventorySearchResultV2.Jar.item.quality, playerInventorySearchResultV2.Jar.item.state);
+                        if (asset3 != null && asset3.type == EItemType.GUN && itemAsset != null && itemAsset.type == EItemType.GUN && item.state.Length >= 12)
+                        {
+                            if (blueprint.withoutAttachments)
+                            {
+                                for (int m = 0; m < item.state.Length; m++)
+                                {
+                                    item.state[m] = 0;
+                                }
+                            }
+                            if (itemAsset is ItemGunAsset itemGunAsset)
+                            {
+                                item.state[11] = (byte)itemGunAsset.firemode;
+                            }
+                        }
+                        base.player.inventory.forceAddItem(item, auto: true);
+                    }
+                    else
+                    {
+                        base.player.inventory.forceAddItem(new Item(itemAsset.id, blueprintOutput.origin), auto: true);
+                    }
+                }
+            }
+            blueprint.ApplyConditions(base.player);
+            blueprint.GrantRewards(base.player);
+            if (!flag)
+            {
+                flag = true;
+                SendRefreshCrafting.Invoke(GetNetId(), ENetReliability.Reliable, base.channel.GetOwnerTransportConnection());
                 base.player.sendStat(EPlayerStat.FOUND_CRAFTS);
                 EffectAsset effectAsset = blueprint.FindBuildEffectAsset();
                 if (effectAsset != null)
@@ -427,16 +710,37 @@ public class PlayerCrafting : PlayerCaller
                     }
                 }
             }
-            if (!force || blueprint.type == EBlueprintType.REPAIR || blueprint.type == EBlueprintType.AMMO)
+            if (!asManyAsPossible || blueprint.Operation != 0)
             {
                 break;
             }
         }
     }
 
+    [Obsolete("Please use SendRequestToCraft which takes a blueprint parameter")]
     public void sendCraft(ushort id, byte index, bool force)
     {
-        SendCraft.Invoke(GetNetId(), ENetReliability.Unreliable, id, index, force);
+        if (Assets.find(EAssetType.ITEM, id) is ItemAsset blueprintOwner)
+        {
+            Blueprint blueprintByIndex = blueprintOwner.GetBlueprintByIndex(index);
+            if (blueprintByIndex != null)
+            {
+                SendRequestToCraft(blueprintByIndex, force);
+            }
+        }
+    }
+
+    public void SendRequestToCraft(Blueprint blueprint, bool asManyAsPossible)
+    {
+        Asset ownerAsset = blueprint.GetOwnerAsset();
+        if (ownerAsset == null)
+        {
+            UnturnedLog.warn($"Unable to craft blueprint without owner asset {blueprint}");
+        }
+        else
+        {
+            SendCraft.Invoke(GetNetId(), ENetReliability.Unreliable, ownerAsset.GUID, blueprint.Index, asManyAsPossible);
+        }
     }
 
     /// <summary>
@@ -448,12 +752,14 @@ public class PlayerCrafting : PlayerCaller
         {
             return false;
         }
-        foreach (IgnoredCraftingBlueprint ignoredBlueprint in ignoredBlueprints)
+        Asset ownerAsset = blueprint.GetOwnerAsset();
+        if (ownerAsset == null)
         {
-            if (ignoredBlueprint.matchesBlueprint(blueprint))
-            {
-                return true;
-            }
+            return false;
+        }
+        if (ignoredBlueprints.TryGetValue(ownerAsset.GUID, out var value))
+        {
+            return value.Contains(blueprint.Index);
         }
         return false;
     }
@@ -468,21 +774,37 @@ public class PlayerCrafting : PlayerCaller
         {
             return;
         }
-        for (int num = ignoredBlueprints.Count - 1; num >= 0; num--)
+        Asset ownerAsset = blueprint.GetOwnerAsset();
+        if (ownerAsset == null)
         {
-            if (ignoredBlueprints[num].matchesBlueprint(blueprint))
+            return;
+        }
+        bool flag;
+        if (ignoredBlueprints.TryGetValue(ownerAsset.GUID, out var value))
+        {
+            flag = value.Remove(blueprint.Index) != isIgnoring;
+            if (isIgnoring)
             {
-                if (!isIgnoring)
-                {
-                    ignoredBlueprints.RemoveAtFast(num);
-                }
-                return;
+                value.Add(blueprint.Index);
+            }
+            else if (value.Count < 1)
+            {
+                ignoredBlueprints.Remove(ownerAsset.GUID);
             }
         }
-        IgnoredCraftingBlueprint ignoredCraftingBlueprint = new IgnoredCraftingBlueprint();
-        ignoredCraftingBlueprint.itemId = blueprint.sourceItem.id;
-        ignoredCraftingBlueprint.blueprintIndex = blueprint.id;
-        ignoredBlueprints.Add(ignoredCraftingBlueprint);
+        else
+        {
+            flag = isIgnoring;
+            if (isIgnoring)
+            {
+                value = new List<byte> { blueprint.Index };
+                ignoredBlueprints.Add(ownerAsset.GUID, value);
+            }
+        }
+        if (!isLoadingIgnoredBlueprints && flag)
+        {
+            OnLocalPlayerIgnoredBlueprintsChanged?.Invoke();
+        }
     }
 
     internal void InitializePlayer()
@@ -503,39 +825,89 @@ public class PlayerCrafting : PlayerCaller
 
     private void load()
     {
-        if (!ReadWrite.fileExists("/Cloud/Ignored_Blueprints.dat", useCloud: false))
+        isLoadingIgnoredBlueprints = true;
+        try
         {
-            return;
-        }
-        Block block = ReadWrite.readBlock("/Cloud/Ignored_Blueprints.dat", useCloud: false, 0);
-        block.readByte();
-        int a = block.readInt32();
-        a = Mathf.Min(a, 10000);
-        ignoredBlueprints.Capacity = ignoredBlueprints.Count + a;
-        for (int i = 0; i < a; i++)
-        {
-            ushort num = block.readUInt16();
-            byte blueprintIndex = block.readByte();
-            if (num != 0)
+            if (ReadWrite.fileExists("/Cloud/Ignored_Blueprints.dat", useCloud: false))
             {
-                IgnoredCraftingBlueprint ignoredCraftingBlueprint = new IgnoredCraftingBlueprint();
-                ignoredCraftingBlueprint.itemId = num;
-                ignoredCraftingBlueprint.blueprintIndex = blueprintIndex;
-                ignoredBlueprints.Add(ignoredCraftingBlueprint);
+                Block block = ReadWrite.readBlock("/Cloud/Ignored_Blueprints.dat", useCloud: false, 0);
+                byte b = block.readByte();
+                int a = block.readInt32();
+                a = Mathf.Min(a, 10000);
+                if (b >= 2)
+                {
+                    for (int i = 0; i < a; i++)
+                    {
+                        IBlueprintOwner blueprintOwner = Assets.find(block.readGUID()) as IBlueprintOwner;
+                        int num = block.readInt32();
+                        for (int j = 0; j < num; j++)
+                        {
+                            byte index = block.readByte();
+                            if (blueprintOwner != null)
+                            {
+                                Blueprint blueprintByIndex = blueprintOwner.GetBlueprintByIndex(index);
+                                if (blueprintByIndex != null)
+                                {
+                                    setIgnoringBlueprint(blueprintByIndex, isIgnoring: true);
+                                }
+                            }
+                        }
+                    }
+                }
+                else
+                {
+                    for (int k = 0; k < a; k++)
+                    {
+                        ushort num2 = block.readUInt16();
+                        byte index2 = block.readByte();
+                        if (num2 != 0 && Assets.find(EAssetType.ITEM, num2) is ItemAsset blueprintOwner2)
+                        {
+                            Blueprint blueprintByIndex2 = blueprintOwner2.GetBlueprintByIndex(index2);
+                            if (blueprintByIndex2 != null)
+                            {
+                                setIgnoringBlueprint(blueprintByIndex2, isIgnoring: true);
+                            }
+                        }
+                    }
+                }
+                OnLocalPlayerIgnoredBlueprintsChanged?.Invoke();
             }
         }
+        catch (Exception e)
+        {
+            UnturnedLog.exception(e, "Caught exception loading ignored blueprints:");
+        }
+        isLoadingIgnoredBlueprints = false;
     }
 
     private void save()
     {
         Block block = new Block();
-        block.writeByte(SAVEDATA_VERSION);
+        block.writeByte(2);
         block.writeInt32(ignoredBlueprints.Count);
-        foreach (IgnoredCraftingBlueprint ignoredBlueprint in ignoredBlueprints)
+        foreach (KeyValuePair<Guid, List<byte>> ignoredBlueprint in ignoredBlueprints)
         {
-            block.writeUInt16(ignoredBlueprint.itemId);
-            block.writeByte(ignoredBlueprint.blueprintIndex);
+            block.writeGUID(ignoredBlueprint.Key);
+            block.writeInt32(ignoredBlueprint.Value.Count);
+            foreach (byte item in ignoredBlueprint.Value)
+            {
+                block.writeByte(item);
+            }
         }
         ReadWrite.writeBlock("/Cloud/Ignored_Blueprints.dat", useCloud: false, block);
+    }
+
+    [Obsolete]
+    public void askCraft(CSteamID steamID, ushort id, byte index, bool force)
+    {
+    }
+
+    [Obsolete("Should not have been called externally to begin with")]
+    public void ReceiveCraft(in ServerInvocationContext context, ushort id, byte index, bool force)
+    {
+        if (Assets.find(EAssetType.ITEM, id) is ItemAsset itemAsset)
+        {
+            ReceiveCraft(in context, itemAsset.GUID, index, force);
+        }
     }
 }

@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
+using System.Text;
 using SDG.Framework.Devkit;
 using SDG.Framework.Modules;
 using Steamworks;
@@ -100,6 +101,18 @@ public class Assets : MonoBehaviour
     /// Useful for developing, but it does slow down loading.
     /// </summary>
     public static CommandLineFlag shouldValidateAssets = new CommandLineFlag(defaultValue: false, "-ValidateAssets");
+
+    /// <summary>
+    /// Should asset file metadata such as line numbers and comments be parsed?
+    /// Useful for development (e.g., error messages), but may slow down loading and increases RAM usage.
+    /// </summary>
+    public static CommandLineFlag shouldParseMetadata = new CommandLineFlag(defaultValue: false, "-ParseAssetMetadata");
+
+    /// <summary>
+    /// Should asset files be re-saved after all loading is finished?
+    /// Requires asset metadata. Useful for automatically upgrading .dat/.asset files.
+    /// </summary>
+    public static CommandLineFlag shouldResaveAssets = new CommandLineFlag(defaultValue: false, "-ResaveAssets");
 
     /// <summary>
     /// Should workshop asset names and IDs be logged while loading?
@@ -252,6 +265,10 @@ public class Assets : MonoBehaviour
 
     public static void ReportError(IAssetErrorContext context, string error)
     {
+        if (context is Asset asset)
+        {
+            asset.HasErrors = true;
+        }
         reportError(context.AssetErrorPrefix + ": " + error);
     }
 
@@ -344,6 +361,7 @@ public class Assets : MonoBehaviour
         }
         AssetOrigin assetOrigin = new AssetOrigin();
         assetOrigin.name = b;
+        assetOrigin.canResave = true;
         assetOrigins.Add(assetOrigin);
         return assetOrigin;
     }
@@ -427,7 +445,7 @@ public class Assets : MonoBehaviour
         MasterBundleConfig masterBundleConfig = findMasterBundleByName(reference.name);
         if (masterBundleConfig != null && masterBundleConfig.assetBundle != null)
         {
-            string text = masterBundleConfig.formatAssetPath(reference.path);
+            string text = masterBundleConfig.FormatAssetPathAndCache(reference.path);
             T val = masterBundleConfig.assetBundle.LoadAsset<T>(text);
             if (val == null)
             {
@@ -524,6 +542,18 @@ public class Assets : MonoBehaviour
     /// <summary>
     /// This method supports <see cref="T:SDG.Unturned.RedirectorAsset" />.
     /// </summary>
+    public static SpawnAsset FindSpawnAssetByGuidOrLegacyId(Guid guid, ushort legacyId)
+    {
+        if (guid.IsEmpty())
+        {
+            return find(EAssetType.SPAWN, legacyId) as SpawnAsset;
+        }
+        return find<SpawnAsset>(guid);
+    }
+
+    /// <summary>
+    /// This method supports <see cref="T:SDG.Unturned.RedirectorAsset" />.
+    /// </summary>
     internal static T FindItemByGuidOrLegacyId<T>(Guid guid, ushort legacyId) where T : ItemAsset
     {
         if (guid.IsEmpty())
@@ -550,9 +580,16 @@ public class Assets : MonoBehaviour
     /// <summary>
     /// Append assets that extend from result type.
     /// </summary>
-    public static void find<T>(List<T> results) where T : Asset
+    public static void find<T>(List<T> results) where T : class
     {
         FindAssetsInListByType(currentAssetMapping.assetList, results);
+    }
+
+    internal static bool HasCurrentAssetMappingChanged(ref int counter)
+    {
+        bool result = currentAssetMapping.modificationCounter != counter;
+        counter = currentAssetMapping.modificationCounter;
+        return result;
     }
 
     internal static bool HasDefaultAssetMappingChanged(ref int counter)
@@ -566,12 +603,12 @@ public class Assets : MonoBehaviour
     /// Maybe considered a hack? Ignores the current per-server asset mapping.
     /// Append assets that extend from result type.
     /// </summary>
-    internal static void FindAssetsByType_UseDefaultAssetMapping<T>(List<T> results) where T : Asset
+    internal static void FindAssetsByType_UseDefaultAssetMapping<T>(List<T> results) where T : class
     {
         FindAssetsInListByType(defaultAssetMapping.assetList, results);
     }
 
-    private static void FindAssetsInListByType<T>(List<Asset> assetList, List<T> results) where T : Asset
+    private static void FindAssetsInListByType<T>(List<Asset> assetList, List<T> results) where T : class
     {
         foreach (Asset asset in assetList)
         {
@@ -673,7 +710,7 @@ public class Assets : MonoBehaviour
                 else if (assetMapping.legacyAssetsTable[assetCategory].ContainsKey(asset.id))
                 {
                     assetMapping.legacyAssetsTable[assetCategory].TryGetValue(asset.id, out var value2);
-                    ReportError(asset, "short ID is already taken by " + value2.getTypeNameAndIdDisplayString() + "!");
+                    ReportError(asset, $"legacy ID {asset.id} already taken by {value2.FriendlyNameWithFriendlyType} in {value2.GetOriginName()}!");
                     return;
                 }
                 assetMapping.legacyAssetsTable[assetCategory].Add(asset.id, asset);
@@ -720,7 +757,7 @@ public class Assets : MonoBehaviour
             else if (assetMapping.assetDictionary.ContainsKey(asset.GUID))
             {
                 assetMapping.assetDictionary.TryGetValue(asset.GUID, out var value5);
-                ReportError(asset, "long GUID " + asset.GUID.ToString("N") + " is already taken by " + value5.getTypeNameAndIdDisplayString() + "!");
+                ReportError(asset, "GUID already taken by " + value5.FriendlyNameWithFriendlyType + " in " + value5.GetOriginName() + "!");
                 return;
             }
             assetMapping.assetDictionary.Add(asset.GUID, asset);
@@ -895,15 +932,18 @@ public class Assets : MonoBehaviour
     private static void LoadFile(AssetsWorker.AssetDefinition file)
     {
         string path = file.path;
-        DatDictionary assetData = file.assetData;
+        IDatDictionary assetData = file.assetData;
         byte[] array = file.hash;
         if (path.Length > 260)
         {
             reportError("Asset path exceeds 260 characters and might not load properly on Windows: \"" + path + "\"");
         }
-        if (!string.IsNullOrEmpty(file.assetError))
+        if (file.assetErrors != null)
         {
-            reportError("Error parsing \"" + path + "\": \"" + file.assetError + "\"");
+            foreach (string assetError in file.assetErrors)
+            {
+                reportError("Error parsing \"" + path + "\": \"" + assetError + "\"");
+            }
         }
         string directoryName = Path.GetDirectoryName(path);
         string text = (path.EndsWith("Asset.dat", StringComparison.OrdinalIgnoreCase) ? Path.GetFileName(directoryName) : Path.GetFileNameWithoutExtension(path));
@@ -929,7 +969,7 @@ public class Assets : MonoBehaviour
             try
             {
                 string text2 = File.ReadAllText(path);
-                text2 = "GUID " + value.ToString("N") + "\n" + text2;
+                text2 = "GUID " + value.ToString("N") + Environment.NewLine + text2;
                 File.WriteAllText(path, text2);
                 UnturnedLog.info($"Assigned GUID {value:N} to asset \"{path}\"");
             }
@@ -948,7 +988,7 @@ public class Assets : MonoBehaviour
             reportError("Cannot use empty GUID in \"" + path + "\"");
             return;
         }
-        DatDictionary datDictionary = assetData;
+        IDatDictionary datDictionary = assetData;
         if (assetData.TryGetDictionary("Asset", out var node2))
         {
             datDictionary = node2;
@@ -1068,9 +1108,34 @@ public class Assets : MonoBehaviour
             asset.GUID = value;
             asset.hash = array;
             asset.requiredShaderUpgrade = bundle.convertShadersToStandard || bundle.consolidateShaders;
+            asset.HasErrors = file.assetErrors != null && file.assetErrors.Count > 0;
             asset.absoluteOriginFilePath = path;
             asset.origin = file.origin;
-            asset.PopulateAsset(bundle, datDictionary, localization);
+            int num4;
+            if ((bool)shouldResaveAssets)
+            {
+                AssetOrigin origin = asset.origin;
+                if (origin != null && origin.canResave)
+                {
+                    num4 = (((bool)shouldParseMetadata) ? 1 : 0);
+                    goto IL_0646;
+                }
+            }
+            num4 = 0;
+            goto IL_0646;
+            IL_0646:
+            bool flag = (byte)num4 != 0;
+            if (flag)
+            {
+                asset.OriginParsedData = assetData;
+            }
+            PopulateAssetParameters populateAssetParameters = default(PopulateAssetParameters);
+            populateAssetParameters.bundle = bundle;
+            populateAssetParameters.data = datDictionary;
+            populateAssetParameters.localization = localization;
+            populateAssetParameters.CanPerformDataConversions = flag;
+            PopulateAssetParameters p = populateAssetParameters;
+            asset.PopulateAsset(in p);
             asset.origin.assets.Add(asset);
             AddToMapping(asset, file.origin.shouldAssetsOverrideExistingIds, defaultAssetMapping);
             bundle.unload();
@@ -1086,7 +1151,7 @@ public class Assets : MonoBehaviour
     }
 
     /// <summary>
-    /// Called when a new workshop item is installed either on client or server. 
+    /// Called when a new workshop item is installed either on client or server.
     /// </summary>
     public static void RequestAddSearchLocation(string absoluteDirectoryPath, AssetOrigin origin)
     {
@@ -1270,7 +1335,11 @@ public class Assets : MonoBehaviour
     {
         Func<Blueprint, Blueprint, bool> func = delegate(Blueprint myBlueprint, Blueprint yourBlueprint)
         {
-            if (myBlueprint.type != yourBlueprint.type)
+            if (myBlueprint.Operation != yourBlueprint.Operation)
+            {
+                return false;
+            }
+            if (myBlueprint.CategoryTagRef != yourBlueprint.CategoryTagRef)
             {
                 return false;
             }
@@ -1282,7 +1351,11 @@ public class Assets : MonoBehaviour
             {
                 return false;
             }
-            if (myBlueprint.questConditions.Length != yourBlueprint.questConditions.Length)
+            if (myBlueprint.questConditions != null != (yourBlueprint.questConditions != null))
+            {
+                return false;
+            }
+            if (myBlueprint.questConditions != null && myBlueprint.questConditions.Length != yourBlueprint.questConditions.Length)
             {
                 return false;
             }
@@ -1294,36 +1367,36 @@ public class Assets : MonoBehaviour
             {
                 return false;
             }
-            if (myBlueprint.tool != yourBlueprint.tool)
+            if (myBlueprint.TargetItem != null != (yourBlueprint.TargetItem != null))
+            {
+                return false;
+            }
+            if (myBlueprint.TargetItem != null && !myBlueprint.TargetItem.Equals(yourBlueprint.TargetItem))
             {
                 return false;
             }
             for (byte b5 = 0; b5 < myBlueprint.outputs.Length; b5++)
             {
-                if (myBlueprint.outputs[b5].id != yourBlueprint.outputs[b5].id)
+                if (myBlueprint.outputs[b5].ItemRef != yourBlueprint.outputs[b5].ItemRef)
                 {
                     return false;
                 }
             }
             for (byte b6 = 0; b6 < myBlueprint.supplies.Length; b6++)
             {
-                if (myBlueprint.supplies[b6].id != yourBlueprint.supplies[b6].id)
+                if (!myBlueprint.supplies[b6].Equals(yourBlueprint.supplies[b6]))
                 {
                     return false;
                 }
             }
-            for (byte b7 = 0; b7 < myBlueprint.supplies.Length; b7++)
+            if (myBlueprint.questConditions != null)
             {
-                if (myBlueprint.supplies[b7].amount != yourBlueprint.supplies[b7].amount)
+                for (int k = 0; k < myBlueprint.questConditions.Length; k++)
                 {
-                    return false;
-                }
-            }
-            for (int k = 0; k < myBlueprint.questConditions.Length; k++)
-            {
-                if (!myBlueprint.questConditions[k].Equals(yourBlueprint.questConditions[k]))
-                {
-                    return false;
+                    if (!myBlueprint.questConditions[k].Equals(yourBlueprint.questConditions[k]))
+                    {
+                        return false;
+                    }
                 }
             }
             if (myBlueprint.questRewards != null)
@@ -1487,6 +1560,7 @@ public class Assets : MonoBehaviour
                 AssetOrigin assetOrigin = new AssetOrigin();
                 assetOrigin.name = "Sandbox Folder \"" + fileName + "\"";
                 assetOrigin.shouldAssetsOverrideExistingIds = true;
+                assetOrigin.canResave = true;
                 assetOrigins.Add(assetOrigin);
                 AddSearchLocation(path2, assetOrigin);
             }
@@ -1654,6 +1728,7 @@ public class Assets : MonoBehaviour
         loadingStats.Reset();
         coreOrigin = new AssetOrigin();
         coreOrigin.name = "Vanilla Built-in Assets";
+        coreOrigin.canResave = Application.isEditor;
         assetOrigins.Add(coreOrigin);
         reloadOrigin = new AssetOrigin();
         reloadOrigin.name = "Reloaded Assets (Debug)";
@@ -1704,6 +1779,10 @@ public class Assets : MonoBehaviour
             CheckForNpcErrors();
         }
         CleanupMemory();
+        if ((bool)shouldResaveAssets && (bool)shouldParseMetadata)
+        {
+            ResaveAssets();
+        }
         LoadingUI.SetLoadingText("Loading_Misc");
         yield return null;
         onAssetsRefreshed?.Invoke();
@@ -1725,6 +1804,36 @@ public class Assets : MonoBehaviour
         yield return null;
         UnturnedLog.info("Launching main menu");
         SceneManager.LoadScene("Menu");
+    }
+
+    private void ResaveAssets()
+    {
+        UnturnedLog.info("Re-saving assets!");
+        DatWriter datWriter = new DatWriter();
+        MetadataPreservingDatWriter metadataPreservingDatWriter = new MetadataPreservingDatWriter();
+        foreach (Asset asset in defaultAssetMapping.assetList)
+        {
+            if (asset.OriginParsedData == null)
+            {
+                continue;
+            }
+            if (asset.HasErrors)
+            {
+                UnturnedLog.info($"Skipping re-saving asset {asset} because it loaded with errors and may lose data");
+                continue;
+            }
+            try
+            {
+                asset.PreResaveAsset(asset.OriginParsedData);
+                using StreamWriter output = new StreamWriter(asset.absoluteOriginFilePath, append: false, Encoding.UTF8);
+                datWriter.SetOutput(output);
+                metadataPreservingDatWriter.WriteRootDictionary(asset.OriginParsedData, datWriter);
+            }
+            catch (Exception e)
+            {
+                UnturnedLog.exception(e, $"Caught exception re-saving asset {asset}");
+            }
+        }
     }
 
     private IEnumerator LoadNewAssetsFromUpdate()
@@ -1853,8 +1962,8 @@ public class Assets : MonoBehaviour
     [SteamCall(ESteamCallValidation.ONLY_FROM_SERVER)]
     public static void ReceiveKickForHashMismatch(Guid guid, string serverName, string serverFriendlyName, byte[] serverHash, string serverAssetBundleNameWithoutExtension, string serverAssetOrigin)
     {
-        Provider._connectionFailureInfo = ESteamConnectionFailureInfo.CUSTOM;
         Asset asset = find(guid);
+        bool flag;
         if (asset != null)
         {
             string text = asset.origin?.name;
@@ -1869,21 +1978,25 @@ public class Assets : MonoBehaviour
                 {
                     text2 = $"Client and server loaded \"{serverFriendlyName}\" from different asset bundles! (File: \"{asset.name}\" ID: {guid:N})";
                     text2 = text2 + "\nClient asset bundle is \"" + asset.originMasterBundle.assetBundleNameWithoutExtension + "\", whereas server asset bundle is \"" + serverAssetBundleNameWithoutExtension + "\".";
+                    flag = true;
                 }
                 else if (!string.IsNullOrEmpty(serverAssetBundleNameWithoutExtension) && asset.originMasterBundle == null)
                 {
                     text2 = $"Client loaded \"{serverFriendlyName}\" from legacy asset bundle but server did not! (File: \"{asset.name}\" ID: {guid:N})";
                     text2 = text2 + "\nServer asset bundle name: \"" + serverAssetBundleNameWithoutExtension + "\".";
+                    flag = true;
                 }
                 else if (string.IsNullOrEmpty(serverAssetBundleNameWithoutExtension) && asset.originMasterBundle != null)
                 {
                     text2 = $"Server loaded \"{serverFriendlyName}\" from legacy asset bundle but client did not! (File: \"{asset.name}\" ID: {guid:N})";
                     text2 = text2 + "\nClient asset bundle name: \"" + asset.originMasterBundle.assetBundleNameWithoutExtension + "\"";
+                    flag = true;
                 }
                 else if (Hash.verifyHash(asset.hash, serverHash))
                 {
                     text2 = $"Server asset bundle hash out of date for \"{serverFriendlyName}\"! (File: \"{asset.name}\" ID: {guid:N})";
                     text2 = text2 + "\nThis probably means the mod creator should re-export the \"" + serverAssetBundleNameWithoutExtension + "\" asset bundle.";
+                    flag = false;
                 }
                 else
                 {
@@ -1891,6 +2004,7 @@ public class Assets : MonoBehaviour
                     text2 += "\nUsually this means the files are different versions in which case updating the client and server might fix it.";
                     text2 += "\nAlternatively the file may have been corrupted, locally modified, or modified on the server.";
                     text2 = text2 + "\nClient hash is " + Hash.toString(asset.hash) + ", whereas server hash is " + Hash.toString(serverHash) + ".";
+                    flag = true;
                 }
             }
             else
@@ -1899,6 +2013,7 @@ public class Assets : MonoBehaviour
                 text2 += "\nThis probably means an existing file was copied, but the mod creator can fix it by changing the ID.";
                 text2 = ((!string.Equals(asset.FriendlyName, serverFriendlyName)) ? (text2 + "\nClient display name is \"" + asset.FriendlyName + "\", whereas server display name is \"" + serverFriendlyName + "\".") : (text2 + "\nDisplay name \"" + serverFriendlyName + "\" matches between client and server."));
                 text2 = ((!string.Equals(asset.name, serverName)) ? (text2 + "\nClient file name is \"" + asset.name + "\", whereas server file name is \"" + serverName + "\".") : (text2 + "\nFile name \"" + asset.name + "\" matches between client and server."));
+                flag = true;
             }
             text2 = ((!string.Equals(text, serverAssetOrigin)) ? (text2 + "\nClient asset is from " + text + ", whereas server asset is from " + serverAssetOrigin + ".") : (text2 + "\nClient and server agree this asset is from " + text + "."));
             Provider._connectionFailureReason = text2;
@@ -1906,7 +2021,9 @@ public class Assets : MonoBehaviour
         else
         {
             Provider._connectionFailureReason = $"Unknown asset hash mismatch? (should never happen) Name: \"{serverFriendlyName}\" File: \"{serverName}\" Id: {guid:N}";
+            flag = true;
         }
+        Provider._connectionFailureInfo = (flag ? ESteamConnectionFailureInfo.CUSTOM_SHOULD_VERIFY_GAME_FILES : ESteamConnectionFailureInfo.CUSTOM);
         Provider.RequestDisconnect($"Kicked for asset hash mismatch guid: {guid:N} serverName: \"{serverName}\" serverFriendlyName: \"{serverFriendlyName}\" serverHash: {Hash.toString(serverHash)} serverAssetBundleName: \"{serverAssetBundleNameWithoutExtension}\" serverAssetOrigin: \"{serverAssetOrigin}\"");
     }
 

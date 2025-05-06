@@ -1,4 +1,4 @@
-GUID 3697845b16fa4bbfb568117fbcf8c57c
+﻿GUID 3697845b16fa4bbfb568117fbcf8c57c
 Type Medical
 Rarity Rare
 Useable Consumeable
@@ -11,4 +11,26 @@ Size_Z 0.5
 Aid
 Bones_Modifier Heal
 Virus 5
-Health 5
+Health 20
+
+Blueprints
+[
+	{
+		CategoryTag "d089feb7e43f40c5a7dfcefc36998cfb" // Supplies
+		InputItems
+		[
+			"7aee55ea2abf4f3fb70c4b2677da0e14" // Chemicals
+			"ae1fc8674d0b4443b3ad9a68776dcf0f x 2" // Glue
+			"21ede8ebffb14c5580e8c7ad149e335e" // Metal Scrap
+			"c0b0f4a9f46c49a59f4558210bf36da5" // Metal Can
+		]
+		OutputItems this
+		Skill Craft
+		Skill_Level 1
+		RequiresNearbyCraftingTags
+		[
+			"99896da563a748148460c67b9962874f" // Pharmaceutical
+		]
+		Effect "7eceb9f7751d4634b572c8e236355104" // Rip
+	}
+]

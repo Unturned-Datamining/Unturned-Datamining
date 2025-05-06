@@ -16,6 +16,8 @@ public class PlayerDashboardUI
 
     private static SleekButtonIcon informationButton;
 
+    private PlayerDashboardCraftingUI craftingUI;
+
     private PlayerDashboardInformationUI infoUI;
 
     public static void open()
@@ -161,6 +163,7 @@ public class PlayerDashboardUI
     /// </summary>
     public void OnDestroy()
     {
+        craftingUI.OnDestroy();
         infoUI.OnDestroy();
     }
 
@@ -199,7 +202,7 @@ public class PlayerDashboardUI
         craftingButton.iconColor = ESleekTint.FOREGROUND;
         craftingButton.fontSize = ESleekFontSize.Medium;
         container.AddChild(craftingButton);
-        if (Level.info != null && !Level.info.configData.Allow_Crafting)
+        if (!Level.IsCraftingAllowedByLevel)
         {
             createDisabledLabel(craftingButton, local);
         }
@@ -255,7 +258,7 @@ public class PlayerDashboardUI
         }
         bundle.unload();
         new PlayerDashboardInventoryUI();
-        new PlayerDashboardCraftingUI();
+        craftingUI = new PlayerDashboardCraftingUI();
         new PlayerDashboardSkillsUI();
         infoUI = new PlayerDashboardInformationUI();
     }

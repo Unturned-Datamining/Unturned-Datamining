@@ -1,4 +1,4 @@
-GUID 266602d956ad423d85183715f6bcc594
+﻿GUID 266602d956ad423d85183715f6bcc594
 Type Barricade
 Useable Barricade
 Build Bed
@@ -16,14 +16,26 @@ Offset 0.2
 Explosion 37
 Vulnerable
 
-Blueprints 1
-Blueprint_0_Type Furniture
-Blueprint_0_Supplies 2
-Blueprint_0_Supply_0_ID 66
-Blueprint_0_Supply_0_Amount 9
-Blueprint_0_Supply_1_ID 256
-Blueprint_0_Supply_1_Amount 1
-Blueprint_0_Supply_1_Critical
-Blueprint_0_Build 27
+Blueprints
+[
+	{
+		CategoryTag "b0c6cc0a8b4346be89aef697ecdb8e46" // Furniture
+		InputItems
+		[
+			{
+				ID "cbc5d88aa8524d37b4bde233fa21f030" // White Bedroll
+				Critical true
+			}
+			"75c8885c931f4d0a919e4af9c5ee099b" // Green Flare
+		]
+		RequiresNearbyCraftingTags
+		[
+			"8e86b740dafc46f7bf98c5040c9b223e" // DyeVat
+		]
+		OutputItems this
+		Effect "61edeaee95b742a3a0b589f769261cdb" // DyeVatCraftingEffect
+	}
+]
+
 PlacementAudioClip Sounds/WoodenPlacement.mp3
 Has_Clip_Prefab false

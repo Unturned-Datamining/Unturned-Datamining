@@ -1,24 +1,28 @@
 using System;
+using System.Collections.Generic;
+using Unturned.SystemEx;
 
 namespace SDG.Unturned;
 
 public class Blueprint
 {
-    private byte _id;
+    private byte index;
 
-    private EBlueprintType _type;
+    internal EBlueprintOperation _operation;
+
+    internal CachingAssetRef _categoryTagRef;
 
     private BlueprintSupply[] _supplies;
 
     private BlueprintOutput[] _outputs;
 
-    private ushort _tool;
+    private bool hasCheckedForVanillaHeatSourceTag;
 
-    private bool _toolCritical;
+    private bool requiresVanillaHeatSourceTag;
 
-    private Guid _buildEffectGuid;
+    private static CachingAssetRef[] onlyVanillaHeatSourceTag = new CachingAssetRef[1] { PowerTool.VanillaCraftingHeatTag };
 
-    private ushort _build;
+    internal CachingBcAssetRef effectAssetRef;
 
     private byte _level;
 
@@ -31,19 +35,7 @@ public class Blueprint
     /// </summary>
     public bool withoutAttachments;
 
-    public bool hasSupplies;
-
-    public bool hasTool;
-
-    public bool hasItem;
-
-    public bool hasSkills;
-
-    public ushort tools;
-
-    public ushort products;
-
-    public ushort items;
+    protected NPCConditionsList questConditionsList;
 
     protected NPCRewardsList questRewardsList;
 
@@ -54,30 +46,49 @@ public class Blueprint
     /// </summary>
     public bool canBeVisibleWhenSearchedWithoutRequiredItems = true;
 
-    public ItemAsset sourceItem { get; protected set; }
+    /// <summary>
+    /// Optional case-sensitive identifier in list of blueprints.
+    /// Added as an alternative to referencing blueprints by index.
+    /// Defaults to null.
+    /// </summary>
+    public string Name { get; internal set; }
 
-    public byte id => _id;
+    public IBlueprintOwner Owner { get; internal set; }
 
-    public EBlueprintType type => _type;
+    /// <summary>
+    /// Index into Owner's blueprints list.
+    /// </summary>
+    public byte Index => index;
+
+    /// <summary>
+    /// Operation replaces the special behavior for EBlueprintType.Ammo and EBlueprintType.Repair.
+    /// </summary>
+    public EBlueprintOperation Operation => _operation;
+
+    /// <summary>
+    /// Note: if resolving ref please use GetCategoryTag instead for caching.
+    /// </summary>
+    public CachingAssetRef CategoryTagRef => _categoryTagRef;
 
     public BlueprintSupply[] supplies => _supplies;
 
+    /// <summary>
+    /// Only applicable for operations with a target item.
+    ///
+    /// Nelson 2025-04-11: initially, this was implemented as the last item in supplies list. However, there are a
+    /// lot of checks for special handling of target item, so I think it makes sense to separate.
+    /// </summary>
+    public BlueprintSupply TargetItem { get; set; }
+
     public BlueprintOutput[] outputs => _outputs;
 
-    public ushort tool => _tool;
+    /// <summary>
+    /// If not null, these tags must be provided by nearby objects to craft this blueprint.
+    /// Note: this is the list as-configured. It has not been filtered according to gameplay config.
+    /// </summary>
+    public CachingAssetRef[] RequiresNearbyCraftingTags { get; internal set; }
 
-    public bool toolCritical => _toolCritical;
-
-    public Guid BuildEffectGuid => _buildEffectGuid;
-
-    public ushort build
-    {
-        [Obsolete]
-        get
-        {
-            return _build;
-        }
-    }
+    public Guid BuildEffectGuid => effectAssetRef.Guid;
 
     public byte level => _level;
 
@@ -90,12 +101,19 @@ public class Blueprint
     /// <summary>
     /// Must match conditions to craft.
     /// </summary>
-    public INPCCondition[] questConditions { get; protected set; }
+    public INPCCondition[] questConditions => questConditionsList.conditions;
 
     /// <summary>
     /// Extra rewards given after crafting. Not displayed.
     /// </summary>
     public INPCReward[] questRewards => questRewardsList.rewards;
+
+    /// <summary>
+    /// Defaults to false. If true, blueprint can become visible in the crafting list even when NPC conditions
+    /// are not met. This should typically only be enabled if all conditions are configured to be visible in the
+    /// details panel. Otherwise, the default "conditions unmet" label isn't very informative for players.
+    /// </summary>
+    public bool CanBeVisibleWithUnmetConditions { get; set; }
 
     internal bool IsOutputFreeformBuildable
     {
@@ -106,9 +124,9 @@ public class Blueprint
                 return false;
             }
             BlueprintOutput[] array = _outputs;
-            foreach (BlueprintOutput blueprintOutput in array)
+            for (int i = 0; i < array.Length; i++)
             {
-                if (Assets.find(EAssetType.ITEM, blueprintOutput.id) is ItemBarricadeAsset { build: EBuild.FREEFORM })
+                if (array[i].FindItemAsset() is ItemBarricadeAsset { build: EBuild.FREEFORM })
                 {
                     return true;
                 }
@@ -117,35 +135,131 @@ public class Blueprint
         }
     }
 
+    [Obsolete("Changed to OwnerAsset because blueprints can be contained in CraftingAsset now")]
+    public ItemAsset sourceItem => GetOwnerAsset() as ItemAsset;
+
+    [Obsolete("Replaced by input item ShouldConsume false")]
+    public ushort tool
+    {
+        get
+        {
+            if (_supplies != null && _supplies.Length != 0)
+            {
+                BlueprintSupply blueprintSupply = _supplies[_supplies.Length - 1];
+                if (!blueprintSupply.ShouldConsume)
+                {
+                    return blueprintSupply.id;
+                }
+            }
+            return 0;
+        }
+    }
+
+    [Obsolete("Replaced by input item ShouldConsume false")]
+    public bool toolCritical
+    {
+        get
+        {
+            if (_supplies != null && _supplies.Length != 0)
+            {
+                BlueprintSupply blueprintSupply = _supplies[_supplies.Length - 1];
+                if (!blueprintSupply.ShouldConsume)
+                {
+                    return blueprintSupply.ShouldConsume;
+                }
+            }
+            return false;
+        }
+    }
+
+    [Obsolete("Renamed to Index to distinguish from named blueprint")]
+    public byte id => index;
+
+    [Obsolete]
+    public ushort build => effectAssetRef.LegacyId;
+
+    [Obsolete("Please use CategoryTags and Operation properties instead.")]
+    public EBlueprintType type
+    {
+        get
+        {
+            switch (_operation)
+            {
+            case EBlueprintOperation.FillTargetItem:
+                return EBlueprintType.AMMO;
+            case EBlueprintOperation.RepairTargetItem:
+                return EBlueprintType.REPAIR;
+            default:
+            {
+                for (int i = 0; i < EBlueprintTypeEx.legacyBlueprintTypeCategoryTagRefs.Length; i++)
+                {
+                    if (_categoryTagRef == EBlueprintTypeEx.legacyBlueprintTypeCategoryTagRefs[i])
+                    {
+                        return (EBlueprintType)i;
+                    }
+                }
+                return EBlueprintType.TOOL;
+            }
+            }
+        }
+    }
+
+    public Asset GetOwnerAsset()
+    {
+        return Owner.GetBlueprintOwnerAsset();
+    }
+
+    /// <summary>
+    /// Category tag replaces the blueprint "Type" which acted as both category AND behaviour modifier.
+    /// </summary>
+    public TagAsset GetCategoryTag()
+    {
+        return _categoryTagRef.Get<TagAsset>();
+    }
+
+    public CachingAssetRef[] GetApplicableRequiredNearbyCraftingTags()
+    {
+        if (RequiresNearbyCraftingTags == null || RequiresNearbyCraftingTags.Length < 1)
+        {
+            return null;
+        }
+        if (Provider.modeConfigData?.Gameplay?.Enable_Workstation_Requirements ?? true)
+        {
+            return RequiresNearbyCraftingTags;
+        }
+        if (!hasCheckedForVanillaHeatSourceTag)
+        {
+            hasCheckedForVanillaHeatSourceTag = true;
+            CachingAssetRef[] requiresNearbyCraftingTags = RequiresNearbyCraftingTags;
+            for (int i = 0; i < requiresNearbyCraftingTags.Length; i++)
+            {
+                if (requiresNearbyCraftingTags[i] == PowerTool.VanillaCraftingHeatTag)
+                {
+                    requiresVanillaHeatSourceTag = true;
+                    break;
+                }
+            }
+        }
+        if (!requiresVanillaHeatSourceTag)
+        {
+            return null;
+        }
+        return onlyVanillaHeatSourceTag;
+    }
+
     public EffectAsset FindBuildEffectAsset()
     {
-        return Assets.FindEffectAssetByGuidOrLegacyId(_buildEffectGuid, _build);
+        return effectAssetRef.Get<EffectAsset>();
     }
 
     public bool areConditionsMet(Player player)
     {
-        if (questConditions != null)
-        {
-            for (int i = 0; i < questConditions.Length; i++)
-            {
-                if (!questConditions[i].isConditionMet(player))
-                {
-                    return false;
-                }
-            }
-        }
-        return true;
+        return questConditionsList.AreConditionsMet(player);
     }
 
     public void ApplyConditions(Player player)
     {
-        if (questConditions != null)
-        {
-            for (int i = 0; i < questConditions.Length; i++)
-            {
-                questConditions[i].ApplyCondition(player);
-            }
-        }
+        questConditionsList.ApplyConditions(player);
     }
 
     public void GrantRewards(Player player)
@@ -153,59 +267,118 @@ public class Blueprint
         questRewardsList.Grant(player);
     }
 
-    public Blueprint(ItemAsset newSourceItem, byte newID, EBlueprintType newType, BlueprintSupply[] newSupplies, BlueprintOutput[] newOutputs, ushort newTool, bool newToolCritical, ushort newBuild, byte newLevel, EBlueprintSkill newSkill, bool newTransferState, string newMap, INPCCondition[] newQuestConditions, NPCRewardsList newQuestRewardsList)
-        : this(newSourceItem, newID, newType, newSupplies, newOutputs, newTool, newToolCritical, newBuild, default(Guid), newLevel, newSkill, newTransferState, newWithoutAttachments: false, newMap, newQuestConditions, newQuestRewardsList)
+    public bool DoesRequireNearbyCraftingTag(TagAsset tag)
+    {
+        if (tag == null || RequiresNearbyCraftingTags == null)
+        {
+            return false;
+        }
+        for (int i = 0; i < RequiresNearbyCraftingTags.Length; i++)
+        {
+            if (RequiresNearbyCraftingTags[i].IsReferenceTo(tag))
+            {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public int CountOverlappingRequiredNearbyCraftingTags(HashSet<TagAsset> tags)
+    {
+        if (tags == null || tags.Count < 1 || RequiresNearbyCraftingTags.IsNullOrEmpty())
+        {
+            return 0;
+        }
+        int num = 0;
+        for (int i = 0; i < RequiresNearbyCraftingTags.Length; i++)
+        {
+            TagAsset tagAsset = RequiresNearbyCraftingTags[i].Get<TagAsset>();
+            if (tagAsset != null && tags.Contains(tagAsset))
+            {
+                num++;
+            }
+        }
+        return num;
+    }
+
+    public bool ContainsAnyOfItems(HashSet<ItemAsset> availableItems)
+    {
+        if (supplies == null)
+        {
+            return false;
+        }
+        BlueprintSupply[] array = supplies;
+        for (int i = 0; i < array.Length; i++)
+        {
+            ItemAsset itemAsset = array[i].FindItemAsset();
+            if (itemAsset != null && availableItems.Contains(itemAsset))
+            {
+                return true;
+            }
+        }
+        ItemAsset itemAsset2 = TargetItem?.FindItemAsset();
+        if (itemAsset2 != null && availableItems.Contains(itemAsset2))
+        {
+            return true;
+        }
+        return false;
+    }
+
+    [Obsolete]
+    public Blueprint(ItemAsset newSourceItem, byte newID, EBlueprintType newType, BlueprintSupply[] newSupplies, BlueprintOutput[] newOutputs, ushort newTool, bool newToolCritical, ushort newBuild, byte newLevel, EBlueprintSkill newSkill, bool newTransferState, string newMap, NPCConditionsList newQuestConditionsList, NPCRewardsList newQuestRewardsList)
+        : this(newID, newSupplies, newOutputs, newLevel, newSkill, newTransferState, newWithoutAttachments: false, newMap, newQuestConditionsList, newQuestRewardsList)
     {
     }
 
-    public Blueprint(ItemAsset newSourceItem, byte newID, EBlueprintType newType, BlueprintSupply[] newSupplies, BlueprintOutput[] newOutputs, ushort newTool, bool newToolCritical, ushort newBuild, Guid newBuildEffectGuid, byte newLevel, EBlueprintSkill newSkill, bool newTransferState, bool newWithoutAttachments, string newMap, INPCCondition[] newQuestConditions, NPCRewardsList newQuestRewardsList)
+    public Blueprint(byte newIndex, BlueprintSupply[] newSupplies, BlueprintOutput[] newOutputs, byte newLevel, EBlueprintSkill newSkill, bool newTransferState, bool newWithoutAttachments, string newMap, NPCConditionsList newQuestConditionsList, NPCRewardsList newQuestRewardsList)
     {
-        sourceItem = newSourceItem;
-        _id = newID;
-        _type = newType;
+        index = newIndex;
         _supplies = newSupplies;
         _outputs = newOutputs;
-        _tool = newTool;
-        _toolCritical = newToolCritical;
-        _buildEffectGuid = newBuildEffectGuid;
-        _build = newBuild;
         _level = newLevel;
         _skill = newSkill;
         _transferState = newTransferState;
         withoutAttachments = newWithoutAttachments;
         map = newMap;
-        questConditions = newQuestConditions;
+        questConditionsList = newQuestConditionsList;
         questRewardsList = newQuestRewardsList;
-        hasSupplies = false;
-        hasTool = false;
-        tools = 0;
     }
 
     public override string ToString()
     {
         string empty = string.Empty;
-        empty += type;
+        empty += GetCategoryTag()?.FriendlyName;
         empty += ": ";
-        for (byte b = 0; b < supplies.Length; b++)
+        for (int i = 0; i < supplies.Length; i++)
         {
-            if (b > 0)
+            if (i > 0)
             {
                 empty += " + ";
             }
-            empty += supplies[b].id;
-            empty += "x";
-            empty += supplies[b].amount;
+            empty += supplies[i].FindItemAsset()?.FriendlyName ?? "null";
+            empty += " x";
+            empty += supplies[i].amount;
         }
-        empty += " = ";
-        for (byte b2 = 0; b2 < outputs.Length; b2++)
+        if (TargetItem != null)
         {
-            if (b2 > 0)
+            empty += " -> ";
+            empty += TargetItem.FindItemAsset()?.FriendlyName ?? "null";
+            empty += " x";
+            empty += TargetItem.amount;
+        }
+        if (outputs != null && outputs.Length != 0)
+        {
+            empty += " = ";
+            for (int j = 0; j < outputs.Length; j++)
             {
-                empty += " + ";
+                if (j > 0)
+                {
+                    empty += " + ";
+                }
+                empty += outputs[j].FindItemAsset()?.FriendlyName ?? "null";
+                empty += " x";
+                empty += outputs[j].amount;
             }
-            empty += outputs[b2].id;
-            empty += "x";
-            empty += outputs[b2].amount;
         }
         return empty;
     }

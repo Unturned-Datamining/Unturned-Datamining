@@ -346,18 +346,20 @@ public class ResourceManager : SteamCaller
 
     internal void SendRegion(SteamPlayer client, byte x, byte y)
     {
-        List<ResourceSpawnpoint> regionTrees = LevelGround.trees[x, y];
-        SendResources.Invoke(ENetReliability.Reliable, client.transportConnection, delegate(NetPakWriter writer)
+        SendResources.Invoke(ENetReliability.Reliable, client.transportConnection, SendResources_Write, x, y);
+    }
+
+    private static void SendResources_Write(NetPakWriter writer, byte x, byte y)
+    {
+        List<ResourceSpawnpoint> list = LevelGround.trees[x, y];
+        writer.WriteUInt8(x);
+        writer.WriteUInt8(y);
+        ushort num = (ushort)list.Count;
+        writer.WriteUInt16(num);
+        for (ushort num2 = 0; num2 < num; num2++)
         {
-            writer.WriteUInt8(x);
-            writer.WriteUInt8(y);
-            ushort num = (ushort)regionTrees.Count;
-            writer.WriteUInt16(num);
-            for (ushort num2 = 0; num2 < num; num2++)
-            {
-                writer.WriteBit(regionTrees[num2].isDead);
-            }
-        });
+            writer.WriteBit(list[num2].isDead);
+        }
     }
 
     public static ResourceSpawnpoint getResourceSpawnpoint(byte x, byte y, ushort index)

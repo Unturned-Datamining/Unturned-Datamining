@@ -1,4 +1,4 @@
-GUID c4ddc94171524da294cd5c4daea98ddd
+﻿GUID c4ddc94171524da294cd5c4daea98ddd
 Type Magazine
 Rarity Epic
 ID 1209
@@ -28,23 +28,33 @@ Object_Damage 200
 Explosion 34
 Explosive
 
-Blueprints 2
-Blueprint_0_Type Gear
-Blueprint_0_Supplies 3
-Blueprint_0_Supply_0_ID 347
-Blueprint_0_Supply_0_Amount 1
-Blueprint_0_Supply_1_ID 69
-Blueprint_0_Supply_1_Amount 1
-Blueprint_0_Supply_2_ID 73
-Blueprint_0_Supply_2_Amount 2
-Blueprint_0_Level 2
-Blueprint_0_Skill Craft
-Blueprint_0_Build 27
-Blueprint_1_Type Tool
-Blueprint_1_Supplies 1
-Blueprint_1_Supply_0_ID this
-Blueprint_1_Supply_0_AllowEmpty true
-Blueprint_1_Supply_0_Prioritization LowestAmount
-Blueprint_1_Product "73" // Explosives
-Blueprint_1_Products 1
-Blueprint_1_Build 27
+Blueprints
+[
+	{
+		CategoryTag "cdb2df24b76d4c6e9d8411c940d8337f" // Gear
+		InputItems
+		[
+			"b5c948f84f7e44ba882fc8cecf8ae731" // Arrow
+			"8c25cf28c76a4634855f404c8972c0ae" // Tape
+			"8ce5c560166545499432d6e01ce399cc x 2" // Raw Explosives
+		]
+		OutputItems this
+		Skill Craft
+		Skill_Level 2
+		Effect "84347b13028340b8976033c08675d458" // Wrench
+	}
+	{
+		Name Salvage
+		CategoryTag "7ed29f9101ae4523a3b2e389414b7bd9" // Salvage
+		InputItems
+		[
+			{
+				ID this
+				Prioritization LowestAmount
+				CountEmptyAsOne true
+			}
+		]
+		OutputItems "8ce5c560166545499432d6e01ce399cc" // Raw Explosives
+		Effect "84347b13028340b8976033c08675d458" // Wrench
+	}
+]

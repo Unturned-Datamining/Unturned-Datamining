@@ -4,6 +4,8 @@ namespace SDG.Unturned;
 
 public abstract class VendorElement
 {
+    protected NPCConditionsList conditionsList;
+
     protected NPCRewardsList rewardsList;
 
     /// <summary>
@@ -25,8 +27,10 @@ public abstract class VendorElement
 
     public uint cost { get; protected set; }
 
-    public INPCCondition[] conditions { get; protected set; }
+    [Obsolete]
+    public INPCCondition[] conditions => conditionsList.conditions;
 
+    [Obsolete]
     public INPCReward[] rewards => rewardsList.rewards;
 
     public abstract string displayName { get; }
@@ -39,28 +43,12 @@ public abstract class VendorElement
 
     public bool areConditionsMet(Player player)
     {
-        if (conditions != null)
-        {
-            for (int i = 0; i < conditions.Length; i++)
-            {
-                if (!conditions[i].isConditionMet(player))
-                {
-                    return false;
-                }
-            }
-        }
-        return true;
+        return conditionsList.AreConditionsMet(player);
     }
 
     public void ApplyConditions(Player player)
     {
-        if (conditions != null)
-        {
-            for (int i = 0; i < conditions.Length; i++)
-            {
-                conditions[i].ApplyCondition(player);
-            }
-        }
+        conditionsList.ApplyConditions(player);
     }
 
     public void GrantRewards(Player player)
@@ -68,14 +56,14 @@ public abstract class VendorElement
         rewardsList.Grant(player);
     }
 
-    public VendorElement(VendorAsset newOuterAsset, byte newIndex, Guid newGuid, ushort newLegacyId, uint newCost, INPCCondition[] newConditions, NPCRewardsList newRewardsList, string newDescriptionOverride)
+    public VendorElement(VendorAsset newOuterAsset, byte newIndex, Guid newGuid, ushort newLegacyId, uint newCost, NPCConditionsList newConditionsList, NPCRewardsList newRewardsList, string newDescriptionOverride)
     {
         outerAsset = newOuterAsset;
         index = newIndex;
         TargetAssetGuid = newGuid;
         id = newLegacyId;
         cost = newCost;
-        conditions = newConditions;
+        conditionsList = newConditionsList;
         rewardsList = newRewardsList;
         descriptionOverride = newDescriptionOverride;
     }

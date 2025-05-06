@@ -8,7 +8,7 @@ public class MainMenuWorkshopLiveConfig
 
     public MainMenuWorkshopPopularLiveConfig popular = new MainMenuWorkshopPopularLiveConfig();
 
-    public void Parse(DatDictionary data)
+    public void Parse(IDatDictionary data)
     {
         allowNews = data.ParseBool("AllowNews");
         if (data.TryGetDictionary("Featured", out var node))

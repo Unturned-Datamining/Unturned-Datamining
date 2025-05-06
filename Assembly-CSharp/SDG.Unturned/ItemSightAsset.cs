@@ -40,17 +40,17 @@ public class ItemSightAsset : ItemCaliberAsset
 
         public bool TryParse(IDatNode node)
         {
-            if (node is DatDictionary datDictionary)
+            if (node is IDatDictionary dictionary)
             {
-                if (!datDictionary.TryParseFloat("Distance", out distance))
+                if (!dictionary.TryParseFloat("Distance", out distance))
                 {
                     return false;
                 }
-                lineOffset = datDictionary.ParseFloat("LineOffset");
-                lineWidth = datDictionary.ParseFloat("LineWidth", 0.05f);
-                side = datDictionary.ParseEnum("Side", ESide.Right);
-                hasLabel = datDictionary.ParseBool("HasLabel", defaultValue: true);
-                color = datDictionary.ParseColor32RGB("Color");
+                lineOffset = dictionary.ParseFloat("LineOffset");
+                lineWidth = dictionary.ParseFloat("LineWidth", 0.05f);
+                side = dictionary.ParseEnum("Side", ESide.Right);
+                hasLabel = dictionary.ParseBool("HasLabel", defaultValue: true);
+                color = dictionary.ParseColor32RGB("Color");
                 return true;
             }
             return false;
@@ -112,34 +112,34 @@ public class ItemSightAsset : ItemCaliberAsset
         }
     }
 
-    public override void PopulateAsset(Bundle bundle, DatDictionary data, Local localization)
+    public override void PopulateAsset(in PopulateAssetParameters p)
     {
-        base.PopulateAsset(bundle, data, localization);
-        _sight = loadRequiredAsset<GameObject>(bundle, "Sight");
-        if (data.ContainsKey("Vision"))
+        base.PopulateAsset(in p);
+        _sight = loadRequiredAsset<GameObject>(p.bundle, "Sight");
+        if (p.data.ContainsKey("Vision"))
         {
-            _vision = (ELightingVision)Enum.Parse(typeof(ELightingVision), data.GetString("Vision"), ignoreCase: true);
+            _vision = (ELightingVision)Enum.Parse(typeof(ELightingVision), p.data.GetString("Vision"), ignoreCase: true);
             if (vision == ELightingVision.CIVILIAN)
             {
-                nightvisionColor = data.LegacyParseColor32RGB("Nightvision_Color", LevelLighting.NIGHTVISION_CIVILIAN);
-                nightvisionFogIntensity = data.ParseFloat("Nightvision_Fog_Intensity", 0.5f);
+                nightvisionColor = p.data.LegacyParseColor32RGB("Nightvision_Color", LevelLighting.NIGHTVISION_CIVILIAN);
+                nightvisionFogIntensity = p.data.ParseFloat("Nightvision_Fog_Intensity", 0.5f);
             }
             else if (vision == ELightingVision.MILITARY)
             {
-                nightvisionColor = data.LegacyParseColor32RGB("Nightvision_Color", LevelLighting.NIGHTVISION_MILITARY);
-                nightvisionFogIntensity = data.ParseFloat("Nightvision_Fog_Intensity", 0.25f);
+                nightvisionColor = p.data.LegacyParseColor32RGB("Nightvision_Color", LevelLighting.NIGHTVISION_MILITARY);
+                nightvisionFogIntensity = p.data.ParseFloat("Nightvision_Fog_Intensity", 0.25f);
             }
         }
         else
         {
             _vision = ELightingVision.NONE;
         }
-        zoom = Mathf.Max(1f, data.ParseFloat("Zoom"));
-        thirdPersonZoomFactor = Mathf.Max(1f, data.ParseFloat("ThirdPerson_Zoom", 1.25f));
-        shouldZoomUsingEyes = data.ParseBool("Zoom_Using_Eyes");
-        shouldOffsetScopeOverlayByOneTexel = data.ParseBool("Offset_Scope_Overlay_By_One_Texel");
-        _isHolographic = data.ContainsKey("Holographic");
-        distanceMarkers = data.ParseListOfStructs<DistanceMarker>("DistanceMarkers");
+        zoom = Mathf.Max(1f, p.data.ParseFloat("Zoom"));
+        thirdPersonZoomFactor = Mathf.Max(1f, p.data.ParseFloat("ThirdPerson_Zoom", 1.25f));
+        shouldZoomUsingEyes = p.data.ParseBool("Zoom_Using_Eyes");
+        shouldOffsetScopeOverlayByOneTexel = p.data.ParseBool("Offset_Scope_Overlay_By_One_Texel");
+        _isHolographic = p.data.ContainsKey("Holographic");
+        distanceMarkers = p.data.ParseListOfStructs<DistanceMarker>("DistanceMarkers");
     }
 
     internal override void BuildCargoData(CargoBuilder builder)

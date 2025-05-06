@@ -1,54 +1,54 @@
-"Metadata"
+﻿Metadata
 {
-	"GUID" "22a2d4cf2d0341e08bee3d9557b78d23"
-	"Type" "SDG.Unturned.WeatherAsset, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null"
+	GUID 22a2d4cf2d0341e08bee3d9557b78d23
+	Type SDG.Unturned.WeatherAsset, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
 }
-"Asset"
+Asset
 {
-	"Volume_Mask" "2"
-	"Fade_In_Duration" "20"
-	"Fade_Out_Duration" "20"
-	"Override_Fog" "true"
-	"Override_Atmospheric_Fog" "false"
-	"Fog_Blend_Exponent" "1.25"
-	"Dawn"
+	Volume_Mask 2
+	Fade_In_Duration 20
+	Fade_Out_Duration 20
+	Override_Fog true
+	Override_Atmospheric_Fog false
+	Fog_Blend_Exponent 1.25
+	Dawn
 	{
-		"Fog_Color"
+		Fog_Color
 		{
-			"Level_Enum" "SKY_SKY"
+			Level_Enum SKY_SKY
 		}
-		"Fog_Density" "0.7"
+		Fog_Density 0.7
 	}
-	"Midday"
+	Midday
 	{
-		"Fog_Color"
+		Fog_Color
 		{
-			"Level_Enum" "SKY_SKY"
+			Level_Enum SKY_SKY
 		}
-		"Fog_Density" "0.6"
+		Fog_Density 0.6
 	}
-	"Dusk"
+	Dusk
 	{
-		"Fog_Color"
+		Fog_Color
 		{
-			"Level_Enum" "SKY_SKY"
+			Level_Enum SKY_SKY
 		}
-		"Fog_Density" "0.7"
+		Fog_Density 0.7
 	}
-	"Midnight"
+	Midnight
 	{
-		"Fog_Color"
+		Fog_Color
 		{
-			"Level_Enum" "SKY_SKY"
+			Level_Enum SKY_SKY
 		}
-		"Fog_Density" "0.8"
+		Fog_Density 0.8
 	}
-	"Effects"
+	Effects
 	[
 		{
-			"Prefab" "Effects/Weather/GentleSnowParticles.prefab"
-			"Emission_Exponent" "2.0"
-			"Translate_With_View" "true"
+			Prefab Effects/Weather/GentleSnowParticles.prefab
+			Emission_Exponent 2.0
+			Translate_With_View true
 		}
 	]
 }

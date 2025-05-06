@@ -1,4 +1,4 @@
-GUID 35457ca38d03426091815950e067262b
+﻿GUID 35457ca38d03426091815950e067262b
 Type Storage
 Rarity Rare
 Useable Barricade
@@ -14,22 +14,39 @@ Range 4
 Radius 0.5
 Offset 0.75
 
-Storage_X 4
+Storage_X 5
 Storage_Y 6
 
 Explosion 36
 
-Blueprints 1
-Blueprint_0_Type Furniture
-Blueprint_0_Supplies 2
-Blueprint_0_Supply_0_ID 68
-Blueprint_0_Supply_0_Amount 3
-Blueprint_0_Supply_1_ID 285
-Blueprint_0_Supply_1_Amount 1
-Blueprint_0_Tool 76
-Blueprint_0_Level 3
-Blueprint_0_Skill Craft
-Blueprint_0_Build 27
+Blueprints
+[
+	{
+		CategoryTag "b0c6cc0a8b4346be89aef697ecdb8e46" // Furniture
+		InputItems
+		[
+			{
+				ID "7f06b16642724683bd61584a52fde981" // Metal Sheet
+				Amount 3
+			}
+			{
+				ID "656f319d2d194813b390edc6edd8a697" // Metal Bar
+			}
+			{
+				ID "5830b84bf8074caa91cf3f4dde0dd19e" // Blowtorch
+				Delete false
+			}
+		]
+		OutputItems this
+		Skill Craft
+		Skill_Level 2
+		RequiresNearbyCraftingTags
+		[
+			"7b82c125a5a54984b8bb26576b59e977" // Workbench
+		]
+		Effect "84347b13028340b8976033c08675d458" // Wrench
+	}
+]
 
 Should_Close_When_Outside_Range true
 PlacementAudioClip Sounds/MetalPlacement.mp3

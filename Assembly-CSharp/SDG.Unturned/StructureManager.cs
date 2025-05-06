@@ -11,6 +11,23 @@ namespace SDG.Unturned;
 
 public class StructureManager : SteamCaller
 {
+    private struct SendMultipleStructuresWriteParameters
+    {
+        public StructureRegion region;
+
+        public int index;
+
+        public int count;
+
+        public float sortOrder;
+
+        public byte packet;
+
+        public byte x;
+
+        public byte y;
+    }
+
     public const byte SAVEDATA_VERSION_INITIAL = 8;
 
     public const byte SAVEDATA_VERSION_REPLACE_EULER_ANGLES_WITH_QUATERNION = 9;
@@ -740,53 +757,68 @@ public class StructureManager : SteamCaller
         }
         if (region.drops.Count > 0)
         {
-            byte packet = 0;
-            int index = 0;
-            int count = 0;
-            while (index < region.drops.Count)
+            byte b = 0;
+            int num = 0;
+            int num2 = 0;
+            while (num < region.drops.Count)
             {
-                int num = 0;
-                while (count < region.drops.Count)
+                int num3 = 0;
+                while (num2 < region.drops.Count)
                 {
-                    num += 44;
-                    count++;
-                    if (num > Block.BUFFER_SIZE / 2)
+                    num3 += 44;
+                    num2++;
+                    if (num3 > Block.BUFFER_SIZE / 2)
                     {
                         break;
                     }
                 }
-                SendMultipleStructures.Invoke(ENetReliability.Reliable, transportConnection, delegate(NetPakWriter writer)
-                {
-                    writer.WriteUInt8(x);
-                    writer.WriteUInt8(y);
-                    writer.WriteUInt8(packet);
-                    writer.WriteUInt16((ushort)(count - index));
-                    writer.WriteFloat(sortOrder);
-                    for (; index < count; index++)
-                    {
-                        StructureData serversideData = region.drops[index].serversideData;
-                        writer.WriteGuid(serversideData.structure.asset.GUID);
-                        writer.WriteClampedVector3(serversideData.point, 13, 11);
-                        writer.WriteSpecialYawOrQuaternion(serversideData.rotation, 23);
-                        writer.WriteUInt8((byte)Mathf.RoundToInt((float)(int)serversideData.structure.health / (float)(int)serversideData.structure.asset.health * 100f));
-                        writer.WriteUInt64(serversideData.owner);
-                        writer.WriteUInt64(serversideData.group);
-                        writer.WriteNetId(region.drops[index].GetNetId());
-                    }
-                });
-                packet++;
+                SendMultipleStructuresWriteParameters sendMultipleStructuresWriteParameters = default(SendMultipleStructuresWriteParameters);
+                sendMultipleStructuresWriteParameters.region = region;
+                sendMultipleStructuresWriteParameters.index = num;
+                sendMultipleStructuresWriteParameters.count = num2;
+                sendMultipleStructuresWriteParameters.sortOrder = sortOrder;
+                sendMultipleStructuresWriteParameters.packet = b;
+                sendMultipleStructuresWriteParameters.x = x;
+                sendMultipleStructuresWriteParameters.y = y;
+                SendMultipleStructuresWriteParameters arg = sendMultipleStructuresWriteParameters;
+                num = num2;
+                SendMultipleStructures.Invoke(ENetReliability.Reliable, transportConnection, SendMultipleStructures_Write, arg);
+                b++;
             }
         }
         else
         {
-            SendMultipleStructures.Invoke(ENetReliability.Reliable, transportConnection, delegate(NetPakWriter writer)
-            {
-                writer.WriteUInt8(x);
-                writer.WriteUInt8(y);
-                writer.WriteUInt8(0);
-                writer.WriteUInt16(0);
-            });
+            SendMultipleStructures.Invoke(ENetReliability.Reliable, transportConnection, SendMultipleStructures_WriteEmpty, x, y);
         }
+    }
+
+    private static void SendMultipleStructures_Write(NetPakWriter writer, SendMultipleStructuresWriteParameters p)
+    {
+        writer.WriteUInt8(p.x);
+        writer.WriteUInt8(p.y);
+        writer.WriteUInt8(p.packet);
+        writer.WriteUInt16((ushort)(p.count - p.index));
+        writer.WriteFloat(p.sortOrder);
+        while (p.index < p.count)
+        {
+            StructureData serversideData = p.region.drops[p.index].serversideData;
+            writer.WriteGuid(serversideData.structure.asset.GUID);
+            writer.WriteClampedVector3(serversideData.point, 13, 11);
+            writer.WriteSpecialYawOrQuaternion(serversideData.rotation, 23);
+            writer.WriteUInt8((byte)Mathf.RoundToInt((float)(int)serversideData.structure.health / (float)(int)serversideData.structure.asset.health * 100f));
+            writer.WriteUInt64(serversideData.owner);
+            writer.WriteUInt64(serversideData.group);
+            writer.WriteNetId(p.region.drops[p.index].GetNetId());
+            p.index++;
+        }
+    }
+
+    private static void SendMultipleStructures_WriteEmpty(NetPakWriter writer, byte x, byte y)
+    {
+        writer.WriteUInt8(x);
+        writer.WriteUInt8(y);
+        writer.WriteUInt8(0);
+        writer.WriteUInt16(0);
     }
 
     private static void updateActivity(StructureRegion region, CSteamID owner, CSteamID group)

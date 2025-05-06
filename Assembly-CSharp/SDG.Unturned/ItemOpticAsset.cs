@@ -19,9 +19,9 @@ public class ItemOpticAsset : ItemAsset
         }
     }
 
-    public override void PopulateAsset(Bundle bundle, DatDictionary data, Local localization)
+    public override void PopulateAsset(in PopulateAssetParameters p)
     {
-        base.PopulateAsset(bundle, data, localization);
-        zoom = Mathf.Max(1f, data.ParseFloat("Zoom"));
+        base.PopulateAsset(in p);
+        zoom = Mathf.Max(1f, p.data.ParseFloat("Zoom"));
     }
 }

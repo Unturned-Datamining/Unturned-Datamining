@@ -98,15 +98,11 @@ public class AnimalManager : SteamCaller
         {
             Animal animal = manager.addAnimal(id, point, angle.eulerAngles.y, isDead: false);
             AnimalSpawnpoint item = new AnimalSpawnpoint(0, point);
-            PackInfo packInfo = new PackInfo();
-            animal.pack = packInfo;
+            PackInfo packInfo = (animal.pack = new PackInfo());
             packInfo.animals.Add(animal);
             packInfo.spawns.Add(item);
             packs.Add(packInfo);
-            SendSingleAnimal.Invoke(ENetReliability.Reliable, Provider.GatherRemoteClientConnections(), delegate(NetPakWriter writer)
-            {
-                WriteSingleAnimal(animal, writer);
-            });
+            SendSingleAnimal.Invoke(ENetReliability.Reliable, Provider.GatherRemoteClientConnections(), WriteSingleAnimal, animal);
         }
     }
 
@@ -276,14 +272,17 @@ public class AnimalManager : SteamCaller
 
     internal static void SendInitialGlobalState(ITransportConnection transportConnection)
     {
-        SendMultipleAnimals.Invoke(ENetReliability.Reliable, transportConnection, delegate(NetPakWriter writer)
+        SendMultipleAnimals.Invoke(ENetReliability.Reliable, transportConnection, SendMultipleAnimals_Write);
+    }
+
+    private static void SendMultipleAnimals_Write(NetPakWriter writer)
+    {
+        writer.WriteUInt16((ushort)animals.Count);
+        for (ushort num = 0; num < animals.Count; num++)
         {
-            writer.WriteUInt16((ushort)animals.Count);
-            for (ushort num = 0; num < animals.Count; num++)
-            {
-                WriteSingleAnimal(animals[num], writer);
-            }
-        });
+            Animal animal = animals[num];
+            WriteSingleAnimal(writer, animal);
+        }
     }
 
     [Obsolete]
@@ -291,7 +290,7 @@ public class AnimalManager : SteamCaller
     {
     }
 
-    private static void WriteSingleAnimal(Animal animal, NetPakWriter writer)
+    private static void WriteSingleAnimal(NetPakWriter writer, Animal animal)
     {
         writer.WriteUInt16(animal.id);
         writer.WriteClampedVector3(animal.transform.position);
@@ -678,7 +677,7 @@ public class AnimalManager : SteamCaller
             {
                 continue;
             }
-            ushort updateCount = 0;
+            ushort num = 0;
             animalsToSend.Clear();
             for (int j = 0; j < animals.Count; j++)
             {
@@ -686,24 +685,13 @@ public class AnimalManager : SteamCaller
                 if (!(animal == null) && animal.isUpdated)
                 {
                     animalsToSend.Add(animal);
-                    updateCount++;
+                    num++;
                 }
             }
-            if (updateCount == 0)
+            if (num != 0)
             {
-                continue;
+                SendAnimalStates.Invoke(ENetReliability.Unreliable, steamPlayer.transportConnection, SendAnimalStates_Write, num);
             }
-            SendAnimalStates.Invoke(ENetReliability.Unreliable, steamPlayer.transportConnection, delegate(NetPakWriter writer)
-            {
-                writer.WriteUInt32(seq);
-                writer.WriteUInt16(updateCount);
-                foreach (Animal item in animalsToSend)
-                {
-                    writer.WriteUInt16(item.index);
-                    writer.WriteClampedVector3(item.transform.position);
-                    writer.WriteDegrees(item.transform.eulerAngles.y);
-                }
-            });
         }
         for (int k = 0; k < animals.Count; k++)
         {
@@ -712,6 +700,18 @@ public class AnimalManager : SteamCaller
             {
                 animal2.isUpdated = false;
             }
+        }
+    }
+
+    private void SendAnimalStates_Write(NetPakWriter writer, ushort updateCount)
+    {
+        writer.WriteUInt32(seq);
+        writer.WriteUInt16(updateCount);
+        foreach (Animal item in animalsToSend)
+        {
+            writer.WriteUInt16(item.index);
+            writer.WriteClampedVector3(item.transform.position);
+            writer.WriteDegrees(item.transform.eulerAngles.y);
         }
     }
 

@@ -10,6 +10,21 @@ namespace SDG.Unturned;
 
 public class ItemManager : SteamCaller
 {
+    private struct SendItemsWriteParameters
+    {
+        public int index;
+
+        public int count;
+
+        public float sortOrder;
+
+        public byte x;
+
+        public byte y;
+
+        public byte packet;
+    }
+
     public static readonly byte ITEM_REGIONS = 1;
 
     public static ServerSpawningItemDropHandler onServerSpawningItemDrop;
@@ -487,53 +502,68 @@ public class ItemManager : SteamCaller
     {
         if (regions[x, y].items.Count > 0)
         {
-            byte packet = 0;
-            int index = 0;
-            int count = 0;
-            while (index < regions[x, y].items.Count)
+            byte b = 0;
+            int num = 0;
+            int num2 = 0;
+            while (num < regions[x, y].items.Count)
             {
-                int num = 0;
-                while (count < regions[x, y].items.Count)
+                int num3 = 0;
+                while (num2 < regions[x, y].items.Count)
                 {
-                    num += 4 + regions[x, y].items[count].item.state.Length + 12 + 4;
-                    count++;
-                    if (num > Block.BUFFER_SIZE / 2)
+                    num3 += 4 + regions[x, y].items[num2].item.state.Length + 12 + 4;
+                    num2++;
+                    if (num3 > Block.BUFFER_SIZE / 2)
                     {
                         break;
                     }
                 }
-                SendItems.Invoke(ENetReliability.Reliable, transportConnection, delegate(NetPakWriter writer)
-                {
-                    writer.WriteUInt8(x);
-                    writer.WriteUInt8(y);
-                    writer.WriteUInt8(packet);
-                    writer.WriteUInt16((ushort)(count - index));
-                    writer.WriteFloat(sortOrder);
-                    for (; index < count; index++)
-                    {
-                        ItemData itemData = regions[x, y].items[index];
-                        writer.WriteUInt16(itemData.item.id);
-                        writer.WriteUInt8(itemData.item.amount);
-                        writer.WriteUInt8(itemData.item.quality);
-                        writer.WriteUInt8((byte)itemData.item.state.Length);
-                        writer.WriteBytes(itemData.item.state);
-                        writer.WriteClampedVector3(itemData.point);
-                        writer.WriteUInt32(itemData.instanceID);
-                    }
-                });
-                packet++;
+                SendItemsWriteParameters sendItemsWriteParameters = default(SendItemsWriteParameters);
+                sendItemsWriteParameters.x = x;
+                sendItemsWriteParameters.y = y;
+                sendItemsWriteParameters.packet = b;
+                sendItemsWriteParameters.index = num;
+                sendItemsWriteParameters.count = num2;
+                sendItemsWriteParameters.sortOrder = sortOrder;
+                SendItemsWriteParameters arg = sendItemsWriteParameters;
+                num = num2;
+                SendItems.Invoke(ENetReliability.Reliable, transportConnection, SendItems_Write, arg);
+                b++;
             }
         }
         else
         {
-            SendItems.Invoke(ENetReliability.Reliable, transportConnection, delegate(NetPakWriter writer)
-            {
-                writer.WriteUInt8(x);
-                writer.WriteUInt8(y);
-                writer.WriteUInt8(0);
-                writer.WriteUInt16(0);
-            });
+            SendItems.Invoke(ENetReliability.Reliable, transportConnection, SendItems_WriteEmpty, x, y);
         }
+    }
+
+    private static void SendItems_Write(NetPakWriter writer, SendItemsWriteParameters p)
+    {
+        writer.WriteUInt8(p.x);
+        writer.WriteUInt8(p.y);
+        writer.WriteUInt8(p.packet);
+        writer.WriteUInt16((ushort)(p.count - p.index));
+        writer.WriteFloat(p.sortOrder);
+        List<ItemData> items = regions[p.x, p.y].items;
+        while (p.index < p.count)
+        {
+            ItemData itemData = items[p.index];
+            writer.WriteUInt16(itemData.item.id);
+            writer.WriteUInt8(itemData.item.amount);
+            writer.WriteUInt8(itemData.item.quality);
+            writer.WriteUInt8((byte)itemData.item.state.Length);
+            writer.WriteBytes(itemData.item.state);
+            writer.WriteClampedVector3(itemData.point);
+            writer.WriteUInt32(itemData.instanceID);
+            p.index++;
+        }
+    }
+
+    private static void SendItems_WriteEmpty(NetPakWriter writer, byte x, byte y)
+    {
+        writer.WriteUInt8(x);
+        writer.WriteUInt8(y);
+        writer.WriteUInt8(0);
+        writer.WriteUInt16(0);
     }
 
     /// <summary>

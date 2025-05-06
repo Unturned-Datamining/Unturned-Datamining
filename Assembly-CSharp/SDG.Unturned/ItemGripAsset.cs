@@ -12,9 +12,9 @@ public class ItemGripAsset : ItemCaliberAsset
     [Obsolete]
     public bool isBipod => _isBipod;
 
-    public override void PopulateAsset(Bundle bundle, DatDictionary data, Local localization)
+    public override void PopulateAsset(in PopulateAssetParameters p)
     {
-        base.PopulateAsset(bundle, data, localization);
-        _grip = loadRequiredAsset<GameObject>(bundle, "Grip");
+        base.PopulateAsset(in p);
+        _grip = loadRequiredAsset<GameObject>(p.bundle, "Grip");
     }
 }

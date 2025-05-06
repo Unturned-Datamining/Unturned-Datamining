@@ -16,15 +16,15 @@ public class RedirectorAsset : Asset
 
     public Guid TargetGuid => _targetGuid;
 
-    public override void PopulateAsset(Bundle bundle, DatDictionary data, Local localization)
+    public override void PopulateAsset(in PopulateAssetParameters p)
     {
-        base.PopulateAsset(bundle, data, localization);
-        assetCategoryOverride = data.ParseEnum("AssetCategory", EAssetType.NONE);
+        base.PopulateAsset(in p);
+        assetCategoryOverride = p.data.ParseEnum("AssetCategory", EAssetType.NONE);
         if (id > 0 && assetCategoryOverride == EAssetType.NONE)
         {
             Assets.ReportError(this, "legacy ID was assigned but AssetCategory was not");
         }
-        if (!data.TryParseGuid("TargetAsset", out _targetGuid))
+        if (!p.data.TryParseGuid("TargetAsset", out _targetGuid))
         {
             Assets.ReportError(this, "unable to parse TargetAsset");
         }

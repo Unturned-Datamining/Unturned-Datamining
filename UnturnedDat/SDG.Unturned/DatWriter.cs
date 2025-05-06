@@ -32,7 +32,6 @@ public sealed class DatWriter : IDisposable
     public void SetOutput(TextWriter output)
     {
         this.output = output;
-        output.NewLine = "\n";
         stack.Clear();
         indentationDepth = 0;
     }
@@ -428,18 +427,18 @@ public sealed class DatWriter : IDisposable
         switch (node.NodeType)
         {
         case EDatNodeType.Value:
-            WriteValue(((DatValue)node).value);
+            WriteValue(((IDatValue)node).Value);
             break;
         case EDatNodeType.Dictionary:
-            WriteDictionary((DatDictionary)node);
+            WriteDictionary((IDatDictionary)node);
             break;
         case EDatNodeType.List:
-            WriteList((DatList)node);
+            WriteList((IDatList)node);
             break;
         }
     }
 
-    public void WriteDictionary(DatDictionary dictionary)
+    public void WriteDictionary(IDatDictionary dictionary)
     {
         if (dictionary == null)
         {
@@ -468,7 +467,7 @@ public sealed class DatWriter : IDisposable
         }
     }
 
-    public void WriteList(DatList list)
+    public void WriteList(IDatList list)
     {
         if (list == null)
         {

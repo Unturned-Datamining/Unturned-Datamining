@@ -21,6 +21,8 @@ public class MenuUI : MonoBehaviour
 
     internal static SleekButtonIcon copyNotificationButton;
 
+    internal static SleekButtonIcon markContentCorruptButton;
+
     private static SleekInventory[] itemAlerts;
 
     private static bool isAlerting;
@@ -68,6 +70,7 @@ public class MenuUI : MonoBehaviour
             alertBox.PositionOffset_Y = -50f;
             alertBox.SizeOffset_Y = 100f;
             copyNotificationButton.IsVisible = true;
+            markContentCorruptButton.IsVisible = false;
             originLabel.IsVisible = false;
             removeItemAlerts();
         }
@@ -81,6 +84,7 @@ public class MenuUI : MonoBehaviour
             alertBox.PositionOffset_Y = -150f;
             alertBox.SizeOffset_Y = 300f;
             copyNotificationButton.IsVisible = false;
+            markContentCorruptButton.IsVisible = false;
             originLabel.IsVisible = true;
         }
     }
@@ -241,6 +245,13 @@ public class MenuUI : MonoBehaviour
     private static void OnClickedCopyNotification(ISleekElement button)
     {
         GUIUtility.systemCopyBuffer = alertBox.Text;
+    }
+
+    private static void OnClickedMarkContentCorrupt(ISleekElement button)
+    {
+        UnturnedLog.info("Marketing Steam content corrupt (will verify/validate game files)");
+        SteamApps.MarkContentCorrupt(bMissingFilesOnly: false);
+        Provider.QuitGame("clicked mark content corrupt button");
     }
 
     public static void closeAll()
@@ -613,7 +624,7 @@ public class MenuUI : MonoBehaviour
             UnturnedLog.warn("Not requesting Steam community announcements because web requests are disabled");
             yield break;
         }
-        string format = "http://api.steampowered.com/ISteamNews/GetNewsForApp/v0002?appid=304930&count={0}&feeds=steam_community_announcements";
+        string format = "https://api.steampowered.com/ISteamNews/GetNewsForApp/v0002?appid=304930&count={0}&feeds=steam_community_announcements";
         format = string.Format(format, num.ToString("D"));
         using UnityWebRequest request = UnityWebRequest.Get(format);
         request.timeout = 15;
@@ -742,6 +753,16 @@ public class MenuUI : MonoBehaviour
             copyNotificationButton.onClickedButton += OnClickedCopyNotification;
             copyNotificationButton.fontSize = ESleekFontSize.Medium;
             alertBox.AddChild(copyNotificationButton);
+            markContentCorruptButton = new SleekButtonIcon(null, 40);
+            markContentCorruptButton.PositionOffset_X = -200f;
+            markContentCorruptButton.PositionOffset_Y = 90f;
+            markContentCorruptButton.PositionScale_X = 0.5f;
+            markContentCorruptButton.PositionScale_Y = 1f;
+            markContentCorruptButton.SizeOffset_X = 400f;
+            markContentCorruptButton.SizeOffset_Y = 50f;
+            markContentCorruptButton.onClickedButton += OnClickedMarkContentCorrupt;
+            markContentCorruptButton.fontSize = ESleekFontSize.Medium;
+            alertBox.AddChild(markContentCorruptButton);
             itemAlerts = null;
             OptionsSettings.apply();
             GraphicsSettings.apply("loaded menu");

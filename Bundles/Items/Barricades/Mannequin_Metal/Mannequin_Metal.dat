@@ -1,4 +1,4 @@
-GUID b98e6dcc04284219a279a95a09b98c6a
+﻿GUID b98e6dcc04284219a279a95a09b98c6a
 Type Barricade
 Rarity Epic
 Useable Barricade
@@ -18,19 +18,39 @@ Locked
 
 Explosion 36
 
-Blueprints 1
-Blueprint_0_Type Furniture
-Blueprint_0_Supplies 3
-Blueprint_0_Supply_0_ID 67
-Blueprint_0_Supply_0_Amount 4
-Blueprint_0_Supply_1_ID 285
-Blueprint_0_Supply_1_Amount 7
-Blueprint_0_Supply_2_ID 66
-Blueprint_0_Supply_2_Amount 5
-Blueprint_0_Tool 76
-Blueprint_0_Level 3
-Blueprint_0_Skill Craft
-Blueprint_0_Build 27
+Blueprints
+[
+	{
+		CategoryTag "b0c6cc0a8b4346be89aef697ecdb8e46" // Furniture
+		InputItems
+		[
+			{
+				ID "21ede8ebffb14c5580e8c7ad149e335e" // Metal Scrap
+				Amount 4
+			}
+			{
+				ID "656f319d2d194813b390edc6edd8a697" // Metal Bar
+				Amount 7
+			}
+			{
+				ID "14901f32cd3240179fd6124324cc27e5" // Cloth
+				Amount 5
+			}
+			{
+				ID "5830b84bf8074caa91cf3f4dde0dd19e" // Blowtorch
+				Delete false
+			}
+		]
+		OutputItems this
+		Skill Craft
+		Skill_Level 3
+		RequiresNearbyCraftingTags
+		[
+			"7b82c125a5a54984b8bb26576b59e977" // Workbench
+		]
+		Effect "84347b13028340b8976033c08675d458" // Wrench
+	}
+]
 
 // References human read/writeable texture.
 Ignore_TexRW

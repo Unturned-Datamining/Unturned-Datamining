@@ -1,3 +1,4 @@
+using System;
 using SDG.Framework.Devkit;
 using UnityEngine;
 
@@ -43,6 +44,57 @@ public class NPCEffectReward : INPCReward
         }
     }
 
+    internal override void PopulateV2(in PopulateRewardParameters p)
+    {
+        base.PopulateV2(in p);
+        if (p.data.TryParseGuid("GUID", out var value))
+        {
+            AssetRef = new AssetReference<EffectAsset>(value);
+        }
+        else
+        {
+            p.ReportRequiredOptionInvalid("GUID");
+        }
+        if (p.data.TryGetString("Spawnpoint", out var value2))
+        {
+            Spawnpoint = value2;
+        }
+        else
+        {
+            p.ReportRequiredOptionInvalid("Spawnpoint");
+        }
+        IsReliable = p.data.ParseBool("IsReliable", defaultValue: true);
+        OverrideRelevantDistance = p.data.ParseFloat("RelevantDistance", -1f);
+    }
+
+    internal override void PopulateLegacy(in PopulateRewardParameters p)
+    {
+        base.PopulateLegacy(in p);
+        if (p.data.TryParseGuid(p.legacyPrefix + "_GUID", out var value))
+        {
+            AssetRef = new AssetReference<EffectAsset>(value);
+        }
+        else
+        {
+            p.ReportRequiredOptionInvalid("GUID");
+        }
+        if (p.data.TryGetString(p.legacyPrefix + "_Spawnpoint", out var value2))
+        {
+            Spawnpoint = value2;
+        }
+        else
+        {
+            p.ReportRequiredOptionInvalid("Spawnpoint");
+        }
+        IsReliable = p.data.ParseBool(p.legacyPrefix + "_IsReliable", defaultValue: true);
+        OverrideRelevantDistance = p.data.ParseFloat(p.legacyPrefix + "_RelevantDistance", -1f);
+    }
+
+    public NPCEffectReward()
+    {
+    }
+
+    [Obsolete]
     public NPCEffectReward(AssetReference<EffectAsset> newAssetRef, string newSpawnpoint, bool newIsReliable, float newRelevantDistance, string newText)
         : base(newText)
     {

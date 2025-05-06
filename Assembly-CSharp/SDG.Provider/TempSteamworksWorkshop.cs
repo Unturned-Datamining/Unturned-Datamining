@@ -149,7 +149,7 @@ public class TempSteamworksWorkshop
 
     public void open(PublishedFileId_t id)
     {
-        SteamFriends.ActivateGameOverlayToWebPage("http://steamcommunity.com/sharedfiles/filedetails/?id=" + id.m_PublishedFileId);
+        SteamFriends.ActivateGameOverlayToWebPage("https://steamcommunity.com/sharedfiles/filedetails/?id=" + id.m_PublishedFileId);
     }
 
     /// <summary>

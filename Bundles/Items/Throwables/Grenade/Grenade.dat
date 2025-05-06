@@ -1,4 +1,4 @@
-GUID 4ca85c0123bb466fa2a059b6227544c1
+﻿GUID 4ca85c0123bb466fa2a059b6227544c1
 Type Throwable
 Rarity Rare
 Useable Throwable
@@ -22,13 +22,15 @@ Explosion 34
 
 Explosive
 
-Blueprints 1
-Blueprint_0_Type Tool
-Blueprint_0_Supplies 1
-Blueprint_0_Supply_0_ID this
-Blueprint_0_Supply_0_Amount 4
-Blueprint_0_Product "73" // Explosives
-Blueprint_0_Products 1
-Blueprint_0_Level 2
-Blueprint_0_Skill Craft
-Blueprint_0_Build 27
+Blueprints
+[
+	{
+		Name Salvage
+		CategoryTag "7ed29f9101ae4523a3b2e389414b7bd9" // Salvage
+		InputItems this x 4
+		OutputItems "8ce5c560166545499432d6e01ce399cc" // Raw Explosives
+		Skill Craft
+		Skill_Level 2
+		Effect "84347b13028340b8976033c08675d458" // Wrench
+	}
+]

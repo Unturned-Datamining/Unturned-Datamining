@@ -94,7 +94,7 @@ public class TempSteamworksEconomy
 
     public void open(ulong id)
     {
-        SDG.Unturned.Provider.openURL("http://steamcommunity.com/profiles/" + SteamUser.GetSteamID().ToString() + "/inventory/?sellOnLoad=1#" + SteamUtils.GetAppID().ToString() + "_2_" + id);
+        SDG.Unturned.Provider.openURL("https://steamcommunity.com/profiles/" + SteamUser.GetSteamID().ToString() + "/inventory/?sellOnLoad=1#" + SteamUtils.GetAppID().ToString() + "_2_" + id);
     }
 
     /// <summary>

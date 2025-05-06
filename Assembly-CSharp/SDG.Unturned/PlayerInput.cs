@@ -578,8 +578,6 @@ public class PlayerInput : PlayerCaller
                         WalkingPlayerInputPacket walkingPlayerInputPacket = new WalkingPlayerInputPacket();
                         walkingPlayerInputPacket.analog = (byte)((base.player.movement.horizontal << 4) | base.player.movement.vertical);
                         walkingPlayerInputPacket.clientPosition = base.transform.position;
-                        walkingPlayerInputPacket.pitch = base.player.look.pitch;
-                        walkingPlayerInputPacket.yaw = base.player.look.yaw;
                         clientPendingInput = walkingPlayerInputPacket;
                         ClientMovementInput item = default(ClientMovementInput);
                         item.frameNumber = simulation;
@@ -595,6 +593,8 @@ public class PlayerInput : PlayerCaller
                     }
                     clientPendingInput.clientSimulationFrameNumber = simulation;
                     clientPendingInput.recov = recov;
+                    clientPendingInput.pitch = base.player.look.pitch;
+                    clientPendingInput.yaw = base.player.look.yaw;
                 }
                 base.player.equipment.simulate(simulation, pendingPrimaryAttackInput, pendingSecondaryAttackInput, base.player.stance.localWantsToSteadyAim);
                 base.player.animator.simulate(simulation, base.player.animator.leanLeft, base.player.animator.leanRight);
@@ -645,18 +645,7 @@ public class PlayerInput : PlayerCaller
                 }
                 if (true & Provider.isConnected)
                 {
-                    SendInputs.Invoke(GetNetId(), ENetReliability.Reliable, delegate(NetPakWriter writer)
-                    {
-                        if (clientPendingInput is DrivingPlayerInputPacket)
-                        {
-                            writer.WriteBit(value: true);
-                        }
-                        else
-                        {
-                            writer.WriteBit(value: false);
-                        }
-                        clientPendingInput.write(writer);
-                    });
+                    SendInputs.Invoke(GetNetId(), ENetReliability.Reliable, SendInputs_Write);
                 }
             }
             count++;
@@ -694,7 +683,7 @@ public class PlayerInput : PlayerCaller
                         if (base.player.life.IsAlive)
                         {
                             base.player.life.simulate(simulation);
-                            base.player.look.simulate(0f, 0f, RATE);
+                            base.player.look.simulate(drivingPlayerInputPacket2.yaw, drivingPlayerInputPacket2.pitch, RATE);
                             base.player.stance.simulate(simulation, inputCrouch: false, inputProne: false, inputSprint: false);
                             base.player.movement.simulate(simulation, drivingPlayerInputPacket2.recov, keys[0], keys[5], drivingPlayerInputPacket2.position, drivingPlayerInputPacket2.rotation, drivingPlayerInputPacket2.speed, drivingPlayerInputPacket2.forwardVelocity, drivingPlayerInputPacket2.steeringInput, drivingPlayerInputPacket2.velocityInput, RATE);
                             base.player.equipment.simulate(simulation, pendingPrimaryAttackInput, pendingSecondaryAttackInput, keys[9]);
@@ -766,6 +755,19 @@ public class PlayerInput : PlayerCaller
                 }
             }
         }
+    }
+
+    private void SendInputs_Write(NetPakWriter writer)
+    {
+        if (clientPendingInput is DrivingPlayerInputPacket)
+        {
+            writer.WriteBit(value: true);
+        }
+        else
+        {
+            writer.WriteBit(value: false);
+        }
+        clientPendingInput.write(writer);
     }
 
     internal void InitializePlayer()

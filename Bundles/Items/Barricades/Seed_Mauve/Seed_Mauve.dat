@@ -1,4 +1,4 @@
-GUID b31e1cb715ed45a5acb6416a84294023
+﻿GUID b31e1cb715ed45a5acb6416a84294023
 Type Farm
 Useable Barricade
 Build Farm
@@ -19,9 +19,15 @@ Grow 115
 Explosion 43
 Vulnerable
 
-Blueprints 1
-Blueprint_0_Type Utilities
-Blueprint_0_Supply_0_ID 115
-Blueprint_0_Build 27
+Blueprints
+[
+	{
+		CategoryTag "bfac6026305f4737a95fd275ebff65a6" // Utilities
+		InputItems "77c2168e6fb5405aadb5f41b074a96e0" // Raw Mauve Berries
+		OutputItems this
+		Effect "84347b13028340b8976033c08675d458" // Wrench
+	}
+]
+
 PlacementAudioClip Sounds/FoliagePlacement.mp3
 Has_Clip_Prefab false

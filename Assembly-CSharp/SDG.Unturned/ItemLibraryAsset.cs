@@ -15,11 +15,11 @@ public class ItemLibraryAsset : ItemBarricadeAsset
         return new byte[20];
     }
 
-    public override void PopulateAsset(Bundle bundle, DatDictionary data, Local localization)
+    public override void PopulateAsset(in PopulateAssetParameters p)
     {
-        base.PopulateAsset(bundle, data, localization);
-        _capacity = data.ParseUInt32("Capacity");
-        _tax = data.ParseUInt8("Tax", 0);
+        base.PopulateAsset(in p);
+        _capacity = p.data.ParseUInt32("Capacity");
+        _tax = p.data.ParseUInt8("Tax", 0);
     }
 
     internal override void BuildCargoData(CargoBuilder builder)

@@ -463,23 +463,25 @@ public class ObjectManager : SteamCaller
 
     internal void askObjects(ITransportConnection transportConnection, byte x, byte y)
     {
-        SendObjects.Invoke(ENetReliability.Reliable, transportConnection, delegate(NetPakWriter writer)
+        SendObjects.Invoke(ENetReliability.Reliable, transportConnection, SendObjects_Write, x, y);
+    }
+
+    private static void SendObjects_Write(NetPakWriter writer, byte x, byte y)
+    {
+        writer.WriteUInt8(x);
+        writer.WriteUInt8(y);
+        for (ushort num = 0; num < LevelObjects.objects[x, y].Count; num++)
         {
-            writer.WriteUInt8(x);
-            writer.WriteUInt8(y);
-            for (ushort num = 0; num < LevelObjects.objects[x, y].Count; num++)
+            LevelObject levelObject = LevelObjects.objects[x, y][num];
+            if (levelObject.state != null && levelObject.state.Length != 0)
             {
-                LevelObject levelObject = LevelObjects.objects[x, y][num];
-                if (levelObject.state != null && levelObject.state.Length != 0)
-                {
-                    writer.WriteUInt16(num);
-                    byte b = (byte)levelObject.state.Length;
-                    writer.WriteUInt8(b);
-                    writer.WriteBytes(levelObject.state, b);
-                }
+                writer.WriteUInt16(num);
+                byte b = (byte)levelObject.state.Length;
+                writer.WriteUInt8(b);
+                writer.WriteBytes(levelObject.state, b);
             }
-            writer.WriteUInt16(ushort.MaxValue);
-        });
+        }
+        writer.WriteUInt16(ushort.MaxValue);
     }
 
     public static LevelObject getObject(byte x, byte y, ushort index)

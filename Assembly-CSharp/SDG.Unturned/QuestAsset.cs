@@ -4,6 +4,8 @@ namespace SDG.Unturned;
 
 public class QuestAsset : Asset
 {
+    protected NPCConditionsList conditionsList;
+
     protected NPCRewardsList rewardsList;
 
     /// <summary>
@@ -16,7 +18,7 @@ public class QuestAsset : Asset
 
     public string questDescription { get; protected set; }
 
-    public INPCCondition[] conditions { get; protected set; }
+    public INPCCondition[] conditions => conditionsList.conditions;
 
     public INPCReward[] rewards => rewardsList.rewards;
 
@@ -24,28 +26,12 @@ public class QuestAsset : Asset
 
     public bool areConditionsMet(Player player)
     {
-        if (conditions != null)
-        {
-            for (int i = 0; i < conditions.Length; i++)
-            {
-                if (!conditions[i].isConditionMet(player))
-                {
-                    return false;
-                }
-            }
-        }
-        return true;
+        return conditionsList.AreConditionsMet(player);
     }
 
     public void ApplyConditions(Player player)
     {
-        if (conditions != null)
-        {
-            for (int i = 0; i < conditions.Length; i++)
-            {
-                conditions[i].ApplyCondition(player);
-            }
-        }
+        conditionsList.ApplyConditions(player);
     }
 
     public void GrantRewards(Player player)
@@ -58,23 +44,22 @@ public class QuestAsset : Asset
         abandonmentRewardsList.Grant(player);
     }
 
-    public override void PopulateAsset(Bundle bundle, DatDictionary data, Local localization)
+    public override void PopulateAsset(in PopulateAssetParameters p)
     {
-        base.PopulateAsset(bundle, data, localization);
-        if (id < 2000 && !base.OriginAllowsVanillaLegacyId && !data.ContainsKey("Bypass_ID_Limit"))
+        base.PopulateAsset(in p);
+        if (id < 2000 && !base.OriginAllowsVanillaLegacyId && !p.data.ContainsKey("Bypass_ID_Limit"))
         {
             throw new NotSupportedException("ID < 2000");
         }
-        questName = localization.format("Name");
+        questName = p.localization.format("Name");
         questName = ItemTool.filterRarityRichText(questName);
-        string desc = localization.format("Description");
+        string desc = p.localization.format("Description");
         desc = ItemTool.filterRarityRichText(desc);
         RichTextUtil.replaceNewlineMarkup(ref desc);
         questDescription = desc;
-        conditions = new INPCCondition[data.ParseUInt8("Conditions", 0)];
-        NPCTool.readConditions(data, localization, "Condition_", conditions, this);
-        rewardsList.Parse(data, localization, this, "Rewards", "Reward_");
-        abandonmentRewardsList.Parse(data, localization, this, "AbandonmentRewards", "AbandonmentReward_");
+        conditionsList.Parse(p.data, p.localization, this, "Conditions", "Condition_");
+        rewardsList.Parse(p.data, p.localization, this, "Rewards", "Reward_");
+        abandonmentRewardsList.Parse(p.data, p.localization, this, "AbandonmentRewards", "AbandonmentReward_");
     }
 
     [Obsolete("Removed shouldSend parameter")]

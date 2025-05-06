@@ -255,6 +255,8 @@ public class Level : MonoBehaviour
 
     public static LevelInfo info => _info;
 
+    public static bool IsCraftingAllowedByLevel => _info?.configData?.Allow_Crafting ?? true;
+
     /// <summary>
     /// Should loading code proceed with redirects?
     /// Disabled by level and when in the editor.
@@ -312,18 +314,6 @@ public class Level : MonoBehaviour
     public static bool isEditor => _isEditor;
 
     public static bool isExiting { get; protected set; }
-
-    public static bool isVR
-    {
-        get
-        {
-            if (PlaySettings.isVR)
-            {
-                return isEditor;
-            }
-            return false;
-        }
-    }
 
     public static bool isLoading
     {
@@ -572,17 +562,14 @@ public class Level : MonoBehaviour
         LevelLighting.save();
         LevelGround.save();
         LevelRoads.save();
-        if (!isVR)
-        {
-            LevelNavigation.save();
-            LevelNodes.save();
-            LevelItems.save();
-            LevelPlayers.save();
-            LevelZombies.save();
-            LevelVehicles.save();
-            LevelAnimals.save();
-            LevelVisibility.save();
-        }
+        LevelNavigation.save();
+        LevelNodes.save();
+        LevelItems.save();
+        LevelPlayers.save();
+        LevelZombies.save();
+        LevelVehicles.save();
+        LevelAnimals.save();
+        LevelVisibility.save();
         Editor.save();
     }
 
@@ -1422,10 +1409,7 @@ public class Level : MonoBehaviour
 
     public IEnumerator init(int id)
     {
-        if (!isVR)
-        {
-            LevelNavigation.load();
-        }
+        LevelNavigation.load();
         if (shouldUseLevelBatching)
         {
             LevelBatching.Get()?.Reset();
@@ -1444,30 +1428,24 @@ public class Level : MonoBehaviour
         LevelRoads.load();
         LoadingUI.NotifyLevelLoadingProgress(0.2631579f);
         yield return null;
-        if (!isVR)
-        {
-            LevelNodes.load();
-            LoadingUI.NotifyLevelLoadingProgress(0.31578946f);
-            yield return null;
-            LevelItems.load();
-            LoadingUI.NotifyLevelLoadingProgress(0.36842105f);
-            yield return null;
-        }
+        LevelNodes.load();
+        LoadingUI.NotifyLevelLoadingProgress(0.31578946f);
+        yield return null;
+        LevelItems.load();
+        LoadingUI.NotifyLevelLoadingProgress(0.36842105f);
+        yield return null;
         LevelPlayers.load();
         LoadingUI.NotifyLevelLoadingProgress(0.42105263f);
         yield return null;
-        if (!isVR)
-        {
-            LevelZombies.load();
-            LoadingUI.NotifyLevelLoadingProgress(0.47368422f);
-            yield return null;
-            LevelVehicles.load();
-            LoadingUI.NotifyLevelLoadingProgress(0.5263158f);
-            yield return null;
-            LevelAnimals.load();
-            LoadingUI.NotifyLevelLoadingProgress(0.57894737f);
-            yield return null;
-        }
+        LevelZombies.load();
+        LoadingUI.NotifyLevelLoadingProgress(0.47368422f);
+        yield return null;
+        LevelVehicles.load();
+        LoadingUI.NotifyLevelLoadingProgress(0.5263158f);
+        yield return null;
+        LevelAnimals.load();
+        LoadingUI.NotifyLevelLoadingProgress(0.57894737f);
+        yield return null;
         LevelVisibility.load();
         LoadingUI.NotifyLevelLoadingProgress(0.6315789f);
         yield return null;
@@ -1533,7 +1511,7 @@ public class Level : MonoBehaviour
             satelliteCaptureTransform = satelliteCaptureGameObject.transform;
             satelliteCaptureTransform.parent = editing;
             satelliteCaptureCamera = satelliteCaptureGameObject.GetComponent<Camera>();
-            Transform obj = ((GameObject)UnityEngine.Object.Instantiate(Resources.Load(isVR ? "Edit/VR" : "Edit/Editor"))).transform;
+            Transform obj = UnityEngine.Object.Instantiate(Resources.Load<GameObject>("Edit/Editor")).transform;
             obj.name = "Editor";
             obj.parent = editing;
             obj.tag = "Logic";

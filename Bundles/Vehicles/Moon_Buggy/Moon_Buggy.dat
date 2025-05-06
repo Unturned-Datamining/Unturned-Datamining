@@ -1,4 +1,4 @@
-GUID a3fc0d4177394bc79e444f063c2ebf1b
+﻿GUID a3fc0d4177394bc79e444f063c2ebf1b
 Type Vehicle
 Rarity Rare
 ID 139
@@ -34,14 +34,14 @@ Explosion_Force_Multiplier 2
 
 PaintableSections
 [
-    {
-        Path Model_0
-        MaterialIndex 0
-    }
-    {
-        Path Model_1
-        MaterialIndex 0
-    }
+	{
+		Path Model_0
+		MaterialIndex 0
+	}
+	{
+		Path Model_1
+		MaterialIndex 0
+	}
 ]
 
 DefaultPaintColors

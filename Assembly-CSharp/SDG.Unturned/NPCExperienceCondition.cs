@@ -1,3 +1,5 @@
+using System;
+
 namespace SDG.Unturned;
 
 public class NPCExperienceCondition : NPCLogicCondition
@@ -26,6 +28,37 @@ public class NPCExperienceCondition : NPCLogicCondition
         return Local.FormatText(text, player.skills.experience, experience);
     }
 
+    internal override void PopulateV2(in PopulateConditionParameters p)
+    {
+        base.PopulateV2(in p);
+        if (p.data.TryParseUInt32("Value", out var value))
+        {
+            experience = value;
+        }
+        else
+        {
+            p.ReportRequiredOptionInvalid("Value");
+        }
+    }
+
+    internal override void PopulateLegacy(in PopulateConditionParameters p)
+    {
+        base.PopulateLegacy(in p);
+        if (p.data.TryParseUInt32(p.legacyPrefix + "_Value", out var value))
+        {
+            experience = value;
+        }
+        else
+        {
+            p.ReportRequiredOptionInvalid("Value");
+        }
+    }
+
+    public NPCExperienceCondition()
+    {
+    }
+
+    [Obsolete]
     public NPCExperienceCondition(uint newExperience, ENPCLogicType newLogicType, string newText, bool newShouldReset)
         : base(newLogicType, newText, newShouldReset)
     {

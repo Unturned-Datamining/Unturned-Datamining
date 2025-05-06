@@ -13,12 +13,12 @@ public class ServerListCurationAsset : Asset
 
     public override string FriendlyName => curationFile?.Name ?? name;
 
-    public override void PopulateAsset(Bundle bundle, DatDictionary data, Local localization)
+    public override void PopulateAsset(in PopulateAssetParameters p)
     {
-        base.PopulateAsset(bundle, data, localization);
-        Icon = LoadRedirectableAsset<Texture2D>(bundle, "Icon", data, "IconAssetPath");
+        base.PopulateAsset(in p);
+        Icon = LoadRedirectableAsset<Texture2D>(p.bundle, "Icon", p.data, "IconAssetPath");
         curationFile = new ServerListCurationFile();
-        curationFile.Populate(this, data, localization);
+        curationFile.Populate(this, p.data, p.localization);
         if (string.IsNullOrEmpty(curationFile.Name))
         {
             curationFile.Name = name;

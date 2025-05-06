@@ -375,25 +375,27 @@ public class Player : MonoBehaviour, IDialogueTarget, IExplosionDamageable, IEqu
             return;
         }
         screenshotsExpected--;
-        if (!reader.ReadUInt16(out var length))
+        if (!reader.ReadUInt16(out var value))
         {
             return;
         }
-        byte[] data = new byte[length];
-        reader.ReadBytes(data);
+        byte[] array = new byte[value];
+        reader.ReadBytes(array);
         if (screenshotsDestination != CSteamID.Nil)
         {
             ITransportConnection transportConnection = Provider.findTransportConnection(screenshotsDestination);
             if (transportConnection != null)
             {
-                SendScreenshotDestination.Invoke(GetNetId(), ENetReliability.Reliable, transportConnection, delegate(NetPakWriter writer)
-                {
-                    writer.WriteUInt16(length);
-                    writer.WriteBytes(data);
-                });
+                SendScreenshotDestination.Invoke(GetNetId(), ENetReliability.Reliable, transportConnection, SendScreenshotDestination_Write, value, array);
             }
         }
-        HandleScreenshotData(data);
+        HandleScreenshotData(array);
+    }
+
+    private void SendScreenshotDestination_Write(NetPakWriter writer, ushort length, byte[] data)
+    {
+        writer.WriteUInt16(length);
+        writer.WriteBytes(data);
     }
 
     private IEnumerator takeScreenshot()
@@ -413,25 +415,29 @@ public class Player : MonoBehaviour, IDialogueTarget, IExplosionDamageable, IEqu
         screenshotFinal.ReadPixels(new Rect(0f, 0f, screenshotFinal.width, screenshotFinal.height), 0, 0, recalculateMipMaps: false);
         RenderTexture.active = null;
         RenderTexture.ReleaseTemporary(temporary);
-        byte[] data = screenshotFinal.EncodeToJPG(33);
-        if (data.Length < 40000)
+        byte[] array = screenshotFinal.EncodeToJPG(33);
+        if (array.Length < 40000)
         {
             if (Provider.isServer)
             {
-                HandleScreenshotData(data);
-                yield break;
+                HandleScreenshotData(array);
             }
-            SendScreenshotRelay.Invoke(GetNetId(), ENetReliability.Reliable, delegate(NetPakWriter writer)
+            else
             {
-                ushort num = (ushort)data.Length;
-                writer.WriteUInt16(num);
-                writer.WriteBytes(data, num);
-            });
+                SendScreenshotRelay.Invoke(GetNetId(), ENetReliability.Reliable, SendScreenshotRelay_Write, array);
+            }
         }
         else
         {
-            UnturnedLog.warn($"Unable to send screenshot to server because size ({data.Length} bytes) exceeds limit");
+            UnturnedLog.warn($"Unable to send screenshot to server because size ({array.Length} bytes) exceeds limit");
         }
+    }
+
+    private void SendScreenshotRelay_Write(NetPakWriter writer, byte[] data)
+    {
+        ushort num = (ushort)data.Length;
+        writer.WriteUInt16(num);
+        writer.WriteBytes(data, num);
     }
 
     [Obsolete]

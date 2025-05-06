@@ -1,4 +1,4 @@
-GUID 0dede0087967430c9ff5606a101eeb6e
+﻿GUID 0dede0087967430c9ff5606a101eeb6e
 Type Barricade
 Rarity Rare
 Useable Barricade
@@ -16,27 +16,39 @@ Offset 0.5
 
 Explosion 19
 
-Blueprints 3
-Blueprint_0_Type Utilities
-Blueprint_0_Supplies 2
-Blueprint_0_Supply_0_ID 61
-Blueprint_0_Supply_0_Amount 5
-Blueprint_0_Supply_1_ID 332
-Blueprint_0_Supply_1_Amount 1
-Blueprint_0_Build 27
-Blueprint_1_Type Utilities
-Blueprint_1_Supplies 2
-Blueprint_1_Supply_0_ID 62
-Blueprint_1_Supply_0_Amount 5
-Blueprint_1_Supply_1_ID 332
-Blueprint_1_Supply_1_Amount 1
-Blueprint_1_Build 27
-Blueprint_2_Type Utilities
-Blueprint_2_Supplies 2
-Blueprint_2_Supply_0_ID 63
-Blueprint_2_Supply_0_Amount 5
-Blueprint_2_Supply_1_ID 332
-Blueprint_2_Supply_1_Amount 1
-Blueprint_2_Build 27
+Blueprints
+[
+	{
+		CategoryTag "bfac6026305f4737a95fd275ebff65a6" // Utilities
+		InputItems
+		[
+			"e73a23b102f24520a32ec0b2afaa6157 x 5" // Maple Plank
+			"54ebe428a6e34922b8764ca40a95d165" // Fertilizer
+		]
+		OutputItems this
+		Effect "84347b13028340b8976033c08675d458" // Wrench
+	}
+	{
+		CategoryTag "bfac6026305f4737a95fd275ebff65a6" // Utilities
+		InputItems
+		[
+			"5a3c4302400e400b9b9486fbb5178eca x 5" // Birch Plank
+			"54ebe428a6e34922b8764ca40a95d165" // Fertilizer
+		]
+		OutputItems this
+		Effect "84347b13028340b8976033c08675d458" // Wrench
+	}
+	{
+		CategoryTag "bfac6026305f4737a95fd275ebff65a6" // Utilities
+		InputItems
+		[
+			"719bfdf2c2dc4be6ad5be44d044583e4 x 5" // Pine Plank
+			"54ebe428a6e34922b8764ca40a95d165" // Fertilizer
+		]
+		OutputItems this
+		Effect "84347b13028340b8976033c08675d458" // Wrench
+	}
+]
+
 PlacementAudioClip Sounds/WoodenPlacement.mp3
 Has_Clip_Prefab false

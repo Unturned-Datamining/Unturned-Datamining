@@ -262,13 +262,13 @@ public class ItemBarricadeAsset : ItemPlaceableAsset
         }
     }
 
-    public override void PopulateAsset(Bundle bundle, DatDictionary data, Local localization)
+    public override void PopulateAsset(in PopulateAssetParameters p)
     {
-        base.PopulateAsset(bundle, data, localization);
+        base.PopulateAsset(in p);
         bool flag;
-        if (Dedicator.IsDedicatedServer && data.ParseBool("Has_Clip_Prefab", defaultValue: true))
+        if (Dedicator.IsDedicatedServer && p.data.ParseBool("Has_Clip_Prefab", defaultValue: true))
         {
-            _barricade = bundle.load<GameObject>("Clip");
+            _barricade = p.bundle.load<GameObject>("Clip");
             if (barricade == null)
             {
                 flag = true;
@@ -285,7 +285,7 @@ public class ItemBarricadeAsset : ItemPlaceableAsset
         }
         if (flag)
         {
-            _barricade = bundle.load<GameObject>("Barricade");
+            _barricade = p.bundle.load<GameObject>("Barricade");
             if (barricade == null)
             {
                 Assets.ReportError(this, "missing \"Barricade\" GameObject");
@@ -304,38 +304,38 @@ public class ItemBarricadeAsset : ItemPlaceableAsset
             barricade.transform.localPosition = Vector3.zero;
             barricade.transform.localRotation = Quaternion.identity;
         }
-        placementPreviewRef = data.readMasterBundleReference<GameObject>("PlacementPreviewPrefab", bundle);
-        _nav = bundle.load<GameObject>("Nav");
-        _use = LoadRedirectableAsset<AudioClip>(bundle, "Use", data, "PlacementAudioClip");
-        _build = (EBuild)Enum.Parse(typeof(EBuild), data.GetString("Build"), ignoreCase: true);
+        placementPreviewRef = p.data.readMasterBundleReference<GameObject>("PlacementPreviewPrefab", p.bundle);
+        _nav = p.bundle.load<GameObject>("Nav");
+        _use = LoadRedirectableAsset<AudioClip>(p.bundle, "Use", p.data, "PlacementAudioClip");
+        _build = (EBuild)Enum.Parse(typeof(EBuild), p.data.GetString("Build"), ignoreCase: true);
         if ((build == EBuild.DOOR || build == EBuild.GATE || build == EBuild.SHUTTER) && barricade != null && barricade.transform.Find("Placeholder") == null)
         {
             Assets.ReportError(this, "missing 'Placeholder' Collider");
         }
-        _health = data.ParseUInt16("Health", 0);
-        _range = data.ParseFloat("Range");
-        _radius = data.ParseFloat("Radius");
-        _offset = data.ParseFloat("Offset");
+        _health = p.data.ParseUInt16("Health", 0);
+        _range = p.data.ParseFloat("Range");
+        _radius = p.data.ParseFloat("Radius");
+        _offset = p.data.ParseFloat("Offset");
         if (radius > 0.05f && Mathf.Abs(radius - offset) < 0.05f)
         {
             _radius -= 0.05f;
         }
-        _explosion = data.ParseGuidOrLegacyId("Explosion", out _explosionGuid);
+        _explosion = p.data.ParseGuidOrLegacyId("Explosion", out _explosionGuid);
         if (build == EBuild.VEHICLE)
         {
             _vehicleId = _explosion;
             _vehicleGuid = _explosionGuid;
         }
-        canBeDamaged = data.ParseBool("Can_Be_Damaged", defaultValue: true);
+        canBeDamaged = p.data.ParseBool("Can_Be_Damaged", defaultValue: true);
         bool defaultValue = build != EBuild.BEACON;
-        eligibleForPooling = data.ParseBool("Eligible_For_Pooling", defaultValue);
-        _isLocked = data.ContainsKey("Locked");
-        _isVulnerable = data.ContainsKey("Vulnerable");
-        if (data.TryParseBool("Bypass_Claim", out var value))
+        eligibleForPooling = p.data.ParseBool("Eligible_For_Pooling", defaultValue);
+        _isLocked = p.data.ContainsKey("Locked");
+        _isVulnerable = p.data.ContainsKey("Vulnerable");
+        if (p.data.TryParseBool("Bypass_Claim", out var value))
         {
             _bypassClaim = value;
         }
-        else if (data.ContainsKey("Bypass_Claim"))
+        else if (p.data.ContainsKey("Bypass_Claim"))
         {
             _bypassClaim = true;
         }
@@ -344,28 +344,28 @@ public class ItemBarricadeAsset : ItemPlaceableAsset
             _bypassClaim = build == EBuild.CHARGE;
         }
         bool defaultValue2 = build != EBuild.BED && build != EBuild.SENTRY && build != EBuild.SENTRY_FREEFORM;
-        allowPlacementOnVehicle = data.ParseBool("Allow_Placement_On_Vehicle", defaultValue2);
-        _isRepairable = !data.ContainsKey("Unrepairable");
-        _proofExplosion = data.ContainsKey("Proof_Explosion");
-        _isUnpickupable = data.ContainsKey("Unpickupable");
-        shouldBypassPickupOwnership = data.ParseBool("Bypass_Pickup_Ownership", build == EBuild.CHARGE);
-        AllowPlacementInsideClipVolumes = data.ParseBool("Allow_Placement_Inside_Clip_Volumes", build == EBuild.CHARGE);
-        _isSalvageable = !data.ContainsKey("Unsalvageable");
-        salvageDurationMultiplier = data.ParseFloat("Salvage_Duration_Multiplier", 1f);
-        _isSaveable = !data.ContainsKey("Unsaveable");
-        allowCollisionWhileAnimating = data.ParseBool("Allow_Collision_While_Animating");
-        useWaterHeightTransparentSort = data.ContainsKey("Use_Water_Height_Transparent_Sort");
-        if (data.ContainsKey("CanVehicleHookWhileAttached"))
+        allowPlacementOnVehicle = p.data.ParseBool("Allow_Placement_On_Vehicle", defaultValue2);
+        _isRepairable = !p.data.ContainsKey("Unrepairable");
+        _proofExplosion = p.data.ContainsKey("Proof_Explosion");
+        _isUnpickupable = p.data.ContainsKey("Unpickupable");
+        shouldBypassPickupOwnership = p.data.ParseBool("Bypass_Pickup_Ownership", build == EBuild.CHARGE);
+        AllowPlacementInsideClipVolumes = p.data.ParseBool("Allow_Placement_Inside_Clip_Volumes", build == EBuild.CHARGE);
+        _isSalvageable = !p.data.ContainsKey("Unsalvageable");
+        salvageDurationMultiplier = p.data.ParseFloat("Salvage_Duration_Multiplier", 1f);
+        _isSaveable = !p.data.ContainsKey("Unsaveable");
+        allowCollisionWhileAnimating = p.data.ParseBool("Allow_Collision_While_Animating");
+        useWaterHeightTransparentSort = p.data.ContainsKey("Use_Water_Height_Transparent_Sort");
+        if (p.data.ContainsKey("CanVehicleHookWhileAttached"))
         {
-            CanParentVehicleBePickedUp = data.ParseBool("CanVehicleHookWhileAttached");
+            CanParentVehicleBePickedUp = p.data.ParseBool("CanVehicleHookWhileAttached");
         }
         else
         {
-            CanParentVehicleBePickedUp = data.ParseBool("CanParentVehicleBePickedUp");
+            CanParentVehicleBePickedUp = p.data.ParseBool("CanParentVehicleBePickedUp");
         }
-        if (data.ContainsKey("Armor_Tier"))
+        if (p.data.ContainsKey("Armor_Tier"))
         {
-            armorTier = (EArmorTier)Enum.Parse(typeof(EArmorTier), data.GetString("Armor_Tier"), ignoreCase: true);
+            armorTier = (EArmorTier)Enum.Parse(typeof(EArmorTier), p.data.GetString("Armor_Tier"), ignoreCase: true);
         }
         else if (name.Contains("Metal"))
         {
@@ -375,6 +375,46 @@ public class ItemBarricadeAsset : ItemPlaceableAsset
         {
             armorTier = EArmorTier.LOW;
         }
+        if ((build != EBuild.OVEN && build != EBuild.TORCH && build != EBuild.CAMPFIRE) || !p.data.ParseBool("RequiresHeatSourceCraftingTagConversion", defaultValue: true) || !(_barricade != null))
+        {
+            return;
+        }
+        Transform transform = _barricade.transform.Find("Fire");
+        if (!(transform != null))
+        {
+            return;
+        }
+        if (base.PlaceableProvidedCraftingTags == null)
+        {
+            base.PlaceableProvidedCraftingTags = new CachingAssetRef[1] { PowerTool.VanillaCraftingHeatTag };
+        }
+        else if ((bool)Assets.shouldValidateAssets)
+        {
+            bool flag2 = false;
+            CachingAssetRef[] placeableProvidedCraftingTags = base.PlaceableProvidedCraftingTags;
+            for (int i = 0; i < placeableProvidedCraftingTags.Length; i++)
+            {
+                if (placeableProvidedCraftingTags[i] == PowerTool.VanillaCraftingHeatTag)
+                {
+                    flag2 = true;
+                    break;
+                }
+            }
+            if (!flag2)
+            {
+                ReportAssetError("specifies PlaceableProvidedCraftingTags without Heat Source tag but has RequiresHeatSourceCraftingTagConversion enabled");
+            }
+        }
+        CraftingTagModifierComponent craftingTagModifierComponent = transform.gameObject.AddComponent<CraftingTagModifierComponent>();
+        craftingTagModifierComponent.tagGuids = new string[1] { "20f30322bbcc4b01a4f116d22b24c21a" };
+        craftingTagModifierComponent.mode = CraftingTagModifierComponent.EMode.Remove;
+        craftingTagModifierComponent.activationRequirement = CraftingTagModifierComponent.EActivationRequirement.Invert;
+        CraftingTagProviderComponent orAddComponent = _barricade.GetOrAddComponent<CraftingTagProviderComponent>();
+        if (orAddComponent.modifiers != null && orAddComponent.modifiers.Length != 0)
+        {
+            ReportAssetError("has RequiresHeatSourceCraftingTagConversion enabled, but barricade already has a CraftingTagProviderComponent attached!");
+        }
+        orAddComponent.modifiers = new CraftingTagModifierComponent[1] { craftingTagModifierComponent };
     }
 
     internal override void BuildCargoData(CargoBuilder builder)

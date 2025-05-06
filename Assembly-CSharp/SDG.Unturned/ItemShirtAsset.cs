@@ -46,9 +46,9 @@ public class ItemShirtAsset : ItemBagAsset
     /// </summary>
     public Mesh[] characterMeshOverride3pLODs { get; protected set; }
 
-    public override void PopulateAsset(Bundle bundle, DatDictionary data, Local localization)
+    public override void PopulateAsset(in PopulateAssetParameters p)
     {
-        base.PopulateAsset(bundle, data, localization);
+        base.PopulateAsset(in p);
         if (Dedicator.IsDedicatedServer)
         {
             characterMeshOverride1pLODs = null;
@@ -57,15 +57,15 @@ public class ItemShirtAsset : ItemBagAsset
         }
         else
         {
-            if (data.ParseBool("Has_1P_Character_Mesh_Override"))
+            if (p.data.ParseBool("Has_1P_Character_Mesh_Override"))
             {
                 characterMeshOverride1pLODs = new Mesh[1];
                 for (int i = 0; i < characterMeshOverride1pLODs.Length; i++)
                 {
-                    GameObject gameObject = bundle.load<GameObject>("Character_Mesh_1P_Override_" + i);
+                    GameObject gameObject = p.bundle.load<GameObject>("Character_Mesh_1P_Override_" + i);
                     if (gameObject == null)
                     {
-                        gameObject = bundle.load<GameObject>("Character_Mesh_Override_" + i);
+                        gameObject = p.bundle.load<GameObject>("Character_Mesh_Override_" + i);
                     }
                     if (gameObject != null)
                     {
@@ -89,16 +89,16 @@ public class ItemShirtAsset : ItemBagAsset
             {
                 characterMeshOverride1pLODs = null;
             }
-            ushort num = data.ParseUInt16("Character_Mesh_3P_Override_LODs", 0);
+            ushort num = p.data.ParseUInt16("Character_Mesh_3P_Override_LODs", 0);
             if (num > 0)
             {
                 characterMeshOverride3pLODs = new Mesh[num];
                 for (int j = 0; j < characterMeshOverride3pLODs.Length; j++)
                 {
-                    GameObject gameObject2 = bundle.load<GameObject>("Character_Mesh_3P_Override_" + j);
+                    GameObject gameObject2 = p.bundle.load<GameObject>("Character_Mesh_3P_Override_" + j);
                     if (gameObject2 == null)
                     {
-                        gameObject2 = bundle.load<GameObject>("Character_Mesh_Override_" + j);
+                        gameObject2 = p.bundle.load<GameObject>("Character_Mesh_Override_" + j);
                     }
                     if (gameObject2 != null)
                     {
@@ -122,9 +122,9 @@ public class ItemShirtAsset : ItemBagAsset
             {
                 characterMeshOverride3pLODs = null;
             }
-            if (data.ParseBool("Has_Character_Material_Override"))
+            if (p.data.ParseBool("Has_Character_Material_Override"))
             {
-                characterMaterialOverride = bundle.load<Material>("Character_Material_Override");
+                characterMaterialOverride = p.bundle.load<Material>("Character_Material_Override");
                 if (characterMaterialOverride == null)
                 {
                     Assets.ReportError(this, "missing 'Character_Material_Override' Material");
@@ -137,7 +137,7 @@ public class ItemShirtAsset : ItemBagAsset
         }
         if (!Dedicator.IsDedicatedServer && characterMaterialOverride == null)
         {
-            _shirt = loadRequiredAsset<Texture2D>(bundle, "Shirt");
+            _shirt = loadRequiredAsset<Texture2D>(p.bundle, "Shirt");
             if (shirt != null && (bool)Assets.shouldValidateAssets)
             {
                 if (shirt.isReadable)
@@ -149,7 +149,7 @@ public class ItemShirtAsset : ItemBagAsset
                     Assets.ReportError(this, $"texture Shirt might look weird because it is relatively low resolution but has compression enabled ({shirt.format})");
                 }
             }
-            _emission = bundle.load<Texture2D>("Emission");
+            _emission = p.bundle.load<Texture2D>("Emission");
             if (emission != null && (bool)Assets.shouldValidateAssets)
             {
                 if (emission.isReadable)
@@ -168,7 +168,7 @@ public class ItemShirtAsset : ItemBagAsset
                     }
                 }
             }
-            _metallic = bundle.load<Texture2D>("Metallic");
+            _metallic = p.bundle.load<Texture2D>("Metallic");
             if (metallic != null && (bool)Assets.shouldValidateAssets)
             {
                 if (metallic.isReadable)
@@ -181,6 +181,6 @@ public class ItemShirtAsset : ItemBagAsset
                 }
             }
         }
-        _ignoreHand = data.ContainsKey("Ignore_Hand");
+        _ignoreHand = p.data.ContainsKey("Ignore_Hand");
     }
 }

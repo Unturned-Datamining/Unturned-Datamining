@@ -214,3 +214,5 @@ Dismiss_Notification_Label Confirm
 Dismiss_Notification_Tooltip Dismiss notification.
 Copy_Notification_Label Copy to Clipboard
 Copy_Notification_Tooltip Copy message to system clipboard.
+MarkContentCorrupt_Label Force Update Check and Repair Files
+MarkContentCorrupt_Tooltip Restart the game, requesting Steam to verify game files.

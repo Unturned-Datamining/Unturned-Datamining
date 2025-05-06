@@ -399,16 +399,13 @@ public class VehicleManager : SteamCaller
     public static InteractableVehicle SpawnVehicleV3(VehicleAsset asset, ushort skinID, ushort mythicID, float roadPosition, Vector3 point, Quaternion angle, bool sirens, bool blimp, bool headlights, bool taillights, ushort fuel, ushort health, ushort batteryCharge, CSteamID owner, CSteamID group, bool locked, byte[][] turrets, byte tireAliveMask, Color32 paintColor)
     {
         NetId netId = NetIdRegistry.ClaimBlock(21u);
-        InteractableVehicle spawnedVehicle = manager.addVehicle(asset.GUID, skinID, mythicID, roadPosition, point, angle, sirens, blimp, headlights, taillights, fuel, isExploded: false, health, batteryCharge, owner, group, locked, null, turrets, allocateInstanceID(), tireAliveMask, netId, paintColor);
-        if (spawnedVehicle == null)
+        InteractableVehicle interactableVehicle = manager.addVehicle(asset.GUID, skinID, mythicID, roadPosition, point, angle, sirens, blimp, headlights, taillights, fuel, isExploded: false, health, batteryCharge, owner, group, locked, null, turrets, allocateInstanceID(), tireAliveMask, netId, paintColor);
+        if (interactableVehicle == null)
         {
             return null;
         }
-        SendSingleVehicle.Invoke(ENetReliability.Reliable, Provider.GatherRemoteClientConnections(), delegate(NetPakWriter writer)
-        {
-            sendVehicle(spawnedVehicle, writer);
-        });
-        return spawnedVehicle;
+        SendSingleVehicle.Invoke(ENetReliability.Reliable, Provider.GatherRemoteClientConnections(), WriteVehicle, interactableVehicle);
+        return interactableVehicle;
     }
 
     /// <summary>
@@ -565,7 +562,7 @@ public class VehicleManager : SteamCaller
         }
     }
 
-    internal static void sendVehicle(InteractableVehicle vehicle, NetPakWriter writer)
+    private static void WriteVehicle(NetPakWriter writer, InteractableVehicle vehicle)
     {
         Vector3 value = ((vehicle.asset.engine != EEngine.TRAIN) ? vehicle.transform.position : InteractableVehicle.PackRoadPosition(vehicle.roadPosition));
         writer.WriteGuid(vehicle.asset.GUID);
@@ -1020,19 +1017,22 @@ public class VehicleManager : SteamCaller
         {
             endIndex = vehicles.Count;
         }
-        int count = endIndex - startIndex;
-        if (count < 1)
+        if (endIndex - startIndex < 1)
         {
             throw new ArgumentException("startIndex or endIndex to askVehiclesHelper invalid");
         }
-        SendMultipleVehicles.Invoke(ENetReliability.Reliable, transportConnection, delegate(NetPakWriter writer)
+        SendMultipleVehicles.Invoke(ENetReliability.Reliable, transportConnection, SendMultipleVehicles_Write, startIndex, endIndex);
+    }
+
+    private static void SendMultipleVehicles_Write(NetPakWriter writer, int startIndex, int endIndex)
+    {
+        int num = endIndex - startIndex;
+        writer.WriteUInt16((ushort)num);
+        for (int i = startIndex; i < endIndex; i++)
         {
-            writer.WriteUInt16((ushort)count);
-            for (int i = startIndex; i < endIndex; i++)
-            {
-                sendVehicle(vehicles[i], writer);
-            }
-        });
+            InteractableVehicle vehicle = vehicles[i];
+            WriteVehicle(writer, vehicle);
+        }
     }
 
     internal static void SendInitialGlobalState(SteamPlayer client)
@@ -1051,12 +1051,14 @@ public class VehicleManager : SteamCaller
         }
         else
         {
-            SendMultipleVehicles.Invoke(ENetReliability.Reliable, client.transportConnection, delegate(NetPakWriter writer)
-            {
-                writer.WriteUInt16(0);
-            });
+            SendMultipleVehicles.Invoke(ENetReliability.Reliable, client.transportConnection, SendMultipleVehicles_WriteEmpty);
         }
         BarricadeManager.SendVehicleRegions(client);
+    }
+
+    private static void SendMultipleVehicles_WriteEmpty(NetPakWriter writer)
+    {
+        writer.WriteUInt16(0);
     }
 
     [SteamCall(ESteamCallValidation.ONLY_FROM_SERVER, legacyName = "tellEnterVehicle")]
@@ -1750,13 +1752,10 @@ public class VehicleManager : SteamCaller
     /// </summary>
     private void addVehicleAtSpawnAndReplicate(VehicleSpawnpoint spawn)
     {
-        InteractableVehicle character = addVehicleAtSpawn(spawn);
-        if (character != null)
+        InteractableVehicle interactableVehicle = addVehicleAtSpawn(spawn);
+        if (interactableVehicle != null)
         {
-            SendSingleVehicle.Invoke(ENetReliability.Reliable, Provider.GatherRemoteClientConnections(), delegate(NetPakWriter writer)
-            {
-                sendVehicle(character, writer);
-            });
+            SendSingleVehicle.Invoke(ENetReliability.Reliable, Provider.GatherRemoteClientConnections(), WriteVehicle, interactableVehicle);
         }
     }
 
@@ -2027,90 +2026,145 @@ public class VehicleManager : SteamCaller
         seq++;
         for (int i = 0; i < Provider.clients.Count; i++)
         {
-            SteamPlayer client = Provider.clients[i];
-            if (client == null || client.player == null)
+            SteamPlayer steamPlayer = Provider.clients[i];
+            if (steamPlayer == null || steamPlayer.player == null)
             {
                 continue;
             }
             vehiclesToSend.Clear();
             foreach (InteractableVehicle item in vehiclesNeedingReplicationUpdate)
             {
-                if (!(item == null) && !item.checkDriver(client.playerID.steamID))
+                if (!(item == null) && !item.checkDriver(steamPlayer.playerID.steamID))
                 {
                     vehiclesToSend.Add(item);
                 }
             }
-            if (vehiclesToSend.IsEmpty())
+            if (!vehiclesToSend.IsEmpty())
             {
-                continue;
+                Vector3 position = steamPlayer.player.transform.position;
+                SendVehicleStates.Invoke(ENetReliability.Unreliable, steamPlayer.transportConnection, SendVehicleStates_Write, position);
             }
-            SendVehicleStates.Invoke(ENetReliability.Unreliable, client.transportConnection, delegate(NetPakWriter writer)
-            {
-                Vector3 position = client.player.transform.position;
-                writer.WriteUInt32(seq);
-                writer.WriteUInt16((ushort)vehiclesToSend.Count);
-                foreach (InteractableVehicle item2 in vehiclesToSend)
-                {
-                    Vector3 position2 = item2.transform.position;
-                    bool flag = (position2 - position).sqrMagnitude < 90000f;
-                    Vector3 value = ((item2.asset.engine != EEngine.TRAIN) ? position2 : InteractableVehicle.PackRoadPosition(item2.roadPosition));
-                    writer.WriteUInt32(item2.instanceID);
-                    writer.WriteClampedVector3(value, 13, 8);
-                    writer.WriteQuaternion(item2.transform.rotation, 11);
-                    writer.WriteUnsignedClampedFloat(item2.ReplicatedSpeed, 8, 2);
-                    writer.WriteClampedFloat(item2.ReplicatedForwardVelocity, 9, 2);
-                    writer.WriteSignedNormalizedFloat(item2.ReplicatedSteeringInput, 2);
-                    writer.WriteClampedFloat(item2.ReplicatedVelocityInput, 9, 2);
-                    writer.WriteBit(flag);
-                    if (flag)
-                    {
-                        if (item2.asset.replicatedWheelIndices != null)
-                        {
-                            int[] replicatedWheelIndices = item2.asset.replicatedWheelIndices;
-                            foreach (int num in replicatedWheelIndices)
-                            {
-                                Wheel wheelAtIndex = item2.GetWheelAtIndex(num);
-                                if (wheelAtIndex == null)
-                                {
-                                    UnturnedLog.error($"\"{item2.asset.FriendlyName}\" missing wheel for replicated index: {num}");
-                                    writer.WriteUnsignedNormalizedFloat(0f, 4);
-                                }
-                                else
-                                {
-                                    writer.WriteUnsignedNormalizedFloat(wheelAtIndex.replicatedSuspensionState, 4);
-                                    writer.WritePhysicsMaterialNetId(wheelAtIndex.replicatedGroundMaterial);
-                                }
-                            }
-                        }
-                        if (item2.asset.UsesEngineRpmAndGears)
-                        {
-                            uint value2 = (uint)(item2.GearNumber + 1);
-                            writer.WriteBits(value2, 3);
-                            float value3 = Mathf.InverseLerp(item2.asset.EngineIdleRpm, item2.asset.EngineMaxRpm, item2.ReplicatedEngineRpm);
-                            writer.WriteUnsignedNormalizedFloat(value3, 7);
-                        }
-                    }
-                }
-                if (writer.errors != 0 && Time.realtimeSinceStartup - lastSendOverflowWarning > 1f)
-                {
-                    lastSendOverflowWarning = Time.realtimeSinceStartup;
-                    CommandWindow.LogWarningFormat("Error {0} writing vehicle states. The vehicle count ({1}) is probably too high. No this is not a bug introduced in the update, rather a warning of a previously silent bug.", writer.errors, _vehicles.Count);
-                }
-            });
         }
-        foreach (InteractableVehicle item3 in vehiclesNeedingReplicationUpdate)
+        foreach (InteractableVehicle item2 in vehiclesNeedingReplicationUpdate)
         {
-            if (item3 != null)
+            if (item2 != null)
             {
-                item3.needsReplicationUpdate = false;
+                item2.needsReplicationUpdate = false;
             }
         }
         vehiclesNeedingReplicationUpdate.Clear();
     }
 
+    private void SendVehicleStates_Write(NetPakWriter writer, Vector3 recipientPosition)
+    {
+        writer.WriteUInt32(seq);
+        writer.WriteUInt16((ushort)vehiclesToSend.Count);
+        foreach (InteractableVehicle item in vehiclesToSend)
+        {
+            Vector3 position = item.transform.position;
+            bool flag = (position - recipientPosition).sqrMagnitude < 90000f;
+            Vector3 value = ((item.asset.engine != EEngine.TRAIN) ? position : InteractableVehicle.PackRoadPosition(item.roadPosition));
+            writer.WriteUInt32(item.instanceID);
+            writer.WriteClampedVector3(value, 13, 8);
+            writer.WriteQuaternion(item.transform.rotation, 11);
+            writer.WriteUnsignedClampedFloat(item.ReplicatedSpeed, 8, 2);
+            writer.WriteClampedFloat(item.ReplicatedForwardVelocity, 9, 2);
+            writer.WriteSignedNormalizedFloat(item.ReplicatedSteeringInput, 2);
+            writer.WriteClampedFloat(item.ReplicatedVelocityInput, 9, 2);
+            writer.WriteBit(flag);
+            if (!flag)
+            {
+                continue;
+            }
+            if (item.asset.replicatedWheelIndices != null)
+            {
+                int[] replicatedWheelIndices = item.asset.replicatedWheelIndices;
+                foreach (int num in replicatedWheelIndices)
+                {
+                    Wheel wheelAtIndex = item.GetWheelAtIndex(num);
+                    if (wheelAtIndex == null)
+                    {
+                        UnturnedLog.error($"\"{item.asset.FriendlyName}\" missing wheel for replicated index: {num}");
+                        writer.WriteUnsignedNormalizedFloat(0f, 4);
+                    }
+                    else
+                    {
+                        writer.WriteUnsignedNormalizedFloat(wheelAtIndex.replicatedSuspensionState, 4);
+                        writer.WritePhysicsMaterialNetId(wheelAtIndex.replicatedGroundMaterial);
+                    }
+                }
+            }
+            if (item.asset.UsesEngineRpmAndGears)
+            {
+                uint value2 = (uint)(item.GearNumber + 1);
+                writer.WriteBits(value2, 3);
+                float value3 = Mathf.InverseLerp(item.asset.EngineIdleRpm, item.asset.EngineMaxRpm, item.ReplicatedEngineRpm);
+                writer.WriteUnsignedNormalizedFloat(value3, 7);
+            }
+        }
+        if (writer.errors != 0 && Time.realtimeSinceStartup - lastSendOverflowWarning > 1f)
+        {
+            lastSendOverflowWarning = Time.realtimeSinceStartup;
+            CommandWindow.LogWarningFormat("Error {0} writing vehicle states. The vehicle count ({1}) is probably too high. No this is not a bug introduced in the update, rather a warning of a previously silent bug.", writer.errors, _vehicles.Count);
+        }
+    }
+
     private void Update()
     {
-        if (!Provider.isServer || !Level.isLoaded || vehicles == null)
+        if (vehicles == null)
+        {
+            return;
+        }
+        float deltaTime = Time.deltaTime;
+        if (Dedicator.IsDedicatedServer)
+        {
+            foreach (InteractableVehicle vehicle in vehicles)
+            {
+                if (!(vehicle == null) && vehicle.hasUnityCalledStart)
+                {
+                    try
+                    {
+                        vehicle.OnUpdate(deltaTime);
+                    }
+                    catch (Exception e)
+                    {
+                        UnturnedLog.exception(e, "Caught exception updating vehicle " + vehicle.asset?.FriendlyName + ":");
+                    }
+                }
+            }
+        }
+        else
+        {
+            int frameCount = Time.frameCount;
+            int num = 0;
+            int num2 = frameCount % 4;
+            foreach (InteractableVehicle vehicle2 in vehicles)
+            {
+                if (vehicle2 == null || !vehicle2.hasUnityCalledStart)
+                {
+                    continue;
+                }
+                int num3 = num % 4;
+                num++;
+                float num4 = MainCamera.SqrDistanceFromLodPosition(vehicle2.transform.position);
+                vehicle2.isVisibleToLocalPlayer = num4 < GraphicsSettings.sqrVehicleCullDistanceWithMargin;
+                vehicle2.accumulatedDeltaTime += deltaTime;
+                if (vehicle2.isVisibleToLocalPlayer || num2 == num3)
+                {
+                    float accumulatedDeltaTime = vehicle2.accumulatedDeltaTime;
+                    vehicle2.accumulatedDeltaTime = 0f;
+                    try
+                    {
+                        vehicle2.OnUpdate(accumulatedDeltaTime);
+                    }
+                    catch (Exception e2)
+                    {
+                        UnturnedLog.exception(e2, "Caught exception updating vehicle " + vehicle2.asset?.FriendlyName + ":");
+                    }
+                }
+            }
+        }
+        if (!Provider.isServer || !Level.isLoaded)
         {
             return;
         }

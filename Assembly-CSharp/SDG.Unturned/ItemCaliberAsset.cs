@@ -90,6 +90,37 @@ public class ItemCaliberAsset : ItemAsset
     [Obsolete("Changed type to int")]
     public byte firerate => MathfEx.ClampToByte(_firerateOffset);
 
+    /// <summary>
+    /// Returns true if calibers list contains provided caliber ID.
+    /// </summary>
+    public bool CalibersContainId(ushort caliberId)
+    {
+        ushort[] array = calibers;
+        for (int i = 0; i < array.Length; i++)
+        {
+            if (array[i] == caliberId)
+            {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /// <summary>
+    /// Returns true if calibers list contains any of the provided caliber IDs.
+    /// </summary>
+    public bool CalibersContainAnyOfIds(ushort[] caliberIds)
+    {
+        foreach (ushort caliberId in caliberIds)
+        {
+            if (CalibersContainId(caliberId))
+            {
+                return true;
+            }
+        }
+        return false;
+    }
+
     public override void BuildDescription(ItemDescriptionBuilder builder, Item itemInstance)
     {
         base.BuildDescription(builder, itemInstance);
@@ -138,31 +169,31 @@ public class ItemCaliberAsset : ItemAsset
         }
     }
 
-    public override void PopulateAsset(Bundle bundle, DatDictionary data, Local localization)
+    public override void PopulateAsset(in PopulateAssetParameters p)
     {
-        base.PopulateAsset(bundle, data, localization);
-        _calibers = new ushort[data.ParseUInt8("Calibers", 0)];
+        base.PopulateAsset(in p);
+        _calibers = new ushort[p.data.ParseUInt8("Calibers", 0)];
         for (byte b = 0; b < calibers.Length; b++)
         {
-            _calibers[b] = data.ParseUInt16("Caliber_" + b, 0);
+            _calibers[b] = p.data.ParseUInt16("Caliber_" + b, 0);
         }
-        _recoil_x = data.ParseFloat("Recoil_X", 1f);
-        _recoil_y = data.ParseFloat("Recoil_Y", 1f);
-        aimingRecoilMultiplier = data.ParseFloat("Aiming_Recoil_Multiplier", 1f);
-        aimDurationMultiplier = data.ParseFloat("Aim_Duration_Multiplier", 1f);
-        _spread = data.ParseFloat("Spread", 1f);
-        _sway = data.ParseFloat("Sway", 1f);
-        _shake = data.ParseFloat("Shake", 1f);
-        _firerateOffset = data.ParseInt32("Firerate");
-        float defaultValue = data.ParseFloat("Damage", 1f);
-        ballisticDamageMultiplier = data.ParseFloat("Ballistic_Damage_Multiplier", defaultValue);
-        BallisticGravityMultiplier = data.ParseFloat("Ballistic_Drop", 1f);
-        aimingMovementSpeedMultiplier = data.ParseFloat("Aiming_Movement_Speed_Multiplier", 1f);
-        _isPaintable = data.ContainsKey("Paintable");
-        _isBipod = data.ContainsKey("Bipod");
-        CanDamageInvulernableEntities = data.ParseBool("Invulnerable");
-        shouldDestroyAttachmentColliders = data.ParseBool("Destroy_Attachment_Colliders", defaultValue: true);
-        instantiatedAttachmentName = data.GetString("Instantiated_Attachment_Name_Override", GUID.ToString("N"));
+        _recoil_x = p.data.ParseFloat("Recoil_X", 1f);
+        _recoil_y = p.data.ParseFloat("Recoil_Y", 1f);
+        aimingRecoilMultiplier = p.data.ParseFloat("Aiming_Recoil_Multiplier", 1f);
+        aimDurationMultiplier = p.data.ParseFloat("Aim_Duration_Multiplier", 1f);
+        _spread = p.data.ParseFloat("Spread", 1f);
+        _sway = p.data.ParseFloat("Sway", 1f);
+        _shake = p.data.ParseFloat("Shake", 1f);
+        _firerateOffset = p.data.ParseInt32("Firerate");
+        float defaultValue = p.data.ParseFloat("Damage", 1f);
+        ballisticDamageMultiplier = p.data.ParseFloat("Ballistic_Damage_Multiplier", defaultValue);
+        BallisticGravityMultiplier = p.data.ParseFloat("Ballistic_Drop", 1f);
+        aimingMovementSpeedMultiplier = p.data.ParseFloat("Aiming_Movement_Speed_Multiplier", 1f);
+        _isPaintable = p.data.ContainsKey("Paintable");
+        _isBipod = p.data.ContainsKey("Bipod");
+        CanDamageInvulernableEntities = p.data.ParseBool("Invulnerable");
+        shouldDestroyAttachmentColliders = p.data.ParseBool("Destroy_Attachment_Colliders", defaultValue: true);
+        instantiatedAttachmentName = p.data.GetString("Instantiated_Attachment_Name_Override", GUID.ToString("N"));
     }
 
     internal override void BuildCargoData(CargoBuilder builder)

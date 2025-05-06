@@ -18,9 +18,9 @@ internal class VehicleRandomPaintColorConfiguration : IDatParseable
 
     public bool TryParse(IDatNode node)
     {
-        if (node is DatDictionary datDictionary)
+        if (node is IDatDictionary dictionary)
         {
-            return datDictionary.TryParseFloat("MinSaturation", out minSaturation) & datDictionary.TryParseFloat("MaxSaturation", out maxSaturation) & datDictionary.TryParseFloat("MinValue", out minValue) & datDictionary.TryParseFloat("MaxValue", out maxValue) & datDictionary.TryParseFloat("GrayscaleChance", out grayscaleChance);
+            return dictionary.TryParseFloat("MinSaturation", out minSaturation) & dictionary.TryParseFloat("MaxSaturation", out maxSaturation) & dictionary.TryParseFloat("MinValue", out minValue) & dictionary.TryParseFloat("MaxValue", out maxValue) & dictionary.TryParseFloat("GrayscaleChance", out grayscaleChance);
         }
         return false;
     }

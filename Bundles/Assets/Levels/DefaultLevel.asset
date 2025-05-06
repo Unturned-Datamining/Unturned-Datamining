@@ -1,14 +1,14 @@
-"Metadata"
+﻿Metadata
 {
-	"GUID" "12dc9fdbe9974022afd21158ad54b76a"
-	"Type" "SDG.Unturned.LevelAsset, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null"
+	GUID 12dc9fdbe9974022afd21158ad54b76a
+	Type SDG.Unturned.LevelAsset, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
 }
-"Asset"
+Asset
 {
-	"Dropship"
+	Dropship
 	{
-		"MasterBundle" "core.masterbundle"
-		"AssetPath" "Level/Dropship.prefab"
+		MasterBundle core.masterbundle
+		AssetPath Level/Dropship.prefab
 	}
-	"Airdrop" { "GUID" "229440c249dc490ba26ce71e8a59d5c6" }
+	Airdrop { "GUID" "229440c249dc490ba26ce71e8a59d5c6" }
 }

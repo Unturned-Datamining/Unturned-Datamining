@@ -1,13 +1,15 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Text;
 using UnityEngine;
+using UnityEngine.Profiling;
+using Unturned.SystemEx;
 
 namespace SDG.Unturned;
 
 public class PlayerDashboardCraftingUI
 {
-    private static readonly int TYPES = 10;
-
     public static Local localization;
 
     private static SleekFullscreenBox container;
@@ -22,31 +24,107 @@ public class PlayerDashboardCraftingUI
 
     private static ISleekButton searchButton;
 
-    private static List<Blueprint> visibleBlueprints;
+    /// <summary>
+    /// List of all loaded blueprints potentially craftable by player. Updated when assets are refreshed. This
+    /// allows us to skip blueprints that will never be craftable (such as level-specific blueprints).
+    /// </summary>
+    private static List<Blueprint> loadedBlueprints;
 
-    private static SleekList<Blueprint> blueprintsScrollBox;
+    private static int assetListChangeCounter;
 
-    private static ISleekBox infoBox;
+    /// <summary>
+    /// Recycled list of assets with blueprints.
+    /// </summary>
+    private static List<IBlueprintOwner> blueprintOwners = new List<IBlueprintOwner>();
+
+    /// <summary>
+    /// Subset of loadedBlueprints.
+    /// </summary>
+    private static List<Blueprint> filteredBlueprints = new List<Blueprint>();
+
+    private static List<BlueprintStatus> visibleBlueprints;
+
+    /// <summary>
+    /// Center column.
+    /// </summary>
+    private static ISleekElement blueprintsContainer;
+
+    private static SleekButtonIcon filteringDescriptionButton;
+
+    private static SleekList<BlueprintStatus> blueprintsScrollBox;
+
+    private static ISleekBox blueprintsListEmptyInfoBox;
+
+    private static ISleekButton resetFiltersButton;
 
     private static ISleekToggle hideUncraftableToggle;
+
+    private static ISleekToggle showIgnoredToggle;
 
     /// <summary>
     /// Used by inventory item context menu to override which blueprints are shown.
     /// </summary>
     public static Blueprint[] filteredBlueprintsOverride;
 
-    private static byte blueprintTypeFilterIndex;
+    private static CachingAssetRef blueprintCategoryFilterRef;
+
+    private static HashSet<TagAsset> filterRequiresAnyOfTags;
+
+    private static ICraftingTagProvider filterTagProvider;
+
+    private static List<BlueprintStatus> updatedBlueprints;
+
+    private static List<BlueprintStatus> blueprintStatusPool;
 
     private static bool hideUncraftable;
 
+    private static bool showIgnored;
+
     private static string itemNameFilter;
+
+    /// <summary>
+    /// Left-hand column.
+    /// </summary>
+    private static ISleekScrollView filtersScrollView;
+
+    private static ISleekElement categoriesContainer;
+
+    private static ISleekLabel categoriesHeader;
+
+    private static List<SleekTagButton> categoryTagButtons;
+
+    private static ISleekElement tagProvidersContainer;
+
+    private static ISleekLabel tagProvidersHeader;
+
+    private static List<SleekCraftingTagProviderButton> tagProviderButtons;
+
+    /// <summary>
+    /// Right-hand column.
+    /// </summary>
+    private static SleekSelectedBlueprint selectedBlueprintMenu;
+
+    private static StringBuilder craftTooltipBuilder = new StringBuilder();
+
+    private static HashSet<ItemAsset> availableItemAssets = new HashSet<ItemAsset>();
+
+    private static StringBuilder filteringDescriptionSb = new StringBuilder();
+
+    private static CustomSampler refreshCraftableBlueprintsSampler = CustomSampler.Create("RefreshCraftableBlueprints");
+
+    private static void SetSelectedBlueprintStatus(BlueprintStatus status)
+    {
+        selectedBlueprintMenu.IsVisible = status != null;
+        selectedBlueprintMenu.SetSelectedBlueprintStatus(status);
+        blueprintsContainer.SizeOffset_X = (selectedBlueprintMenu.IsVisible ? (-500) : (-260));
+    }
 
     public static void open()
     {
         if (!active)
         {
             active = true;
-            updateSelection(filteredBlueprintsOverride, blueprintTypeFilterIndex, hideUncraftable, itemNameFilter);
+            RefreshBlueprintList();
             container.AnimateIntoView();
         }
     }
@@ -61,236 +139,419 @@ public class PlayerDashboardCraftingUI
         }
     }
 
-    private static bool DoesAnyItemNameContainString(Blueprint blueprint, string text)
+    internal static string BuildNotCraftableTooltip(BlueprintStatus status)
     {
+        craftTooltipBuilder.Clear();
+        craftTooltipBuilder.AppendLine(localization.format("NotCraftable_Header"));
+        Blueprint blueprint = status.blueprint;
+        if (status.isMissingTargetItem && blueprint.TargetItem != null)
+        {
+            ItemAsset itemAsset = blueprint.TargetItem.FindItemAsset();
+            if (itemAsset != null)
+            {
+                craftTooltipBuilder.Append(localization.format("NotCraftable_LineItemPrefix"));
+                craftTooltipBuilder.AppendFormat(localization.format("NotCraftable_MissingInputItem"), itemAsset.itemName);
+                craftTooltipBuilder.AppendLine();
+            }
+        }
+        if (status.totalMissingInputItemsCount > 0 && !blueprint.supplies.IsNullOrEmpty())
+        {
+            for (int i = 0; i < blueprint.supplies.Length; i++)
+            {
+                BlueprintSupply blueprintSupply = blueprint.supplies[i];
+                if (status.inputItems[i].isMissingRequiredAmount)
+                {
+                    ItemAsset itemAsset2 = blueprintSupply.FindItemAsset();
+                    if (itemAsset2 != null)
+                    {
+                        craftTooltipBuilder.Append(localization.format("NotCraftable_LineItemPrefix"));
+                        craftTooltipBuilder.AppendFormat(localization.format("NotCraftable_MissingInputItem"), itemAsset2.itemName);
+                        craftTooltipBuilder.AppendLine();
+                    }
+                }
+            }
+        }
+        if (status.isMissingRequiredSkill)
+        {
+            craftTooltipBuilder.Append(localization.format("NotCraftable_LineItemPrefix"));
+            craftTooltipBuilder.AppendLine(localization.format("NotCraftable_MissingSkill"));
+        }
+        if (status.missingCraftingTagsCount > 0)
+        {
+            CachingAssetRef[] applicableRequiredNearbyCraftingTags = blueprint.GetApplicableRequiredNearbyCraftingTags();
+            if (applicableRequiredNearbyCraftingTags != null)
+            {
+                for (int j = 0; j < applicableRequiredNearbyCraftingTags.Length; j++)
+                {
+                    TagAsset tagAsset = applicableRequiredNearbyCraftingTags[j].Get<TagAsset>();
+                    if (tagAsset != null && !Player.player.crafting.IsCraftingTagAvailable(tagAsset))
+                    {
+                        craftTooltipBuilder.Append(localization.format("NotCraftable_LineItemPrefix"));
+                        craftTooltipBuilder.AppendFormat(localization.format("NotCraftable_MissingCraftingTag"), tagAsset.PlainTextName);
+                        craftTooltipBuilder.AppendLine();
+                    }
+                }
+            }
+        }
+        if (status.isMissingAnyNpcConditions)
+        {
+            craftTooltipBuilder.Append(localization.format("NotCraftable_LineItemPrefix"));
+            craftTooltipBuilder.AppendLine(localization.format("NotCraftable_UnmetConditions"));
+        }
+        return craftTooltipBuilder.ToString();
+    }
+
+    private static bool DoesAnyItemNameContainString(Blueprint blueprint)
+    {
+        string value = itemNameFilter;
         for (byte b = 0; b < blueprint.outputs.Length; b++)
         {
-            BlueprintOutput blueprintOutput = blueprint.outputs[b];
-            if (Assets.find(EAssetType.ITEM, blueprintOutput.id) is ItemAsset { itemName: not null } itemAsset && itemAsset.itemName.IndexOf(text, StringComparison.OrdinalIgnoreCase) != -1)
+            ItemAsset itemAsset = blueprint.outputs[b].FindItemAsset();
+            if (itemAsset != null && itemAsset.itemName != null && itemAsset.itemName.IndexOf(value, StringComparison.OrdinalIgnoreCase) != -1)
             {
                 return true;
             }
-        }
-        if (blueprint.tool != 0 && Assets.find(EAssetType.ITEM, blueprint.tool) is ItemAsset { itemName: not null } itemAsset2 && itemAsset2.itemName.IndexOf(text, StringComparison.OrdinalIgnoreCase) != -1)
-        {
-            return true;
         }
         for (byte b2 = 0; b2 < blueprint.supplies.Length; b2++)
         {
-            BlueprintSupply blueprintSupply = blueprint.supplies[b2];
-            if (Assets.find(EAssetType.ITEM, blueprintSupply.id) is ItemAsset { itemName: not null } itemAsset3 && itemAsset3.itemName.IndexOf(text, StringComparison.OrdinalIgnoreCase) != -1)
+            ItemAsset itemAsset2 = blueprint.supplies[b2].FindItemAsset();
+            if (itemAsset2 != null && itemAsset2.itemName != null && itemAsset2.itemName.IndexOf(value, StringComparison.OrdinalIgnoreCase) != -1)
             {
                 return true;
             }
+        }
+        ItemAsset itemAsset3 = blueprint.TargetItem?.FindItemAsset();
+        if (itemAsset3 != null && !string.IsNullOrEmpty(itemAsset3.itemName) && itemAsset3.itemName.IndexOf(value, StringComparison.OrdinalIgnoreCase) != -1)
+        {
+            return true;
         }
         return false;
     }
 
-    public static void updateSelection()
+    /// <summary>
+    /// Returns true if all filtered blueprints are craftable. (hacked-in for item action menu)
+    /// </summary>
+    public static bool UpdateFilteredBlueprintsAndGetAreAllCraftable()
     {
-        updateSelection(filteredBlueprintsOverride, blueprintTypeFilterIndex, hideUncraftable, itemNameFilter);
+        RefreshBlueprintList();
+        foreach (BlueprintStatus updatedBlueprint in updatedBlueprints)
+        {
+            if (!updatedBlueprint.IsCraftable)
+            {
+                return false;
+            }
+        }
+        return true;
     }
 
-    private static void updateSelection(Blueprint[] newFilteredBlueprintsOverride, byte newBlueprintTypeFilterIndex, bool newHideUncraftable, string newItemNameFilter)
+    /// <summary>
+    /// If asset mapping has changed, find all assets with blueprints and gather the ones that can ever be crafted
+    /// on this level. (I.e., excluding ones that we shouldn't waste time considering.)
+    /// </summary>
+    private static void RefreshLoadedBlueprintsIfNecessary()
     {
-        bool flag = PowerTool.checkFires(Player.player.transform.position, 16f);
-        bool flag2 = !string.IsNullOrEmpty(newItemNameFilter);
-        List<Blueprint> list;
-        if (newFilteredBlueprintsOverride == null)
+        if (!Assets.HasCurrentAssetMappingChanged(ref assetListChangeCounter))
         {
-            list = new List<Blueprint>();
-            List<ItemAsset> list2 = new List<ItemAsset>();
-            Assets.find(list2);
-            foreach (ItemAsset item in list2)
+            return;
+        }
+        loadedBlueprints.Clear();
+        HashSet<TagAsset> hashSet = new HashSet<TagAsset>();
+        blueprintOwners.Clear();
+        Assets.find(blueprintOwners);
+        PlayerCrafting crafting = Player.player.crafting;
+        foreach (IBlueprintOwner blueprintOwner in blueprintOwners)
+        {
+            foreach (Blueprint blueprint in blueprintOwner.GetBlueprints())
             {
-                if (item == null)
+                if (!crafting.IsBlueprintPermanentlyDisabled(blueprint))
                 {
-                    continue;
-                }
-                foreach (Blueprint blueprint in item.blueprints)
-                {
-                    if (flag2 ? DoesAnyItemNameContainString(blueprint, newItemNameFilter) : (blueprint.type == (EBlueprintType)newBlueprintTypeFilterIndex))
-                    {
-                        list.Add(blueprint);
-                    }
+                    loadedBlueprints.Add(blueprint);
+                    hashSet.Add(blueprint.GetCategoryTag());
                 }
             }
+        }
+        RefreshCategoryTagButtons(hashSet);
+    }
+
+    private static void RefreshCraftableBlueprints()
+    {
+        availableItemAssets.Clear();
+        Player.player.crafting.GatherUniqueInputItems(availableItemAssets);
+        foreach (Blueprint loadedBlueprint in loadedBlueprints)
+        {
+            if (loadedBlueprint.ContainsAnyOfItems(availableItemAssets))
+            {
+                filteredBlueprints.Add(loadedBlueprint);
+            }
+        }
+    }
+
+    private static void RefreshCategoryTagButtons(HashSet<TagAsset> allCategoryTags)
+    {
+        List<TagAsset> list = allCategoryTags.ToList();
+        list.Sort(CompareCategoryTags);
+        categoriesContainer.IsVisible = list.Count > 0;
+        if (!categoriesContainer.IsVisible)
+        {
+            return;
+        }
+        int i;
+        for (i = 0; i < list.Count; i++)
+        {
+            SleekTagButton sleekTagButton;
+            if (i < categoryTagButtons.Count)
+            {
+                sleekTagButton = categoryTagButtons[i];
+                sleekTagButton.IsVisible = true;
+            }
+            else
+            {
+                sleekTagButton = new SleekTagButton();
+                sleekTagButton.SizeOffset_X = 50f;
+                sleekTagButton.SizeOffset_Y = 50f;
+                sleekTagButton.OnClicked += OnClickedCategoryFilterButton;
+                categoriesContainer.AddChild(sleekTagButton);
+                categoryTagButtons.Add(sleekTagButton);
+            }
+            sleekTagButton.TagRef = list[i];
+            sleekTagButton.PositionScale_X = 0.5f;
+            sleekTagButton.PositionOffset_X = -100 + i % 4 * 50;
+            sleekTagButton.PositionOffset_Y = 40 + i / 4 * 50;
+        }
+        categoriesContainer.SizeOffset_Y = 40 + MathfEx.GetPageCount(list.Count, 4) * 50;
+        while (i < categoryTagButtons.Count)
+        {
+            categoryTagButtons[i].IsVisible = false;
+        }
+    }
+
+    private static void RefreshTagProviderButtons()
+    {
+        tagProvidersContainer.IsVisible = PlayerCrafting.localPlayerNearbyTagProviders.Count > 0;
+        if (!tagProvidersContainer.IsVisible)
+        {
+            return;
+        }
+        int i = 0;
+        foreach (NearbyCraftingTagProvider localPlayerNearbyTagProvider in PlayerCrafting.localPlayerNearbyTagProviders)
+        {
+            SleekCraftingTagProviderButton sleekCraftingTagProviderButton;
+            if (i < tagProviderButtons.Count)
+            {
+                sleekCraftingTagProviderButton = tagProviderButtons[i];
+                sleekCraftingTagProviderButton.IsVisible = true;
+            }
+            else
+            {
+                sleekCraftingTagProviderButton = new SleekCraftingTagProviderButton();
+                sleekCraftingTagProviderButton.SizeScale_X = 1f;
+                sleekCraftingTagProviderButton.SizeOffset_Y = 50f;
+                sleekCraftingTagProviderButton.OnClicked += OnClickedNearbyTagProviderButton;
+                tagProvidersContainer.AddChild(sleekCraftingTagProviderButton);
+                tagProviderButtons.Add(sleekCraftingTagProviderButton);
+            }
+            sleekCraftingTagProviderButton.SetTagProvider(localPlayerNearbyTagProvider);
+            sleekCraftingTagProviderButton.PositionOffset_Y = 40 + i * 50;
+            i++;
+        }
+        tagProvidersContainer.SizeOffset_Y = 40 + i * 50;
+        for (; i < tagProviderButtons.Count; i++)
+        {
+            tagProviderButtons[i].IsVisible = false;
+        }
+    }
+
+    private static void OrganizeFiltersColumn()
+    {
+        float num = 100f;
+        if (showIgnoredToggle.IsVisible)
+        {
+            showIgnoredToggle.PositionOffset_Y = num;
+            num += showIgnoredToggle.SizeOffset_Y;
+        }
+        if (categoriesContainer.IsVisible)
+        {
+            categoriesContainer.PositionOffset_Y = num;
+            num += categoriesContainer.SizeOffset_Y;
+            num += 10f;
+        }
+        if (tagProvidersContainer.IsVisible)
+        {
+            tagProvidersContainer.PositionOffset_Y = num;
+            num += tagProvidersContainer.SizeOffset_Y;
+            num += 10f;
+        }
+        filtersScrollView.ContentSizeOffset = new Vector2(0f, num - 10f);
+    }
+
+    private static void RefreshBlueprintList()
+    {
+        Player.player.crafting.UpdateAvailableCraftingTags();
+        RefreshTagProviderButtons();
+        TagAsset tagAsset = blueprintCategoryFilterRef.Get<TagAsset>();
+        bool flag = !string.IsNullOrEmpty(itemNameFilter);
+        bool flag2 = false;
+        filteringDescriptionSb.Clear();
+        if (tagAsset != null)
+        {
+            flag2 = true;
+            if (filteringDescriptionSb.Length > 0)
+            {
+                filteringDescriptionSb.Append(localization.format("FilteringDescription_Separator"));
+            }
+            string format = localization.format("FilteringDescription_Category");
+            filteringDescriptionSb.AppendFormat(format, tagAsset.RichTextOrPreferredFontColor);
+        }
+        if (filterTagProvider != null)
+        {
+            flag2 = true;
+            if (filteringDescriptionSb.Length > 0)
+            {
+                filteringDescriptionSb.Append(localization.format("FilteringDescription_Separator"));
+            }
+            string format2 = localization.format("FilteringDescription_TagProvider");
+            Asset tagProviderAsset = filterTagProvider.GetTagProviderAsset();
+            string arg = ((tagProviderAsset == null) ? filterTagProvider.ToString() : ((!(tagProviderAsset is ItemAsset itemAsset)) ? tagProviderAsset.FriendlyName : itemAsset.RarityRichTextName));
+            filteringDescriptionSb.AppendFormat(format2, arg);
+        }
+        else if (filterRequiresAnyOfTags.Count == 1)
+        {
+            flag2 = true;
+            if (filteringDescriptionSb.Length > 0)
+            {
+                filteringDescriptionSb.Append(localization.format("FilteringDescription_Separator"));
+            }
+            string format3 = localization.format("FilteringDescription_Tag");
+            TagAsset tagAsset2 = filterRequiresAnyOfTags.First();
+            filteringDescriptionSb.AppendFormat(format3, tagAsset2.RichTextOrPreferredFontColor);
+        }
+        if (flag)
+        {
+            flag2 = true;
+            if (filteringDescriptionSb.Length > 0)
+            {
+                filteringDescriptionSb.Append(localization.format("FilteringDescription_Separator"));
+            }
+            string format4 = localization.format("FilteringDescription_Name");
+            string arg2 = "<color=" + Palette.hex(OptionsSettings.fontColor) + ">" + itemNameFilter + "</color>";
+            filteringDescriptionSb.AppendFormat(format4, arg2);
+        }
+        filteringDescriptionButton.IsVisible = flag2;
+        if (flag2)
+        {
+            filteringDescriptionButton.text = localization.format("FilteringDescription_Format", filteringDescriptionSb);
+            blueprintsScrollBox.PositionOffset_Y = filteringDescriptionButton.SizeOffset_Y;
         }
         else
         {
-            list = new List<Blueprint>(newFilteredBlueprintsOverride);
+            blueprintsScrollBox.PositionOffset_Y = 0f;
         }
-        if (Level.info != null && Level.info.configData != null && !Level.info.configData.Allow_Crafting)
+        blueprintsScrollBox.SizeOffset_Y = 0f - blueprintsScrollBox.PositionOffset_Y;
+        filteredBlueprints.Clear();
+        if (Level.IsCraftingAllowedByLevel)
         {
-            newFilteredBlueprintsOverride = new Blueprint[0];
-            list.Clear();
+            if (filteredBlueprintsOverride == null)
+            {
+                RefreshLoadedBlueprintsIfNecessary();
+                if (flag2)
+                {
+                    foreach (Blueprint loadedBlueprint in loadedBlueprints)
+                    {
+                        if (tagAsset != null && loadedBlueprint.GetCategoryTag() != tagAsset)
+                        {
+                            continue;
+                        }
+                        if (filterRequiresAnyOfTags.Count > 0)
+                        {
+                            bool flag3 = false;
+                            foreach (TagAsset filterRequiresAnyOfTag in filterRequiresAnyOfTags)
+                            {
+                                if (loadedBlueprint.DoesRequireNearbyCraftingTag(filterRequiresAnyOfTag))
+                                {
+                                    flag3 = true;
+                                    break;
+                                }
+                            }
+                            if (!flag3)
+                            {
+                                continue;
+                            }
+                        }
+                        if (!flag || DoesAnyItemNameContainString(loadedBlueprint))
+                        {
+                            filteredBlueprints.Add(loadedBlueprint);
+                        }
+                    }
+                }
+                else
+                {
+                    RefreshCraftableBlueprints();
+                }
+            }
+            else
+            {
+                filteredBlueprints.AddRange(filteredBlueprintsOverride);
+            }
         }
+        OrganizeFiltersColumn();
+        blueprintStatusPool.AddRange(updatedBlueprints);
+        updatedBlueprints.Clear();
         visibleBlueprints.Clear();
-        foreach (Blueprint item2 in list)
+        Blueprint selectedBlueprint = selectedBlueprintMenu.SelectedBlueprint;
+        BlueprintStatus selectedBlueprintStatus = null;
+        foreach (Blueprint filteredBlueprint in filteredBlueprints)
         {
-            if ((item2.skill == EBlueprintSkill.REPAIR && item2.level > Provider.modeConfigData.Gameplay.Repair_Level_Max) || (!string.IsNullOrEmpty(item2.map) && !item2.map.Equals(Level.info.name, StringComparison.InvariantCultureIgnoreCase)) || !item2.areConditionsMet(Player.player) || Player.player.crafting.isBlueprintBlacklisted(item2) || (!Provider.modeConfigData.Gameplay.Allow_Freeform_Buildables && !Provider.modeConfigData.Gameplay.Allow_Freeform_Buildables_On_Vehicles && item2.IsOutputFreeformBuildable))
+            if (!showIgnored && Player.player.crafting.getIgnoringBlueprint(filteredBlueprint))
             {
                 continue;
             }
-            ItemAsset sourceItem = item2.sourceItem;
-            int num = 0;
-            bool flag3 = false;
-            item2.hasSupplies = true;
-            item2.hasSkills = item2.skill == EBlueprintSkill.NONE || (item2.skill == EBlueprintSkill.CRAFT && Player.player.skills.skills[2][1].level >= item2.level) || (item2.skill == EBlueprintSkill.COOK && flag && Player.player.skills.skills[2][3].level >= item2.level) || (item2.skill == EBlueprintSkill.REPAIR && Player.player.skills.skills[2][7].level >= item2.level);
-            List<InventorySearch>[] array = new List<InventorySearch>[item2.supplies.Length];
-            for (int i = 0; i < item2.supplies.Length; i++)
+            BlueprintStatus blueprintStatus = CreateBlueprintStatus();
+            blueprintStatus.blueprint = filteredBlueprint;
+            updatedBlueprints.Add(blueprintStatus);
+            UpdateBlueprintStatusParameters updateBlueprintStatusParameters = default(UpdateBlueprintStatusParameters);
+            updateBlueprintStatusParameters.status = blueprintStatus;
+            updateBlueprintStatusParameters.shouldExitEarly = false;
+            UpdateBlueprintStatusParameters p = updateBlueprintStatusParameters;
+            Player.player.crafting.UpdateBlueprintStaticStatus(in p);
+            Player.player.crafting.UpdateBlueprintDynamicStatus(in p);
+            if ((!hideUncraftable || blueprintStatus.IsCraftable) && (!blueprintStatus.isMissingAnyCriticalInputItem || (flag && filteredBlueprint.canBeVisibleWhenSearchedWithoutRequiredItems)) && (filteredBlueprint.canBeVisibleWhenSearchedWithoutRequiredItems || blueprintStatus.hasAnyInputItem) && (!blueprintStatus.isMissingAnyNpcConditions || filteredBlueprint.CanBeVisibleWithUnmetConditions))
             {
-                BlueprintSupply blueprintSupply = item2.supplies[i];
-                List<InventorySearch> list3 = Player.player.inventory.search(blueprintSupply.id, blueprintSupply.ShouldTreatEmptyAsOne, findHealthy: true);
-                int num2 = 0;
-                foreach (InventorySearch item3 in list3)
+                blueprintStatus.UpdateCraftabilityScore();
+                visibleBlueprints.Add(blueprintStatus);
+                if (filteredBlueprint == selectedBlueprint)
                 {
-                    num2 += (blueprintSupply.ShouldTreatEmptyAsOne ? Mathf.Max(1, item3.jar.item.amount) : item3.jar.item.amount);
+                    selectedBlueprintStatus = blueprintStatus;
                 }
-                num += num2;
-                blueprintSupply.hasAmount = (ushort)num2;
-                if (item2.type == EBlueprintType.AMMO)
-                {
-                    if (blueprintSupply.hasAmount == 0)
-                    {
-                        item2.hasSupplies = false;
-                        flag3 = true;
-                    }
-                }
-                else if (blueprintSupply.hasAmount < blueprintSupply.amount)
-                {
-                    item2.hasSupplies = false;
-                    flag3 |= blueprintSupply.isCritical;
-                }
-                array[i] = list3;
-            }
-            if (item2.tool != 0)
-            {
-                InventorySearch inventorySearch = Player.player.inventory.has(item2.tool);
-                item2.tools = ((inventorySearch != null) ? ((ushort)1) : ((ushort)0));
-                item2.hasTool = inventorySearch != null;
-                flag3 |= inventorySearch == null && item2.toolCritical;
-            }
-            else
-            {
-                item2.tools = 1;
-                item2.hasTool = true;
-            }
-            if (item2.type == EBlueprintType.REPAIR)
-            {
-                List<InventorySearch> list4 = Player.player.inventory.search(sourceItem.id, findEmpty: false, findHealthy: false);
-                byte b = byte.MaxValue;
-                int num3 = -1;
-                for (int j = 0; j < list4.Count; j++)
-                {
-                    if (list4[j].jar.item.quality < b)
-                    {
-                        b = list4[j].jar.item.quality;
-                        num3 = j;
-                    }
-                }
-                if (num3 >= 0)
-                {
-                    item2.items = list4[num3].jar.item.quality;
-                    num++;
-                }
-                else
-                {
-                    item2.items = 0;
-                }
-                item2.hasItem = num3 >= 0;
-            }
-            else if (item2.type == EBlueprintType.AMMO)
-            {
-                List<InventorySearch> list5 = Player.player.inventory.search(sourceItem.id, findEmpty: true, findHealthy: true);
-                int num4 = -1;
-                int num5 = -1;
-                for (int k = 0; k < list5.Count; k++)
-                {
-                    if (list5[k].jar.item.amount > num4 && list5[k].jar.item.amount < sourceItem.amount)
-                    {
-                        num4 = list5[k].jar.item.amount;
-                        num5 = k;
-                    }
-                }
-                if (num5 >= 0)
-                {
-                    if (list5[num5].jar.item.id == item2.supplies[0].id)
-                    {
-                        item2.supplies[0].hasAmount -= (ushort)num4;
-                    }
-                    item2.supplies[0].amount = (byte)(sourceItem.amount - num4);
-                    item2.items = list5[num5].jar.item.amount;
-                    num++;
-                }
-                else
-                {
-                    item2.supplies[0].amount = 0;
-                    item2.items = 0;
-                }
-                item2.hasItem = num5 >= 0;
-                if (num5 < 0)
-                {
-                    item2.products = 0;
-                }
-                else if (item2.items + item2.supplies[0].hasAmount > sourceItem.amount)
-                {
-                    item2.products = sourceItem.amount;
-                }
-                else
-                {
-                    item2.products = (ushort)(item2.items + item2.supplies[0].hasAmount);
-                }
-            }
-            else
-            {
-                item2.hasItem = true;
-            }
-            if (flag3 && (!flag2 || !item2.canBeVisibleWhenSearchedWithoutRequiredItems))
-            {
-                continue;
-            }
-            if (newHideUncraftable)
-            {
-                bool ignoringBlueprint = Player.player.crafting.getIgnoringBlueprint(item2);
-                if (item2.hasSupplies && item2.hasTool && item2.hasItem && item2.hasSkills && !ignoringBlueprint)
-                {
-                    visibleBlueprints.Add(item2);
-                }
-            }
-            else if (newFilteredBlueprintsOverride != null)
-            {
-                if (item2.hasSupplies && item2.hasTool && item2.hasItem && item2.hasSkills)
-                {
-                    visibleBlueprints.Insert(0, item2);
-                }
-                else
-                {
-                    visibleBlueprints.Add(item2);
-                }
-            }
-            else if (item2.hasSupplies && item2.hasTool && item2.hasItem && item2.hasSkills)
-            {
-                visibleBlueprints.Insert(0, item2);
-            }
-            else if ((flag2 && item2.canBeVisibleWhenSearchedWithoutRequiredItems) || ((item2.type == EBlueprintType.AMMO || item2.type == EBlueprintType.REPAIR || num != 0) && item2.hasItem))
-            {
-                visibleBlueprints.Add(item2);
             }
         }
-        filteredBlueprintsOverride = newFilteredBlueprintsOverride;
-        blueprintTypeFilterIndex = newBlueprintTypeFilterIndex;
-        hideUncraftable = newHideUncraftable;
-        itemNameFilter = newItemNameFilter;
+        visibleBlueprints.Sort(CompareVisibleBlueprints);
+        SetSelectedBlueprintStatus(selectedBlueprintStatus);
         blueprintsScrollBox.ForceRebuildElements();
-        infoBox.IsVisible = visibleBlueprints.Count == 0;
+        blueprintsListEmptyInfoBox.IsVisible = visibleBlueprints.Count == 0;
+        if (blueprintsListEmptyInfoBox.IsVisible)
+        {
+            blueprintsListEmptyInfoBox.PositionOffset_Y = blueprintsScrollBox.PositionOffset_Y;
+            resetFiltersButton.IsVisible = flag2;
+            if (flag2)
+            {
+                blueprintsListEmptyInfoBox.Text = localization.format("No_Blueprints");
+            }
+            else if (availableItemAssets.Count < 1)
+            {
+                blueprintsListEmptyInfoBox.Text = localization.format("NoBlueprints_ZeroAvailableItems");
+            }
+            else
+            {
+                blueprintsListEmptyInfoBox.Text = localization.format("NoBlueprints_HasAvailableItems");
+            }
+        }
     }
 
     private static void onInventoryResized(byte page, byte newWidth, byte newHeight)
     {
         if (active)
         {
-            updateSelection();
+            RefreshBlueprintList();
         }
     }
 
@@ -298,56 +559,147 @@ public class PlayerDashboardCraftingUI
     {
         if (active)
         {
-            updateSelection();
+            RefreshBlueprintList();
         }
     }
 
-    private static void onClickedTypeButton(ISleekElement button)
+    private static void ClearFilters()
     {
-        byte newBlueprintTypeFilterIndex = (byte)((button.PositionOffset_X + (float)(-(TYPES * -30 + 5))) / 60f);
+        filteredBlueprintsOverride = null;
+        blueprintCategoryFilterRef.Clear();
+        filterRequiresAnyOfTags.Clear();
+        filterTagProvider = null;
         searchField.Text = "";
-        updateSelection(null, newBlueprintTypeFilterIndex, hideUncraftable, string.Empty);
+        itemNameFilter = null;
+    }
+
+    private static void OnClickedCategoryFilterButton(CachingAssetRef categoryTagRef)
+    {
+        filteredBlueprintsOverride = null;
+        if (blueprintCategoryFilterRef == categoryTagRef)
+        {
+            blueprintCategoryFilterRef.Clear();
+        }
+        else
+        {
+            blueprintCategoryFilterRef = categoryTagRef;
+        }
+        RefreshBlueprintList();
+    }
+
+    private static void OnClickedNearbyTagProviderButton(ICraftingTagProvider tagProvider)
+    {
+        if (tagProvider == null)
+        {
+            UnturnedLog.info("Clicked nearby crafting tag provider has been destroyed");
+            return;
+        }
+        filteredBlueprintsOverride = null;
+        if (filterTagProvider == tagProvider)
+        {
+            filterTagProvider = null;
+            filterRequiresAnyOfTags.Clear();
+        }
+        else
+        {
+            filterTagProvider = tagProvider;
+            filterRequiresAnyOfTags.Clear();
+            CraftingTagProviderGetAvailableTagsParameters p = default(CraftingTagProviderGetAvailableTagsParameters);
+            p.ResultTags = filterRequiresAnyOfTags;
+            tagProvider.GetAvailableTags(ref p);
+        }
+        RefreshBlueprintList();
     }
 
     private static void onToggledHideUncraftableToggle(ISleekToggle toggle, bool state)
     {
-        updateSelection(filteredBlueprintsOverride, blueprintTypeFilterIndex, state, itemNameFilter);
+        hideUncraftable = state;
+        RefreshBlueprintList();
+    }
+
+    private static void OnShowIgnoredToggled(ISleekToggle toggle, bool state)
+    {
+        showIgnored = state;
+        RefreshBlueprintList();
+    }
+
+    private static void OnClickedClearFilters(ISleekElement button)
+    {
+        ClearFilters();
+        RefreshBlueprintList();
     }
 
     private static void onEnteredSearchField(ISleekField field)
     {
-        updateSelection(null, blueprintTypeFilterIndex, hideUncraftable, searchField.Text);
+        filteredBlueprintsOverride = null;
+        itemNameFilter = searchField.Text;
+        RefreshBlueprintList();
     }
 
     private static void onClickedSearchButton(ISleekElement button)
     {
-        updateSelection(null, blueprintTypeFilterIndex, hideUncraftable, searchField.Text);
+        onEnteredSearchField(searchField);
     }
 
-    private static void clickedBlueprint(Blueprint blueprint, bool all)
+    private static void OnClickedBlueprint(BlueprintStatus blueprintStatus)
     {
-        if (blueprint.hasSupplies && blueprint.hasTool && blueprint.hasItem && blueprint.hasSkills && !Player.player.equipment.isBusy)
+        bool key = InputEx.GetKey(ControlsSettings.SkipActionCraftingMenu);
+        bool key2 = InputEx.GetKey(ControlsSettings.other);
+        if ((key || key2) && blueprintStatus.IsCraftable)
         {
-            Player.player.crafting.sendCraft(blueprint.sourceItem.id, blueprint.id, all);
+            if (!Player.player.equipment.isBusy)
+            {
+                Player.player.crafting.SendRequestToCraft(blueprintStatus.blueprint, key2);
+            }
+        }
+        else if (selectedBlueprintMenu.SelectedBlueprint == blueprintStatus.blueprint)
+        {
+            SetSelectedBlueprintStatus(null);
+        }
+        else
+        {
+            SetSelectedBlueprintStatus(blueprintStatus);
         }
     }
 
-    private static void onClickedBlueprintButton(Blueprint blueprint)
+    private static ISleekElement onCreateBlueprint(BlueprintStatus blueprintStatus)
     {
-        clickedBlueprint(blueprint, InputEx.GetKey(ControlsSettings.other));
-    }
-
-    private static void onClickedBlueprintCraftAllButton(Blueprint blueprint)
-    {
-        clickedBlueprint(blueprint, all: true);
-    }
-
-    private static ISleekElement onCreateBlueprint(Blueprint blueprint)
-    {
-        SleekBlueprint sleekBlueprint = new SleekBlueprint(blueprint);
-        sleekBlueprint.onClickedCraftButton += onClickedBlueprintButton;
-        sleekBlueprint.onClickedCraftAllButton += onClickedBlueprintCraftAllButton;
+        SleekBlueprint sleekBlueprint = new SleekBlueprint(blueprintStatus);
+        sleekBlueprint.OnClickedBlueprint += OnClickedBlueprint;
         return sleekBlueprint;
+    }
+
+    /// <summary>
+    /// Get a blank status from the pool or construct a new one.
+    /// </summary>
+    private static BlueprintStatus CreateBlueprintStatus()
+    {
+        BlueprintStatus blueprintStatus;
+        if (blueprintStatusPool.Count > 0)
+        {
+            blueprintStatus = blueprintStatusPool.GetAndRemoveTail();
+            blueprintStatus.Reset();
+        }
+        else
+        {
+            blueprintStatus = new BlueprintStatus();
+        }
+        return blueprintStatus;
+    }
+
+    private static void RefreshShowIgnoredToggleVisible()
+    {
+        bool isIgnoringAnyBlueprints = Player.player.crafting.IsIgnoringAnyBlueprints;
+        if (showIgnoredToggle.IsVisible != isIgnoringAnyBlueprints)
+        {
+            showIgnoredToggle.IsVisible = isIgnoringAnyBlueprints;
+            OrganizeFiltersColumn();
+        }
+    }
+
+    internal void OnDestroy()
+    {
+        PlayerCrafting.OnLocalPlayerIgnoredBlueprintsChanged = (System.Action)Delegate.Remove(PlayerCrafting.OnLocalPlayerIgnoredBlueprintsChanged, new System.Action(RefreshShowIgnoredToggleVisible));
     }
 
     public PlayerDashboardCraftingUI()
@@ -368,9 +720,12 @@ public class PlayerDashboardCraftingUI
         container.SizeScale_Y = 1f;
         PlayerUI.container.AddChild(container);
         active = false;
-        blueprintTypeFilterIndex = byte.MaxValue;
+        filteredBlueprintsOverride = null;
+        blueprintCategoryFilterRef = null;
         hideUncraftable = false;
+        showIgnored = false;
         itemNameFilter = string.Empty;
+        filterRequiresAnyOfTags = new HashSet<TagAsset>();
         backdropBox = Glazier.Get().CreateBox();
         backdropBox.PositionOffset_Y = 60f;
         backdropBox.SizeOffset_Y = -60f;
@@ -378,78 +733,184 @@ public class PlayerDashboardCraftingUI
         backdropBox.SizeScale_Y = 1f;
         backdropBox.BackgroundColor = new SleekColor(ESleekTint.BACKGROUND, 0.5f);
         container.AddChild(backdropBox);
-        visibleBlueprints = new List<Blueprint>();
-        blueprintsScrollBox = new SleekList<Blueprint>();
-        blueprintsScrollBox.PositionOffset_X = 10f;
-        blueprintsScrollBox.PositionOffset_Y = 110f;
-        blueprintsScrollBox.SizeOffset_X = -20f;
-        blueprintsScrollBox.SizeOffset_Y = -120f;
+        loadedBlueprints = new List<Blueprint>();
+        assetListChangeCounter = -1;
+        visibleBlueprints = new List<BlueprintStatus>();
+        updatedBlueprints = new List<BlueprintStatus>();
+        blueprintStatusPool = new List<BlueprintStatus>();
+        blueprintsContainer = Glazier.Get().CreateFrame();
+        blueprintsContainer.PositionOffset_X = 250f;
+        blueprintsContainer.PositionOffset_Y = 10f;
+        blueprintsContainer.SizeOffset_X = -260f;
+        blueprintsContainer.SizeScale_X = 1f;
+        blueprintsContainer.SizeScale_Y = 1f;
+        blueprintsContainer.SizeOffset_Y = -20f;
+        backdropBox.AddChild(blueprintsContainer);
+        filteringDescriptionButton = new SleekButtonIcon(icons.load<Texture2D>("CancelFiltering"), 40);
+        filteringDescriptionButton.SizeOffset_Y = 50f;
+        filteringDescriptionButton.SizeScale_X = 1f;
+        filteringDescriptionButton.enableRichText = true;
+        filteringDescriptionButton.textColor = ESleekTint.RICH_TEXT_DEFAULT;
+        filteringDescriptionButton.fontSize = ESleekFontSize.Medium;
+        filteringDescriptionButton.shadowStyle = ETextContrastContext.InconspicuousBackdrop;
+        filteringDescriptionButton.iconColor = ESleekTint.FOREGROUND;
+        filteringDescriptionButton.onClickedButton += OnClickedClearFilters;
+        blueprintsContainer.AddChild(filteringDescriptionButton);
+        blueprintsScrollBox = new SleekList<BlueprintStatus>();
+        blueprintsScrollBox.PositionOffset_Y = 40f;
         blueprintsScrollBox.SizeScale_X = 1f;
         blueprintsScrollBox.SizeScale_Y = 1f;
         blueprintsScrollBox.itemHeight = 195;
-        blueprintsScrollBox.itemPadding = 10;
         blueprintsScrollBox.onCreateElement = onCreateBlueprint;
         blueprintsScrollBox.SetData(visibleBlueprints);
-        backdropBox.AddChild(blueprintsScrollBox);
-        for (int i = 0; i < TYPES; i++)
-        {
-            SleekButtonIcon sleekButtonIcon = new SleekButtonIcon(icons.load<Texture2D>("Blueprint_" + i));
-            sleekButtonIcon.PositionOffset_X = TYPES * -30 + 5 + i * 60;
-            sleekButtonIcon.PositionOffset_Y = 10f;
-            sleekButtonIcon.PositionScale_X = 0.5f;
-            sleekButtonIcon.SizeOffset_X = 50f;
-            sleekButtonIcon.SizeOffset_Y = 50f;
-            sleekButtonIcon.tooltip = localization.format("Type_" + i + "_Tooltip");
-            sleekButtonIcon.iconColor = ESleekTint.FOREGROUND;
-            sleekButtonIcon.onClickedButton += onClickedTypeButton;
-            backdropBox.AddChild(sleekButtonIcon);
-        }
+        blueprintsContainer.AddChild(blueprintsScrollBox);
+        filtersScrollView = Glazier.Get().CreateScrollView();
+        filtersScrollView.PositionOffset_X = 10f;
+        filtersScrollView.PositionOffset_Y = 10f;
+        filtersScrollView.SizeOffset_X = 230f;
+        filtersScrollView.SizeOffset_Y = -20f;
+        filtersScrollView.SizeScale_Y = 1f;
+        filtersScrollView.ScaleContentToWidth = true;
+        backdropBox.AddChild(filtersScrollView);
+        categoriesContainer = Glazier.Get().CreateFrame();
+        categoriesContainer.SizeScale_X = 1f;
+        categoriesContainer.SizeOffset_Y = 50f;
+        filtersScrollView.AddChild(categoriesContainer);
+        categoryTagButtons = new List<SleekTagButton>();
+        categoriesHeader = Glazier.Get().CreateLabel();
+        categoriesHeader.SizeScale_X = 1f;
+        categoriesHeader.SizeOffset_Y = 40f;
+        categoriesHeader.Text = localization.format("Header_Categories");
+        categoriesHeader.FontSize = ESleekFontSize.Medium;
+        categoriesHeader.TextContrastContext = ETextContrastContext.InconspicuousBackdrop;
+        categoriesContainer.AddChild(categoriesHeader);
+        tagProvidersContainer = Glazier.Get().CreateFrame();
+        tagProvidersContainer.SizeScale_X = 1f;
+        filtersScrollView.AddChild(tagProvidersContainer);
+        tagProviderButtons = new List<SleekCraftingTagProviderButton>();
+        tagProvidersHeader = Glazier.Get().CreateLabel();
+        tagProvidersHeader.SizeScale_X = 1f;
+        tagProvidersHeader.SizeOffset_Y = 40f;
+        tagProvidersHeader.Text = localization.format("Header_TagProviders");
+        tagProvidersHeader.FontSize = ESleekFontSize.Medium;
+        tagProvidersHeader.TextContrastContext = ETextContrastContext.InconspicuousBackdrop;
+        tagProvidersContainer.AddChild(tagProvidersHeader);
         hideUncraftableToggle = Glazier.Get().CreateToggle();
-        hideUncraftableToggle.PositionOffset_X = -80f;
-        hideUncraftableToggle.PositionOffset_Y = 65f;
-        hideUncraftableToggle.PositionScale_X = 1f;
+        hideUncraftableToggle.PositionOffset_Y = 60f;
         hideUncraftableToggle.SizeOffset_X = 40f;
         hideUncraftableToggle.SizeOffset_Y = 40f;
-        hideUncraftableToggle.AddLabel(localization.format("Hide_Uncraftable_Toggle_Label"), ESleekSide.LEFT);
+        hideUncraftableToggle.AddLabel(localization.format("Hide_Uncraftable_Toggle_Label"), ESleekSide.RIGHT);
+        hideUncraftableToggle.TooltipText = localization.format("Hide_Uncraftable_Toggle_Tooltip");
         hideUncraftableToggle.Value = hideUncraftable;
         hideUncraftableToggle.OnValueChanged += onToggledHideUncraftableToggle;
-        backdropBox.AddChild(hideUncraftableToggle);
+        filtersScrollView.AddChild(hideUncraftableToggle);
+        showIgnoredToggle = Glazier.Get().CreateToggle();
+        showIgnoredToggle.PositionOffset_Y = 100f;
+        showIgnoredToggle.SizeOffset_X = 40f;
+        showIgnoredToggle.SizeOffset_Y = 40f;
+        showIgnoredToggle.AddLabel(localization.format("Show_Ignored_Toggle_Label"), ESleekSide.RIGHT);
+        showIgnoredToggle.TooltipText = localization.format("Show_Ignored_Toggle_Tooltip");
+        showIgnoredToggle.Value = showIgnored;
+        showIgnoredToggle.OnValueChanged += OnShowIgnoredToggled;
+        filtersScrollView.AddChild(showIgnoredToggle);
+        RefreshShowIgnoredToggleVisible();
         searchField = Glazier.Get().CreateStringField();
-        searchField.PositionOffset_X = 10f;
-        searchField.PositionOffset_Y = 70f;
-        searchField.SizeOffset_X = -410f;
-        searchField.SizeOffset_Y = 30f;
         searchField.SizeScale_X = 1f;
+        searchField.SizeOffset_Y = 30f;
         searchField.PlaceholderText = localization.format("Search_Field_Hint");
         searchField.OnTextSubmitted += onEnteredSearchField;
-        backdropBox.AddChild(searchField);
+        filtersScrollView.AddChild(searchField);
         searchButton = Glazier.Get().CreateButton();
-        searchButton.PositionOffset_X = -390f;
-        searchButton.PositionOffset_Y = 70f;
-        searchButton.PositionScale_X = 1f;
-        searchButton.SizeOffset_X = 100f;
+        searchButton.PositionOffset_Y = 30f;
+        searchButton.SizeScale_X = 1f;
         searchButton.SizeOffset_Y = 30f;
         searchButton.Text = localization.format("Search");
         searchButton.TooltipText = localization.format("Search_Tooltip");
         searchButton.OnClicked += onClickedSearchButton;
-        backdropBox.AddChild(searchButton);
-        infoBox = Glazier.Get().CreateBox();
-        infoBox.PositionOffset_X = 10f;
-        infoBox.PositionOffset_Y = 110f;
-        infoBox.SizeOffset_X = -20f;
-        infoBox.SizeOffset_Y = 50f;
-        infoBox.SizeScale_X = 1f;
-        infoBox.Text = localization.format("No_Blueprints");
-        infoBox.FontSize = ESleekFontSize.Medium;
-        backdropBox.AddChild(infoBox);
-        infoBox.IsVisible = false;
-        filteredBlueprintsOverride = null;
-        blueprintTypeFilterIndex = 0;
-        hideUncraftable = false;
-        itemNameFilter = string.Empty;
+        filtersScrollView.AddChild(searchButton);
+        blueprintsListEmptyInfoBox = Glazier.Get().CreateBox();
+        blueprintsListEmptyInfoBox.PositionOffset_Y = 40f;
+        blueprintsListEmptyInfoBox.SizeOffset_Y = 50f;
+        blueprintsListEmptyInfoBox.SizeScale_X = 1f;
+        blueprintsListEmptyInfoBox.FontSize = ESleekFontSize.Medium;
+        blueprintsContainer.AddChild(blueprintsListEmptyInfoBox);
+        blueprintsListEmptyInfoBox.IsVisible = false;
+        resetFiltersButton = Glazier.Get().CreateButton();
+        resetFiltersButton.PositionOffset_X = -150f;
+        resetFiltersButton.PositionOffset_Y = 10f;
+        resetFiltersButton.PositionScale_X = 0.5f;
+        resetFiltersButton.PositionScale_Y = 1f;
+        resetFiltersButton.SizeOffset_X = 300f;
+        resetFiltersButton.SizeOffset_Y = 30f;
+        resetFiltersButton.Text = localization.format("ResetFilters_Label");
+        resetFiltersButton.TooltipText = localization.format("ResetFilters_Tooltip");
+        resetFiltersButton.OnClicked += OnClickedClearFilters;
+        blueprintsListEmptyInfoBox.AddChild(resetFiltersButton);
+        selectedBlueprintMenu = new SleekSelectedBlueprint();
+        selectedBlueprintMenu.PositionOffset_X = -240f;
+        selectedBlueprintMenu.PositionOffset_Y = 10f;
+        selectedBlueprintMenu.PositionScale_X = 1f;
+        selectedBlueprintMenu.SizeOffset_X = 230f;
+        selectedBlueprintMenu.SizeScale_Y = 1f;
+        selectedBlueprintMenu.SizeOffset_Y = -20f;
+        selectedBlueprintMenu.IsVisible = false;
+        backdropBox.AddChild(selectedBlueprintMenu);
         PlayerInventory inventory = Player.player.inventory;
         inventory.onInventoryResized = (InventoryResized)Delegate.Combine(inventory.onInventoryResized, new InventoryResized(onInventoryResized));
         PlayerCrafting crafting = Player.player.crafting;
         crafting.onCraftingUpdated = (CraftingUpdated)Delegate.Combine(crafting.onCraftingUpdated, new CraftingUpdated(onCraftingUpdated));
+        PlayerCrafting.OnLocalPlayerIgnoredBlueprintsChanged = (System.Action)Delegate.Combine(PlayerCrafting.OnLocalPlayerIgnoredBlueprintsChanged, new System.Action(RefreshShowIgnoredToggleVisible));
+    }
+
+    private static int CompareCategoryTags(TagAsset lhs, TagAsset rhs)
+    {
+        return lhs.FriendlyName.CompareTo(rhs.FriendlyName);
+    }
+
+    private static string GetBlueprintStatusSortString(BlueprintStatus status)
+    {
+        Blueprint blueprint = status.blueprint;
+        if (blueprint.TargetItem != null)
+        {
+            return blueprint.TargetItem.FindItemAsset()?.itemName;
+        }
+        if (blueprint.outputs != null && blueprint.outputs.Length == 1)
+        {
+            return blueprint.outputs[0].FindItemAsset()?.itemName;
+        }
+        if (blueprint.supplies != null && blueprint.supplies.Length == 1)
+        {
+            return blueprint.supplies[0].FindItemAsset()?.itemName;
+        }
+        return blueprint.GetOwnerAsset()?.FriendlyName;
+    }
+
+    private static int CompareVisibleBlueprints(BlueprintStatus lhs, BlueprintStatus rhs)
+    {
+        if (filterRequiresAnyOfTags != null && filterRequiresAnyOfTags.Count > 1)
+        {
+            int num = lhs.blueprint.CountOverlappingRequiredNearbyCraftingTags(filterRequiresAnyOfTags);
+            int num2 = rhs.blueprint.CountOverlappingRequiredNearbyCraftingTags(filterRequiresAnyOfTags);
+            if (num != num2)
+            {
+                return -num.CompareTo(num2);
+            }
+        }
+        int num3 = -lhs.normalizedCraftability.CompareTo(rhs.normalizedCraftability);
+        if (num3 != 0)
+        {
+            return num3;
+        }
+        string blueprintStatusSortString = GetBlueprintStatusSortString(lhs);
+        string blueprintStatusSortString2 = GetBlueprintStatusSortString(rhs);
+        if (string.IsNullOrEmpty(blueprintStatusSortString) == string.IsNullOrEmpty(blueprintStatusSortString2))
+        {
+            return blueprintStatusSortString?.CompareTo(blueprintStatusSortString2) ?? 0;
+        }
+        if (blueprintStatusSortString != null)
+        {
+            return -1;
+        }
+        return 1;
     }
 }

@@ -1,3 +1,5 @@
+using System;
+
 namespace SDG.Unturned;
 
 public class NPCWeatherStatusCondition : NPCLogicCondition
@@ -20,6 +22,53 @@ public class NPCWeatherStatusCondition : NPCLogicCondition
         };
     }
 
+    internal override void PopulateV2(in PopulateConditionParameters p)
+    {
+        base.PopulateV2(in p);
+        if (p.data.TryParseGuid("GUID", out var gUID))
+        {
+            weather = new AssetReference<WeatherAssetBase>(gUID);
+        }
+        else
+        {
+            p.ReportRequiredOptionInvalid("GUID");
+        }
+        if (p.data.TryParseEnum<ENPCWeatherStatus>("Value", out var eNPCWeatherStatus))
+        {
+            value = eNPCWeatherStatus;
+        }
+        else
+        {
+            p.ReportRequiredOptionInvalid("Value");
+        }
+    }
+
+    internal override void PopulateLegacy(in PopulateConditionParameters p)
+    {
+        base.PopulateLegacy(in p);
+        if (p.data.TryParseGuid(p.legacyPrefix + "_GUID", out var gUID))
+        {
+            weather = new AssetReference<WeatherAssetBase>(gUID);
+        }
+        else
+        {
+            p.ReportRequiredOptionInvalid("GUID");
+        }
+        if (p.data.TryParseEnum<ENPCWeatherStatus>(p.legacyPrefix + "_Value", out var eNPCWeatherStatus))
+        {
+            value = eNPCWeatherStatus;
+        }
+        else
+        {
+            p.ReportRequiredOptionInvalid("Value");
+        }
+    }
+
+    public NPCWeatherStatusCondition()
+    {
+    }
+
+    [Obsolete]
     public NPCWeatherStatusCondition(AssetReference<WeatherAssetBase> newWeather, ENPCWeatherStatus newValue, ENPCLogicType newLogicType, string newText)
         : base(newLogicType, newText, newShouldReset: false)
     {

@@ -1,18 +1,51 @@
+using System;
+
 namespace SDG.Unturned;
 
 public class ActionBlueprint
 {
-    private byte _id;
+    internal int index;
 
-    private bool _isLink;
+    internal string blueprintName;
 
-    public byte id => _id;
+    internal bool _isLink;
+
+    /// <summary>
+    /// Index into Blueprints list. -1 means blueprint name is used instead.
+    /// </summary>
+    public int Index => index;
+
+    /// <summary>
+    /// Name to look for in Blueprints list.
+    /// </summary>
+    public string BlueprintName => blueprintName;
 
     public bool isLink => _isLink;
 
-    public ActionBlueprint(byte newID, bool newLink)
+    [Obsolete("Renamed to Index")]
+    public byte id => (byte)index;
+
+    public Blueprint FindBlueprint(IBlueprintOwner blueprintOwner)
     {
-        _id = newID;
+        if (index >= 0)
+        {
+            return blueprintOwner.GetBlueprintByIndex(index);
+        }
+        if (!string.IsNullOrEmpty(blueprintName))
+        {
+            return blueprintOwner.FindBlueprintByName(blueprintName);
+        }
+        return null;
+    }
+
+    public override string ToString()
+    {
+        return $"(Index: {index} Name: {blueprintName} Link: {_isLink})";
+    }
+
+    public ActionBlueprint(int newIndex, bool newLink)
+    {
+        index = newIndex;
         _isLink = newLink;
     }
 }

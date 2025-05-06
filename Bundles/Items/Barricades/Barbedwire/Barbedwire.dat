@@ -1,4 +1,4 @@
-GUID e2432d5d18e74a6cbc207746468b19bf
+﻿GUID e2432d5d18e74a6cbc207746468b19bf
 Type Trap
 Rarity Uncommon
 Useable Barricade
@@ -22,17 +22,21 @@ Explosion 36
 Vulnerable
 Unrepairable
 
-Blueprints 2
-Blueprint_0_Type Barricade
-Blueprint_0_Supply_0_ID 65
-Blueprint_0_Supply_0_Amount 2
-Blueprint_0_Build 27
-Blueprint_1_Type Barricade
-Blueprint_1_Supplies 1
-Blueprint_1_Supply_0_ID this
-Blueprint_1_Supply_0_Amount 1
-Blueprint_1_Product "65" // Wire
-Blueprint_1_Products 1
-Blueprint_1_Build 27
+Blueprints
+[
+	{
+		CategoryTag "31a59b5fec3f4ec5b2887b1ce4acb029" // Barricades
+		InputItems "ebb61f2e64f24351a6ab905b5516060b x 2" // Wire
+		OutputItems this
+		Effect "84347b13028340b8976033c08675d458" // Wrench
+	}
+	{
+		Name Salvage
+		CategoryTag "7ed29f9101ae4523a3b2e389414b7bd9" // Salvage
+		InputItems this
+		OutputItems "ebb61f2e64f24351a6ab905b5516060b" // Wire
+		Effect "84347b13028340b8976033c08675d458" // Wrench
+	}
+]
 
 Has_Clip_Prefab false

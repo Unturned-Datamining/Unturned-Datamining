@@ -1,4 +1,4 @@
-GUID db4346abc6a040d2ae51987dac2a4dc5
+﻿GUID db4346abc6a040d2ae51987dac2a4dc5
 Type Barricade
 Useable Barricade
 Build Stereo
@@ -16,13 +16,23 @@ Offset 0.25
 Explosion 36
 Vulnerable
 
-Blueprints 1
-Blueprint_0_Type Furniture
-Blueprint_0_Supplies 2
-Blueprint_0_Supply_0_ID 1176
-Blueprint_0_Supply_0_Amount 1
-Blueprint_0_Supply_1_ID 67
-Blueprint_0_Supply_1_Amount 3
-Blueprint_0_Build 27
+Blueprints
+[
+	{
+		CategoryTag "b0c6cc0a8b4346be89aef697ecdb8e46" // Furniture
+		InputItems
+		[
+			"52bc64a1c32b4b45a0c66e98c25dcbf7" // GPS
+			"21ede8ebffb14c5580e8c7ad149e335e x 3" // Metal Scrap
+		]
+		OutputItems this
+		RequiresNearbyCraftingTags
+		[
+			"7b82c125a5a54984b8bb26576b59e977" // Workbench
+		]
+		Effect "84347b13028340b8976033c08675d458" // Wrench
+	}
+]
+
 PlacementAudioClip Sounds/MetalPlacement.mp3
 Has_Clip_Prefab false

@@ -39,15 +39,15 @@ internal struct CrawlerTrackTilingMaterial : IDatParseable
 
     public bool TryParse(IDatNode node)
     {
-        if (node is DatDictionary datDictionary)
+        if (node is IDatDictionary dictionary)
         {
-            repeatDistance = datDictionary.ParseFloat("RepeatDistance");
-            if (datDictionary.TryGetList("WheelIndices", out var node2))
+            repeatDistance = dictionary.ParseFloat("RepeatDistance");
+            if (dictionary.TryGetList("WheelIndices", out var node2))
             {
                 List<int> list = new List<int>(node2.Count);
                 foreach (IDatNode item in node2)
                 {
-                    if (item is DatValue datValue && datValue.TryParseInt32(out var value))
+                    if (item is IDatValue valueNode && valueNode.TryParseInt32(out var value))
                     {
                         list.Add(value);
                     }
@@ -62,9 +62,9 @@ internal struct CrawlerTrackTilingMaterial : IDatParseable
                 Assets.ReportError(Assets.currentAsset, "crawler track tiling material\"" + path + "\" has no WheelIndices");
                 return false;
             }
-            path = datDictionary.GetString("Path");
-            materialIndex = datDictionary.ParseInt32("MaterialIndex");
-            uvDirection = datDictionary.ParseVector2("UV_Direction");
+            path = dictionary.GetString("Path");
+            materialIndex = dictionary.ParseInt32("MaterialIndex");
+            uvDirection = dictionary.ParseVector2("UV_Direction");
             return true;
         }
         return false;

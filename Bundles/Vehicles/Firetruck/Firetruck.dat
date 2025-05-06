@@ -1,4 +1,4 @@
-GUID 5c58496c74e3442fbb76d7a6d0135c95
+﻿GUID 5c58496c74e3442fbb76d7a6d0135c95
 Type Vehicle
 Rarity Uncommon
 ID 34
@@ -33,19 +33,19 @@ Has_Clip_Prefab false
 
 PaintableSections
 [
-    {
-        Path Model_0
-        MaterialIndex 0
-    }
-    {
-        Path Model_1
-        MaterialIndex 0
-    }
+	{
+		Path Model_0
+		MaterialIndex 0
+	}
+	{
+		Path Model_1
+		MaterialIndex 0
+	}
 ]
 
 DefaultPaintColors
 [
-    #6d1d1d
+	#6d1d1d
 ]
 
 Carjack_Force_Multiplier 2

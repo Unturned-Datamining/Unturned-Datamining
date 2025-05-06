@@ -9,6 +9,8 @@
 - [FoliageInstancedMeshInfoAsset.cs](FoliageInstancedMeshInfoAsset.cs)
 - [FoliageInstanceGroup.cs](FoliageInstanceGroup.cs)
 - [FoliageInstanceList.cs](FoliageInstanceList.cs)
+- [FoliageInstancingBatchConfig.cs](FoliageInstancingBatchConfig.cs)
+- [FoliageInstancingBatchData.cs](FoliageInstancingBatchData.cs)
 - [FoliageObjectInfoAsset.cs](FoliageObjectInfoAsset.cs)
 - [FoliagePreviewSample.cs](FoliagePreviewSample.cs)
 - [FoliageResourceInfoAsset.cs](FoliageResourceInfoAsset.cs)

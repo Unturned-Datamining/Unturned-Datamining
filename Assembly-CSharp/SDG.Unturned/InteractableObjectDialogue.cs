@@ -62,21 +62,18 @@ public class InteractableObjectDialogue : InteractableObject, IDialogueTarget
 
     public override bool checkHint(out EPlayerMessage message, out string text, out Color color)
     {
-        for (int i = 0; i < base.objectAsset.interactabilityConditions.Length; i++)
+        INPCCondition firstUnmetCondition = base.objectAsset.interactabilityConditionsList.GetFirstUnmetCondition(Player.player);
+        if (firstUnmetCondition != null)
         {
-            INPCCondition iNPCCondition = base.objectAsset.interactabilityConditions[i];
-            if (!iNPCCondition.isConditionMet(Player.player))
+            text = firstUnmetCondition.formatCondition(Player.player);
+            color = Color.white;
+            if (string.IsNullOrEmpty(text))
             {
-                text = iNPCCondition.formatCondition(Player.player);
-                color = Color.white;
-                if (string.IsNullOrEmpty(text))
-                {
-                    message = EPlayerMessage.NONE;
-                    return false;
-                }
-                message = EPlayerMessage.CONDITION;
-                return true;
+                message = EPlayerMessage.NONE;
+                return false;
             }
+            message = EPlayerMessage.CONDITION;
+            return true;
         }
         message = EPlayerMessage.INTERACT;
         text = base.objectAsset.interactabilityText;

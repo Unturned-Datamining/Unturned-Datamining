@@ -1,4 +1,4 @@
-GUID 49e23cd99a1c4100bd0b78d9211ea3c0
+﻿GUID 49e23cd99a1c4100bd0b78d9211ea3c0
 Type Barricade
 Rarity Uncommon
 Useable Barricade
@@ -15,24 +15,49 @@ Offset 2
 
 Explosion 91
 
-Blueprints 1
-Blueprint_0_Type Barricade
-Blueprint_0_Supplies 6
-Blueprint_0_Supply_0_ID 68
-Blueprint_0_Supply_0_Amount 2
-Blueprint_0_Supply_1_ID 69
-Blueprint_0_Supply_1_Amount 2
-Blueprint_0_Supply_2_ID 285
-Blueprint_0_Supply_2_Amount 2
-Blueprint_0_Supply_3_ID 458
-Blueprint_0_Supply_3_Amount 1
-Blueprint_0_Supply_4_ID 1450
-Blueprint_0_Supply_4_Amount 1
-Blueprint_0_Supply_5_ID 1451
-Blueprint_0_Supply_5_Amount 4
-Blueprint_0_Tool 76
-Blueprint_0_Level 2
-Blueprint_0_Skill Craft
-Blueprint_0_Build 27
+Blueprints
+[
+	{
+		CategoryTag "31a59b5fec3f4ec5b2887b1ce4acb029" // Barricades
+		InputItems
+		[
+			{
+				ID "7f06b16642724683bd61584a52fde981" // Metal Sheet
+				Amount 2
+			}
+			{
+				ID "8c25cf28c76a4634855f404c8972c0ae" // Tape
+				Amount 2
+			}
+			{
+				ID "656f319d2d194813b390edc6edd8a697" // Metal Bar
+				Amount 2
+			}
+			{
+				ID "72fae83175f34bde94bd52d40c7a9ebc" // Portable Generator
+			}
+			{
+				ID "098b13be34a7411db7736b7f866ada69" // Vehicle Battery
+			}
+			{
+				ID "5a59fbb525e6414e8b05be253e461ed5" // Tire
+				Amount 4
+			}
+			{
+				ID "5830b84bf8074caa91cf3f4dde0dd19e" // Blowtorch
+				Delete false
+			}
+		]
+		OutputItems this
+		Skill Craft
+		Skill_Level 2
+		RequiresNearbyCraftingTags
+		[
+			"7b82c125a5a54984b8bb26576b59e977" // Workbench
+		]
+		Effect "84347b13028340b8976033c08675d458" // Wrench
+	}
+]
+
 PlacementAudioClip Sounds/WoodenPlacement.mp3
 Has_Clip_Prefab false

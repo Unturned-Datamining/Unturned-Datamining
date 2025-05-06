@@ -1,11 +1,11 @@
-"Metadata"
+﻿Metadata
 {
-	"GUID" "66918a47a0064f73b4ffae43c40afddd"
-	"Type" "SDG.Unturned.OutfitAsset, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null"
+	GUID 66918a47a0064f73b4ffae43c40afddd
+	Type SDG.Unturned.OutfitAsset, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
 }
-"Asset"
+Asset
 {
-	"Items"
+	Items
 	[
 		// Bag
 		82122bee03d242a4b9f95a00f2319fc2

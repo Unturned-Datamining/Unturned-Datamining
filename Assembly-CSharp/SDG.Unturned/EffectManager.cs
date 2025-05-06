@@ -148,6 +148,10 @@ public class EffectManager : SteamCaller
 
     public static GameObject InstantiateFromPool(EffectAsset asset)
     {
+        if (asset == null || asset.effect == null)
+        {
+            return null;
+        }
         PoolReference poolReference = pool.Instantiate(asset.effect);
         poolReference.excludeFromDestroyAll = true;
         GameObject obj = poolReference.gameObject;
@@ -1316,6 +1320,20 @@ public class EffectManager : SteamCaller
             obj.gameObject.SetActive(value: true);
             UnityEngine.Object.Destroy(obj.gameObject, asset.splatterLifetime - asset.splatterLifetimeSpread);
         }
+        if (!Dedicator.IsDedicatedServer)
+        {
+            float volumeMultiplier;
+            float pitchMultiplier;
+            AudioClip audioClip = asset.OneShotAudio.LoadAudioClip(out volumeMultiplier, out pitchMultiplier);
+            if (audioClip != null)
+            {
+                OneShotAudioParameters oneShotAudioParameters = new OneShotAudioParameters(point, audioClip);
+                oneShotAudioParameters.volume = volumeMultiplier;
+                oneShotAudioParameters.pitch = pitchMultiplier;
+                oneShotAudioParameters.maxDistance = 16f;
+                oneShotAudioParameters.Play();
+            }
+        }
         if (Dedicator.IsDedicatedServer)
         {
             if (!asset.spawnOnDedicatedServer)
@@ -1332,6 +1350,10 @@ public class EffectManager : SteamCaller
             ClientAssetIntegrity.QueueRequest(asset);
         }
         if (pool == null)
+        {
+            return null;
+        }
+        if (asset.effect == null)
         {
             return null;
         }

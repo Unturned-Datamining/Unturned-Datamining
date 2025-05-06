@@ -1,4 +1,4 @@
-GUID 8c81bfb33b7c46e7affdf4bafbd41e68
+﻿GUID 8c81bfb33b7c46e7affdf4bafbd41e68
 Type Barricade
 Rarity Epic
 Useable Barricade
@@ -15,14 +15,31 @@ Radius 0.5
 
 Explosion 35
 
-Blueprints 1
-Blueprint_0_Type Barricade
-Blueprint_0_Supply_0_ID 285
-Blueprint_0_Supply_0_Amount 6
-Blueprint_0_Tool 76
-Blueprint_0_Level 3
-Blueprint_0_Skill Craft
-Blueprint_0_Build 27
+Blueprints
+[
+	{
+		CategoryTag "31a59b5fec3f4ec5b2887b1ce4acb029" // Barricades
+		InputItems
+		[
+			{
+				ID "656f319d2d194813b390edc6edd8a697" // Metal Bar
+				Amount 6
+			}
+			{
+				ID "5830b84bf8074caa91cf3f4dde0dd19e" // Blowtorch
+				Delete false
+			}
+		]
+		OutputItems this
+		Skill Craft
+		Skill_Level 3
+		RequiresNearbyCraftingTags
+		[
+			"7b82c125a5a54984b8bb26576b59e977" // Workbench
+		]
+		Effect "84347b13028340b8976033c08675d458" // Wrench
+	}
+]
 
 Armor_Tier High
 

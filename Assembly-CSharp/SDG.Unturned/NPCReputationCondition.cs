@@ -1,3 +1,5 @@
+using System;
+
 namespace SDG.Unturned;
 
 public class NPCReputationCondition : NPCLogicCondition
@@ -28,6 +30,37 @@ public class NPCReputationCondition : NPCLogicCondition
         return Local.FormatText(base.text, text, text2);
     }
 
+    internal override void PopulateV2(in PopulateConditionParameters p)
+    {
+        base.PopulateV2(in p);
+        if (p.data.TryParseInt32("Value", out var value))
+        {
+            reputation = value;
+        }
+        else
+        {
+            p.ReportRequiredOptionInvalid("Value");
+        }
+    }
+
+    internal override void PopulateLegacy(in PopulateConditionParameters p)
+    {
+        base.PopulateLegacy(in p);
+        if (p.data.TryParseInt32(p.legacyPrefix + "_Value", out var value))
+        {
+            reputation = value;
+        }
+        else
+        {
+            p.ReportRequiredOptionInvalid("Value");
+        }
+    }
+
+    public NPCReputationCondition()
+    {
+    }
+
+    [Obsolete]
     public NPCReputationCondition(int newReputation, ENPCLogicType newLogicType, string newText)
         : base(newLogicType, newText, newShouldReset: false)
     {

@@ -381,28 +381,31 @@ public class LevelObject
         Player.onPlayerCreated = (PlayerCreated)Delegate.Remove(Player.onPlayerCreated, new PlayerCreated(onPlayerCreated));
         bool flag = false;
         bool flag2 = false;
-        INPCCondition[] conditions = asset.conditions;
-        foreach (INPCCondition iNPCCondition in conditions)
+        if (asset.visibilityConditionsList.conditions != null)
         {
-            if (iNPCCondition is NPCTimeOfDayCondition || iNPCCondition is NPCIsFullMoonCondition || iNPCCondition is NPCDateCounterCondition)
+            INPCCondition[] conditions = asset.visibilityConditionsList.conditions;
+            foreach (INPCCondition iNPCCondition in conditions)
             {
-                flag = true;
+                if (iNPCCondition is NPCTimeOfDayCondition || iNPCCondition is NPCIsFullMoonCondition || iNPCCondition is NPCDateCounterCondition)
+                {
+                    flag = true;
+                }
+                else if (iNPCCondition is NPCQuestCondition)
+                {
+                    flag2 = true;
+                }
             }
-            else if (iNPCCondition is NPCQuestCondition)
+            conditions = asset.visibilityConditionsList.conditions;
+            foreach (INPCCondition iNPCCondition2 in conditions)
             {
-                flag2 = true;
-            }
-        }
-        conditions = asset.conditions;
-        foreach (INPCCondition iNPCCondition2 in conditions)
-        {
-            if (iNPCCondition2 is NPCWeatherBlendAlphaCondition { weather: var weather })
-            {
-                WeatherEventListenerManager.AddBlendAlphaListener(weather.GUID, OnWeatherBlendAlphaChanged);
-            }
-            else if (iNPCCondition2 is NPCWeatherStatusCondition { weather: var weather2 })
-            {
-                WeatherEventListenerManager.AddStatusListener(weather2.GUID, OnWeatherStatusChanged);
+                if (iNPCCondition2 is NPCWeatherBlendAlphaCondition { weather: var weather })
+                {
+                    WeatherEventListenerManager.AddBlendAlphaListener(weather.GUID, OnWeatherBlendAlphaChanged);
+                }
+                else if (iNPCCondition2 is NPCWeatherStatusCondition { weather: var weather2 })
+                {
+                    WeatherEventListenerManager.AddStatusListener(weather2.GUID, OnWeatherStatusChanged);
+                }
             }
         }
         if (flag)
@@ -517,6 +520,7 @@ public class LevelObject
                 GameObject gameObject = UnityEngine.Object.Instantiate(orLoadModel, newPoint, newRotation);
                 _transform = gameObject.transform;
                 gameObject.name = asset.name;
+                gameObject.GetOrAddComponent<LevelObjectRefComponent>().levelObjectOwner = this;
                 NetIdRegistry.AssignTransform(netId, _transform);
                 isDecal = this.transform.Find("Decal");
                 if (isDecal)
@@ -535,6 +539,7 @@ public class LevelObject
             GameObject gameObject2 = UnityEngine.Object.Instantiate(orLoadModel, newPoint, newRotation);
             _transform = gameObject2.transform;
             gameObject2.name = asset.name;
+            gameObject2.GetOrAddComponent<LevelObjectRefComponent>().levelObjectOwner = this;
             if (!netId.IsNull())
             {
                 NetIdRegistry.AssignTransform(netId, _transform);

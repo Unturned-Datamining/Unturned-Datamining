@@ -1,4 +1,4 @@
-GUID eeffac0063804866b38c8eb6436ace10
+﻿GUID eeffac0063804866b38c8eb6436ace10
 Type Oil_Pump
 Rarity Rare
 Useable Barricade
@@ -16,21 +16,43 @@ Offset 0.75
 
 Explosion 36
 
-Blueprints 1
-Blueprint_0_Type Utilities
-Blueprint_0_Supplies 4
-Blueprint_0_Supply_0_ID 68
-Blueprint_0_Supply_0_Amount 5
-Blueprint_0_Supply_1_ID 285
-Blueprint_0_Supply_1_Amount 3
-Blueprint_0_Supply_2_ID 75
-Blueprint_0_Supply_2_Amount 2
-Blueprint_0_Supply_3_ID 28
-Blueprint_0_Supply_3_Amount 2
-Blueprint_0_Tool 76
-Blueprint_0_Level 3
-Blueprint_0_Skill Craft
-Blueprint_0_Build 27
+Blueprints
+[
+	{
+		CategoryTag "bfac6026305f4737a95fd275ebff65a6" // Utilities
+		InputItems
+		[
+			{
+				ID "7f06b16642724683bd61584a52fde981" // Metal Sheet
+				Amount 5
+			}
+			{
+				ID "656f319d2d194813b390edc6edd8a697" // Metal Bar
+				Amount 3
+			}
+			{
+				ID "7aee55ea2abf4f3fb70c4b2677da0e14" // Chemicals
+				Amount 2
+			}
+			{
+				ID "d5b9f19e2f2a4ee2ab4dc666f32f7df3" // Portable Gas Can
+				Amount 2
+			}
+			{
+				ID "5830b84bf8074caa91cf3f4dde0dd19e" // Blowtorch
+				Delete false
+			}
+		]
+		OutputItems this
+		Skill Craft
+		Skill_Level 3
+		RequiresNearbyCraftingTags
+		[
+			"7b82c125a5a54984b8bb26576b59e977" // Workbench
+		]
+		Effect "84347b13028340b8976033c08675d458" // Wrench
+	}
+]
 
 Fuel_Capacity 2500
 

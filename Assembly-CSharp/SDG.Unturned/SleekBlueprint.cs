@@ -1,92 +1,65 @@
+using System;
+using System.Text;
 using UnityEngine;
 
 namespace SDG.Unturned;
 
 public class SleekBlueprint : SleekWrapper
 {
-    public delegate void Clicked(Blueprint blueprint);
+    internal delegate void Clicked(BlueprintStatus blueprintStatus);
 
-    private Blueprint _blueprint;
-
-    private ISleekButton craftButton;
-
-    private ISleekButton craftAllButton;
+    private BlueprintStatus blueprintStatus;
 
     private ISleekButton backgroundButton;
 
     private ISleekElement container;
 
-    private ISleekToggle ignoreToggleButton;
+    private ISleekImage ignoredIcon;
 
-    public Blueprint blueprint => _blueprint;
+    private static StringBuilder inputItemsSb = new StringBuilder();
 
-    private bool isCraftable
+    private static StringBuilder titleSb = new StringBuilder();
+
+    private static StringBuilder descSb = new StringBuilder();
+
+    public Blueprint blueprint => blueprintStatus.blueprint;
+
+    internal event Clicked OnClickedBlueprint;
+
+    private void RefreshIsIgnored()
     {
-        get
-        {
-            if (blueprint.hasSupplies && blueprint.hasTool && blueprint.hasItem)
-            {
-                return blueprint.hasSkills;
-            }
-            return false;
-        }
+        ignoredIcon.IsVisible = Player.player.crafting.getIgnoringBlueprint(blueprint);
     }
 
-    public event Clicked onClickedCraftButton;
-
-    public event Clicked onClickedCraftAllButton;
-
-    private void onToggledIgnoring(ISleekToggle toggle, bool toggleState)
+    public override void OnDestroy()
     {
-        Player.player.crafting.setIgnoringBlueprint(blueprint, !toggleState);
-        refreshIgnoring();
+        base.OnDestroy();
+        PlayerCrafting.OnLocalPlayerIgnoredBlueprintsChanged = (System.Action)Delegate.Remove(PlayerCrafting.OnLocalPlayerIgnoredBlueprintsChanged, new System.Action(RefreshIsIgnored));
     }
 
-    private void refreshIgnoring()
+    internal SleekBlueprint(BlueprintStatus blueprintStatus)
     {
-        bool ignoringBlueprint = Player.player.crafting.getIgnoringBlueprint(blueprint);
-        if (backgroundButton != null)
-        {
-            backgroundButton.IsClickable = !ignoringBlueprint && isCraftable;
-        }
-        if (craftButton != null)
-        {
-            craftButton.IsClickable = !ignoringBlueprint;
-            craftAllButton.IsClickable = craftButton.IsClickable;
-        }
-        ignoreToggleButton.Value = !ignoringBlueprint;
-    }
-
-    public SleekBlueprint(Blueprint newBlueprint)
-    {
-        _blueprint = newBlueprint;
-        bool supportsDepth = Glazier.Get().SupportsDepth;
-        if (supportsDepth)
-        {
-            backgroundButton = Glazier.Get().CreateButton();
-            backgroundButton.SizeScale_X = 1f;
-            backgroundButton.SizeScale_Y = 1f;
-            backgroundButton.OnClicked += onClickedBackgroundButton;
-            AddChild(backgroundButton);
-        }
-        else
-        {
-            ISleekBox sleekBox = Glazier.Get().CreateBox();
-            sleekBox.SizeScale_X = 1f;
-            sleekBox.SizeScale_Y = 1f;
-            AddChild(sleekBox);
-        }
+        this.blueprintStatus = blueprintStatus;
+        Local localization = PlayerDashboardCraftingUI.localization;
+        backgroundButton = Glazier.Get().CreateButton();
+        backgroundButton.SizeScale_X = 1f;
+        backgroundButton.SizeScale_Y = 1f;
+        backgroundButton.OnClicked += onClickedBackgroundButton;
+        AddChild(backgroundButton);
         ISleekLabel sleekLabel = Glazier.Get().CreateLabel();
         sleekLabel.PositionOffset_X = 5f;
         sleekLabel.PositionOffset_Y = 5f;
         sleekLabel.SizeOffset_X = -10f;
         sleekLabel.SizeOffset_Y = 30f;
         sleekLabel.SizeScale_X = 1f;
-        sleekLabel.TextColor = (isCraftable ? ESleekTint.FONT : ESleekTint.BAD);
-        sleekLabel.TextContrastContext = ((!isCraftable) ? ETextContrastContext.InconspicuousBackdrop : ETextContrastContext.Default);
+        sleekLabel.AllowRichText = true;
+        sleekLabel.TextContrastContext = ETextContrastContext.ColorfulBackdrop;
         sleekLabel.FontSize = ESleekFontSize.Medium;
         AddChild(sleekLabel);
-        if (blueprint.skill != 0)
+        inputItemsSb.Clear();
+        titleSb.Clear();
+        CachingAssetRef[] applicableRequiredNearbyCraftingTags = blueprint.GetApplicableRequiredNearbyCraftingTags();
+        if (blueprint.skill != 0 || applicableRequiredNearbyCraftingTags != null)
         {
             ISleekLabel sleekLabel2 = Glazier.Get().CreateLabel();
             sleekLabel2.PositionOffset_X = 5f;
@@ -95,10 +68,71 @@ public class SleekBlueprint : SleekWrapper
             sleekLabel2.SizeOffset_X = -10f;
             sleekLabel2.SizeOffset_Y = 30f;
             sleekLabel2.SizeScale_X = 1f;
-            sleekLabel2.Text = PlayerDashboardCraftingUI.localization.format("Skill_" + (int)blueprint.skill, PlayerDashboardSkillsUI.localization.format("Level_" + blueprint.level));
-            sleekLabel2.TextColor = (blueprint.hasSkills ? ESleekTint.FONT : ESleekTint.BAD);
-            sleekLabel2.TextContrastContext = ((!blueprint.hasSkills) ? ETextContrastContext.InconspicuousBackdrop : ETextContrastContext.Default);
+            descSb.Clear();
+            if (blueprint.skill != 0)
+            {
+                int num;
+                int num2;
+                switch (blueprint.skill)
+                {
+                case EBlueprintSkill.CRAFT:
+                    num = 2;
+                    num2 = 1;
+                    break;
+                case EBlueprintSkill.COOK:
+                    num = 2;
+                    num2 = 3;
+                    break;
+                case EBlueprintSkill.REPAIR:
+                    num = 2;
+                    num2 = 7;
+                    break;
+                default:
+                    num = 0;
+                    num2 = 0;
+                    UnturnedLog.error($"Unknown blueprint skill requirement: {blueprint.skill}");
+                    break;
+                }
+                bool num3 = Player.player.skills.skills[num][num2].level >= blueprint.level;
+                Local localization2 = PlayerDashboardSkillsUI.localization;
+                string arg = localization2.format("Speciality_" + num + "_Skill_" + num2);
+                string arg2 = localization2.format("Level_" + blueprint.level);
+                string value = PlayerDashboardCraftingUI.localization.format("Requirements_Skill", arg, arg2);
+                Color color = new SleekColor(num3 ? ESleekTint.FONT : ESleekTint.BAD).Get();
+                descSb.Append("<color=");
+                descSb.Append(Palette.hex(color));
+                descSb.Append('>');
+                descSb.Append(value);
+                descSb.Append("</color>");
+            }
+            if (applicableRequiredNearbyCraftingTags != null)
+            {
+                for (int i = 0; i < applicableRequiredNearbyCraftingTags.Length; i++)
+                {
+                    TagAsset tagAsset = applicableRequiredNearbyCraftingTags[i].Get<TagAsset>();
+                    if (tagAsset != null)
+                    {
+                        if (descSb.Length > 0)
+                        {
+                            descSb.Append(PlayerDashboardCraftingUI.localization.format("Requirements_Separator"));
+                        }
+                        if (Player.player.crafting.IsCraftingTagAvailable(tagAsset))
+                        {
+                            descSb.Append(tagAsset.RichTextOrPreferredFontColor);
+                            continue;
+                        }
+                        descSb.Append("<color=");
+                        descSb.Append(Palette.hex(OptionsSettings.badColor));
+                        descSb.Append('>');
+                        descSb.Append(tagAsset.PlainTextName);
+                        descSb.Append("</color>");
+                    }
+                }
+            }
+            sleekLabel2.AllowRichText = true;
+            sleekLabel2.Text = PlayerDashboardCraftingUI.localization.format("Requirements_Label", descSb.ToString());
             sleekLabel2.FontSize = ESleekFontSize.Medium;
+            sleekLabel2.TextContrastContext = ETextContrastContext.ColorfulBackdrop;
             AddChild(sleekLabel2);
         }
         container = Glazier.Get().CreateFrame();
@@ -107,274 +141,294 @@ public class SleekBlueprint : SleekWrapper
         container.SizeOffset_Y = -45f;
         container.SizeScale_Y = 1f;
         AddChild(container);
-        int num = 0;
-        for (int i = 0; i < blueprint.supplies.Length; i++)
+        float num4 = 0f;
+        for (int j = 0; j < blueprint.supplies.Length; j++)
         {
-            BlueprintSupply blueprintSupply = blueprint.supplies[i];
-            if (!(Assets.find(EAssetType.ITEM, blueprintSupply.id) is ItemAsset itemAsset))
+            BlueprintSupply blueprintSupply = blueprint.supplies[j];
+            ItemAsset itemAsset = blueprintSupply.FindItemAsset();
+            if (itemAsset != null)
             {
-                continue;
-            }
-            sleekLabel.Text += itemAsset.itemName;
-            SleekItemIcon sleekItemIcon = new SleekItemIcon
-            {
-                PositionOffset_X = num,
-                PositionOffset_Y = -itemAsset.size_y * 25,
-                PositionScale_Y = 0.5f,
-                SizeOffset_X = itemAsset.size_x * 50,
-                SizeOffset_Y = itemAsset.size_y * 50
-            };
-            container.AddChild(sleekItemIcon);
-            sleekItemIcon.Refresh(blueprintSupply.id, 100, itemAsset.getState(isFull: false), itemAsset);
-            ISleekLabel sleekLabel3 = Glazier.Get().CreateLabel();
-            sleekLabel3.PositionOffset_X = -100f;
-            sleekLabel3.PositionOffset_Y = -30f;
-            sleekLabel3.PositionScale_Y = 1f;
-            sleekLabel3.SizeOffset_X = 100f;
-            sleekLabel3.SizeOffset_Y = 30f;
-            sleekLabel3.SizeScale_X = 1f;
-            sleekLabel3.TextAlignment = TextAnchor.MiddleRight;
-            sleekLabel3.Text = blueprintSupply.hasAmount + "/" + blueprintSupply.amount;
-            sleekLabel3.TextContrastContext = ETextContrastContext.InconspicuousBackdrop;
-            sleekItemIcon.AddChild(sleekLabel3);
-            ISleekLabel sleekLabel4 = sleekLabel;
-            sleekLabel4.Text = sleekLabel4.Text + " " + blueprintSupply.hasAmount + "/" + blueprintSupply.amount;
-            if (blueprint.type == EBlueprintType.AMMO)
-            {
-                if (blueprintSupply.hasAmount == 0 || blueprintSupply.amount == 0)
+                BlueprintInputItemStatus blueprintInputItemStatus = blueprintStatus.inputItems[j];
+                SleekItemIcon sleekItemIcon = new SleekItemIcon
                 {
-                    sleekLabel3.TextColor = ESleekTint.BAD;
+                    PositionOffset_X = num4,
+                    PositionOffset_Y = -itemAsset.size_y * 25,
+                    PositionScale_Y = 0.5f,
+                    SizeOffset_X = itemAsset.size_x * 50,
+                    SizeOffset_Y = itemAsset.size_y * 50
+                };
+                container.AddChild(sleekItemIcon);
+                byte[] array = blueprintInputItemStatus.FirstItemOrNull?.state;
+                if (array == null)
+                {
+                    array = itemAsset.getState(isFull: false);
+                }
+                sleekItemIcon.Refresh(itemAsset.id, 100, array, itemAsset);
+                string text = null;
+                ESleekTint eSleekTint = ESleekTint.FONT;
+                if (blueprint.Operation == EBlueprintOperation.FillTargetItem && j == 0)
+                {
+                    text = $"x{blueprintInputItemStatus.totalAmount}";
+                }
+                else if (blueprintInputItemStatus.isMissingRequiredAmount)
+                {
+                    eSleekTint = ESleekTint.BAD;
+                    text = PlayerDashboardCraftingUI.localization.format("BlueprintAmountLabel", blueprintInputItemStatus.totalAmount, blueprintSupply.amount);
+                }
+                else if (blueprintSupply.amount > 1)
+                {
+                    text = $"x{blueprintSupply.amount}";
+                }
+                if (!string.IsNullOrEmpty(text))
+                {
+                    ISleekLabel sleekLabel3 = Glazier.Get().CreateLabel();
+                    sleekLabel3.PositionOffset_X = -100f;
+                    sleekLabel3.PositionOffset_Y = -30f;
+                    sleekLabel3.PositionScale_Y = 1f;
+                    sleekLabel3.SizeOffset_X = 100f;
+                    sleekLabel3.SizeOffset_Y = 30f;
+                    sleekLabel3.SizeScale_X = 1f;
+                    sleekLabel3.TextAlignment = TextAnchor.MiddleRight;
+                    sleekLabel3.Text = text;
+                    sleekLabel3.TextColor = eSleekTint;
+                    sleekLabel3.TextContrastContext = ETextContrastContext.ColorfulBackdrop;
+                    sleekItemIcon.AddChild(sleekLabel3);
+                }
+                inputItemsSb.Append(itemAsset.RarityRichTextName);
+                if (blueprintSupply.amount > 1)
+                {
+                    inputItemsSb.Append(" x");
+                    inputItemsSb.Append(blueprintSupply.amount);
+                }
+                if (!blueprintSupply.ShouldConsume)
+                {
+                    inputItemsSb.Append(' ');
+                    inputItemsSb.Append(localization.format("BlueprintTitle_ToolItem"));
+                }
+                num4 += sleekItemIcon.SizeOffset_X;
+                num4 += 5f;
+                if (j != blueprint.supplies.Length - 1)
+                {
+                    inputItemsSb.Append(localization.format("BlueprintTitle_ItemSeparator"));
+                    Texture2D texture = PlayerDashboardCraftingUI.icons.load<Texture2D>("Plus");
+                    ISleekImage sleekImage = Glazier.Get().CreateImage(texture);
+                    sleekImage.PositionOffset_X = num4;
+                    sleekImage.PositionOffset_Y = -10f;
+                    sleekImage.PositionScale_Y = 0.5f;
+                    sleekImage.SizeOffset_X = 20f;
+                    sleekImage.SizeOffset_Y = 20f;
+                    sleekImage.TintColor = ESleekTint.FOREGROUND;
+                    container.AddChild(sleekImage);
+                    num4 += sleekImage.SizeOffset_X;
+                    num4 += 5f;
                 }
             }
-            else if (blueprintSupply.hasAmount < blueprintSupply.amount)
-            {
-                sleekLabel3.TextColor = ESleekTint.BAD;
-            }
-            num += itemAsset.size_x * 50 + 25;
-            if (i < blueprint.supplies.Length - 1 || blueprint.tool != 0 || blueprint.type == EBlueprintType.REPAIR || blueprint.type == EBlueprintType.AMMO)
-            {
-                sleekLabel.Text += " + ";
-                ISleekImage sleekImage = Glazier.Get().CreateImage(PlayerDashboardCraftingUI.icons.load<Texture2D>("Plus"));
-                sleekImage.PositionOffset_X = num;
-                sleekImage.PositionOffset_Y = -20f;
-                sleekImage.PositionScale_Y = 0.5f;
-                sleekImage.SizeOffset_X = 40f;
-                sleekImage.SizeOffset_Y = 40f;
-                sleekImage.TintColor = ESleekTint.FOREGROUND;
-                container.AddChild(sleekImage);
-                num += 65;
-            }
         }
-        if (blueprint.tool != 0 && Assets.find(EAssetType.ITEM, blueprint.tool) is ItemAsset itemAsset2)
+        if (blueprint.TargetItem != null)
         {
-            sleekLabel.Text += itemAsset2.itemName;
-            SleekItemIcon sleekItemIcon2 = new SleekItemIcon
+            Texture2D texture2 = PlayerDashboardCraftingUI.icons.load<Texture2D>("Arrow");
+            ISleekImage sleekImage2 = Glazier.Get().CreateImage(texture2);
+            sleekImage2.PositionOffset_X = num4;
+            sleekImage2.PositionOffset_Y = -10f;
+            sleekImage2.PositionScale_Y = 0.5f;
+            sleekImage2.SizeOffset_X = 20f;
+            sleekImage2.SizeOffset_Y = 20f;
+            sleekImage2.TintColor = ESleekTint.FOREGROUND;
+            container.AddChild(sleekImage2);
+            num4 += sleekImage2.SizeOffset_X;
+            num4 += 5f;
+            _ = blueprint.TargetItem;
+            ItemAsset itemAsset2 = blueprint.TargetItem.FindItemAsset();
+            if (itemAsset2 != null)
             {
-                PositionOffset_X = num,
-                PositionOffset_Y = -itemAsset2.size_y * 25,
-                PositionScale_Y = 0.5f,
-                SizeOffset_X = itemAsset2.size_x * 50,
-                SizeOffset_Y = itemAsset2.size_y * 50
-            };
-            container.AddChild(sleekItemIcon2);
-            sleekItemIcon2.Refresh(blueprint.tool, 100, itemAsset2.getState(), itemAsset2);
-            ISleekLabel sleekLabel5 = Glazier.Get().CreateLabel();
-            sleekLabel5.PositionOffset_X = -100f;
-            sleekLabel5.PositionOffset_Y = -30f;
-            sleekLabel5.PositionScale_Y = 1f;
-            sleekLabel5.SizeOffset_X = 100f;
-            sleekLabel5.SizeOffset_Y = 30f;
-            sleekLabel5.SizeScale_X = 1f;
-            sleekLabel5.TextAlignment = TextAnchor.MiddleRight;
-            sleekLabel5.Text = blueprint.tools + "/1";
-            sleekLabel5.TextContrastContext = ETextContrastContext.InconspicuousBackdrop;
-            sleekItemIcon2.AddChild(sleekLabel5);
-            sleekLabel.Text = sleekLabel.Text + " " + blueprint.tools + "/1";
-            if (!blueprint.hasTool)
-            {
-                sleekLabel5.TextColor = ESleekTint.BAD;
-            }
-            num += itemAsset2.size_x * 50 + 25;
-            if (blueprint.type == EBlueprintType.REPAIR || blueprint.type == EBlueprintType.AMMO)
-            {
-                sleekLabel.Text += " + ";
-                ISleekImage sleekImage2 = Glazier.Get().CreateImage(PlayerDashboardCraftingUI.icons.load<Texture2D>("Plus"));
-                sleekImage2.PositionOffset_X = num;
-                sleekImage2.PositionOffset_Y = -20f;
-                sleekImage2.PositionScale_Y = 0.5f;
-                sleekImage2.SizeOffset_X = 40f;
-                sleekImage2.SizeOffset_Y = 40f;
-                sleekImage2.TintColor = ESleekTint.FOREGROUND;
-                container.AddChild(sleekImage2);
-                num += 65;
-            }
-        }
-        if ((blueprint.type == EBlueprintType.REPAIR || blueprint.type == EBlueprintType.AMMO) && Assets.find(EAssetType.ITEM, blueprint.outputs[0].id) is ItemAsset itemAsset3)
-        {
-            sleekLabel.Text += itemAsset3.itemName;
-            SleekItemIcon sleekItemIcon3 = new SleekItemIcon
-            {
-                PositionOffset_X = num,
-                PositionOffset_Y = -itemAsset3.size_y * 25,
-                PositionScale_Y = 0.5f,
-                SizeOffset_X = itemAsset3.size_x * 50,
-                SizeOffset_Y = itemAsset3.size_y * 50
-            };
-            container.AddChild(sleekItemIcon3);
-            sleekItemIcon3.Refresh(blueprint.outputs[0].id, 100, itemAsset3.getState(), itemAsset3);
-            ISleekLabel sleekLabel6 = Glazier.Get().CreateLabel();
-            sleekLabel6.PositionOffset_X = -100f;
-            sleekLabel6.PositionOffset_Y = -30f;
-            sleekLabel6.PositionScale_Y = 1f;
-            sleekLabel6.SizeOffset_X = 100f;
-            sleekLabel6.SizeOffset_Y = 30f;
-            sleekLabel6.SizeScale_X = 1f;
-            sleekLabel6.TextAlignment = TextAnchor.MiddleRight;
-            if (blueprint.type == EBlueprintType.REPAIR)
-            {
-                sleekLabel.Text = sleekLabel.Text + " " + blueprint.items + "%";
-                sleekLabel6.Text = blueprint.items + "%";
-                sleekLabel6.TextColor = ItemTool.getQualityColor((float)(int)blueprint.items / 100f);
-            }
-            else if (blueprint.type == EBlueprintType.AMMO)
-            {
-                ISleekLabel sleekLabel4 = sleekLabel;
-                sleekLabel4.Text = sleekLabel4.Text + " " + blueprint.items + "/" + blueprint.products;
-                sleekLabel6.Text = blueprint.items + "/" + itemAsset3.amount;
-            }
-            if (!blueprint.hasItem)
-            {
-                sleekLabel6.TextColor = ESleekTint.BAD;
-            }
-            sleekLabel6.TextContrastContext = ETextContrastContext.InconspicuousBackdrop;
-            sleekItemIcon3.AddChild(sleekLabel6);
-            num += itemAsset3.size_x * 50 + 25;
-        }
-        sleekLabel.Text += " = ";
-        ISleekImage sleekImage3 = Glazier.Get().CreateImage(PlayerDashboardCraftingUI.icons.load<Texture2D>("Equals"));
-        sleekImage3.PositionOffset_X = num;
-        sleekImage3.PositionOffset_Y = -20f;
-        sleekImage3.PositionScale_Y = 0.5f;
-        sleekImage3.SizeOffset_X = 40f;
-        sleekImage3.SizeOffset_Y = 40f;
-        sleekImage3.TintColor = ESleekTint.FOREGROUND;
-        container.AddChild(sleekImage3);
-        num += 65;
-        for (int j = 0; j < blueprint.outputs.Length; j++)
-        {
-            BlueprintOutput blueprintOutput = blueprint.outputs[j];
-            if (!(Assets.find(EAssetType.ITEM, blueprintOutput.id) is ItemAsset itemAsset4))
-            {
-                continue;
-            }
-            sleekLabel.Text += itemAsset4.itemName;
-            SleekItemIcon sleekItemIcon4 = new SleekItemIcon
-            {
-                PositionOffset_X = num,
-                PositionOffset_Y = -itemAsset4.size_y * 25,
-                PositionScale_Y = 0.5f,
-                SizeOffset_X = itemAsset4.size_x * 50,
-                SizeOffset_Y = itemAsset4.size_y * 50
-            };
-            container.AddChild(sleekItemIcon4);
-            sleekItemIcon4.Refresh(blueprintOutput.id, 100, itemAsset4.getState(), itemAsset4);
-            ISleekLabel sleekLabel7 = Glazier.Get().CreateLabel();
-            sleekLabel7.PositionOffset_X = -100f;
-            sleekLabel7.PositionOffset_Y = -30f;
-            sleekLabel7.PositionScale_Y = 1f;
-            sleekLabel7.SizeOffset_X = 100f;
-            sleekLabel7.SizeOffset_Y = 30f;
-            sleekLabel7.SizeScale_X = 1f;
-            sleekLabel7.TextAlignment = TextAnchor.MiddleRight;
-            sleekLabel7.TextContrastContext = ETextContrastContext.InconspicuousBackdrop;
-            if (blueprint.type == EBlueprintType.REPAIR)
-            {
-                sleekLabel.Text += " 100%";
-                sleekLabel7.Text = "100%";
-                sleekLabel7.TextColor = Palette.COLOR_G;
-            }
-            else if (blueprint.type == EBlueprintType.AMMO)
-            {
-                if (Assets.find(EAssetType.ITEM, blueprintOutput.id) is ItemAsset itemAsset5)
+                BlueprintInputItemStatus targetStatus = blueprintStatus.targetStatus;
+                SleekItemIcon sleekItemIcon2 = new SleekItemIcon
                 {
-                    ISleekLabel sleekLabel4 = sleekLabel;
-                    sleekLabel4.Text = sleekLabel4.Text + " " + blueprint.products + "/" + itemAsset5.amount;
-                    sleekLabel7.Text = blueprint.products + "/" + itemAsset5.amount;
+                    PositionOffset_X = num4,
+                    PositionOffset_Y = -itemAsset2.size_y * 25,
+                    PositionScale_Y = 0.5f,
+                    SizeOffset_X = itemAsset2.size_x * 50,
+                    SizeOffset_Y = itemAsset2.size_y * 50
+                };
+                container.AddChild(sleekItemIcon2);
+                num4 += sleekItemIcon2.SizeOffset_X;
+                num4 += 5f;
+                byte[] array2 = null;
+                byte b = 0;
+                int num5 = 0;
+                Item firstItemOrNull = targetStatus.FirstItemOrNull;
+                if (firstItemOrNull != null)
+                {
+                    array2 = firstItemOrNull.state;
+                    b = firstItemOrNull.quality;
+                    num5 = firstItemOrNull.amount;
+                }
+                if (array2 == null)
+                {
+                    array2 = itemAsset2.getState(isFull: false);
+                }
+                sleekItemIcon2.Refresh(itemAsset2.id, 100, array2, itemAsset2);
+                ISleekLabel sleekLabel4 = Glazier.Get().CreateLabel();
+                sleekLabel4.PositionOffset_X = -100f;
+                sleekLabel4.PositionOffset_Y = -30f;
+                sleekLabel4.PositionScale_Y = 1f;
+                sleekLabel4.SizeOffset_X = 100f;
+                sleekLabel4.SizeOffset_Y = 30f;
+                sleekLabel4.SizeScale_X = 1f;
+                sleekLabel4.AllowRichText = true;
+                sleekLabel4.TextAlignment = TextAnchor.MiddleRight;
+                sleekLabel4.TextContrastContext = ETextContrastContext.ColorfulBackdrop;
+                sleekItemIcon2.AddChild(sleekLabel4);
+                if (blueprint.Operation == EBlueprintOperation.RepairTargetItem)
+                {
+                    int num6 = 100 - b;
+                    Color qualityColor = ItemTool.getQualityColor((float)(int)b / 100f);
+                    string arg3 = RichTextUtil.wrapWithColor($"{b}%", qualityColor);
+                    sleekLabel4.Text = RichTextUtil.wrapWithColor($"{b} +{num6}%", qualityColor);
+                    titleSb.Append(localization.format("BlueprintTitle_OperationRepair", itemAsset2.RarityRichTextName, arg3, inputItemsSb));
+                }
+                else if (blueprint.Operation == EBlueprintOperation.FillTargetItem)
+                {
+                    int a = itemAsset2.MaxAmount - num5;
+                    int b2 = 0;
+                    if (blueprintStatus.inputItems.Count > 0)
+                    {
+                        b2 = blueprintStatus.inputItems[0].totalAmount;
+                    }
+                    int num7 = Mathf.Min(a, b2);
+                    sleekLabel4.Text = $"x{num5} +{num7}";
+                    titleSb.Append(localization.format("BlueprintTitle_OperationFill", itemAsset2.RarityRichTextName, num7, inputItemsSb));
                 }
             }
-            else
-            {
-                sleekLabel.Text = sleekLabel.Text + " x" + blueprintOutput.amount;
-                sleekLabel7.Text = "x" + blueprintOutput.amount;
-            }
-            sleekItemIcon4.AddChild(sleekLabel7);
-            num += itemAsset4.size_x * 50;
-            if (j < blueprint.outputs.Length - 1)
-            {
-                num += 25;
-                sleekLabel.Text += " + ";
-                ISleekImage sleekImage4 = Glazier.Get().CreateImage(PlayerDashboardCraftingUI.icons.load<Texture2D>("Plus"));
-                sleekImage4.PositionOffset_X = num;
-                sleekImage4.PositionOffset_Y = -20f;
-                sleekImage4.PositionScale_Y = 0.5f;
-                sleekImage4.SizeOffset_X = 40f;
-                sleekImage4.SizeOffset_Y = 40f;
-                sleekImage4.TintColor = ESleekTint.FOREGROUND;
-                container.AddChild(sleekImage4);
-                num += 65;
-            }
         }
-        container.PositionOffset_X = -num / 2;
-        container.SizeOffset_X = num;
-        if (!supportsDepth)
+        if (titleSb.Length < 1)
         {
-            craftButton = Glazier.Get().CreateButton();
-            craftButton.PositionOffset_X = -70f;
-            craftButton.PositionOffset_Y = -35f;
-            craftButton.PositionScale_X = 0.75f;
-            craftButton.PositionScale_Y = 1f;
-            craftButton.SizeOffset_X = 140f;
-            craftButton.SizeOffset_Y = 30f;
-            craftButton.Text = PlayerDashboardCraftingUI.localization.format("Craft");
-            craftButton.TextColor = sleekLabel.TextColor;
-            craftButton.OnClicked += onClickedButton;
-            AddChild(craftButton);
-            craftAllButton = Glazier.Get().CreateButton();
-            craftAllButton.PositionOffset_X = -70f;
-            craftAllButton.PositionOffset_Y = -35f;
-            craftAllButton.PositionScale_X = 0.25f;
-            craftAllButton.PositionScale_Y = 1f;
-            craftAllButton.SizeOffset_X = 140f;
-            craftAllButton.SizeOffset_Y = 30f;
-            craftAllButton.Text = PlayerDashboardCraftingUI.localization.format("Craft_All");
-            craftAllButton.TextColor = sleekLabel.TextColor;
-            craftAllButton.OnClicked += onClickedAltButton;
-            AddChild(craftAllButton);
+            titleSb.Append(inputItemsSb);
         }
-        ignoreToggleButton = Glazier.Get().CreateToggle();
-        ignoreToggleButton.PositionOffset_X = -50f;
-        ignoreToggleButton.PositionOffset_Y = -40f;
-        ignoreToggleButton.PositionScale_X = 1f;
-        ignoreToggleButton.PositionScale_Y = 1f;
-        ignoreToggleButton.SizeOffset_X = 40f;
-        ignoreToggleButton.SizeOffset_Y = 40f;
-        ignoreToggleButton.OnValueChanged += onToggledIgnoring;
-        AddChild(ignoreToggleButton);
-        refreshIgnoring();
+        if (blueprint.outputs != null && blueprint.outputs.Length != 0)
+        {
+            titleSb.Append(localization.format("BlueprintTitle_OutputSeparator"));
+            ISleekImage sleekImage3 = Glazier.Get().CreateImage(PlayerDashboardCraftingUI.icons.load<Texture2D>("Equals"));
+            sleekImage3.PositionOffset_X = num4;
+            sleekImage3.PositionOffset_Y = -10f;
+            sleekImage3.PositionScale_Y = 0.5f;
+            sleekImage3.SizeOffset_X = 20f;
+            sleekImage3.SizeOffset_Y = 20f;
+            sleekImage3.TintColor = ESleekTint.FOREGROUND;
+            container.AddChild(sleekImage3);
+            num4 += sleekImage3.SizeOffset_X;
+            num4 += 5f;
+            for (int k = 0; k < blueprint.outputs.Length; k++)
+            {
+                BlueprintOutput blueprintOutput = blueprint.outputs[k];
+                ItemAsset itemAsset3 = blueprintOutput.FindItemAsset();
+                if (itemAsset3 == null)
+                {
+                    continue;
+                }
+                titleSb.Append(itemAsset3.RarityRichTextName);
+                if (blueprintOutput.amount > 1)
+                {
+                    titleSb.Append(" x");
+                    titleSb.Append(blueprintOutput.amount);
+                }
+                SleekItemIcon sleekItemIcon3 = new SleekItemIcon
+                {
+                    PositionOffset_X = num4,
+                    PositionOffset_Y = -itemAsset3.size_y * 25,
+                    PositionScale_Y = 0.5f,
+                    SizeOffset_X = itemAsset3.size_x * 50,
+                    SizeOffset_Y = itemAsset3.size_y * 50
+                };
+                container.AddChild(sleekItemIcon3);
+                byte quality;
+                byte[] state;
+                if (blueprint.transferState)
+                {
+                    blueprintStatus.GetPreviewOutputTransferState(itemAsset3, out quality, out state);
+                }
+                else
+                {
+                    quality = 100;
+                    state = itemAsset3.getState();
+                }
+                sleekItemIcon3.Refresh(itemAsset3.id, quality, state, itemAsset3);
+                if (blueprintOutput.amount > 1 || quality != 100)
+                {
+                    ISleekLabel sleekLabel5 = Glazier.Get().CreateLabel();
+                    sleekLabel5.PositionOffset_X = -100f;
+                    sleekLabel5.PositionOffset_Y = -60f;
+                    sleekLabel5.PositionScale_Y = 1f;
+                    sleekLabel5.SizeOffset_X = 100f;
+                    sleekLabel5.SizeOffset_Y = 60f;
+                    sleekLabel5.SizeScale_X = 1f;
+                    sleekLabel5.TextAlignment = TextAnchor.LowerRight;
+                    sleekLabel5.TextContrastContext = ETextContrastContext.ColorfulBackdrop;
+                    sleekLabel5.AllowRichText = true;
+                    string text2 = string.Empty;
+                    if (quality != 100)
+                    {
+                        Color qualityColor2 = ItemTool.getQualityColor((float)(int)quality / 100f);
+                        text2 = $"<color={Palette.hex(qualityColor2)}>{quality}%</color>";
+                    }
+                    if (blueprintOutput.amount > 1)
+                    {
+                        if (!string.IsNullOrEmpty(text2))
+                        {
+                            text2 += "\n";
+                        }
+                        text2 += $"x{blueprintOutput.amount}";
+                    }
+                    sleekLabel5.Text = text2;
+                    sleekItemIcon3.AddChild(sleekLabel5);
+                }
+                num4 += sleekItemIcon3.SizeOffset_X;
+                num4 += 5f;
+                if (k < blueprint.outputs.Length - 1)
+                {
+                    titleSb.Append(localization.format("BlueprintTitle_ItemSeparator"));
+                    ISleekImage sleekImage4 = Glazier.Get().CreateImage(PlayerDashboardCraftingUI.icons.load<Texture2D>("Plus"));
+                    sleekImage4.PositionOffset_X = num4;
+                    sleekImage4.PositionOffset_Y = -10f;
+                    sleekImage4.PositionScale_Y = 0.5f;
+                    sleekImage4.SizeOffset_X = 20f;
+                    sleekImage4.SizeOffset_Y = 20f;
+                    sleekImage4.TintColor = ESleekTint.FOREGROUND;
+                    container.AddChild(sleekImage4);
+                    num4 += sleekImage4.SizeOffset_X;
+                    num4 += 5f;
+                }
+            }
+        }
+        string text4 = (sleekLabel.Text = titleSb.ToString());
+        if (blueprintStatus.IsCraftable)
+        {
+            string text5 = PlayerDashboardInventoryUI.localization.format("ActionBlueprint_SkipCraftingTooltip", MenuConfigurationControlsUI.getKeyCodeText(ControlsSettings.SkipActionCraftingMenu));
+            string text6 = PlayerDashboardInventoryUI.localization.format("ActionBlueprint_CraftAllTooltip", MenuConfigurationControlsUI.getKeyCodeText(ControlsSettings.other));
+            backgroundButton.TooltipText = text4 + "\n\n" + text5 + "\n" + text6;
+        }
+        else
+        {
+            backgroundButton.TooltipText = text4 + "\n\n" + PlayerDashboardCraftingUI.BuildNotCraftableTooltip(blueprintStatus);
+        }
+        num4 -= 5f;
+        container.PositionOffset_X = (0f - num4) / 2f;
+        container.SizeOffset_X = num4;
+        ignoredIcon = Glazier.Get().CreateImage(PlayerDashboardCraftingUI.icons.load<Texture2D>("BlueprintHiddenIcon"));
+        ignoredIcon.PositionOffset_X = -50f;
+        ignoredIcon.PositionOffset_Y = -40f;
+        ignoredIcon.PositionScale_X = 1f;
+        ignoredIcon.PositionScale_Y = 1f;
+        ignoredIcon.SizeOffset_X = 40f;
+        ignoredIcon.SizeOffset_Y = 40f;
+        ignoredIcon.TintColor = new SleekColor(ESleekTint.FOREGROUND, 0.5f);
+        AddChild(ignoredIcon);
+        PlayerCrafting.OnLocalPlayerIgnoredBlueprintsChanged = (System.Action)Delegate.Combine(PlayerCrafting.OnLocalPlayerIgnoredBlueprintsChanged, new System.Action(RefreshIsIgnored));
+        RefreshIsIgnored();
     }
 
     private void onClickedBackgroundButton(ISleekElement internalButton)
     {
-        this.onClickedCraftButton?.Invoke(blueprint);
-    }
-
-    private void onClickedButton(ISleekElement internalButton)
-    {
-        this.onClickedCraftButton?.Invoke(blueprint);
-    }
-
-    private void onClickedAltButton(ISleekElement internalButton)
-    {
-        this.onClickedCraftAllButton?.Invoke(blueprint);
+        this.OnClickedBlueprint?.Invoke(blueprintStatus);
     }
 }

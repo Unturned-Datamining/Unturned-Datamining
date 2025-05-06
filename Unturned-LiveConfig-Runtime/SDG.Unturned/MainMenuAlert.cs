@@ -26,7 +26,7 @@ public class MainMenuAlert
 
     public DateTime endTime;
 
-    public void Parse(DatDictionary data)
+    public void Parse(IDatDictionary data)
     {
         id = data.ParseInt64("Id", 0L);
         header = data.GetString("Header");

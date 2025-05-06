@@ -106,28 +106,28 @@ public class LandscapeMaterialAsset : Asset
         return layer;
     }
 
-    public override void PopulateAsset(Bundle bundle, DatDictionary data, Local localization)
+    public override void PopulateAsset(in PopulateAssetParameters p)
     {
-        base.PopulateAsset(bundle, data, localization);
-        texture = data.ParseStruct<ContentReference<Texture2D>>("Texture");
-        mask = data.ParseStruct<ContentReference<Texture2D>>("Mask");
-        physicsMaterialName = data.GetString("Physics_Material");
+        base.PopulateAsset(in p);
+        texture = p.data.ParseStruct<ContentReference<Texture2D>>("Texture");
+        mask = p.data.ParseStruct<ContentReference<Texture2D>>("Mask");
+        physicsMaterialName = p.data.GetString("Physics_Material");
         if (Enum.TryParse<EPhysicsMaterial>(physicsMaterialName, out physicsMaterial))
         {
             physicsMaterialName = PhysicsTool.GetNameOfLegacyMaterial(physicsMaterial);
         }
-        foliage = data.ParseStruct<AssetReference<FoliageInfoCollectionAsset>>("Foliage");
-        christmasRedirect = data.ParseStruct<AssetReference<LandscapeMaterialAsset>>("Christmas_Redirect");
-        halloweenRedirect = data.ParseStruct<AssetReference<LandscapeMaterialAsset>>("Halloween_Redirect");
-        aprilFoolsRedirect = data.ParseStruct<AssetReference<LandscapeMaterialAsset>>("AprilFools_Redirect");
-        useAutoSlope = data.ParseBool("Use_Auto_Slope");
-        autoMinAngleBegin = data.ParseFloat("Auto_Min_Angle_Begin");
-        autoMinAngleEnd = data.ParseFloat("Auto_Min_Angle_End");
-        autoMaxAngleBegin = data.ParseFloat("Auto_Max_Angle_Begin");
-        autoMaxAngleEnd = data.ParseFloat("Auto_Max_Angle_End");
-        useAutoFoundation = data.ParseBool("Use_Auto_Foundation");
-        autoRayRadius = data.ParseFloat("Auto_Ray_Radius");
-        autoRayLength = data.ParseFloat("Auto_Ray_Length");
-        autoRayMask = data.ParseEnum("Auto_Ray_Mask", (ERayMask)0);
+        foliage = p.data.ParseStruct<AssetReference<FoliageInfoCollectionAsset>>("Foliage");
+        christmasRedirect = p.data.ParseStruct<AssetReference<LandscapeMaterialAsset>>("Christmas_Redirect");
+        halloweenRedirect = p.data.ParseStruct<AssetReference<LandscapeMaterialAsset>>("Halloween_Redirect");
+        aprilFoolsRedirect = p.data.ParseStruct<AssetReference<LandscapeMaterialAsset>>("AprilFools_Redirect");
+        useAutoSlope = p.data.ParseBool("Use_Auto_Slope");
+        autoMinAngleBegin = p.data.ParseFloat("Auto_Min_Angle_Begin");
+        autoMinAngleEnd = p.data.ParseFloat("Auto_Min_Angle_End");
+        autoMaxAngleBegin = p.data.ParseFloat("Auto_Max_Angle_Begin");
+        autoMaxAngleEnd = p.data.ParseFloat("Auto_Max_Angle_End");
+        useAutoFoundation = p.data.ParseBool("Use_Auto_Foundation");
+        autoRayRadius = p.data.ParseFloat("Auto_Ray_Radius");
+        autoRayLength = p.data.ParseFloat("Auto_Ray_Length");
+        autoRayMask = p.data.ParseEnum("Auto_Ray_Mask", (ERayMask)0);
     }
 }

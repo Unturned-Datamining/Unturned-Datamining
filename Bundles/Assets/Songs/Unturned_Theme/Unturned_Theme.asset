@@ -1,19 +1,19 @@
-"Metadata"
+﻿Metadata
 {
-	"GUID" "d89bee43c77e48db8c810abe841cb26d"
-	"Type" "SDG.Unturned.StereoSongAsset, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null"
+	GUID d89bee43c77e48db8c810abe841cb26d
+	Type SDG.Unturned.StereoSongAsset, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
 }
-"Asset"
+Asset
 {
-	"ID" "0"
-	"Title"
+	ID 0
+	Title
 	{
-		"Namespace" "SDG"
-		"Token" "Stereo_Songs.Unturned_Theme.Title"
+		Namespace SDG
+		Token Stereo_Songs.Unturned_Theme.Title
 	}
-	"Song"
+	Song
 	{
-		"MasterBundle" "core.masterbundle"
-		"AssetPath" "Sounds/Unturned_Theme.mp3"
+		MasterBundle core.masterbundle
+		AssetPath Sounds/Unturned_Theme.mp3
 	}
 }

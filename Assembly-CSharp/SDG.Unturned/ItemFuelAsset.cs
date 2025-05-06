@@ -38,13 +38,13 @@ public class ItemFuelAsset : ItemAsset
         builder.Append(PlayerDashboardInventoryUI.localization.format("ItemDescription_FuelAmountWithCapacity", num, fuel, num2.ToString("P")), 2000);
     }
 
-    public override void PopulateAsset(Bundle bundle, DatDictionary data, Local localization)
+    public override void PopulateAsset(in PopulateAssetParameters p)
     {
-        base.PopulateAsset(bundle, data, localization);
-        _use = bundle.load<AudioClip>("Use");
-        _fuel = data.ParseUInt16("Fuel", 0);
+        base.PopulateAsset(in p);
+        _use = p.bundle.load<AudioClip>("Use");
+        _fuel = p.data.ParseUInt16("Fuel", 0);
         fuelState = BitConverter.GetBytes(fuel);
-        shouldDeleteAfterFillingTarget = data.ParseBool("Delete_After_Filling_Target");
-        shouldAlwaysSpawnFull = data.ParseBool("Always_Spawn_Full");
+        shouldDeleteAfterFillingTarget = p.data.ParseBool("Delete_After_Filling_Target");
+        shouldAlwaysSpawnFull = p.data.ParseBool("Always_Spawn_Full");
     }
 }

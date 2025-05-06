@@ -42,7 +42,7 @@
 	{
 		"Major_Version": 25,
 		"Minor_Version": 4,
-		"Patch_Version": 0,
+		"Patch_Version": 100,
 		"GrantPackageIDs":
 		[
 			487
@@ -57,7 +57,7 @@
 	{
 		"PromoStart": "2025-03-17T12:00:00Z",
 		"PromoEnd": "2025-04-09T12:00:00Z",
-		"PromoLevel": "RioMenu"
+		"PromoLevel": ""
 	},
 	"News":
 	{

@@ -549,28 +549,30 @@ public class ZombieManager : SteamCaller
 
     private void SendZombiesToPlayer(ITransportConnection transportConnection, byte bound)
     {
-        ZombieRegion region = regions[bound];
-        SendZombies.Invoke(ENetReliability.Reliable, transportConnection, delegate(NetPakWriter writer)
+        SendZombies.Invoke(ENetReliability.Reliable, transportConnection, SendZombies_Write, bound);
+    }
+
+    private static void SendZombies_Write(NetPakWriter writer, byte bound)
+    {
+        ZombieRegion zombieRegion = regions[bound];
+        writer.WriteUInt8(bound);
+        writer.WriteBit(zombieRegion.hasBeacon);
+        writer.WriteUInt16((ushort)zombieRegion.zombies.Count);
+        for (ushort num = 0; num < zombieRegion.zombies.Count; num++)
         {
-            writer.WriteUInt8(bound);
-            writer.WriteBit(region.hasBeacon);
-            writer.WriteUInt16((ushort)region.zombies.Count);
-            for (ushort num = 0; num < region.zombies.Count; num++)
-            {
-                Zombie zombie = region.zombies[num];
-                writer.WriteUInt8(zombie.type);
-                writer.WriteUInt8((byte)zombie.speciality);
-                writer.WriteUInt8(zombie.shirt);
-                writer.WriteUInt8(zombie.pants);
-                writer.WriteUInt8(zombie.hat);
-                writer.WriteUInt8(zombie.gear);
-                writer.WriteUInt8(zombie.move);
-                writer.WriteUInt8(zombie.idle);
-                writer.WriteClampedVector3(zombie.transform.position);
-                writer.WriteDegrees(zombie.transform.eulerAngles.y);
-                writer.WriteBit(zombie.isDead);
-            }
-        });
+            Zombie zombie = zombieRegion.zombies[num];
+            writer.WriteUInt8(zombie.type);
+            writer.WriteUInt8((byte)zombie.speciality);
+            writer.WriteUInt8(zombie.shirt);
+            writer.WriteUInt8(zombie.pants);
+            writer.WriteUInt8(zombie.hat);
+            writer.WriteUInt8(zombie.gear);
+            writer.WriteUInt8(zombie.move);
+            writer.WriteUInt8(zombie.idle);
+            writer.WriteClampedVector3(zombie.transform.position);
+            writer.WriteDegrees(zombie.transform.eulerAngles.y);
+            writer.WriteBit(zombie.isDead);
+        }
     }
 
     public static void sendZombieAlive(Zombie zombie, byte newType, byte newSpeciality, byte newShirt, byte newPants, byte newHat, byte newGear, Vector3 newPosition, byte newAngle)
@@ -1204,48 +1206,48 @@ public class ZombieManager : SteamCaller
 
     private void updateRegionsAndSendZombieStates()
     {
-        byte regionIndex = 0;
-        while (regionIndex < regions.Length)
+        for (byte b = 0; b < regions.Length; b++)
         {
-            ZombieRegion region = regions[regionIndex];
-            region.UpdateRegion();
-            if (region.updates > 0)
+            ZombieRegion zombieRegion = regions[b];
+            zombieRegion.UpdateRegion();
+            if (zombieRegion.updates > 0)
             {
                 if (Dedicator.IsDedicatedServer)
                 {
                     seq++;
-                    SendZombieStates.Invoke(ENetReliability.Unreliable, GatherRemoteClientConnections(regionIndex), delegate(NetPakWriter writer)
-                    {
-                        writer.WriteUInt8(regionIndex);
-                        writer.WriteUInt32(seq);
-                        writer.WriteUInt16(region.updates);
-                        foreach (Zombie zombie in region.zombies)
-                        {
-                            if (zombie.isUpdated)
-                            {
-                                zombie.isUpdated = false;
-                                writer.WriteUInt16(zombie.id);
-                                writer.WriteClampedVector3(zombie.transform.position);
-                                writer.WriteDegrees(zombie.transform.eulerAngles.y);
-                            }
-                        }
-                    });
-                    region.updates = 0;
+                    SendZombieStates.Invoke(ENetReliability.Unreliable, GatherRemoteClientConnections(b), SendZombieStates_Write, b);
+                    zombieRegion.updates = 0;
                 }
                 else
                 {
-                    foreach (Zombie zombie2 in region.zombies)
+                    foreach (Zombie zombie in zombieRegion.zombies)
                     {
-                        if (zombie2.isUpdated)
+                        if (zombie.isUpdated)
                         {
-                            zombie2.isUpdated = false;
+                            zombie.isUpdated = false;
                         }
                     }
-                    region.updates = 0;
+                    zombieRegion.updates = 0;
                 }
             }
-            byte b = (byte)(regionIndex + 1);
-            regionIndex = b;
+        }
+    }
+
+    private void SendZombieStates_Write(NetPakWriter writer, byte regionIndex)
+    {
+        ZombieRegion zombieRegion = regions[regionIndex];
+        writer.WriteUInt8(regionIndex);
+        writer.WriteUInt32(seq);
+        writer.WriteUInt16(zombieRegion.updates);
+        foreach (Zombie zombie in zombieRegion.zombies)
+        {
+            if (zombie.isUpdated)
+            {
+                zombie.isUpdated = false;
+                writer.WriteUInt16(zombie.id);
+                writer.WriteClampedVector3(zombie.transform.position);
+                writer.WriteDegrees(zombie.transform.eulerAngles.y);
+            }
         }
     }
 

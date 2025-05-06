@@ -52,6 +52,69 @@ public class NPCTreeKillsCondition : INPCCondition
         associatedFlags.Add(id);
     }
 
+    internal override void PopulateV2(in PopulateConditionParameters p)
+    {
+        base.PopulateV2(in p);
+        if (p.data.TryParseUInt16("ID", out var num))
+        {
+            id = num;
+        }
+        else
+        {
+            p.ReportRequiredOptionInvalid("ID");
+        }
+        if (p.data.TryParseInt16("Value", out var num2))
+        {
+            value = num2;
+        }
+        else
+        {
+            p.ReportRequiredOptionInvalid("Value");
+        }
+        if (p.data.TryParseGuid("Tree", out var guid))
+        {
+            treeGuid = guid;
+        }
+        else
+        {
+            p.ReportRequiredOptionInvalid("Tree");
+        }
+    }
+
+    internal override void PopulateLegacy(in PopulateConditionParameters p)
+    {
+        base.PopulateLegacy(in p);
+        if (p.data.TryParseUInt16(p.legacyPrefix + "_ID", out var num))
+        {
+            id = num;
+        }
+        else
+        {
+            p.ReportRequiredOptionInvalid("ID");
+        }
+        if (p.data.TryParseInt16(p.legacyPrefix + "_Value", out var num2))
+        {
+            value = num2;
+        }
+        else
+        {
+            p.ReportRequiredOptionInvalid("Value");
+        }
+        if (p.data.TryParseGuid(p.legacyPrefix + "_Tree", out var guid))
+        {
+            treeGuid = guid;
+        }
+        else
+        {
+            p.ReportRequiredOptionInvalid("Tree");
+        }
+    }
+
+    public NPCTreeKillsCondition()
+    {
+    }
+
+    [Obsolete]
     public NPCTreeKillsCondition(ushort newID, short newValue, Guid newTreeGuid, string newText, bool newShouldReset)
         : base(newText, newShouldReset)
     {

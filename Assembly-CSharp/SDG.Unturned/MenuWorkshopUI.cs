@@ -91,7 +91,7 @@ public class MenuWorkshopUI
         }
         else
         {
-            Provider.provider.browserService.open("http://steamcommunity.com/app/304930/workshop/");
+            Provider.provider.browserService.open("https://steamcommunity.com/app/304930/workshop/");
         }
     }
 

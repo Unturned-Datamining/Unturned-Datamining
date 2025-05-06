@@ -1,5 +1,8 @@
 namespace SDG.Unturned;
 
+/// <summary>
+/// Please use PlayerInventorySearchResultV2 for better performance!
+/// </summary>
 public class InventorySearch
 {
     private byte _page;
@@ -50,10 +53,14 @@ public class InventorySearch
             return desiredAmount;
         }
         player.inventory.sendUpdateAmount(page, jar.x, jar.y, 0);
-        player.crafting.removeItem(page, jar);
-        if (page < PlayerInventory.SLOTS)
+        ItemAsset asset = GetAsset();
+        if (asset == null || asset.ShouldDeleteAtZeroAmount)
         {
-            player.equipment.sendSlot(page);
+            player.crafting.removeItem(page, jar);
+            if (page < PlayerInventory.SLOTS)
+            {
+                player.equipment.sendSlot(page);
+            }
         }
         return amount;
     }

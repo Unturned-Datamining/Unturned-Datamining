@@ -406,11 +406,11 @@ public class ItemGunAsset : ItemWeaponAsset
         {
             if (!string.IsNullOrEmpty(itemMagazineAsset.itemName))
             {
-                builder.Append(PlayerDashboardInventoryUI.localization.format("Ammo", "<color=" + Palette.hex(ItemTool.getRarityColorUI(itemMagazineAsset.rarity)) + ">" + itemMagazineAsset.itemName + "</color>", itemInstance.state[10], itemMagazineAsset.amount), 2000);
+                builder.Append(PlayerDashboardInventoryUI.localization.format("Ammo", "<color=" + Palette.hex(ItemTool.getRarityColorUI(itemMagazineAsset.rarity)) + ">" + itemMagazineAsset.itemName + "</color>", itemInstance.state[10], itemMagazineAsset.MaxAmount), 2000);
             }
             else
             {
-                builder.Append(PlayerDashboardInventoryUI.localization.format("Ammo", "<color=" + Palette.hex(ItemTool.getRarityColorUI(rarity)) + ">" + base.itemName + "</color>", itemInstance.state[10], itemMagazineAsset.amount), 2000);
+                builder.Append(PlayerDashboardInventoryUI.localization.format("Ammo", "<color=" + Palette.hex(ItemTool.getRarityColorUI(rarity)) + ">" + base.itemName + "</color>", itemInstance.state[10], itemMagazineAsset.MaxAmount), 2000);
             }
         }
         else
@@ -620,58 +620,58 @@ public class ItemGunAsset : ItemWeaponAsset
         shootQuestRewards.Grant(player);
     }
 
-    public override void PopulateAsset(Bundle bundle, DatDictionary data, Local localization)
+    public override void PopulateAsset(in PopulateAssetParameters p)
     {
-        base.PopulateAsset(bundle, data, localization);
-        _shoot = LoadRedirectableAsset<AudioClip>(bundle, "Shoot", data, "ShootAudioClip");
-        _reload = LoadRedirectableAsset<AudioClip>(bundle, "Reload", data, "ReloadAudioClip");
-        _hammer = LoadRedirectableAsset<AudioClip>(bundle, "Hammer", data, "HammerAudioClip");
-        _aim = LoadRedirectableAsset<AudioClip>(bundle, "Aim", data, "AimAudioClip");
-        _minigun = LoadRedirectableAsset<AudioClip>(bundle, "Minigun", data, "MinigunAudioClip");
-        _chamberJammedSound = LoadRedirectableAsset<AudioClip>(bundle, "ChamberJammed", data, "ChamberJammedAudioClip");
-        fireDelaySound = LoadRedirectableAsset<AudioClip>(bundle, "FireDelay", data, "FireDelayAudioClip");
-        _projectile = bundle.load<GameObject>("Projectile");
-        ammoMin = data.ParseUInt8("Ammo_Min", 0);
-        ammoMax = data.ParseUInt8("Ammo_Max", 0);
-        sightID = data.ParseUInt16("Sight", 0);
-        tacticalID = data.ParseUInt16("Tactical", 0);
-        gripID = data.ParseUInt16("Grip", 0);
-        barrelID = data.ParseUInt16("Barrel", 0);
-        defaultMagazineLegacyId = data.ParseGuidOrLegacyId("Magazine", out defaultMagazineGuid);
-        int num = data.ParseInt32("Magazine_Replacements");
+        base.PopulateAsset(in p);
+        _shoot = LoadRedirectableAsset<AudioClip>(p.bundle, "Shoot", p.data, "ShootAudioClip");
+        _reload = LoadRedirectableAsset<AudioClip>(p.bundle, "Reload", p.data, "ReloadAudioClip");
+        _hammer = LoadRedirectableAsset<AudioClip>(p.bundle, "Hammer", p.data, "HammerAudioClip");
+        _aim = LoadRedirectableAsset<AudioClip>(p.bundle, "Aim", p.data, "AimAudioClip");
+        _minigun = LoadRedirectableAsset<AudioClip>(p.bundle, "Minigun", p.data, "MinigunAudioClip");
+        _chamberJammedSound = LoadRedirectableAsset<AudioClip>(p.bundle, "ChamberJammed", p.data, "ChamberJammedAudioClip");
+        fireDelaySound = LoadRedirectableAsset<AudioClip>(p.bundle, "FireDelay", p.data, "FireDelayAudioClip");
+        _projectile = p.bundle.load<GameObject>("Projectile");
+        ammoMin = p.data.ParseUInt8("Ammo_Min", 0);
+        ammoMax = p.data.ParseUInt8("Ammo_Max", 0);
+        sightID = p.data.ParseUInt16("Sight", 0);
+        tacticalID = p.data.ParseUInt16("Tactical", 0);
+        gripID = p.data.ParseUInt16("Grip", 0);
+        barrelID = p.data.ParseUInt16("Barrel", 0);
+        defaultMagazineLegacyId = p.data.ParseGuidOrLegacyId("Magazine", out defaultMagazineGuid);
+        int num = p.data.ParseInt32("Magazine_Replacements");
         magazineReplacements = new MagazineReplacement[num];
         for (int i = 0; i < num; i++)
         {
             Guid guid;
-            ushort legacyId = data.ParseGuidOrLegacyId("Magazine_Replacement_" + i + "_ID", out guid);
-            string @string = data.GetString("Magazine_Replacement_" + i + "_Map");
+            ushort legacyId = p.data.ParseGuidOrLegacyId("Magazine_Replacement_" + i + "_ID", out guid);
+            string @string = p.data.GetString("Magazine_Replacement_" + i + "_Map");
             MagazineReplacement magazineReplacement = default(MagazineReplacement);
             magazineReplacement.legacyId = legacyId;
             magazineReplacement.guid = guid;
             magazineReplacement.map = @string;
             magazineReplacements[i] = magazineReplacement;
         }
-        unplace = data.ParseFloat("Unplace");
-        replace = data.ParseFloat("Replace", 1f);
-        hasSight = data.ContainsKey("Hook_Sight");
-        hasTactical = data.ContainsKey("Hook_Tactical");
-        hasGrip = data.ContainsKey("Hook_Grip");
-        hasBarrel = data.ContainsKey("Hook_Barrel");
-        int num2 = data.ParseInt32("Magazine_Calibers");
+        unplace = p.data.ParseFloat("Unplace");
+        replace = p.data.ParseFloat("Replace", 1f);
+        hasSight = p.data.ContainsKey("Hook_Sight");
+        hasTactical = p.data.ContainsKey("Hook_Tactical");
+        hasGrip = p.data.ContainsKey("Hook_Grip");
+        hasBarrel = p.data.ContainsKey("Hook_Barrel");
+        int num2 = p.data.ParseInt32("Magazine_Calibers");
         if (num2 > 0)
         {
             magazineCalibers = new ushort[num2];
             for (int j = 0; j < num2; j++)
             {
-                magazineCalibers[j] = data.ParseUInt16("Magazine_Caliber_" + j, 0);
+                magazineCalibers[j] = p.data.ParseUInt16("Magazine_Caliber_" + j, 0);
             }
-            int num3 = data.ParseInt32("Attachment_Calibers");
+            int num3 = p.data.ParseInt32("Attachment_Calibers");
             if (num3 > 0)
             {
                 attachmentCalibers = new ushort[num3];
                 for (int k = 0; k < num3; k++)
                 {
-                    attachmentCalibers[k] = data.ParseUInt16("Attachment_Caliber_" + k, 0);
+                    attachmentCalibers[k] = p.data.ParseUInt16("Attachment_Caliber_" + k, 0);
                 }
             }
             else
@@ -682,28 +682,28 @@ public class ItemGunAsset : ItemWeaponAsset
         else
         {
             magazineCalibers = new ushort[1];
-            magazineCalibers[0] = data.ParseUInt16("Caliber", 0);
+            magazineCalibers[0] = p.data.ParseUInt16("Caliber", 0);
             attachmentCalibers = magazineCalibers;
         }
-        firerate = data.ParseUInt8("Firerate", 0);
-        action = (EAction)Enum.Parse(typeof(EAction), data.GetString("Action"), ignoreCase: true);
-        if (data.ContainsKey("Delete_Empty_Magazines"))
+        firerate = p.data.ParseUInt8("Firerate", 0);
+        action = (EAction)Enum.Parse(typeof(EAction), p.data.GetString("Action"), ignoreCase: true);
+        if (p.data.ContainsKey("Delete_Empty_Magazines"))
         {
             shouldDeleteEmptyMagazines = true;
         }
         else
         {
             bool defaultValue = action == EAction.Pump || action == EAction.Rail || action == EAction.String || action == EAction.Rocket || action == EAction.Break;
-            shouldDeleteEmptyMagazines = data.ParseBool("Should_Delete_Empty_Magazines", defaultValue);
+            shouldDeleteEmptyMagazines = p.data.ParseBool("Should_Delete_Empty_Magazines", defaultValue);
         }
-        requiresNonZeroAttachmentCaliber = data.ParseBool("Requires_NonZero_Attachment_Caliber");
-        bursts = data.ParseInt32("Bursts");
-        hasSafety = data.ContainsKey("Safety");
-        hasSemi = data.ContainsKey("Semi");
-        hasAuto = data.ContainsKey("Auto");
+        requiresNonZeroAttachmentCaliber = p.data.ParseBool("Requires_NonZero_Attachment_Caliber");
+        bursts = p.data.ParseInt32("Bursts");
+        hasSafety = p.data.ContainsKey("Safety");
+        hasSemi = p.data.ContainsKey("Semi");
+        hasAuto = p.data.ContainsKey("Auto");
         hasBurst = bursts > 0;
-        isTurret = data.ContainsKey("Turret");
-        driverTurretViewmodelMode = data.ParseEnum("DriverTurretViewmodelMode", EDriverTurretViewmodelMode.OffscreenWhileAiming);
+        isTurret = p.data.ContainsKey("Turret");
+        driverTurretViewmodelMode = p.data.ParseEnum("DriverTurretViewmodelMode", EDriverTurretViewmodelMode.OffscreenWhileAiming);
         if (hasAuto)
         {
             firemode = EFiremode.AUTO;
@@ -720,48 +720,48 @@ public class ItemGunAsset : ItemWeaponAsset
         {
             firemode = EFiremode.SAFETY;
         }
-        spreadAim = data.ParseFloat("Spread_Aim");
-        if (data.ContainsKey("Spread_Angle_Degrees"))
+        spreadAim = p.data.ParseFloat("Spread_Aim");
+        if (p.data.ContainsKey("Spread_Angle_Degrees"))
         {
-            baseSpreadAngleRadians = MathF.PI / 180f * data.ParseFloat("Spread_Angle_Degrees");
+            baseSpreadAngleRadians = MathF.PI / 180f * p.data.ParseFloat("Spread_Angle_Degrees");
             spreadHip = Mathf.Tan(baseSpreadAngleRadians);
         }
         else
         {
-            spreadHip = data.ParseFloat("Spread_Hip");
+            spreadHip = p.data.ParseFloat("Spread_Hip");
             baseSpreadAngleRadians = Mathf.Atan(spreadHip);
             if ((bool)shouldLogSpreadConversion)
             {
                 UnturnedLog.info($"Converted \"{FriendlyName}\" Spread_Hip {spreadHip} to {baseSpreadAngleRadians * 57.29578f} degrees");
             }
         }
-        spreadSprint = data.ParseFloat("Spread_Sprint", 1.25f);
-        spreadCrouch = data.ParseFloat("Spread_Crouch", 0.85f);
-        spreadProne = data.ParseFloat("Spread_Prone", 0.7f);
-        spreadSwimming = data.ParseFloat("Spread_Swimming", 1.1f);
-        spreadMidair = data.ParseFloat("Spread_Midair", 1.5f);
-        recoilMin_x = data.ParseFloat("Recoil_Min_X");
-        recoilMin_y = data.ParseFloat("Recoil_Min_Y");
-        recoilMax_x = data.ParseFloat("Recoil_Max_X");
-        recoilMax_y = data.ParseFloat("Recoil_Max_Y");
-        aimingRecoilMultiplier = data.ParseFloat("Aiming_Recoil_Multiplier", 1f);
-        recover_x = data.ParseFloat("Recover_X");
-        recover_y = data.ParseFloat("Recover_Y");
-        recoilSprint = data.ParseFloat("Recoil_Sprint", 1.25f);
-        recoilCrouch = data.ParseFloat("Recoil_Crouch", 0.85f);
-        recoilProne = data.ParseFloat("Recoil_Prone", 0.7f);
-        recoilSwimming = data.ParseFloat("Recoil_Swimming", 1.1f);
-        recoilMidair = data.ParseFloat("Recoil_Midair", 1f);
-        shakeMin_x = data.ParseFloat("Shake_Min_X");
-        shakeMin_y = data.ParseFloat("Shake_Min_Y");
-        shakeMin_z = data.ParseFloat("Shake_Min_Z");
-        shakeMax_x = data.ParseFloat("Shake_Max_X");
-        shakeMax_y = data.ParseFloat("Shake_Max_Y");
-        shakeMax_z = data.ParseFloat("Shake_Max_Z");
-        ballisticSteps = data.ParseUInt8("Ballistic_Steps", 0);
-        ballisticTravel = data.ParseFloat("Ballistic_Travel");
-        bool flag = data.ContainsKey("Ballistic_Steps") && ballisticSteps > 0;
-        bool flag2 = data.ContainsKey("Ballistic_Travel") && ballisticTravel > 0.1f;
+        spreadSprint = p.data.ParseFloat("Spread_Sprint", 1.25f);
+        spreadCrouch = p.data.ParseFloat("Spread_Crouch", 0.85f);
+        spreadProne = p.data.ParseFloat("Spread_Prone", 0.7f);
+        spreadSwimming = p.data.ParseFloat("Spread_Swimming", 1.1f);
+        spreadMidair = p.data.ParseFloat("Spread_Midair", 1.5f);
+        recoilMin_x = p.data.ParseFloat("Recoil_Min_X");
+        recoilMin_y = p.data.ParseFloat("Recoil_Min_Y");
+        recoilMax_x = p.data.ParseFloat("Recoil_Max_X");
+        recoilMax_y = p.data.ParseFloat("Recoil_Max_Y");
+        aimingRecoilMultiplier = p.data.ParseFloat("Aiming_Recoil_Multiplier", 1f);
+        recover_x = p.data.ParseFloat("Recover_X");
+        recover_y = p.data.ParseFloat("Recover_Y");
+        recoilSprint = p.data.ParseFloat("Recoil_Sprint", 1.25f);
+        recoilCrouch = p.data.ParseFloat("Recoil_Crouch", 0.85f);
+        recoilProne = p.data.ParseFloat("Recoil_Prone", 0.7f);
+        recoilSwimming = p.data.ParseFloat("Recoil_Swimming", 1.1f);
+        recoilMidair = p.data.ParseFloat("Recoil_Midair", 1f);
+        shakeMin_x = p.data.ParseFloat("Shake_Min_X");
+        shakeMin_y = p.data.ParseFloat("Shake_Min_Y");
+        shakeMin_z = p.data.ParseFloat("Shake_Min_Z");
+        shakeMax_x = p.data.ParseFloat("Shake_Max_X");
+        shakeMax_y = p.data.ParseFloat("Shake_Max_Y");
+        shakeMax_z = p.data.ParseFloat("Shake_Max_Z");
+        ballisticSteps = p.data.ParseUInt8("Ballistic_Steps", 0);
+        ballisticTravel = p.data.ParseFloat("Ballistic_Travel");
+        bool flag = p.data.ContainsKey("Ballistic_Steps") && ballisticSteps > 0;
+        bool flag2 = p.data.ContainsKey("Ballistic_Travel") && ballisticTravel > 0.1f;
         if (flag && flag2)
         {
             float num4 = Mathf.Abs((float)(int)ballisticSteps * ballisticTravel - range);
@@ -784,7 +784,7 @@ public class ItemGunAsset : ItemWeaponAsset
             ballisticSteps = (byte)Mathf.CeilToInt(range / ballisticTravel);
         }
         muzzleVelocity = ballisticTravel * (float)PlayerInput.TOCK_PER_SECOND;
-        if (data.TryParseFloat("Ballistic_Drop", out var value))
+        if (p.data.TryParseFloat("Ballistic_Drop", out var value))
         {
             if (value < 1E-06f)
             {
@@ -811,29 +811,29 @@ public class ItemGunAsset : ItemWeaponAsset
         }
         else
         {
-            bulletGravityMultiplier = data.ParseFloat("Bullet_Gravity_Multiplier", 4f);
+            bulletGravityMultiplier = p.data.ParseFloat("Bullet_Gravity_Multiplier", 4f);
         }
-        if (data.ContainsKey("Ballistic_Force"))
+        if (p.data.ContainsKey("Ballistic_Force"))
         {
-            ballisticForce = data.ParseFloat("Ballistic_Force");
+            ballisticForce = p.data.ParseFloat("Ballistic_Force");
         }
         else
         {
             ballisticForce = 0.002f;
         }
-        damageFalloffRange = data.ParseFloat("Damage_Falloff_Range", 1f);
-        damageFalloffMaxRange = data.ParseFloat("Damage_Falloff_Max_Range", 1f);
-        damageFalloffMultiplier = data.ParseFloat("Damage_Falloff_Multiplier", 1f);
-        projectileLifespan = data.ParseFloat("Projectile_Lifespan", 30f);
-        projectilePenetrateBuildables = data.ContainsKey("Projectile_Penetrate_Buildables");
-        projectileExplosionLaunchSpeed = data.ParseFloat("Projectile_Explosion_Launch_Speed", playerDamageMultiplier.damage * 0.1f);
-        reloadTime = data.ParseFloat("Reload_Time");
-        hammerTime = data.ParseFloat("Hammer_Time");
-        muzzle = data.ParseGuidOrLegacyId("Muzzle", out muzzleGuid);
-        explosion = data.ParseGuidOrLegacyId("Explosion", out projectileExplosionEffectGuid);
-        if (data.ContainsKey("Shell"))
+        damageFalloffRange = p.data.ParseFloat("Damage_Falloff_Range", 1f);
+        damageFalloffMaxRange = p.data.ParseFloat("Damage_Falloff_Max_Range", 1f);
+        damageFalloffMultiplier = p.data.ParseFloat("Damage_Falloff_Multiplier", 1f);
+        projectileLifespan = p.data.ParseFloat("Projectile_Lifespan", 30f);
+        projectilePenetrateBuildables = p.data.ContainsKey("Projectile_Penetrate_Buildables");
+        projectileExplosionLaunchSpeed = p.data.ParseFloat("Projectile_Explosion_Launch_Speed", playerDamageMultiplier.damage * 0.1f);
+        reloadTime = p.data.ParseFloat("Reload_Time");
+        hammerTime = p.data.ParseFloat("Hammer_Time");
+        muzzle = p.data.ParseGuidOrLegacyId("Muzzle", out muzzleGuid);
+        explosion = p.data.ParseGuidOrLegacyId("Explosion", out projectileExplosionEffectGuid);
+        if (p.data.ContainsKey("Shell"))
         {
-            shell = data.ParseGuidOrLegacyId("Shell", out shellGuid);
+            shell = p.data.ParseGuidOrLegacyId("Shell", out shellGuid);
         }
         else if (action == EAction.Pump || action == EAction.Break)
         {
@@ -843,42 +843,41 @@ public class ItemGunAsset : ItemWeaponAsset
         {
             shellGuid = new Guid("f380a6a6f41f422c9f5b9ac13e3b13e8");
         }
-        if (data.ContainsKey("Alert_Radius"))
+        if (p.data.ContainsKey("Alert_Radius"))
         {
-            alertRadius = data.ParseFloat("Alert_Radius");
+            alertRadius = p.data.ParseFloat("Alert_Radius");
         }
         else
         {
             alertRadius = 48f;
         }
-        if (data.ContainsKey("Range_Rangefinder"))
+        if (p.data.ContainsKey("Range_Rangefinder"))
         {
-            rangeRangefinder = data.ParseFloat("Range_Rangefinder");
+            rangeRangefinder = p.data.ParseFloat("Range_Rangefinder");
         }
         else
         {
-            rangeRangefinder = data.ParseFloat("Range");
+            rangeRangefinder = p.data.ParseFloat("Range");
         }
-        instakillHeadshots = data.ParseBool("Instakill_Headshots");
-        infiniteAmmo = data.ParseBool("Infinite_Ammo");
-        ammoPerShot = data.ParseUInt8("Ammo_Per_Shot", 1);
-        fireDelay = Mathf.RoundToInt(data.ParseFloat("Fire_Delay_Seconds") * (float)PlayerInput.TOCK_PER_SECOND);
-        allowMagazineChange = data.ParseBool("Allow_Magazine_Change", defaultValue: true);
-        canAimDuringSprint = data.ParseBool("Can_Aim_During_Sprint");
-        aimingMovementSpeedMultiplier = data.ParseFloat("Aiming_Movement_Speed_Multiplier", canAimDuringSprint ? 1f : 0.75f);
-        MustAimToShoot = data.ParseBool("Must_Aim_To_Shoot", action == EAction.Minigun);
-        canEverJam = data.ContainsKey("Can_Ever_Jam");
+        instakillHeadshots = p.data.ParseBool("Instakill_Headshots");
+        infiniteAmmo = p.data.ParseBool("Infinite_Ammo");
+        ammoPerShot = p.data.ParseUInt8("Ammo_Per_Shot", 1);
+        fireDelay = Mathf.RoundToInt(p.data.ParseFloat("Fire_Delay_Seconds") * (float)PlayerInput.TOCK_PER_SECOND);
+        allowMagazineChange = p.data.ParseBool("Allow_Magazine_Change", defaultValue: true);
+        canAimDuringSprint = p.data.ParseBool("Can_Aim_During_Sprint");
+        aimingMovementSpeedMultiplier = p.data.ParseFloat("Aiming_Movement_Speed_Multiplier", canAimDuringSprint ? 1f : 0.75f);
+        MustAimToShoot = p.data.ParseBool("Must_Aim_To_Shoot", action == EAction.Minigun);
+        canEverJam = p.data.ContainsKey("Can_Ever_Jam");
         if (canEverJam)
         {
-            jamQualityThreshold = data.ParseFloat("Jam_Quality_Threshold", 0.4f);
-            jamMaxChance = data.ParseFloat("Jam_Max_Chance", 0.1f);
-            unjamChamberAnimName = data.GetString("Unjam_Chamber_Anim", "UnjamChamber");
+            jamQualityThreshold = p.data.ParseFloat("Jam_Quality_Threshold", 0.4f);
+            jamMaxChance = p.data.ParseFloat("Jam_Max_Chance", 0.1f);
+            unjamChamberAnimName = p.data.GetString("Unjam_Chamber_Anim", "UnjamChamber");
         }
-        float defaultValue2 = ((action == EAction.String) ? 16f : ((action != EAction.Rocket) ? 512f : 64f));
-        gunshotRolloffDistance = data.ParseFloat("Gunshot_Rolloff_Distance", defaultValue2);
-        shootQuestRewards.Parse(data, localization, this, "Shoot_Quest_Rewards", "Shoot_Quest_Reward_");
-        aimInDuration = data.ParseFloat("Aim_In_Duration", 0.2f);
-        shouldScaleAimAnimations = data.ParseBool("Scale_Aim_Animation_Speed", defaultValue: true);
+        gunshotRolloffDistance = DatDictionaryEx.ParseFloat(defaultValue: (action == EAction.String) ? 16f : ((action != EAction.Rocket) ? 512f : 64f), dictionary: p.data, key: "Gunshot_Rolloff_Distance");
+        shootQuestRewards.Parse(p.data, p.localization, this, "Shoot_Quest_Rewards", "Shoot_Quest_Reward_");
+        aimInDuration = p.data.ParseFloat("Aim_In_Duration", 0.2f);
+        shouldScaleAimAnimations = p.data.ParseBool("Scale_Aim_Animation_Speed", defaultValue: true);
     }
 
     internal override void BuildCargoData(CargoBuilder builder)

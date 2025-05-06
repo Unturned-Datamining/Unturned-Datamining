@@ -1,4 +1,4 @@
-GUID e0503457d87b4230bfa78350c79d16ec
+﻿GUID e0503457d87b4230bfa78350c79d16ec
 Type Medical
 Rarity Uncommon
 Useable Consumeable
@@ -12,11 +12,15 @@ Aid
 Bleeding_Modifier Heal
 Health 15
 
-Blueprints 1
-Blueprint_0_Type Supply
-Blueprint_0_Supply_0_ID 393
-Blueprint_0_Supply_0_Amount 2
-Blueprint_0_Build 32
+Blueprints
+[
+	{
+		CategoryTag "d089feb7e43f40c5a7dfcefc36998cfb" // Supplies
+		InputItems "3e78a9db8cf74f4e830df4c06f2e9273 x 2" // Rag
+		OutputItems this
+		Effect "7eceb9f7751d4634b572c8e236355104" // Rip
+	}
+]
 
 Actions 1
 Action_0_Type Blueprint

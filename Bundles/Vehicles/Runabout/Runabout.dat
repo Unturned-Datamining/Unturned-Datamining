@@ -1,4 +1,4 @@
-GUID cd3cf0d5b4204075a6ddc120216ff937
+﻿GUID cd3cf0d5b4204075a6ddc120216ff937
 Type Vehicle
 Rarity Rare
 ID 97
@@ -31,13 +31,13 @@ Has_Clip_Prefab false
 
 PaintableSections
 [
-    {
-        Path Model_0
-        MaterialIndex 0
-    }
+	{
+		Path Model_0
+		MaterialIndex 0
+	}
 ]
 
 DefaultPaintColors
 [
-    #96543b
+	#96543b
 ]

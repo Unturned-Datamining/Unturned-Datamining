@@ -1,4 +1,4 @@
-GUID 014c8244baac4e9b9cc08963cb90e1e4
+﻿GUID 014c8244baac4e9b9cc08963cb90e1e4
 Type Storage
 Useable Barricade
 Build Storage_Wall
@@ -13,19 +13,24 @@ Range 4
 Offset 0.125
 
 Storage_X 5
-Storage_Y 2
+Storage_Y 3
 Display
 
 Explosion 28
 
-Blueprints 1
-Blueprint_0_Type Furniture
-Blueprint_0_Supplies 2
-Blueprint_0_Supply_0_ID 62
-Blueprint_0_Supply_0_Amount 5
-Blueprint_0_Supply_1_ID 285
-Blueprint_0_Supply_1_Amount 2
-Blueprint_0_Build 27
+Blueprints
+[
+	{
+		CategoryTag "b0c6cc0a8b4346be89aef697ecdb8e46" // Furniture
+		InputItems
+		[
+			"5a3c4302400e400b9b9486fbb5178eca x 5" // Birch Plank
+			"656f319d2d194813b390edc6edd8a697 x 2" // Metal Bar
+		]
+		OutputItems this
+		Effect "84347b13028340b8976033c08675d458" // Wrench
+	}
+]
 
 Should_Close_When_Outside_Range true
 PlacementAudioClip Sounds/WoodenPlacement.mp3

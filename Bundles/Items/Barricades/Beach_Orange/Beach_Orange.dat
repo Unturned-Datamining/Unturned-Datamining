@@ -1,4 +1,4 @@
-GUID e14f9c4e27544968a54b946412dfa403
+﻿GUID e14f9c4e27544968a54b946412dfa403
 Type Barricade
 Useable Barricade
 Build Barricade
@@ -15,16 +15,26 @@ Offset 0.25
 
 Explosion 37
 
-Blueprints 1
-Blueprint_0_Type Furniture
-Blueprint_0_Supplies 3
-Blueprint_0_Supply_0_ID 66
-Blueprint_0_Supply_0_Amount 7
-Blueprint_0_Supply_1_ID 285
-Blueprint_0_Supply_1_Amount 2
-Blueprint_0_Supply_2_ID 257
-Blueprint_0_Supply_2_Amount 1
-Blueprint_0_Supply_2_Critical
-Blueprint_0_Build 27
+Blueprints
+[
+	{
+		CategoryTag "b0c6cc0a8b4346be89aef697ecdb8e46" // Furniture
+		InputItems
+		[
+			{
+				ID "b16e02715819464ebd3a810543e760a9" // White Beach Chair
+				Critical true
+			}
+			"e5e0e9876b6b4f6f8511b741544c6c94" // Orange Flare
+		]
+		RequiresNearbyCraftingTags
+		[
+			"8e86b740dafc46f7bf98c5040c9b223e" // DyeVat
+		]
+		OutputItems this
+		Effect "61edeaee95b742a3a0b589f769261cdb" // DyeVatCraftingEffect
+	}
+]
+
 PlacementAudioClip Sounds/WoodenPlacement.mp3
 Has_Clip_Prefab false

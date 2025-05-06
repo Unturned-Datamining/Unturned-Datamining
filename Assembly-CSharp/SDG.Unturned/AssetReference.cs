@@ -3,7 +3,11 @@ using SDG.Framework.IO.FormattedFiles;
 
 namespace SDG.Unturned;
 
-public struct AssetReference<T> : IAssetReference, IFormattedFileReadable, IFormattedFileWritable, IDatParseable, IEquatable<AssetReference<T>> where T : Asset
+/// <summary>
+/// Nelson 2025-04-08: newer code should probably use CachingAssetRef instead. (Or CachingLegacyAssetRef if legacy
+/// ID support is necessary.)
+/// </summary>
+public struct AssetReference<T> : IFormattedFileReadable, IFormattedFileWritable, IDatParseable, IAssetReference, IEquatable<AssetReference<T>> where T : Asset
 {
     public static AssetReference<T> invalid = new AssetReference<T>(Guid.Empty);
 
@@ -59,17 +63,17 @@ public struct AssetReference<T> : IAssetReference, IFormattedFileReadable, IForm
 
     public bool TryParse(IDatNode node)
     {
-        if (node is DatValue datValue)
+        if (node is IDatValue valueNode)
         {
             Guid value;
-            bool result = datValue.TryParseGuid(out value);
+            bool result = valueNode.TryParseGuid(out value);
             GUID = value;
             return result;
         }
-        if (node is DatDictionary datDictionary)
+        if (node is IDatDictionary dictionary)
         {
             Guid value2;
-            bool result2 = datDictionary.TryParseGuid("GUID", out value2);
+            bool result2 = dictionary.TryParseGuid("GUID", out value2);
             GUID = value2;
             return result2;
         }
@@ -152,6 +156,7 @@ public struct AssetReference<T> : IAssetReference, IFormattedFileReadable, IForm
         Guid.TryParse(GUID, out _guid);
     }
 
+    [Obsolete]
     public AssetReference(IAssetReference assetReference)
     {
         _guid = assetReference.GUID;

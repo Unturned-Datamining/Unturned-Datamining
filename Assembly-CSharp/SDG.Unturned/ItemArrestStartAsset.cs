@@ -14,11 +14,11 @@ public class ItemArrestStartAsset : ItemAsset
 
     public override bool shouldFriendlySentryTargetUser => true;
 
-    public override void PopulateAsset(Bundle bundle, DatDictionary data, Local localization)
+    public override void PopulateAsset(in PopulateAssetParameters p)
     {
-        base.PopulateAsset(bundle, data, localization);
-        _use = bundle.load<AudioClip>("Use");
-        _strength = data.ParseUInt16("Strength", 0);
+        base.PopulateAsset(in p);
+        _use = p.bundle.load<AudioClip>("Use");
+        _strength = p.data.ParseUInt16("Strength", 0);
     }
 
     internal override void BuildCargoData(CargoBuilder builder)

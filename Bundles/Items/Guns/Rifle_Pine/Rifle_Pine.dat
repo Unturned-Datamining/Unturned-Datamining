@@ -1,4 +1,4 @@
-GUID 37fdffea289349658130469d67ac79bb
+﻿GUID 37fdffea289349658130469d67ac79bb
 Type Gun
 Useable Gun
 Slot Primary
@@ -50,7 +50,7 @@ Resource_Damage 30
 Object_Damage 30
 
 Durability 1
-Wear 4
+Wear 3
 
 Spread_Aim 0.01
 Spread_Angle_Degrees 16.7
@@ -72,33 +72,50 @@ Shake_Max_Z -0.1
 
 Muzzle 4
 
-Blueprints 3
-Blueprint_0_Type Repair
-Blueprint_0_Supplies 2
-Blueprint_0_Supply_0_ID 67
-Blueprint_0_Supply_0_Amount 1
-Blueprint_0_Supply_1_ID 63
-Blueprint_0_Supply_1_Amount 2
-Blueprint_0_Build 27
-Blueprint_1_Type Tool
-Blueprint_1_Supplies 4
-Blueprint_1_Supply_0_ID 67
-Blueprint_1_Supply_0_Amount 2
-Blueprint_1_Supply_1_ID 63
-Blueprint_1_Supply_1_Amount 4
-Blueprint_1_Supply_2_ID 69
-Blueprint_1_Supply_2_Amount 1
-Blueprint_1_Supply_3_ID 64
-Blueprint_1_Supply_3_Amount 1
-Blueprint_1_Level 1
-Blueprint_1_Skill Craft
-Blueprint_1_Build 27
-Blueprint_2_Type Tool
-Blueprint_2_Supplies 1
-Blueprint_2_Supply_0_ID 480
-Blueprint_2_Outputs 2
-Blueprint_2_Output_0_ID 67
-Blueprint_2_Output_0_Amount 1
-Blueprint_2_Output_1_ID 63
-Blueprint_2_Output_1_Amount 1
-Blueprint_2_Build 27
+Blueprints
+[
+	{
+		Name Repair
+		CategoryTag "732ee6ffeb18418985cf4f9fde33dd11" // Repair
+		Operation RepairTargetItem
+		InputItems
+		[
+			"21ede8ebffb14c5580e8c7ad149e335e" // Metal Scrap
+			"719bfdf2c2dc4be6ad5be44d044583e4 x 2" // Pine Plank
+		]
+		RequiresNearbyCraftingTags
+		[
+			"7b82c125a5a54984b8bb26576b59e977" // Workbench
+		]
+		Effect "84347b13028340b8976033c08675d458" // Wrench
+	}
+	{
+		CategoryTag "ad1804b6945145f3b308738b0b8ea447" // Tools
+		InputItems
+		[
+			"21ede8ebffb14c5580e8c7ad149e335e x 2" // Metal Scrap
+			"719bfdf2c2dc4be6ad5be44d044583e4 x 4" // Pine Plank
+			"8c25cf28c76a4634855f404c8972c0ae" // Tape
+			"5ff4bcf752554990bf06e103b996cef2" // Rope
+		]
+		OutputItems this
+		Skill Craft
+		Skill_Level 1
+		RequiresNearbyCraftingTags
+		[
+			"7b82c125a5a54984b8bb26576b59e977" // Workbench
+		]
+		Effect "84347b13028340b8976033c08675d458" // Wrench
+	}
+	{
+		Name Salvage
+		CategoryTag "7ed29f9101ae4523a3b2e389414b7bd9" // Salvage
+		InputItems this
+		OutputItems
+		[
+			"21ede8ebffb14c5580e8c7ad149e335e" // Metal Scrap
+			"719bfdf2c2dc4be6ad5be44d044583e4" // Pine Plank
+		]
+		Effect "84347b13028340b8976033c08675d458" // Wrench
+	}
+]

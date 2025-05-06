@@ -213,16 +213,16 @@ public class SpawnAsset : Asset
         markTablesDirty();
     }
 
-    public override void PopulateAsset(Bundle bundle, DatDictionary data, Local localization)
+    public override void PopulateAsset(in PopulateAssetParameters p)
     {
-        base.PopulateAsset(bundle, data, localization);
-        if (data.TryGetList("Roots", out var node))
+        base.PopulateAsset(in p);
+        if (p.data.TryGetList("Roots", out var node))
         {
             insertRoots = new List<SpawnTable>(node.Count);
             _roots = new List<SpawnTable>(node.Count);
             foreach (IDatNode item in node)
             {
-                if (item is DatDictionary datDictionary)
+                if (item is IDatDictionary datDictionary)
                 {
                     SpawnTable spawnTable = new SpawnTable();
                     if (spawnTable.TryParse(this, datDictionary))
@@ -234,15 +234,15 @@ public class SpawnAsset : Asset
         }
         else
         {
-            int num = data.ParseInt32("Roots");
+            int num = p.data.ParseInt32("Roots");
             insertRoots = new List<SpawnTable>(num);
             for (int i = 0; i < num; i++)
             {
                 SpawnTable spawnTable2 = new SpawnTable();
-                spawnTable2.legacySpawnId = data.ParseUInt16("Root_" + i + "_Spawn_ID", 0);
-                spawnTable2.targetGuid = data.ParseGuid("Root_" + i + "_GUID");
-                spawnTable2.isOverride = data.ContainsKey("Root_" + i + "_Override");
-                spawnTable2.weight = data.ParseInt32("Root_" + i + "_Weight", spawnTable2.isOverride ? 1 : 0);
+                spawnTable2.legacySpawnId = p.data.ParseUInt16("Root_" + i + "_Spawn_ID", 0);
+                spawnTable2.targetGuid = p.data.ParseGuid("Root_" + i + "_GUID");
+                spawnTable2.isOverride = p.data.ContainsKey("Root_" + i + "_Override");
+                spawnTable2.weight = p.data.ParseInt32("Root_" + i + "_Weight", spawnTable2.isOverride ? 1 : 0);
                 spawnTable2.normalizedWeight = 0f;
                 if (spawnTable2.legacySpawnId == 0 && spawnTable2.targetGuid.IsEmpty())
                 {
@@ -256,12 +256,12 @@ public class SpawnAsset : Asset
             }
             _roots = new List<SpawnTable>(num);
         }
-        if (data.TryGetList("Tables", out var node2))
+        if (p.data.TryGetList("Tables", out var node2))
         {
             _tables = new List<SpawnTable>(node2.Count);
             foreach (IDatNode item2 in node2)
             {
-                if (item2 is DatDictionary datDictionary2)
+                if (item2 is IDatDictionary datDictionary2)
                 {
                     SpawnTable spawnTable3 = new SpawnTable();
                     if (spawnTable3.TryParse(this, datDictionary2))
@@ -273,15 +273,15 @@ public class SpawnAsset : Asset
         }
         else
         {
-            int num2 = data.ParseInt32("Tables");
+            int num2 = p.data.ParseInt32("Tables");
             _tables = new List<SpawnTable>(num2);
             for (int j = 0; j < num2; j++)
             {
                 SpawnTable spawnTable4 = new SpawnTable();
-                spawnTable4.legacyAssetId = data.ParseUInt16("Table_" + j + "_Asset_ID", 0);
-                spawnTable4.legacySpawnId = data.ParseUInt16("Table_" + j + "_Spawn_ID", 0);
-                spawnTable4.targetGuid = data.ParseGuid("Table_" + j + "_GUID");
-                spawnTable4.weight = data.ParseInt32("Table_" + j + "_Weight");
+                spawnTable4.legacyAssetId = p.data.ParseUInt16("Table_" + j + "_Asset_ID", 0);
+                spawnTable4.legacySpawnId = p.data.ParseUInt16("Table_" + j + "_Spawn_ID", 0);
+                spawnTable4.targetGuid = p.data.ParseGuid("Table_" + j + "_GUID");
+                spawnTable4.weight = p.data.ParseInt32("Table_" + j + "_Weight");
                 spawnTable4.normalizedWeight = 0f;
                 if (spawnTable4.legacySpawnId == 0 && spawnTable4.legacyAssetId == 0 && spawnTable4.targetGuid.IsEmpty())
                 {

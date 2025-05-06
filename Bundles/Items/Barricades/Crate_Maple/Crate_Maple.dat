@@ -1,4 +1,4 @@
-GUID 60c94e47bc784d48841963d4f8200828
+﻿GUID 60c94e47bc784d48841963d4f8200828
 Type Storage
 Rarity Uncommon
 Useable Barricade
@@ -15,18 +15,23 @@ Radius 0.5
 Offset 0.75
 
 Storage_X 7
-Storage_Y 4
+Storage_Y 5
 
 Explosion 19
 
-Blueprints 1
-Blueprint_0_Type Furniture
-Blueprint_0_Supplies 2
-Blueprint_0_Supply_0_ID 61
-Blueprint_0_Supply_0_Amount 7
-Blueprint_0_Supply_1_ID 40
-Blueprint_0_Supply_1_Amount 3
-Blueprint_0_Build 27
+Blueprints
+[
+	{
+		CategoryTag "b0c6cc0a8b4346be89aef697ecdb8e46" // Furniture
+		InputItems
+		[
+			"e73a23b102f24520a32ec0b2afaa6157 x 7" // Maple Plank
+			"46218740c256475b87dbc6a2e9a1fb19 x 3" // Maple Stick
+		]
+		OutputItems this
+		Effect "84347b13028340b8976033c08675d458" // Wrench
+	}
+]
 
 Should_Close_When_Outside_Range true
 PlacementAudioClip Sounds/WoodenPlacement.mp3

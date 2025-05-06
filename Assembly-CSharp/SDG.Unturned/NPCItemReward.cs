@@ -5,10 +5,9 @@ namespace SDG.Unturned;
 
 public class NPCItemReward : INPCReward
 {
-    public Guid itemGuid;
+    private CachingBcAssetRef _itemAssetRef;
 
-    [Obsolete]
-    public ushort id { get; protected set; }
+    public CachingBcAssetRef ItemAssetRef => _itemAssetRef;
 
     public byte amount { get; protected set; }
 
@@ -28,9 +27,15 @@ public class NPCItemReward : INPCReward
 
     public EItemOrigin origin { get; protected set; }
 
+    [Obsolete]
+    public Guid itemGuid => ItemAssetRef.Guid;
+
+    [Obsolete]
+    public ushort id => ItemAssetRef.LegacyId;
+
     public ItemAsset GetItemAsset()
     {
-        return Assets.FindItemByGuidOrLegacyId<ItemAsset>(itemGuid, id);
+        return _itemAssetRef.Get<ItemAsset>();
     }
 
     public override void GrantReward(Player player)
@@ -130,11 +135,65 @@ public class NPCItemReward : INPCReward
         return sleekBox;
     }
 
+    internal override void PopulateV2(in PopulateRewardParameters p)
+    {
+        base.PopulateV2(in p);
+        if (!p.data.TryParseBcAssetRef("ID", EAssetType.ITEM, out _itemAssetRef))
+        {
+            p.ReportRequiredOptionInvalid("ID");
+        }
+        if (p.data.TryParseUInt8("Amount", out var value))
+        {
+            amount = value;
+        }
+        else
+        {
+            p.ReportRequiredOptionInvalid("Amount");
+        }
+        shouldAutoEquip = p.data.ParseBool("Auto_Equip");
+        origin = p.data.ParseEnum("Origin", EItemOrigin.CRAFT);
+        sight = p.data.ParseInt32("Sight", -1);
+        tactical = p.data.ParseInt32("Tactical", -1);
+        grip = p.data.ParseInt32("Grip", -1);
+        barrel = p.data.ParseInt32("Barrel", -1);
+        magazine = p.data.ParseInt32("Magazine", -1);
+        ammo = p.data.ParseInt32("Ammo", -1);
+    }
+
+    internal override void PopulateLegacy(in PopulateRewardParameters p)
+    {
+        base.PopulateLegacy(in p);
+        if (!p.data.TryParseBcAssetRef(p.legacyPrefix + "_ID", EAssetType.ITEM, out _itemAssetRef))
+        {
+            p.ReportRequiredOptionInvalid("ID");
+        }
+        if (p.data.TryParseUInt8(p.legacyPrefix + "_Amount", out var value))
+        {
+            amount = value;
+        }
+        else
+        {
+            p.ReportRequiredOptionInvalid("Amount");
+        }
+        shouldAutoEquip = p.data.ParseBool(p.legacyPrefix + "_Auto_Equip");
+        origin = p.data.ParseEnum(p.legacyPrefix + "_Origin", EItemOrigin.CRAFT);
+        sight = p.data.ParseInt32(p.legacyPrefix + "_Sight", -1);
+        tactical = p.data.ParseInt32(p.legacyPrefix + "_Tactical", -1);
+        grip = p.data.ParseInt32(p.legacyPrefix + "_Grip", -1);
+        barrel = p.data.ParseInt32(p.legacyPrefix + "_Barrel", -1);
+        magazine = p.data.ParseInt32(p.legacyPrefix + "_Magazine", -1);
+        ammo = p.data.ParseInt32(p.legacyPrefix + "_Ammo", -1);
+    }
+
+    public NPCItemReward()
+    {
+    }
+
+    [Obsolete]
     public NPCItemReward(Guid newItemGuid, ushort newID, byte newAmount, bool newShouldAutoEquip, int newSight, int newTactical, int newGrip, int newBarrel, int newMagazine, int newAmmo, EItemOrigin origin, string newText)
         : base(newText)
     {
-        itemGuid = newItemGuid;
-        id = newID;
+        _itemAssetRef = new CachingBcAssetRef(newItemGuid, EAssetType.ITEM, newID);
         amount = newAmount;
         shouldAutoEquip = newShouldAutoEquip;
         sight = newSight;

@@ -63,7 +63,10 @@ public class ObjectAsset : Asset
 
     public Vector3 cullingVolumeSizeOffset;
 
+    [Obsolete]
     public INPCCondition[] conditions;
+
+    internal NPCConditionsList visibilityConditionsList;
 
     public EObjectInteractability interactability;
 
@@ -105,7 +108,10 @@ public class ObjectAsset : Asset
 
     internal EInteractableObjectBinaryStateEmissiveMaterialMode iobsEmissiveMaterialMode;
 
+    [Obsolete]
     public INPCCondition[] interactabilityConditions;
+
+    internal NPCConditionsList interactabilityConditionsList;
 
     protected NPCRewardsList interactabilityRewards;
 
@@ -478,17 +484,7 @@ public class ObjectAsset : Asset
 
     public bool areConditionsMet(Player player)
     {
-        if (conditions != null)
-        {
-            for (int i = 0; i < conditions.Length; i++)
-            {
-                if (!conditions[i].isConditionMet(player))
-                {
-                    return false;
-                }
-            }
-        }
-        return true;
+        return visibilityConditionsList.AreConditionsMet(player);
     }
 
     /// <summary>
@@ -497,11 +493,11 @@ public class ObjectAsset : Asset
     /// </summary>
     internal HashSet<ushort> GetConditionAssociatedFlags()
     {
-        if (conditions == null)
+        if (visibilityConditionsList.conditions == null)
         {
             return null;
         }
-        INPCCondition[] array = conditions;
+        INPCCondition[] array = visibilityConditionsList.conditions;
         for (int i = 0; i < array.Length; i++)
         {
             array[i].GatherAssociatedFlags(tempAssociatedFlags);
@@ -517,28 +513,12 @@ public class ObjectAsset : Asset
 
     public bool areInteractabilityConditionsMet(Player player)
     {
-        if (interactabilityConditions != null)
-        {
-            for (int i = 0; i < interactabilityConditions.Length; i++)
-            {
-                if (!interactabilityConditions[i].isConditionMet(player))
-                {
-                    return false;
-                }
-            }
-        }
-        return true;
+        return interactabilityConditionsList.AreConditionsMet(player);
     }
 
     public void ApplyInteractabilityConditions(Player player)
     {
-        if (interactabilityConditions != null)
-        {
-            for (int i = 0; i < interactabilityConditions.Length; i++)
-            {
-                interactabilityConditions[i].ApplyCondition(player);
-            }
-        }
+        interactabilityConditionsList.ApplyConditions(player);
     }
 
     public void GrantInteractabilityRewards(Player player)
@@ -631,11 +611,11 @@ public class ObjectAsset : Asset
         }
     }
 
-    public override void PopulateAsset(Bundle bundle, DatDictionary data, Local localization)
+    public override void PopulateAsset(in PopulateAssetParameters p)
     {
-        base.PopulateAsset(bundle, data, localization);
-        _objectName = localization.format("Name");
-        type = (EObjectType)Enum.Parse(typeof(EObjectType), data.GetString("Type"), ignoreCase: true);
+        base.PopulateAsset(in p);
+        _objectName = p.localization.format("Name");
+        type = (EObjectType)Enum.Parse(typeof(EObjectType), p.data.GetString("Type"), ignoreCase: true);
         if (type == EObjectType.NPC)
         {
             if (Dedicator.IsDedicatedServer)
@@ -654,8 +634,8 @@ public class ObjectAsset : Asset
         else if (type == EObjectType.DECAL)
         {
             hasLoadedModel = true;
-            float num = data.ParseFloat("Decal_X", 1f);
-            float num2 = data.ParseFloat("Decal_Y", 1f);
+            float num = p.data.ParseFloat("Decal_X", 1f);
+            float num2 = p.data.ParseFloat("Decal_Y", 1f);
             if (Dedicator.IsDedicatedServer)
             {
                 loadedModel = new GameObject("Decal_Template");
@@ -667,16 +647,16 @@ public class ObjectAsset : Asset
             else
             {
                 float num3 = 1f;
-                if (data.ContainsKey("Decal_LOD_Bias"))
+                if (p.data.ContainsKey("Decal_LOD_Bias"))
                 {
-                    num3 = data.ParseFloat("Decal_LOD_Bias");
+                    num3 = p.data.ParseFloat("Decal_LOD_Bias");
                 }
-                Texture2D texture2D = bundle.load<Texture2D>("Decal");
+                Texture2D texture2D = p.bundle.load<Texture2D>("Decal");
                 if (texture2D == null)
                 {
                     Assets.ReportError(this, "missing 'Decal' Texture2D. It will show as pure white without one.");
                 }
-                bool flag = data.ContainsKey("Decal_Alpha");
+                bool flag = p.data.ContainsKey("Decal_Alpha");
                 loadedModel = UnityEngine.Object.Instantiate(Resources.Load<GameObject>(flag ? "Materials/Decal_Template_Alpha" : "Materials/Decal_Template_Masked"));
                 loadedModel.transform.position = new Vector3(-10000f, -10000f, -10000f);
                 loadedModel.hideFlags = HideFlags.HideAndDontSave;
@@ -703,23 +683,23 @@ public class ObjectAsset : Asset
         }
         else
         {
-            if (data.ContainsKey("Interactability"))
+            if (p.data.ContainsKey("Interactability"))
             {
-                interactability = (EObjectInteractability)Enum.Parse(typeof(EObjectInteractability), data.GetString("Interactability"), ignoreCase: true);
-                interactabilityRemote = data.ContainsKey("Interactability_Remote");
-                interactabilityDelay = data.ParseFloat("Interactability_Delay");
-                interactabilityReset = data.ParseFloat("Interactability_Reset");
-                if (data.ContainsKey("Interactability_Hint"))
+                interactability = (EObjectInteractability)Enum.Parse(typeof(EObjectInteractability), p.data.GetString("Interactability"), ignoreCase: true);
+                interactabilityRemote = p.data.ContainsKey("Interactability_Remote");
+                interactabilityDelay = p.data.ParseFloat("Interactability_Delay");
+                interactabilityReset = p.data.ParseFloat("Interactability_Reset");
+                if (p.data.ContainsKey("Interactability_Hint"))
                 {
-                    interactabilityHint = (EObjectInteractabilityHint)Enum.Parse(typeof(EObjectInteractabilityHint), data.GetString("Interactability_Hint"), ignoreCase: true);
+                    interactabilityHint = (EObjectInteractabilityHint)Enum.Parse(typeof(EObjectInteractabilityHint), p.data.GetString("Interactability_Hint"), ignoreCase: true);
                 }
                 if (interactability == EObjectInteractability.NOTE)
                 {
-                    ushort num4 = data.ParseUInt16("Interactability_Text_Lines", 0);
+                    ushort num4 = p.data.ParseUInt16("Interactability_Text_Lines", 0);
                     StringBuilder stringBuilder = new StringBuilder();
                     for (ushort num5 = 0; num5 < num4; num5++)
                     {
-                        string desc = localization.format("Interactability_Text_Line_" + num5);
+                        string desc = p.localization.format("Interactability_Text_Line_" + num5);
                         desc = ItemTool.filterRarityRichText(desc);
                         RichTextUtil.replaceNewlineMarkup(ref desc);
                         stringBuilder.AppendLine(desc);
@@ -728,7 +708,7 @@ public class ObjectAsset : Asset
                 }
                 else
                 {
-                    interactabilityText = localization.read("Interact");
+                    interactabilityText = p.localization.read("Interact");
                     if (string.IsNullOrWhiteSpace(interactabilityText))
                     {
                         if (interactability == EObjectInteractability.QUEST)
@@ -742,50 +722,50 @@ public class ObjectAsset : Asset
                         RichTextUtil.replaceNewlineMarkup(ref interactabilityText);
                     }
                 }
-                if (data.ContainsKey("Interactability_Power"))
+                if (p.data.ContainsKey("Interactability_Power"))
                 {
-                    interactabilityPower = (EObjectInteractabilityPower)Enum.Parse(typeof(EObjectInteractabilityPower), data.GetString("Interactability_Power"), ignoreCase: true);
+                    interactabilityPower = (EObjectInteractabilityPower)Enum.Parse(typeof(EObjectInteractabilityPower), p.data.GetString("Interactability_Power"), ignoreCase: true);
                 }
                 else
                 {
                     interactabilityPower = EObjectInteractabilityPower.NONE;
                 }
-                if (data.ContainsKey("Interactability_Editor"))
+                if (p.data.ContainsKey("Interactability_Editor"))
                 {
-                    interactabilityEditor = (EObjectInteractabilityEditor)Enum.Parse(typeof(EObjectInteractabilityEditor), data.GetString("Interactability_Editor"), ignoreCase: true);
+                    interactabilityEditor = (EObjectInteractabilityEditor)Enum.Parse(typeof(EObjectInteractabilityEditor), p.data.GetString("Interactability_Editor"), ignoreCase: true);
                 }
                 else
                 {
                     interactabilityEditor = EObjectInteractabilityEditor.NONE;
                 }
-                if (data.ContainsKey("Interactability_Nav"))
+                if (p.data.ContainsKey("Interactability_Nav"))
                 {
-                    interactabilityNav = (EObjectInteractabilityNav)Enum.Parse(typeof(EObjectInteractabilityNav), data.GetString("Interactability_Nav"), ignoreCase: true);
+                    interactabilityNav = (EObjectInteractabilityNav)Enum.Parse(typeof(EObjectInteractabilityNav), p.data.GetString("Interactability_Nav"), ignoreCase: true);
                 }
                 else
                 {
                     interactabilityNav = EObjectInteractabilityNav.NONE;
                 }
-                interactabilityDrops = new ushort[data.ParseUInt8("Interactability_Drops", 0)];
+                interactabilityDrops = new ushort[p.data.ParseUInt8("Interactability_Drops", 0)];
                 for (byte b = 0; b < interactabilityDrops.Length; b++)
                 {
-                    interactabilityDrops[b] = data.ParseUInt16("Interactability_Drop_" + b, 0);
+                    interactabilityDrops[b] = p.data.ParseUInt16("Interactability_Drop_" + b, 0);
                 }
-                interactabilityRewardID = data.ParseUInt16("Interactability_Reward_ID", 0);
-                interactabilityEffect = data.ParseGuidOrLegacyId("Interactability_Effect", out interactabilityEffectGuid);
+                interactabilityRewardID = p.data.ParseUInt16("Interactability_Reward_ID", 0);
+                interactabilityEffect = p.data.ParseGuidOrLegacyId("Interactability_Effect", out interactabilityEffectGuid);
                 if (interactability == EObjectInteractability.DIALOGUE)
                 {
-                    interactabilityDialogueRef = data.readAssetReference<DialogueAsset>("Interactability_Dialogue");
+                    interactabilityDialogueRef = p.data.readAssetReference<DialogueAsset>("Interactability_Dialogue");
                 }
                 if (interactability == EObjectInteractability.BINARY_STATE)
                 {
-                    interactabilityChildPathOverride = data.GetString("Interactability_Animation_Component_Path");
-                    iobsEmissiveMaterialMode = data.ParseEnum("Interactability_Emissive_Material_Mode", EInteractableObjectBinaryStateEmissiveMaterialMode.Auto);
+                    interactabilityChildPathOverride = p.data.GetString("Interactability_Animation_Component_Path");
+                    iobsEmissiveMaterialMode = p.data.ParseEnum("Interactability_Emissive_Material_Mode", EInteractableObjectBinaryStateEmissiveMaterialMode.Auto);
                 }
-                interactabilityConditions = new INPCCondition[data.ParseUInt8("Interactability_Conditions", 0)];
-                NPCTool.readConditions(data, localization, "Interactability_Condition_", interactabilityConditions, this);
-                interactabilityRewards.Parse(data, localization, this, "Interactability_Rewards", "Interactability_Reward_");
-                interactabilityResource = data.ParseUInt16("Interactability_Resource", 0);
+                interactabilityConditionsList.Parse(p.data, p.localization, this, "Interactability_Conditions", "Interactability_Condition_");
+                interactabilityConditions = interactabilityConditionsList.conditions;
+                interactabilityRewards.Parse(p.data, p.localization, this, "Interactability_Rewards", "Interactability_Reward_");
+                interactabilityResource = p.data.ParseUInt16("Interactability_Resource", 0);
                 interactabilityResourceState = BitConverter.GetBytes(interactabilityResource);
             }
             else
@@ -797,110 +777,110 @@ public class ObjectAsset : Asset
             if (interactability == EObjectInteractability.RUBBLE)
             {
                 rubble = EObjectRubble.DESTROY;
-                rubbleReset = data.ParseFloat("Interactability_Reset");
-                rubbleHealth = data.ParseUInt16("Interactability_Health", 0);
-                rubbleEffect = data.ParseGuidOrLegacyId("Interactability_Effect", out rubbleEffectGuid);
-                rubbleFinale = data.ParseGuidOrLegacyId("Interactability_Finale", out rubbleFinaleGuid);
-                rubbleRewardID = data.ParseUInt16("Interactability_Reward_ID", 0);
-                rubbleBladeID = data.ParseUInt8("Interactability_Blade_ID", 0);
-                rubbleRewardProbability = data.ParseFloat("Interactability_Reward_Probability", 1f);
-                rubbleRewardsMin = data.ParseUInt8("Interactability_Rewards_Min", 1);
-                rubbleRewardsMax = data.ParseUInt8("Interactability_Rewards_Max", 1);
-                rubbleRewardXP = data.ParseUInt32("Interactability_Reward_XP");
-                rubbleIsVulnerable = !data.ContainsKey("Interactability_Invulnerable");
-                rubbleProofExplosion = data.ContainsKey("Interactability_Proof_Explosion");
-                RubbleCanZombiesDamage = data.ParseBool("Interactability_Can_Zombies_Damage");
-                RubbleZombieDamageMultiplier = data.ParseFloat("Interactability_Zombie_Damage_Multiplier", 1f);
-                RubbleSectionDestroyedAlertRadius = data.ParseFloat("Interactability_Section_Destroyed_Alert_Radius", -1f);
-                RubbleAllSectionsDestroyedAlertRadius = data.ParseFloat("Interactability_All_Sections_Destroyed_Alert_Radius", -1f);
-                RubbleNavMode = data.ParseEnum("Interactability_Nav_Mode", EObjectRubbleNavMode.Unaffected);
+                rubbleReset = p.data.ParseFloat("Interactability_Reset");
+                rubbleHealth = p.data.ParseUInt16("Interactability_Health", 0);
+                rubbleEffect = p.data.ParseGuidOrLegacyId("Interactability_Effect", out rubbleEffectGuid);
+                rubbleFinale = p.data.ParseGuidOrLegacyId("Interactability_Finale", out rubbleFinaleGuid);
+                rubbleRewardID = p.data.ParseUInt16("Interactability_Reward_ID", 0);
+                rubbleBladeID = p.data.ParseUInt8("Interactability_Blade_ID", 0);
+                rubbleRewardProbability = p.data.ParseFloat("Interactability_Reward_Probability", 1f);
+                rubbleRewardsMin = p.data.ParseUInt8("Interactability_Rewards_Min", 1);
+                rubbleRewardsMax = p.data.ParseUInt8("Interactability_Rewards_Max", 1);
+                rubbleRewardXP = p.data.ParseUInt32("Interactability_Reward_XP");
+                rubbleIsVulnerable = !p.data.ContainsKey("Interactability_Invulnerable");
+                rubbleProofExplosion = p.data.ContainsKey("Interactability_Proof_Explosion");
+                RubbleCanZombiesDamage = p.data.ParseBool("Interactability_Can_Zombies_Damage");
+                RubbleZombieDamageMultiplier = p.data.ParseFloat("Interactability_Zombie_Damage_Multiplier", 1f);
+                RubbleSectionDestroyedAlertRadius = p.data.ParseFloat("Interactability_Section_Destroyed_Alert_Radius", -1f);
+                RubbleAllSectionsDestroyedAlertRadius = p.data.ParseFloat("Interactability_All_Sections_Destroyed_Alert_Radius", -1f);
+                RubbleNavMode = p.data.ParseEnum("Interactability_Nav_Mode", EObjectRubbleNavMode.Unaffected);
             }
-            else if (data.ContainsKey("Rubble"))
+            else if (p.data.ContainsKey("Rubble"))
             {
-                rubble = (EObjectRubble)Enum.Parse(typeof(EObjectRubble), data.GetString("Rubble"), ignoreCase: true);
-                rubbleReset = data.ParseFloat("Rubble_Reset");
-                rubbleHealth = data.ParseUInt16("Rubble_Health", 0);
-                rubbleEffect = data.ParseGuidOrLegacyId("Rubble_Effect", out rubbleEffectGuid);
-                rubbleFinale = data.ParseGuidOrLegacyId("Rubble_Finale", out rubbleFinaleGuid);
-                rubbleRewardID = data.ParseUInt16("Rubble_Reward_ID", 0);
-                rubbleBladeID = data.ParseUInt8("Rubble_Blade_ID", 0);
-                rubbleRewardProbability = data.ParseFloat("Rubble_Reward_Probability", 1f);
-                rubbleRewardsMin = data.ParseUInt8("Rubble_Rewards_Min", 1);
-                rubbleRewardsMax = data.ParseUInt8("Rubble_Rewards_Max", 1);
-                rubbleRewardXP = data.ParseUInt32("Rubble_Reward_XP");
-                rubbleIsVulnerable = !data.ContainsKey("Rubble_Invulnerable");
-                rubbleProofExplosion = data.ContainsKey("Rubble_Proof_Explosion");
-                RubbleCanZombiesDamage = data.ParseBool("Rubble_Can_Zombies_Damage");
-                RubbleZombieDamageMultiplier = data.ParseFloat("Rubble_Zombie_Damage_Multiplier", 1f);
-                RubbleSectionDestroyedAlertRadius = data.ParseFloat("Rubble_Section_Destroyed_Alert_Radius", -1f);
-                RubbleAllSectionsDestroyedAlertRadius = data.ParseFloat("Rubble_All_Sections_Destroyed_Alert_Radius", -1f);
-                RubbleNavMode = data.ParseEnum("Rubble_Nav_Mode", EObjectRubbleNavMode.Unaffected);
-                if (data.ContainsKey("Rubble_Editor"))
+                rubble = (EObjectRubble)Enum.Parse(typeof(EObjectRubble), p.data.GetString("Rubble"), ignoreCase: true);
+                rubbleReset = p.data.ParseFloat("Rubble_Reset");
+                rubbleHealth = p.data.ParseUInt16("Rubble_Health", 0);
+                rubbleEffect = p.data.ParseGuidOrLegacyId("Rubble_Effect", out rubbleEffectGuid);
+                rubbleFinale = p.data.ParseGuidOrLegacyId("Rubble_Finale", out rubbleFinaleGuid);
+                rubbleRewardID = p.data.ParseUInt16("Rubble_Reward_ID", 0);
+                rubbleBladeID = p.data.ParseUInt8("Rubble_Blade_ID", 0);
+                rubbleRewardProbability = p.data.ParseFloat("Rubble_Reward_Probability", 1f);
+                rubbleRewardsMin = p.data.ParseUInt8("Rubble_Rewards_Min", 1);
+                rubbleRewardsMax = p.data.ParseUInt8("Rubble_Rewards_Max", 1);
+                rubbleRewardXP = p.data.ParseUInt32("Rubble_Reward_XP");
+                rubbleIsVulnerable = !p.data.ContainsKey("Rubble_Invulnerable");
+                rubbleProofExplosion = p.data.ContainsKey("Rubble_Proof_Explosion");
+                RubbleCanZombiesDamage = p.data.ParseBool("Rubble_Can_Zombies_Damage");
+                RubbleZombieDamageMultiplier = p.data.ParseFloat("Rubble_Zombie_Damage_Multiplier", 1f);
+                RubbleSectionDestroyedAlertRadius = p.data.ParseFloat("Rubble_Section_Destroyed_Alert_Radius", -1f);
+                RubbleAllSectionsDestroyedAlertRadius = p.data.ParseFloat("Rubble_All_Sections_Destroyed_Alert_Radius", -1f);
+                RubbleNavMode = p.data.ParseEnum("Rubble_Nav_Mode", EObjectRubbleNavMode.Unaffected);
+                if (p.data.ContainsKey("Rubble_Editor"))
                 {
-                    rubbleEditor = (EObjectRubbleEditor)Enum.Parse(typeof(EObjectRubbleEditor), data.GetString("Rubble_Editor"), ignoreCase: true);
+                    rubbleEditor = (EObjectRubbleEditor)Enum.Parse(typeof(EObjectRubbleEditor), p.data.GetString("Rubble_Editor"), ignoreCase: true);
                 }
                 else
                 {
                     rubbleEditor = EObjectRubbleEditor.ALIVE;
                 }
             }
-            if (Dedicator.IsDedicatedServer && data.ParseBool("Has_Clip_Prefab", defaultValue: true))
+            if (Dedicator.IsDedicatedServer && p.data.ParseBool("Has_Clip_Prefab", defaultValue: true))
             {
-                bundle.loadDeferred("Clip", out legacyServerModel, (LoadedAssetDeferredCallback<GameObject>)OnServerModelLoaded);
+                p.bundle.loadDeferred("Clip", out legacyServerModel, (LoadedAssetDeferredCallback<GameObject>)OnServerModelLoaded);
             }
-            bundle.loadDeferred("Object", out clientModel, (LoadedAssetDeferredCallback<GameObject>)OnClientModelLoaded);
+            p.bundle.loadDeferred("Object", out clientModel, (LoadedAssetDeferredCallback<GameObject>)OnClientModelLoaded);
             if (!Dedicator.IsDedicatedServer)
             {
-                bundle.loadDeferred("Skybox", out skyboxGameObject, (LoadedAssetDeferredCallback<GameObject>)null);
+                p.bundle.loadDeferred("Skybox", out skyboxGameObject, (LoadedAssetDeferredCallback<GameObject>)null);
             }
-            bundle.loadDeferred("Nav", out navGameObject, (LoadedAssetDeferredCallback<GameObject>)onNavGameObjectLoaded);
-            bundle.loadDeferred("Slots", out slotsGameObject, (LoadedAssetDeferredCallback<GameObject>)onSlotsGameObjectLoaded);
-            bundle.loadDeferred("Triggers", out triggersGameObject, (LoadedAssetDeferredCallback<GameObject>)null);
-            isSnowshoe = data.ContainsKey("Snowshoe");
-            if (data.ContainsKey("Chart"))
+            p.bundle.loadDeferred("Nav", out navGameObject, (LoadedAssetDeferredCallback<GameObject>)onNavGameObjectLoaded);
+            p.bundle.loadDeferred("Slots", out slotsGameObject, (LoadedAssetDeferredCallback<GameObject>)onSlotsGameObjectLoaded);
+            p.bundle.loadDeferred("Triggers", out triggersGameObject, (LoadedAssetDeferredCallback<GameObject>)null);
+            isSnowshoe = p.data.ContainsKey("Snowshoe");
+            if (p.data.ContainsKey("Chart"))
             {
-                chart = (EObjectChart)Enum.Parse(typeof(EObjectChart), data.GetString("Chart"), ignoreCase: true);
+                chart = (EObjectChart)Enum.Parse(typeof(EObjectChart), p.data.GetString("Chart"), ignoreCase: true);
             }
             else
             {
                 chart = EObjectChart.NONE;
             }
-            isFuel = data.ContainsKey("Fuel");
-            isRefill = data.ContainsKey("Refill");
-            isSoft = data.ContainsKey("Soft");
-            causesFallDamage = data.ParseBool("Causes_Fall_Damage", defaultValue: true);
-            isCollisionImportant = data.ContainsKey("Collision_Important") || type == EObjectType.LARGE;
-            shouldExcludeFromCullingVolumes = data.ParseBool("Exclude_From_Culling_Volumes");
+            isFuel = p.data.ContainsKey("Fuel");
+            isRefill = p.data.ContainsKey("Refill");
+            isSoft = p.data.ContainsKey("Soft");
+            causesFallDamage = p.data.ParseBool("Causes_Fall_Damage", defaultValue: true);
+            isCollisionImportant = p.data.ContainsKey("Collision_Important") || type == EObjectType.LARGE;
+            shouldExcludeFromCullingVolumes = p.data.ParseBool("Exclude_From_Culling_Volumes");
             if (isFuel || isRefill)
             {
                 Assets.ReportError(this, "is using the legacy fuel/water system");
             }
-            if (data.ContainsKey("LOD"))
+            if (p.data.ContainsKey("LOD"))
             {
-                lod = (EObjectLOD)Enum.Parse(typeof(EObjectLOD), data.GetString("LOD"), ignoreCase: true);
-                lodBias = data.ParseFloat("LOD_Bias");
+                lod = (EObjectLOD)Enum.Parse(typeof(EObjectLOD), p.data.GetString("LOD"), ignoreCase: true);
+                lodBias = p.data.ParseFloat("LOD_Bias");
                 if (lodBias < 0.01f)
                 {
                     lodBias = 1f;
                 }
-                cullingVolumeLocalPositionOffset = data.LegacyParseVector3("LOD_Center");
-                cullingVolumeSizeOffset = data.LegacyParseVector3("LOD_Size");
+                cullingVolumeLocalPositionOffset = p.data.LegacyParseVector3("LOD_Center");
+                cullingVolumeSizeOffset = p.data.LegacyParseVector3("LOD_Size");
             }
-            if (data.ContainsKey("Foliage"))
+            if (p.data.ContainsKey("Foliage"))
             {
-                foliage = new AssetReference<FoliageInfoCollectionAsset>(new Guid(data.GetString("Foliage")));
+                foliage = new AssetReference<FoliageInfoCollectionAsset>(new Guid(p.data.GetString("Foliage")));
             }
-            useWaterHeightTransparentSort = data.ContainsKey("Use_Water_Height_Transparent_Sort");
-            shouldAddNightLightScript = data.ContainsKey("Add_Night_Light_Script");
-            shouldAddKillTriggers = data.ParseBool("Add_Kill_Triggers");
-            allowStructures = data.ContainsKey("Allow_Structures");
-            if (data.ContainsKey("Material_Palette"))
+            useWaterHeightTransparentSort = p.data.ContainsKey("Use_Water_Height_Transparent_Sort");
+            shouldAddNightLightScript = p.data.ContainsKey("Add_Night_Light_Script");
+            shouldAddKillTriggers = p.data.ParseBool("Add_Kill_Triggers");
+            allowStructures = p.data.ContainsKey("Allow_Structures");
+            if (p.data.ContainsKey("Material_Palette"))
             {
-                materialPalette = new AssetReference<MaterialPaletteAsset>(data.ParseGuid("Material_Palette"));
+                materialPalette = new AssetReference<MaterialPaletteAsset>(p.data.ParseGuid("Material_Palette"));
             }
-            if (data.ContainsKey("Landmark_Quality"))
+            if (p.data.ContainsKey("Landmark_Quality"))
             {
-                landmarkQuality = (EGraphicQuality)Enum.Parse(typeof(EGraphicQuality), data.GetString("Landmark_Quality"), ignoreCase: true);
+                landmarkQuality = (EGraphicQuality)Enum.Parse(typeof(EGraphicQuality), p.data.GetString("Landmark_Quality"), ignoreCase: true);
                 if (landmarkQuality < EGraphicQuality.LOW)
                 {
                     landmarkQuality = EGraphicQuality.LOW;
@@ -911,9 +891,9 @@ public class ObjectAsset : Asset
                 landmarkQuality = EGraphicQuality.LOW;
             }
         }
-        if (data.ContainsKey("Holiday_Restriction"))
+        if (p.data.ContainsKey("Holiday_Restriction"))
         {
-            holidayRestriction = (ENPCHoliday)Enum.Parse(typeof(ENPCHoliday), data.GetString("Holiday_Restriction"), ignoreCase: true);
+            holidayRestriction = (ENPCHoliday)Enum.Parse(typeof(ENPCHoliday), p.data.GetString("Holiday_Restriction"), ignoreCase: true);
             if (holidayRestriction == ENPCHoliday.NONE)
             {
                 Assets.ReportError(this, "has no holiday restriction, so value is ignored");
@@ -923,18 +903,18 @@ public class ObjectAsset : Asset
         {
             holidayRestriction = ENPCHoliday.NONE;
         }
-        christmasRedirect = data.readAssetReference<ObjectAsset>("Christmas_Redirect");
-        halloweenRedirect = data.readAssetReference<ObjectAsset>("Halloween_Redirect");
-        isGore = data.ParseBool("Is_Gore");
-        shouldExcludeFromLevelBatching = data.ParseBool("Exclude_From_Level_Batching");
+        christmasRedirect = p.data.readAssetReference<ObjectAsset>("Christmas_Redirect");
+        halloweenRedirect = p.data.readAssetReference<ObjectAsset>("Halloween_Redirect");
+        isGore = p.data.ParseBool("Is_Gore");
+        shouldExcludeFromLevelBatching = p.data.ParseBool("Exclude_From_Level_Batching");
         shouldExcludeFromLevelBatching |= type == EObjectType.NPC || type == EObjectType.DECAL;
         bool defaultValue = holidayRestriction != ENPCHoliday.NONE;
-        ShouldExcludeFromSatelliteCapture = data.ParseBool("Exclude_From_Satellite_Capture", defaultValue);
+        ShouldExcludeFromSatelliteCapture = p.data.ParseBool("Exclude_From_Satellite_Capture", defaultValue);
         bool defaultValue2 = type == EObjectType.MEDIUM || type == EObjectType.LARGE;
-        ShouldLoadNavOnServer = data.ParseBool("Load_Nav_On_Server", defaultValue2);
-        ShouldLoadNavInEditor = data.ParseBool("Load_Nav_In_Editor", defaultValue2);
-        conditions = new INPCCondition[data.ParseUInt8("Conditions", 0)];
-        NPCTool.readConditions(data, localization, "Condition_", conditions, this);
+        ShouldLoadNavOnServer = p.data.ParseBool("Load_Nav_On_Server", defaultValue2);
+        ShouldLoadNavInEditor = p.data.ParseBool("Load_Nav_In_Editor", defaultValue2);
+        visibilityConditionsList.Parse(p.data, p.localization, this, "Conditions", "Condition_");
+        conditions = visibilityConditionsList.conditions;
     }
 
     [Obsolete("Removed shouldSend parameter")]

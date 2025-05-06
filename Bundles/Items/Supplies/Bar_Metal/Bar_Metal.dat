@@ -1,4 +1,4 @@
-GUID 656f319d2d194813b390edc6edd8a697
+﻿GUID 656f319d2d194813b390edc6edd8a697
 Type Supply
 Rarity Rare
 ID 285
@@ -7,18 +7,39 @@ Size_X 1
 Size_Y 1
 Size_Z 0.35
 
-Blueprints 2
-Blueprint_0_Type Gear
-Blueprint_0_Supply_0_ID 67
-Blueprint_0_Supply_0_Amount 1
-Blueprint_0_Tool 76
-Blueprint_0_Products 2
-Blueprint_0_Build 27
-Blueprint_1_Type Gear
-Blueprint_1_Supply_0_ID 65
-Blueprint_1_Tool 76
-Blueprint_1_Products 3
-Blueprint_1_Build 27
+Blueprints
+[
+	{
+		CategoryTag "cdb2df24b76d4c6e9d8411c940d8337f" // Gear
+		InputItems
+		[
+			{
+				ID "21ede8ebffb14c5580e8c7ad149e335e" // Metal Scrap
+			}
+			{
+				ID "5830b84bf8074caa91cf3f4dde0dd19e" // Blowtorch
+				Delete false
+			}
+		]
+		OutputItems this x 2
+		Effect "84347b13028340b8976033c08675d458" // Wrench
+	}
+	{
+		CategoryTag "cdb2df24b76d4c6e9d8411c940d8337f" // Gear
+		InputItems
+		[
+			{
+				ID "ebb61f2e64f24351a6ab905b5516060b" // Wire
+			}
+			{
+				ID "5830b84bf8074caa91cf3f4dde0dd19e" // Blowtorch
+				Delete false
+			}
+		]
+		OutputItems this x 3
+		Effect "84347b13028340b8976033c08675d458" // Wrench
+	}
+]
 
 Actions 1
 Action_0_Type Blueprint

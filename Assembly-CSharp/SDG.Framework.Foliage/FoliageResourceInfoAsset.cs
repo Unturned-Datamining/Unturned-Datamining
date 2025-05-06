@@ -71,13 +71,13 @@ public class FoliageResourceInfoAsset : FoliageInfoAsset
         return true;
     }
 
-    public override void PopulateAsset(Bundle bundle, DatDictionary data, Local localization)
+    public override void PopulateAsset(in PopulateAssetParameters p)
     {
-        base.PopulateAsset(bundle, data, localization);
-        resource = data.ParseStruct<AssetReference<ResourceAsset>>("Resource");
-        if (data.ContainsKey("Obstruction_Radius"))
+        base.PopulateAsset(in p);
+        resource = p.data.ParseStruct<AssetReference<ResourceAsset>>("Resource");
+        if (p.data.ContainsKey("Obstruction_Radius"))
         {
-            obstructionRadius = data.ParseFloat("Obstruction_Radius");
+            obstructionRadius = p.data.ParseFloat("Obstruction_Radius");
         }
     }
 

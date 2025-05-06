@@ -12,6 +12,25 @@ namespace SDG.Unturned;
 
 public class BarricadeManager : SteamCaller
 {
+    private struct SendMultipleBarricadesWriteParameters
+    {
+        public BarricadeRegion region;
+
+        public int index;
+
+        public int count;
+
+        public float sortOrder;
+
+        public NetId parentNetId;
+
+        public byte packet;
+
+        public byte x;
+
+        public byte y;
+    }
+
     private static Collider[] checkColliders = new Collider[2];
 
     /// <summary>
@@ -1871,95 +1890,111 @@ public class BarricadeManager : SteamCaller
     {
         if (region.drops.Count > 0)
         {
-            byte packet = 0;
-            int index = 0;
-            int count = 0;
-            while (index < region.drops.Count)
+            byte b = 0;
+            int num = 0;
+            int num2 = 0;
+            while (num < region.drops.Count)
             {
-                int num = 0;
-                while (count < region.drops.Count)
+                int num3 = 0;
+                while (num2 < region.drops.Count)
                 {
-                    num += 44 + region.drops[count].serversideData.barricade.state.Length;
-                    count++;
-                    if (num > Block.BUFFER_SIZE / 2)
+                    num3 += 44 + region.drops[num2].serversideData.barricade.state.Length;
+                    num2++;
+                    if (num3 > Block.BUFFER_SIZE / 2)
                     {
                         break;
                     }
                 }
-                SendMultipleBarricades.Invoke(ENetReliability.Reliable, client.transportConnection, delegate(NetPakWriter writer)
-                {
-                    writer.WriteUInt8(x);
-                    writer.WriteUInt8(y);
-                    writer.WriteNetId(parentNetId);
-                    writer.WriteUInt8(packet);
-                    writer.WriteUInt16((ushort)(count - index));
-                    writer.WriteFloat(sortOrder);
-                    for (; index < count; index++)
-                    {
-                        BarricadeDrop barricadeDrop = region.drops[index];
-                        BarricadeData serversideData = barricadeDrop.serversideData;
-                        InteractableStorage interactableStorage = barricadeDrop.interactable as InteractableStorage;
-                        writer.WriteGuid(barricadeDrop.asset.GUID);
-                        if (interactableStorage != null)
-                        {
-                            byte[] array;
-                            if (interactableStorage.isDisplay)
-                            {
-                                string s = ((interactableStorage.displayTags != null) ? interactableStorage.displayTags : string.Empty);
-                                byte[] bytes = Encoding.UTF8.GetBytes(s);
-                                string s2 = ((interactableStorage.displayDynamicProps != null) ? interactableStorage.displayDynamicProps : string.Empty);
-                                byte[] bytes2 = Encoding.UTF8.GetBytes(s2);
-                                array = new byte[20 + ((interactableStorage.displayItem != null) ? interactableStorage.displayItem.state.Length : 0) + 4 + 1 + bytes.Length + 1 + bytes2.Length + 1];
-                                if (interactableStorage.displayItem != null)
-                                {
-                                    Array.Copy(BitConverter.GetBytes(interactableStorage.displayItem.id), 0, array, 16, 2);
-                                    array[18] = interactableStorage.displayItem.quality;
-                                    array[19] = (byte)interactableStorage.displayItem.state.Length;
-                                    Array.Copy(interactableStorage.displayItem.state, 0, array, 20, interactableStorage.displayItem.state.Length);
-                                    Array.Copy(BitConverter.GetBytes(interactableStorage.displaySkin), 0, array, 20 + interactableStorage.displayItem.state.Length, 2);
-                                    Array.Copy(BitConverter.GetBytes(interactableStorage.displayMythic), 0, array, 20 + interactableStorage.displayItem.state.Length + 2, 2);
-                                    array[20 + interactableStorage.displayItem.state.Length + 4] = (byte)bytes.Length;
-                                    Array.Copy(bytes, 0, array, 20 + interactableStorage.displayItem.state.Length + 5, bytes.Length);
-                                    array[20 + interactableStorage.displayItem.state.Length + 5 + bytes.Length] = (byte)bytes2.Length;
-                                    Array.Copy(bytes2, 0, array, 20 + interactableStorage.displayItem.state.Length + 5 + bytes.Length + 1, bytes2.Length);
-                                    array[20 + interactableStorage.displayItem.state.Length + 5 + bytes.Length + 1 + bytes2.Length] = interactableStorage.rot_comp;
-                                }
-                            }
-                            else
-                            {
-                                array = new byte[16];
-                            }
-                            Array.Copy(serversideData.barricade.state, 0, array, 0, 16);
-                            writer.WriteUInt8((byte)array.Length);
-                            writer.WriteBytes(array);
-                        }
-                        else
-                        {
-                            writer.WriteUInt8((byte)serversideData.barricade.state.Length);
-                            writer.WriteBytes(serversideData.barricade.state);
-                        }
-                        writer.WriteClampedVector3(serversideData.point, 13, 11);
-                        writer.WriteSpecialYawOrQuaternion(serversideData.rotation, 23);
-                        writer.WriteUInt8((byte)Mathf.RoundToInt((float)(int)serversideData.barricade.health / (float)(int)serversideData.barricade.asset.health * 100f));
-                        writer.WriteUInt64(serversideData.owner);
-                        writer.WriteUInt64(serversideData.group);
-                        writer.WriteNetId(barricadeDrop.GetNetId());
-                    }
-                });
-                packet++;
+                SendMultipleBarricadesWriteParameters sendMultipleBarricadesWriteParameters = default(SendMultipleBarricadesWriteParameters);
+                sendMultipleBarricadesWriteParameters.region = region;
+                sendMultipleBarricadesWriteParameters.x = x;
+                sendMultipleBarricadesWriteParameters.y = y;
+                sendMultipleBarricadesWriteParameters.parentNetId = parentNetId;
+                sendMultipleBarricadesWriteParameters.sortOrder = sortOrder;
+                sendMultipleBarricadesWriteParameters.index = num;
+                sendMultipleBarricadesWriteParameters.count = num2;
+                sendMultipleBarricadesWriteParameters.packet = b;
+                SendMultipleBarricadesWriteParameters arg = sendMultipleBarricadesWriteParameters;
+                num = num2;
+                SendMultipleBarricades.Invoke(ENetReliability.Reliable, client.transportConnection, SendMultipleBarricades_Write, arg);
+                b++;
             }
         }
         else
         {
-            SendMultipleBarricades.Invoke(ENetReliability.Reliable, client.transportConnection, delegate(NetPakWriter writer)
-            {
-                writer.WriteUInt8(x);
-                writer.WriteUInt8(y);
-                writer.WriteNetId(NetId.INVALID);
-                writer.WriteUInt8(0);
-                writer.WriteUInt16(0);
-            });
+            SendMultipleBarricades.Invoke(ENetReliability.Reliable, client.transportConnection, SendMultipleBarricades_WriteEmpty, x, y);
         }
+    }
+
+    private static void SendMultipleBarricades_Write(NetPakWriter writer, SendMultipleBarricadesWriteParameters p)
+    {
+        writer.WriteUInt8(p.x);
+        writer.WriteUInt8(p.y);
+        writer.WriteNetId(p.parentNetId);
+        writer.WriteUInt8(p.packet);
+        writer.WriteUInt16((ushort)(p.count - p.index));
+        writer.WriteFloat(p.sortOrder);
+        while (p.index < p.count)
+        {
+            BarricadeDrop barricadeDrop = p.region.drops[p.index];
+            BarricadeData serversideData = barricadeDrop.serversideData;
+            InteractableStorage interactableStorage = barricadeDrop.interactable as InteractableStorage;
+            writer.WriteGuid(barricadeDrop.asset.GUID);
+            if (interactableStorage != null)
+            {
+                byte[] array;
+                if (interactableStorage.isDisplay)
+                {
+                    string s = ((interactableStorage.displayTags != null) ? interactableStorage.displayTags : string.Empty);
+                    byte[] bytes = Encoding.UTF8.GetBytes(s);
+                    string s2 = ((interactableStorage.displayDynamicProps != null) ? interactableStorage.displayDynamicProps : string.Empty);
+                    byte[] bytes2 = Encoding.UTF8.GetBytes(s2);
+                    array = new byte[20 + ((interactableStorage.displayItem != null) ? interactableStorage.displayItem.state.Length : 0) + 4 + 1 + bytes.Length + 1 + bytes2.Length + 1];
+                    if (interactableStorage.displayItem != null)
+                    {
+                        Array.Copy(BitConverter.GetBytes(interactableStorage.displayItem.id), 0, array, 16, 2);
+                        array[18] = interactableStorage.displayItem.quality;
+                        array[19] = (byte)interactableStorage.displayItem.state.Length;
+                        Array.Copy(interactableStorage.displayItem.state, 0, array, 20, interactableStorage.displayItem.state.Length);
+                        Array.Copy(BitConverter.GetBytes(interactableStorage.displaySkin), 0, array, 20 + interactableStorage.displayItem.state.Length, 2);
+                        Array.Copy(BitConverter.GetBytes(interactableStorage.displayMythic), 0, array, 20 + interactableStorage.displayItem.state.Length + 2, 2);
+                        array[20 + interactableStorage.displayItem.state.Length + 4] = (byte)bytes.Length;
+                        Array.Copy(bytes, 0, array, 20 + interactableStorage.displayItem.state.Length + 5, bytes.Length);
+                        array[20 + interactableStorage.displayItem.state.Length + 5 + bytes.Length] = (byte)bytes2.Length;
+                        Array.Copy(bytes2, 0, array, 20 + interactableStorage.displayItem.state.Length + 5 + bytes.Length + 1, bytes2.Length);
+                        array[20 + interactableStorage.displayItem.state.Length + 5 + bytes.Length + 1 + bytes2.Length] = interactableStorage.rot_comp;
+                    }
+                }
+                else
+                {
+                    array = new byte[16];
+                }
+                Array.Copy(serversideData.barricade.state, 0, array, 0, 16);
+                writer.WriteUInt8((byte)array.Length);
+                writer.WriteBytes(array);
+            }
+            else
+            {
+                writer.WriteUInt8((byte)serversideData.barricade.state.Length);
+                writer.WriteBytes(serversideData.barricade.state);
+            }
+            writer.WriteClampedVector3(serversideData.point, 13, 11);
+            writer.WriteSpecialYawOrQuaternion(serversideData.rotation, 23);
+            writer.WriteUInt8((byte)Mathf.RoundToInt((float)(int)serversideData.barricade.health / (float)(int)serversideData.barricade.asset.health * 100f));
+            writer.WriteUInt64(serversideData.owner);
+            writer.WriteUInt64(serversideData.group);
+            writer.WriteNetId(barricadeDrop.GetNetId());
+            p.index++;
+        }
+    }
+
+    private static void SendMultipleBarricades_WriteEmpty(NetPakWriter writer, byte x, byte y)
+    {
+        writer.WriteUInt8(x);
+        writer.WriteUInt8(y);
+        writer.WriteNetId(NetId.INVALID);
+        writer.WriteUInt8(0);
+        writer.WriteUInt16(0);
     }
 
     /// <summary>

@@ -62,6 +62,13 @@ public class GraphicsSettings
 
     private static bool hasBoundApplicationFocusChangedEvent;
 
+    private static float vehicleCullDistanceWithMargin;
+
+    /// <summary>
+    /// Vehicles outside this distance are not rendered.
+    /// </summary>
+    internal static float sqrVehicleCullDistanceWithMargin;
+
     public static bool uncapLandmarks
     {
         get
@@ -574,10 +581,6 @@ public class GraphicsSettings
     {
         get
         {
-            if (Level.isVR && graphicsSettingsData.LightingQuality == EGraphicQuality.ULTRA)
-            {
-                return EGraphicQuality.HIGH;
-            }
             return graphicsSettingsData.LightingQuality;
         }
         set
@@ -614,10 +617,6 @@ public class GraphicsSettings
     {
         get
         {
-            if (Level.isVR && graphicsSettingsData.WaterQuality == EGraphicQuality.ULTRA)
-            {
-                return EGraphicQuality.HIGH;
-            }
             return graphicsSettingsData.WaterQuality;
         }
         set
@@ -921,6 +920,8 @@ public class GraphicsSettings
                 array[19] += num3;
             }
         }
+        vehicleCullDistanceWithMargin = array[26] + 32f;
+        sqrVehicleCullDistanceWithMargin = vehicleCullDistanceWithMargin * vehicleCullDistanceWithMargin;
         LevelObjects.RegularObjectMaxDistance = Mathf.Min(a, 447f);
         LevelGround.RegularTreeMaxDistance = LevelObjects.RegularObjectMaxDistance;
         LevelObjects.SkyboxObjectMaxDistance = ((landmarkQuality > EGraphicQuality.OFF) ? (LevelObjects.RegularObjectMaxDistance + num3) : 0f);

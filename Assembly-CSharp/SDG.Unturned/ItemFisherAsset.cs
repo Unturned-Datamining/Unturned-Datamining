@@ -26,15 +26,15 @@ public class ItemFisherAsset : ItemAsset
 
     public ushort rewardID => _rewardID;
 
-    public override void PopulateAsset(Bundle bundle, DatDictionary data, Local localization)
+    public override void PopulateAsset(in PopulateAssetParameters p)
     {
-        base.PopulateAsset(bundle, data, localization);
-        _cast = bundle.load<AudioClip>("Cast");
-        _reel = bundle.load<AudioClip>("Reel");
-        _tug = bundle.load<AudioClip>("Tug");
-        _rewardID = data.ParseUInt16("Reward_ID", 0);
-        rewardExperienceMin = data.ParseInt32("Reward_Experience_Min", 3);
-        rewardExperienceMax = data.ParseInt32("Reward_Experience_Max", 3);
-        rewardsList.Parse(data, localization, this, "Quest_Rewards", "Quest_Reward_");
+        base.PopulateAsset(in p);
+        _cast = p.bundle.load<AudioClip>("Cast");
+        _reel = p.bundle.load<AudioClip>("Reel");
+        _tug = p.bundle.load<AudioClip>("Tug");
+        _rewardID = p.data.ParseUInt16("Reward_ID", 0);
+        rewardExperienceMin = p.data.ParseInt32("Reward_Experience_Min", 3);
+        rewardExperienceMax = p.data.ParseInt32("Reward_Experience_Max", 3);
+        rewardsList.Parse(p.data, p.localization, this, "Quest_Rewards", "Quest_Reward_");
     }
 }

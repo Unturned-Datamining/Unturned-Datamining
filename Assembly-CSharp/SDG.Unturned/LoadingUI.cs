@@ -9,8 +9,6 @@ namespace SDG.Unturned;
 
 public class LoadingUI : MonoBehaviour
 {
-    private static readonly byte TIP_COUNT = 32;
-
     private static bool _isInitialized;
 
     /// <summary>
@@ -54,7 +52,7 @@ public class LoadingUI : MonoBehaviour
     /// </summary>
     private static int lastLoading;
 
-    private static ELoadingTip tip;
+    private static ELoadingTip tip = ELoadingTip.NONE;
 
     private static bool wasLoadingAssetBundles;
 
@@ -417,13 +415,15 @@ public class LoadingUI : MonoBehaviour
         UpdateLoadingBarPositions();
         NotifyLevelLoadingProgress(0f);
         Local local = Localization.read("/Menu/MenuTips.dat");
-        byte b;
+        int num = (int)tip;
+        int maxExclusive = 38;
+        int num2;
         do
         {
-            b = (byte)UnityEngine.Random.Range(1, TIP_COUNT + 1);
+            num2 = UnityEngine.Random.Range(1, maxExclusive);
         }
-        while (b == (byte)tip);
-        tip = (ELoadingTip)b;
+        while (num2 == num);
+        tip = (ELoadingTip)num2;
         string s = ((OptionsSettings.streamer && Provider.streamerNames != null && Provider.streamerNames.Count > 0 && Provider.streamerNames[0] == "Nelson AI") ? local.format("Streamer") : (tip switch
         {
             ELoadingTip.HOTKEY => local.format("Hotkey"), 
@@ -457,7 +457,12 @@ public class LoadingUI : MonoBehaviour
             ELoadingTip.ORIENTATION => local.format("Orientation", MenuConfigurationControlsUI.getKeyCodeText(ControlsSettings.rotate)), 
             ELoadingTip.RED => local.format("Red"), 
             ELoadingTip.STEADY => local.format("Steady", MenuConfigurationControlsUI.getKeyCodeText(ControlsSettings.sprint)), 
+            ELoadingTip.STREAMER => local.format("Streamer"), 
             ELoadingTip.SKIP_ACTION_CRAFTING_MENU => local.format("SkipActionCraftingMenu", MenuConfigurationControlsUI.getKeyCodeText(ControlsSettings.SkipActionCraftingMenu)), 
+            ELoadingTip.WORKSTATION => local.format("Workstation"), 
+            ELoadingTip.WORKSTATION_HEAT => local.format("WorkstationHeat"), 
+            ELoadingTip.WORKSTATION_MEDICINE => local.format("WorkstationMedicine"), 
+            ELoadingTip.WORKSTATION_DYE => local.format("WorkstationDye"), 
             _ => "#" + tip, 
         }));
         if (Level.info != null)

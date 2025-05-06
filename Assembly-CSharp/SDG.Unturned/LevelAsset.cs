@@ -92,12 +92,12 @@ public class LevelAsset : Asset
 
         public bool TryParse(IDatNode node)
         {
-            if (node is DatDictionary datDictionary)
+            if (node is IDatDictionary dictionary)
             {
                 Color32 value;
-                bool num = datDictionary.TryParseColor32RGB("Color", out value);
+                bool num = dictionary.TryParseColor32RGB("Color", out value);
                 Color.RGBToHSV(value, out ruleHue, out ruleSaturation, out ruleValue);
-                return num & datDictionary.TryParseFloat("HueThreshold", out hueThreshold) & datDictionary.TryParseFloat("SaturationThreshold", out saturationThreshold) & datDictionary.TryParseFloat("ValueThreshold", out valueThreshold);
+                return num & dictionary.TryParseFloat("HueThreshold", out hueThreshold) & dictionary.TryParseFloat("SaturationThreshold", out saturationThreshold) & dictionary.TryParseFloat("ValueThreshold", out valueThreshold);
             }
             return false;
         }
@@ -214,33 +214,33 @@ public class LevelAsset : Asset
         return false;
     }
 
-    public override void PopulateAsset(Bundle bundle, DatDictionary data, Local localization)
+    public override void PopulateAsset(in PopulateAssetParameters p)
     {
-        base.PopulateAsset(bundle, data, localization);
-        defaultGameMode = data.ParseStruct<TypeReference<GameMode>>("Default_Game_Mode");
-        if (data.TryGetList("Supported_Game_Modes", out var node))
+        base.PopulateAsset(in p);
+        defaultGameMode = p.data.ParseStruct<TypeReference<GameMode>>("Default_Game_Mode");
+        if (p.data.TryGetList("Supported_Game_Modes", out var node))
         {
             supportedGameModes = node.ParseListOfStructs<TypeReference<GameMode>>();
         }
-        dropshipPrefab = data.ParseStruct<MasterBundleReference<GameObject>>("Dropship");
-        airdropRef = data.ParseStruct<AssetReference<AirdropAsset>>("Airdrop");
-        if (data.TryGetList("Crafting_Blacklists", out var node2) && node2.Count > 0)
+        dropshipPrefab = p.data.ParseStruct<MasterBundleReference<GameObject>>("Dropship");
+        airdropRef = p.data.ParseStruct<AssetReference<AirdropAsset>>("Airdrop");
+        if (p.data.TryGetList("Crafting_Blacklists", out var node2) && node2.Count > 0)
         {
             craftingBlacklists = node2.ParseListOfStructs<AssetReference<CraftingBlacklistAsset>>();
         }
-        if (data.TryGetList("Weather_Types", out var node3))
+        if (p.data.TryGetList("Weather_Types", out var node3))
         {
             List<SchedulableWeather> list = new List<SchedulableWeather>(node3.Count);
             for (int i = 0; i < node3.Count; i++)
             {
-                if (node3[i] is DatDictionary datDictionary)
+                if (node3[i] is IDatDictionary dictionary)
                 {
                     SchedulableWeather item = default(SchedulableWeather);
-                    item.assetRef = datDictionary.ParseStruct<AssetReference<WeatherAssetBase>>("Asset");
-                    item.minFrequency = Mathf.Max(0f, datDictionary.ParseFloat("Min_Frequency"));
-                    item.maxFrequency = Mathf.Max(0f, datDictionary.ParseFloat("Max_Frequency"));
-                    item.minDuration = Mathf.Max(0f, datDictionary.ParseFloat("Min_Duration"));
-                    item.maxDuration = Mathf.Max(0f, datDictionary.ParseFloat("Max_Duration"));
+                    item.assetRef = dictionary.ParseStruct<AssetReference<WeatherAssetBase>>("Asset");
+                    item.minFrequency = Mathf.Max(0f, dictionary.ParseFloat("Min_Frequency"));
+                    item.maxFrequency = Mathf.Max(0f, dictionary.ParseFloat("Max_Frequency"));
+                    item.minDuration = Mathf.Max(0f, dictionary.ParseFloat("Min_Duration"));
+                    item.maxDuration = Mathf.Max(0f, dictionary.ParseFloat("Max_Duration"));
                     if (Mathf.Max(item.minDuration, item.maxDuration) > 0.001f)
                     {
                         list.Add(item);
@@ -254,28 +254,28 @@ public class LevelAsset : Asset
                 schedulableWeathers = list.ToArray();
             }
         }
-        perpetualWeatherRef = data.ParseStruct<AssetReference<WeatherAssetBase>>("Perpetual_Weather_Asset");
-        if (data.TryGetList("Loading_Screen_Music", out var node4))
+        perpetualWeatherRef = p.data.ParseStruct<AssetReference<WeatherAssetBase>>("Perpetual_Weather_Asset");
+        if (p.data.TryGetList("Loading_Screen_Music", out var node4))
         {
             this.loadingScreenMusic = new LoadingScreenMusic[node4.Count];
             for (int j = 0; j < node4.Count; j++)
             {
-                if (node4[j] is DatDictionary datDictionary2)
+                if (node4[j] is IDatDictionary datDictionary)
                 {
                     LoadingScreenMusic loadingScreenMusic = default(LoadingScreenMusic);
-                    loadingScreenMusic.loopRef = datDictionary2.ParseStruct<MasterBundleReference<AudioClip>>("Loop");
-                    loadingScreenMusic.outroRef = datDictionary2.ParseStruct<MasterBundleReference<AudioClip>>("Outro");
-                    if (datDictionary2.ContainsKey("Loop_Volume"))
+                    loadingScreenMusic.loopRef = datDictionary.ParseStruct<MasterBundleReference<AudioClip>>("Loop");
+                    loadingScreenMusic.outroRef = datDictionary.ParseStruct<MasterBundleReference<AudioClip>>("Outro");
+                    if (datDictionary.ContainsKey("Loop_Volume"))
                     {
-                        loadingScreenMusic.loopVolume = datDictionary2.ParseFloat("Loop_Volume");
+                        loadingScreenMusic.loopVolume = datDictionary.ParseFloat("Loop_Volume");
                     }
                     else
                     {
                         loadingScreenMusic.loopVolume = 1f;
                     }
-                    if (datDictionary2.ContainsKey("Outro_Volume"))
+                    if (datDictionary.ContainsKey("Outro_Volume"))
                     {
-                        loadingScreenMusic.outroVolume = datDictionary2.ParseFloat("Outro_Volume");
+                        loadingScreenMusic.outroVolume = datDictionary.ParseFloat("Outro_Volume");
                     }
                     else
                     {
@@ -285,7 +285,7 @@ public class LevelAsset : Asset
                 }
             }
         }
-        if (data.TryParseStruct<MasterBundleReference<AudioClip>>("Death_Music", out var value))
+        if (p.data.TryParseStruct<MasterBundleReference<AudioClip>>("Death_Music", out var value))
         {
             DeathMusicRef = value;
         }
@@ -293,16 +293,16 @@ public class LevelAsset : Asset
         {
             DeathMusicRef = DefaultDeathMusicRef;
         }
-        shouldAnimateBackgroundImage = data.ParseBool("Should_Animate_Background_Image");
-        if (data.ContainsKey("Global_Weather_Mask"))
+        shouldAnimateBackgroundImage = p.data.ParseBool("Should_Animate_Background_Image");
+        if (p.data.ContainsKey("Global_Weather_Mask"))
         {
-            globalWeatherMask = data.ParseUInt32("Global_Weather_Mask");
+            globalWeatherMask = p.data.ParseUInt32("Global_Weather_Mask");
         }
         else
         {
             globalWeatherMask = uint.MaxValue;
         }
-        if (data.TryGetList("Skills", out var node5))
+        if (p.data.TryGetList("Skills", out var node5))
         {
             skillRules = new SkillRule[PlayerSkills.SPECIALITIES][];
             skillRules[0] = new SkillRule[7];
@@ -310,29 +310,29 @@ public class LevelAsset : Asset
             skillRules[2] = new SkillRule[8];
             for (int k = 0; k < node5.Count; k++)
             {
-                if (!(node5[k] is DatDictionary datDictionary3))
+                if (!(node5[k] is IDatDictionary datDictionary2))
                 {
                     continue;
                 }
-                string @string = datDictionary3.GetString("Id");
+                string @string = datDictionary2.GetString("Id");
                 if (!PlayerSkills.TryParseIndices(@string, out var specialityIndex, out var skillIndex))
                 {
                     UnturnedLog.warn("Level {0} unable to parse skill index {1} ({2})", this, k, @string);
                     continue;
                 }
                 SkillRule skillRule = new SkillRule();
-                skillRule.defaultLevel = datDictionary3.ParseInt32("Default_Level");
-                if (datDictionary3.ContainsKey("Max_Unlockable_Level"))
+                skillRule.defaultLevel = datDictionary2.ParseInt32("Default_Level");
+                if (datDictionary2.ContainsKey("Max_Unlockable_Level"))
                 {
-                    skillRule.maxUnlockableLevel = datDictionary3.ParseInt32("Max_Unlockable_Level");
+                    skillRule.maxUnlockableLevel = datDictionary2.ParseInt32("Max_Unlockable_Level");
                 }
                 else
                 {
                     skillRule.maxUnlockableLevel = -1;
                 }
-                if (datDictionary3.ContainsKey("Cost_Multiplier"))
+                if (datDictionary2.ContainsKey("Cost_Multiplier"))
                 {
-                    skillRule.costMultiplier = datDictionary3.ParseFloat("Cost_Multiplier");
+                    skillRule.costMultiplier = datDictionary2.ParseFloat("Cost_Multiplier");
                 }
                 else
                 {
@@ -341,30 +341,30 @@ public class LevelAsset : Asset
                 skillRules[specialityIndex][skillIndex] = skillRule;
             }
         }
-        minStealthRadius = data.ParseFloat("Min_Stealth_Radius");
-        fallDamageSpeedThreshold = data.ParseFloat("Fall_Damage_Speed_Threshold");
-        if (data.ContainsKey("Enable_Admin_Faster_Salvage_Duration"))
+        minStealthRadius = p.data.ParseFloat("Min_Stealth_Radius");
+        fallDamageSpeedThreshold = p.data.ParseFloat("Fall_Damage_Speed_Threshold");
+        if (p.data.ContainsKey("Enable_Admin_Faster_Salvage_Duration"))
         {
-            enableAdminFasterSalvageDuration = data.ParseBool("Enable_Admin_Faster_Salvage_Duration");
+            enableAdminFasterSalvageDuration = p.data.ParseBool("Enable_Admin_Faster_Salvage_Duration");
         }
-        if (data.ContainsKey("Has_Clouds"))
+        if (p.data.ContainsKey("Has_Clouds"))
         {
-            hasClouds = data.ParseBool("Has_Clouds");
+            hasClouds = p.data.ParseBool("Has_Clouds");
         }
         else
         {
             hasClouds = true;
         }
-        if (!data.TryGetList("TerrainColors", out var node6))
+        if (!p.data.TryGetList("TerrainColors", out var node6))
         {
             return;
         }
         List<TerrainColorRule> list2 = new List<TerrainColorRule>(node6.Count);
         for (int l = 0; l < node6.Count; l++)
         {
-            IDatNode datNode = node6[l];
+            IDatNode node7 = node6[l];
             TerrainColorRule terrainColorRule = new TerrainColorRule();
-            if (terrainColorRule.TryParse(datNode))
+            if (terrainColorRule.TryParse(node7))
             {
                 bool flag = false;
                 Color[] sKINS = Customization.SKINS;
@@ -386,7 +386,7 @@ public class LevelAsset : Asset
             }
             else
             {
-                Assets.ReportError(this, "unable to parse entry in TerrainColors: " + datNode.DebugDumpToString());
+                Assets.ReportError(this, "unable to parse entry in TerrainColors: " + node7.DebugDumpToString());
             }
         }
         if (list2.Count > 0)

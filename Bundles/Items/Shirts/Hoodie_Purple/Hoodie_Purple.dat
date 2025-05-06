@@ -1,4 +1,4 @@
-GUID 60a5bfcb4fcf4846a059a1e9d97afe10
+﻿GUID 60a5bfcb4fcf4846a059a1e9d97afe10
 Type Shirt
 Useable Clothing
 ID 157
@@ -12,14 +12,41 @@ Height 3
 
 Armor 0.95
 
-Blueprints 2
-Blueprint_0_Type Apparel
-Blueprint_0_Supply_0_ID 157
-Blueprint_0_Product 66
-Blueprint_0_Products 3
-Blueprint_0_Build 32
-Blueprint_1_Type Repair
-Blueprint_1_Supplies 1
-Blueprint_1_Supply_0_ID 66
-Blueprint_1_Supply_0_Amount 3
-Blueprint_1_Build 32
+Blueprints
+[
+	{
+		Name Salvage
+		CategoryTag "7ed29f9101ae4523a3b2e389414b7bd9" // Salvage
+		InputItems this
+		OutputItems "14901f32cd3240179fd6124324cc27e5 x 3" // Cloth
+		Effect "7eceb9f7751d4634b572c8e236355104" // Rip
+	}
+	{
+		Name Repair
+		CategoryTag "732ee6ffeb18418985cf4f9fde33dd11" // Repair
+		Operation RepairTargetItem
+		InputItems "14901f32cd3240179fd6124324cc27e5 x 3" // Cloth
+		RequiresNearbyCraftingTags
+		[
+			"7b82c125a5a54984b8bb26576b59e977" // Workbench
+		]
+		Effect "7eceb9f7751d4634b572c8e236355104" // Rip
+	}
+	{
+		CategoryTag "ebe755533bdd42d1871c3ac66b89530f" // Apparel
+		InputItems
+		[
+			{
+				ID "1c3d496df33b45c6991cdbe0ef176386" // White Hoodie
+				Critical true
+			}
+			"4477326c7a1c4ff3bbfe5943e724f73a" // Purple Flare
+		]
+		RequiresNearbyCraftingTags
+		[
+			"8e86b740dafc46f7bf98c5040c9b223e" // DyeVat
+		]
+		OutputItems this
+		Effect "61edeaee95b742a3a0b589f769261cdb" // DyeVatCraftingEffect
+	}
+]

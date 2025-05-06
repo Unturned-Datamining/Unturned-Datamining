@@ -1,3 +1,4 @@
+using System;
 using SDG.Framework.Devkit;
 
 namespace SDG.Unturned;
@@ -28,6 +29,37 @@ public class NPCTeleportReward : INPCReward
         return "teleport to \"" + spawnpoint + "\"";
     }
 
+    internal override void PopulateV2(in PopulateRewardParameters p)
+    {
+        base.PopulateV2(in p);
+        if (p.data.TryGetString("Spawnpoint", out var value))
+        {
+            spawnpoint = value;
+        }
+        else
+        {
+            p.ReportRequiredOptionInvalid("Spawnpoint");
+        }
+    }
+
+    internal override void PopulateLegacy(in PopulateRewardParameters p)
+    {
+        base.PopulateLegacy(in p);
+        if (p.data.TryGetString(p.legacyPrefix + "_Spawnpoint", out var value))
+        {
+            spawnpoint = value;
+        }
+        else
+        {
+            p.ReportRequiredOptionInvalid("Spawnpoint");
+        }
+    }
+
+    public NPCTeleportReward()
+    {
+    }
+
+    [Obsolete]
     public NPCTeleportReward(string newSpawnpoint, string newText)
         : base(newText)
     {

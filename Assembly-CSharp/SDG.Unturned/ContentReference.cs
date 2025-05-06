@@ -26,36 +26,36 @@ public struct ContentReference<T> : IContentReference, IFormattedFileReadable, I
 
     public bool TryParse(IDatNode node)
     {
-        if (node is DatValue datValue)
+        if (node is IDatValue datValue)
         {
-            if (string.IsNullOrEmpty(datValue.value))
+            if (string.IsNullOrEmpty(datValue.Value))
             {
                 return false;
             }
-            if (datValue.value.Length < 2)
+            if (datValue.Value.Length < 2)
             {
                 return false;
             }
-            int num = datValue.value.IndexOf(':');
+            int num = datValue.Value.IndexOf(':');
             if (num < 0)
             {
                 if (Assets.currentMasterBundle != null)
                 {
                     name = Assets.currentMasterBundle.assetBundleName;
                 }
-                path = datValue.value;
+                path = datValue.Value;
             }
             else
             {
-                name = datValue.value.Substring(0, num);
-                path = datValue.value.Substring(num + 1);
+                name = datValue.Value.Substring(0, num);
+                path = datValue.Value.Substring(num + 1);
             }
             return true;
         }
-        if (node is DatDictionary datDictionary)
+        if (node is IDatDictionary dictionary)
         {
-            name = datDictionary.GetString("Name");
-            path = datDictionary.GetString("Path");
+            name = dictionary.GetString("Name");
+            path = dictionary.GetString("Path");
             return true;
         }
         return false;

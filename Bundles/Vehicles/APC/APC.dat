@@ -1,4 +1,4 @@
-GUID 6f56dc58382349b79793f9ba8839774e
+﻿GUID 6f56dc58382349b79793f9ba8839774e
 Type Vehicle
 Rarity Legendary
 
@@ -48,14 +48,14 @@ Explosion_Force_Multiplier 2
 
 PaintableSections
 [
-    {
-        Path Model_0
-        MaterialIndex 0
-    }
-    {
-        Path Model_1
-        MaterialIndex 0
-    }
+	{
+		Path Model_0
+		MaterialIndex 0
+	}
+	{
+		Path Model_1
+		MaterialIndex 0
+	}
 ]
 
 DefaultPaintColors

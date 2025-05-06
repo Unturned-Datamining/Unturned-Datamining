@@ -1,4 +1,4 @@
-GUID ffe53c6ac046419fa0969c4002934c16
+﻿GUID ffe53c6ac046419fa0969c4002934c16
 Type Vehicle
 ID 185
 
@@ -46,27 +46,27 @@ Explosion_Force_Multiplier 2
 
 PaintableSections
 [
-    {
-        Path Model_0
-        MaterialIndex 0
-    }
-    {
-        Path Model_1
-        MaterialIndex 0
-    }
-    {
-        Path Model_2
-        MaterialIndex 0
-    }
-    {
-        Path Objects/Front
-        MaterialIndex 0
-    }
+	{
+		Path Model_0
+		MaterialIndex 0
+	}
+	{
+		Path Model_1
+		MaterialIndex 0
+	}
+	{
+		Path Model_2
+		MaterialIndex 0
+	}
+	{
+		Path Objects/Front
+		MaterialIndex 0
+	}
 ]
 
 DefaultPaintColors
 [
-    #b7b7b7
+	#b7b7b7
 ]
 
 WheelConfigurations
@@ -96,7 +96,7 @@ RollAngularVelocityDamping 2
 ReverseGearRatio 5
 ForwardGearRatios
 [
-    10
+	10
 ]
 GearShift_Duration 0.2
 GearShift_Interval 0.5

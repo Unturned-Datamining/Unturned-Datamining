@@ -20,7 +20,7 @@ public class MenuPlayLobbiesUI
         {
             IBrowserService browserService = Provider.provider.browserService;
             CSteamID cSteamID = steamID;
-            browserService.open("http://steamcommunity.com/profiles/" + cSteamID.ToString());
+            browserService.open("https://steamcommunity.com/profiles/" + cSteamID.ToString());
         }
 
         public SleekLobbyPlayerButton(CSteamID newSteamID)

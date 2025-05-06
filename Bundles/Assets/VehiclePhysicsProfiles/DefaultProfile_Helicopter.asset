@@ -1,9 +1,8 @@
-"Metadata"
+﻿Metadata
 {
-	"GUID" "bb9f9f0204c4462ca7d976b87d1336d4"
-	"Type" "SDG.Unturned.VehiclePhysicsProfileAsset, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null"
+	GUID bb9f9f0204c4462ca7d976b87d1336d4
+	Type SDG.Unturned.VehiclePhysicsProfileAsset, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
 }
-"Asset"
+Asset
 {
-	// Default has no overrides.
 }

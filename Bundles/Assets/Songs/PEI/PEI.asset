@@ -1,14 +1,14 @@
-"Metadata"
+﻿Metadata
 {
-	"GUID" "d7dbfca63ee246ddbd23b0525b904001"
-	"Type" "SDG.Unturned.StereoSongAsset, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null"
+	GUID d7dbfca63ee246ddbd23b0525b904001
+	Type SDG.Unturned.StereoSongAsset, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
 }
-"Asset"
+Asset
 {
-	"Song"
+	Song
 	{
-		"MasterBundle" "core.masterbundle"
-		"AssetPath" "Music/PEI_Loop.ogg"
+		MasterBundle core.masterbundle
+		AssetPath Music/PEI_Loop.ogg
 	}
-	"Is_Loop" "true"
+	Is_Loop true
 }

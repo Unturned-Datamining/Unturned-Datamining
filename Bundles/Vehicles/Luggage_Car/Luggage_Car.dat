@@ -1,4 +1,4 @@
-GUID 655fdb8128c743f586c92bbc65f99d9c
+﻿GUID 655fdb8128c743f586c92bbc65f99d9c
 Type Vehicle
 ID 122
 
@@ -33,19 +33,19 @@ Explosion_Force_Multiplier 2
 
 PaintableSections
 [
-    {
-        Path Model_0
-        MaterialIndex 0
-    }
-    {
-        Path Model_1
-        MaterialIndex 0
-    }
+	{
+		Path Model_0
+		MaterialIndex 0
+	}
+	{
+		Path Model_1
+		MaterialIndex 0
+	}
 ]
 
 DefaultPaintColors
 [
-    #bfbfbf
+	#bfbfbf
 ]
 
 WheelConfigurations

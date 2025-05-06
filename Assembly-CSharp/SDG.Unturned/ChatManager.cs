@@ -499,6 +499,10 @@ public class ChatManager : SteamCaller
         {
             CopyCameraTransform();
         }
+        else if (string.Equals(text, "/freezecameratransform", StringComparison.InvariantCultureIgnoreCase))
+        {
+            ToggleFreezeCameraTransform();
+        }
         else
         {
             SendChatRequest.Invoke(ENetReliability.Reliable, (byte)mode, text);
@@ -686,6 +690,22 @@ public class ChatManager : SteamCaller
         float x = eulerAngles.x;
         float y = eulerAngles.y;
         GUIUtility.systemCopyBuffer = $"{camera.transform.position}:{x}, {y}";
+    }
+
+    internal static void ToggleFreezeCameraTransform()
+    {
+        if (MainCamera.instance == null)
+        {
+            UnturnedLog.warn("Unable to freeze camera transform because there is no active main camera");
+        }
+        else if (!Player.player.channel.owner.isAdmin)
+        {
+            UnturnedLog.warn("Unable to freeze camera transform without admin permissions");
+        }
+        else
+        {
+            MainCamera.IsPositionFrozen = !MainCamera.IsPositionFrozen;
+        }
     }
 
     private void Start()

@@ -1,28 +1,28 @@
-"Metadata"
+﻿Metadata
 {
-	"GUID" "c9658747dce44787a6ea11b93fa6f448"
-	"Type" "SDG.Unturned.OutfitAsset, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null"
+	GUID c9658747dce44787a6ea11b93fa6f448
+	Type SDG.Unturned.OutfitAsset, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
 }
-"Asset"
+Asset
 {
-	"Items"
+	Items
 	[
 		// Beard
-		"4cc1a95c61114351a2ab1a2dac90ee66"
+		4cc1a95c61114351a2ab1a2dac90ee66
 
 		// Cannon (Backpack)
-		"7258bb4847374ab38c548e58cfa3119e"
+		7258bb4847374ab38c548e58cfa3119e
 
 		// Coat (Vest)
-		"d13cf66cfa5344839abe3b2ffb3c3af1"
+		d13cf66cfa5344839abe3b2ffb3c3af1
 
 		// Hat
-		"82f1941f0f52481883c617e8409b160b"
+		82f1941f0f52481883c617e8409b160b
 
 		// Pants
-		"456b1a3ab33a4546ad1521b30856a54f"
+		456b1a3ab33a4546ad1521b30856a54f
 
 		// Shirt
-		"2edec41ab3a944de9d35de3b412d4671"
+		2edec41ab3a944de9d35de3b412d4671
 	]
 }

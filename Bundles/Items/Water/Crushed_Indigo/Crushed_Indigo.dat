@@ -1,4 +1,4 @@
-GUID a5d9efc7acf5486489804d87eea37a19
+﻿GUID a5d9efc7acf5486489804d87eea37a19
 Type Water
 Useable Consumeable
 ID 398
@@ -11,9 +11,14 @@ Energy 50
 Food 10
 Water 10
 
-Blueprints 1
-Blueprint_0_Type Supply
-Blueprint_0_Supply_0_ID 271
-Blueprint_0_Supply_0_Amount 2
-Blueprint_0_Build 27
+Blueprints
+[
+	{
+		CategoryTag "d089feb7e43f40c5a7dfcefc36998cfb" // Supplies
+		InputItems "b84ca54360c747c08f55e9e72cdc3f7a x 2" // Raw Indigo Berries
+		OutputItems this
+		Effect "84347b13028340b8976033c08675d458" // Wrench
+	}
+]
+
 ConsumeAudioClip Sounds/EatSquishy.mp3

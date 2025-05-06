@@ -1,4 +1,4 @@
-GUID e4698d4dbe044bf8afdcac7b73748d9a
+﻿GUID e4698d4dbe044bf8afdcac7b73748d9a
 Type Magazine
 ID 478
 
@@ -15,27 +15,40 @@ Caliber_0 17
 
 Tracer 48
 
-Blueprints 4
-Blueprint_0_Type Ammo
-Blueprint_0_Supplies 1
-Blueprint_0_Supply_0_ID 44
-Blueprint_0_Build 30
-Blueprint_1_Type Ammo
-Blueprint_1_Supplies 1
-Blueprint_1_Supply_0_ID 478
-Blueprint_1_Build 30
-Blueprint_2_Type Tool
-Blueprint_2_Supplies 1
-Blueprint_2_Supply_0_ID 67
-Blueprint_2_Supply_0_Amount 6
-Blueprint_2_Level 1
-Blueprint_2_Skill Craft
-Blueprint_2_Build 27
-Blueprint_3_Type Tool
-Blueprint_3_Supplies 1
-Blueprint_3_Supply_0_ID this
-Blueprint_3_Supply_0_AllowEmpty true
-Blueprint_3_Supply_0_Prioritization LowestAmount
-Blueprint_3_Product "67" // Metal Scrap
-Blueprint_3_Products 1
-Blueprint_3_Build 27
+Blueprints
+[
+	{
+		CategoryTag "d739926736374e5ba34b4ac6ffbb5c8f" // Ammunition
+		Operation FillTargetItem
+		InputItems "ac70d382ad48474c9ad057bf1bd8a3d4" // Low Caliber Civilian Ammunition Box
+		Effect "03caec479dd2475c92e1c326e1720140" // Casing
+	}
+	{
+		CategoryTag "d739926736374e5ba34b4ac6ffbb5c8f" // Ammunition
+		Operation FillTargetItem
+		InputItems this
+		Effect "03caec479dd2475c92e1c326e1720140" // Casing
+	}
+	{
+		CategoryTag "ad1804b6945145f3b308738b0b8ea447" // Tools
+		InputItems "21ede8ebffb14c5580e8c7ad149e335e x 6" // Metal Scrap
+		OutputItems this
+		Skill Craft
+		Skill_Level 1
+		Effect "84347b13028340b8976033c08675d458" // Wrench
+	}
+	{
+		Name Salvage
+		CategoryTag "7ed29f9101ae4523a3b2e389414b7bd9" // Salvage
+		InputItems
+		[
+			{
+				ID this
+				Prioritization LowestAmount
+				CountEmptyAsOne true
+			}
+		]
+		OutputItems "21ede8ebffb14c5580e8c7ad149e335e" // Metal Scrap
+		Effect "84347b13028340b8976033c08675d458" // Wrench
+	}
+]

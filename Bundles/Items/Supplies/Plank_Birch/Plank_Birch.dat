@@ -1,4 +1,4 @@
-GUID 5a3c4302400e400b9b9486fbb5178eca
+﻿GUID 5a3c4302400e400b9b9486fbb5178eca
 Type Supply
 ID 62
 
@@ -6,16 +6,30 @@ Size_X 1
 Size_Y 2
 Size_Z 0.6
 
-Blueprints 2
-Blueprint_0_Type Gear
-Blueprint_0_Supply_0_ID 37
-Blueprint_0_Tool 141
-Blueprint_0_Products 3
-Blueprint_0_Build 27
-Blueprint_1_Type Gear
-Blueprint_1_Supply_0_ID 38
-Blueprint_1_Supply_0_Amount 4
-Blueprint_1_Build 27
+Blueprints
+[
+	{
+		CategoryTag "cdb2df24b76d4c6e9d8411c940d8337f" // Gear
+		InputItems
+		[
+			{
+				ID "ccfd125a44cf487fbd3d471f15a854af" // Birch Log
+			}
+			{
+				ID "fd6bee4579884ee9ad0b729baf423ab1" // Saw
+				Delete false
+			}
+		]
+		OutputItems this x 3
+		Effect "84347b13028340b8976033c08675d458" // Wrench
+	}
+	{
+		CategoryTag "cdb2df24b76d4c6e9d8411c940d8337f" // Gear
+		InputItems "9c563bf14d4641a18873f338beaed128 x 4" // Birch Stick
+		OutputItems this
+		Effect "84347b13028340b8976033c08675d458" // Wrench
+	}
+]
 
 Actions 1
 Action_0_Type Blueprint

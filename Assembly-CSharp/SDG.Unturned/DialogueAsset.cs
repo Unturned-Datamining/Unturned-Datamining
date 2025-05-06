@@ -100,22 +100,22 @@ public class DialogueAsset : Asset
         }
     }
 
-    public override void PopulateAsset(Bundle bundle, DatDictionary data, Local localization)
+    public override void PopulateAsset(in PopulateAssetParameters p)
     {
-        base.PopulateAsset(bundle, data, localization);
-        if (id < 2000 && !base.OriginAllowsVanillaLegacyId && !data.ContainsKey("Bypass_ID_Limit"))
+        base.PopulateAsset(in p);
+        if (id < 2000 && !base.OriginAllowsVanillaLegacyId && !p.data.ContainsKey("Bypass_ID_Limit"))
         {
             throw new NotSupportedException("ID < 2000");
         }
-        int num = data.ParseInt32("Messages");
-        int num2 = data.ParseUInt8("Responses", 0);
+        int num = p.data.ParseInt32("Messages");
+        int num2 = p.data.ParseUInt8("Responses", 0);
         messages = new DialogueMessage[num];
         for (byte b = 0; b < messages.Length; b++)
         {
-            DialoguePage[] array = new DialoguePage[data.ParseUInt8("Message_" + b + "_Pages", 0)];
+            DialoguePage[] array = new DialoguePage[p.data.ParseUInt8("Message_" + b + "_Pages", 0)];
             for (byte b2 = 0; b2 < array.Length; b2++)
             {
-                string desc = localization.format("Message_" + b + "_Page_" + b2);
+                string desc = p.localization.format("Message_" + b + "_Page_" + b2);
                 desc = ItemTool.filterRarityRichText(desc);
                 RichTextUtil.replaceNewlineMarkup(ref desc);
                 if (string.IsNullOrEmpty(desc))
@@ -124,56 +124,56 @@ public class DialogueAsset : Asset
                 }
                 array[b2] = new DialoguePage(desc);
             }
-            byte[] array2 = new byte[data.ParseUInt8("Message_" + b + "_Responses", 0)];
+            byte[] array2 = new byte[p.data.ParseUInt8("Message_" + b + "_Responses", 0)];
             for (byte b3 = 0; b3 < array2.Length; b3++)
             {
                 string text = "Message_" + b + "_Response_" + b3;
-                array2[b3] = data.ParseUInt8(text, 0);
+                array2[b3] = p.data.ParseUInt8(text, 0);
                 if (array2[b3] >= num2)
                 {
                     Assets.ReportError(this, "{0} out of bounds ({1})", text, num2);
                 }
             }
             Guid guid;
-            ushort newPrev = data.ParseGuidOrLegacyId("Message_" + b + "_Prev", out guid);
-            byte? faceOverride = ((!data.ContainsKey("Message_" + b + "_FaceOverride")) ? null : new byte?(data.ParseUInt8("Message_" + b + "_FaceOverride", 0)));
-            INPCCondition[] array3 = new INPCCondition[data.ParseUInt8("Message_" + b + "_Conditions", 0)];
-            NPCTool.readConditions(data, localization, "Message_" + b + "_Condition_", array3, this);
+            ushort newPrev = p.data.ParseGuidOrLegacyId("Message_" + b + "_Prev", out guid);
+            byte? faceOverride = ((!p.data.ContainsKey("Message_" + b + "_FaceOverride")) ? null : new byte?(p.data.ParseUInt8("Message_" + b + "_FaceOverride", 0)));
+            NPCConditionsList newConditionsList = default(NPCConditionsList);
+            newConditionsList.Parse(p.data, p.localization, this, "Message_" + b + "_Conditions", "Message_" + b + "_Condition_");
             NPCRewardsList newRewardsList = default(NPCRewardsList);
-            newRewardsList.Parse(data, localization, this, "Message_" + b + "_Rewards", "Message_" + b + "_Reward_");
-            messages[b] = new DialogueMessage(b, array, array2, newPrev, guid, faceOverride, array3, newRewardsList);
+            newRewardsList.Parse(p.data, p.localization, this, "Message_" + b + "_Rewards", "Message_" + b + "_Reward_");
+            messages[b] = new DialogueMessage(b, array, array2, newPrev, guid, faceOverride, newConditionsList, newRewardsList);
         }
         responses = new DialogueResponse[num2];
         for (byte b4 = 0; b4 < responses.Length; b4++)
         {
-            byte[] array4 = new byte[data.ParseUInt8("Response_" + b4 + "_Messages", 0)];
-            for (byte b5 = 0; b5 < array4.Length; b5++)
+            byte[] array3 = new byte[p.data.ParseUInt8("Response_" + b4 + "_Messages", 0)];
+            for (byte b5 = 0; b5 < array3.Length; b5++)
             {
                 string text2 = "Response_" + b4 + "_Message_" + b5;
-                array4[b5] = data.ParseUInt8(text2, 0);
-                if (array4[b5] >= num)
+                array3[b5] = p.data.ParseUInt8(text2, 0);
+                if (array3[b5] >= num)
                 {
                     Assets.ReportError(this, "{0} out of bounds ({1})", text2, num);
                 }
             }
             Guid guid2;
-            ushort newDialogue = data.ParseGuidOrLegacyId("Response_" + b4 + "_Dialogue", out guid2);
+            ushort newDialogue = p.data.ParseGuidOrLegacyId("Response_" + b4 + "_Dialogue", out guid2);
             Guid guid3;
-            ushort newQuest = data.ParseGuidOrLegacyId("Response_" + b4 + "_Quest", out guid3);
+            ushort newQuest = p.data.ParseGuidOrLegacyId("Response_" + b4 + "_Quest", out guid3);
             Guid guid4;
-            ushort newVendor = data.ParseGuidOrLegacyId("Response_" + b4 + "_Vendor", out guid4);
-            string desc2 = localization.format("Response_" + b4);
+            ushort newVendor = p.data.ParseGuidOrLegacyId("Response_" + b4 + "_Vendor", out guid4);
+            string desc2 = p.localization.format("Response_" + b4);
             desc2 = ItemTool.filterRarityRichText(desc2);
             RichTextUtil.replaceNewlineMarkup(ref desc2);
             if (string.IsNullOrEmpty(desc2))
             {
                 throw new NotSupportedException("missing response " + b4);
             }
-            INPCCondition[] array5 = new INPCCondition[data.ParseUInt8("Response_" + b4 + "_Conditions", 0)];
-            NPCTool.readConditions(data, localization, "Response_" + b4 + "_Condition_", array5, this);
+            NPCConditionsList newConditionsList2 = default(NPCConditionsList);
+            newConditionsList2.Parse(p.data, p.localization, this, "Response_" + b4 + "_Conditions", "Response_" + b4 + "_Condition_");
             NPCRewardsList newRewardsList2 = default(NPCRewardsList);
-            newRewardsList2.Parse(data, localization, this, "Response_" + b4 + "_Rewards", "Response_" + b4 + "_Reward_");
-            responses[b4] = new DialogueResponse(b4, array4, newDialogue, guid2, newQuest, guid3, newVendor, guid4, desc2, array5, newRewardsList2);
+            newRewardsList2.Parse(p.data, p.localization, this, "Response_" + b4 + "_Rewards", "Response_" + b4 + "_Reward_");
+            responses[b4] = new DialogueResponse(b4, array3, newDialogue, guid2, newQuest, guid3, newVendor, guid4, desc2, newConditionsList2, newRewardsList2);
         }
     }
 

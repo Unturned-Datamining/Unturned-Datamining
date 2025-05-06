@@ -91,42 +91,42 @@ public class FoliageInstancedMeshInfoAsset : FoliageInfoAsset
         return true;
     }
 
-    public override void PopulateAsset(Bundle bundle, DatDictionary data, Local localization)
+    public override void PopulateAsset(in PopulateAssetParameters p)
     {
-        base.PopulateAsset(bundle, data, localization);
-        mesh = data.ParseStruct<ContentReference<Mesh>>("Mesh");
-        material = data.ParseStruct<ContentReference<Material>>("Material");
-        if (data.ContainsKey("Cast_Shadows"))
+        base.PopulateAsset(in p);
+        mesh = p.data.ParseStruct<ContentReference<Mesh>>("Mesh");
+        material = p.data.ParseStruct<ContentReference<Material>>("Material");
+        if (p.data.ContainsKey("Cast_Shadows"))
         {
-            castShadows = data.ParseBool("Cast_Shadows");
+            castShadows = p.data.ParseBool("Cast_Shadows");
         }
         else
         {
             castShadows = false;
         }
-        if (data.ContainsKey("Tile_Dither"))
+        if (p.data.ContainsKey("Tile_Dither"))
         {
-            tileDither = data.ParseBool("Tile_Dither");
+            tileDither = p.data.ParseBool("Tile_Dither");
         }
         else
         {
             tileDither = true;
         }
-        if (data.ContainsKey("Draw_Distance"))
+        if (p.data.ContainsKey("Draw_Distance"))
         {
-            drawDistance = data.ParseInt32("Draw_Distance");
+            drawDistance = p.data.ParseInt32("Draw_Distance");
         }
         else
         {
             drawDistance = -1;
         }
-        if (data.ContainsKey("Christmas_Redirect"))
+        if (p.data.ContainsKey("Christmas_Redirect"))
         {
-            christmasRedirect = data.ParseStruct<AssetReference<FoliageInstancedMeshInfoAsset>>("Christmas_Redirect");
+            christmasRedirect = p.data.ParseStruct<AssetReference<FoliageInstancedMeshInfoAsset>>("Christmas_Redirect");
         }
-        if (data.ContainsKey("Halloween_Redirect"))
+        if (p.data.ContainsKey("Halloween_Redirect"))
         {
-            halloweenRedirect = data.ParseStruct<AssetReference<FoliageInstancedMeshInfoAsset>>("Halloween_Redirect");
+            halloweenRedirect = p.data.ParseStruct<AssetReference<FoliageInstancedMeshInfoAsset>>("Halloween_Redirect");
         }
     }
 

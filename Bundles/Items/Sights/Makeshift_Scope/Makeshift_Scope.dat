@@ -1,4 +1,4 @@
-GUID 806bc882292247b78bd730ba073eb45a
+﻿GUID 806bc882292247b78bd730ba073eb45a
 Type Sight
 ID 476
 
@@ -9,22 +9,28 @@ Size_Z 0.2
 Spread 0.8
 Zoom 6
 
-Blueprints 2
-Blueprint_0_Type Tool
-Blueprint_0_Supplies 2
-Blueprint_0_Supply_0_ID 333
-Blueprint_0_Supply_0_Amount 1
-Blueprint_0_Supply_1_ID 69
-Blueprint_0_Supply_1_Amount 1
-Blueprint_0_Level 1
-Blueprint_0_Skill Craft
-Blueprint_0_Build 27
-Blueprint_1_Type Tool
-Blueprint_1_Supplies 1
-Blueprint_1_Supply_0_ID this
-Blueprint_1_Product "67" // Metal Scrap
-Blueprint_1_Products 1
-Blueprint_1_Build 27
+Blueprints
+[
+	{
+		CategoryTag "ad1804b6945145f3b308738b0b8ea447" // Tools
+		InputItems
+		[
+			"f260c581cf504098956f424d62345982" // Binoculars
+			"8c25cf28c76a4634855f404c8972c0ae" // Tape
+		]
+		OutputItems this
+		Skill Craft
+		Skill_Level 1
+		Effect "84347b13028340b8976033c08675d458" // Wrench
+	}
+	{
+		Name Salvage
+		CategoryTag "7ed29f9101ae4523a3b2e389414b7bd9" // Salvage
+		InputItems this
+		OutputItems "21ede8ebffb14c5580e8c7ad149e335e" // Metal Scrap
+		Effect "84347b13028340b8976033c08675d458" // Wrench
+	}
+]
 
 Offset_Scope_Overlay_By_One_Texel true
 

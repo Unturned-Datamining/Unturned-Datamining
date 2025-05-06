@@ -1,4 +1,4 @@
-GUID 6ac0018afea44eaeb9586791feef3229
+﻿GUID 6ac0018afea44eaeb9586791feef3229
 Type Vehicle_Paint_Tool
 Rarity Uncommon
 Useable Vehicle_Paint
@@ -11,9 +11,13 @@ UseAudioClip Sounds/Vehicle_Spraypaint.wav
 
 PaintColor #152A4F
 
-Blueprints 1
-Blueprint_0_Type Tool
-Blueprint_0_Supply_0_ID 1855
-Blueprint_0_Product 67
-Blueprint_0_Products 2
-Blueprint_0_Build 27
+Blueprints
+[
+	{
+		Name Salvage
+		CategoryTag "7ed29f9101ae4523a3b2e389414b7bd9" // Salvage
+		InputItems this
+		OutputItems "21ede8ebffb14c5580e8c7ad149e335e x 2" // Metal Scrap
+		Effect "84347b13028340b8976033c08675d458" // Wrench
+	}
+]

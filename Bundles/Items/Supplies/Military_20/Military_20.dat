@@ -1,4 +1,4 @@
-GUID d20d112bc75a4691962f09cd549439b0
+﻿GUID d20d112bc75a4691962f09cd549439b0
 Type Supply
 Rarity Epic
 ID 1192
@@ -11,10 +11,14 @@ Amount 20
 Count_Min 13
 Count_Max 18
 
-Blueprints 1
-Blueprint_0_Type Ammo
-Blueprint_0_Supplies 1
-Blueprint_0_Supply_0_ID 1192
-Blueprint_0_Build 30
+Blueprints
+[
+	{
+		CategoryTag "d739926736374e5ba34b4ac6ffbb5c8f" // Ammunition
+		Operation FillTargetItem
+		InputItems this
+		Effect "03caec479dd2475c92e1c326e1720140" // Casing
+	}
+]
 
 InventoryAudio Sounds/Inventory/SmallGunAttachment.asset

@@ -1,4 +1,4 @@
-GUID 0e119557092d479e9f9b3b696cc3e78e
+﻿GUID 0e119557092d479e9f9b3b696cc3e78e
 Type Vehicle
 Rarity Epic
 
@@ -28,24 +28,24 @@ Explosion_Force_Multiplier 2
 
 PaintableSections
 [
-    {
-        Path Model_0
-        MaterialIndex 0
-    }
-    {
-        Path Model_1
-        MaterialIndex 0
-    }
+	{
+		Path Model_0
+		MaterialIndex 0
+	}
+	{
+		Path Model_1
+		MaterialIndex 0
+	}
 ]
 
 DefaultPaintColor_Mode RandomHueOrGrayscale
 DefaultPaintColor_Configuration
 {
-    MinSaturation 0.15
-    MaxSaturation 0.7
-    MinValue 0.15
-    MaxValue 0.9
-    GrayscaleChance 0.1
+	MinSaturation 0.15
+	MaxSaturation 0.7
+	MinValue 0.15
+	MaxValue 0.9
+	GrayscaleChance 0.1
 }
 
 WheelConfigurations

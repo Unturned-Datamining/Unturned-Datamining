@@ -1,4 +1,4 @@
-GUID 1f943f37293a41b1ada84cb18c4bd706
+﻿GUID 1f943f37293a41b1ada84cb18c4bd706
 Type Barricade
 Rarity Uncommon
 Useable Barricade
@@ -16,24 +16,32 @@ Offset 0.6
 Explosion 19
 Vulnerable
 
-Blueprints 2
-Blueprint_0_Type Gear
-Blueprint_0_Supply_0_ID 39
-Blueprint_0_Supply_0_Amount 12
-Blueprint_0_Build 27
-Blueprint_1_Type Gear
-Blueprint_1_Supply_0_ID 1900
-Blueprint_1_Supply_0_Amount 1
-Blueprint_1_Product 39
-Blueprint_1_Products 12
-Blueprint_1_Build 27
+Blueprints
+[
+	{
+		Name Stack
+		CategoryTag "cdb2df24b76d4c6e9d8411c940d8337f" // Gear
+		InputItems "94f9c6aa09c249dfbce4f195c0271b9c x 12" // Maple Log
+		OutputItems this
+		Effect "84347b13028340b8976033c08675d458" // Wrench
+	}
+	{
+		Name Unstack
+		CategoryTag "7ed29f9101ae4523a3b2e389414b7bd9" // Salvage
+		InputItems this
+		OutputItems "94f9c6aa09c249dfbce4f195c0271b9c x 12" // Maple Log
+		Effect "84347b13028340b8976033c08675d458" // Wrench
+	}
+]
 
-Actions 1
-Action_0_Type Blueprint
-Action_0_Source 1900
-Action_0_Blueprints 1
-Action_0_Blueprint_0_Index 1
-Action_0_Key Unstack
+Actions
+[
+	{
+		Type Blueprint
+		BlueprintName Unstack
+		CommonTextId Unstack
+	}
+]
 
 PlacementAudioClip Sounds/WoodenPlacement.mp3
 Has_Clip_Prefab false

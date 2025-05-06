@@ -26,7 +26,7 @@ internal class ServerListCurationFile
     /// </summary>
     public string IconUrl { get; protected set; }
 
-    public void Populate(IAssetErrorContext errorContext, DatDictionary data, Local localization)
+    public void Populate(IAssetErrorContext errorContext, IDatDictionary data, Local localization)
     {
         if (localization != null && localization.has("Name"))
         {
@@ -42,11 +42,11 @@ internal class ServerListCurationFile
             labels = new Dictionary<string, string>(node.Count);
             foreach (IDatNode item4 in node)
             {
-                if (item4 is DatDictionary datDictionary)
+                if (item4 is IDatDictionary dictionary)
                 {
-                    string @string = datDictionary.GetString("Name");
+                    string @string = dictionary.GetString("Name");
                     string key = "Label_" + @string;
-                    string value = ((localization == null || !localization.has(key)) ? datDictionary.GetString("Text") : localization.format(key));
+                    string value = ((localization == null || !localization.has(key)) ? dictionary.GetString("Text") : localization.format(key));
                     if (string.IsNullOrWhiteSpace(value))
                     {
                         errorContext.ReportAssetError("label \"" + @string + "\" text is empty");
@@ -63,14 +63,14 @@ internal class ServerListCurationFile
             rules = new List<ServerListCurationRule>(node2.Count);
             for (int i = 0; i < node2.Count; i++)
             {
-                if (node2[i] is DatDictionary datDictionary2)
+                if (node2[i] is IDatDictionary dictionary2)
                 {
-                    if (!datDictionary2.TryParseEnum<EServerListCurationRuleType>("Type", out var value2))
+                    if (!dictionary2.TryParseEnum<EServerListCurationRuleType>("Type", out var value2))
                     {
                         errorContext.ReportAssetError($"unable to parse rule index {i} Type");
                         continue;
                     }
-                    if (!datDictionary2.TryParseEnum<EServerListCurationAction>("Action", out var value3))
+                    if (!dictionary2.TryParseEnum<EServerListCurationAction>("Action", out var value3))
                     {
                         errorContext.ReportAssetError($"unable to parse rule index {i} Action");
                         continue;
@@ -84,21 +84,21 @@ internal class ServerListCurationFile
                     case EServerListCurationRuleType.Name:
                     {
                         string value6;
-                        if (datDictionary2.TryGetList("Regexes", out var node4))
+                        if (dictionary2.TryGetList("Regexes", out var node4))
                         {
                             List<Regex> list2 = new List<Regex>(node4.Count);
                             for (int k = 0; k < node4.Count; k++)
                             {
-                                if (node4[k] is DatValue datValue2)
+                                if (node4[k] is IDatValue datValue2)
                                 {
                                     try
                                     {
-                                        Regex item2 = new Regex(datValue2.value);
+                                        Regex item2 = new Regex(datValue2.Value);
                                         list2.Add(item2);
                                     }
                                     catch
                                     {
-                                        errorContext.ReportAssetError($"unable to parse rule at index {i} Regexes list item at index {k} (\"{datValue2.value}\")");
+                                        errorContext.ReportAssetError($"unable to parse rule at index {i} Regexes list item at index {k} (\"{datValue2.Value}\")");
                                     }
                                 }
                                 else
@@ -116,7 +116,7 @@ internal class ServerListCurationFile
                                 errorContext.ReportAssetError($"rule at index {i} Regexes list is empty");
                             }
                         }
-                        else if (datDictionary2.TryGetString("Regex", out value6))
+                        else if (dictionary2.TryGetString("Regex", out value6))
                         {
                             try
                             {
@@ -140,20 +140,20 @@ internal class ServerListCurationFile
                     case EServerListCurationRuleType.IPv4:
                     {
                         string value7;
-                        if (datDictionary2.TryGetList("Filters", out var node5))
+                        if (dictionary2.TryGetList("Filters", out var node5))
                         {
                             List<IPv4Filter> list3 = new List<IPv4Filter>(node5.Count);
                             for (int l = 0; l < node5.Count; l++)
                             {
-                                if (node5[l] is DatValue datValue3)
+                                if (node5[l] is IDatValue datValue3)
                                 {
-                                    if (IPv4Filter.TryParse(datValue3.value, out var filter))
+                                    if (IPv4Filter.TryParse(datValue3.Value, out var filter))
                                     {
                                         list3.Add(filter);
                                     }
                                     else
                                     {
-                                        errorContext.ReportAssetError($"unable to parse rule at index {i} Filters list item at index {l} (\"{datValue3.value}\")");
+                                        errorContext.ReportAssetError($"unable to parse rule at index {i} Filters list item at index {l} (\"{datValue3.Value}\")");
                                     }
                                 }
                                 else
@@ -171,7 +171,7 @@ internal class ServerListCurationFile
                                 errorContext.ReportAssetError($"rule at index {i} Filters list is empty");
                             }
                         }
-                        else if (datDictionary2.TryGetString("Filter", out value7))
+                        else if (dictionary2.TryGetString("Filter", out value7))
                         {
                             if (IPv4Filter.TryParse(value7, out var filter2))
                             {
@@ -192,12 +192,12 @@ internal class ServerListCurationFile
                     case EServerListCurationRuleType.ServerID:
                     {
                         ulong value5;
-                        if (datDictionary2.TryGetList("Values", out var node3))
+                        if (dictionary2.TryGetList("Values", out var node3))
                         {
                             List<CSteamID> list = new List<CSteamID>(node3.Count);
                             for (int j = 0; j < node3.Count; j++)
                             {
-                                if (node3[j] is DatValue datValue)
+                                if (node3[j] is IDatValue datValue)
                                 {
                                     if (datValue.TryParseUInt64(out var value4))
                                     {
@@ -213,7 +213,7 @@ internal class ServerListCurationFile
                                     }
                                     else
                                     {
-                                        errorContext.ReportAssetError($"unable to parse rule at index {i} Values list item at index {j} (\"{datValue.value}\")");
+                                        errorContext.ReportAssetError($"unable to parse rule at index {i} Values list item at index {j} (\"{datValue.Value}\")");
                                     }
                                 }
                                 else
@@ -231,7 +231,7 @@ internal class ServerListCurationFile
                                 errorContext.ReportAssetError($"rule at index {i} Values list is empty");
                             }
                         }
-                        else if (datDictionary2.TryParseUInt64("Value", out value5))
+                        else if (dictionary2.TryParseUInt64("Value", out value5))
                         {
                             array = new CSteamID[1]
                             {
@@ -258,7 +258,7 @@ internal class ServerListCurationFile
                         continue;
                     }
                     string value8;
-                    bool flag2 = datDictionary2.TryGetString("Label", out value8);
+                    bool flag2 = dictionary2.TryGetString("Label", out value8);
                     if (value3 == EServerListCurationAction.Label && !flag2)
                     {
                         errorContext.ReportAssetError($"rule at index {i} action is Label but no Label is specified");
@@ -275,11 +275,11 @@ internal class ServerListCurationFile
                         errorContext.ReportAssetError($"rule at index {i} Label \"{value8}\" is not configured in Labels list");
                         continue;
                     }
-                    if (!datDictionary2.TryGetString("Description", out var value10))
+                    if (!dictionary2.TryGetString("Description", out var value10))
                     {
                         value10 = $"Default description for rule at index {i}";
                     }
-                    bool inverted = datDictionary2.ParseBool("Inverted");
+                    bool inverted = dictionary2.ParseBool("Inverted");
                     ServerListCurationRule item3 = new ServerListCurationRule
                     {
                         ruleType = value2,

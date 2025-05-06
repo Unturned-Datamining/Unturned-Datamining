@@ -1678,7 +1678,7 @@ public class PlayerQuests : PlayerCaller
             }
         }
         DialogueResponse dialogueResponse = dialogueAsset.responses[index];
-        if (dialogueResponse == null || dialogueResponse.conditions == null || !dialogueResponse.areConditionsMet(base.player))
+        if (dialogueResponse == null || !dialogueResponse.areConditionsMet(base.player))
         {
             return;
         }
@@ -1852,8 +1852,8 @@ public class PlayerQuests : PlayerCaller
 
     internal void SendInitialPlayerState(SteamPlayer client)
     {
-        bool sendingToOwner = base.channel.owner == client;
-        if (base.channel.IsLocalPlayer && sendingToOwner)
+        bool flag = base.channel.owner == client;
+        if (base.channel.IsLocalPlayer && flag)
         {
             return;
         }
@@ -1865,14 +1865,16 @@ public class PlayerQuests : PlayerCaller
                 GroupManager.sendGroupInfo(client.transportConnection, groupInfo);
             }
         }
-        SendQuests.Invoke(GetNetId(), ENetReliability.Reliable, client.transportConnection, delegate(NetPakWriter writer)
+        SendQuests.Invoke(GetNetId(), ENetReliability.Reliable, client.transportConnection, SendQuests_Write, flag);
+    }
+
+    private void SendQuests_Write(NetPakWriter writer, bool sendingToOwner)
+    {
+        WriteAllState(writer);
+        if (sendingToOwner)
         {
-            WriteAllState(writer);
-            if (sendingToOwner)
-            {
-                WriteOwnerState(writer);
-            }
-        });
+            WriteOwnerState(writer);
+        }
     }
 
     internal void SendInitialPlayerState(List<ITransportConnection> transportConnections)
@@ -1885,10 +1887,7 @@ public class PlayerQuests : PlayerCaller
                 GroupManager.sendGroupInfo(transportConnections, groupInfo);
             }
         }
-        SendQuests.Invoke(GetNetId(), ENetReliability.Reliable, transportConnections, delegate(NetPakWriter writer)
-        {
-            WriteAllState(writer);
-        });
+        SendQuests.Invoke(GetNetId(), ENetReliability.Reliable, transportConnections, WriteAllState);
     }
 
     private void OnPlayerNavChanged(PlayerMovement sender, byte oldNav, byte newNav)

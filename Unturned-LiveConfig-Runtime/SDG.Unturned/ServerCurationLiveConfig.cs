@@ -6,7 +6,7 @@ public class ServerCurationLiveConfig
 {
     public ServerCurationLiveConfigItem[] items = new ServerCurationLiveConfigItem[0];
 
-    public void Parse(DatDictionary data)
+    public void Parse(IDatDictionary data)
     {
         if (data.TryGetList("Items", out var node))
         {

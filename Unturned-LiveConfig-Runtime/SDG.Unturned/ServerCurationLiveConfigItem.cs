@@ -8,10 +8,10 @@ public struct ServerCurationLiveConfigItem : IDatParseable
 
     public bool TryParse(IDatNode node)
     {
-        if (node is DatDictionary datDictionary)
+        if (node is IDatDictionary dictionary)
         {
-            id = datDictionary.ParseInt32("Id");
-            url = datDictionary.GetString("Url");
+            id = dictionary.ParseInt32("Id");
+            url = dictionary.GetString("Url");
             return true;
         }
         return false;

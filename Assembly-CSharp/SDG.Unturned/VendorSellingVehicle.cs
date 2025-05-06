@@ -67,8 +67,8 @@ public class VendorSellingVehicle : VendorSellingBase
         }
     }
 
-    public VendorSellingVehicle(VendorAsset newOuterAsset, byte newIndex, Guid newTargetAssetGuid, ushort newTargetAssetLegacyId, uint newCost, string newSpawnpoint, Color32? newPaintColor, INPCCondition[] newConditions, NPCRewardsList newRewardsList, string newDescriptionOverride)
-        : base(newOuterAsset, newIndex, newTargetAssetGuid, newTargetAssetLegacyId, newCost, newConditions, newRewardsList, newDescriptionOverride)
+    public VendorSellingVehicle(VendorAsset newOuterAsset, byte newIndex, Guid newTargetAssetGuid, ushort newTargetAssetLegacyId, uint newCost, string newSpawnpoint, Color32? newPaintColor, NPCConditionsList newConditionsList, NPCRewardsList newRewardsList, string newDescriptionOverride)
+        : base(newOuterAsset, newIndex, newTargetAssetGuid, newTargetAssetLegacyId, newCost, newConditionsList, newRewardsList, newDescriptionOverride)
     {
         spawnpoint = newSpawnpoint;
         paintColor = newPaintColor;

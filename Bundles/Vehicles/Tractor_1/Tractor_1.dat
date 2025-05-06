@@ -1,4 +1,4 @@
-GUID bc985bbb6abf4681aaf2aeed5a7fa29a
+﻿GUID bc985bbb6abf4681aaf2aeed5a7fa29a
 Type Vehicle
 Rarity Uncommon
 ID 138
@@ -29,19 +29,19 @@ Has_Clip_Prefab false
 
 PaintableSections
 [
-    {
-        Path Model_0
-        MaterialIndex 0
-    }
-    {
-        Path Model_1
-        MaterialIndex 0
-    }
+	{
+		Path Model_0
+		MaterialIndex 0
+	}
+	{
+		Path Model_1
+		MaterialIndex 0
+	}
 ]
 
 DefaultPaintColors
 [
-    #8c4141
+	#8c4141
 ]
 
 WheelConfigurations

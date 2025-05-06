@@ -29,6 +29,27 @@ public sealed class ServerInstanceMethod : ServerInstanceMethodBase
         SendAndLoopbackIfLocal(reliability, writerWithInstanceHeader);
     }
 
+    public void Invoke<T>(NetId netId, ENetReliability reliability, Action<NetPakWriter, T> callback, T arg)
+    {
+        NetPakWriter writerWithInstanceHeader = GetWriterWithInstanceHeader(netId);
+        callback(writerWithInstanceHeader, arg);
+        SendAndLoopbackIfLocal(reliability, writerWithInstanceHeader);
+    }
+
+    public void Invoke<T1, T2>(NetId netId, ENetReliability reliability, Action<NetPakWriter, T1, T2> callback, T1 arg1, T2 arg2)
+    {
+        NetPakWriter writerWithInstanceHeader = GetWriterWithInstanceHeader(netId);
+        callback(writerWithInstanceHeader, arg1, arg2);
+        SendAndLoopbackIfLocal(reliability, writerWithInstanceHeader);
+    }
+
+    public void Invoke<T1, T2, T3>(NetId netId, ENetReliability reliability, Action<NetPakWriter, T1, T2, T3> callback, T1 arg1, T2 arg2, T3 arg3)
+    {
+        NetPakWriter writerWithInstanceHeader = GetWriterWithInstanceHeader(netId);
+        callback(writerWithInstanceHeader, arg1, arg2, arg3);
+        SendAndLoopbackIfLocal(reliability, writerWithInstanceHeader);
+    }
+
     private ServerInstanceMethod(ServerMethodInfo serverMethodInfo)
         : base(serverMethodInfo)
     {

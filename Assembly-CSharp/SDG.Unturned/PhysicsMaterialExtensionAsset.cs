@@ -8,10 +8,10 @@ public class PhysicsMaterialExtensionAsset : PhysicsMaterialAssetBase
 {
     public AssetReference<PhysicsMaterialAsset> baseRef;
 
-    public override void PopulateAsset(Bundle bundle, DatDictionary data, Local localization)
+    public override void PopulateAsset(in PopulateAssetParameters p)
     {
-        base.PopulateAsset(bundle, data, localization);
-        baseRef = data.ParseStruct<AssetReference<PhysicsMaterialAsset>>("Base");
+        base.PopulateAsset(in p);
+        baseRef = p.data.ParseStruct<AssetReference<PhysicsMaterialAsset>>("Base");
         PhysicMaterialCustomData.RegisterAsset(this);
     }
 }

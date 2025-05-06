@@ -1,4 +1,4 @@
-GUID db2e01aaf099465d97c0e6dc4c8c749d
+﻿GUID db2e01aaf099465d97c0e6dc4c8c749d
 Type Structure
 Useable Structure
 Construct Pillar
@@ -13,12 +13,16 @@ Range 8
 
 Explosion 28
 
-Blueprints 1
-Blueprint_0_Type Structure
-Blueprint_0_Supplies 1
-Blueprint_0_Supply_0_ID 37
-Blueprint_0_Supply_0_Amount 2
-Blueprint_0_Build 27
+Blueprints
+[
+	{
+		CategoryTag "71d9e182c18b4aad8e87778e4f621995" // Structures
+		InputItems "ccfd125a44cf487fbd3d471f15a854af x 2" // Birch Log
+		OutputItems this
+		Effect "84347b13028340b8976033c08675d458" // Wrench
+	}
+]
+
 PlacementAudioClip Sounds/WoodenPlacement.mp3
 
 Has_Clip_Prefab false

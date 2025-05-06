@@ -1,4 +1,4 @@
-GUID 6f2735b9483b455c83aa893ec049ca91
+﻿GUID 6f2735b9483b455c83aa893ec049ca91
 Type Barricade
 Useable Barricade
 Build Freeform
@@ -16,11 +16,15 @@ Offset 0.375
 Explosion 28
 Vulnerable
 
-Blueprints 1
-Blueprint_0_Type Barricade
-Blueprint_0_Supplies 1
-Blueprint_0_Supply_0_ID 62
-Blueprint_0_Supply_0_Amount 2
-Blueprint_0_Build 27
+Blueprints
+[
+	{
+		CategoryTag "31a59b5fec3f4ec5b2887b1ce4acb029" // Barricades
+		InputItems "5a3c4302400e400b9b9486fbb5178eca x 2" // Birch Plank
+		OutputItems this
+		Effect "84347b13028340b8976033c08675d458" // Wrench
+	}
+]
+
 PlacementAudioClip Sounds/WoodenPlacement.mp3
 Has_Clip_Prefab false

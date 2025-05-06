@@ -1702,7 +1702,7 @@ public class PlayerEquipment : PlayerCaller
     {
         if (HasValidUseable)
         {
-            ushort id = itemID;
+            ItemAsset itemAsset = asset;
             byte index = base.player.inventory.getIndex(equippedPage, equipped_x, equipped_y);
             ItemJar item = base.player.inventory.getItem(equippedPage, index);
             byte b = equippedPage;
@@ -1711,10 +1711,9 @@ public class PlayerEquipment : PlayerCaller
             byte rot = item.rot;
             base.player.inventory.removeItem(equippedPage, index);
             dequip();
-            InventorySearch inventorySearch = base.player.inventory.has(id);
-            if (inventorySearch != null)
+            if (base.player.inventory.FindFirstItemByAsset(itemAsset, out var result))
             {
-                base.player.inventory.ReceiveDragItem(inventorySearch.page, inventorySearch.jar.x, inventorySearch.jar.y, b, b2, b3, rot);
+                base.player.inventory.ReceiveDragItem(result.Page, result.Jar.x, result.Jar.y, b, b2, b3, rot);
                 ServerEquip(b, b2, b3);
             }
         }
@@ -1746,12 +1745,11 @@ public class PlayerEquipment : PlayerCaller
     {
         if (HasValidUseable)
         {
-            ushort id = itemID;
+            ItemAsset itemAsset = asset;
             dequip();
-            InventorySearch inventorySearch = base.player.inventory.has(id);
-            if (inventorySearch != null)
+            if (base.player.inventory.FindFirstItemByAsset(itemAsset, out var result))
             {
-                base.player.inventory.ReceiveDragItem(inventorySearch.page, inventorySearch.jar.x, inventorySearch.jar.y, page_A, x_A, y_A, rot_A);
+                base.player.inventory.ReceiveDragItem(result.Page, result.Jar.x, result.Jar.y, page_A, x_A, y_A, rot_A);
                 ServerEquip(page_A, x_A, y_A);
             }
         }

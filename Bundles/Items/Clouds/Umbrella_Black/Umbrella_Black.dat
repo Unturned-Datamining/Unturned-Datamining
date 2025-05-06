@@ -1,4 +1,4 @@
-GUID a59c6b1b816f4b668cb2f9a075208fe3
+﻿GUID a59c6b1b816f4b668cb2f9a075208fe3
 Type Cloud
 Rarity Uncommon
 Useable Cloud
@@ -11,8 +11,13 @@ Use_Auto_Icon_Measurements false
 
 Gravity 0.25
 
-Blueprints 1
-Blueprint_0_Type Apparel
-Blueprint_0_Supply_0_ID 1103
-Blueprint_0_Product 66
-Blueprint_0_Build 32
+Blueprints
+[
+	{
+		Name Salvage
+		CategoryTag "7ed29f9101ae4523a3b2e389414b7bd9" // Salvage
+		InputItems this
+		OutputItems "14901f32cd3240179fd6124324cc27e5" // Cloth
+		Effect "7eceb9f7751d4634b572c8e236355104" // Rip
+	}
+]

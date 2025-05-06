@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 
 namespace SDG.Unturned;
@@ -88,6 +89,83 @@ public class NPCZombieKillsCondition : INPCCondition
         associatedFlags.Add(id);
     }
 
+    internal override void PopulateV2(in PopulateConditionParameters p)
+    {
+        base.PopulateV2(in p);
+        if (p.data.TryParseUInt16("ID", out var num))
+        {
+            id = num;
+        }
+        else
+        {
+            p.ReportRequiredOptionInvalid("ID");
+        }
+        if (p.data.TryParseInt16("Value", out var num2))
+        {
+            value = num2;
+        }
+        else
+        {
+            p.ReportRequiredOptionInvalid("Value");
+        }
+        if (p.data.TryParseEnum<EZombieSpeciality>("Zombie", out var eZombieSpeciality))
+        {
+            zombie = eZombieSpeciality;
+        }
+        else
+        {
+            p.ReportRequiredOptionInvalid("Zombie");
+        }
+        spawn = p.data.ParseBool("Spawn");
+        spawnQuantity = p.data.ParseInt32("Spawn_Quantity", 1);
+        nav = p.data.ParseUInt8("Nav", byte.MaxValue);
+        sqrRadius = MathfEx.Square(p.data.ParseFloat("Radius", 512f));
+        sqrMinRadius = MathfEx.Square(p.data.ParseFloat("MinRadius"));
+        LevelTableUniqueId = p.data.ParseInt32("LevelTableOverride", -1);
+        usesBossInterval = spawnQuantity < 2;
+    }
+
+    internal override void PopulateLegacy(in PopulateConditionParameters p)
+    {
+        base.PopulateLegacy(in p);
+        if (p.data.TryParseUInt16(p.legacyPrefix + "_ID", out var num))
+        {
+            id = num;
+        }
+        else
+        {
+            p.ReportRequiredOptionInvalid("ID");
+        }
+        if (p.data.TryParseInt16(p.legacyPrefix + "_Value", out var num2))
+        {
+            value = num2;
+        }
+        else
+        {
+            p.ReportRequiredOptionInvalid("Value");
+        }
+        if (p.data.TryParseEnum<EZombieSpeciality>(p.legacyPrefix + "_Zombie", out var eZombieSpeciality))
+        {
+            zombie = eZombieSpeciality;
+        }
+        else
+        {
+            p.ReportRequiredOptionInvalid("Zombie");
+        }
+        spawn = p.data.ContainsKey(p.legacyPrefix + "_Spawn");
+        spawnQuantity = p.data.ParseInt32(p.legacyPrefix + "_Spawn_Quantity", 1);
+        nav = p.data.ParseUInt8(p.legacyPrefix + "_Nav", byte.MaxValue);
+        sqrRadius = MathfEx.Square(p.data.ParseFloat(p.legacyPrefix + "_Radius", 512f));
+        sqrMinRadius = MathfEx.Square(p.data.ParseFloat(p.legacyPrefix + "_MinRadius"));
+        LevelTableUniqueId = p.data.ParseInt32(p.legacyPrefix + "_LevelTableOverride", -1);
+        usesBossInterval = spawnQuantity < 2;
+    }
+
+    public NPCZombieKillsCondition()
+    {
+    }
+
+    [Obsolete]
     public NPCZombieKillsCondition(ushort newID, short newValue, EZombieSpeciality newZombie, bool newSpawn, int newSpawnQuantity, byte newNav, float newRadius, float newMinRadius, int newLevelTableUniqueId, string newText, bool newShouldReset)
         : base(newText, newShouldReset)
     {

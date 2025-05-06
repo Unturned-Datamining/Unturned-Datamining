@@ -1,4 +1,4 @@
-GUID ad170d0654b149528d56316728037b90
+﻿GUID ad170d0654b149528d56316728037b90
 Type Mask
 Rarity Rare
 Useable Clothing
@@ -13,9 +13,13 @@ Quality_Max 100
 
 Proof_Radiation
 
-Blueprints 1
-Blueprint_0_Type Apparel
-Blueprint_0_Supply_0_ID 1017
-Blueprint_0_Product 67
-Blueprint_0_Products 2
-Blueprint_0_Build 27
+Blueprints
+[
+	{
+		Name Salvage
+		CategoryTag "7ed29f9101ae4523a3b2e389414b7bd9" // Salvage
+		InputItems this
+		OutputItems "21ede8ebffb14c5580e8c7ad149e335e x 2" // Metal Scrap
+		Effect "84347b13028340b8976033c08675d458" // Wrench
+	}
+]

@@ -1,24 +1,24 @@
-"Metadata"
+﻿Metadata
 {
-	"GUID" "684f4b28200d4ceb9c5362d78d2c9619"
-	"Type" "SDG.Unturned.LandscapeMaterialAsset, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null"
+	GUID 684f4b28200d4ceb9c5362d78d2c9619
+	Type SDG.Unturned.LandscapeMaterialAsset, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
 }
-"Asset"
+Asset
 {
-	"ID" "0"
-	"Texture"
+	ID 0
+	Texture
 	{
-		"Name" "core.masterbundle"
-		"Path" "Terrain/Materials/Russia/Gravel_Shore_00.png"
+		Name core.masterbundle
+		Path Terrain/Materials/Russia/Gravel_Shore_00.png
 	}
-	"Mask"
+	Mask
 	{
-		"Name" ""
-		"Path" ""
+		Name
+		Path
 	}
-	"Physics_Material" "GRAVEL_STATIC"
-	"Foliage"
+	Physics_Material GRAVEL_STATIC
+	Foliage
 	{
-		"GUID" "048bec5b613c4d5187c6d076797e2670"
+		GUID 048bec5b613c4d5187c6d076797e2670
 	}
 }

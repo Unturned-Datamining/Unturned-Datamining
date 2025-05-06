@@ -1,4 +1,4 @@
-GUID 632632fea2f94952938100c6cb62c544
+﻿GUID 632632fea2f94952938100c6cb62c544
 Type Beacon
 Rarity Legendary
 Useable Barricade
@@ -17,23 +17,42 @@ Offset 0.75
 Explosion 36
 Unpickupable
 
-Blueprints 1
-Blueprint_0_Type Utilities
-Blueprint_0_Supplies 5
-Blueprint_0_Supply_0_ID 68
-Blueprint_0_Supply_0_Amount 6
-Blueprint_0_Supply_1_ID 285
-Blueprint_0_Supply_1_Amount 6
-Blueprint_0_Supply_2_ID 73
-Blueprint_0_Supply_2_Amount 2
-Blueprint_0_Supply_3_ID 75
-Blueprint_0_Supply_3_Amount 2
-Blueprint_0_Supply_4_ID 1240
-Blueprint_0_Supply_4_Amount 1
-Blueprint_0_Tool 76
-Blueprint_0_Level 3
-Blueprint_0_Skill Craft
-Blueprint_0_Build 27
+Blueprints
+[
+	{
+		CategoryTag "bfac6026305f4737a95fd275ebff65a6" // Utilities
+		InputItems
+		[
+			{
+				ID "7f06b16642724683bd61584a52fde981" // Metal Sheet
+				Amount 6
+			}
+			{
+				ID "656f319d2d194813b390edc6edd8a697" // Metal Bar
+				Amount 6
+			}
+			{
+				ID "8ce5c560166545499432d6e01ce399cc" // Raw Explosives
+				Amount 2
+			}
+			{
+				ID "7aee55ea2abf4f3fb70c4b2677da0e14" // Chemicals
+				Amount 2
+			}
+			{
+				ID "8d80a12a6f564850ab2478927648dd7a" // Detonator
+			}
+			{
+				ID "5830b84bf8074caa91cf3f4dde0dd19e" // Blowtorch
+				Delete false
+			}
+		]
+		OutputItems this
+		Skill Craft
+		Skill_Level 3
+		Effect "84347b13028340b8976033c08675d458" // Wrench
+	}
+]
 
 Wave 100
 Rewards 7

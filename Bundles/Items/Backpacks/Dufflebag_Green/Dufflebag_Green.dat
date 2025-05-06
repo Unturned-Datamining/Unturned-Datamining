@@ -1,4 +1,4 @@
-GUID 101d5f74fa444a0d8373d6b3f7fb7cdb
+﻿GUID 101d5f74fa444a0d8373d6b3f7fb7cdb
 Type Backpack
 Useable Clothing
 ID 1184
@@ -10,14 +10,41 @@ Size_Z 0.55
 Width 7
 Height 4
 
-Blueprints 2
-Blueprint_0_Type Apparel
-Blueprint_0_Supply_0_ID 1184
-Blueprint_0_Product 66
-Blueprint_0_Products 3
-Blueprint_0_Build 32
-Blueprint_1_Type Repair
-Blueprint_1_Supplies 1
-Blueprint_1_Supply_0_ID 66
-Blueprint_1_Supply_0_Amount 3
-Blueprint_1_Build 32
+Blueprints
+[
+	{
+		Name Salvage
+		CategoryTag "7ed29f9101ae4523a3b2e389414b7bd9" // Salvage
+		InputItems this
+		OutputItems "14901f32cd3240179fd6124324cc27e5 x 3" // Cloth
+		Effect "7eceb9f7751d4634b572c8e236355104" // Rip
+	}
+	{
+		Name Repair
+		CategoryTag "732ee6ffeb18418985cf4f9fde33dd11" // Repair
+		Operation RepairTargetItem
+		InputItems "14901f32cd3240179fd6124324cc27e5 x 3" // Cloth
+		RequiresNearbyCraftingTags
+		[
+			"7b82c125a5a54984b8bb26576b59e977" // Workbench
+		]
+		Effect "7eceb9f7751d4634b572c8e236355104" // Rip
+	}
+	{
+		CategoryTag "ebe755533bdd42d1871c3ac66b89530f" // Apparel
+		InputItems
+		[
+			{
+				ID "ebad30019a5e4bb790e6e7a7e28f0262" // White Dufflebag
+				Critical true
+			}
+			"75c8885c931f4d0a919e4af9c5ee099b" // Green Flare
+		]
+		RequiresNearbyCraftingTags
+		[
+			"8e86b740dafc46f7bf98c5040c9b223e" // DyeVat
+		]
+		OutputItems this
+		Effect "61edeaee95b742a3a0b589f769261cdb" // DyeVatCraftingEffect
+	}
+]

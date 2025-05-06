@@ -47,7 +47,7 @@ public class MenuPlayServerInfoUI
         private void onClickedButton(ISleekElement button)
         {
             PublishedFileId_t publishedFileId_t = fileId;
-            string url = "http://steamcommunity.com/sharedfiles/filedetails/?id=" + publishedFileId_t.ToString();
+            string url = "https://steamcommunity.com/sharedfiles/filedetails/?id=" + publishedFileId_t.ToString();
             Provider.provider.browserService.open(url);
         }
     }

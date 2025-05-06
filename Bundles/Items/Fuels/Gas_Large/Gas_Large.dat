@@ -1,4 +1,4 @@
-GUID 6c0962c45f874fec9373765cf8c29976
+﻿GUID 6c0962c45f874fec9373765cf8c29976
 Type Fuel
 Rarity Rare
 Useable Fuel
@@ -10,13 +10,29 @@ Size_Z 0.5
 
 Fuel 2500
 
-Blueprints 1
-Blueprint_0_Type Tool
-Blueprint_0_Supplies 1
-Blueprint_0_Supply_0_ID 28
-Blueprint_0_Supply_0_Amount 5
-Blueprint_0_State_Transfer
-Blueprint_0_Tool 76
-Blueprint_0_Level 2
-Blueprint_0_Skill Craft
-Blueprint_0_Build 27
+Blueprints
+[
+	{
+		CategoryTag "ad1804b6945145f3b308738b0b8ea447" // Tools
+		InputItems
+		[
+			{
+				ID "d5b9f19e2f2a4ee2ab4dc666f32f7df3" // Portable Gas Can
+				Amount 5
+			}
+			{
+				ID "5830b84bf8074caa91cf3f4dde0dd19e" // Blowtorch
+				Delete false
+			}
+		]
+		OutputItems this
+		Skill Craft
+		Skill_Level 2
+		StateTransfer true
+		RequiresNearbyCraftingTags
+		[
+			"7b82c125a5a54984b8bb26576b59e977" // Workbench
+		]
+		Effect "84347b13028340b8976033c08675d458" // Wrench
+	}
+]

@@ -16,10 +16,10 @@ public class AirdropAsset : Asset
     /// </summary>
     public MasterBundleReference<GameObject> model;
 
-    public override void PopulateAsset(Bundle bundle, DatDictionary data, Local localization)
+    public override void PopulateAsset(in PopulateAssetParameters p)
     {
-        base.PopulateAsset(bundle, data, localization);
-        barricadeRef = data.ParseStruct<AssetReference<ItemBarricadeAsset>>("Landed_Barricade");
-        model = data.ParseStruct<MasterBundleReference<GameObject>>("Carepackage_Prefab");
+        base.PopulateAsset(in p);
+        barricadeRef = p.data.ParseStruct<AssetReference<ItemBarricadeAsset>>("Landed_Barricade");
+        model = p.data.ParseStruct<MasterBundleReference<GameObject>>("Carepackage_Prefab");
     }
 }

@@ -27,14 +27,14 @@ public class MainMenuWorkshopPopularLiveConfig
         return false;
     }
 
-    public void Parse(DatDictionary data)
+    public void Parse(IDatDictionary data)
     {
         trendDays = data.ParseUInt32("TrendDays");
         carouselItems = data.ParseInt32("CarouselItems");
         if (data.TryGetList("HiddenFileIds", out var node))
         {
             List<ulong> list = new List<ulong>(node.Count);
-            foreach (DatValue value2 in node.GetValues())
+            foreach (IDatValue value2 in node.GetValues())
             {
                 if (value2.TryParseUInt64(out var value))
                 {

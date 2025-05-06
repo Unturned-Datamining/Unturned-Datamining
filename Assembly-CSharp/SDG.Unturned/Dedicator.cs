@@ -20,8 +20,6 @@ public class Dedicator : MonoBehaviour
 
     private static bool _hasBattlEye;
 
-    private static bool _isVR;
-
     public static CommandWindow commandWindow { get; protected set; }
 
     /// <summary>
@@ -41,8 +39,6 @@ public class Dedicator : MonoBehaviour
 
     public static bool hasBattlEye => _hasBattlEye;
 
-    public static bool isVR => _isVR;
-
     private void Update()
     {
         if (IsDedicatedServer && commandWindow != null)
@@ -55,7 +51,6 @@ public class Dedicator : MonoBehaviour
     {
         _isDedicated = CommandLine.tryGetServer(out serverVisibility, out serverID);
         _hasBattlEye = Environment.CommandLine.IndexOf("-BattlEye", StringComparison.OrdinalIgnoreCase) != -1;
-        _isVR = false;
         UnturnedMasterVolume.mutedByDedicatedServer = IsDedicatedServer;
         if (IsDedicatedServer)
         {

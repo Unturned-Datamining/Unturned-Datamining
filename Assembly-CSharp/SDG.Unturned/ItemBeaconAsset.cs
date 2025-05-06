@@ -16,13 +16,13 @@ public class ItemBeaconAsset : ItemBarricadeAsset
 
     public bool ShouldScaleWithNumberOfParticipants { get; private set; }
 
-    public override void PopulateAsset(Bundle bundle, DatDictionary data, Local localization)
+    public override void PopulateAsset(in PopulateAssetParameters p)
     {
-        base.PopulateAsset(bundle, data, localization);
-        _wave = data.ParseUInt16("Wave", 0);
-        _rewards = data.ParseUInt8("Rewards", 0);
-        _rewardID = data.ParseUInt16("Reward_ID", 0);
-        ShouldScaleWithNumberOfParticipants = data.ParseBool("Enable_Participant_Scaling", defaultValue: true);
+        base.PopulateAsset(in p);
+        _wave = p.data.ParseUInt16("Wave", 0);
+        _rewards = p.data.ParseUInt8("Rewards", 0);
+        _rewardID = p.data.ParseUInt16("Reward_ID", 0);
+        ShouldScaleWithNumberOfParticipants = p.data.ParseBool("Enable_Participant_Scaling", defaultValue: true);
     }
 
     internal override void BuildCargoData(CargoBuilder builder)

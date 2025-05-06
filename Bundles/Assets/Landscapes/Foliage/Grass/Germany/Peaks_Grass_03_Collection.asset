@@ -1,75 +1,75 @@
-"Metadata"
+﻿Metadata
 {
-	"GUID" "5ec8ebd6450f4866b38b872eb37862a1"
-	"Type" "SDG.Framework.Foliage.FoliageInfoCollectionAsset, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null"
+	GUID 5ec8ebd6450f4866b38b872eb37862a1
+	Type SDG.Framework.Foliage.FoliageInfoCollectionAsset, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
 }
-"Asset"
+Asset
 {
-	"ID" "0"
-	"Foliage"
+	ID 0
+	Foliage
 	[
 		{
-			"Asset"
+			Asset
 			{
-				"GUID" "b1672792b0334aedbeaca1853f2b42b9"
+				GUID b1672792b0334aedbeaca1853f2b42b9
 			}
-			"Weight" "1"
+			Weight 1
 		}
 		{
-			"Asset"
+			Asset
 			{
-				"GUID" "069f8adcd08347dfbd8ef17edc2fc5bb"
+				GUID 069f8adcd08347dfbd8ef17edc2fc5bb
 			}
-			"Weight" "1"
+			Weight 1
 		}
 		{
-			"Asset"
+			Asset
 			{
-				"GUID" "ff78991d9eeb4efeb38dc8d1b8a556b8"
+				GUID ff78991d9eeb4efeb38dc8d1b8a556b8
 			}
-			"Weight" "1"
+			Weight 1
 		}
 		{
-			"Asset"
+			Asset
 			{
-				"GUID" "b17fb72d177545d49708ba0388eaa7d3"
+				GUID b17fb72d177545d49708ba0388eaa7d3
 			}
-			"Weight" "1"
+			Weight 1
 		}
 		{
-			"Asset"
+			Asset
 			{
-				"GUID" "e3b5808b02a34b56a870dd5e4301a3a1"
+				GUID e3b5808b02a34b56a870dd5e4301a3a1
 			}
-			"Weight" "1"
+			Weight 1
 		}
 		{
-			"Asset"
+			Asset
 			{
-				"GUID" "23b7c3419da84afb9ebc1d7f4a13bfd4"
+				GUID 23b7c3419da84afb9ebc1d7f4a13bfd4
 			}
-			"Weight" "1"
+			Weight 1
 		}
 		{
-			"Asset"
+			Asset
 			{
-				"GUID" "62540492fabf46beb8bcc0721eb504bb"
+				GUID 62540492fabf46beb8bcc0721eb504bb
 			}
-			"Weight" "1"
+			Weight 1
 		}
 		{
-			"Asset"
+			Asset
 			{
-				"GUID" "9a4ead1873a24afe98cf014da335cf18"
+				GUID 9a4ead1873a24afe98cf014da335cf18
 			}
-			"Weight" "1"
+			Weight 1
 		}
 		{
-			"Asset"
+			Asset
 			{
-				"GUID" "a4bcafea21b74b28a32810b2779a5bcb"
+				GUID a4bcafea21b74b28a32810b2779a5bcb
 			}
-			"Weight" "1"
+			Weight 1
 		}
 	]
 }

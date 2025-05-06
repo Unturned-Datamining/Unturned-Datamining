@@ -100,18 +100,20 @@ public static class PhysicsMaterialNetTable
 
     internal static void Send(ITransportConnection transportConnection)
     {
-        SendMappings.Invoke(ENetReliability.Reliable, transportConnection, delegate(NetPakWriter writer)
+        SendMappings.Invoke(ENetReliability.Reliable, transportConnection, SendMappings_Write);
+    }
+
+    private static void SendMappings_Write(NetPakWriter writer)
+    {
+        writer.WriteUInt8((byte)nameToId.Count);
+        writer.WriteUInt8((byte)idBitCount);
+        foreach (KeyValuePair<string, uint> item in nameToId)
         {
-            writer.WriteUInt8((byte)nameToId.Count);
-            writer.WriteUInt8((byte)idBitCount);
-            foreach (KeyValuePair<string, uint> item in nameToId)
-            {
-                string key = item.Key;
-                uint value = item.Value;
-                writer.WriteString(key, 6);
-                writer.WriteBits(value, idBitCount);
-            }
-        });
+            string key = item.Key;
+            uint value = item.Value;
+            writer.WriteString(key, 6);
+            writer.WriteBits(value, idBitCount);
+        }
     }
 
     [SteamCall(ESteamCallValidation.ONLY_FROM_SERVER)]

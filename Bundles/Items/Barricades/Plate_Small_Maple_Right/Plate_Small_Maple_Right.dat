@@ -1,4 +1,4 @@
-GUID 4292d32dac5441368c50e6e3cb1f17d2
+﻿GUID 4292d32dac5441368c50e6e3cb1f17d2
 Type Barricade
 Rarity Uncommon
 Useable Barricade
@@ -17,17 +17,21 @@ Offset 0.875
 Explosion 19
 Vulnerable
 
-Blueprints 2
-Blueprint_0_Type Barricade
-Blueprint_0_Supplies 1
-Blueprint_0_Supply_0_ID 39
-Blueprint_0_Supply_0_Amount 1
-Blueprint_0_Build 27
-Blueprint_1_Type Barricade
-Blueprint_1_Supplies 1
-Blueprint_1_Supply_0_ID 1147
-Blueprint_1_Supply_0_Amount 1
-Blueprint_1_Products 4
-Blueprint_1_Build 27
+Blueprints
+[
+	{
+		CategoryTag "31a59b5fec3f4ec5b2887b1ce4acb029" // Barricades
+		InputItems "94f9c6aa09c249dfbce4f195c0271b9c" // Maple Log
+		OutputItems this
+		Effect "84347b13028340b8976033c08675d458" // Wrench
+	}
+	{
+		CategoryTag "31a59b5fec3f4ec5b2887b1ce4acb029" // Barricades
+		InputItems "a856416391584e05a16c17c32a6e77ac" // Large Maple Plate
+		OutputItems this x 4
+		Effect "84347b13028340b8976033c08675d458" // Wrench
+	}
+]
+
 PlacementAudioClip Sounds/WoodenPlacement.mp3
 Has_Clip_Prefab false

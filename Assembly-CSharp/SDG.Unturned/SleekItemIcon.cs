@@ -58,6 +58,11 @@ public class SleekItemIcon : SleekWrapper
         ItemTool.getIcon(id, quality, state, itemAsset, widthOverride, heightOverride, OnIconReady);
     }
 
+    public void Refresh(ItemAsset itemAsset, int widthOverride, int heightOverride)
+    {
+        ItemTool.getIcon(itemAsset.id, 100, itemAsset.getState(), itemAsset, widthOverride, heightOverride, OnIconReady);
+    }
+
     public override void OnDestroy()
     {
         internalImage = null;

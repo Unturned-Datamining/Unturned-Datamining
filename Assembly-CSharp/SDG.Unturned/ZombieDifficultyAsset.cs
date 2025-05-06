@@ -39,43 +39,43 @@ public class ZombieDifficultyAsset : Asset
     /// </summary>
     public bool Allow_Horde_Beacon;
 
-    public override void PopulateAsset(Bundle bundle, DatDictionary data, Local localization)
+    public override void PopulateAsset(in PopulateAssetParameters p)
     {
-        base.PopulateAsset(bundle, data, localization);
-        if (data.ContainsKey("Overrides_Spawn_Chance"))
+        base.PopulateAsset(in p);
+        if (p.data.ContainsKey("Overrides_Spawn_Chance"))
         {
-            Overrides_Spawn_Chance = data.ParseBool("Overrides_Spawn_Chance");
+            Overrides_Spawn_Chance = p.data.ParseBool("Overrides_Spawn_Chance");
         }
         else
         {
             Overrides_Spawn_Chance = true;
         }
-        Crawler_Chance = data.ParseFloat("Crawler_Chance");
-        Sprinter_Chance = data.ParseFloat("Sprinter_Chance");
-        Flanker_Chance = data.ParseFloat("Flanker_Chance");
-        Burner_Chance = data.ParseFloat("Burner_Chance");
-        Acid_Chance = data.ParseFloat("Acid_Chance");
-        Boss_Electric_Chance = data.ParseFloat("Boss_Electric_Chance");
-        Boss_Wind_Chance = data.ParseFloat("Boss_Wind_Chance");
-        Boss_Fire_Chance = data.ParseFloat("Boss_Fire_Chance");
-        Spirit_Chance = data.ParseFloat("Spirit_Chance");
-        DL_Red_Volatile_Chance = data.ParseFloat("DL_Red_Volatile_Chance");
-        DL_Blue_Volatile_Chance = data.ParseFloat("DL_Blue_Volatile_Chance");
-        Boss_Elver_Stomper_Chance = data.ParseFloat("Boss_Elver_Stomper_Chance");
-        Boss_Kuwait_Chance = data.ParseFloat("Boss_Kuwait_Chance");
-        Mega_Stun_Threshold = data.ParseInt32("Mega_Stun_Threshold");
+        Crawler_Chance = p.data.ParseFloat("Crawler_Chance");
+        Sprinter_Chance = p.data.ParseFloat("Sprinter_Chance");
+        Flanker_Chance = p.data.ParseFloat("Flanker_Chance");
+        Burner_Chance = p.data.ParseFloat("Burner_Chance");
+        Acid_Chance = p.data.ParseFloat("Acid_Chance");
+        Boss_Electric_Chance = p.data.ParseFloat("Boss_Electric_Chance");
+        Boss_Wind_Chance = p.data.ParseFloat("Boss_Wind_Chance");
+        Boss_Fire_Chance = p.data.ParseFloat("Boss_Fire_Chance");
+        Spirit_Chance = p.data.ParseFloat("Spirit_Chance");
+        DL_Red_Volatile_Chance = p.data.ParseFloat("DL_Red_Volatile_Chance");
+        DL_Blue_Volatile_Chance = p.data.ParseFloat("DL_Blue_Volatile_Chance");
+        Boss_Elver_Stomper_Chance = p.data.ParseFloat("Boss_Elver_Stomper_Chance");
+        Boss_Kuwait_Chance = p.data.ParseFloat("Boss_Kuwait_Chance");
+        Mega_Stun_Threshold = p.data.ParseInt32("Mega_Stun_Threshold");
         if (Mega_Stun_Threshold < 1)
         {
             Mega_Stun_Threshold = -1;
         }
-        Normal_Stun_Threshold = data.ParseInt32("Normal_Stun_Threshold");
+        Normal_Stun_Threshold = p.data.ParseInt32("Normal_Stun_Threshold");
         if (Normal_Stun_Threshold < 1)
         {
             Normal_Stun_Threshold = -1;
         }
-        if (data.ContainsKey("Allow_Horde_Beacon"))
+        if (p.data.ContainsKey("Allow_Horde_Beacon"))
         {
-            Allow_Horde_Beacon = data.ParseBool("Allow_Horde_Beacon");
+            Allow_Horde_Beacon = p.data.ParseBool("Allow_Horde_Beacon");
         }
         else
         {

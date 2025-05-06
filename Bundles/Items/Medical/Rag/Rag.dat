@@ -1,4 +1,4 @@
-GUID 3e78a9db8cf74f4e830df4c06f2e9273
+﻿GUID 3e78a9db8cf74f4e830df4c06f2e9273
 Type Medical
 Useable Consumeable
 ID 393
@@ -11,11 +11,15 @@ Aid
 Bleeding_Modifier Heal
 Health 5
 
-Blueprints 1
-Blueprint_0_Type Supply
-Blueprint_0_Supply_0_ID 66
-Blueprint_0_Supply_0_Amount 2
-Blueprint_0_Build 32
+Blueprints
+[
+	{
+		CategoryTag "d089feb7e43f40c5a7dfcefc36998cfb" // Supplies
+		InputItems "14901f32cd3240179fd6124324cc27e5 x 2" // Cloth
+		OutputItems this
+		Effect "7eceb9f7751d4634b572c8e236355104" // Rip
+	}
+]
 
 Actions 1
 Action_0_Type Blueprint

@@ -1,4 +1,4 @@
-GUID 97b6fb7f9cfa4837a0a49c4efc7d8e8f
+﻿GUID 97b6fb7f9cfa4837a0a49c4efc7d8e8f
 Type Trap
 Rarity Epic
 Useable Barricade
@@ -21,12 +21,22 @@ Animal_Damage 100
 Explosion 36
 Unrepairable
 
-Blueprints 1
-Blueprint_0_Type Barricade
-Blueprint_0_Supplies 2
-Blueprint_0_Supply_0_ID 67
-Blueprint_0_Supply_0_Amount 2
-Blueprint_0_Supply_1_ID 386
-Blueprint_0_Supply_1_Amount 5
-Blueprint_0_Build 27
+Blueprints
+[
+	{
+		CategoryTag "31a59b5fec3f4ec5b2887b1ce4acb029" // Barricades
+		InputItems
+		[
+			"21ede8ebffb14c5580e8c7ad149e335e x 2" // Metal Scrap
+			"e2432d5d18e74a6cbc207746468b19bf x 5" // Barbed Wire
+		]
+		OutputItems this
+		RequiresNearbyCraftingTags
+		[
+			"7b82c125a5a54984b8bb26576b59e977" // Workbench
+		]
+		Effect "84347b13028340b8976033c08675d458" // Wrench
+	}
+]
+
 Has_Clip_Prefab false

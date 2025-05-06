@@ -287,7 +287,7 @@ public class InteractableSentry : InteractableStorage
         if (attachments.ejectHook != null && ((ItemGunAsset)displayAsset).action != EAction.String && ((ItemGunAsset)displayAsset).action != EAction.Rocket)
         {
             EffectAsset effectAsset = ((ItemGunAsset)displayAsset).FindShellEffectAsset();
-            if (effectAsset != null)
+            if (effectAsset != null && effectAsset.effect != null)
             {
                 Transform transform = EffectManager.InstantiateFromPool(effectAsset).transform;
                 transform.name = "Emitter";
@@ -300,7 +300,7 @@ public class InteractableSentry : InteractableStorage
         if (attachments.barrelHook != null)
         {
             EffectAsset effectAsset2 = ((ItemGunAsset)displayAsset).FindMuzzleEffectAsset();
-            if (effectAsset2 != null)
+            if (effectAsset2 != null && effectAsset2.effect != null)
             {
                 Transform transform2 = EffectManager.InstantiateFromPool(effectAsset2).transform;
                 transform2.name = "Emitter";
@@ -330,7 +330,7 @@ public class InteractableSentry : InteractableStorage
         if (attachments.magazineAsset != null)
         {
             EffectAsset effectAsset3 = attachments.magazineAsset.FindTracerEffectAsset();
-            if (effectAsset3 != null)
+            if (effectAsset3 != null && effectAsset3.effect != null)
             {
                 Transform transform3 = EffectManager.InstantiateFromPool(effectAsset3).transform;
                 transform3.name = "Tracer";

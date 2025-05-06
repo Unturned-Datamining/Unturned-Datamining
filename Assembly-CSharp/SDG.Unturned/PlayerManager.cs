@@ -98,7 +98,7 @@ public class PlayerManager : SteamCaller
             {
                 continue;
             }
-            ushort updateCount = 0;
+            ushort num = 0;
             playersToSend.Clear();
             for (int j = 0; j < Provider.clients.Count; j++)
             {
@@ -108,31 +108,11 @@ public class PlayerManager : SteamCaller
                     if (steamPlayer2 != null && !(steamPlayer2.player == null) && !(steamPlayer2.player.movement == null) && steamPlayer2.player.movement.updates != null && steamPlayer2.player.movement.updates.Count != 0)
                     {
                         playersToSend.Add(steamPlayer2);
-                        updateCount += (ushort)steamPlayer2.player.movement.updates.Count;
+                        num += (ushort)steamPlayer2.player.movement.updates.Count;
                     }
                 }
             }
-            SendPlayerStates.Invoke(ENetReliability.Unreliable, steamPlayer.transportConnection, delegate(NetPakWriter writer)
-            {
-                writer.WriteUInt32(seq);
-                writer.WriteUInt16(updateCount);
-                foreach (SteamPlayer item in playersToSend)
-                {
-                    for (int l = 0; l < item.player.movement.updates.Count; l++)
-                    {
-                        PlayerStateUpdate playerStateUpdate = item.player.movement.updates[l];
-                        writer.WriteUInt8((byte)item.channel);
-                        writer.WriteClampedVector3(playerStateUpdate.pos);
-                        writer.WriteUInt8(playerStateUpdate.angle);
-                        writer.WriteUInt8(playerStateUpdate.rot);
-                    }
-                }
-                if (writer.errors != 0 && Time.realtimeSinceStartup - lastSendOverflowWarning > 1f)
-                {
-                    lastSendOverflowWarning = Time.realtimeSinceStartup;
-                    CommandWindow.LogWarningFormat("Error {0} writing player states. The player count ({1}) is probably too high. No this is not a bug introduced in the update, rather a warning of a previously silent bug.", writer.errors, Provider.clients.Count);
-                }
-            });
+            SendPlayerStates.Invoke(ENetReliability.Unreliable, steamPlayer.transportConnection, SendPlayerStates_Write, num);
         }
         for (int k = 0; k < Provider.clients.Count; k++)
         {
@@ -141,6 +121,28 @@ public class PlayerManager : SteamCaller
             {
                 steamPlayer3.player.movement.updates.Clear();
             }
+        }
+    }
+
+    private void SendPlayerStates_Write(NetPakWriter writer, ushort updateCount)
+    {
+        writer.WriteUInt32(seq);
+        writer.WriteUInt16(updateCount);
+        foreach (SteamPlayer item in playersToSend)
+        {
+            for (int i = 0; i < item.player.movement.updates.Count; i++)
+            {
+                PlayerStateUpdate playerStateUpdate = item.player.movement.updates[i];
+                writer.WriteUInt8((byte)item.channel);
+                writer.WriteClampedVector3(playerStateUpdate.pos);
+                writer.WriteUInt8(playerStateUpdate.angle);
+                writer.WriteUInt8(playerStateUpdate.rot);
+            }
+        }
+        if (writer.errors != 0 && Time.realtimeSinceStartup - lastSendOverflowWarning > 1f)
+        {
+            lastSendOverflowWarning = Time.realtimeSinceStartup;
+            CommandWindow.LogWarningFormat("Error {0} writing player states. The player count ({1}) is probably too high. No this is not a bug introduced in the update, rather a warning of a previously silent bug.", writer.errors, Provider.clients.Count);
         }
     }
 

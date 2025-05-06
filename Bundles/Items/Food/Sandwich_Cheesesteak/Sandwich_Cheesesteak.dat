@@ -1,4 +1,4 @@
-GUID ac1687cb166d44cfb7fc13371934b83b
+﻿GUID ac1687cb166d44cfb7fc13371934b83b
 Type Food
 Rarity Rare
 Useable Consumeable
@@ -12,16 +12,25 @@ Health 5
 Food 100
 Water 10
 
-Blueprints 1
-Blueprint_0_Type Supply
-Blueprint_0_Supplies 3
-Blueprint_0_Supply_0_ID 460
-Blueprint_0_Supply_0_Amount 2
-Blueprint_0_Supply_1_ID 515
-Blueprint_0_Supply_1_Amount 1
-Blueprint_0_Supply_2_ID 464
-Blueprint_0_Supply_2_Amount 1
-Blueprint_0_Level 3
-Blueprint_0_Skill Cook
-Blueprint_0_Build 27
+Blueprints
+[
+	{
+		CategoryTag "d089feb7e43f40c5a7dfcefc36998cfb" // Supplies
+		InputItems
+		[
+			"4880f590a948465891188c5f96559340 x 2" // Bread
+			"bdffdef7d9784831b97dca9e27006b3d" // Cooked Venison
+			"a51c979f42b34359bc7df4974ccb8b92" // Cheese
+		]
+		OutputItems this
+		Skill Cook
+		Skill_Level 3
+		RequiresNearbyCraftingTags
+		[
+			"20f30322bbcc4b01a4f116d22b24c21a" // Heat Source
+		]
+		Effect "84347b13028340b8976033c08675d458" // Wrench
+	}
+]
+
 ConsumeAudioClip Sounds/EatCrunchy.mp3

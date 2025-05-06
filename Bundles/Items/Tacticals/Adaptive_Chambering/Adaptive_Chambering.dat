@@ -1,4 +1,4 @@
-GUID 9e8d092e13474ff49ab8a41c5b2fcbf5
+﻿GUID 9e8d092e13474ff49ab8a41c5b2fcbf5
 Type Tactical
 Rarity Epic
 ID 1007
@@ -11,10 +11,13 @@ Firerate 1
 Recoil_X 1.2
 Recoil_Y 1.3
 
-Blueprints 1
-Blueprint_0_Type Tool
-Blueprint_0_Supplies 1
-Blueprint_0_Supply_0_ID this
-Blueprint_0_Product "67" // Metal Scrap
-Blueprint_0_Products 2
-Blueprint_0_Build 27
+Blueprints
+[
+	{
+		Name Salvage
+		CategoryTag "7ed29f9101ae4523a3b2e389414b7bd9" // Salvage
+		InputItems this
+		OutputItems "21ede8ebffb14c5580e8c7ad149e335e x 2" // Metal Scrap
+		Effect "84347b13028340b8976033c08675d458" // Wrench
+	}
+]

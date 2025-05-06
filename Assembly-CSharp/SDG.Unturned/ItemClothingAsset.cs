@@ -154,9 +154,9 @@ public class ItemClothingAsset : ItemAsset
         }
     }
 
-    public override void PopulateAsset(Bundle bundle, DatDictionary data, Local localization)
+    public override void PopulateAsset(in PopulateAssetParameters p)
     {
-        base.PopulateAsset(bundle, data, localization);
+        base.PopulateAsset(in p);
         if (isPro)
         {
             _armor = 1f;
@@ -165,37 +165,37 @@ public class ItemClothingAsset : ItemAsset
         }
         else
         {
-            _armor = data.ParseFloat("Armor");
-            if (data.ContainsKey("Armor"))
+            _armor = p.data.ParseFloat("Armor");
+            if (p.data.ContainsKey("Armor"))
             {
-                _armor = data.ParseFloat("Armor");
+                _armor = p.data.ParseFloat("Armor");
             }
             else
             {
                 _armor = 1f;
             }
-            if (data.ContainsKey("Armor_Explosion"))
+            if (p.data.ContainsKey("Armor_Explosion"))
             {
-                _explosionArmor = data.ParseFloat("Armor_Explosion");
+                _explosionArmor = p.data.ParseFloat("Armor_Explosion");
             }
             else
             {
                 _explosionArmor = armor;
             }
-            fallingDamageMultiplier = data.ParseFloat("Falling_Damage_Multiplier", 1f);
-            _proofWater = data.ContainsKey("Proof_Water");
-            _proofFire = data.ContainsKey("Proof_Fire");
-            _proofRadiation = data.ContainsKey("Proof_Radiation");
-            preventsFallingBrokenBones = data.ParseBool("Prevents_Falling_Broken_Bones");
-            movementSpeedMultiplier = data.ParseFloat("Movement_Speed_Multiplier", 1f);
+            fallingDamageMultiplier = p.data.ParseFloat("Falling_Damage_Multiplier", 1f);
+            _proofWater = p.data.ContainsKey("Proof_Water");
+            _proofFire = p.data.ContainsKey("Proof_Fire");
+            _proofRadiation = p.data.ContainsKey("Proof_Radiation");
+            preventsFallingBrokenBones = p.data.ParseBool("Prevents_Falling_Broken_Bones");
+            movementSpeedMultiplier = p.data.ParseFloat("Movement_Speed_Multiplier", 1f);
         }
-        visibleOnRagdoll = data.ParseBool("Visible_On_Ragdoll", defaultValue: true);
-        hairVisible = data.ParseBool("Hair_Visible", defaultValue: true);
-        beardVisible = data.ParseBool("Beard_Visible", defaultValue: true);
-        shouldMirrorLeftHandedModel = data.ParseBool("Mirror_Left_Handed_Model", defaultValue: true);
-        if (data.ContainsKey("WearAudio"))
+        visibleOnRagdoll = p.data.ParseBool("Visible_On_Ragdoll", defaultValue: true);
+        hairVisible = p.data.ParseBool("Hair_Visible", defaultValue: true);
+        beardVisible = p.data.ParseBool("Beard_Visible", defaultValue: true);
+        shouldMirrorLeftHandedModel = p.data.ParseBool("Mirror_Left_Handed_Model", defaultValue: true);
+        if (p.data.ContainsKey("WearAudio"))
         {
-            wearAudio = data.ReadAudioReference("WearAudio", bundle);
+            wearAudio = p.data.ReadAudioReference("WearAudio", p.bundle);
         }
         else if (type == EItemType.BACKPACK || type == EItemType.VEST)
         {
@@ -205,12 +205,12 @@ public class ItemClothingAsset : ItemAsset
         {
             wearAudio = new AudioReference("core.masterbundle", "Sounds/Sleeve.mp3");
         }
-        shouldDestroyClothingColliders = data.ParseBool("Destroy_Clothing_Colliders", defaultValue: true);
-        hasPriorityOverCosmeticOverride = data.TryParseBool("Priority_Over_Cosmetic", out priorityOverCosmeticOverride);
-        skinOverride = data.GetString("Skin_Override");
+        shouldDestroyClothingColliders = p.data.ParseBool("Destroy_Clothing_Colliders", defaultValue: true);
+        hasPriorityOverCosmeticOverride = p.data.TryParseBool("Priority_Over_Cosmetic", out priorityOverCosmeticOverride);
+        skinOverride = p.data.GetString("Skin_Override");
         if (isPro && !Dedicator.IsDedicatedServer)
         {
-            cosmeticPreviewModelOverride = bundle.load<GameObject>("CosmeticPreviewOverride");
+            cosmeticPreviewModelOverride = p.bundle.load<GameObject>("CosmeticPreviewOverride");
         }
     }
 

@@ -21,11 +21,11 @@ public class ItemArrestEndAsset : ItemAsset
         }
     }
 
-    public override void PopulateAsset(Bundle bundle, DatDictionary data, Local localization)
+    public override void PopulateAsset(in PopulateAssetParameters p)
     {
-        base.PopulateAsset(bundle, data, localization);
-        _use = bundle.load<AudioClip>("Use");
-        _recover = data.ParseUInt16("Recover", 0);
+        base.PopulateAsset(in p);
+        _use = p.bundle.load<AudioClip>("Use");
+        _recover = p.data.ParseUInt16("Recover", 0);
     }
 
     internal override void BuildCargoData(CargoBuilder builder)

@@ -194,7 +194,7 @@ public class MenuWorkshopSubmitUI
         }
         else
         {
-            Provider.provider.browserService.open("http://steamcommunity.com/sharedfiles/workshoplegalagreement/?appid=304930");
+            Provider.provider.browserService.open("https://steamcommunity.com/sharedfiles/workshoplegalagreement/?appid=304930");
         }
     }
 

@@ -1,4 +1,4 @@
-GUID c60fc61f64c24bb388b879dd819fea96
+﻿GUID c60fc61f64c24bb388b879dd819fea96
 Type Water
 Useable Consumeable
 ID 397
@@ -12,9 +12,14 @@ Food 5
 Water 10
 Virus 5
 
-Blueprints 1
-Blueprint_0_Type Supply
-Blueprint_0_Supply_0_ID 270
-Blueprint_0_Supply_0_Amount 2
-Blueprint_0_Build 27
+Blueprints
+[
+	{
+		CategoryTag "d089feb7e43f40c5a7dfcefc36998cfb" // Supplies
+		InputItems "796932f416274112879175ef57274afd x 2" // Raw Amber Berries
+		OutputItems this
+		Effect "84347b13028340b8976033c08675d458" // Wrench
+	}
+]
+
 ConsumeAudioClip Sounds/EatSquishy.mp3

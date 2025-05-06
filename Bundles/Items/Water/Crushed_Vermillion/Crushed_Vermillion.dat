@@ -1,4 +1,4 @@
-GUID edd40a1bb42a431cafc50d0743bd374b
+﻿GUID edd40a1bb42a431cafc50d0743bd374b
 Type Water
 Useable Consumeable
 ID 402
@@ -11,9 +11,14 @@ Health 5
 Food 10
 Water 10
 
-Blueprints 1
-Blueprint_0_Type Supply
-Blueprint_0_Supply_0_ID 275
-Blueprint_0_Supply_0_Amount 2
-Blueprint_0_Build 27
+Blueprints
+[
+	{
+		CategoryTag "d089feb7e43f40c5a7dfcefc36998cfb" // Supplies
+		InputItems "f892a49670c145db940a92261d6f91bf x 2" // Raw Vermillion Berries
+		OutputItems this
+		Effect "84347b13028340b8976033c08675d458" // Wrench
+	}
+]
+
 ConsumeAudioClip Sounds/EatSquishy.mp3

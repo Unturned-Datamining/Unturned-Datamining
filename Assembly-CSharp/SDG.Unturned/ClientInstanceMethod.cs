@@ -30,6 +30,27 @@ public sealed class ClientInstanceMethod : ClientInstanceMethodBase
         SendAndLoopbackIfLocal(reliability, transportConnection, writerWithInstanceHeader);
     }
 
+    public void Invoke<T>(NetId netId, ENetReliability reliability, ITransportConnection transportConnection, Action<NetPakWriter, T> callback, T arg)
+    {
+        NetPakWriter writerWithInstanceHeader = GetWriterWithInstanceHeader(netId);
+        callback(writerWithInstanceHeader, arg);
+        SendAndLoopbackIfLocal(reliability, transportConnection, writerWithInstanceHeader);
+    }
+
+    public void Invoke<T1, T2>(NetId netId, ENetReliability reliability, ITransportConnection transportConnection, Action<NetPakWriter, T1, T2> callback, T1 arg1, T2 arg2)
+    {
+        NetPakWriter writerWithInstanceHeader = GetWriterWithInstanceHeader(netId);
+        callback(writerWithInstanceHeader, arg1, arg2);
+        SendAndLoopbackIfLocal(reliability, transportConnection, writerWithInstanceHeader);
+    }
+
+    public void Invoke<T1, T2, T3>(NetId netId, ENetReliability reliability, ITransportConnection transportConnection, Action<NetPakWriter, T1, T2, T3> callback, T1 arg1, T2 arg2, T3 arg3)
+    {
+        NetPakWriter writerWithInstanceHeader = GetWriterWithInstanceHeader(netId);
+        callback(writerWithInstanceHeader, arg1, arg2, arg3);
+        SendAndLoopbackIfLocal(reliability, transportConnection, writerWithInstanceHeader);
+    }
+
     public void Invoke(NetId netId, ENetReliability reliability, List<ITransportConnection> transportConnections)
     {
         NetPakWriter writerWithInstanceHeader = GetWriterWithInstanceHeader(netId);
@@ -51,6 +72,27 @@ public sealed class ClientInstanceMethod : ClientInstanceMethodBase
     {
         NetPakWriter writerWithInstanceHeader = GetWriterWithInstanceHeader(netId);
         callback(writerWithInstanceHeader);
+        SendAndLoopbackIfAnyAreLocal(reliability, transportConnections, writerWithInstanceHeader);
+    }
+
+    public void Invoke<T>(NetId netId, ENetReliability reliability, List<ITransportConnection> transportConnections, Action<NetPakWriter, T> callback, T arg)
+    {
+        NetPakWriter writerWithInstanceHeader = GetWriterWithInstanceHeader(netId);
+        callback(writerWithInstanceHeader, arg);
+        SendAndLoopbackIfAnyAreLocal(reliability, transportConnections, writerWithInstanceHeader);
+    }
+
+    public void Invoke<T1, T2>(NetId netId, ENetReliability reliability, List<ITransportConnection> transportConnections, Action<NetPakWriter, T1, T2> callback, T1 arg1, T2 arg2)
+    {
+        NetPakWriter writerWithInstanceHeader = GetWriterWithInstanceHeader(netId);
+        callback(writerWithInstanceHeader, arg1, arg2);
+        SendAndLoopbackIfAnyAreLocal(reliability, transportConnections, writerWithInstanceHeader);
+    }
+
+    public void Invoke<T1, T2, T3>(NetId netId, ENetReliability reliability, List<ITransportConnection> transportConnections, Action<NetPakWriter, T1, T2, T3> callback, T1 arg1, T2 arg2, T3 arg3)
+    {
+        NetPakWriter writerWithInstanceHeader = GetWriterWithInstanceHeader(netId);
+        callback(writerWithInstanceHeader, arg1, arg2, arg3);
         SendAndLoopbackIfAnyAreLocal(reliability, transportConnections, writerWithInstanceHeader);
     }
 
@@ -86,6 +128,27 @@ public sealed class ClientInstanceMethod : ClientInstanceMethodBase
     {
         NetPakWriter writerWithInstanceHeader = GetWriterWithInstanceHeader(netId);
         callback(writerWithInstanceHeader);
+        SendAndLoopback(reliability, transportConnections, writerWithInstanceHeader);
+    }
+
+    public void InvokeAndLoopback<T>(NetId netId, ENetReliability reliability, List<ITransportConnection> transportConnections, Action<NetPakWriter, T> callback, T arg)
+    {
+        NetPakWriter writerWithInstanceHeader = GetWriterWithInstanceHeader(netId);
+        callback(writerWithInstanceHeader, arg);
+        SendAndLoopback(reliability, transportConnections, writerWithInstanceHeader);
+    }
+
+    public void InvokeAndLoopback<T1, T2>(NetId netId, ENetReliability reliability, List<ITransportConnection> transportConnections, Action<NetPakWriter, T1, T2> callback, T1 arg1, T2 arg2)
+    {
+        NetPakWriter writerWithInstanceHeader = GetWriterWithInstanceHeader(netId);
+        callback(writerWithInstanceHeader, arg1, arg2);
+        SendAndLoopback(reliability, transportConnections, writerWithInstanceHeader);
+    }
+
+    public void InvokeAndLoopback<T1, T2, T3>(NetId netId, ENetReliability reliability, List<ITransportConnection> transportConnections, Action<NetPakWriter, T1, T2, T3> callback, T1 arg1, T2 arg2, T3 arg3)
+    {
+        NetPakWriter writerWithInstanceHeader = GetWriterWithInstanceHeader(netId);
+        callback(writerWithInstanceHeader, arg1, arg2, arg3);
         SendAndLoopback(reliability, transportConnections, writerWithInstanceHeader);
     }
 

@@ -868,9 +868,28 @@ public class PlayerMovement : PlayerCaller
         {
             ApplyPendingVehicleChange();
         }
-        else if (base.player.stance.stance == EPlayerStance.DRIVING && vehicle != null)
+        else if (base.player.stance.stance == EPlayerStance.DRIVING)
         {
-            vehicle.simulate(simulation, recov, inputStamina, point, rotation, newSpeed, newForwardVelocity, newSteeringInput, newVelocityInput, delta);
+            ServerUpdateTurretAim();
+            if (vehicle != null)
+            {
+                vehicle.simulate(simulation, recov, inputStamina, point, rotation, newSpeed, newForwardVelocity, newSteeringInput, newVelocityInput, delta);
+            }
+        }
+    }
+
+    private void ServerUpdateTurretAim()
+    {
+        if (getVehicleSeat()?.turret != null && (Mathf.Abs(base.player.look.lastAngle - base.player.look.angle) > 1 || Mathf.Abs(base.player.look.lastRot - base.player.look.rot) > 1))
+        {
+            base.player.look.lastAngle = base.player.look.angle;
+            base.player.look.lastRot = base.player.look.rot;
+            if (canAddSimulationResultsToUpdates)
+            {
+                mostRecentlyAddedUpdate = new PlayerStateUpdate(base.transform.position, base.player.look.angle, base.player.look.rot);
+                hasMostRecentlyAddedUpdate = true;
+                updates.Add(mostRecentlyAddedUpdate);
+            }
         }
     }
 
@@ -897,17 +916,7 @@ public class PlayerMovement : PlayerCaller
             mostRecentControllerColliderHit = null;
             velocity = Vector3.zero;
             pendingLaunchVelocity = Vector3.zero;
-            if (getVehicle() != null && getVehicle().passengers[getSeat()].turret != null && (Mathf.Abs(base.player.look.lastAngle - base.player.look.angle) > 1 || Mathf.Abs(base.player.look.lastRot - base.player.look.rot) > 1))
-            {
-                base.player.look.lastAngle = base.player.look.angle;
-                base.player.look.lastRot = base.player.look.rot;
-                if (canAddSimulationResultsToUpdates)
-                {
-                    mostRecentlyAddedUpdate = new PlayerStateUpdate(base.transform.position, base.player.look.angle, base.player.look.rot);
-                    hasMostRecentlyAddedUpdate = true;
-                    updates.Add(mostRecentlyAddedUpdate);
-                }
-            }
+            ServerUpdateTurretAim();
             return;
         }
         if (base.player.stance.stance == EPlayerStance.DRIVING)

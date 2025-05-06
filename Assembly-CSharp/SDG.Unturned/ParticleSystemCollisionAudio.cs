@@ -63,7 +63,7 @@ public class ParticleSystemCollisionAudio : MonoBehaviour
             }
             else
             {
-                string text = ((!particleCollisionEvent.colliderComponent.transform.CompareTag("Ground")) ? (particleCollisionEvent.colliderComponent as Collider)?.sharedMaterial?.name : PhysicsTool.GetTerrainMaterialName(particleCollisionEvent.intersection));
+                string text = ((!particleCollisionEvent.colliderComponent.transform.CompareTag("Ground")) ? PhysicsTool.GetColliderSharedPhysicsMaterialName(particleCollisionEvent.colliderComponent as Collider) : PhysicsTool.GetTerrainMaterialName(particleCollisionEvent.intersection));
                 if (!string.IsNullOrEmpty(text))
                 {
                     oneShotAudioDefinition = PhysicMaterialCustomData.GetAudioDef(text, materialPropertyName);

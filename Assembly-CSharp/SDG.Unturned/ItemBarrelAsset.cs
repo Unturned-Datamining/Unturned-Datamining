@@ -39,17 +39,17 @@ public class ItemBarrelAsset : ItemCaliberAsset
     /// </summary>
     public float gunshotRolloffDistanceMultiplier { get; protected set; }
 
-    public override void PopulateAsset(Bundle bundle, DatDictionary data, Local localization)
+    public override void PopulateAsset(in PopulateAssetParameters p)
     {
-        base.PopulateAsset(bundle, data, localization);
-        _shoot = bundle.load<AudioClip>("Shoot");
-        _barrel = loadRequiredAsset<GameObject>(bundle, "Barrel");
-        _isBraked = data.ContainsKey("Braked");
-        _isSilenced = data.ContainsKey("Silenced");
-        _volume = data.ParseFloat("Volume", 1f);
-        _durability = data.ParseUInt8("Durability", 0);
+        base.PopulateAsset(in p);
+        _shoot = p.bundle.load<AudioClip>("Shoot");
+        _barrel = loadRequiredAsset<GameObject>(p.bundle, "Barrel");
+        _isBraked = p.data.ContainsKey("Braked");
+        _isSilenced = p.data.ContainsKey("Silenced");
+        _volume = p.data.ParseFloat("Volume", 1f);
+        _durability = p.data.ParseUInt8("Durability", 0);
         float defaultValue = (isSilenced ? 0.5f : 1f);
-        gunshotRolloffDistanceMultiplier = data.ParseFloat("Gunshot_Rolloff_Distance_Multiplier", defaultValue);
+        gunshotRolloffDistanceMultiplier = p.data.ParseFloat("Gunshot_Rolloff_Distance_Multiplier", defaultValue);
     }
 
     internal override void BuildCargoData(CargoBuilder builder)

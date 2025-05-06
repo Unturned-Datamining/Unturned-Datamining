@@ -1,4 +1,4 @@
-GUID 0c3320145c974b6bb2e50586cd65f36e
+﻿GUID 0c3320145c974b6bb2e50586cd65f36e
 Type Barricade
 Useable Barricade
 Build Torch
@@ -15,10 +15,15 @@ Offset 0.2
 Explosion 36
 Vulnerable
 
-Blueprints 1
-Blueprint_0_Type Utilities
-Blueprint_0_Supply_0_ID 258
-Blueprint_0_Supply_0_Amount 2
-Blueprint_0_Build 27
+Blueprints
+[
+	{
+		CategoryTag "bfac6026305f4737a95fd275ebff65a6" // Utilities
+		InputItems "4477326c7a1c4ff3bbfe5943e724f73a x 2" // Purple Flare
+		OutputItems this
+		Effect "84347b13028340b8976033c08675d458" // Wrench
+	}
+]
+
 PlacementAudioClip Sounds/WoodenPlacement.mp3
 Has_Clip_Prefab false

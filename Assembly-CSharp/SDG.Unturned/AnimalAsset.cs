@@ -179,18 +179,18 @@ public class AnimalAsset : Asset
         }
     }
 
-    public override void PopulateAsset(Bundle bundle, DatDictionary data, Local localization)
+    public override void PopulateAsset(in PopulateAssetParameters p)
     {
-        base.PopulateAsset(bundle, data, localization);
-        if (id < 50 && !base.OriginAllowsVanillaLegacyId && !data.ContainsKey("Bypass_ID_Limit"))
+        base.PopulateAsset(in p);
+        if (id < 50 && !base.OriginAllowsVanillaLegacyId && !p.data.ContainsKey("Bypass_ID_Limit"))
         {
             throw new NotSupportedException("ID < 50");
         }
-        _animalName = localization.format("Name");
-        _client = bundle.load<GameObject>("Animal_Client");
-        _server = bundle.load<GameObject>("Animal_Server");
-        _dedicated = bundle.load<GameObject>("Animal_Dedicated");
-        _ragdoll = bundle.load<GameObject>("Ragdoll");
+        _animalName = p.localization.format("Name");
+        _client = p.bundle.load<GameObject>("Animal_Client");
+        _server = p.bundle.load<GameObject>("Animal_Server");
+        _dedicated = p.bundle.load<GameObject>("Animal_Dedicated");
+        _ragdoll = p.bundle.load<GameObject>("Ragdoll");
         if (client == null)
         {
             throw new NotSupportedException("missing \"Animal_Client\" GameObject");
@@ -215,56 +215,56 @@ public class AnimalAsset : Asset
         {
             Assets.ReportError(this, "missing 'Ragdoll' GameObject. Highly recommended to fix.");
         }
-        _speedRun = data.ParseFloat("Speed_Run");
-        _speedWalk = data.ParseFloat("Speed_Walk");
-        _behaviour = (EAnimalBehaviour)Enum.Parse(typeof(EAnimalBehaviour), data.GetString("Behaviour"), ignoreCase: true);
-        _health = data.ParseUInt16("Health", 0);
-        _regen = data.ParseFloat("Regen");
-        if (!data.ContainsKey("Regen"))
+        _speedRun = p.data.ParseFloat("Speed_Run");
+        _speedWalk = p.data.ParseFloat("Speed_Walk");
+        _behaviour = (EAnimalBehaviour)Enum.Parse(typeof(EAnimalBehaviour), p.data.GetString("Behaviour"), ignoreCase: true);
+        _health = p.data.ParseUInt16("Health", 0);
+        _regen = p.data.ParseFloat("Regen");
+        if (!p.data.ContainsKey("Regen"))
         {
             _regen = 10f;
         }
-        _damage = data.ParseUInt8("Damage", 0);
-        _meat = data.ParseUInt16("Meat", 0);
-        _pelt = data.ParseUInt16("Pelt", 0);
-        _rewardID = data.ParseUInt16("Reward_ID", 0);
-        if (data.ContainsKey("Reward_Min"))
+        _damage = p.data.ParseUInt8("Damage", 0);
+        _meat = p.data.ParseUInt16("Meat", 0);
+        _pelt = p.data.ParseUInt16("Pelt", 0);
+        _rewardID = p.data.ParseUInt16("Reward_ID", 0);
+        if (p.data.ContainsKey("Reward_Min"))
         {
-            _rewardMin = data.ParseUInt8("Reward_Min", 0);
+            _rewardMin = p.data.ParseUInt8("Reward_Min", 0);
         }
         else
         {
             _rewardMin = 3;
         }
-        if (data.ContainsKey("Reward_Max"))
+        if (p.data.ContainsKey("Reward_Max"))
         {
-            _rewardMax = data.ParseUInt8("Reward_Max", 0);
+            _rewardMax = p.data.ParseUInt8("Reward_Max", 0);
         }
         else
         {
             _rewardMax = 4;
         }
-        _roars = new AudioClip[data.ParseUInt8("Roars", 0)];
+        _roars = new AudioClip[p.data.ParseUInt8("Roars", 0)];
         for (byte b = 0; b < roars.Length; b++)
         {
-            roars[b] = bundle.load<AudioClip>("Roar_" + b);
+            roars[b] = p.bundle.load<AudioClip>("Roar_" + b);
         }
-        _panics = new AudioClip[data.ParseUInt8("Panics", 0)];
+        _panics = new AudioClip[p.data.ParseUInt8("Panics", 0)];
         for (byte b2 = 0; b2 < panics.Length; b2++)
         {
-            panics[b2] = bundle.load<AudioClip>("Panic_" + b2);
+            panics[b2] = p.bundle.load<AudioClip>("Panic_" + b2);
         }
-        attackAnimVariantsCount = data.ParseInt32("Attack_Anim_Variants", 1);
-        eatAnimVariantsCount = data.ParseInt32("Eat_Anim_Variants", 1);
-        glanceAnimVariantsCount = data.ParseInt32("Glance_Anim_Variants", 2);
-        startleAnimVariantsCount = data.ParseInt32("Startle_Anim_Variants", 1);
-        horizontalAttackRangeSquared = MathfEx.Square(data.ParseFloat("Horizontal_Attack_Range", 2.25f));
-        horizontalVehicleAttackRangeSquared = MathfEx.Square(data.ParseFloat("Horizontal_Vehicle_Attack_Range", 4.4f));
-        verticalAttackRange = data.ParseFloat("Vertical_Attack_Range", 2f);
-        attackInterval = data.ParseFloat("Attack_Interval", 1f);
-        shouldPlayAnimsOnDedicatedServer = data.ParseBool("Should_Play_Anims_On_Dedicated_Server");
-        ShouldPreventMoveDuringStartle = data.ParseBool("Should_Prevent_Move_During_Startle");
-        _rewardXP = data.ParseUInt32("Reward_XP");
+        attackAnimVariantsCount = p.data.ParseInt32("Attack_Anim_Variants", 1);
+        eatAnimVariantsCount = p.data.ParseInt32("Eat_Anim_Variants", 1);
+        glanceAnimVariantsCount = p.data.ParseInt32("Glance_Anim_Variants", 2);
+        startleAnimVariantsCount = p.data.ParseInt32("Startle_Anim_Variants", 1);
+        horizontalAttackRangeSquared = MathfEx.Square(p.data.ParseFloat("Horizontal_Attack_Range", 2.25f));
+        horizontalVehicleAttackRangeSquared = MathfEx.Square(p.data.ParseFloat("Horizontal_Vehicle_Attack_Range", 4.4f));
+        verticalAttackRange = p.data.ParseFloat("Vertical_Attack_Range", 2f);
+        attackInterval = p.data.ParseFloat("Attack_Interval", 1f);
+        shouldPlayAnimsOnDedicatedServer = p.data.ParseBool("Should_Play_Anims_On_Dedicated_Server");
+        ShouldPreventMoveDuringStartle = p.data.ParseBool("Should_Prevent_Move_During_Startle");
+        _rewardXP = p.data.ParseUInt32("Reward_XP");
     }
 
     internal override void BuildCargoData(CargoBuilder builder)

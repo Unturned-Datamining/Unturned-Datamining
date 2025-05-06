@@ -96,19 +96,19 @@ public class ItemThrowableAsset : ItemWeaponAsset
         }
     }
 
-    public override void PopulateAsset(Bundle bundle, DatDictionary data, Local localization)
+    public override void PopulateAsset(in PopulateAssetParameters p)
     {
-        base.PopulateAsset(bundle, data, localization);
-        _use = bundle.load<AudioClip>("Use");
-        _throwable = bundle.load<GameObject>("Throwable");
-        _explosion = data.ParseGuidOrLegacyId("Explosion", out explosionEffectGuid);
-        _isExplosive = data.ContainsKey("Explosive");
-        _isFlash = data.ContainsKey("Flash");
-        _isSticky = data.ContainsKey("Sticky");
-        _explodeOnImpact = data.ContainsKey("Explode_On_Impact");
-        if (data.ContainsKey("Fuse_Length"))
+        base.PopulateAsset(in p);
+        _use = p.bundle.load<AudioClip>("Use");
+        _throwable = p.bundle.load<GameObject>("Throwable");
+        _explosion = p.data.ParseGuidOrLegacyId("Explosion", out explosionEffectGuid);
+        _isExplosive = p.data.ContainsKey("Explosive");
+        _isFlash = p.data.ContainsKey("Flash");
+        _isSticky = p.data.ContainsKey("Sticky");
+        _explodeOnImpact = p.data.ContainsKey("Explode_On_Impact");
+        if (p.data.ContainsKey("Fuse_Length"))
         {
-            _fuseLength = data.ParseFloat("Fuse_Length");
+            _fuseLength = p.data.ParseFloat("Fuse_Length");
         }
         else if (isExplosive || isFlash)
         {
@@ -118,9 +118,9 @@ public class ItemThrowableAsset : ItemWeaponAsset
         {
             _fuseLength = 180f;
         }
-        explosionLaunchSpeed = data.ParseFloat("Explosion_Launch_Speed", playerDamageMultiplier.damage * 0.1f);
-        strongThrowForce = data.ParseFloat("Strong_Throw_Force", 1100f);
-        weakThrowForce = data.ParseFloat("Weak_Throw_Force", 600f);
-        boostForceMultiplier = data.ParseFloat("Boost_Throw_Force_Multiplier", 1.4f);
+        explosionLaunchSpeed = p.data.ParseFloat("Explosion_Launch_Speed", playerDamageMultiplier.damage * 0.1f);
+        strongThrowForce = p.data.ParseFloat("Strong_Throw_Force", 1100f);
+        weakThrowForce = p.data.ParseFloat("Weak_Throw_Force", 600f);
+        boostForceMultiplier = p.data.ParseFloat("Boost_Throw_Force_Multiplier", 1.4f);
     }
 }

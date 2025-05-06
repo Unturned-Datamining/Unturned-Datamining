@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using SDG.Framework.Landscapes;
 using SDG.Framework.Water;
 using UnityEngine;
@@ -7,6 +8,8 @@ namespace SDG.Unturned;
 
 public class PhysicsTool
 {
+    private static Dictionary<int, string> physicsMaterialToName = new Dictionary<int, string>();
+
     internal const int NAME_LENGTH_BITS = 6;
 
     [Obsolete("Intended for backwards compatibility")]
@@ -55,15 +58,16 @@ public class PhysicsTool
 
     public static string GetTerrainMaterialName(Vector3 position)
     {
+        string result = null;
         if (Landscape.getSplatmapMaterial(position, out var materialAsset))
         {
             LandscapeMaterialAsset landscapeMaterialAsset = Assets.find(materialAsset);
             if (landscapeMaterialAsset != null)
             {
-                return landscapeMaterialAsset.physicsMaterialName;
+                result = landscapeMaterialAsset.physicsMaterialName;
             }
         }
-        return null;
+        return result;
     }
 
     [Obsolete("Replaced by GetTerrainMaterialName")]
@@ -153,7 +157,7 @@ public class PhysicsTool
         {
             return EPhysicsMaterial.NONE;
         }
-        return GetLegacyMaterialByName(collider.sharedMaterial.name);
+        return GetLegacyMaterialByName(GetColliderSharedPhysicsMaterialName(collider));
     }
 
     public static string GetMaterialName(Vector3 point, Transform transform, Collider collider)
@@ -166,7 +170,7 @@ public class PhysicsTool
         {
             return GetTerrainMaterialName(point);
         }
-        return collider?.sharedMaterial?.name;
+        return GetColliderSharedPhysicsMaterialName(collider);
     }
 
     public static string GetMaterialName(RaycastHit hit)
@@ -177,5 +181,28 @@ public class PhysicsTool
     public static string GetMaterialName(WheelHit hit)
     {
         return GetMaterialName(hit.point, hit.collider?.transform, hit.collider);
+    }
+
+    /// <summary>
+    /// If collider and its physics material are not null, get the physics material's name. Null otherwise.
+    ///
+    /// Nelson 2025-04-22: this method may seem silly on first glance. However, I tracked down some every-frame
+    /// memory allocation to getting the PhysicMaterial.name property. This method caches the instance ID to
+    /// name lookup in a dictionary to avoid that. Note: we don't worry about clearing the dictionary because
+    /// there aren't very many physics materials.
+    /// </summary>
+    public static string GetColliderSharedPhysicsMaterialName(Collider collider)
+    {
+        string value = null;
+        PhysicMaterial physicMaterial = collider?.sharedMaterial;
+        if (physicMaterial != null)
+        {
+            int instanceID = physicMaterial.GetInstanceID();
+            if (!physicsMaterialToName.TryGetValue(instanceID, out value))
+            {
+                physicsMaterialToName[instanceID] = physicMaterial.name;
+            }
+        }
+        return value;
     }
 }

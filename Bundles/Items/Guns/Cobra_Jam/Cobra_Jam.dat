@@ -1,4 +1,4 @@
-GUID a5f36c8e14c04c0bb886ef2af1b523d7
+﻿GUID a5f36c8e14c04c0bb886ef2af1b523d7
 Type Gun
 Rarity Rare
 Useable Gun
@@ -9,7 +9,7 @@ ID 1521
 Can_Ever_Jam
 Jam_Quality_Threshold 0.9
 Jam_Max_Chance 0.5
-// Cobra doesn't have an UnjamChamber animation clip, so we fallback to Reload: 
+// Cobra doesn't have an UnjamChamber animation clip, so we fallback to Reload:
 Unjam_Chamber_Anim Reload
 
 // Master_Bundle_Override isn't required in this case, but just as an example:
@@ -63,7 +63,8 @@ Vehicle_Damage 25
 Resource_Damage 15
 Object_Damage 15
 
-Durability 0.2
+Durability 1
+Wear 1
 
 Spread_Aim 0.1
 Spread_Angle_Degrees 16.7
@@ -85,16 +86,34 @@ Shake_Max_Z -0.075
 
 Muzzle 3
 
-Blueprints 2
-Blueprint_0_Type Repair
-Blueprint_0_Supplies 1
-Blueprint_0_Supply_0_ID 67
-Blueprint_0_Supply_0_Amount 3
-Blueprint_0_Tool 76
-Blueprint_0_Build 27
-Blueprint_1_Type Tool
-Blueprint_1_Supplies 1
-Blueprint_1_Supply_0_ID 1521
-Blueprint_1_Product 67
-Blueprint_1_Products 2
-Blueprint_1_Build 27
+Blueprints
+[
+	{
+		Name Repair
+		CategoryTag "732ee6ffeb18418985cf4f9fde33dd11" // Repair
+		Operation RepairTargetItem
+		InputItems
+		[
+			{
+				ID "21ede8ebffb14c5580e8c7ad149e335e" // Metal Scrap
+				Amount 3
+			}
+			{
+				ID "5830b84bf8074caa91cf3f4dde0dd19e" // Blowtorch
+				Delete false
+			}
+		]
+		RequiresNearbyCraftingTags
+		[
+			"7b82c125a5a54984b8bb26576b59e977" // Workbench
+		]
+		Effect "84347b13028340b8976033c08675d458" // Wrench
+	}
+	{
+		Name Salvage
+		CategoryTag "7ed29f9101ae4523a3b2e389414b7bd9" // Salvage
+		InputItems this
+		OutputItems "21ede8ebffb14c5580e8c7ad149e335e x 2" // Metal Scrap
+		Effect "84347b13028340b8976033c08675d458" // Wrench
+	}
+]

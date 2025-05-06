@@ -1,3 +1,5 @@
+using System;
+
 namespace SDG.Unturned;
 
 public class NPCPlayerLifeHealthCondition : NPCLogicCondition
@@ -18,6 +20,37 @@ public class NPCPlayerLifeHealthCondition : NPCLogicCondition
         return Local.FormatText(text, player.life.health, health);
     }
 
+    internal override void PopulateV2(in PopulateConditionParameters p)
+    {
+        base.PopulateV2(in p);
+        if (p.data.TryParseInt32("Value", out var value))
+        {
+            health = value;
+        }
+        else
+        {
+            p.ReportRequiredOptionInvalid("Value");
+        }
+    }
+
+    internal override void PopulateLegacy(in PopulateConditionParameters p)
+    {
+        base.PopulateLegacy(in p);
+        if (p.data.TryParseInt32(p.legacyPrefix + "_Value", out var value))
+        {
+            health = value;
+        }
+        else
+        {
+            p.ReportRequiredOptionInvalid("Value");
+        }
+    }
+
+    public NPCPlayerLifeHealthCondition()
+    {
+    }
+
+    [Obsolete]
     public NPCPlayerLifeHealthCondition(int newHealth, ENPCLogicType newLogicType, string newText)
         : base(newLogicType, newText, newShouldReset: false)
     {

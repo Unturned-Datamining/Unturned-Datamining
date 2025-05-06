@@ -1,4 +1,4 @@
-GUID 60ca549dc68e4c3e91470df6545c7ce7
+﻿GUID 60ca549dc68e4c3e91470df6545c7ce7
 Type Tactical
 Rarity Rare
 ID 1438
@@ -9,22 +9,36 @@ Size_Z 0.25
 
 Melee
 
-Blueprints 2
-
-Blueprint_0_Type Tool
-Blueprint_0_Supplies 1
-Blueprint_0_Supply_0_ID 1438
-Blueprint_0_Outputs 1
-Blueprint_0_Output_0_ID 67
-Blueprint_0_Output_0_Amount 2
-Blueprint_0_Build 27
-
-Blueprint_1_Type Tool
-Blueprint_1_Supplies 1
-Blueprint_1_Supply_0_ID 68
-Blueprint_1_Supply_0_Amount 4
-Blueprint_1_Tool 1439
-Blueprint_1_Tool_Critical
-Blueprint_1_Level 2
-Blueprint_1_Skill Craft
-Blueprint_1_Build 27
+Blueprints
+[
+	{
+		Name Salvage
+		CategoryTag "7ed29f9101ae4523a3b2e389414b7bd9" // Salvage
+		InputItems this
+		OutputItems "21ede8ebffb14c5580e8c7ad149e335e x 2" // Metal Scrap
+		Effect "84347b13028340b8976033c08675d458" // Wrench
+	}
+	{
+		CategoryTag "ad1804b6945145f3b308738b0b8ea447" // Tools
+		InputItems
+		[
+			{
+				ID "7f06b16642724683bd61584a52fde981" // Metal Sheet
+				Amount 4
+			}
+			{
+				ID "4d6b717fd0ce44fc874d7d2e58044a03" // Bayonet Blueprint
+				Critical true
+				Delete false
+			}
+		]
+		OutputItems this
+		Skill Craft
+		Skill_Level 2
+		RequiresNearbyCraftingTags
+		[
+			"7b82c125a5a54984b8bb26576b59e977" // Workbench
+		]
+		Effect "84347b13028340b8976033c08675d458" // Wrench
+	}
+]

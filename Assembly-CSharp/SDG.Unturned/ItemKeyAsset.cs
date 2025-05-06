@@ -4,9 +4,9 @@ public class ItemKeyAsset : ItemAsset
 {
     public bool exchangeWithTargetItem;
 
-    public override void PopulateAsset(Bundle bundle, DatDictionary data, Local localization)
+    public override void PopulateAsset(in PopulateAssetParameters p)
     {
-        base.PopulateAsset(bundle, data, localization);
-        exchangeWithTargetItem = data.ContainsKey("Exchange_With_Target_Item");
+        base.PopulateAsset(in p);
+        exchangeWithTargetItem = p.data.ContainsKey("Exchange_With_Target_Item");
     }
 }

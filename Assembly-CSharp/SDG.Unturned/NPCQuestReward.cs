@@ -4,14 +4,19 @@ namespace SDG.Unturned;
 
 public class NPCQuestReward : INPCReward
 {
-    public Guid questGuid { get; private set; }
+    private CachingBcAssetRef _questAssetRef;
+
+    public CachingBcAssetRef QuestAssetRef => _questAssetRef;
 
     [Obsolete]
-    public ushort id { get; protected set; }
+    public Guid questGuid => QuestAssetRef.Guid;
+
+    [Obsolete]
+    public ushort id => QuestAssetRef.LegacyId;
 
     public QuestAsset GetQuestAsset()
     {
-        return Assets.FindNpcAssetByGuidOrLegacyId<QuestAsset>(questGuid, id);
+        return _questAssetRef.Get<QuestAsset>();
     }
 
     public override void GrantReward(Player player)
@@ -23,10 +28,32 @@ public class NPCQuestReward : INPCReward
         }
     }
 
+    internal override void PopulateV2(in PopulateRewardParameters p)
+    {
+        base.PopulateV2(in p);
+        if (!p.data.TryParseBcAssetRef("ID", EAssetType.NPC, out _questAssetRef))
+        {
+            p.ReportRequiredOptionInvalid("ID");
+        }
+    }
+
+    internal override void PopulateLegacy(in PopulateRewardParameters p)
+    {
+        base.PopulateLegacy(in p);
+        if (!p.data.TryParseBcAssetRef(p.legacyPrefix + "_ID", EAssetType.NPC, out _questAssetRef))
+        {
+            p.ReportRequiredOptionInvalid("ID");
+        }
+    }
+
+    public NPCQuestReward()
+    {
+    }
+
+    [Obsolete]
     public NPCQuestReward(Guid newQuestGuid, ushort newID, string newText)
         : base(newText)
     {
-        questGuid = newQuestGuid;
-        id = newID;
+        _questAssetRef = new CachingBcAssetRef(newQuestGuid, EAssetType.NPC, newID);
     }
 }

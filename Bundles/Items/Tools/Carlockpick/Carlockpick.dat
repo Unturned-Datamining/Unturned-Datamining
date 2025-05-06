@@ -1,4 +1,4 @@
-GUID 1f315672d98f4ebbb9f76255faa43721
+﻿GUID 1f315672d98f4ebbb9f76255faa43721
 Type Tool
 Rarity Uncommon
 Useable Carlockpick
@@ -8,9 +8,13 @@ Size_X 2
 Size_Y 1
 Size_Z 0.3
 
-Blueprints 1
-Blueprint_0_Type Tool
-Blueprint_0_Supply_0_ID 1353
-Blueprint_0_Product 67
-Blueprint_0_Products 2
-Blueprint_0_Build 27
+Blueprints
+[
+	{
+		Name Salvage
+		CategoryTag "7ed29f9101ae4523a3b2e389414b7bd9" // Salvage
+		InputItems this
+		OutputItems "21ede8ebffb14c5580e8c7ad149e335e x 2" // Metal Scrap
+		Effect "84347b13028340b8976033c08675d458" // Wrench
+	}
+]

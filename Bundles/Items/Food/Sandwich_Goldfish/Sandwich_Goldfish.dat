@@ -1,4 +1,4 @@
-GUID 1b5dbd2eacb947c3b557972ec7fa5b9b
+﻿GUID 1b5dbd2eacb947c3b557972ec7fa5b9b
 Type Food
 Rarity Rare
 Useable Consumeable
@@ -10,14 +10,24 @@ Size_Z 0.3
 
 Food 70
 
-Blueprints 1
-Blueprint_0_Type Supply
-Blueprint_0_Supplies 2
-Blueprint_0_Supply_0_ID 460
-Blueprint_0_Supply_0_Amount 2
-Blueprint_0_Supply_1_ID 1350
-Blueprint_0_Supply_1_Amount 3
-Blueprint_0_Level 2
-Blueprint_0_Skill Cook
-Blueprint_0_Build 27
+Blueprints
+[
+	{
+		CategoryTag "d089feb7e43f40c5a7dfcefc36998cfb" // Supplies
+		InputItems
+		[
+			"4880f590a948465891188c5f96559340 x 2" // Bread
+			"263325e3ad4a496bb6ca1b5fa10dfb4b x 3" // Cooked Goldfish
+		]
+		OutputItems this
+		Skill Cook
+		Skill_Level 2
+		RequiresNearbyCraftingTags
+		[
+			"20f30322bbcc4b01a4f116d22b24c21a" // Heat Source
+		]
+		Effect "84347b13028340b8976033c08675d458" // Wrench
+	}
+]
+
 ConsumeAudioClip Sounds/EatCrunchy.mp3

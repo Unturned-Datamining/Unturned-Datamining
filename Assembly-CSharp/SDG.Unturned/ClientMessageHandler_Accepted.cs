@@ -117,6 +117,7 @@ internal static class ClientMessageHandler_Accepted
         reader.ReadBit(out Provider._modeConfigData.Gameplay.Allow_Freeform_Buildables_On_Vehicles);
         reader.ReadBit(out Provider._modeConfigData.Gameplay.Enable_Damage_Flinch);
         reader.ReadBit(out Provider._modeConfigData.Gameplay.Enable_Explosion_Camera_Shake);
+        reader.ReadBit(out Provider._modeConfigData.Gameplay.Enable_Workstation_Requirements);
         reader.ReadUInt16(out var value4);
         Provider._modeConfigData.Gameplay.Timer_Exit = MathfEx.Min(value4, 60u);
         reader.ReadUInt16(out var value5);

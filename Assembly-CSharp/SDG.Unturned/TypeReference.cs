@@ -41,14 +41,14 @@ public struct TypeReference<T> : ITypeReference, IFormattedFileReadable, IFormat
 
     public bool TryParse(IDatNode node)
     {
-        if (node is DatValue datValue)
+        if (node is IDatValue datValue)
         {
-            assemblyQualifiedName = datValue.value;
+            assemblyQualifiedName = datValue.Value;
             return true;
         }
-        if (node is DatDictionary datDictionary)
+        if (node is IDatDictionary dictionary)
         {
-            assemblyQualifiedName = datDictionary.GetString("Type");
+            assemblyQualifiedName = dictionary.GetString("Type");
             return true;
         }
         return false;

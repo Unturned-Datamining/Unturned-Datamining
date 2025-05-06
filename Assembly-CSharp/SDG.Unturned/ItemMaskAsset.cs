@@ -37,13 +37,13 @@ public class ItemMaskAsset : ItemGearAsset
         }
     }
 
-    public override void PopulateAsset(Bundle bundle, DatDictionary data, Local localization)
+    public override void PopulateAsset(in PopulateAssetParameters p)
     {
-        base.PopulateAsset(bundle, data, localization);
-        FilterDegradationRateMultiplier = data.ParseFloat("FilterDegradationRateMultiplier", 1f);
+        base.PopulateAsset(in p);
+        FilterDegradationRateMultiplier = p.data.ParseFloat("FilterDegradationRateMultiplier", 1f);
         if (!Dedicator.IsDedicatedServer)
         {
-            _mask = loadRequiredAsset<GameObject>(bundle, "Mask");
+            _mask = loadRequiredAsset<GameObject>(p.bundle, "Mask");
             if ((bool)Assets.shouldValidateAssets)
             {
                 AssetValidation.ValidateLayersEqual(this, _mask, 10);
@@ -52,7 +52,7 @@ public class ItemMaskAsset : ItemGearAsset
         }
         if (!isPro)
         {
-            _isEarpiece = data.ContainsKey("Earpiece");
+            _isEarpiece = p.data.ContainsKey("Earpiece");
         }
     }
 

@@ -355,11 +355,6 @@ public class LevelGround : MonoBehaviour
         }
     }
 
-    protected static void handlePostBake()
-    {
-        onRegionUpdated(byte.MaxValue, byte.MaxValue, EditorArea.instance.region_x, EditorArea.instance.region_y);
-    }
-
     public static void addSpawn(Vector3 point, Guid guid, bool isGenerated = false)
     {
         if (Regions.tryGetCoordinate(point, out var x, out var y))
@@ -1038,29 +1033,9 @@ public class LevelGround : MonoBehaviour
         return Path.Combine(Level.info.path, "Terrain", "TerrainWasAutoConverted.txt");
     }
 
-    private static void onRegionUpdated(byte old_x, byte old_y, byte new_x, byte new_y)
-    {
-        bool canIncrementIndex = true;
-        onRegionUpdated(null, old_x, old_y, new_x, new_y, 0, ref canIncrementIndex);
-    }
-
     private static void onPlayerTeleported(Player player, Vector3 position)
     {
         shouldInstantlyLoad = true;
-    }
-
-    private static void onRegionUpdated(Player player, byte old_x, byte old_y, byte new_x, byte new_y, byte step, ref bool canIncrementIndex)
-    {
-        if (step == 0)
-        {
-            regionTracker.CameraCoord = new Vector2Int(new_x, new_y);
-            skyboxRegionTracker.CameraCoord = regionTracker.CameraCoord;
-            if (shouldInstantlyLoad)
-            {
-                ImmediatelySyncRegionalVisibility();
-            }
-            shouldInstantlyLoad = false;
-        }
     }
 
     private static void onPlayerCreated(Player player)
@@ -1069,14 +1044,7 @@ public class LevelGround : MonoBehaviour
         {
             Player player2 = Player.player;
             player2.onPlayerTeleported = (PlayerTeleported)Delegate.Combine(player2.onPlayerTeleported, new PlayerTeleported(onPlayerTeleported));
-            PlayerMovement movement = Player.player.movement;
-            movement.onRegionUpdated = (PlayerRegionUpdated)Delegate.Combine(movement.onRegionUpdated, new PlayerRegionUpdated(onRegionUpdated));
         }
-    }
-
-    private static void handleEditorAreaRegistered(EditorArea area)
-    {
-        area.onRegionUpdated = (EditorRegionUpdated)Delegate.Combine(area.onRegionUpdated, new EditorRegionUpdated(onRegionUpdated));
     }
 
     private static void ImmediatelySyncRegionalVisibility()
@@ -1122,6 +1090,16 @@ public class LevelGround : MonoBehaviour
     /// </summary>
     private void tickRegionalVisibility()
     {
+        Vector2Int coordinateVector2Int = Regions.GetCoordinateVector2Int(MainCamera.RenderingPosition);
+        shouldInstantlyLoad |= (coordinateVector2Int - regionTracker.CameraCoord).sqrMagnitude >= 4;
+        regionTracker.CameraCoord = coordinateVector2Int;
+        skyboxRegionTracker.CameraCoord = coordinateVector2Int;
+        if (shouldInstantlyLoad)
+        {
+            shouldInstantlyLoad = false;
+            ImmediatelySyncRegionalVisibility();
+            return;
+        }
         regionTrackerData.Clear();
         regionTracker.MaxDistance = RegularTreeMaxDistance;
         regionTracker.UpdateRegions(regionTrackerData);
@@ -1170,7 +1148,7 @@ public class LevelGround : MonoBehaviour
 
     private void Update()
     {
-        if (Level.isLoaded && !Dedicator.IsDedicatedServer && trees != null)
+        if (Level.isLoaded && !Dedicator.IsDedicatedServer && trees != null && !(MainCamera.instance == null))
         {
             tickRegionalVisibility();
         }
@@ -1179,7 +1157,6 @@ public class LevelGround : MonoBehaviour
     private void Start()
     {
         Player.onPlayerCreated = (PlayerCreated)Delegate.Combine(Player.onPlayerCreated, new PlayerCreated(onPlayerCreated));
-        EditorArea.registered += handleEditorAreaRegistered;
         if (_Triplanar_Primary_Size == -1)
         {
             _Triplanar_Primary_Size = Shader.PropertyToID("_Triplanar_Primary_Size");
@@ -1232,6 +1209,5 @@ public class LevelGround : MonoBehaviour
         ALPHAMAPS = 2;
         regionTrackerData = new Dictionary<Vector2Int, RegionVisibilityData>();
         FoliageSystem.preBakeTile += handlePreBakeTile;
-        FoliageSystem.postBake += handlePostBake;
     }
 }

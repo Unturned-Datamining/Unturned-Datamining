@@ -59,7 +59,7 @@ public class SpawnTable
         return null;
     }
 
-    internal bool TryParse(Asset assetContext, DatDictionary datDictionary)
+    internal bool TryParse(Asset assetContext, IDatDictionary datDictionary)
     {
         targetGuid = datDictionary.ParseGuid("Guid");
         legacyAssetId = datDictionary.ParseUInt16("LegacyAssetId", 0);

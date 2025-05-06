@@ -1,4 +1,4 @@
-GUID 37dcda8892bc43f29c2538f8e26c3a90
+﻿GUID 37dcda8892bc43f29c2538f8e26c3a90
 Type Barricade
 Useable Barricade
 Build Barricade
@@ -15,10 +15,15 @@ Offset 0.75
 
 Explosion 37
 
-Blueprints 1
-Blueprint_0_Type Furniture
-Blueprint_0_Supply_0_ID 66
-Blueprint_0_Supply_0_Amount 11
-Blueprint_0_Build 27
+Blueprints
+[
+	{
+		CategoryTag "b0c6cc0a8b4346be89aef697ecdb8e46" // Furniture
+		InputItems "14901f32cd3240179fd6124324cc27e5 x 11" // Cloth
+		OutputItems this
+		Effect "84347b13028340b8976033c08675d458" // Wrench
+	}
+]
+
 PlacementAudioClip Sounds/WoodenPlacement.mp3
 Has_Clip_Prefab false

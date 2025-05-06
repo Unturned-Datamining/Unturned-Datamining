@@ -1,4 +1,4 @@
-GUID d3dd98a5b4544bf39fc93dd98010e83c
+﻿GUID d3dd98a5b4544bf39fc93dd98010e83c
 Type Storage
 Useable Barricade
 Build Storage
@@ -13,17 +13,20 @@ Range 4
 Radius 0.5
 Offset 0.75
 
-Storage_X 4
+Storage_X 5
 Storage_Y 4
 
 Explosion 28
 
-Blueprints 1
-Blueprint_0_Type Furniture
-Blueprint_0_Supplies 1
-Blueprint_0_Supply_0_ID 1246
-Blueprint_0_Supply_0_Amount 1
-Blueprint_0_Build 27
+Blueprints
+[
+	{
+		CategoryTag "b0c6cc0a8b4346be89aef697ecdb8e46" // Furniture
+		InputItems "78d18d4585ed4f55bb5ac69b9a3b5729" // Birch Counter
+		OutputItems this
+		Effect "84347b13028340b8976033c08675d458" // Wrench
+	}
+]
 
 Should_Close_When_Outside_Range true
 PlacementAudioClip Sounds/WoodenPlacement.mp3

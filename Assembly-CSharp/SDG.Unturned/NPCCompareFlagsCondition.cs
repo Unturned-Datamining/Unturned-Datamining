@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 
 namespace SDG.Unturned;
@@ -58,6 +59,57 @@ public class NPCCompareFlagsCondition : NPCLogicCondition
         associatedFlags.Add(flag_B_ID);
     }
 
+    internal override void PopulateV2(in PopulateConditionParameters p)
+    {
+        base.PopulateV2(in p);
+        if (p.data.TryParseUInt16("A_ID", out var value))
+        {
+            flag_A_ID = value;
+        }
+        else
+        {
+            p.ReportRequiredOptionInvalid("A_ID");
+        }
+        if (p.data.TryParseUInt16("B_ID", out var value2))
+        {
+            flag_B_ID = value2;
+        }
+        else
+        {
+            p.ReportRequiredOptionInvalid("B_ID");
+        }
+        allowFlag_A_Unset = p.data.ParseBool("Allow_A_Unset");
+        allowFlag_B_Unset = p.data.ParseBool("Allow_B_Unset");
+    }
+
+    internal override void PopulateLegacy(in PopulateConditionParameters p)
+    {
+        base.PopulateLegacy(in p);
+        if (p.data.TryParseUInt16(p.legacyPrefix + "_A_ID", out var value))
+        {
+            flag_A_ID = value;
+        }
+        else
+        {
+            p.ReportRequiredOptionInvalid("A_ID");
+        }
+        if (p.data.TryParseUInt16(p.legacyPrefix + "_B_ID", out var value2))
+        {
+            flag_B_ID = value2;
+        }
+        else
+        {
+            p.ReportRequiredOptionInvalid("B_ID");
+        }
+        allowFlag_A_Unset = p.data.ContainsKey(p.legacyPrefix + "_Allow_A_Unset");
+        allowFlag_B_Unset = p.data.ContainsKey(p.legacyPrefix + "_Allow_B_Unset");
+    }
+
+    public NPCCompareFlagsCondition()
+    {
+    }
+
+    [Obsolete]
     public NPCCompareFlagsCondition(ushort newFlag_A_ID, ushort newFlag_B_ID, bool newAllowFlag_A_Unset, bool newAllowFlag_B_Unset, ENPCLogicType newLogicType, string newText, bool newShouldReset)
         : base(newLogicType, newText, newShouldReset)
     {

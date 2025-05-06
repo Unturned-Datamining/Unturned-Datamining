@@ -1,24 +1,24 @@
-"Metadata"
+﻿Metadata
 {
-	"GUID" "e25f0351181f4ad1a9c0dc31d2fedade"
-	"Type" "SDG.Unturned.LandscapeMaterialAsset, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null"
+	GUID e25f0351181f4ad1a9c0dc31d2fedade
+	Type SDG.Unturned.LandscapeMaterialAsset, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
 }
-"Asset"
+Asset
 {
-	"ID" "0"
-	"Texture"
+	ID 0
+	Texture
 	{
-		"Name" "core.masterbundle"
-		"Path" "Terrain/Materials/Yukon/Snow_00.png"
+		Name core.masterbundle
+		Path Terrain/Materials/Yukon/Snow_00.png
 	}
-	"Mask"
+	Mask
 	{
-		"Name" "core.masterbundle"
-		"Path" "Terrain/Materials/Yukon/Snow_mask_00.png"
+		Name core.masterbundle
+		Path Terrain/Materials/Yukon/Snow_mask_00.png
 	}
-	"Physics_Material" "SNOW_STATIC"
-	"Foliage"
+	Physics_Material SNOW_STATIC
+	Foliage
 	{
-		"GUID" "e4cc3ee0c2ee47a7bc9eaa420ee8c639"
+		GUID e4cc3ee0c2ee47a7bc9eaa420ee8c639
 	}
 }

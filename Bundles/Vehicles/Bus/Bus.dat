@@ -1,4 +1,4 @@
-GUID e3a51d77b1174f438ee099b63476f5f4
+﻿GUID e3a51d77b1174f438ee099b63476f5f4
 Type Vehicle
 Rarity Uncommon
 ID 86
@@ -37,19 +37,19 @@ Explosion_Force_Multiplier 2
 
 PaintableSections
 [
-    {
-        Path Model_0
-        MaterialIndex 0
-    }
-    {
-        Path Model_1
-        MaterialIndex 0
-    }
+	{
+		Path Model_0
+		MaterialIndex 0
+	}
+	{
+		Path Model_1
+		MaterialIndex 0
+	}
 ]
 
 DefaultPaintColors
 [
-    #d4d4d4
+	#d4d4d4
 ]
 
 WheelConfigurations

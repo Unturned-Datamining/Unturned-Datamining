@@ -2,9 +2,9 @@ namespace SDG.Unturned;
 
 public class Local
 {
-    private DatDictionary data;
+    private IDatDictionary data;
 
-    private DatDictionary fallbackData;
+    private IDatDictionary fallbackData;
 
     public string read(string key)
     {
@@ -161,12 +161,12 @@ public class Local
         return false;
     }
 
-    public Local(DatDictionary newData)
+    public Local(IDatDictionary newData)
         : this(newData, null)
     {
     }
 
-    public Local(DatDictionary data, DatDictionary fallbackData)
+    public Local(IDatDictionary data, IDatDictionary fallbackData)
     {
         this.data = data;
         this.fallbackData = fallbackData;

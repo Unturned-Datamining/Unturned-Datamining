@@ -1,4 +1,4 @@
-GUID 3ea67e3ad2ca415f9feb81bbc1508fd2
+﻿GUID 3ea67e3ad2ca415f9feb81bbc1508fd2
 Type Structure
 Rarity Uncommon
 Useable Structure
@@ -14,12 +14,16 @@ Range 8
 
 Explosion 19
 
-Blueprints 1
-Blueprint_0_Type Structure
-Blueprint_0_Supplies 1
-Blueprint_0_Supply_0_ID 39
-Blueprint_0_Supply_0_Amount 2
-Blueprint_0_Build 27
+Blueprints
+[
+	{
+		CategoryTag "71d9e182c18b4aad8e87778e4f621995" // Structures
+		InputItems "94f9c6aa09c249dfbce4f195c0271b9c x 2" // Maple Log
+		OutputItems this
+		Effect "84347b13028340b8976033c08675d458" // Wrench
+	}
+]
+
 PlacementAudioClip Sounds/WoodenPlacement.mp3
 
 Has_Clip_Prefab false

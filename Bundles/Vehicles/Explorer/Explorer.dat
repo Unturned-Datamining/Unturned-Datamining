@@ -1,4 +1,4 @@
-GUID e41b10018a1e4a219b9e132b603b11a3
+﻿GUID e41b10018a1e4a219b9e132b603b11a3
 Type Vehicle
 Rarity Uncommon
 ID 58
@@ -46,31 +46,31 @@ Explosion_Force_Multiplier 2
 
 PaintableSections
 [
-    {
-        Path Model_0
-        MaterialIndex 0
-    }
-    {
-        Path Model_1
-        MaterialIndex 0
-    }
+	{
+		Path Model_0
+		MaterialIndex 0
+	}
+	{
+		Path Model_1
+		MaterialIndex 0
+	}
 ]
 
 DefaultPaintColors
 [
-    #e58834
+	#e58834
 ]
 
 ExplosionBurnMaterialSections
 [
-    {
-        Path Model_0
+	{
+		Path Model_0
 		AllMaterials true
-    }
-    {
-        Path Model_1
+	}
+	{
+		Path Model_1
 		AllMaterials true
-    }
+	}
 ]
 
 CrawlerTrackTilingMaterials

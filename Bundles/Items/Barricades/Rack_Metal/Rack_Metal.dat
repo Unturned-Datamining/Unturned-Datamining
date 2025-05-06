@@ -1,4 +1,4 @@
-GUID 4eb615311edb4ef98ee95d8c70ba3c25
+﻿GUID 4eb615311edb4ef98ee95d8c70ba3c25
 Type Storage
 Rarity Epic
 Useable Barricade
@@ -14,20 +14,29 @@ Range 4
 Offset 0.125
 
 Storage_X 5
-Storage_Y 2
+Storage_Y 3
 Display
 Locked
 
 Explosion 36
 
-Blueprints 1
-Blueprint_0_Type Furniture
-Blueprint_0_Supplies 2
-Blueprint_0_Supply_0_ID 68
-Blueprint_0_Supply_0_Amount 2
-Blueprint_0_Supply_1_ID 285
-Blueprint_0_Supply_1_Amount 2
-Blueprint_0_Build 27
+Blueprints
+[
+	{
+		CategoryTag "b0c6cc0a8b4346be89aef697ecdb8e46" // Furniture
+		InputItems
+		[
+			"7f06b16642724683bd61584a52fde981 x 2" // Metal Sheet
+			"656f319d2d194813b390edc6edd8a697 x 2" // Metal Bar
+		]
+		OutputItems this
+		RequiresNearbyCraftingTags
+		[
+			"7b82c125a5a54984b8bb26576b59e977" // Workbench
+		]
+		Effect "84347b13028340b8976033c08675d458" // Wrench
+	}
+]
 
 Should_Close_When_Outside_Range true
 PlacementAudioClip Sounds/MetalPlacement.mp3

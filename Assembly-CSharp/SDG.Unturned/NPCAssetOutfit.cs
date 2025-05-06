@@ -39,7 +39,7 @@ public class NPCAssetOutfit
     [Obsolete]
     public ushort glasses { get; protected set; }
 
-    public NPCAssetOutfit(DatDictionary data, ENPCHoliday holiday)
+    public NPCAssetOutfit(IDatDictionary data, ENPCHoliday holiday)
     {
         string text = holiday switch
         {

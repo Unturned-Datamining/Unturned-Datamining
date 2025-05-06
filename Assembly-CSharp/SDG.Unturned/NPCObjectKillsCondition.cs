@@ -53,6 +53,71 @@ public class NPCObjectKillsCondition : INPCCondition
         associatedFlags.Add(id);
     }
 
+    internal override void PopulateV2(in PopulateConditionParameters p)
+    {
+        base.PopulateV2(in p);
+        if (p.data.TryParseUInt16("ID", out var num))
+        {
+            id = num;
+        }
+        else
+        {
+            p.ReportRequiredOptionInvalid("ID");
+        }
+        if (p.data.TryParseInt16("Value", out var num2))
+        {
+            value = num2;
+        }
+        else
+        {
+            p.ReportRequiredOptionInvalid("Value");
+        }
+        if (p.data.TryParseGuid("Object", out var guid))
+        {
+            objectGuid = guid;
+        }
+        else
+        {
+            p.ReportRequiredOptionInvalid("Object");
+        }
+        nav = p.data.ParseUInt8("Nav", byte.MaxValue);
+    }
+
+    internal override void PopulateLegacy(in PopulateConditionParameters p)
+    {
+        base.PopulateLegacy(in p);
+        if (p.data.TryParseUInt16(p.legacyPrefix + "_ID", out var num))
+        {
+            id = num;
+        }
+        else
+        {
+            p.ReportRequiredOptionInvalid("ID");
+        }
+        if (p.data.TryParseInt16(p.legacyPrefix + "_Value", out var num2))
+        {
+            value = num2;
+        }
+        else
+        {
+            p.ReportRequiredOptionInvalid("Value");
+        }
+        if (p.data.TryParseGuid(p.legacyPrefix + "_Object", out var guid))
+        {
+            objectGuid = guid;
+        }
+        else
+        {
+            p.ReportRequiredOptionInvalid("Object");
+        }
+        nav = p.data.ParseUInt8(p.legacyPrefix + "_Nav", byte.MaxValue);
+    }
+
+    public NPCObjectKillsCondition()
+    {
+    }
+
+    [Obsolete]
     public NPCObjectKillsCondition(ushort newID, short newValue, Guid newObjectGuid, byte newNav, string newText, bool newShouldReset)
         : base(newText, newShouldReset)
     {

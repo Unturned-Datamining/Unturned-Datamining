@@ -1,18 +1,52 @@
+using System;
+
 namespace SDG.Unturned;
 
 public class BlueprintOutput
 {
-    private ushort _id;
+    private CachingBcAssetRef _itemRef;
 
     public ushort amount;
 
     public EItemOrigin origin;
 
-    public ushort id => _id;
+    /// <summary>
+    /// Note: if calling ItemRef.Get() please use FindItemAsset instead to avoid redundant asset lookups.
+    /// </summary>
+    public CachingBcAssetRef ItemRef
+    {
+        get
+        {
+            return _itemRef;
+        }
+        internal set
+        {
+            _itemRef = value;
+        }
+    }
+
+    [Obsolete("Please use FindItemAsset instead for GUID support")]
+    public ushort id => _itemRef.LegacyId;
+
+    public ItemAsset FindItemAsset()
+    {
+        return _itemRef.Get<ItemAsset>();
+    }
+
+    /// <summary>
+    /// Does this blueprint output create the specified item?
+    /// </summary>
+    public bool IsItem(ItemAsset asset)
+    {
+        if (asset == null)
+        {
+            return false;
+        }
+        return _itemRef.IsReferenceTo(asset);
+    }
 
     public BlueprintOutput(ushort newID, byte newAmount, EItemOrigin newOrigin)
     {
-        _id = newID;
         amount = newAmount;
         origin = newOrigin;
     }

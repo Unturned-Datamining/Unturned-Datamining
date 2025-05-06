@@ -1,4 +1,4 @@
-GUID fd6bee4579884ee9ad0b729baf423ab1
+﻿GUID fd6bee4579884ee9ad0b729baf423ab1
 Type Melee
 Useable Melee
 Slot Secondary
@@ -38,21 +38,34 @@ Vehicle_Damage 25
 Resource_Damage 25
 Object_Damage 25
 
-Durability 0.15
+Durability 0.125
 
-Blueprints 3
-Blueprint_0_Type Tool
-Blueprint_0_Supply_0_ID 68
-Blueprint_0_Supply_0_Amount 2
-Blueprint_0_Build 27
-Blueprint_1_Type Repair
-Blueprint_1_Supply_0_ID 67
-Blueprint_1_Supply_0_Amount 3
-Blueprint_1_Build 27
-Blueprint_2_Type Tool
-Blueprint_2_Supplies 1
-Blueprint_2_Supply_0_ID 141
-Blueprint_2_Product 67
-Blueprint_2_Products 2
-Blueprint_2_Build 27
+Blueprints
+[
+	{
+		CategoryTag "ad1804b6945145f3b308738b0b8ea447" // Tools
+		InputItems "7f06b16642724683bd61584a52fde981 x 2" // Metal Sheet
+		OutputItems this
+		Effect "84347b13028340b8976033c08675d458" // Wrench
+	}
+	{
+		Name Repair
+		CategoryTag "732ee6ffeb18418985cf4f9fde33dd11" // Repair
+		Operation RepairTargetItem
+		InputItems "21ede8ebffb14c5580e8c7ad149e335e x 3" // Metal Scrap
+		RequiresNearbyCraftingTags
+		[
+			"7b82c125a5a54984b8bb26576b59e977" // Workbench
+		]
+		Effect "84347b13028340b8976033c08675d458" // Wrench
+	}
+	{
+		Name Salvage
+		CategoryTag "7ed29f9101ae4523a3b2e389414b7bd9" // Salvage
+		InputItems this
+		OutputItems "21ede8ebffb14c5580e8c7ad149e335e x 2" // Metal Scrap
+		Effect "84347b13028340b8976033c08675d458" // Wrench
+	}
+]
+
 AttackAudioClip Sounds/MeleeAttack_02.mp3

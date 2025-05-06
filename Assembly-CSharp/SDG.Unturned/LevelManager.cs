@@ -437,16 +437,13 @@ public class LevelManager : SteamCaller
             lastFinaleMessage = Time.realtimeSinceStartup;
             if (arenaPlayers.Count > 0)
             {
-                ulong[] playersIDs3 = new ulong[arenaPlayers.Count];
+                ulong[] array = new ulong[arenaPlayers.Count];
                 for (int i = 0; i < arenaPlayers.Count; i++)
                 {
-                    playersIDs3[i] = arenaPlayers[i].steamPlayer.playerID.steamID.m_SteamID;
+                    array[i] = arenaPlayers[i].steamPlayer.playerID.steamID.m_SteamID;
                 }
                 arenaMessage = EArenaMessage.LOSE;
-                SendArenaPlayer.InvokeAndLoopback(ENetReliability.Reliable, Provider.GatherRemoteClientConnections(), delegate(NetPakWriter writer)
-                {
-                    WriteArenaPlayer(writer, playersIDs3, EArenaMessage.WIN);
-                });
+                SendArenaPlayer.InvokeAndLoopback(ENetReliability.Reliable, Provider.GatherRemoteClientConnections(), SendArenaPlayer_Write, array, EArenaMessage.WIN);
             }
             else
             {
@@ -461,12 +458,8 @@ public class LevelManager : SteamCaller
             ArenaPlayer arenaPlayer = arenaPlayers[num];
             if (arenaPlayer.steamPlayer == null || arenaPlayer.steamPlayer.player == null)
             {
-                ulong[] playersIDs2 = new ulong[1];
-                playersIDs2[0] = arenaPlayer.steamPlayer.playerID.steamID.m_SteamID;
-                SendArenaPlayer.InvokeAndLoopback(ENetReliability.Reliable, Provider.GatherRemoteClientConnections(), delegate(NetPakWriter writer)
-                {
-                    WriteArenaPlayer(writer, playersIDs2, EArenaMessage.ABANDONED);
-                });
+                ulong[] arg = new ulong[1] { arenaPlayer.steamPlayer.playerID.steamID.m_SteamID };
+                SendArenaPlayer.InvokeAndLoopback(ENetReliability.Reliable, Provider.GatherRemoteClientConnections(), SendArenaPlayer_Write, arg, EArenaMessage.ABANDONED);
                 arenaPlayers.RemoveAt(num);
                 updateGroups(arenaPlayer.steamPlayer);
                 SendLevelNumber.InvokeAndLoopback(ENetReliability.Reliable, Provider.GatherRemoteClientConnections(), (byte)arenaPlayers.Count);
@@ -490,12 +483,8 @@ public class LevelManager : SteamCaller
                 }
                 if (arenaPlayer.hasDied)
                 {
-                    ulong[] playersIDs = new ulong[1];
-                    playersIDs[0] = arenaPlayer.steamPlayer.playerID.steamID.m_SteamID;
-                    SendArenaPlayer.InvokeAndLoopback(ENetReliability.Reliable, Provider.GatherRemoteClientConnections(), delegate(NetPakWriter writer)
-                    {
-                        WriteArenaPlayer(writer, playersIDs, EArenaMessage.DIED);
-                    });
+                    ulong[] arg2 = new ulong[1] { arenaPlayer.steamPlayer.playerID.steamID.m_SteamID };
+                    SendArenaPlayer.InvokeAndLoopback(ENetReliability.Reliable, Provider.GatherRemoteClientConnections(), SendArenaPlayer_Write, arg2, EArenaMessage.DIED);
                     arenaPlayers.RemoveAt(num);
                     updateGroups(arenaPlayer.steamPlayer);
                     SendLevelNumber.InvokeAndLoopback(ENetReliability.Reliable, Provider.GatherRemoteClientConnections(), (byte)arenaPlayers.Count);
@@ -697,7 +686,7 @@ public class LevelManager : SteamCaller
         onArenaPlayerUpdated?.Invoke(array, value2);
     }
 
-    private static void WriteArenaPlayer(NetPakWriter writer, ulong[] newPlayerIDs, EArenaMessage newArenaMessage)
+    private static void SendArenaPlayer_Write(NetPakWriter writer, ulong[] newPlayerIDs, EArenaMessage newArenaMessage)
     {
         byte b = (byte)newPlayerIDs.Length;
         writer.WriteUInt8(b);

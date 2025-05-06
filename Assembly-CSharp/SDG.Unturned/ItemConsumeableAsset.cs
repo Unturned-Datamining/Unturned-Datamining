@@ -227,45 +227,45 @@ public class ItemConsumeableAsset : ItemWeaponAsset
         }
     }
 
-    public override void PopulateAsset(Bundle bundle, DatDictionary data, Local localization)
+    public override void PopulateAsset(in PopulateAssetParameters p)
     {
-        base.PopulateAsset(bundle, data, localization);
-        _use = LoadRedirectableAsset<AudioClip>(bundle, "Use", data, "ConsumeAudioClip");
-        _health = data.ParseUInt8("Health", 0);
-        _food = data.ParseUInt8("Food", 0);
-        _water = data.ParseUInt8("Water", 0);
-        _virus = data.ParseUInt8("Virus", 0);
-        _disinfectant = data.ParseUInt8("Disinfectant", 0);
-        _energy = data.ParseUInt8("Energy", 0);
-        _vision = data.ParseUInt8("Vision", 0);
-        oxygen = data.ParseInt8("Oxygen", 0);
-        _warmth = data.ParseUInt32("Warmth");
-        experience = data.ParseInt32("Experience");
-        if (data.ContainsKey("Bleeding"))
+        base.PopulateAsset(in p);
+        _use = LoadRedirectableAsset<AudioClip>(p.bundle, "Use", p.data, "ConsumeAudioClip");
+        _health = p.data.ParseUInt8("Health", 0);
+        _food = p.data.ParseUInt8("Food", 0);
+        _water = p.data.ParseUInt8("Water", 0);
+        _virus = p.data.ParseUInt8("Virus", 0);
+        _disinfectant = p.data.ParseUInt8("Disinfectant", 0);
+        _energy = p.data.ParseUInt8("Energy", 0);
+        _vision = p.data.ParseUInt8("Vision", 0);
+        oxygen = p.data.ParseInt8("Oxygen", 0);
+        _warmth = p.data.ParseUInt32("Warmth");
+        experience = p.data.ParseInt32("Experience");
+        if (p.data.ContainsKey("Bleeding"))
         {
             bleedingModifier = Bleeding.Heal;
         }
         else
         {
-            bleedingModifier = data.ParseEnum("Bleeding_Modifier", Bleeding.None);
+            bleedingModifier = p.data.ParseEnum("Bleeding_Modifier", Bleeding.None);
         }
-        if (data.ContainsKey("Broken"))
+        if (p.data.ContainsKey("Broken"))
         {
             bonesModifier = Bones.Heal;
         }
         else
         {
-            bonesModifier = data.ParseEnum("Bones_Modifier", Bones.None);
+            bonesModifier = p.data.ParseEnum("Bones_Modifier", Bones.None);
         }
-        _hasAid = data.ContainsKey("Aid");
+        _hasAid = p.data.ContainsKey("Aid");
         foodConstrainsWater = food >= water;
-        shouldDeleteAfterUse = data.ParseBool("Should_Delete_After_Use", defaultValue: true);
-        questRewardsList.Parse(data, localization, this, "Quest_Rewards", "Quest_Reward_");
-        ushort tableID = data.ParseUInt16("Item_Reward_Spawn_ID", 0);
-        int min = data.ParseInt32("Min_Item_Rewards");
-        int max = data.ParseInt32("Max_Item_Rewards");
+        shouldDeleteAfterUse = p.data.ParseBool("Should_Delete_After_Use", defaultValue: true);
+        questRewardsList.Parse(p.data, p.localization, this, "Quest_Rewards", "Quest_Reward_");
+        ushort tableID = p.data.ParseUInt16("Item_Reward_Spawn_ID", 0);
+        int min = p.data.ParseInt32("Min_Item_Rewards");
+        int max = p.data.ParseInt32("Max_Item_Rewards");
         itemRewards = new SpawnTableReward(tableID, min, max);
-        _explosion = data.ParseGuidOrLegacyId("Explosion", out _explosionEffectGuid);
+        _explosion = p.data.ParseGuidOrLegacyId("Explosion", out _explosionEffectGuid);
         IsExplosive = !IsExplosionEffectRefNull();
     }
 

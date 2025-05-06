@@ -4,10 +4,10 @@ public class OutfitAsset : Asset
 {
     public AssetReference<ItemAsset>[] itemAssets;
 
-    public override void PopulateAsset(Bundle bundle, DatDictionary data, Local localization)
+    public override void PopulateAsset(in PopulateAssetParameters p)
     {
-        base.PopulateAsset(bundle, data, localization);
-        if (data.TryGetList("Items", out var node))
+        base.PopulateAsset(in p);
+        if (p.data.TryGetList("Items", out var node))
         {
             itemAssets = node.ParseArrayOfStructs<AssetReference<ItemAsset>>();
         }

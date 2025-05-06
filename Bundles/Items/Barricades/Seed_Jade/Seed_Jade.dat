@@ -1,4 +1,4 @@
-GUID 4c612a12cbd64226b6408681fda329f4
+﻿GUID 4c612a12cbd64226b6408681fda329f4
 Type Farm
 Useable Barricade
 Build Farm
@@ -19,9 +19,15 @@ Grow 272
 Explosion 43
 Vulnerable
 
-Blueprints 1
-Blueprint_0_Type Utilities
-Blueprint_0_Supply_0_ID 272
-Blueprint_0_Build 27
+Blueprints
+[
+	{
+		CategoryTag "bfac6026305f4737a95fd275ebff65a6" // Utilities
+		InputItems "fed7f5e1ed584862ac5667118311ee9b" // Raw Jade Berries
+		OutputItems this
+		Effect "84347b13028340b8976033c08675d458" // Wrench
+	}
+]
+
 PlacementAudioClip Sounds/FoliagePlacement.mp3
 Has_Clip_Prefab false

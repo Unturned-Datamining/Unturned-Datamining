@@ -44,10 +44,10 @@ public class PhysicsMaterialAsset : PhysicsMaterialAssetBase
     /// </summary>
     public float? characterMaxSpeedMultiplier;
 
-    public override void PopulateAsset(Bundle bundle, DatDictionary data, Local localization)
+    public override void PopulateAsset(in PopulateAssetParameters p)
     {
-        base.PopulateAsset(bundle, data, localization);
-        if (data.TryGetList("UnityNames", out var node))
+        base.PopulateAsset(in p);
+        if (p.data.TryGetList("UnityNames", out var node))
         {
             physicMaterialNames = new string[node.Count];
             for (int i = 0; i < node.Count; i++)
@@ -57,37 +57,37 @@ public class PhysicsMaterialAsset : PhysicsMaterialAssetBase
         }
         else
         {
-            physicMaterialNames = new string[1] { data.GetString("UnityName") };
+            physicMaterialNames = new string[1] { p.data.GetString("UnityName") };
         }
-        fallbackRef = data.ParseStruct<AssetReference<PhysicsMaterialAsset>>("Fallback");
-        bulletImpactEffect = data.ParseStruct<AssetReference<EffectAsset>>("WipDoNotUseTemp_BulletImpactEffect");
-        tireMotionEffect = data.ParseStruct<AssetReference<EffectAsset>>("TireMotionEffect");
-        if (data.ContainsKey("Character_Friction_Mode"))
+        fallbackRef = p.data.ParseStruct<AssetReference<PhysicsMaterialAsset>>("Fallback");
+        bulletImpactEffect = p.data.ParseStruct<AssetReference<EffectAsset>>("WipDoNotUseTemp_BulletImpactEffect");
+        tireMotionEffect = p.data.ParseStruct<AssetReference<EffectAsset>>("TireMotionEffect");
+        if (p.data.ContainsKey("Character_Friction_Mode"))
         {
-            characterFrictionMode = data.ParseEnum("Character_Friction_Mode", EPhysicsMaterialCharacterFrictionMode.ImmediatelyResponsive);
+            characterFrictionMode = p.data.ParseEnum("Character_Friction_Mode", EPhysicsMaterialCharacterFrictionMode.ImmediatelyResponsive);
             if (characterFrictionMode != 0)
             {
-                if (data.ContainsKey("Character_Acceleration_Multiplier"))
+                if (p.data.ContainsKey("Character_Acceleration_Multiplier"))
                 {
-                    characterAccelerationMultiplier = data.ParseFloat("Character_Acceleration_Multiplier");
+                    characterAccelerationMultiplier = p.data.ParseFloat("Character_Acceleration_Multiplier");
                 }
-                if (data.ContainsKey("Character_Deceleration_Multiplier"))
+                if (p.data.ContainsKey("Character_Deceleration_Multiplier"))
                 {
-                    characterDecelerationMultiplier = data.ParseFloat("Character_Deceleration_Multiplier");
+                    characterDecelerationMultiplier = p.data.ParseFloat("Character_Deceleration_Multiplier");
                 }
-                if (data.ContainsKey("Character_Max_Speed_Multiplier"))
+                if (p.data.ContainsKey("Character_Max_Speed_Multiplier"))
                 {
-                    characterMaxSpeedMultiplier = data.ParseFloat("Character_Max_Speed_Multiplier");
+                    characterMaxSpeedMultiplier = p.data.ParseFloat("Character_Max_Speed_Multiplier");
                 }
             }
         }
-        if (data.ContainsKey("IsArable"))
+        if (p.data.ContainsKey("IsArable"))
         {
-            isArable = data.ParseBool("IsArable");
+            isArable = p.data.ParseBool("IsArable");
         }
-        if (data.ContainsKey("HasOil"))
+        if (p.data.ContainsKey("HasOil"))
         {
-            hasOil = data.ParseBool("HasOil");
+            hasOil = p.data.ParseBool("HasOil");
         }
         PhysicMaterialCustomData.RegisterAsset(this);
     }

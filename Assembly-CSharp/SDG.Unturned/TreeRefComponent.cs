@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace SDG.Unturned;
 
-internal class TreeRefComponent : MonoBehaviour, IExplosionDamageable, IEquatable<IExplosionDamageable>
+internal class TreeRefComponent : MonoBehaviour, IExplosionDamageable, IEquatable<IExplosionDamageable>, ICraftingTagProvider
 {
     public ResourceSpawnpoint owner;
 
@@ -51,6 +51,21 @@ internal class TreeRefComponent : MonoBehaviour, IExplosionDamageable, IEquatabl
             }
             damageParameters.xp += xp;
         }
+    }
+
+    public Asset GetTagProviderAsset()
+    {
+        return owner?.asset;
+    }
+
+    public void GetAvailableTags(ref CraftingTagProviderGetAvailableTagsParameters p)
+    {
+        p.ApplyModHooks(base.gameObject);
+    }
+
+    public bool Equals(ICraftingTagProvider obj)
+    {
+        return this == obj;
     }
 
     void IExplosionDamageable.ApplyExplosionDamage(in ExplosionParameters explosionParameters, ref ExplosionDamageParameters damageParameters)

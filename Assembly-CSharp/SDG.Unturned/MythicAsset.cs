@@ -30,10 +30,10 @@ public class MythicAsset : Asset
 
     public override EAssetType assetCategory => EAssetType.MYTHIC;
 
-    public override void PopulateAsset(Bundle bundle, DatDictionary data, Local localization)
+    public override void PopulateAsset(in PopulateAssetParameters p)
     {
-        base.PopulateAsset(bundle, data, localization);
-        if (id < 500 && !base.OriginAllowsVanillaLegacyId && !data.ContainsKey("Bypass_ID_Limit"))
+        base.PopulateAsset(in p);
+        if (id < 500 && !base.OriginAllowsVanillaLegacyId && !p.data.ContainsKey("Bypass_ID_Limit"))
         {
             throw new NotSupportedException("ID < 500");
         }
@@ -41,16 +41,16 @@ public class MythicAsset : Asset
         {
             return;
         }
-        particleTagName = localization.format("Particle_Tag_Name");
+        particleTagName = p.localization.format("Particle_Tag_Name");
         if (string.IsNullOrEmpty(particleTagName))
         {
             particleTagName = name;
         }
-        _systemArea = bundle.load<GameObject>("System_Area");
-        _systemHook = bundle.load<GameObject>("System_Hook");
-        _systemFirst = bundle.load<GameObject>("System_First");
-        _systemThird = bundle.load<GameObject>("System_Third");
-        ShouldBodyCosmeticsUseAreaPrefab = data.ParseBool("Body_Cosmetics_Use_System_Area");
+        _systemArea = p.bundle.load<GameObject>("System_Area");
+        _systemHook = p.bundle.load<GameObject>("System_Hook");
+        _systemFirst = p.bundle.load<GameObject>("System_First");
+        _systemThird = p.bundle.load<GameObject>("System_Third");
+        ShouldBodyCosmeticsUseAreaPrefab = p.data.ParseBool("Body_Cosmetics_Use_System_Area");
         if ((bool)Assets.shouldValidateAssets)
         {
             if (systemArea != null)

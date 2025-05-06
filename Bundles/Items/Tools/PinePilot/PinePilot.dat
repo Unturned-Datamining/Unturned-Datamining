@@ -1,4 +1,4 @@
-GUID b376e31635eb476b95d85f2e57fc4263
+﻿GUID b376e31635eb476b95d85f2e57fc4263
 Type Tool
 Rarity Uncommon
 Useable Housing_Planner
@@ -8,20 +8,23 @@ Size_X 1
 Size_Y 1
 Size_Z 0.3
 
-Blueprints 2
-
-// Salvaging
-Blueprint_0_Type Tool
-Blueprint_0_Supply_0_ID 1764
-Blueprint_0_Product 67
-Blueprint_0_Products 2
-Blueprint_0_Build 27
-
-// Craft from GPS and Rangefinder
-Blueprint_1_Type Tool
-Blueprint_1_Supplies 2
-// GPS
-Blueprint_1_Supply_0_ID 1176
-// Rangefinder
-Blueprint_1_Supply_1_ID 1008
-Blueprint_1_Build 27
+Blueprints
+[
+	{
+		Name Salvage
+		CategoryTag "7ed29f9101ae4523a3b2e389414b7bd9" // Salvage
+		InputItems this
+		OutputItems "21ede8ebffb14c5580e8c7ad149e335e x 2" // Metal Scrap
+		Effect "84347b13028340b8976033c08675d458" // Wrench
+	}
+	{
+		CategoryTag "ad1804b6945145f3b308738b0b8ea447" // Tools
+		InputItems
+		[
+			"52bc64a1c32b4b45a0c66e98c25dcbf7" // GPS
+			"669bab19df634f859a2e61c39e428e59" // Rangefinder
+		]
+		OutputItems this
+		Effect "84347b13028340b8976033c08675d458" // Wrench
+	}
+]

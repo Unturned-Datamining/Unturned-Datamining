@@ -1,4 +1,4 @@
-GUID 68d9141f7b40442ca91a87655442a920
+﻿GUID 68d9141f7b40442ca91a87655442a920
 Type Barricade
 Rarity Uncommon
 Useable Barricade
@@ -17,31 +17,72 @@ Offset 1
 Explosion 37
 Vulnerable
 
-Blueprints 3
-Blueprint_0_Type Furniture
-Blueprint_0_Supplies 2
-Blueprint_0_Supply_0_ID 61
-Blueprint_0_Supply_0_Amount 7
-Blueprint_0_Supply_0_Critical
-Blueprint_0_Supply_1_ID 66
-Blueprint_0_Supply_1_Amount 5
-Blueprint_0_Build 27
-Blueprint_1_Type Furniture
-Blueprint_1_Supplies 2
-Blueprint_1_Supply_0_ID 62
-Blueprint_1_Supply_0_Amount 7
-Blueprint_1_Supply_0_Critical
-Blueprint_1_Supply_1_ID 66
-Blueprint_1_Supply_1_Amount 5
-Blueprint_1_Build 27
-Blueprint_2_Type Furniture
-Blueprint_2_Supplies 2
-Blueprint_2_Supply_0_ID 63
-Blueprint_2_Supply_0_Amount 7
-Blueprint_2_Supply_0_Critical
-Blueprint_2_Supply_1_ID 66
-Blueprint_2_Supply_1_Amount 5
-Blueprint_2_Build 27
+Blueprints
+[
+	{
+		CategoryTag "b0c6cc0a8b4346be89aef697ecdb8e46" // Furniture
+		InputItems
+		[
+			{
+				ID "e73a23b102f24520a32ec0b2afaa6157" // Maple Plank
+				Amount 7
+				Critical true
+			}
+			{
+				ID "14901f32cd3240179fd6124324cc27e5" // Cloth
+				Amount 5
+			}
+		]
+		OutputItems this
+		RequiresNearbyCraftingTags
+		[
+			"7b82c125a5a54984b8bb26576b59e977" // Workbench
+		]
+		Effect "84347b13028340b8976033c08675d458" // Wrench
+	}
+	{
+		CategoryTag "b0c6cc0a8b4346be89aef697ecdb8e46" // Furniture
+		InputItems
+		[
+			{
+				ID "5a3c4302400e400b9b9486fbb5178eca" // Birch Plank
+				Amount 7
+				Critical true
+			}
+			{
+				ID "14901f32cd3240179fd6124324cc27e5" // Cloth
+				Amount 5
+			}
+		]
+		OutputItems this
+		RequiresNearbyCraftingTags
+		[
+			"7b82c125a5a54984b8bb26576b59e977" // Workbench
+		]
+		Effect "84347b13028340b8976033c08675d458" // Wrench
+	}
+	{
+		CategoryTag "b0c6cc0a8b4346be89aef697ecdb8e46" // Furniture
+		InputItems
+		[
+			{
+				ID "719bfdf2c2dc4be6ad5be44d044583e4" // Pine Plank
+				Amount 7
+				Critical true
+			}
+			{
+				ID "14901f32cd3240179fd6124324cc27e5" // Cloth
+				Amount 5
+			}
+		]
+		OutputItems this
+		RequiresNearbyCraftingTags
+		[
+			"7b82c125a5a54984b8bb26576b59e977" // Workbench
+		]
+		Effect "84347b13028340b8976033c08675d458" // Wrench
+	}
+]
 
 // References human read/writeable texture.
 Ignore_TexRW

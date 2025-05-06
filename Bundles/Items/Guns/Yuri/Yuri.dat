@@ -1,4 +1,4 @@
-GUID 5f49e7e1f8584797a9a859d66722d19c
+﻿GUID 5f49e7e1f8584797a9a859d66722d19c
 Type Gun
 Rarity Rare
 Useable Gun
@@ -54,7 +54,7 @@ Vehicle_Damage 23
 Resource_Damage 12
 Object_Damage 15
 
-Durability 0.5
+Durability 0.38
 
 Spread_Aim 0.1
 Spread_Angle_Degrees 11.31
@@ -76,18 +76,36 @@ Shake_Max_Z -0.01
 
 Muzzle 3
 
-Blueprints 2
-Blueprint_0_Type Repair
-Blueprint_0_Supplies 1
-Blueprint_0_Supply_0_ID 67
-Blueprint_0_Supply_0_Amount 4
-Blueprint_0_Tool 76
-Blueprint_0_Level 2
-Blueprint_0_Skill Repair
-Blueprint_0_Build 27
-Blueprint_1_Type Tool
-Blueprint_1_Supplies 1
-Blueprint_1_Supply_0_ID 1041
-Blueprint_1_Product 67
-Blueprint_1_Products 3
-Blueprint_1_Build 27
+Blueprints
+[
+	{
+		Name Repair
+		CategoryTag "732ee6ffeb18418985cf4f9fde33dd11" // Repair
+		Operation RepairTargetItem
+		InputItems
+		[
+			{
+				ID "21ede8ebffb14c5580e8c7ad149e335e" // Metal Scrap
+				Amount 4
+			}
+			{
+				ID "5830b84bf8074caa91cf3f4dde0dd19e" // Blowtorch
+				Delete false
+			}
+		]
+		Skill Repair
+		Skill_Level 1
+		RequiresNearbyCraftingTags
+		[
+			"7b82c125a5a54984b8bb26576b59e977" // Workbench
+		]
+		Effect "84347b13028340b8976033c08675d458" // Wrench
+	}
+	{
+		Name Salvage
+		CategoryTag "7ed29f9101ae4523a3b2e389414b7bd9" // Salvage
+		InputItems this
+		OutputItems "21ede8ebffb14c5580e8c7ad149e335e x 3" // Metal Scrap
+		Effect "84347b13028340b8976033c08675d458" // Wrench
+	}
+]

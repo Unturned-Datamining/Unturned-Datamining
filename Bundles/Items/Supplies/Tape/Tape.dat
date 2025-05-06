@@ -1,4 +1,4 @@
-GUID 8c25cf28c76a4634855f404c8972c0ae
+﻿GUID 8c25cf28c76a4634855f404c8972c0ae
 Type Supply
 ID 69
 
@@ -6,26 +6,33 @@ Size_X 1
 Size_Y 1
 Size_Z 0.25
 
-Blueprints 3
-Blueprint_0_Type Gear
-Blueprint_0_Supplies 2
-Blueprint_0_Supply_0_ID 66
-Blueprint_0_Supply_0_Amount 4
-Blueprint_0_Supply_1_ID 75
-Blueprint_0_Supply_1_Amount 1
-Blueprint_0_Build 27
-Blueprint_1_Type Gear
-Blueprint_1_Supplies 2
-Blueprint_1_Supply_0_ID 66
-Blueprint_1_Supply_0_Amount 4
-Blueprint_1_Supply_1_ID 70
-Blueprint_1_Supply_1_Amount 1
-Blueprint_1_Build 27
-Blueprint_2_Type Gear
-Blueprint_2_Supplies 1
-Blueprint_2_Supply_0_ID this
-Blueprint_2_Supply_0_Amount 1
-Blueprint_2_Outputs 1
-Blueprint_2_Output_0_ID "66" // Cloth
-Blueprint_2_Output_0_Amount 3
-Blueprint_2_Build 27
+Blueprints
+[
+	{
+		CategoryTag "cdb2df24b76d4c6e9d8411c940d8337f" // Gear
+		InputItems
+		[
+			"14901f32cd3240179fd6124324cc27e5 x 4" // Cloth
+			"7aee55ea2abf4f3fb70c4b2677da0e14" // Chemicals
+		]
+		OutputItems this
+		Effect "84347b13028340b8976033c08675d458" // Wrench
+	}
+	{
+		CategoryTag "cdb2df24b76d4c6e9d8411c940d8337f" // Gear
+		InputItems
+		[
+			"14901f32cd3240179fd6124324cc27e5 x 4" // Cloth
+			"ae1fc8674d0b4443b3ad9a68776dcf0f" // Glue
+		]
+		OutputItems this
+		Effect "84347b13028340b8976033c08675d458" // Wrench
+	}
+	{
+		Name Salvage
+		CategoryTag "7ed29f9101ae4523a3b2e389414b7bd9" // Salvage
+		InputItems this
+		OutputItems "14901f32cd3240179fd6124324cc27e5 x 3" // Cloth
+		Effect "84347b13028340b8976033c08675d458" // Wrench
+	}
+]

@@ -171,7 +171,7 @@ public class EffectVolume : LevelVolume<EffectVolume, EffectVolumeManager>
             effect = null;
         }
         EffectAsset effectAsset = Assets.FindEffectAssetByGuidOrLegacyId(_effectGuid, _id);
-        if (effectAsset != null && (!Dedicator.IsDedicatedServer || effectAsset.spawnOnDedicatedServer))
+        if (effectAsset != null && effectAsset.effect != null && (!Dedicator.IsDedicatedServer || effectAsset.spawnOnDedicatedServer))
         {
             effect = UnityEngine.Object.Instantiate(effectAsset.effect).transform;
             effect.name = "Effect";

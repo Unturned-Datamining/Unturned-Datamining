@@ -61,6 +61,17 @@ public abstract class Asset : IAssetErrorContext
     }
 
     /// <summary>
+    /// If true, errors related to this asset were reported during loading.
+    /// </summary>
+    public bool HasErrors { get; internal set; }
+
+    /// <summary>
+    /// Contents of file this asset was loaded from. Only kept if data re-saving is enabled. (So that this memory
+    /// is collected after populating the asset.)
+    /// </summary>
+    public IDatDictionary OriginParsedData { get; set; }
+
+    /// <summary>
     /// Master bundle this asset loaded from.
     /// </summary>
     public MasterBundleConfig originMasterBundle { get; protected set; }
@@ -81,7 +92,12 @@ public abstract class Asset : IAssetErrorContext
 
     public virtual EAssetType assetCategory => EAssetType.NONE;
 
-    public string AssetErrorPrefix => $"({GetTypeFriendlyName()}) {FriendlyName} [{GUID:N}]";
+    public string AssetErrorPrefix => $"{GetOriginName()} {FriendlyName} ({GetTypeFriendlyName()}) [{GUID:N}]";
+
+    /// <summary>
+    /// e.g. Canned Beans (Consumeable Item)
+    /// </summary>
+    public string FriendlyNameWithFriendlyType => FriendlyName + " (" + GetTypeFriendlyName() + ")";
 
     protected bool OriginAllowsVanillaLegacyId
     {
@@ -170,25 +186,29 @@ public abstract class Asset : IAssetErrorContext
         name = GetType().Name;
     }
 
-    public virtual void PopulateAsset(Bundle bundle, DatDictionary data, Local localization)
+    public virtual void PopulateAsset(in PopulateAssetParameters p)
     {
-        if (bundle != null)
+        if (p.bundle != null)
         {
-            name = bundle.name;
+            name = p.bundle.name;
         }
         else
         {
             name = "Asset_" + id;
         }
-        if (bundle is MasterBundle masterBundle)
+        if (p.bundle is MasterBundle masterBundle)
         {
             originMasterBundle = masterBundle.cfg;
         }
-        if (data != null)
+        if (p.data != null)
         {
-            ignoreNPOT = data.ContainsKey("Ignore_NPOT");
-            ignoreTextureReadable = data.ContainsKey("Ignore_TexRW");
+            ignoreNPOT = p.data.ContainsKey("Ignore_NPOT");
+            ignoreTextureReadable = p.data.ContainsKey("Ignore_TexRW");
         }
+    }
+
+    internal virtual void PreResaveAsset(IDatDictionary data)
+    {
     }
 
     internal virtual void BuildCargoData(CargoBuilder builder)
@@ -223,7 +243,7 @@ public abstract class Asset : IAssetErrorContext
     /// <summary>
     /// Planning ahead to potentially convert the game to use Unity's newer Addressables feature.
     /// </summary>
-    protected T LoadRedirectableAsset<T>(Bundle fromBundle, string defaultName, DatDictionary data, string key) where T : UnityEngine.Object
+    protected T LoadRedirectableAsset<T>(Bundle fromBundle, string defaultName, IDatDictionary data, string key) where T : UnityEngine.Object
     {
         if (data.TryGetString(key, out var value))
         {

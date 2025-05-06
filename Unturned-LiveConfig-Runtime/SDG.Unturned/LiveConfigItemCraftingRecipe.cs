@@ -8,10 +8,10 @@ public struct LiveConfigItemCraftingRecipe : IDatParseable
 
     public bool TryParse(IDatNode node)
     {
-        if (node is DatDictionary datDictionary)
+        if (node is IDatDictionary dictionary)
         {
-            targetItemDefId = datDictionary.ParseInt32("ItemDefId");
-            craftingMaterialsRequired = datDictionary.ParseInt32("Materials");
+            targetItemDefId = dictionary.ParseInt32("ItemDefId");
+            craftingMaterialsRequired = dictionary.ParseInt32("Materials");
             if (targetItemDefId > 0)
             {
                 return craftingMaterialsRequired > 0;

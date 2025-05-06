@@ -1,4 +1,4 @@
-GUID 82e07667f07e42279dce024116b322d4
+﻿GUID 82e07667f07e42279dce024116b322d4
 Type Vehicle
 Rarity Rare
 
@@ -34,14 +34,14 @@ Explosion_Force_Multiplier 2
 
 PaintableSections
 [
-    {
-        Path Model_0
-        MaterialIndex 0
-    }
-    {
-        Path Model_1
-        MaterialIndex 0
-    }
+	{
+		Path Model_0
+		MaterialIndex 0
+	}
+	{
+		Path Model_1
+		MaterialIndex 0
+	}
 ]
 
 DefaultPaintColors

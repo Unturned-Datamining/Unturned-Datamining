@@ -20,18 +20,18 @@ public class ItemBoxAsset : ItemAsset
 
     public bool containsBonusItems { get; protected set; }
 
-    public override void PopulateAsset(Bundle bundle, DatDictionary data, Local localization)
+    public override void PopulateAsset(in PopulateAssetParameters p)
     {
-        base.PopulateAsset(bundle, data, localization);
-        _generate = data.ParseInt32("Generate");
-        _destroy = data.ParseInt32("Destroy");
-        _drops = new int[data.ParseInt32("Drops")];
+        base.PopulateAsset(in p);
+        _generate = p.data.ParseInt32("Generate");
+        _destroy = p.data.ParseInt32("Destroy");
+        _drops = new int[p.data.ParseInt32("Drops")];
         for (int i = 0; i < drops.Length; i++)
         {
-            drops[i] = data.ParseInt32("Drop_" + i);
+            drops[i] = p.data.ParseInt32("Drop_" + i);
         }
-        itemOrigin = data.ParseEnum("Item_Origin", EBoxItemOrigin.Unbox);
-        probabilityModel = data.ParseEnum("Probability_Model", EBoxProbabilityModel.Original);
-        containsBonusItems = data.ParseBool("Contains_Bonus_Items");
+        itemOrigin = p.data.ParseEnum("Item_Origin", EBoxItemOrigin.Unbox);
+        probabilityModel = p.data.ParseEnum("Probability_Model", EBoxProbabilityModel.Original);
+        containsBonusItems = p.data.ParseBool("Contains_Bonus_Items");
     }
 }

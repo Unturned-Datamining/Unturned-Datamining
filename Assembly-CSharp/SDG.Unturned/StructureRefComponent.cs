@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace SDG.Unturned;
 
-internal class StructureRefComponent : MonoBehaviour, IExplosionDamageable, IEquatable<IExplosionDamageable>
+internal class StructureRefComponent : MonoBehaviour, IExplosionDamageable, IEquatable<IExplosionDamageable>, ICraftingTagProvider
 {
     internal StructureDrop tempNotSureIfStructureShouldBeAComponentYet;
 
@@ -50,6 +50,33 @@ internal class StructureRefComponent : MonoBehaviour, IExplosionDamageable, IEqu
                 StructureManager.damage(base.transform, direction, explosionParameters.structureDamage, 1f - magnitude / explosionParameters.damageRadius, armor: true, explosionParameters.killer, explosionParameters.damageOrigin);
             }
         }
+    }
+
+    public Asset GetTagProviderAsset()
+    {
+        return tempNotSureIfStructureShouldBeAComponentYet?.asset;
+    }
+
+    public void GetAvailableTags(ref CraftingTagProviderGetAvailableTagsParameters p)
+    {
+        ItemPlaceableAsset itemPlaceableAsset = tempNotSureIfStructureShouldBeAComponentYet?.asset;
+        if (itemPlaceableAsset != null && itemPlaceableAsset.PlaceableProvidedCraftingTags != null)
+        {
+            for (int i = 0; i < itemPlaceableAsset.PlaceableProvidedCraftingTags.Length; i++)
+            {
+                TagAsset tagAsset = itemPlaceableAsset.PlaceableProvidedCraftingTags[i].Get<TagAsset>();
+                if (tagAsset != null)
+                {
+                    p.ResultTags.Add(tagAsset);
+                }
+            }
+        }
+        p.ApplyModHooks(base.gameObject);
+    }
+
+    public bool Equals(ICraftingTagProvider obj)
+    {
+        return this == obj;
     }
 
     void IExplosionDamageable.ApplyExplosionDamage(in ExplosionParameters explosionParameters, ref ExplosionDamageParameters damageParameters)

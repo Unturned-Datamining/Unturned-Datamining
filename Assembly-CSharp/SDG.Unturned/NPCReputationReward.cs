@@ -1,3 +1,5 @@
+using System;
+
 namespace SDG.Unturned;
 
 public class NPCReputationReward : INPCReward
@@ -23,6 +25,37 @@ public class NPCReputationReward : INPCReward
         return Local.FormatText(base.text, text);
     }
 
+    internal override void PopulateV2(in PopulateRewardParameters p)
+    {
+        base.PopulateV2(in p);
+        if (p.data.TryParseInt32("Value", out var num))
+        {
+            value = num;
+        }
+        else
+        {
+            p.ReportRequiredOptionInvalid("Value");
+        }
+    }
+
+    internal override void PopulateLegacy(in PopulateRewardParameters p)
+    {
+        base.PopulateLegacy(in p);
+        if (p.data.TryParseInt32(p.legacyPrefix + "_Value", out var num))
+        {
+            value = num;
+        }
+        else
+        {
+            p.ReportRequiredOptionInvalid("Value");
+        }
+    }
+
+    public NPCReputationReward()
+    {
+    }
+
+    [Obsolete]
     public NPCReputationReward(int newValue, string newText)
         : base(newText)
     {

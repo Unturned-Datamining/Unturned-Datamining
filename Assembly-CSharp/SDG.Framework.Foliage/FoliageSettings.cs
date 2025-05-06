@@ -10,7 +10,7 @@ public class FoliageSettings
 
     private static int _drawFocusDistance;
 
-    private static float _instanceDensity;
+    internal static float _instanceDensity;
 
     private static bool _forceInstancingOff;
 

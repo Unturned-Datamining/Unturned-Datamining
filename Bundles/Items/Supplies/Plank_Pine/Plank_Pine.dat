@@ -1,4 +1,4 @@
-GUID 719bfdf2c2dc4be6ad5be44d044583e4
+﻿GUID 719bfdf2c2dc4be6ad5be44d044583e4
 Type Supply
 Rarity Rare
 ID 63
@@ -7,16 +7,30 @@ Size_X 1
 Size_Y 2
 Size_Z 0.6
 
-Blueprints 2
-Blueprint_0_Type Gear
-Blueprint_0_Supply_0_ID 41
-Blueprint_0_Tool 141
-Blueprint_0_Products 3
-Blueprint_0_Build 27
-Blueprint_1_Type Gear
-Blueprint_1_Supply_0_ID 42
-Blueprint_1_Supply_0_Amount 4
-Blueprint_1_Build 27
+Blueprints
+[
+	{
+		CategoryTag "cdb2df24b76d4c6e9d8411c940d8337f" // Gear
+		InputItems
+		[
+			{
+				ID "86bf08032a5147f9871e362e40812771" // Pine Log
+			}
+			{
+				ID "fd6bee4579884ee9ad0b729baf423ab1" // Saw
+				Delete false
+			}
+		]
+		OutputItems this x 3
+		Effect "84347b13028340b8976033c08675d458" // Wrench
+	}
+	{
+		CategoryTag "cdb2df24b76d4c6e9d8411c940d8337f" // Gear
+		InputItems "55d9700ea53c477685458171932251f1 x 4" // Pine Stick
+		OutputItems this
+		Effect "84347b13028340b8976033c08675d458" // Wrench
+	}
+]
 
 Actions 1
 Action_0_Type Blueprint

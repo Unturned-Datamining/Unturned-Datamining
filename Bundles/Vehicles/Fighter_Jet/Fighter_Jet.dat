@@ -1,4 +1,4 @@
-GUID 500a4bf5048648a6b1bad8c78874fe13
+﻿GUID 500a4bf5048648a6b1bad8c78874fe13
 Type Vehicle
 Rarity Legendary
 ID 140
@@ -52,17 +52,17 @@ Has_Clip_Prefab false
 
 PaintableSections
 [
-    {
-        Path Model_0
-        MaterialIndex 0
-    }
-    {
-        Path Model_1
-        MaterialIndex 0
-    }
+	{
+		Path Model_0
+		MaterialIndex 0
+	}
+	{
+		Path Model_1
+		MaterialIndex 0
+	}
 ]
 
 DefaultPaintColors
 [
-    #bcbcbc
+	#bcbcbc
 ]

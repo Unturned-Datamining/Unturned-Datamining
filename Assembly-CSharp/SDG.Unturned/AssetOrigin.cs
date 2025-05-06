@@ -23,6 +23,12 @@ public class AssetOrigin
     /// </summary>
     internal bool shouldAssetsOverrideExistingIds;
 
+    /// <summary>
+    /// If true, we can re-save .dat/.asset files from this origin.
+    /// Defaults to false. Only true for assets in the game install folder.
+    /// </summary>
+    internal bool canResave;
+
     internal List<Asset> assets = new List<Asset>();
 
     public IReadOnlyList<Asset> GetAssets()

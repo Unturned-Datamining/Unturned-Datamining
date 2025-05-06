@@ -42,33 +42,33 @@ public class WeatherAssetBase : Asset
 
     public bool hasLightning { get; protected set; }
 
-    public override void PopulateAsset(Bundle bundle, DatDictionary data, Local localization)
+    public override void PopulateAsset(in PopulateAssetParameters p)
     {
-        base.PopulateAsset(bundle, data, localization);
-        fadeInDuration = data.ParseFloat("Fade_In_Duration");
-        fadeOutDuration = data.ParseFloat("Fade_Out_Duration");
-        ambientAudio = data.ParseStruct<MasterBundleReference<AudioClip>>("Ambient_Audio_Clip");
-        componentType = data.ParseType("Component_Type");
+        base.PopulateAsset(in p);
+        fadeInDuration = p.data.ParseFloat("Fade_In_Duration");
+        fadeOutDuration = p.data.ParseFloat("Fade_Out_Duration");
+        ambientAudio = p.data.ParseStruct<MasterBundleReference<AudioClip>>("Ambient_Audio_Clip");
+        componentType = p.data.ParseType("Component_Type");
         if (componentType == null)
         {
             componentType = typeof(WeatherComponentBase);
         }
-        if (data.ContainsKey("Volume_Mask"))
+        if (p.data.ContainsKey("Volume_Mask"))
         {
-            volumeMask = data.ParseUInt32("Volume_Mask");
+            volumeMask = p.data.ParseUInt32("Volume_Mask");
         }
         else
         {
             volumeMask = uint.MaxValue;
         }
-        hasLightning = data.ParseBool("Has_Lightning");
+        hasLightning = p.data.ParseBool("Has_Lightning");
         if (hasLightning)
         {
-            minLightningInterval = Mathf.Max(5f, data.ParseFloat("Min_Lightning_Interval"));
-            maxLightningInterval = Mathf.Max(5f, data.ParseFloat("Max_Lightning_Interval"));
-            if (data.ContainsKey("Lightning_Target_Radius"))
+            minLightningInterval = Mathf.Max(5f, p.data.ParseFloat("Min_Lightning_Interval"));
+            maxLightningInterval = Mathf.Max(5f, p.data.ParseFloat("Max_Lightning_Interval"));
+            if (p.data.ContainsKey("Lightning_Target_Radius"))
             {
-                lightningTargetRadius = Mathf.Max(0f, data.ParseFloat("Lightning_Target_Radius"));
+                lightningTargetRadius = Mathf.Max(0f, p.data.ParseFloat("Lightning_Target_Radius"));
             }
             else
             {

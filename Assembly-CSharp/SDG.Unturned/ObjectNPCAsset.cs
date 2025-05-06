@@ -128,67 +128,67 @@ public class ObjectNPCAsset : ObjectAsset
         return "???";
     }
 
-    public override void PopulateAsset(Bundle bundle, DatDictionary data, Local localization)
+    public override void PopulateAsset(in PopulateAssetParameters p)
     {
-        base.PopulateAsset(bundle, data, localization);
-        npcName = localization.format("Character");
+        base.PopulateAsset(in p);
+        npcName = p.localization.format("Character");
         npcName = ItemTool.filterRarityRichText(npcName);
-        defaultOutfit = new NPCAssetOutfit(data, ENPCHoliday.NONE);
-        if (data.ParseBool("Has_Halloween_Outfit"))
+        defaultOutfit = new NPCAssetOutfit(p.data, ENPCHoliday.NONE);
+        if (p.data.ParseBool("Has_Halloween_Outfit"))
         {
-            halloweenOutfit = new NPCAssetOutfit(data, ENPCHoliday.HALLOWEEN);
+            halloweenOutfit = new NPCAssetOutfit(p.data, ENPCHoliday.HALLOWEEN);
         }
-        if (data.ParseBool("Has_Christmas_Outfit"))
+        if (p.data.ParseBool("Has_Christmas_Outfit"))
         {
-            christmasOutfit = new NPCAssetOutfit(data, ENPCHoliday.CHRISTMAS);
+            christmasOutfit = new NPCAssetOutfit(p.data, ENPCHoliday.CHRISTMAS);
         }
-        face = data.ParseUInt8("Face", 0);
-        hair = data.ParseUInt8("Hair", 0);
-        beard = data.ParseUInt8("Beard", 0);
-        skin = Palette.hex(data.GetString("Color_Skin"));
-        color = Palette.hex(data.GetString("Color_Hair"));
-        IsLeftHanded = data.ContainsKey("Backward");
-        primary = data.ParseGuidOrLegacyId("Primary", out primaryWeaponGuid);
-        secondary = data.ParseGuidOrLegacyId("Secondary", out secondaryWeaponGuid);
-        tertiary = data.ParseGuidOrLegacyId("Tertiary", out tertiaryWeaponGuid);
-        if (data.ContainsKey("Equipped"))
+        face = p.data.ParseUInt8("Face", 0);
+        hair = p.data.ParseUInt8("Hair", 0);
+        beard = p.data.ParseUInt8("Beard", 0);
+        skin = Palette.hex(p.data.GetString("Color_Skin"));
+        color = Palette.hex(p.data.GetString("Color_Hair"));
+        IsLeftHanded = p.data.ContainsKey("Backward");
+        primary = p.data.ParseGuidOrLegacyId("Primary", out primaryWeaponGuid);
+        secondary = p.data.ParseGuidOrLegacyId("Secondary", out secondaryWeaponGuid);
+        tertiary = p.data.ParseGuidOrLegacyId("Tertiary", out tertiaryWeaponGuid);
+        if (p.data.ContainsKey("Equipped"))
         {
-            equipped = (ESlotType)Enum.Parse(typeof(ESlotType), data.GetString("Equipped"), ignoreCase: true);
+            equipped = (ESlotType)Enum.Parse(typeof(ESlotType), p.data.GetString("Equipped"), ignoreCase: true);
         }
         else
         {
             equipped = ESlotType.NONE;
         }
-        dialogue = data.ParseGuidOrLegacyId("Dialogue", out dialogueGuid);
-        if (data.ContainsKey("Pose"))
+        dialogue = p.data.ParseGuidOrLegacyId("Dialogue", out dialogueGuid);
+        if (p.data.ContainsKey("Pose"))
         {
-            pose = (ENPCPose)Enum.Parse(typeof(ENPCPose), data.GetString("Pose"), ignoreCase: true);
+            pose = (ENPCPose)Enum.Parse(typeof(ENPCPose), p.data.GetString("Pose"), ignoreCase: true);
         }
         else
         {
             pose = ENPCPose.STAND;
         }
-        if (data.ContainsKey("Pose_Lean"))
+        if (p.data.ContainsKey("Pose_Lean"))
         {
-            poseLean = data.ParseFloat("Pose_Lean");
+            poseLean = p.data.ParseFloat("Pose_Lean");
         }
-        if (data.ContainsKey("Pose_Pitch"))
+        if (p.data.ContainsKey("Pose_Pitch"))
         {
-            posePitch = data.ParseFloat("Pose_Pitch");
+            posePitch = p.data.ParseFloat("Pose_Pitch");
         }
         else
         {
             posePitch = 90f;
         }
-        if (data.ContainsKey("Pose_Head_Offset"))
+        if (p.data.ContainsKey("Pose_Head_Offset"))
         {
-            poseHeadOffset = data.ParseFloat("Pose_Head_Offset");
+            poseHeadOffset = p.data.ParseFloat("Pose_Head_Offset");
         }
         else if (pose == ENPCPose.CROUCH)
         {
             poseHeadOffset = 0.1f;
         }
-        playerKnowsNameFlagId = data.ParseUInt16("PlayerKnowsNameFlagID", 0);
+        playerKnowsNameFlagId = p.data.ParseUInt16("PlayerKnowsNameFlagID", 0);
     }
 
     [Obsolete("Server now tracks dialogue tree")]

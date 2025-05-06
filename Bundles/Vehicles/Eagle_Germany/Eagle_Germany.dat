@@ -1,4 +1,4 @@
-GUID ff6021c06024479482f38dce11f2ccf4
+﻿GUID ff6021c06024479482f38dce11f2ccf4
 Type Vehicle
 Rarity Rare
 ID 157
@@ -36,19 +36,19 @@ Explosion_Force_Multiplier 2
 
 PaintableSections
 [
-    {
-        Path Model_0
-        MaterialIndex 0
-    }
-    {
-        Path Model_1
-        MaterialIndex 0
-    }
+	{
+		Path Model_0
+		MaterialIndex 0
+	}
+	{
+		Path Model_1
+		MaterialIndex 0
+	}
 ]
 
 DefaultPaintColors
 [
-    #495631
+	#495631
 ]
 
 WheelConfigurations

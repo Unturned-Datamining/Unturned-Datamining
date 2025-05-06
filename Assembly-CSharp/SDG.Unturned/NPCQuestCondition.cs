@@ -5,18 +5,23 @@ namespace SDG.Unturned;
 
 public class NPCQuestCondition : NPCLogicCondition
 {
-    public Guid questGuid { get; private set; }
+    private CachingBcAssetRef _questAssetRef;
 
-    [Obsolete]
-    public ushort id { get; protected set; }
+    public CachingBcAssetRef QuestAssetRef => _questAssetRef;
 
     public ENPCQuestStatus status { get; protected set; }
 
     public bool ignoreNPC { get; protected set; }
 
+    [Obsolete]
+    public Guid questGuid => QuestAssetRef.Guid;
+
+    [Obsolete]
+    public ushort id => QuestAssetRef.LegacyId;
+
     public QuestAsset GetQuestAsset()
     {
-        return Assets.FindNpcAssetByGuidOrLegacyId<QuestAsset>(questGuid, id);
+        return _questAssetRef.Get<QuestAsset>();
     }
 
     public override bool isConditionMet(Player player)
@@ -68,11 +73,59 @@ public class NPCQuestCondition : NPCLogicCondition
         }
     }
 
+    internal override void PopulateV2(in PopulateConditionParameters p)
+    {
+        base.PopulateV2(in p);
+        if (!p.data.TryParseBcAssetRef("ID", EAssetType.NPC, out _questAssetRef))
+        {
+            p.ReportRequiredOptionInvalid("ID");
+        }
+        if (p.data.TryParseEnum<ENPCQuestStatus>("Status", out var value))
+        {
+            status = value;
+            if (value == ENPCQuestStatus.NONE && shouldReset)
+            {
+                p.ReportError("Quest condition has Reset enabled with Status None (probably accidental)");
+            }
+        }
+        else
+        {
+            p.ReportRequiredOptionInvalid("Status");
+        }
+        ignoreNPC = p.data.ParseBool("Ignore_NPC");
+    }
+
+    internal override void PopulateLegacy(in PopulateConditionParameters p)
+    {
+        base.PopulateLegacy(in p);
+        if (!p.data.TryParseBcAssetRef(p.legacyPrefix + "_ID", EAssetType.NPC, out _questAssetRef))
+        {
+            p.ReportRequiredOptionInvalid("ID");
+        }
+        if (p.data.TryParseEnum<ENPCQuestStatus>(p.legacyPrefix + "_Status", out var value))
+        {
+            status = value;
+            if (value == ENPCQuestStatus.NONE && shouldReset)
+            {
+                p.ReportError("Quest condition has Reset enabled with Status None (probably accidental)");
+            }
+        }
+        else
+        {
+            p.ReportRequiredOptionInvalid("Status");
+        }
+        ignoreNPC = p.data.ContainsKey(p.legacyPrefix + "_Ignore_NPC");
+    }
+
+    public NPCQuestCondition()
+    {
+    }
+
+    [Obsolete]
     public NPCQuestCondition(Guid newQuestGuid, ushort newID, ENPCQuestStatus newStatus, bool newIgnoreNPC, ENPCLogicType newLogicType, string newText, bool newShouldReset)
         : base(newLogicType, newText, newShouldReset)
     {
-        questGuid = newQuestGuid;
-        id = newID;
+        _questAssetRef = new CachingBcAssetRef(newQuestGuid, EAssetType.NPC, newID);
         status = newStatus;
         ignoreNPC = newIgnoreNPC;
     }

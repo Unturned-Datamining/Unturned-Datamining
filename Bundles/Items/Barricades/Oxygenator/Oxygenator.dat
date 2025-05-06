@@ -1,4 +1,4 @@
-GUID ea56c734f3614983a5381bbce91ba79a
+﻿GUID ea56c734f3614983a5381bbce91ba79a
 Type Barricade
 Rarity Epic
 Useable Barricade
@@ -16,18 +16,38 @@ Offset 0.75
 
 Explosion 36
 
-Blueprints 1
-Blueprint_0_Type Utilities
-Blueprint_0_Supplies 3
-Blueprint_0_Supply_0_ID 68
-Blueprint_0_Supply_0_Amount 5
-Blueprint_0_Supply_1_ID 285
-Blueprint_0_Supply_1_Amount 5
-Blueprint_0_Supply_2_ID 1178
-Blueprint_0_Supply_2_Amount 1
-Blueprint_0_Tool 76
-Blueprint_0_Level 2
-Blueprint_0_Skill Craft
-Blueprint_0_Build 27
+Blueprints
+[
+	{
+		CategoryTag "bfac6026305f4737a95fd275ebff65a6" // Utilities
+		InputItems
+		[
+			{
+				ID "7f06b16642724683bd61584a52fde981" // Metal Sheet
+				Amount 5
+			}
+			{
+				ID "656f319d2d194813b390edc6edd8a697" // Metal Bar
+				Amount 5
+			}
+			{
+				ID "ba3baff781ab4970b549b805c4d28bf8" // Diving Tank
+			}
+			{
+				ID "5830b84bf8074caa91cf3f4dde0dd19e" // Blowtorch
+				Delete false
+			}
+		]
+		OutputItems this
+		Skill Craft
+		Skill_Level 2
+		RequiresNearbyCraftingTags
+		[
+			"7b82c125a5a54984b8bb26576b59e977" // Workbench
+		]
+		Effect "84347b13028340b8976033c08675d458" // Wrench
+	}
+]
+
 PlacementAudioClip Sounds/MetalPlacement.mp3
 Has_Clip_Prefab false

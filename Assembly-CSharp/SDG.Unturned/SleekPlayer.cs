@@ -37,7 +37,7 @@ public class SleekPlayer : SleekWrapper
 
     private void onClickedPlayerButton(ISleekElement button)
     {
-        Provider.provider.browserService.open("http://steamcommunity.com/profiles/" + player.playerID.steamID.ToString());
+        Provider.provider.browserService.open("https://steamcommunity.com/profiles/" + player.playerID.steamID.ToString());
     }
 
     private void OnMuteVoiceChatClicked(ISleekElement button)

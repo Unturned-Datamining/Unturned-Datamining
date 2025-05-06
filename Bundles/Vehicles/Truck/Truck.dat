@@ -1,4 +1,4 @@
-GUID e7105217d65f4c5e8d00b0989538f57f
+﻿GUID e7105217d65f4c5e8d00b0989538f57f
 Type Vehicle
 
 Speed_Min -6
@@ -33,24 +33,24 @@ Explosion_Force_Multiplier 2
 
 PaintableSections
 [
-    {
-        Path Model_0
-        MaterialIndex 0
-    }
-    {
-        Path Model_1
-        MaterialIndex 0
-    }
+	{
+		Path Model_0
+		MaterialIndex 0
+	}
+	{
+		Path Model_1
+		MaterialIndex 0
+	}
 ]
 
 DefaultPaintColor_Mode RandomHueOrGrayscale
 DefaultPaintColor_Configuration
 {
-    MinSaturation 0.15
-    MaxSaturation 0.7
-    MinValue 0.15
-    MaxValue 0.9
-    GrayscaleChance 0.1
+	MinSaturation 0.15
+	MaxSaturation 0.7
+	MinValue 0.15
+	MaxValue 0.9
+	GrayscaleChance 0.1
 }
 
 WheelConfigurations

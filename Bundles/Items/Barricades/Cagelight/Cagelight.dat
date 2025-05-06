@@ -1,4 +1,4 @@
-GUID 9908a43237364f22a62242cd1fb14fc9
+﻿GUID 9908a43237364f22a62242cd1fb14fc9
 Type Barricade
 Rarity Rare
 Useable Barricade
@@ -15,27 +15,46 @@ Offset 0.15
 
 Explosion 36
 
-Blueprints 2
-Blueprint_0_Type Utilities
-Blueprint_0_Supplies 2
-Blueprint_0_Supply_0_ID 65
-Blueprint_0_Supply_0_Amount 3
-Blueprint_0_Supply_1_ID 285
-Blueprint_0_Supply_1_Amount 4
-Blueprint_0_Tool 76
-Blueprint_0_Level 3
-Blueprint_0_Skill Craft
-Blueprint_0_Build 27
-Blueprint_1_Type Utilities
-Blueprint_1_Supplies 1
-Blueprint_1_Supply_0_ID this
-Blueprint_1_Supply_0_Amount 1
-Blueprint_1_Outputs 2
-Blueprint_1_Output_0_ID "65" // Wire
-Blueprint_1_Output_0_Amount 2
-Blueprint_1_Output_1_ID "285" // Metal_Bar
-Blueprint_1_Output_1_Amount 2
-Blueprint_1_Build 27
+Blueprints
+[
+	{
+		CategoryTag "bfac6026305f4737a95fd275ebff65a6" // Utilities
+		InputItems
+		[
+			{
+				ID "ebb61f2e64f24351a6ab905b5516060b" // Wire
+				Amount 3
+			}
+			{
+				ID "656f319d2d194813b390edc6edd8a697" // Metal Bar
+				Amount 4
+			}
+			{
+				ID "5830b84bf8074caa91cf3f4dde0dd19e" // Blowtorch
+				Delete false
+			}
+		]
+		OutputItems this
+		Skill Craft
+		Skill_Level 3
+		RequiresNearbyCraftingTags
+		[
+			"7b82c125a5a54984b8bb26576b59e977" // Workbench
+		]
+		Effect "84347b13028340b8976033c08675d458" // Wrench
+	}
+	{
+		Name Salvage
+		CategoryTag "7ed29f9101ae4523a3b2e389414b7bd9" // Salvage
+		InputItems this
+		OutputItems
+		[
+			"ebb61f2e64f24351a6ab905b5516060b x 2" // Wire
+			"656f319d2d194813b390edc6edd8a697 x 2" // Metal Bar
+		]
+		Effect "84347b13028340b8976033c08675d458" // Wrench
+	}
+]
 
 PlacementAudioClip Sounds/MetalPlacement.mp3
 Has_Clip_Prefab false

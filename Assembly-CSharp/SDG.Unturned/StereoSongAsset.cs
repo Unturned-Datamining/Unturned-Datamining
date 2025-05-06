@@ -29,21 +29,21 @@ public class StereoSongAsset : Asset
     /// </summary>
     public string linkURL { get; protected set; }
 
-    public override void PopulateAsset(Bundle bundle, DatDictionary data, Local localization)
+    public override void PopulateAsset(in PopulateAssetParameters p)
     {
-        base.PopulateAsset(bundle, data, localization);
-        if (localization.has("Name"))
+        base.PopulateAsset(in p);
+        if (p.localization.has("Name"))
         {
-            titleText = localization.read("Name");
+            titleText = p.localization.read("Name");
         }
         if (string.IsNullOrEmpty(titleText))
         {
-            titleText = data.GetString("Title");
+            titleText = p.data.GetString("Title");
         }
-        songContentRef = data.ParseStruct<ContentReference<AudioClip>>("Song");
-        songMbRef = data.ParseStruct<MasterBundleReference<AudioClip>>("Song");
-        linkURL = data.GetString("Link_URL");
-        isLoop = data.ParseBool("Is_Loop");
+        songContentRef = p.data.ParseStruct<ContentReference<AudioClip>>("Song");
+        songMbRef = p.data.ParseStruct<MasterBundleReference<AudioClip>>("Song");
+        linkURL = p.data.GetString("Link_URL");
+        isLoop = p.data.ParseBool("Is_Loop");
     }
 
     protected virtual void construct()

@@ -1,4 +1,4 @@
-GUID cce39bd61f9b4536a5ea670a61c012a7
+﻿GUID cce39bd61f9b4536a5ea670a61c012a7
 Type Fisher
 Rarity Epic
 Useable Fisher
@@ -12,19 +12,38 @@ EquipableModelParent LeftHook
 
 Reward_ID 675
 
-Blueprints 1
-Blueprint_0_Type Tool
-Blueprint_0_Supplies 4
-Blueprint_0_Supply_0_ID 503
-Blueprint_0_Supply_0_Amount 1
-Blueprint_0_Supply_1_ID 73
-Blueprint_0_Supply_1_Amount 1
-Blueprint_0_Supply_2_ID 71
-Blueprint_0_Supply_2_Amount 1
-Blueprint_0_Supply_3_ID 65
-Blueprint_0_Supply_3_Amount 2
-Blueprint_0_Tool 1433
-Blueprint_0_Tool_Critical
-Blueprint_0_Level 2
-Blueprint_0_Skill Craft
-Blueprint_0_Build 27
+Blueprints
+[
+	{
+		CategoryTag "ad1804b6945145f3b308738b0b8ea447" // Tools
+		InputItems
+		[
+			{
+				ID "04e1a631fc0848a68b02022d8b1c2141" // Fishing Rod
+			}
+			{
+				ID "8ce5c560166545499432d6e01ce399cc" // Raw Explosives
+			}
+			{
+				ID "4b68587f5cad45eaab5e07ed0e6fd3b3" // Nails
+			}
+			{
+				ID "ebb61f2e64f24351a6ab905b5516060b" // Wire
+				Amount 2
+			}
+			{
+				ID "1c47939b50344c79852e1b4376debbfc" // Upgraded Fishing Rod Blueprint
+				Critical true
+				Delete false
+			}
+		]
+		OutputItems this
+		Skill Craft
+		Skill_Level 2
+		RequiresNearbyCraftingTags
+		[
+			"7b82c125a5a54984b8bb26576b59e977" // Workbench
+		]
+		Effect "84347b13028340b8976033c08675d458" // Wrench
+	}
+]

@@ -7,10 +7,10 @@ public class MaterialPaletteAsset : Asset
 {
     public List<ContentReference<Material>> materials;
 
-    public override void PopulateAsset(Bundle bundle, DatDictionary data, Local localization)
+    public override void PopulateAsset(in PopulateAssetParameters p)
     {
-        base.PopulateAsset(bundle, data, localization);
-        if (data.TryGetList("Materials", out var node))
+        base.PopulateAsset(in p);
+        if (p.data.TryGetList("Materials", out var node))
         {
             materials = node.ParseListOfStructs<ContentReference<Material>>();
         }

@@ -1,20 +1,20 @@
-"Metadata"
+﻿Metadata
 {
-	"GUID" "e54a3da2c46e4927848fed4cdead560a"
-	"Type" "SDG.Unturned.LandscapeMaterialAsset, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null"
+	GUID e54a3da2c46e4927848fed4cdead560a
+	Type SDG.Unturned.LandscapeMaterialAsset, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
 }
-"Asset"
+Asset
 {
-	"ID" "0"
-	"Texture"
+	ID 0
+	Texture
 	{
-		"Name" "core.masterbundle"
-		"Path" "Terrain/Materials/Fallback/Yellow.png"
+		Name core.masterbundle
+		Path Terrain/Materials/Fallback/Yellow.png
 	}
-	"Mask"
+	Mask
 	{
-		"Name" ""
-		"Path" ""
+		Name
+		Path
 	}
-	"Physics_Material" "Concrete_Static"
+	Physics_Material Concrete_Static
 }

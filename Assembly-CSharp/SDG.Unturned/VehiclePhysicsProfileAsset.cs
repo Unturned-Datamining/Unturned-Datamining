@@ -83,11 +83,11 @@ public class VehiclePhysicsProfileAsset : Asset
 
     public EDriveModel? wheelBrakeModel { get; protected set; }
 
-    protected Friction? readFriction(DatDictionary data, string key)
+    protected Friction? readFriction(IDatDictionary data, string key)
     {
         if (data.ContainsKey(key))
         {
-            DatDictionary dictionary = data.GetDictionary(key);
+            IDatDictionary dictionary = data.GetDictionary(key);
             Friction value = default(Friction);
             value.extremumSlip = dictionary.ParseFloat("Extremum_Slip");
             value.extremumValue = dictionary.ParseFloat("Extremum_Value");
@@ -222,78 +222,78 @@ public class VehiclePhysicsProfileAsset : Asset
         }
     }
 
-    public override void PopulateAsset(Bundle bundle, DatDictionary data, Local localization)
+    public override void PopulateAsset(in PopulateAssetParameters p)
     {
-        base.PopulateAsset(bundle, data, localization);
-        if (data.ContainsKey("Root_Mass"))
+        base.PopulateAsset(in p);
+        if (p.data.ContainsKey("Root_Mass"))
         {
-            rootMassOverride = data.ParseFloat("Root_Mass");
+            rootMassOverride = p.data.ParseFloat("Root_Mass");
         }
-        if (data.ContainsKey("Root_Mass_Multiplier"))
+        if (p.data.ContainsKey("Root_Mass_Multiplier"))
         {
-            rootMassMultiplier = data.ParseFloat("Root_Mass_Multiplier");
+            rootMassMultiplier = p.data.ParseFloat("Root_Mass_Multiplier");
         }
-        if (data.ContainsKey("Root_Drag_Multiplier"))
+        if (p.data.ContainsKey("Root_Drag_Multiplier"))
         {
-            rootDragMultiplier = data.ParseFloat("Root_Drag_Multiplier");
+            rootDragMultiplier = p.data.ParseFloat("Root_Drag_Multiplier");
         }
-        if (data.ContainsKey("Root_Angular_Drag_Multiplier"))
+        if (p.data.ContainsKey("Root_Angular_Drag_Multiplier"))
         {
-            rootAngularDragMultiplier = data.ParseFloat("Root_Angular_Drag_Multiplier");
+            rootAngularDragMultiplier = p.data.ParseFloat("Root_Angular_Drag_Multiplier");
         }
-        if (data.ContainsKey("Carjack_Force_Multiplier"))
+        if (p.data.ContainsKey("Carjack_Force_Multiplier"))
         {
-            carjackForceMultiplier = data.ParseFloat("Carjack_Force_Multiplier");
+            carjackForceMultiplier = p.data.ParseFloat("Carjack_Force_Multiplier");
         }
-        if (data.ContainsKey("Wheel_Mass"))
+        if (p.data.ContainsKey("Wheel_Mass"))
         {
-            wheelMassOverride = data.ParseFloat("Wheel_Mass");
+            wheelMassOverride = p.data.ParseFloat("Wheel_Mass");
         }
-        if (data.ContainsKey("Wheel_Mass_Multiplier"))
+        if (p.data.ContainsKey("Wheel_Mass_Multiplier"))
         {
-            wheelMassMultiplier = data.ParseFloat("Wheel_Mass_Multiplier");
+            wheelMassMultiplier = p.data.ParseFloat("Wheel_Mass_Multiplier");
         }
-        if (data.ContainsKey("Wheel_Damping_Rate"))
+        if (p.data.ContainsKey("Wheel_Damping_Rate"))
         {
-            wheelDampingRate = data.ParseFloat("Wheel_Damping_Rate");
+            wheelDampingRate = p.data.ParseFloat("Wheel_Damping_Rate");
         }
-        if (data.ContainsKey("Wheel_Stiffness_Traction_Multiplier"))
+        if (p.data.ContainsKey("Wheel_Stiffness_Traction_Multiplier"))
         {
-            wheelStiffnessTractionMultiplier = data.ParseFloat("Wheel_Stiffness_Traction_Multiplier");
+            wheelStiffnessTractionMultiplier = p.data.ParseFloat("Wheel_Stiffness_Traction_Multiplier");
         }
-        if (data.ContainsKey("Wheel_Suspension_Force"))
+        if (p.data.ContainsKey("Wheel_Suspension_Force"))
         {
-            wheelSuspensionForce = data.ParseFloat("Wheel_Suspension_Force");
+            wheelSuspensionForce = p.data.ParseFloat("Wheel_Suspension_Force");
         }
-        if (data.ContainsKey("Wheel_Suspension_Damper"))
+        if (p.data.ContainsKey("Wheel_Suspension_Damper"))
         {
-            wheelSuspensionDamper = data.ParseFloat("Wheel_Suspension_Damper");
+            wheelSuspensionDamper = p.data.ParseFloat("Wheel_Suspension_Damper");
         }
-        sidewaysFriction = readFriction(data, "Wheel_Friction_Sideways");
-        forwardFriction = readFriction(data, "Wheel_Friction_Forward");
-        if (data.ContainsKey("Motor_Torque_Multiplier"))
+        sidewaysFriction = readFriction(p.data, "Wheel_Friction_Sideways");
+        forwardFriction = readFriction(p.data, "Wheel_Friction_Forward");
+        if (p.data.ContainsKey("Motor_Torque_Multiplier"))
         {
-            motorTorqueMultiplier = data.ParseFloat("Motor_Torque_Multiplier");
+            motorTorqueMultiplier = p.data.ParseFloat("Motor_Torque_Multiplier");
         }
-        if (data.ContainsKey("Motor_Torque_Clamp_Multiplier"))
+        if (p.data.ContainsKey("Motor_Torque_Clamp_Multiplier"))
         {
-            motorTorqueClampMultiplier = data.ParseFloat("Motor_Torque_Clamp_Multiplier");
+            motorTorqueClampMultiplier = p.data.ParseFloat("Motor_Torque_Clamp_Multiplier");
         }
-        if (data.ContainsKey("Brake_Torque_Multiplier"))
+        if (p.data.ContainsKey("Brake_Torque_Multiplier"))
         {
-            brakeTorqueMultiplier = data.ParseFloat("Brake_Torque_Multiplier");
+            brakeTorqueMultiplier = p.data.ParseFloat("Brake_Torque_Multiplier");
         }
-        if (data.ContainsKey("Brake_Torque_Traction_Multiplier"))
+        if (p.data.ContainsKey("Brake_Torque_Traction_Multiplier"))
         {
-            brakeTorqueTractionMultiplier = data.ParseFloat("Brake_Torque_Traction_Multiplier");
+            brakeTorqueTractionMultiplier = p.data.ParseFloat("Brake_Torque_Traction_Multiplier");
         }
-        if (data.ContainsKey("Wheel_Drive_Model"))
+        if (p.data.ContainsKey("Wheel_Drive_Model"))
         {
-            wheelDriveModel = data.ParseEnum("Wheel_Drive_Model", EDriveModel.Front);
+            wheelDriveModel = p.data.ParseEnum("Wheel_Drive_Model", EDriveModel.Front);
         }
-        if (data.ContainsKey("Wheel_Brake_Model"))
+        if (p.data.ContainsKey("Wheel_Brake_Model"))
         {
-            wheelBrakeModel = data.ParseEnum("Wheel_Brake_Model", EDriveModel.Front);
+            wheelBrakeModel = p.data.ParseEnum("Wheel_Brake_Model", EDriveModel.Front);
         }
     }
 

@@ -1,4 +1,4 @@
-GUID 83a149230e9c4a77b1538b3b276abcc7
+﻿GUID 83a149230e9c4a77b1538b3b276abcc7
 Type Farm
 Useable Barricade
 Build Farm
@@ -19,9 +19,15 @@ Grow 335
 Explosion 43
 Vulnerable
 
-Blueprints 1
-Blueprint_0_Type Utilities
-Blueprint_0_Supply_0_ID 335
-Blueprint_0_Build 27
+Blueprints
+[
+	{
+		CategoryTag "bfac6026305f4737a95fd275ebff65a6" // Utilities
+		InputItems "dfe28176368e41e08038652796dd1216" // Corn
+		OutputItems this
+		Effect "84347b13028340b8976033c08675d458" // Wrench
+	}
+]
+
 PlacementAudioClip Sounds/FoliagePlacement.mp3
 Has_Clip_Prefab false

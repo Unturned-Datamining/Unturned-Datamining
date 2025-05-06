@@ -83,31 +83,31 @@ public class ItemMeleeAsset : ItemWeaponAsset
         BuildNonExplosiveDescription(builder, itemInstance);
     }
 
-    public override void PopulateAsset(Bundle bundle, DatDictionary data, Local localization)
+    public override void PopulateAsset(in PopulateAssetParameters p)
     {
-        base.PopulateAsset(bundle, data, localization);
-        _use = LoadRedirectableAsset<AudioClip>(bundle, "Use", data, "AttackAudioClip");
-        _strength = data.ParseFloat("Strength");
-        _weak = data.ParseFloat("Weak", 0.5f);
-        _strong = data.ParseFloat("Strong", 0.33f);
-        _stamina = data.ParseUInt8("Stamina", 0);
-        _isRepair = data.ContainsKey("Repair");
-        _isRepeated = data.ContainsKey("Repeated");
-        _isLight = data.ContainsKey("Light");
+        base.PopulateAsset(in p);
+        _use = LoadRedirectableAsset<AudioClip>(p.bundle, "Use", p.data, "AttackAudioClip");
+        _strength = p.data.ParseFloat("Strength");
+        _weak = p.data.ParseFloat("Weak", 0.5f);
+        _strong = p.data.ParseFloat("Strong", 0.33f);
+        _stamina = p.data.ParseUInt8("Stamina", 0);
+        _isRepair = p.data.ContainsKey("Repair");
+        _isRepeated = p.data.ContainsKey("Repeated");
+        _isLight = p.data.ContainsKey("Light");
         if (isLight)
         {
-            lightConfig = new PlayerSpotLightConfig(data);
+            lightConfig = new PlayerSpotLightConfig(p.data);
         }
-        if (data.ContainsKey("Alert_Radius"))
+        if (p.data.ContainsKey("Alert_Radius"))
         {
-            alertRadius = data.ParseFloat("Alert_Radius");
+            alertRadius = p.data.ParseFloat("Alert_Radius");
         }
         else
         {
             alertRadius = 8f;
         }
-        impactAudio = data.ReadAudioReference("ImpactAudioDef", bundle);
-        weakAttackQuestRewards.Parse(data, localization, this, "Weak_Attack_Quest_Rewards", "Weak_Attack_Quest_Reward_");
-        strongAttackQuestRewards.Parse(data, localization, this, "Strong_Attack_Quest_Rewards", "Strong_Attack_Quest_Reward_");
+        impactAudio = p.data.ReadAudioReference("ImpactAudioDef", p.bundle);
+        weakAttackQuestRewards.Parse(p.data, p.localization, this, "Weak_Attack_Quest_Rewards", "Weak_Attack_Quest_Reward_");
+        strongAttackQuestRewards.Parse(p.data, p.localization, this, "Strong_Attack_Quest_Rewards", "Strong_Attack_Quest_Reward_");
     }
 }

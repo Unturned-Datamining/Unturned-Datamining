@@ -1,4 +1,4 @@
-GUID 0999953ab4b846f0990b7a4ae3a51d9e
+﻿GUID 0999953ab4b846f0990b7a4ae3a51d9e
 Type Vehicle
 Rarity Legendary
 
@@ -41,14 +41,14 @@ Has_Clip_Prefab false
 
 PaintableSections
 [
-    {
-        Path Model_0
-        MaterialIndex 0
-    }
-    {
-        Path Model_1
-        MaterialIndex 0
-    }
+	{
+		Path Model_0
+		MaterialIndex 0
+	}
+	{
+		Path Model_1
+		MaterialIndex 0
+	}
 ]
 
 DefaultPaintColors

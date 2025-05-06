@@ -165,7 +165,7 @@ public class SleekManageWorkshopEntry : SleekWrapper
         if (Provider.provider.browserService.canOpenBrowser)
         {
             PublishedFileId_t publishedFileId_t = fileId;
-            string url = "http://steamcommunity.com/sharedfiles/filedetails/?id=" + publishedFileId_t.ToString();
+            string url = "https://steamcommunity.com/sharedfiles/filedetails/?id=" + publishedFileId_t.ToString();
             Provider.provider.browserService.open(url);
         }
         else

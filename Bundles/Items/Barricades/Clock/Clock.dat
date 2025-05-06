@@ -1,4 +1,4 @@
-GUID d3c40816534e48c3af0e26fb4d5f1b1a
+﻿GUID d3c40816534e48c3af0e26fb4d5f1b1a
 Type Barricade
 Rarity Rare
 Useable Barricade
@@ -15,17 +15,31 @@ Offset 0.05
 
 Explosion 60
 
-Blueprints 1
-Blueprint_0_Type Utilities
-Blueprint_0_Supplies 2
-Blueprint_0_Supply_0_ID 1297
-Blueprint_0_Supply_0_Amount 1
-Blueprint_0_Supply_1_ID 67
-Blueprint_0_Supply_1_Amount 2
-Blueprint_0_Tool 76
-Blueprint_0_Level 3
-Blueprint_0_Skill Craft
-Blueprint_0_Build 27
+Blueprints
+[
+	{
+		CategoryTag "bfac6026305f4737a95fd275ebff65a6" // Utilities
+		InputItems
+		[
+			{
+				ID "6314c13082c24bdcbc9872d492df4926" // Weak Glass
+			}
+			{
+				ID "21ede8ebffb14c5580e8c7ad149e335e" // Metal Scrap
+				Amount 2
+			}
+			{
+				ID "5830b84bf8074caa91cf3f4dde0dd19e" // Blowtorch
+				Delete false
+			}
+		]
+		OutputItems this
+		Skill Craft
+		Skill_Level 3
+		Effect "84347b13028340b8976033c08675d458" // Wrench
+	}
+]
+
 PlacementAudioClip Sounds/WoodenPlacement.mp3
 
 Has_Clip_Prefab false

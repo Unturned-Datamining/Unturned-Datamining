@@ -1189,6 +1189,9 @@ public class MenuDashboardUI
         MenuUI.copyNotificationButton.icon = icons.load<Texture2D>("Clipboard");
         MenuUI.copyNotificationButton.text = localization.format("Copy_Notification_Label");
         MenuUI.copyNotificationButton.tooltip = localization.format("Copy_Notification_Tooltip");
+        MenuUI.markContentCorruptButton.icon = icons.load<Texture2D>("MarkContentCorrupt");
+        MenuUI.markContentCorruptButton.text = localization.format("MarkContentCorrupt_Label");
+        MenuUI.markContentCorruptButton.tooltip = localization.format("MarkContentCorrupt_Tooltip");
         newAnnouncement = null;
         workshopBox = null;
         itemStoreSaleNews = null;
@@ -1354,93 +1357,267 @@ public class MenuDashboardUI
                 UnturnedLog.info("Connection failure {0} is asset related and therefore probably caused by the {1} download-restricted workshop item(s)", eSteamConnectionFailureInfo, serverInvalidItemsCount);
                 eSteamConnectionFailureInfo = ESteamConnectionFailureInfo.WORKSHOP_DOWNLOAD_RESTRICTION;
             }
-            string text = eSteamConnectionFailureInfo switch
+            bool flag = false;
+            string text;
+            switch (eSteamConnectionFailureInfo)
             {
-                ESteamConnectionFailureInfo.BANNED => localization.format("Banned", connectionFailureDuration, connectionFailureReason), 
-                ESteamConnectionFailureInfo.KICKED => localization.format("Kicked", connectionFailureReason), 
-                ESteamConnectionFailureInfo.WHITELISTED => localization.format("Whitelisted"), 
-                ESteamConnectionFailureInfo.PASSWORD => localization.format("Password"), 
-                ESteamConnectionFailureInfo.FULL => localization.format("Full"), 
-                ESteamConnectionFailureInfo.HASH_LEVEL => localization.format("Hash_Level"), 
-                ESteamConnectionFailureInfo.HASH_ASSEMBLY => localization.format("Hash_Assembly"), 
-                ESteamConnectionFailureInfo.VERSION => localization.format("Version", connectionFailureReason, Provider.APP_VERSION), 
-                ESteamConnectionFailureInfo.PRO_SERVER => localization.format("Pro_Server"), 
-                ESteamConnectionFailureInfo.PRO_CHARACTER => localization.format("Pro_Character"), 
-                ESteamConnectionFailureInfo.PRO_DESYNC => localization.format("Pro_Desync"), 
-                ESteamConnectionFailureInfo.PRO_APPEARANCE => localization.format("Pro_Appearance"), 
-                ESteamConnectionFailureInfo.AUTH_VERIFICATION => localization.format("Auth_Verification"), 
-                ESteamConnectionFailureInfo.AUTH_NO_STEAM => localization.format("Auth_No_Steam"), 
-                ESteamConnectionFailureInfo.AUTH_LICENSE_EXPIRED => localization.format("Auth_License_Expired"), 
-                ESteamConnectionFailureInfo.AUTH_VAC_BAN => localization.format("Auth_VAC_Ban"), 
-                ESteamConnectionFailureInfo.AUTH_ELSEWHERE => localization.format("Auth_Elsewhere"), 
-                ESteamConnectionFailureInfo.AUTH_TIMED_OUT => localization.format("Auth_Timed_Out"), 
-                ESteamConnectionFailureInfo.AUTH_USED => localization.format("Auth_Used"), 
-                ESteamConnectionFailureInfo.AUTH_NO_USER => localization.format("Auth_No_User"), 
-                ESteamConnectionFailureInfo.AUTH_PUB_BAN => localization.format("Auth_Pub_Ban"), 
-                ESteamConnectionFailureInfo.AUTH_NETWORK_IDENTITY_FAILURE => localization.format("Auth_Network_Identity_Failure"), 
-                ESteamConnectionFailureInfo.AUTH_ECON_SERIALIZE => localization.format("Auth_Econ_Serialize"), 
-                ESteamConnectionFailureInfo.AUTH_ECON_DESERIALIZE => localization.format("Auth_Econ_Deserialize"), 
-                ESteamConnectionFailureInfo.AUTH_ECON_VERIFY => localization.format("Auth_Econ_Verify"), 
-                ESteamConnectionFailureInfo.AUTH_EMPTY => localization.format("Auth_Empty"), 
-                ESteamConnectionFailureInfo.ALREADY_CONNECTED => localization.format("Already_Connected"), 
-                ESteamConnectionFailureInfo.ALREADY_PENDING => localization.format("Already_Pending"), 
-                ESteamConnectionFailureInfo.LATE_PENDING => localization.format("Late_Pending"), 
-                ESteamConnectionFailureInfo.NOT_PENDING => localization.format("Not_Pending"), 
-                ESteamConnectionFailureInfo.NAME_PLAYER_SHORT => localization.format("Name_Player_Short"), 
-                ESteamConnectionFailureInfo.NAME_PLAYER_LONG => localization.format("Name_Player_Long"), 
-                ESteamConnectionFailureInfo.NAME_PLAYER_INVALID => localization.format("Name_Player_Invalid"), 
-                ESteamConnectionFailureInfo.NAME_PLAYER_NUMBER => localization.format("Name_Player_Number"), 
-                ESteamConnectionFailureInfo.NAME_CHARACTER_SHORT => localization.format("Name_Character_Short"), 
-                ESteamConnectionFailureInfo.NAME_CHARACTER_LONG => localization.format("Name_Character_Long"), 
-                ESteamConnectionFailureInfo.NAME_CHARACTER_INVALID => localization.format("Name_Character_Invalid"), 
-                ESteamConnectionFailureInfo.NAME_CHARACTER_NUMBER => localization.format("Name_Character_Number"), 
-                ESteamConnectionFailureInfo.TIMED_OUT => localization.format("Timed_Out"), 
-                ESteamConnectionFailureInfo.TIMED_OUT_LOGIN => localization.format("Timed_Out_Login"), 
-                ESteamConnectionFailureInfo.MAP => localization.format("Map"), 
-                ESteamConnectionFailureInfo.SHUTDOWN => string.IsNullOrEmpty(connectionFailureReason) ? localization.format("Shutdown") : localization.format("Shutdown_Reason", connectionFailureReason), 
-                ESteamConnectionFailureInfo.PING => connectionFailureReason, 
-                ESteamConnectionFailureInfo.PLUGIN => string.IsNullOrEmpty(connectionFailureReason) ? localization.format("Plugin") : localization.format("Plugin_Reason", connectionFailureReason), 
-                ESteamConnectionFailureInfo.BARRICADE => localization.format("Barricade", connectionFailureReason), 
-                ESteamConnectionFailureInfo.STRUCTURE => localization.format("Structure", connectionFailureReason), 
-                ESteamConnectionFailureInfo.VEHICLE => localization.format("Vehicle", connectionFailureReason), 
-                ESteamConnectionFailureInfo.CLIENT_MODULE_DESYNC => localization.format("Client_Module_Desync"), 
-                ESteamConnectionFailureInfo.SERVER_MODULE_DESYNC => localization.format("Server_Module_Desync"), 
-                ESteamConnectionFailureInfo.BATTLEYE_BROKEN => localization.format("BattlEye_Broken"), 
-                ESteamConnectionFailureInfo.BATTLEYE_UPDATE => localization.format("BattlEye_Update"), 
-                ESteamConnectionFailureInfo.BATTLEYE_UNKNOWN => localization.format("BattlEye_Unknown"), 
-                ESteamConnectionFailureInfo.LEVEL_VERSION => connectionFailureReason, 
-                ESteamConnectionFailureInfo.ECON_HASH => localization.format("Econ_Hash"), 
-                ESteamConnectionFailureInfo.HASH_MASTER_BUNDLE => localization.format("Master_Bundle_Hash", connectionFailureReason), 
-                ESteamConnectionFailureInfo.REJECT_UNKNOWN => localization.format("Reject_Unknown", connectionFailureReason), 
-                ESteamConnectionFailureInfo.WORKSHOP_DOWNLOAD_RESTRICTION => localization.format("Workshop_Download_Restriction", serverInvalidItemsCount), 
-                ESteamConnectionFailureInfo.WORKSHOP_ADVERTISEMENT_MISMATCH => localization.format("Workshop_Advertisement_Mismatch"), 
-                ESteamConnectionFailureInfo.CUSTOM => connectionFailureReason, 
-                ESteamConnectionFailureInfo.LATE_PENDING_STEAM_AUTH => localization.format("Late_Pending_Steam_Auth"), 
-                ESteamConnectionFailureInfo.LATE_PENDING_STEAM_ECON => localization.format("Late_Pending_Steam_Econ"), 
-                ESteamConnectionFailureInfo.LATE_PENDING_STEAM_GROUPS => localization.format("Late_Pending_Steam_Groups"), 
-                ESteamConnectionFailureInfo.NAME_PRIVATE_LONG => localization.format("Name_Private_Long"), 
-                ESteamConnectionFailureInfo.NAME_PRIVATE_INVALID => localization.format("Name_Private_Invalid"), 
-                ESteamConnectionFailureInfo.NAME_PRIVATE_NUMBER => localization.format("Name_Private_Number"), 
-                ESteamConnectionFailureInfo.HASH_RESOURCES => localization.format("Hash_Resources"), 
-                ESteamConnectionFailureInfo.SKIN_COLOR_WITHIN_THRESHOLD_OF_TERRAIN_COLOR => localization.format("SkinColorWithinThresholdOfTerrainColor"), 
-                ESteamConnectionFailureInfo.STEAM_ID_MISMATCH => localization.format("Steam_ID_Mismatch"), 
-                ESteamConnectionFailureInfo.CONNECT_RATE_LIMITING => localization.format("Connect_Rate_Limiting"), 
-                ESteamConnectionFailureInfo.BAD_PACKET_RATE_LIMITING => localization.format("Bad_Packet_Rate_Limiting"), 
-                ESteamConnectionFailureInfo.SERVER_MAP_ADVERTISEMENT_MISMATCH => localization.format("Server_Map_Advertisement_Mismatch"), 
-                ESteamConnectionFailureInfo.SERVER_VAC_ADVERTISEMENT_MISMATCH => localization.format("Server_VAC_Advertisement_Mismatch"), 
-                ESteamConnectionFailureInfo.SERVER_BATTLEYE_ADVERTISEMENT_MISMATCH => localization.format("Server_BattlEye_Advertisement_Mismatch"), 
-                ESteamConnectionFailureInfo.SERVER_MAXPLAYERS_ADVERTISEMENT_MISMATCH => localization.format("Server_MaxPlayers_Advertisement_Mismatch"), 
-                ESteamConnectionFailureInfo.SERVER_CAMERAMODE_ADVERTISEMENT_MISMATCH => localization.format("Server_CameraMode_Advertisement_Mismatch"), 
-                ESteamConnectionFailureInfo.SERVER_PVP_ADVERTISEMENT_MISMATCH => localization.format("Server_PvP_Advertisement_Mismatch"), 
-                ESteamConnectionFailureInfo.HWID_MODIFIED => localization.format("HWID_Modified"), 
-                _ => localization.format("Failure_Unknown", eSteamConnectionFailureInfo, connectionFailureReason), 
-            };
+            case ESteamConnectionFailureInfo.BANNED:
+                text = localization.format("Banned", connectionFailureDuration, connectionFailureReason);
+                break;
+            case ESteamConnectionFailureInfo.KICKED:
+                text = localization.format("Kicked", connectionFailureReason);
+                break;
+            case ESteamConnectionFailureInfo.WHITELISTED:
+                text = localization.format("Whitelisted");
+                break;
+            case ESteamConnectionFailureInfo.PASSWORD:
+                text = localization.format("Password");
+                break;
+            case ESteamConnectionFailureInfo.FULL:
+                text = localization.format("Full");
+                break;
+            case ESteamConnectionFailureInfo.HASH_LEVEL:
+                text = localization.format("Hash_Level");
+                flag = true;
+                break;
+            case ESteamConnectionFailureInfo.HASH_ASSEMBLY:
+                text = localization.format("Hash_Assembly");
+                flag = true;
+                break;
+            case ESteamConnectionFailureInfo.VERSION:
+                text = localization.format("Version", connectionFailureReason, Provider.APP_VERSION);
+                flag = true;
+                break;
+            case ESteamConnectionFailureInfo.PRO_SERVER:
+                text = localization.format("Pro_Server");
+                break;
+            case ESteamConnectionFailureInfo.PRO_CHARACTER:
+                text = localization.format("Pro_Character");
+                break;
+            case ESteamConnectionFailureInfo.PRO_DESYNC:
+                text = localization.format("Pro_Desync");
+                break;
+            case ESteamConnectionFailureInfo.PRO_APPEARANCE:
+                text = localization.format("Pro_Appearance");
+                break;
+            case ESteamConnectionFailureInfo.AUTH_VERIFICATION:
+                text = localization.format("Auth_Verification");
+                break;
+            case ESteamConnectionFailureInfo.AUTH_NO_STEAM:
+                text = localization.format("Auth_No_Steam");
+                break;
+            case ESteamConnectionFailureInfo.AUTH_LICENSE_EXPIRED:
+                text = localization.format("Auth_License_Expired");
+                break;
+            case ESteamConnectionFailureInfo.AUTH_VAC_BAN:
+                text = localization.format("Auth_VAC_Ban");
+                break;
+            case ESteamConnectionFailureInfo.AUTH_ELSEWHERE:
+                text = localization.format("Auth_Elsewhere");
+                break;
+            case ESteamConnectionFailureInfo.AUTH_TIMED_OUT:
+                text = localization.format("Auth_Timed_Out");
+                break;
+            case ESteamConnectionFailureInfo.AUTH_USED:
+                text = localization.format("Auth_Used");
+                break;
+            case ESteamConnectionFailureInfo.AUTH_NO_USER:
+                text = localization.format("Auth_No_User");
+                break;
+            case ESteamConnectionFailureInfo.AUTH_PUB_BAN:
+                text = localization.format("Auth_Pub_Ban");
+                break;
+            case ESteamConnectionFailureInfo.AUTH_NETWORK_IDENTITY_FAILURE:
+                text = localization.format("Auth_Network_Identity_Failure");
+                break;
+            case ESteamConnectionFailureInfo.AUTH_ECON_SERIALIZE:
+                text = localization.format("Auth_Econ_Serialize");
+                break;
+            case ESteamConnectionFailureInfo.AUTH_ECON_DESERIALIZE:
+                text = localization.format("Auth_Econ_Deserialize");
+                break;
+            case ESteamConnectionFailureInfo.AUTH_ECON_VERIFY:
+                text = localization.format("Auth_Econ_Verify");
+                break;
+            case ESteamConnectionFailureInfo.AUTH_EMPTY:
+                text = localization.format("Auth_Empty");
+                break;
+            case ESteamConnectionFailureInfo.ALREADY_CONNECTED:
+                text = localization.format("Already_Connected");
+                break;
+            case ESteamConnectionFailureInfo.ALREADY_PENDING:
+                text = localization.format("Already_Pending");
+                break;
+            case ESteamConnectionFailureInfo.LATE_PENDING:
+                text = localization.format("Late_Pending");
+                break;
+            case ESteamConnectionFailureInfo.NOT_PENDING:
+                text = localization.format("Not_Pending");
+                break;
+            case ESteamConnectionFailureInfo.NAME_PLAYER_SHORT:
+                text = localization.format("Name_Player_Short");
+                break;
+            case ESteamConnectionFailureInfo.NAME_PLAYER_LONG:
+                text = localization.format("Name_Player_Long");
+                break;
+            case ESteamConnectionFailureInfo.NAME_PLAYER_INVALID:
+                text = localization.format("Name_Player_Invalid");
+                break;
+            case ESteamConnectionFailureInfo.NAME_PLAYER_NUMBER:
+                text = localization.format("Name_Player_Number");
+                break;
+            case ESteamConnectionFailureInfo.NAME_CHARACTER_SHORT:
+                text = localization.format("Name_Character_Short");
+                break;
+            case ESteamConnectionFailureInfo.NAME_CHARACTER_LONG:
+                text = localization.format("Name_Character_Long");
+                break;
+            case ESteamConnectionFailureInfo.NAME_CHARACTER_INVALID:
+                text = localization.format("Name_Character_Invalid");
+                break;
+            case ESteamConnectionFailureInfo.NAME_CHARACTER_NUMBER:
+                text = localization.format("Name_Character_Number");
+                break;
+            case ESteamConnectionFailureInfo.TIMED_OUT:
+                text = localization.format("Timed_Out");
+                break;
+            case ESteamConnectionFailureInfo.TIMED_OUT_LOGIN:
+                text = localization.format("Timed_Out_Login");
+                break;
+            case ESteamConnectionFailureInfo.MAP:
+                text = localization.format("Map");
+                break;
+            case ESteamConnectionFailureInfo.SHUTDOWN:
+                text = (string.IsNullOrEmpty(connectionFailureReason) ? localization.format("Shutdown") : localization.format("Shutdown_Reason", connectionFailureReason));
+                break;
+            case ESteamConnectionFailureInfo.PING:
+                text = connectionFailureReason;
+                break;
+            case ESteamConnectionFailureInfo.PLUGIN:
+                text = (string.IsNullOrEmpty(connectionFailureReason) ? localization.format("Plugin") : localization.format("Plugin_Reason", connectionFailureReason));
+                break;
+            case ESteamConnectionFailureInfo.BARRICADE:
+                text = localization.format("Barricade", connectionFailureReason);
+                break;
+            case ESteamConnectionFailureInfo.STRUCTURE:
+                text = localization.format("Structure", connectionFailureReason);
+                break;
+            case ESteamConnectionFailureInfo.VEHICLE:
+                text = localization.format("Vehicle", connectionFailureReason);
+                break;
+            case ESteamConnectionFailureInfo.CLIENT_MODULE_DESYNC:
+                text = localization.format("Client_Module_Desync");
+                break;
+            case ESteamConnectionFailureInfo.SERVER_MODULE_DESYNC:
+                text = localization.format("Server_Module_Desync");
+                break;
+            case ESteamConnectionFailureInfo.BATTLEYE_BROKEN:
+                text = localization.format("BattlEye_Broken");
+                break;
+            case ESteamConnectionFailureInfo.BATTLEYE_UPDATE:
+                text = localization.format("BattlEye_Update");
+                break;
+            case ESteamConnectionFailureInfo.BATTLEYE_UNKNOWN:
+                text = localization.format("BattlEye_Unknown");
+                break;
+            case ESteamConnectionFailureInfo.LEVEL_VERSION:
+                text = connectionFailureReason;
+                flag = true;
+                break;
+            case ESteamConnectionFailureInfo.ECON_HASH:
+                text = localization.format("Econ_Hash");
+                flag = true;
+                break;
+            case ESteamConnectionFailureInfo.HASH_MASTER_BUNDLE:
+                text = localization.format("Master_Bundle_Hash", connectionFailureReason);
+                flag = true;
+                break;
+            case ESteamConnectionFailureInfo.REJECT_UNKNOWN:
+                text = localization.format("Reject_Unknown", connectionFailureReason);
+                break;
+            case ESteamConnectionFailureInfo.WORKSHOP_DOWNLOAD_RESTRICTION:
+                text = localization.format("Workshop_Download_Restriction", serverInvalidItemsCount);
+                break;
+            case ESteamConnectionFailureInfo.WORKSHOP_ADVERTISEMENT_MISMATCH:
+                text = localization.format("Workshop_Advertisement_Mismatch");
+                break;
+            case ESteamConnectionFailureInfo.CUSTOM:
+                text = connectionFailureReason;
+                break;
+            case ESteamConnectionFailureInfo.CUSTOM_SHOULD_VERIFY_GAME_FILES:
+                text = connectionFailureReason;
+                flag = true;
+                break;
+            case ESteamConnectionFailureInfo.LATE_PENDING_STEAM_AUTH:
+                text = localization.format("Late_Pending_Steam_Auth");
+                break;
+            case ESteamConnectionFailureInfo.LATE_PENDING_STEAM_ECON:
+                text = localization.format("Late_Pending_Steam_Econ");
+                break;
+            case ESteamConnectionFailureInfo.LATE_PENDING_STEAM_GROUPS:
+                text = localization.format("Late_Pending_Steam_Groups");
+                break;
+            case ESteamConnectionFailureInfo.NAME_PRIVATE_LONG:
+                text = localization.format("Name_Private_Long");
+                break;
+            case ESteamConnectionFailureInfo.NAME_PRIVATE_INVALID:
+                text = localization.format("Name_Private_Invalid");
+                break;
+            case ESteamConnectionFailureInfo.NAME_PRIVATE_NUMBER:
+                text = localization.format("Name_Private_Number");
+                break;
+            case ESteamConnectionFailureInfo.HASH_RESOURCES:
+                text = localization.format("Hash_Resources");
+                flag = true;
+                break;
+            case ESteamConnectionFailureInfo.SKIN_COLOR_WITHIN_THRESHOLD_OF_TERRAIN_COLOR:
+                text = localization.format("SkinColorWithinThresholdOfTerrainColor");
+                break;
+            case ESteamConnectionFailureInfo.STEAM_ID_MISMATCH:
+                text = localization.format("Steam_ID_Mismatch");
+                break;
+            case ESteamConnectionFailureInfo.CONNECT_RATE_LIMITING:
+                text = localization.format("Connect_Rate_Limiting");
+                break;
+            case ESteamConnectionFailureInfo.BAD_PACKET_RATE_LIMITING:
+                text = localization.format("Bad_Packet_Rate_Limiting");
+                break;
+            case ESteamConnectionFailureInfo.SERVER_MAP_ADVERTISEMENT_MISMATCH:
+                text = localization.format("Server_Map_Advertisement_Mismatch");
+                break;
+            case ESteamConnectionFailureInfo.SERVER_VAC_ADVERTISEMENT_MISMATCH:
+                text = localization.format("Server_VAC_Advertisement_Mismatch");
+                break;
+            case ESteamConnectionFailureInfo.SERVER_BATTLEYE_ADVERTISEMENT_MISMATCH:
+                text = localization.format("Server_BattlEye_Advertisement_Mismatch");
+                break;
+            case ESteamConnectionFailureInfo.SERVER_MAXPLAYERS_ADVERTISEMENT_MISMATCH:
+                text = localization.format("Server_MaxPlayers_Advertisement_Mismatch");
+                break;
+            case ESteamConnectionFailureInfo.SERVER_CAMERAMODE_ADVERTISEMENT_MISMATCH:
+                text = localization.format("Server_CameraMode_Advertisement_Mismatch");
+                break;
+            case ESteamConnectionFailureInfo.SERVER_PVP_ADVERTISEMENT_MISMATCH:
+                text = localization.format("Server_PvP_Advertisement_Mismatch");
+                break;
+            case ESteamConnectionFailureInfo.HWID_MODIFIED:
+                text = localization.format("HWID_Modified");
+                break;
+            default:
+                text = localization.format("Failure_Unknown", eSteamConnectionFailureInfo, connectionFailureReason);
+                break;
+            }
             if (string.IsNullOrEmpty(text))
             {
                 text = $"Error: {eSteamConnectionFailureInfo} Reason: {connectionFailureReason}";
             }
             MenuUI.alert(text);
             UnturnedLog.info(text);
+            if (flag)
+            {
+                UnturnedLog.info("Showing option to verify game files");
+                MenuUI.markContentCorruptButton.IsVisible = true;
+            }
         }
         if (SteamUser.BLoggedOn() && Glazier.Get().SupportsAutomaticLayout && !readNewsPreview())
         {

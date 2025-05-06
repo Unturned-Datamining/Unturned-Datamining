@@ -17,11 +17,11 @@ public class ItemMapAsset : ItemAsset
     /// </summary>
     public bool enablesMap { get; protected set; }
 
-    public override void PopulateAsset(Bundle bundle, DatDictionary data, Local localization)
+    public override void PopulateAsset(in PopulateAssetParameters p)
     {
-        base.PopulateAsset(bundle, data, localization);
-        enablesCompass = data.ContainsKey("Enables_Compass");
-        enablesChart = data.ContainsKey("Enables_Chart");
-        enablesMap = data.ContainsKey("Enables_Map");
+        base.PopulateAsset(in p);
+        enablesCompass = p.data.ContainsKey("Enables_Compass");
+        enablesChart = p.data.ContainsKey("Enables_Chart");
+        enablesMap = p.data.ContainsKey("Enables_Map");
     }
 }

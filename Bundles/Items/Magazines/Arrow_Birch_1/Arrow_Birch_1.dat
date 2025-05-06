@@ -1,4 +1,4 @@
-GUID ecd18c9a449948579fbd70b0b5e13fd2
+﻿GUID ecd18c9a449948579fbd70b0b5e13fd2
 Type Magazine
 ID 351
 
@@ -15,19 +15,30 @@ Tracer 48
 
 Stuck 25
 
-Blueprints 2
-Blueprint_0_Type Tool
-Blueprint_0_Supplies 2
-Blueprint_0_Supply_0_ID 38
-Blueprint_0_Supply_0_Amount 3
-Blueprint_0_Supply_1_ID 71
-Blueprint_0_Products 3
-Blueprint_0_Build 27
-Blueprint_1_Type Tool
-Blueprint_1_Supplies 1
-Blueprint_1_Supply_0_ID this
-Blueprint_1_Supply_0_AllowEmpty true
-Blueprint_1_Supply_0_Prioritization LowestAmount
-Blueprint_1_Product "38" // Birch Stick
-Blueprint_1_Products 1
-Blueprint_1_Build 27
+Blueprints
+[
+	{
+		CategoryTag "ad1804b6945145f3b308738b0b8ea447" // Tools
+		InputItems
+		[
+			"9c563bf14d4641a18873f338beaed128 x 3" // Birch Stick
+			"4b68587f5cad45eaab5e07ed0e6fd3b3" // Nails
+		]
+		OutputItems this x 3
+		Effect "84347b13028340b8976033c08675d458" // Wrench
+	}
+	{
+		Name Salvage
+		CategoryTag "7ed29f9101ae4523a3b2e389414b7bd9" // Salvage
+		InputItems
+		[
+			{
+				ID this
+				Prioritization LowestAmount
+				CountEmptyAsOne true
+			}
+		]
+		OutputItems "9c563bf14d4641a18873f338beaed128" // Birch Stick
+		Effect "84347b13028340b8976033c08675d458" // Wrench
+	}
+]

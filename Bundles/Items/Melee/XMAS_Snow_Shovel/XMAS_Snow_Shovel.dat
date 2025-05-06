@@ -1,4 +1,4 @@
-GUID 8f88771ceed24cf199831a25f3bb2b8a
+﻿GUID 8f88771ceed24cf199831a25f3bb2b8a
 
 Type Melee
 Useable Melee
@@ -14,42 +14,53 @@ Strong 0.375
 Strength 1.5
 Stamina 20
 
-Player_Damage 34
+Player_Damage 29
 Player_Leg_Multiplier 0.6
 Player_Arm_Multiplier 0.6
 Player_Spine_Multiplier 0.8
 Player_Skull_Multiplier 1.1
 
-Zombie_Damage 34
+Zombie_Damage 29
 Zombie_Leg_Multiplier 0.3
 Zombie_Arm_Multiplier 0.3
 Zombie_Spine_Multiplier 0.6
 Zombie_Skull_Multiplier 1.1
 
-Animal_Damage 34
+Animal_Damage 29
 Animal_Leg_Multiplier 0.3
 Animal_Spine_Multiplier 0.6
 Animal_Skull_Multiplier 1.1
 
-Barricade_Damage 15
-Structure_Damage 10
-Vehicle_Damage 20
+Barricade_Damage 12
+Structure_Damage 8
+Vehicle_Damage 15
 Resource_Damage 50
-Object_Damage 20
+Object_Damage 15
 
 Durability 0.2
 
-Blueprints 2
-Blueprint_0_Type Repair
-Blueprint_0_Supply_0_ID 67
-Blueprint_0_Supply_0_Amount 2
-Blueprint_0_Build 27
-Blueprint_1_Type Tool
-Blueprint_1_Supplies 1
-Blueprint_1_Supply_0_ID 1693
-Blueprint_1_Product 67
-Blueprint_1_Products 1
-Blueprint_1_Build 27
+Blueprints
+[
+	{
+		Name Repair
+		CategoryTag "732ee6ffeb18418985cf4f9fde33dd11" // Repair
+		Operation RepairTargetItem
+		InputItems "21ede8ebffb14c5580e8c7ad149e335e x 2" // Metal Scrap
+		RequiresNearbyCraftingTags
+		[
+			"7b82c125a5a54984b8bb26576b59e977" // Workbench
+		]
+		Effect "84347b13028340b8976033c08675d458" // Wrench
+	}
+	{
+		Name Salvage
+		CategoryTag "7ed29f9101ae4523a3b2e389414b7bd9" // Salvage
+		InputItems this
+		OutputItems "21ede8ebffb14c5580e8c7ad149e335e" // Metal Scrap
+		Effect "84347b13028340b8976033c08675d458" // Wrench
+	}
+]
+
 AttackAudioClip Sounds/MeleeAttack_01.mp3
 
 BladeIDs 2

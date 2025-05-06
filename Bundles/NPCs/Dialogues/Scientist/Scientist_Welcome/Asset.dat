@@ -1,4 +1,4 @@
-GUID 7fe493727bdc4b11bdfbf8da0b88e64f
+﻿GUID 7fe493727bdc4b11bdfbf8da0b88e64f
 Type Dialogue
 ID 77
 
@@ -162,7 +162,7 @@ Response_5_Condition_0_Logic Equal
 // Scientist_Work
 Response_6_Dialogue 80
 
-//XMAS Snow Quest
+// XMAS Snow Quest
 Response_7_Quest 316
 Response_7_Rewards 1
 Response_7_Reward_0_Type Quest
@@ -176,7 +176,7 @@ Response_7_Condition_1_Type Holiday
 Response_7_Condition_1_Value Christmas
 Response_7_Dialogue 334
 
-//XMAS Snow Quest Complete
+// XMAS Snow Quest Complete
 Response_8_Dialogue 333
 Response_8_Quest 316
 Response_8_Conditions 2
@@ -188,7 +188,7 @@ Response_8_Condition_0_Reset
 Response_8_Condition_1_Type Holiday
 Response_8_Condition_1_Value Christmas
 
-//XMAS Craft Quest
+// XMAS Craft Quest
 Response_9_Quest 327
 Response_9_Rewards 1
 Response_9_Reward_0_Type Quest
@@ -206,7 +206,7 @@ Response_9_Condition_2_Status Completed
 Response_9_Condition_2_Logic Equal
 Response_9_Dialogue 337
 
-//XMAS Craft Quest Complete
+// XMAS Craft Quest Complete
 Response_10_Dialogue 338
 Response_10_Quest 327
 Response_10_Conditions 2
@@ -218,7 +218,7 @@ Response_10_Condition_0_Reset
 Response_10_Condition_1_Type Holiday
 Response_10_Condition_1_Value Christmas
 
-//XMAS Vendor
+// XMAS Vendor
 Response_11_Dialogue 335
 Response_11_Vendor 336
 Response_11_Conditions 2

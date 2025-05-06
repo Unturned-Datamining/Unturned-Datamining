@@ -174,7 +174,7 @@ public class SleekItem : SleekWrapper
         else
         {
             qualityImage.IsVisible = false;
-            if (asset.amount > 1)
+            if (asset.MaxAmount > 1)
             {
                 amountLabel.Text = "x" + jar.item.amount;
                 amountLabel.TextColor = ESleekTint.FONT;

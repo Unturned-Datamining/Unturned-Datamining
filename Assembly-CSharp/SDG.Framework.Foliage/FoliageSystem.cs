@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using SDG.Framework.Devkit;
 using SDG.Framework.IO.FormattedFiles;
 using SDG.Framework.Landscapes;
@@ -50,16 +51,34 @@ public class FoliageSystem : DevkitHierarchyItemBase
     public bool hiddenByMaterialEditor;
 
     /// <summary>
+    /// Nelson 2025-04-22: instanced foliage rendering is a decent chunk of CPU time. In retrospect this seems like
+    /// an obvious optimization: Graphics.DrawMeshInstanced accepts up to 1023 instances per call. Each tile
+    /// groups instances in lists of up to 1023, but often isn't that high. Now, we collect instances until we
+    /// hit the 1023 limit. This is particularly useful for sparse variants like colored flowers.
+    /// With a consistent camera transform ("/copycameratransform") on an upcoming map remaster I went from between
+    /// 0.72-0.8 ms on my PC to 0.55-0.6 ms!
+    /// </summary>
+    private static Dictionary<FoliageInstancingBatchConfig, FoliageInstancingBatchData> batches;
+
+    private static Stack<Matrix4x4[]> activeMatrixLists;
+
+    private static Stack<Matrix4x4[]> matrixListPool;
+
+    /// <summary>
     /// 2022-04-26: drawTiles previously looped over a square [-N, +N] from the upper-left to the bottom-right,
     /// and each tile checked radial distance. We can improve over this by pre-computing the radial offsets and
     /// starting from the center to improve responsiveness. N is [1, 5]
     /// </summary>
     private static readonly FoliageCoord[][] DRAW_OFFSETS;
 
+    private const int MAX_MATRICES_PER_BATCH = 1023;
+
     /// <summary>
     /// Version number associated with this particular system instance.
     /// </summary>
     protected uint version;
+
+    private static bool shouldDrawWithoutInstancing;
 
     /// <summary>
     /// 2022-04-26: this used to be environment layer, but "scope focus foliage" can draw outside that render distance
@@ -336,87 +355,135 @@ public class FoliageSystem : DevkitHierarchyItemBase
 
     private static void drawTiles(Vector3 position, int drawDistance, Camera camera, Plane[] frustumPlanes)
     {
+        batches.Clear();
+        Stack<Matrix4x4[]> stack = activeMatrixLists;
+        activeMatrixLists = matrixListPool;
+        matrixListPool = stack;
         FoliageCoord foliageCoord = new FoliageCoord(position);
         FoliageCoord[] array = DRAW_OFFSETS[drawDistance];
         for (int i = 0; i < array.Length; i++)
         {
             FoliageCoord foliageCoord2 = array[i];
             FoliageCoord foliageCoord3 = new FoliageCoord(foliageCoord.x + foliageCoord2.x, foliageCoord.y + foliageCoord2.y);
-            if (!activeTiles.ContainsKey(foliageCoord3))
+            if (activeTiles.ContainsKey(foliageCoord3))
             {
-                FoliageTile tile = getTile(foliageCoord3);
-                if (tile != null)
+                continue;
+            }
+            FoliageTile tile = getTile(foliageCoord3);
+            if (tile != null)
+            {
+                int sqrDistance = foliageCoord2.x * foliageCoord2.x + foliageCoord2.y * foliageCoord2.y;
+                if (GeometryUtility.TestPlanesAABB(frustumPlanes, tile.worldBounds))
                 {
-                    int sqrDistance = foliageCoord2.x * foliageCoord2.x + foliageCoord2.y * foliageCoord2.y;
-                    float density = 1f;
-                    drawTileCullingChecks(tile, sqrDistance, density, camera, frustumPlanes);
+                    drawTile(tile, sqrDistance, camera);
                     activeTiles.Add(foliageCoord3, tile);
                 }
             }
         }
-    }
-
-    private static void drawTileCullingChecks(FoliageTile tile, int sqrDistance, float density, Camera camera, Plane[] frustumPlanes)
-    {
-        if (tile != null && GeometryUtility.TestPlanesAABB(frustumPlanes, tile.worldBounds))
+        foreach (KeyValuePair<FoliageInstancingBatchConfig, FoliageInstancingBatchData> batch in batches)
         {
-            drawTile(tile, sqrDistance, density, camera);
+            FoliageInstancingBatchData value = batch.Value;
+            if (value.count >= 1)
+            {
+                FoliageInstancingBatchConfig config = batch.Key;
+                DrawInstances(in config, value.list, value.count, camera);
+            }
         }
     }
 
-    private static void drawTile(FoliageTile tile, int sqrDistance, float density, Camera camera)
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    private static void drawTile(FoliageTile tile, int sqrDistance, Camera camera)
     {
-        if (tile == null)
-        {
-            return;
-        }
         if (!tile.isRelevantToViewer)
         {
             tile.isRelevantToViewer = true;
             storage?.TileBecameRelevantToViewer(tile);
         }
-        foreach (KeyValuePair<AssetReference<FoliageInstancedMeshInfoAsset>, FoliageInstanceList> instance in tile.instances)
+        foreach (FoliageInstanceList value2 in tile.instances.Values)
         {
-            FoliageInstanceList value = instance.Value;
-            value.loadAsset();
-            Mesh mesh = value.mesh;
-            if (mesh == null)
+            int count = value2.matrices.Count;
+            if (count < 1 || !value2.isLoadedAndRenderable || (value2.sqrDrawDistance != -1 && sqrDistance > value2.sqrDrawDistance))
             {
                 continue;
             }
-            Material material = value.material;
-            if (material == null)
+            if (count > 1)
             {
-                continue;
-            }
-            bool castShadows = value.castShadows;
-            if (!value.tileDither)
-            {
-                density = 1f;
-            }
-            density *= FoliageSettings.instanceDensity;
-            if (value.sqrDrawDistance != -1 && sqrDistance > value.sqrDrawDistance)
-            {
-                continue;
-            }
-            if (FoliageSettings.forceInstancingOff || !SystemInfo.supportsInstancing)
-            {
-                foreach (List<Matrix4x4> matrix in value.matrices)
+                for (int i = 0; i < count - 1; i++)
                 {
-                    int num = Mathf.RoundToInt((float)matrix.Count * density);
-                    for (int i = 0; i < num; i++)
-                    {
-                        Graphics.DrawMesh(mesh, matrix[i], material, 18, camera, 0, null, castShadows, receiveShadows: true);
-                    }
+                    List<Matrix4x4> list = value2.matrices[i];
+                    int matrixCount = Mathf.RoundToInt((float)list.Count * FoliageSettings._instanceDensity);
+                    DrawInstances(in value2.batchConfig, list.GetInternalArray(), matrixCount, camera);
                 }
+            }
+            List<Matrix4x4> list2 = value2.matrices[count - 1];
+            int num = Mathf.RoundToInt((float)list2.Count * FoliageSettings._instanceDensity);
+            if (num < 1)
+            {
                 continue;
             }
-            ShadowCastingMode castShadows2 = (castShadows ? ShadowCastingMode.On : ShadowCastingMode.Off);
-            foreach (List<Matrix4x4> matrix2 in value.matrices)
+            if (!batches.TryGetValue(value2.batchConfig, out var value))
             {
-                int count = Mathf.RoundToInt((float)matrix2.Count * density);
-                Graphics.DrawMeshInstanced(mesh, 0, material, matrix2.GetInternalArray(), count, null, castShadows2, receiveShadows: true, 18, camera);
+                if (!matrixListPool.TryPop(out var result))
+                {
+                    result = new Matrix4x4[1023];
+                }
+                activeMatrixLists.Push(result);
+                FoliageInstancingBatchData foliageInstancingBatchData = default(FoliageInstancingBatchData);
+                foliageInstancingBatchData.list = result;
+                foliageInstancingBatchData.count = 0;
+                value = foliageInstancingBatchData;
             }
+            int num2 = 1023 - value.count;
+            if (num < num2)
+            {
+                FastMatrixCopy(list2, 0, value.list, value.count, num);
+                value.count += num;
+            }
+            else
+            {
+                FastMatrixCopy(list2, 0, value.list, value.count, num2);
+                DrawInstances(in value2.batchConfig, value.list, 1023, camera);
+                value.count = num - num2;
+                if (value.count > 0)
+                {
+                    FastMatrixCopy(list2, num2, value.list, 0, value.count);
+                }
+            }
+            batches[value2.batchConfig] = value;
+        }
+    }
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    private unsafe static void FastMatrixCopy(List<Matrix4x4> source, int sourceIndex, Matrix4x4[] destination, int destinationIndex, int count)
+    {
+        fixed (Matrix4x4* ptr = source.GetInternalArray())
+        {
+            fixed (Matrix4x4* ptr2 = destination)
+            {
+                Matrix4x4* source2 = ptr + sourceIndex;
+                Matrix4x4* destination2 = ptr2 + destinationIndex;
+                long destinationSizeInBytes = (1023 - destinationIndex) * sizeof(Matrix4x4);
+                long sourceBytesToCopy = count * sizeof(Matrix4x4);
+                Buffer.MemoryCopy(source2, destination2, destinationSizeInBytes, sourceBytesToCopy);
+            }
+        }
+    }
+
+    /// <param name="matrixCount">Must be within [0, MAX_MATRICES_PER_BATCH] range.</param>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    private static void DrawInstances(in FoliageInstancingBatchConfig config, Matrix4x4[] matrices, int matrixCount, Camera camera)
+    {
+        if (shouldDrawWithoutInstancing)
+        {
+            for (int i = 0; i < matrixCount; i++)
+            {
+                Graphics.DrawMesh(config.mesh, matrices[i], config.material, 18, camera, 0, null, config.castShadows, receiveShadows: true);
+            }
+        }
+        else
+        {
+            ShadowCastingMode castShadows = (config.castShadows ? ShadowCastingMode.On : ShadowCastingMode.Off);
+            Graphics.DrawMeshInstanced(config.mesh, 0, config.material, matrices, matrixCount, null, castShadows, receiveShadows: true, 18, camera);
         }
     }
 
@@ -539,8 +606,9 @@ public class FoliageSystem : DevkitHierarchyItemBase
         activeTiles.Clear();
         if (FoliageSettings.enabled && !(hiddenByHeightEditor | hiddenByMaterialEditor))
         {
+            shouldDrawWithoutInstancing = FoliageSettings.forceInstancingOff || !SystemInfo.supportsInstancing;
             GeometryUtility.CalculateFrustumPlanes(MainCamera.instance, mainCameraFrustumPlanes);
-            drawTiles(MainCamera.instance.transform.position, FoliageSettings.drawDistance, null, mainCameraFrustumPlanes);
+            drawTiles(MainCamera.RenderingPosition, FoliageSettings.drawDistance, null, mainCameraFrustumPlanes);
             if (FoliageSettings.drawFocus && isFocused && focusCamera != null)
             {
                 Plane[] frustumPlanes;
@@ -599,6 +667,9 @@ public class FoliageSystem : DevkitHierarchyItemBase
             prevTiles.Clear();
             activeTiles.Clear();
             bakeQueue.Clear();
+            batches.Clear();
+            activeMatrixLists.Clear();
+            matrixListPool.Clear();
             shutdownStorage();
             clearAndReleaseTiles();
         }
@@ -612,6 +683,9 @@ public class FoliageSystem : DevkitHierarchyItemBase
             prevTiles.Clear();
             activeTiles.Clear();
             bakeQueue.Clear();
+            batches.Clear();
+            activeMatrixLists.Clear();
+            matrixListPool.Clear();
             shutdownStorage();
             clearAndReleaseTiles();
         }
@@ -629,6 +703,9 @@ public class FoliageSystem : DevkitHierarchyItemBase
         bakeQueue = new Queue<KeyValuePair<FoliageTile, List<IFoliageSurface>>>();
         mainCameraFrustumPlanes = new Plane[6];
         focusCameraFrustumPlanes = new Plane[6];
+        batches = new Dictionary<FoliageInstancingBatchConfig, FoliageInstancingBatchData>();
+        activeMatrixLists = new Stack<Matrix4x4[]>();
+        matrixListPool = new Stack<Matrix4x4[]>();
         DRAW_OFFSETS = new FoliageCoord[6][]
         {
             new FoliageCoord[0],

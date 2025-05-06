@@ -1,4 +1,6 @@
+using System;
 using System.Collections.Generic;
+using Unturned.SystemEx;
 
 namespace SDG.Unturned;
 
@@ -7,47 +9,25 @@ namespace SDG.Unturned;
 /// </summary>
 public class CraftingBlacklistAsset : Asset
 {
-    protected struct BlacklistedBlueprint : IDatParseable
+    protected struct BlacklistedBlueprint
     {
-        public AssetReference<ItemAsset> assetRef;
-
         public int index;
 
-        public bool TryParse(IDatNode node)
-        {
-            if (!(node is DatDictionary datDictionary))
-            {
-                return false;
-            }
-            assetRef = datDictionary.ParseStruct<AssetReference<ItemAsset>>("Item");
-            index = datDictionary.ParseInt32("Blueprint");
-            if (assetRef.isValid)
-            {
-                return index >= 0;
-            }
-            return false;
-        }
-
-        public BlacklistedBlueprint(AssetReference<ItemAsset> assetRef, int index)
-        {
-            this.assetRef = assetRef;
-            this.index = index;
-        }
+        /// <summary>
+        /// If null, use index instead.
+        /// </summary>
+        public string blueprintName;
     }
 
     /// <summary>
     /// Restrict blueprints that consume these items.
     /// </summary>
-    protected List<AssetReference<ItemAsset>> inputItems = new List<AssetReference<ItemAsset>>();
+    protected HashSet<Guid> inputItems = new HashSet<Guid>();
 
     /// <summary>
     /// Restrict blueprints that generate these items.
     /// </summary>
-    protected List<AssetReference<ItemAsset>> outputItems = new List<AssetReference<ItemAsset>>();
-
-    protected List<ushort> resolvedInputItems;
-
-    protected List<ushort> resolvedOutputItems;
+    protected HashSet<Guid> outputItems = new HashSet<Guid>();
 
     /// <summary>
     /// If false, blueprints on vanilla/core/built-in items are not allowed. Defaults to true.
@@ -57,66 +37,51 @@ public class CraftingBlacklistAsset : Asset
     /// <summary>
     /// Restrict specific blueprints.
     /// </summary>
-    protected List<BlacklistedBlueprint> blueprints = new List<BlacklistedBlueprint>();
+    protected Dictionary<Guid, List<BlacklistedBlueprint>> blueprints = new Dictionary<Guid, List<BlacklistedBlueprint>>();
 
     public bool isBlueprintBlacklisted(Blueprint blueprint)
     {
-        if (!allowCoreBlueprints && blueprint.sourceItem.origin == Assets.coreOrigin)
+        Asset ownerAsset = blueprint.GetOwnerAsset();
+        if (!allowCoreBlueprints && ownerAsset.origin == Assets.coreOrigin)
         {
             return true;
         }
-        foreach (BlacklistedBlueprint blueprint2 in blueprints)
+        if (blueprints.TryGetValue(ownerAsset.GUID, out var value))
         {
-            if (blueprint2.index == blueprint.id)
+            foreach (BlacklistedBlueprint item in value)
             {
-                AssetReference<ItemAsset> assetRef = blueprint2.assetRef;
-                if (assetRef.isReferenceTo(blueprint.sourceItem))
+                if (!string.IsNullOrEmpty(item.blueprintName))
+                {
+                    if (string.Equals(item.blueprintName, blueprint.Name, StringComparison.InvariantCulture))
+                    {
+                        return true;
+                    }
+                }
+                else if (item.index == blueprint.Index)
                 {
                     return true;
                 }
             }
         }
-        if (resolvedInputItems == null && inputItems != null)
-        {
-            resolvedInputItems = new List<ushort>(inputItems.Count);
-            foreach (AssetReference<ItemAsset> inputItem in inputItems)
-            {
-                ItemAsset itemAsset = inputItem.Find();
-                if (itemAsset != null)
-                {
-                    resolvedInputItems.Add(itemAsset.id);
-                }
-            }
-        }
-        if (resolvedInputItems != null)
+        if (inputItems != null)
         {
             BlueprintSupply[] supplies = blueprint.supplies;
-            foreach (BlueprintSupply blueprintSupply in supplies)
+            for (int i = 0; i < supplies.Length; i++)
             {
-                if (resolvedInputItems.Contains(blueprintSupply.id))
+                ItemAsset itemAsset = supplies[i].FindItemAsset();
+                if (itemAsset != null && inputItems.Contains(itemAsset.GUID))
                 {
                     return true;
                 }
             }
         }
-        if (resolvedOutputItems == null && outputItems != null)
-        {
-            resolvedOutputItems = new List<ushort>(outputItems.Count);
-            foreach (AssetReference<ItemAsset> outputItem in outputItems)
-            {
-                ItemAsset itemAsset2 = outputItem.Find();
-                if (itemAsset2 != null)
-                {
-                    resolvedOutputItems.Add(itemAsset2.id);
-                }
-            }
-        }
-        if (resolvedOutputItems != null)
+        if (outputItems != null)
         {
             BlueprintOutput[] outputs = blueprint.outputs;
-            foreach (BlueprintOutput blueprintOutput in outputs)
+            for (int i = 0; i < outputs.Length; i++)
             {
-                if (resolvedOutputItems.Contains(blueprintOutput.id))
+                ItemAsset itemAsset2 = outputs[i].FindItemAsset();
+                if (itemAsset2 != null && outputItems.Contains(itemAsset2.GUID))
                 {
                     return true;
                 }
@@ -125,7 +90,7 @@ public class CraftingBlacklistAsset : Asset
         return false;
     }
 
-    protected void readList(DatDictionary reader, List<AssetReference<ItemAsset>> list, string key)
+    protected void readList(IDatDictionary reader, HashSet<Guid> list, string key)
     {
         if (!reader.TryGetList(key, out var node))
         {
@@ -135,20 +100,40 @@ public class CraftingBlacklistAsset : Asset
         {
             if (item.TryParseStruct<AssetReference<ItemAsset>>(out var value) && value.isValid)
             {
-                list.Add(value);
+                list.Add(value.GUID);
             }
         }
     }
 
-    public override void PopulateAsset(Bundle bundle, DatDictionary data, Local localization)
+    public override void PopulateAsset(in PopulateAssetParameters p)
     {
-        base.PopulateAsset(bundle, data, localization);
-        readList(data, inputItems, "Input_Items");
-        readList(data, outputItems, "Output_Items");
-        if (data.TryGetList("Blueprints", out var node))
+        base.PopulateAsset(in p);
+        readList(p.data, inputItems, "Input_Items");
+        readList(p.data, outputItems, "Output_Items");
+        if (p.data.TryGetList("Blueprints", out var node))
         {
-            blueprints = node.ParseListOfStructs<BlacklistedBlueprint>();
+            foreach (IDatNode item in node)
+            {
+                if (!(item is IDatDictionary dictionary))
+                {
+                    continue;
+                }
+                AssetReference<Asset> assetReference = dictionary.ParseStruct<AssetReference<Asset>>("Item");
+                if (assetReference.isValid)
+                {
+                    int num = dictionary.ParseInt32("Blueprint");
+                    string @string = dictionary.GetString("BlueprintName");
+                    if (num >= 0 || !string.IsNullOrEmpty(@string))
+                    {
+                        blueprints.GetOrAddNew(assetReference.GUID).Add(new BlacklistedBlueprint
+                        {
+                            index = num,
+                            blueprintName = @string
+                        });
+                    }
+                }
+            }
         }
-        allowCoreBlueprints = data.ParseBool("Allow_Core_Blueprints", defaultValue: true);
+        allowCoreBlueprints = p.data.ParseBool("Allow_Core_Blueprints", defaultValue: true);
     }
 }

@@ -1,4 +1,4 @@
-GUID 54b5aa09ef0640e7994dce0ddcc60012
+﻿GUID 54b5aa09ef0640e7994dce0ddcc60012
 Type Storage
 Rarity Rare
 Useable Barricade
@@ -14,19 +14,24 @@ Range 4
 Radius 0.5
 Offset 0.75
 
-Storage_X 6
+Storage_X 7
 Storage_Y 4
 
 Explosion 29
 
-Blueprints 1
-Blueprint_0_Type Furniture
-Blueprint_0_Supplies 2
-Blueprint_0_Supply_0_ID 63
-Blueprint_0_Supply_0_Amount 6
-Blueprint_0_Supply_1_ID 42
-Blueprint_0_Supply_1_Amount 2
-Blueprint_0_Build 27
+Blueprints
+[
+	{
+		CategoryTag "b0c6cc0a8b4346be89aef697ecdb8e46" // Furniture
+		InputItems
+		[
+			"719bfdf2c2dc4be6ad5be44d044583e4 x 6" // Pine Plank
+			"55d9700ea53c477685458171932251f1 x 2" // Pine Stick
+		]
+		OutputItems this
+		Effect "84347b13028340b8976033c08675d458" // Wrench
+	}
+]
 
 Should_Close_When_Outside_Range true
 PlacementAudioClip Sounds/WoodenPlacement.mp3

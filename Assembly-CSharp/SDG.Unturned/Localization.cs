@@ -33,8 +33,8 @@ public class Localization
         string path3 = Path.Combine(path, "English.dat");
         if (ReadWrite.fileExists(path2, useCloud: false, usePath: false))
         {
-            DatDictionary data = ReadWrite.ReadDataWithoutHash(path2);
-            DatDictionary fallbackData = (Provider.languageIsEnglish ? null : ReadWrite.ReadDataWithoutHash(path3));
+            IDatDictionary data = ReadWrite.ReadDataWithoutHash(path2);
+            IDatDictionary fallbackData = (Provider.languageIsEnglish ? null : ReadWrite.ReadDataWithoutHash(path3));
             return new Local(data, fallbackData);
         }
         if (ReadWrite.fileExists(path3, useCloud: false, usePath: false))
@@ -50,8 +50,8 @@ public class Localization
         string path3 = englishLocalizationRoot + path;
         if (ReadWrite.fileExists(path2, useCloud: false, usePath: false))
         {
-            DatDictionary data = ReadWrite.ReadDataWithoutHash(path2);
-            DatDictionary fallbackData = (Provider.languageIsEnglish ? null : ReadWrite.ReadDataWithoutHash(path3));
+            IDatDictionary data = ReadWrite.ReadDataWithoutHash(path2);
+            IDatDictionary fallbackData = (Provider.languageIsEnglish ? null : ReadWrite.ReadDataWithoutHash(path3));
             return new Local(data, fallbackData);
         }
         if (ReadWrite.fileExists(path3, useCloud: false, usePath: false))
@@ -63,22 +63,22 @@ public class Localization
 
     private static void scanFile(string path)
     {
-        DatDictionary datDictionary = ReadWrite.ReadDataWithoutHash(ReadWrite.PATH + "/Localization/English/" + path);
-        DatDictionary datDictionary2 = ReadWrite.ReadDataWithoutHash(Provider.localizationRoot + path);
+        IDatDictionary datDictionary = ReadWrite.ReadDataWithoutHash(ReadWrite.PATH + "/Localization/English/" + path);
+        IDatDictionary datDictionary2 = ReadWrite.ReadDataWithoutHash(Provider.localizationRoot + path);
         List<KeyValuePair<string, string>> list = new List<KeyValuePair<string, string>>();
         foreach (KeyValuePair<string, IDatNode> item in datDictionary)
         {
-            if (item.Value is DatValue datValue)
+            if (item.Value is IDatValue datValue)
             {
-                list.Add(new KeyValuePair<string, string>(item.Key, datValue.value));
+                list.Add(new KeyValuePair<string, string>(item.Key, datValue.Value));
             }
         }
         List<KeyValuePair<string, string>> list2 = new List<KeyValuePair<string, string>>();
         foreach (KeyValuePair<string, IDatNode> item2 in datDictionary2)
         {
-            if (item2.Value is DatValue datValue2)
+            if (item2.Value is IDatValue datValue2)
             {
-                list2.Add(new KeyValuePair<string, string>(item2.Key, datValue2.value));
+                list2.Add(new KeyValuePair<string, string>(item2.Key, datValue2.Value));
             }
         }
         keys.Clear();

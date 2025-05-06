@@ -1,3 +1,4 @@
+using System;
 using SDG.NetPak;
 
 namespace SDG.Unturned;
@@ -85,7 +86,7 @@ public static class PlayerCrafting_NetMethods
                 context.Kick($"not owner of {playerCrafting}");
                 return;
             }
-            reader.ReadUInt16(out var value2);
+            reader.ReadGuid(out var value2);
             reader.ReadUInt8(out var value3);
             reader.ReadBit(out var value4);
             playerCrafting.ReceiveCraft(in context, value2, value3, value4);
@@ -93,10 +94,10 @@ public static class PlayerCrafting_NetMethods
     }
 
     [NetInvokableGeneratedMethod("ReceiveCraft", ENetInvokableGeneratedMethodPurpose.Write)]
-    public static void ReceiveCraft_Write(NetPakWriter writer, ushort id, byte index, bool force)
+    public static void ReceiveCraft_Write(NetPakWriter writer, Guid assetGuid, byte index, bool asManyAsPossible)
     {
-        writer.WriteUInt16(id);
+        writer.WriteGuid(assetGuid);
         writer.WriteUInt8(index);
-        writer.WriteBit(force);
+        writer.WriteBit(asManyAsPossible);
     }
 }

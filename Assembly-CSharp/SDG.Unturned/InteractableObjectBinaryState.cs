@@ -320,16 +320,13 @@ public class InteractableObjectBinaryState : InteractableObject
 
     public override bool checkHint(out EPlayerMessage message, out string text, out Color color)
     {
-        for (int i = 0; i < base.objectAsset.interactabilityConditions.Length; i++)
+        INPCCondition firstUnmetCondition = base.objectAsset.interactabilityConditionsList.GetFirstUnmetCondition(Player.player);
+        if (firstUnmetCondition != null)
         {
-            INPCCondition iNPCCondition = base.objectAsset.interactabilityConditions[i];
-            if (!iNPCCondition.isConditionMet(Player.player))
-            {
-                message = EPlayerMessage.CONDITION;
-                text = iNPCCondition.formatCondition(Player.player);
-                color = Color.white;
-                return true;
-            }
+            message = EPlayerMessage.CONDITION;
+            text = firstUnmetCondition.formatCondition(Player.player);
+            color = Color.white;
+            return true;
         }
         if (base.objectAsset.interactabilityPower != 0 && !base.isWired)
         {

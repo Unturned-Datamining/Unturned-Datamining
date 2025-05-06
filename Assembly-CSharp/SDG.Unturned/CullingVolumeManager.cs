@@ -99,7 +99,7 @@ public class CullingVolumeManager : VolumeManager<CullingVolume, CullingVolumeMa
     private void UpdateRelevantCullingVolumes()
     {
         bool forceCull = Level.isEditor && EditorVolumesUI.EditorWantsToPreviewCulling;
-        Vector3 position = MainCamera.instance.transform.position;
+        Vector3 renderingPosition = MainCamera.RenderingPosition;
         int num = (wasViewTeleported ? volumesWithObjects.Count : Mathf.Min(32, volumesWithObjects.Count));
         for (int i = 0; i < num; i++)
         {
@@ -109,7 +109,7 @@ public class CullingVolumeManager : VolumeManager<CullingVolume, CullingVolumeMa
                 cullingUpdateIndex = 0;
             }
             CullingVolume cullingVolume = volumesWithObjects[cullingUpdateIndex];
-            if (cullingVolume.UpdateCulling(position, forceCull))
+            if (cullingVolume.UpdateCulling(renderingPosition, forceCull))
             {
                 volumesWithVisibilityUpdates.Add(cullingVolume);
             }

@@ -1,4 +1,4 @@
-GUID ae907de0d5c14c1086a22c2b95c58a47
+﻿GUID ae907de0d5c14c1086a22c2b95c58a47
 Type Map
 Rarity Uncommon
 ID 1175
@@ -9,8 +9,13 @@ Size_Z 0.475
 
 Enables_Chart
 
-Blueprints 1
-Blueprint_0_Type Tool
-Blueprint_0_Supply_0_ID 1175
-Blueprint_0_Product 66
-Blueprint_0_Build 32
+Blueprints
+[
+	{
+		Name Salvage
+		CategoryTag "7ed29f9101ae4523a3b2e389414b7bd9" // Salvage
+		InputItems this
+		OutputItems "14901f32cd3240179fd6124324cc27e5" // Cloth
+		Effect "7eceb9f7751d4634b572c8e236355104" // Rip
+	}
+]

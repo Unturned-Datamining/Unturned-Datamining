@@ -12,12 +12,12 @@ internal class RpmEngineSoundConfiguration : IDatParseable
 
     public bool TryParse(IDatNode node)
     {
-        if (node is DatDictionary datDictionary)
+        if (node is IDatDictionary dictionary)
         {
-            idlePitch = datDictionary.ParseFloat("IdlePitch");
-            idleVolume = datDictionary.ParseFloat("IdleVolume");
-            maxPitch = datDictionary.ParseFloat("MaxPitch");
-            maxVolume = datDictionary.ParseFloat("MaxVolume");
+            idlePitch = dictionary.ParseFloat("IdlePitch");
+            idleVolume = dictionary.ParseFloat("IdleVolume");
+            maxPitch = dictionary.ParseFloat("MaxPitch");
+            maxVolume = dictionary.ParseFloat("MaxVolume");
             return true;
         }
         return false;

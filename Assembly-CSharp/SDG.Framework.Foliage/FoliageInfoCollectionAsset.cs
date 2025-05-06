@@ -14,10 +14,10 @@ public class FoliageInfoCollectionAsset : Asset
 
         public bool TryParse(IDatNode node)
         {
-            if (node is DatDictionary datDictionary)
+            if (node is IDatDictionary dictionary)
             {
-                asset = datDictionary.ParseStruct<AssetReference<FoliageInfoAsset>>("Asset");
-                weight = datDictionary.ParseFloat("Weight", 1f);
+                asset = dictionary.ParseStruct<AssetReference<FoliageInfoAsset>>("Asset");
+                weight = dictionary.ParseFloat("Weight", 1f);
                 return true;
             }
             return false;
@@ -34,10 +34,10 @@ public class FoliageInfoCollectionAsset : Asset
         }
     }
 
-    public override void PopulateAsset(Bundle bundle, DatDictionary data, Local localization)
+    public override void PopulateAsset(in PopulateAssetParameters p)
     {
-        base.PopulateAsset(bundle, data, localization);
-        if (data.TryGetList("Foliage", out var node))
+        base.PopulateAsset(in p);
+        if (p.data.TryGetList("Foliage", out var node))
         {
             elements = node.ParseListOfStructs<FoliageInfoCollectionElement>();
         }

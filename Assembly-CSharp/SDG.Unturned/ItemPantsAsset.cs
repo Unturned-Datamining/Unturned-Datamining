@@ -16,14 +16,14 @@ public class ItemPantsAsset : ItemBagAsset
 
     public Texture2D metallic => _metallic;
 
-    public override void PopulateAsset(Bundle bundle, DatDictionary data, Local localization)
+    public override void PopulateAsset(in PopulateAssetParameters p)
     {
-        base.PopulateAsset(bundle, data, localization);
+        base.PopulateAsset(in p);
         if (Dedicator.IsDedicatedServer)
         {
             return;
         }
-        _pants = loadRequiredAsset<Texture2D>(bundle, "Pants");
+        _pants = loadRequiredAsset<Texture2D>(p.bundle, "Pants");
         if (pants != null && (bool)Assets.shouldValidateAssets)
         {
             if (pants.isReadable)
@@ -35,7 +35,7 @@ public class ItemPantsAsset : ItemBagAsset
                 Assets.ReportError(this, $"texture Pants might look weird because it is relatively low resolution but has compression enabled ({pants.format})");
             }
         }
-        _emission = bundle.load<Texture2D>("Emission");
+        _emission = p.bundle.load<Texture2D>("Emission");
         if (emission != null && (bool)Assets.shouldValidateAssets)
         {
             if (emission.isReadable)
@@ -54,7 +54,7 @@ public class ItemPantsAsset : ItemBagAsset
                 }
             }
         }
-        _metallic = bundle.load<Texture2D>("Metallic");
+        _metallic = p.bundle.load<Texture2D>("Metallic");
         if (metallic != null && (bool)Assets.shouldValidateAssets)
         {
             if (metallic.isReadable)

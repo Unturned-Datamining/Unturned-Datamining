@@ -1,4 +1,4 @@
-GUID 5b0f16188d8442edaae8b0c6e0d86b75
+﻿GUID 5b0f16188d8442edaae8b0c6e0d86b75
 Type Melee
 Rarity Uncommon
 Useable Melee
@@ -37,20 +37,31 @@ Animal_Skull_Multiplier 1.1
 Barricade_Damage 2
 Structure_Damage 2
 Vehicle_Damage 15
-Resource_Damage 25
+Resource_Damage 30
 Object_Damage 20
 
-Durability 0.5
+Durability 0.3
 
-Blueprints 2
-Blueprint_0_Type Repair
-Blueprint_0_Supply_0_ID 67
-Blueprint_0_Supply_0_Amount 4
-Blueprint_0_Build 27
-Blueprint_1_Type Tool
-Blueprint_1_Supplies 1
-Blueprint_1_Supply_0_ID 1174
-Blueprint_1_Product 67
-Blueprint_1_Products 3
-Blueprint_1_Build 27
+Blueprints
+[
+	{
+		Name Repair
+		CategoryTag "732ee6ffeb18418985cf4f9fde33dd11" // Repair
+		Operation RepairTargetItem
+		InputItems "21ede8ebffb14c5580e8c7ad149e335e x 4" // Metal Scrap
+		RequiresNearbyCraftingTags
+		[
+			"7b82c125a5a54984b8bb26576b59e977" // Workbench
+		]
+		Effect "84347b13028340b8976033c08675d458" // Wrench
+	}
+	{
+		Name Salvage
+		CategoryTag "7ed29f9101ae4523a3b2e389414b7bd9" // Salvage
+		InputItems this
+		OutputItems "21ede8ebffb14c5580e8c7ad149e335e x 3" // Metal Scrap
+		Effect "84347b13028340b8976033c08675d458" // Wrench
+	}
+]
+
 AttackAudioClip Sounds/MeleeAttack_02.mp3

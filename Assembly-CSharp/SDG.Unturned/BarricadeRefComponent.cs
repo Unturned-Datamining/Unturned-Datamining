@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace SDG.Unturned;
 
-internal class BarricadeRefComponent : MonoBehaviour, IExplosionDamageable, IEquatable<IExplosionDamageable>
+internal class BarricadeRefComponent : MonoBehaviour, IExplosionDamageable, IEquatable<IExplosionDamageable>, ICraftingTagProvider
 {
     internal BarricadeDrop tempNotSureIfBarricadeShouldBeAComponentYet;
 
@@ -50,6 +50,33 @@ internal class BarricadeRefComponent : MonoBehaviour, IExplosionDamageable, IEqu
                 BarricadeManager.damage(base.transform, explosionParameters.barricadeDamage, 1f - magnitude / explosionParameters.damageRadius, armor: true, explosionParameters.killer, explosionParameters.damageOrigin);
             }
         }
+    }
+
+    public Asset GetTagProviderAsset()
+    {
+        return tempNotSureIfBarricadeShouldBeAComponentYet?.asset;
+    }
+
+    public void GetAvailableTags(ref CraftingTagProviderGetAvailableTagsParameters p)
+    {
+        ItemPlaceableAsset itemPlaceableAsset = tempNotSureIfBarricadeShouldBeAComponentYet?.asset;
+        if (itemPlaceableAsset != null && itemPlaceableAsset.PlaceableProvidedCraftingTags != null)
+        {
+            for (int i = 0; i < itemPlaceableAsset.PlaceableProvidedCraftingTags.Length; i++)
+            {
+                TagAsset tagAsset = itemPlaceableAsset.PlaceableProvidedCraftingTags[i].Get<TagAsset>();
+                if (tagAsset != null)
+                {
+                    p.ResultTags.Add(tagAsset);
+                }
+            }
+        }
+        p.ApplyModHooks(base.gameObject);
+    }
+
+    public bool Equals(ICraftingTagProvider obj)
+    {
+        return this == obj;
     }
 
     void IExplosionDamageable.ApplyExplosionDamage(in ExplosionParameters explosionParameters, ref ExplosionDamageParameters damageParameters)

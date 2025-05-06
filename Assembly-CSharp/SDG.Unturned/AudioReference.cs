@@ -30,33 +30,46 @@ public struct AudioReference
     {
         volumeMultiplier = 1f;
         pitchMultiplier = 1f;
+        AudioClip audioClip;
         if (IsNullOrEmpty)
         {
-            return null;
+            audioClip = null;
         }
-        MasterBundleConfig masterBundleConfig = Assets.findMasterBundleByName(assetBundleName);
-        if (masterBundleConfig == null || masterBundleConfig.assetBundle == null)
+        else
         {
-            UnturnedLog.warn("Unable to find master bundle '{0}' when loading audio reference '{1}'", assetBundleName, path);
-            return null;
-        }
-        string text = masterBundleConfig.formatAssetPath(path);
-        if (text.EndsWith(".asset"))
-        {
-            OneShotAudioDefinition oneShotAudioDefinition = masterBundleConfig.assetBundle.LoadAsset<OneShotAudioDefinition>(text);
-            if (oneShotAudioDefinition == null)
+            MasterBundleConfig masterBundleConfig = Assets.findMasterBundleByName(assetBundleName);
+            if (masterBundleConfig == null || masterBundleConfig.assetBundle == null)
             {
-                UnturnedLog.warn("Failed to load audio def '{0}' from master bundle '{1}'", text, assetBundleName);
-                return null;
+                UnturnedLog.warn("Unable to find master bundle '{0}' when loading audio reference '{1}'", assetBundleName, path);
+                audioClip = null;
             }
-            volumeMultiplier = oneShotAudioDefinition.volumeMultiplier;
-            pitchMultiplier = Random.Range(oneShotAudioDefinition.minPitch, oneShotAudioDefinition.maxPitch);
-            return oneShotAudioDefinition.GetRandomClip();
-        }
-        AudioClip audioClip = masterBundleConfig.assetBundle.LoadAsset<AudioClip>(text);
-        if (audioClip == null)
-        {
-            UnturnedLog.warn("Failed to load audio clip '{0}' from master bundle '{1}'", text, assetBundleName);
+            else
+            {
+                string text = masterBundleConfig.FormatAssetPathAndCache(path);
+                if (text.EndsWith(".asset"))
+                {
+                    OneShotAudioDefinition oneShotAudioDefinition = masterBundleConfig.assetBundle.LoadAsset<OneShotAudioDefinition>(text);
+                    if (oneShotAudioDefinition == null)
+                    {
+                        UnturnedLog.warn("Failed to load audio def '{0}' from master bundle '{1}'", text, assetBundleName);
+                        audioClip = null;
+                    }
+                    else
+                    {
+                        volumeMultiplier = oneShotAudioDefinition.volumeMultiplier;
+                        pitchMultiplier = Random.Range(oneShotAudioDefinition.minPitch, oneShotAudioDefinition.maxPitch);
+                        audioClip = oneShotAudioDefinition.GetRandomClip();
+                    }
+                }
+                else
+                {
+                    audioClip = masterBundleConfig.assetBundle.LoadAsset<AudioClip>(text);
+                    if (audioClip == null)
+                    {
+                        UnturnedLog.warn("Failed to load audio clip '{0}' from master bundle '{1}'", text, assetBundleName);
+                    }
+                }
+            }
         }
         return audioClip;
     }

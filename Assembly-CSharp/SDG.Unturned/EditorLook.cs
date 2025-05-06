@@ -18,7 +18,8 @@ public class EditorLook : MonoBehaviour
     {
         if (EditorInteract.isFlying && Level.isEditor)
         {
-            MainCamera.instance.fieldOfView = Mathf.Lerp(MainCamera.instance.fieldOfView, OptionsSettings.DesiredVerticalFieldOfView + (float)((EditorMovement.isMoving && InputEx.GetKey(ControlsSettings.modify)) ? 10 : 0), 8f * Time.deltaTime);
+            float num = ((EditorMovement.isMoving && InputEx.GetKey(ControlsSettings.modify)) ? (OptionsSettings.sprintFovBoostIntensity * 10f) : 0f);
+            MainCamera.instance.fieldOfView = Mathf.Lerp(MainCamera.instance.fieldOfView, OptionsSettings.DesiredVerticalFieldOfView + num, 8f * Time.deltaTime);
             highlightCamera.fieldOfView = MainCamera.instance.fieldOfView;
             _yaw += ControlsSettings.mouseAimSensitivity * Input.GetAxis("mouse_x");
             if (ControlsSettings.invert)

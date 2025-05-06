@@ -61,8 +61,6 @@ public class PlayerUI : MonoBehaviour
 
     public static bool isLocked;
 
-    private BlurEffect menuBlurFX;
-
     private AudioReverbZone hallucinationReverbZone;
 
     private static float hallucinationTimer;
@@ -458,7 +456,7 @@ public class PlayerUI : MonoBehaviour
                     messageQualityImage.IsVisible = true;
                     messageAmountLabel.IsVisible = true;
                 }
-                else if (((ItemAsset)objects[1]).amount > 1)
+                else if (((ItemAsset)objects[1]).MaxAmount > 1)
                 {
                     messageAmountLabel.Text = "x" + ((Item)objects[0]).amount;
                     messageAmountLabel.TextColor = ESleekTint.FONT;
@@ -1780,15 +1778,9 @@ public class PlayerUI : MonoBehaviour
 
     private void tickMenuBlur()
     {
-        if (!(menuBlurFX == null))
-        {
-            EPluginWidgetFlags pluginWidgetFlags = Player.player.pluginWidgetFlags;
-            bool flag = (pluginWidgetFlags & EPluginWidgetFlags.ForceBlur) == EPluginWidgetFlags.ForceBlur || ((pluginWidgetFlags & EPluginWidgetFlags.NoBlur) != EPluginWidgetFlags.NoBlur && ((window.showCursor && !usingCustomModal && !MenuConfigurationGraphicsUI.active && !PlayerNPCDialogueUI.active && !PlayerNPCQuestUI.active && !PlayerNPCVendorUI.active && !PlayerWorkzoneUI.active) || (WaterUtility.isPointUnderwater(MainCamera.instance.transform.position) && (Player.player.clothing.glassesAsset == null || !Player.player.clothing.glassesAsset.proofWater)) || (Player.player.look.isScopeActive && GraphicsSettings.scopeQuality != 0 && Player.player.look.perspective == EPlayerPerspective.FIRST && Player.player.equipment.useable != null && ((UseableGun)Player.player.equipment.useable).isAiming)));
-            if (menuBlurFX.enabled != flag)
-            {
-                menuBlurFX.enabled = flag;
-            }
-        }
+        EPluginWidgetFlags pluginWidgetFlags = Player.player.pluginWidgetFlags;
+        bool isMainBlurEnabled = (pluginWidgetFlags & EPluginWidgetFlags.ForceBlur) == EPluginWidgetFlags.ForceBlur || ((pluginWidgetFlags & EPluginWidgetFlags.NoBlur) != EPluginWidgetFlags.NoBlur && ((window.showCursor && !usingCustomModal && !MenuConfigurationGraphicsUI.active && !PlayerNPCDialogueUI.active && !PlayerNPCQuestUI.active && !PlayerNPCVendorUI.active && !PlayerWorkzoneUI.active) || (WaterUtility.isPointUnderwater(MainCamera.instance.transform.position) && (Player.player.clothing.glassesAsset == null || !Player.player.clothing.glassesAsset.proofWater)) || (Player.player.look.isScopeActive && GraphicsSettings.scopeQuality != 0 && Player.player.look.perspective == EPlayerPerspective.FIRST && Player.player.equipment.useable != null && ((UseableGun)Player.player.equipment.useable).isAiming)));
+        UnturnedPostProcess.instance.SetIsMainBlurEnabled(isMainBlurEnabled);
     }
 
     private void UpdateOverlayColor()
@@ -2041,7 +2033,6 @@ public class PlayerUI : MonoBehaviour
         PlayerClothing clothing = Player.player.clothing;
         clothing.onGlassesUpdated = (GlassesUpdated)Delegate.Combine(clothing.onGlassesUpdated, new GlassesUpdated(onGlassesUpdated));
         LightingManager.onMoonUpdated = (MoonUpdated)Delegate.Combine(LightingManager.onMoonUpdated, new MoonUpdated(onMoonUpdated));
-        menuBlurFX = GetComponent<BlurEffect>();
         hallucinationReverbZone = GetComponent<AudioReverbZone>();
     }
 
@@ -2067,6 +2058,7 @@ public class PlayerUI : MonoBehaviour
             }
             window = null;
             setIsHallucinating(isHallucinating: false);
+            UnturnedPostProcess.instance.SetIsMainBlurEnabled(enabled: false);
         }
     }
 

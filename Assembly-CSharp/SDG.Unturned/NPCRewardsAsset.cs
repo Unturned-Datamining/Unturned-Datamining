@@ -1,35 +1,24 @@
+using System;
+
 namespace SDG.Unturned;
 
 public class NPCRewardsAsset : Asset
 {
+    private NPCConditionsList conditionsList;
+
     private NPCRewardsList rewardsList;
 
-    public INPCCondition[] conditions { get; private set; }
+    [Obsolete]
+    public INPCCondition[] conditions => conditionsList.conditions;
 
     public bool AreConditionsMet(Player player)
     {
-        if (conditions != null)
-        {
-            for (int i = 0; i < conditions.Length; i++)
-            {
-                if (!conditions[i].isConditionMet(player))
-                {
-                    return false;
-                }
-            }
-        }
-        return true;
+        return conditionsList.AreConditionsMet(player);
     }
 
     public void ApplyConditions(Player player)
     {
-        if (conditions != null)
-        {
-            for (int i = 0; i < conditions.Length; i++)
-            {
-                conditions[i].ApplyCondition(player);
-            }
-        }
+        conditionsList.ApplyConditions(player);
     }
 
     public void GrantRewards(Player player)
@@ -42,11 +31,10 @@ public class NPCRewardsAsset : Asset
         return "NPC Rewards List";
     }
 
-    public override void PopulateAsset(Bundle bundle, DatDictionary data, Local localization)
+    public override void PopulateAsset(in PopulateAssetParameters p)
     {
-        base.PopulateAsset(bundle, data, localization);
-        conditions = new INPCCondition[data.ParseUInt8("Conditions", 0)];
-        NPCTool.readConditions(data, localization, "Condition_", conditions, this);
-        rewardsList.Parse(data, localization, this, "Rewards", "Reward_");
+        base.PopulateAsset(in p);
+        conditionsList.Parse(p.data, p.localization, this, "Conditions", "Condition_");
+        rewardsList.Parse(p.data, p.localization, this, "Rewards", "Reward_");
     }
 }

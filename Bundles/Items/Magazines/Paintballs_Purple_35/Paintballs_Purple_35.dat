@@ -1,4 +1,4 @@
-GUID 95231f3f2871424888cda61f4f035a09
+﻿GUID 95231f3f2871424888cda61f4f035a09
 Type Magazine
 Rarity Uncommon
 ID 1342
@@ -17,18 +17,28 @@ Caliber_0 30
 Tracer 112
 Impact 113
 
-Blueprints 2
-Blueprint_0_Type Ammo
-Blueprint_0_Supplies 1
-Blueprint_0_Supply_0_ID 1342
-Blueprint_0_Build 30
-Blueprint_1_Type Tool
-Blueprint_1_Supplies 1
-Blueprint_1_Supply_0_ID this
-Blueprint_1_Supply_0_AllowEmpty true
-Blueprint_1_Supply_0_Prioritization LowestAmount
-Blueprint_1_Product "67" // Metal Scrap
-Blueprint_1_Products 1
-Blueprint_1_Build 27
+Blueprints
+[
+	{
+		CategoryTag "d739926736374e5ba34b4ac6ffbb5c8f" // Ammunition
+		Operation FillTargetItem
+		InputItems this
+		Effect "03caec479dd2475c92e1c326e1720140" // Casing
+	}
+	{
+		Name Salvage
+		CategoryTag "7ed29f9101ae4523a3b2e389414b7bd9" // Salvage
+		InputItems
+		[
+			{
+				ID this
+				Prioritization LowestAmount
+				CountEmptyAsOne true
+			}
+		]
+		OutputItems "21ede8ebffb14c5580e8c7ad149e335e" // Metal Scrap
+		Effect "84347b13028340b8976033c08675d458" // Wrench
+	}
+]
 
 Delete_Empty

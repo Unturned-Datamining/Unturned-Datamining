@@ -186,11 +186,6 @@ public class CommandLine
         return false;
     }
 
-    public static bool tryGetVR()
-    {
-        return Environment.CommandLine.ToLower().IndexOf("-vr") != -1;
-    }
-
     public static string[] getCommands()
     {
         string[] commandLineArgs = Environment.GetCommandLineArgs();

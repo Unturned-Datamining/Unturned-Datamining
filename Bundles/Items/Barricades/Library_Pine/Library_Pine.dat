@@ -1,4 +1,4 @@
-GUID e15fd91a620a40ce922bb601a69bc1b5
+﻿GUID e15fd91a620a40ce922bb601a69bc1b5
 Type Library
 Rarity Rare
 Useable Barricade
@@ -19,15 +19,21 @@ Tax 10
 
 Explosion 29
 
-Blueprints 1
-Blueprint_0_Type Furniture
-Blueprint_0_Supplies 2
-Blueprint_0_Supply_0_ID 63
-Blueprint_0_Supply_0_Amount 9
-Blueprint_0_Supply_1_ID 64
-Blueprint_0_Supply_1_Amount 5
-Blueprint_0_Level 2
-Blueprint_0_Skill Craft
-Blueprint_0_Build 27
+Blueprints
+[
+	{
+		CategoryTag "b0c6cc0a8b4346be89aef697ecdb8e46" // Furniture
+		InputItems
+		[
+			"719bfdf2c2dc4be6ad5be44d044583e4 x 9" // Pine Plank
+			"5ff4bcf752554990bf06e103b996cef2 x 5" // Rope
+		]
+		OutputItems this
+		Skill Craft
+		Skill_Level 2
+		Effect "84347b13028340b8976033c08675d458" // Wrench
+	}
+]
+
 PlacementAudioClip Sounds/WoodenPlacement.mp3
 Has_Clip_Prefab false

@@ -1,4 +1,4 @@
-GUID 6553e4375e654bdd8ee00d88e4014b98
+﻿GUID 6553e4375e654bdd8ee00d88e4014b98
 Type Gun
 Useable Gun
 Slot Primary
@@ -41,7 +41,7 @@ Animal_Spine_Multiplier 0.8
 Animal_Skull_Multiplier 1.1
 
 Durability 1
-Wear 6
+Wear 5
 
 Spread_Aim 0.15
 Spread_Angle_Degrees 11.31
@@ -66,24 +66,32 @@ Shake_Max_Z -0.1
 
 EquipableModelParent LeftHook
 
-Blueprints 3
-Blueprint_0_Type Tool
-Blueprint_0_Supplies 2
-Blueprint_0_Supply_0_ID 38
-Blueprint_0_Supply_0_Amount 7
-Blueprint_0_Supply_1_ID 64
-Blueprint_0_Supply_1_Amount 1
-Blueprint_0_Level 1
-Blueprint_0_Skill Craft
-Blueprint_0_Build 27
-Blueprint_1_Type Repair
-Blueprint_1_Supplies 1
-Blueprint_1_Supply_0_ID 38
-Blueprint_1_Supply_0_Amount 4
-Blueprint_1_Build 27
-Blueprint_2_Type Tool
-Blueprint_2_Supplies 1
-Blueprint_2_Supply_0_ID 355
-Blueprint_2_Product 38
-Blueprint_2_Products 2
-Blueprint_2_Build 27
+Blueprints
+[
+	{
+		CategoryTag "ad1804b6945145f3b308738b0b8ea447" // Tools
+		InputItems
+		[
+			"9c563bf14d4641a18873f338beaed128 x 7" // Birch Stick
+			"5ff4bcf752554990bf06e103b996cef2" // Rope
+		]
+		OutputItems this
+		Skill Craft
+		Skill_Level 1
+		Effect "84347b13028340b8976033c08675d458" // Wrench
+	}
+	{
+		Name Repair
+		CategoryTag "732ee6ffeb18418985cf4f9fde33dd11" // Repair
+		Operation RepairTargetItem
+		InputItems "9c563bf14d4641a18873f338beaed128 x 4" // Birch Stick
+		Effect "84347b13028340b8976033c08675d458" // Wrench
+	}
+	{
+		Name Salvage
+		CategoryTag "7ed29f9101ae4523a3b2e389414b7bd9" // Salvage
+		InputItems this
+		OutputItems "9c563bf14d4641a18873f338beaed128 x 2" // Birch Stick
+		Effect "84347b13028340b8976033c08675d458" // Wrench
+	}
+]

@@ -167,24 +167,24 @@ public class ResourceAsset : Asset
         lod.SetLODs(lODs);
     }
 
-    public override void PopulateAsset(Bundle bundle, DatDictionary data, Local localization)
+    public override void PopulateAsset(in PopulateAssetParameters p)
     {
-        base.PopulateAsset(bundle, data, localization);
-        if (id < 50 && !base.OriginAllowsVanillaLegacyId && !data.ContainsKey("Bypass_ID_Limit"))
+        base.PopulateAsset(in p);
+        if (id < 50 && !base.OriginAllowsVanillaLegacyId && !p.data.ContainsKey("Bypass_ID_Limit"))
         {
             throw new NotSupportedException("ID < 50");
         }
-        _resourceName = localization.format("Name");
+        _resourceName = p.localization.format("Name");
         if (Dedicator.IsDedicatedServer)
         {
-            if (data.ParseBool("Has_Clip_Prefab", defaultValue: true))
+            if (p.data.ParseBool("Has_Clip_Prefab", defaultValue: true))
             {
-                _modelGameObject = bundle.load<GameObject>("Resource_Clip");
+                _modelGameObject = p.bundle.load<GameObject>("Resource_Clip");
                 if (_modelGameObject == null)
                 {
                     Assets.ReportError(this, "missing \"Resource_Clip\" GameObject, loading \"Resource\" GameObject instead");
                 }
-                _stumpGameObject = bundle.load<GameObject>("Stump_Clip");
+                _stumpGameObject = p.bundle.load<GameObject>("Stump_Clip");
                 if (_stumpGameObject == null)
                 {
                     Assets.ReportError(this, "missing \"Stump_Clip\" GameObject, loading \"Stump\" GameObject instead");
@@ -192,7 +192,7 @@ public class ResourceAsset : Asset
             }
             if (_modelGameObject == null)
             {
-                _modelGameObject = bundle.load<GameObject>("Resource");
+                _modelGameObject = p.bundle.load<GameObject>("Resource");
                 if (_modelGameObject == null)
                 {
                     Assets.ReportError(this, "missing \"Resource\" GameObject");
@@ -204,7 +204,7 @@ public class ResourceAsset : Asset
             }
             if (_stumpGameObject == null)
             {
-                _stumpGameObject = bundle.load<GameObject>("Stump");
+                _stumpGameObject = p.bundle.load<GameObject>("Stump");
                 if (_stumpGameObject == null)
                 {
                     Assets.ReportError(this, "missing \"Stump\" GameObject");
@@ -217,35 +217,35 @@ public class ResourceAsset : Asset
         }
         else
         {
-            _modelGameObject = bundle.load<GameObject>("Resource_Old");
+            _modelGameObject = p.bundle.load<GameObject>("Resource_Old");
             if (_modelGameObject == null)
             {
-                _modelGameObject = bundle.load<GameObject>("Resource");
+                _modelGameObject = p.bundle.load<GameObject>("Resource");
             }
             if (_modelGameObject == null)
             {
                 Assets.ReportError(this, "missing \"Resource\" GameObject");
             }
-            _stumpGameObject = bundle.load<GameObject>("Stump_Old");
+            _stumpGameObject = p.bundle.load<GameObject>("Stump_Old");
             if (_stumpGameObject == null)
             {
-                _stumpGameObject = bundle.load<GameObject>("Stump");
+                _stumpGameObject = p.bundle.load<GameObject>("Stump");
             }
             if (_stumpGameObject == null)
             {
                 Assets.ReportError(this, "missing \"Stump\" GameObject");
             }
-            _skyboxGameObject = bundle.load<GameObject>("Skybox_Old");
+            _skyboxGameObject = p.bundle.load<GameObject>("Skybox_Old");
             if (_skyboxGameObject == null)
             {
-                _skyboxGameObject = bundle.load<GameObject>("Skybox");
+                _skyboxGameObject = p.bundle.load<GameObject>("Skybox");
             }
-            _debrisGameObject = bundle.load<GameObject>("Debris_Old");
+            _debrisGameObject = p.bundle.load<GameObject>("Debris_Old");
             if (_debrisGameObject == null)
             {
-                _debrisGameObject = bundle.load<GameObject>("Debris");
+                _debrisGameObject = p.bundle.load<GameObject>("Debris");
             }
-            if (data.ContainsKey("Auto_Skybox") && (bool)skyboxGameObject)
+            if (p.data.ContainsKey("Auto_Skybox") && (bool)skyboxGameObject)
             {
                 Transform transform = modelGameObject.transform.Find("Model_0");
                 if ((bool)transform)
@@ -306,10 +306,10 @@ public class ResourceAsset : Asset
         {
             _skyboxGameObject.SetTagIfUntaggedRecursively("Resource");
         }
-        health = data.ParseUInt16("Health", 0);
-        MinRandomAngleDeviation = data.ParseFloat("RandomAngleDeviation_Min", -5f);
-        MaxRandomAngleDeviation = data.ParseFloat("RandomAngleDeviation_Max", 5f);
-        if (data.TryParseFloat("Scale", out var value))
+        health = p.data.ParseUInt16("Health", 0);
+        MinRandomAngleDeviation = p.data.ParseFloat("RandomAngleDeviation_Min", -5f);
+        MaxRandomAngleDeviation = p.data.ParseFloat("RandomAngleDeviation_Max", 5f);
+        if (p.data.TryParseFloat("Scale", out var value))
         {
             scale = value;
             MinRandomUniformScale = 1.1f;
@@ -317,39 +317,39 @@ public class ResourceAsset : Asset
         }
         else
         {
-            MinRandomUniformScale = data.ParseFloat("RandomUniformScale_Min", 1.1f);
-            MaxRandomUniformScale = data.ParseFloat("RandomUniformScale_Max", 1.1f);
+            MinRandomUniformScale = p.data.ParseFloat("RandomUniformScale_Min", 1.1f);
+            MaxRandomUniformScale = p.data.ParseFloat("RandomUniformScale_Max", 1.1f);
             scale = (MaxRandomUniformScale - MinRandomUniformScale) * 0.5f;
         }
-        verticalOffset = data.ParseFloat("Vertical_Offset", -0.75f);
-        DebrisVerticalOffset = data.ParseFloat("Debris_Vertical_Offset", 1f);
-        explosion = data.ParseGuidOrLegacyId("Explosion", out _explosionGuid);
-        log = data.ParseUInt16("Log", 0);
-        stick = data.ParseUInt16("Stick", 0);
-        rewardID = data.ParseUInt16("Reward_ID", 0);
-        rewardXP = data.ParseUInt32("Reward_XP");
-        if (data.ContainsKey("Reward_Min"))
+        verticalOffset = p.data.ParseFloat("Vertical_Offset", -0.75f);
+        DebrisVerticalOffset = p.data.ParseFloat("Debris_Vertical_Offset", 1f);
+        explosion = p.data.ParseGuidOrLegacyId("Explosion", out _explosionGuid);
+        log = p.data.ParseUInt16("Log", 0);
+        stick = p.data.ParseUInt16("Stick", 0);
+        rewardID = p.data.ParseUInt16("Reward_ID", 0);
+        rewardXP = p.data.ParseUInt32("Reward_XP");
+        if (p.data.ContainsKey("Reward_Min"))
         {
-            rewardMin = data.ParseUInt8("Reward_Min", 0);
+            rewardMin = p.data.ParseUInt8("Reward_Min", 0);
         }
         else
         {
             rewardMin = 6;
         }
-        if (data.ContainsKey("Reward_Max"))
+        if (p.data.ContainsKey("Reward_Max"))
         {
-            rewardMax = data.ParseUInt8("Reward_Max", 0);
+            rewardMax = p.data.ParseUInt8("Reward_Max", 0);
         }
         else
         {
             rewardMax = 9;
         }
-        bladeID = data.ParseUInt8("BladeID", 0);
-        vulnerableToFists = data.ParseBool("Vulnerable_To_Fists");
-        vulnerableToAllMeleeWeapons = data.ParseBool("Vulnerable_To_All_Melee_Weapons");
-        ShouldIgnoreCollisionBetweenStumpAndDebris = data.ParseBool("Ignore_Collision_Between_Stump_And_Debris", defaultValue: true);
-        reset = data.ParseFloat("Reset");
-        isForage = data.ContainsKey("Forage");
+        bladeID = p.data.ParseUInt8("BladeID", 0);
+        vulnerableToFists = p.data.ParseBool("Vulnerable_To_Fists");
+        vulnerableToAllMeleeWeapons = p.data.ParseBool("Vulnerable_To_All_Melee_Weapons");
+        ShouldIgnoreCollisionBetweenStumpAndDebris = p.data.ParseBool("Ignore_Collision_Between_Stump_And_Debris", defaultValue: true);
+        reset = p.data.ParseFloat("Reset");
+        isForage = p.data.ContainsKey("Forage");
         if (isForage && _modelGameObject != null)
         {
             Transform transform5 = _modelGameObject.transform.Find("Forage");
@@ -362,16 +362,16 @@ public class ResourceAsset : Asset
                 Assets.ReportError(this, "foragable resource missing \"Forage\" GameObject");
             }
         }
-        forageRewardExperience = data.ParseUInt32("Forage_Reward_Experience", 1u);
+        forageRewardExperience = p.data.ParseUInt32("Forage_Reward_Experience", 1u);
         if (isForage)
         {
-            interactabilityText = localization.read("Interact");
+            interactabilityText = p.localization.read("Interact");
             interactabilityText = ItemTool.filterRarityRichText(interactabilityText);
         }
-        hasDebris = !data.ContainsKey("No_Debris");
-        if (data.ContainsKey("Holiday_Restriction"))
+        hasDebris = !p.data.ContainsKey("No_Debris");
+        if (p.data.ContainsKey("Holiday_Restriction"))
         {
-            holidayRestriction = (ENPCHoliday)Enum.Parse(typeof(ENPCHoliday), data.GetString("Holiday_Restriction"), ignoreCase: true);
+            holidayRestriction = (ENPCHoliday)Enum.Parse(typeof(ENPCHoliday), p.data.GetString("Holiday_Restriction"), ignoreCase: true);
             if (holidayRestriction == ENPCHoliday.NONE)
             {
                 Assets.ReportError(this, "has no holiday restriction, so value is ignored");
@@ -381,10 +381,10 @@ public class ResourceAsset : Asset
         {
             holidayRestriction = ENPCHoliday.NONE;
         }
-        christmasRedirect = data.readAssetReference<ResourceAsset>("Christmas_Redirect");
-        halloweenRedirect = data.readAssetReference<ResourceAsset>("Halloween_Redirect");
-        chart = data.ParseEnum("Chart", EObjectChart.NONE);
-        shouldExcludeFromLevelBatching = data.ParseBool("Exclude_From_Level_Batching");
+        christmasRedirect = p.data.readAssetReference<ResourceAsset>("Christmas_Redirect");
+        halloweenRedirect = p.data.readAssetReference<ResourceAsset>("Halloween_Redirect");
+        chart = p.data.ParseEnum("Chart", EObjectChart.NONE);
+        shouldExcludeFromLevelBatching = p.data.ParseBool("Exclude_From_Level_Batching");
     }
 
     internal string OnGetRewardSpawnTableErrorContext()

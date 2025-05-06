@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Text;
 
 namespace SDG.Unturned;
@@ -6,6 +7,8 @@ namespace SDG.Unturned;
 public struct NPCRewardsList
 {
     internal INPCReward[] rewards;
+
+    private static List<INPCReward> tempRewards = new List<INPCReward>();
 
     public void Grant(Player player)
     {
@@ -34,13 +37,89 @@ public struct NPCRewardsList
         }
     }
 
-    public void Parse(DatDictionary data, Local localization, Asset assetContext, string countKey, string prefixKey)
+    /// <summary>
+    /// This overload supports legacy Reward_# format.
+    /// </summary>
+    public void Parse(IDatDictionary data, Local localization, Asset assetContext, string countKey, string prefixKey)
     {
-        int num = data.ParseInt32(countKey);
-        if (num > 0)
+        if (data.TryGetNode(countKey, out var node) && node is IDatValue valueNode)
         {
-            rewards = new INPCReward[num];
-            NPCTool.readRewards(data, localization, prefixKey, rewards, assetContext);
+            int num = valueNode.ParseInt32();
+            if (num > 0)
+            {
+                rewards = new INPCReward[num];
+                NPCTool.readRewards(data, localization, prefixKey, rewards, assetContext);
+            }
+        }
+    }
+
+    /// <summary>
+    /// This overload doesn't support legacy Reward_# format.
+    /// </summary>
+    public void Parse(IDatDictionary data, Local localization, Asset assetContext, string key)
+    {
+        if (data.TryGetList(key, out var node))
+        {
+            Parse(localization, assetContext, node, key);
+        }
+    }
+
+    private void Parse(Local localization, Asset assetContext, IDatList listNode, string countKey)
+    {
+        tempRewards.Clear();
+        int num = -1;
+        foreach (IDatNode item in listNode)
+        {
+            num++;
+            if (!(item is IDatDictionary datDictionary))
+            {
+                continue;
+            }
+            string text = $"{countKey}[{num}]";
+            if (!datDictionary.TryParseEnum<ENPCRewardType>("Type", out var value))
+            {
+                if (datDictionary.ContainsKey("Type"))
+                {
+                    assetContext.ReportAssetError(text + " missing reward Type");
+                }
+                else
+                {
+                    assetContext.ReportAssetError(text + " unable to parse reward type \"" + datDictionary.GetString("Type") + "\"");
+                }
+                continue;
+            }
+            Type type = NPCTool.rewardTypes[(int)value];
+            if (type == null)
+            {
+                assetContext.ReportAssetError($"{text} unable to create type {value}");
+                continue;
+            }
+            INPCReward iNPCReward;
+            try
+            {
+                iNPCReward = Activator.CreateInstance(type) as INPCReward;
+            }
+            catch (Exception e)
+            {
+                UnturnedLog.exception(e, $"Caught exception instantiating {type}:");
+                assetContext.ReportAssetError($"{text} error creating type {value}");
+                continue;
+            }
+            PopulateRewardParameters p = new PopulateRewardParameters(value, datDictionary, localization, assetContext, text, null);
+            try
+            {
+                iNPCReward.PopulateV2(in p);
+            }
+            catch (Exception e2)
+            {
+                UnturnedLog.exception(e2, $"Caught exception populating {text} {type}:");
+                continue;
+            }
+            tempRewards.Add(iNPCReward);
+        }
+        if (tempRewards.Count > 0)
+        {
+            rewards = tempRewards.ToArray();
         }
     }
 

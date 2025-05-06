@@ -1,24 +1,24 @@
-"Metadata"
+﻿Metadata
 {
-	"GUID" "8957222815f0432ca363f056aa9f7990"
-	"Type" "SDG.Unturned.LandscapeMaterialAsset, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null"
+	GUID 8957222815f0432ca363f056aa9f7990
+	Type SDG.Unturned.LandscapeMaterialAsset, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
 }
-"Asset"
+Asset
 {
-	"ID" "0"
-	"Texture"
+	ID 0
+	Texture
 	{
-		"Name" "core.masterbundle"
-		"Path" "Terrain/Materials/Peaks/Grass_00.png"
+		Name core.masterbundle
+		Path Terrain/Materials/Peaks/Grass_00.png
 	}
-	"Mask"
+	Mask
 	{
-		"Name" ""
-		"Path" ""
+		Name
+		Path
 	}
-	"Physics_Material" "Peaks_Grass_Dry"
-	"Foliage"
+	Physics_Material Peaks_Grass_Dry
+	Foliage
 	{
-		"GUID" "5975d4e032b345718e4ad75b2093df00"
+		GUID 5975d4e032b345718e4ad75b2093df00
 	}
 }

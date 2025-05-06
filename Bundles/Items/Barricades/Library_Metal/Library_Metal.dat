@@ -1,4 +1,4 @@
-GUID 115e0813c6734779864b6d9c129e8c87
+﻿GUID 115e0813c6734779864b6d9c129e8c87
 Type Library
 Rarity Epic
 Useable Barricade
@@ -21,16 +21,35 @@ Locked
 
 Explosion 36
 
-Blueprints 1
-Blueprint_0_Type Furniture
-Blueprint_0_Supplies 2
-Blueprint_0_Supply_0_ID 68
-Blueprint_0_Supply_0_Amount 6
-Blueprint_0_Supply_1_ID 64
-Blueprint_0_Supply_1_Amount 5
-Blueprint_0_Tool 76
-Blueprint_0_Level 3
-Blueprint_0_Skill Craft
-Blueprint_0_Build 27
+Blueprints
+[
+	{
+		CategoryTag "b0c6cc0a8b4346be89aef697ecdb8e46" // Furniture
+		InputItems
+		[
+			{
+				ID "7f06b16642724683bd61584a52fde981" // Metal Sheet
+				Amount 6
+			}
+			{
+				ID "5ff4bcf752554990bf06e103b996cef2" // Rope
+				Amount 5
+			}
+			{
+				ID "5830b84bf8074caa91cf3f4dde0dd19e" // Blowtorch
+				Delete false
+			}
+		]
+		OutputItems this
+		Skill Craft
+		Skill_Level 3
+		RequiresNearbyCraftingTags
+		[
+			"7b82c125a5a54984b8bb26576b59e977" // Workbench
+		]
+		Effect "84347b13028340b8976033c08675d458" // Wrench
+	}
+]
+
 PlacementAudioClip Sounds/MetalPlacement.mp3
 Has_Clip_Prefab false

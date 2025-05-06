@@ -309,7 +309,7 @@ public class ReadWrite
         return new Data(text);
     }
 
-    internal static DatDictionary ReadDataWithoutHash(string path)
+    internal static IDatDictionary ReadDataWithoutHash(string path)
     {
         if (!File.Exists(path))
         {

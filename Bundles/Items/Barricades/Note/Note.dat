@@ -1,4 +1,4 @@
-GUID 62a748bf40be48719fe79b8c3e065a79
+﻿GUID 62a748bf40be48719fe79b8c3e065a79
 Type Barricade
 Useable Barricade
 Build Note
@@ -15,12 +15,18 @@ Offset 0.025
 Explosion 58
 Vulnerable
 
-Blueprints 1
-Blueprint_0_Type Furniture
-Blueprint_0_Supplies 2
-Blueprint_0_Supply_0_ID 66
-Blueprint_0_Supply_0_Amount 5
-Blueprint_0_Supply_1_ID 69
-Blueprint_0_Supply_1_Amount 1
-Blueprint_0_Build 27
+Blueprints
+[
+	{
+		CategoryTag "b0c6cc0a8b4346be89aef697ecdb8e46" // Furniture
+		InputItems
+		[
+			"14901f32cd3240179fd6124324cc27e5 x 5" // Cloth
+			"8c25cf28c76a4634855f404c8972c0ae" // Tape
+		]
+		OutputItems this
+		Effect "84347b13028340b8976033c08675d458" // Wrench
+	}
+]
+
 Has_Clip_Prefab false

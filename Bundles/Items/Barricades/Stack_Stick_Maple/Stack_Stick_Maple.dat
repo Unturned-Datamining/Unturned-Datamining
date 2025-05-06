@@ -1,4 +1,4 @@
-GUID 095b058bbc98469d8ed40b9d2fc46b33
+﻿GUID 095b058bbc98469d8ed40b9d2fc46b33
 Type Barricade
 Rarity Uncommon
 Useable Barricade
@@ -16,17 +16,21 @@ Offset 0.38
 Explosion 19
 Vulnerable
 
-Blueprints 2
-Blueprint_0_Type Gear
-Blueprint_0_Supply_0_ID 40
-Blueprint_0_Supply_0_Amount 12
-Blueprint_0_Build 27
-Blueprint_1_Type Gear
-Blueprint_1_Supply_0_ID 1906
-Blueprint_1_Supply_0_Amount 1
-Blueprint_1_Product 40
-Blueprint_1_Products 12
-Blueprint_1_Build 27
+Blueprints
+[
+	{
+		CategoryTag "cdb2df24b76d4c6e9d8411c940d8337f" // Gear
+		InputItems "46218740c256475b87dbc6a2e9a1fb19 x 12" // Maple Stick
+		OutputItems this
+		Effect "84347b13028340b8976033c08675d458" // Wrench
+	}
+	{
+		CategoryTag "7ed29f9101ae4523a3b2e389414b7bd9" // Salvage
+		InputItems this
+		OutputItems "46218740c256475b87dbc6a2e9a1fb19 x 12" // Maple Stick
+		Effect "84347b13028340b8976033c08675d458" // Wrench
+	}
+]
 
 Actions 1
 Action_0_Type Blueprint

@@ -1,23 +1,70 @@
-Type_0_Tooltip Tools
-Type_1_Tooltip Apparel
-Type_2_Tooltip Supplies
-Type_3_Tooltip Gear
-Type_4_Tooltip Ammunition
-Type_5_Tooltip Barricades
-Type_6_Tooltip Structures
-Type_7_Tooltip Utilities
-Type_8_Tooltip Furniture
-Type_9_Tooltip Repair
+Requirements_Label Requires {0}
+Requirements_Separator ", "
+Requirements_Skill {0} Level {1}
 
-Skill_1 Requires Crafting {0}
-Skill_2 Requires Cooking {0} + Heat
-Skill_3 Requires Engineer {0}
+BlueprintAmountLabel {0} of {1}
+BlueprintAmountLabel_Missing {0} of {1} {2}
+MissingAmount (need {0} more)
+
+BlueprintTitle_ItemSeparator " + "
+BlueprintTitle_ToolItem (Tool)
+BlueprintTitle_OutputSeparator " = "
+BlueprintTitle_OperationRepair Repair {0} {1} with {2}
+BlueprintTitle_OperationFill Fill {0} +{1} with {2}
+
+Details_RepairTitle Repair {0}
+Details_RepairDescription Quality +{0} (from {1} to {2})
+Details_FillTitle Fill {0}
+Details_FillDescription Amount +{0} (from x{1} to x{2})
+Details_SalvageTitle Salvage {0}
+Details_CraftTitle Build {0}
+Details_TargetItem Target
+Details_InputItems Ingredients
+Details_ToolItems Tools
+Details_OutputItems Products
+Details_RequiredSkills Required Skills
+Details_RequiredTags Required Capabilities
+Details_Conditions Conditions
+Details_Rewards Provides
+Details_TagMissing (missing)
 
 Search_Field_Hint Blueprint Name Filter
 Search Search
 Search_Tooltip Search
-Hide_Uncraftable_Toggle_Label Hide Uncraftable Blueprints
+Hide_Uncraftable_Toggle_Label Hide Uncraftable
+Hide_Uncraftable_Toggle_Tooltip Exclude blueprints you can't currently craft.
+Show_Ignored_Toggle_Label Show Ignored
+Show_Ignored_Toggle_Tooltip Include blueprints you've blocked.
 No_Blueprints No blueprints available matching these filters.
+NoBlueprints_ZeroAvailableItems You have no items to craft with.
+NoBlueprints_HasAvailableItems No blueprints use the items you have.
+
+Header_Categories Categories
+Header_TagProviders Workstations
+Header_AvailableTags Capabilities
+
+FilteringDescription_Format Filtering blueprints {0}:
+FilteringDescription_Separator " and "
+FilteringDescription_Name mentioning "{0}"
+FilteringDescription_TagProvider using {0}
+FilteringDescription_Tag requiring {0}
+FilteringDescription_Category in {0} category
+
+TagProvider_Tooltip {0} capabilities:
+
+ResetFilters_Label Reset Filters
+ResetFilters_Tooltip Show blueprints craftable with your available items. (default)
+
+VisibilityButton_Visible_Label Visible
+VisibilityButton_Visible_Tooltip Shown and allowed to craft. Click to ignore this blueprint.
+VisibilityButton_Hidden_Label Ignored
+VisibilityButton_Hidden_Tooltip Hidden and blocked from crafting. Click to unblock this blueprint.
 
 Craft Craft
-Craft_All Craft All
+
+NotCraftable_Header Not currently craftable because:
+NotCraftable_LineItemPrefix "• "
+NotCraftable_MissingInputItem Missing {0}
+NotCraftable_MissingSkill Requires Skill
+NotCraftable_MissingCraftingTag Requires {0}
+NotCraftable_UnmetConditions Conditions Unmet

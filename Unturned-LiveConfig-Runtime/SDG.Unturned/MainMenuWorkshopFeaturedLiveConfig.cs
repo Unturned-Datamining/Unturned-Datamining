@@ -63,13 +63,13 @@ public class MainMenuWorkshopFeaturedLiveConfig
         return false;
     }
 
-    public void Parse(DatDictionary data)
+    public void Parse(IDatDictionary data)
     {
         id = data.ParseInt64("Id", 0L);
         if (data.TryGetList("FileIds", out var node))
         {
             List<ulong> list = new List<ulong>(node.Count);
-            foreach (DatValue value3 in node.GetValues())
+            foreach (IDatValue value3 in node.GetValues())
             {
                 if (value3.TryParseUInt64(out var value))
                 {
@@ -91,7 +91,7 @@ public class MainMenuWorkshopFeaturedLiveConfig
         if (data.TryGetList("AssociatedStockpileItems", out var node2))
         {
             List<int> list2 = new List<int>(node2.Count);
-            foreach (DatValue value4 in node2.GetValues())
+            foreach (IDatValue value4 in node2.GetValues())
             {
                 if (value4.TryParseInt32(out var value2))
                 {

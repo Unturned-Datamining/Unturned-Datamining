@@ -1,4 +1,4 @@
-GUID 619c2420ac19420caf2a260eb3f9e9aa
+﻿GUID 619c2420ac19420caf2a260eb3f9e9aa
 Type Refill
 Useable Refill
 ID 482
@@ -9,18 +9,27 @@ Size_Z 0.35
 
 Clean_Water 15
 
-Blueprints 2
-Blueprint_0_Type Tool
-Blueprint_0_Supplies 2
-Blueprint_0_Supply_0_ID 62
-Blueprint_0_Supply_0_Amount 5
-Blueprint_0_Supply_1_ID 69
-Blueprint_0_Supply_1_Amount 1
-Blueprint_0_Level 1
-Blueprint_0_Skill Craft
-Blueprint_0_Build 27
-Blueprint_1_Type Repair
-Blueprint_1_Supply_0_ID 392
-Blueprint_1_Supply_0_Amount 1
-Blueprint_1_Build 27
+Blueprints
+[
+	{
+		CategoryTag "ad1804b6945145f3b308738b0b8ea447" // Tools
+		InputItems
+		[
+			"5a3c4302400e400b9b9486fbb5178eca x 5" // Birch Plank
+			"8c25cf28c76a4634855f404c8972c0ae" // Tape
+		]
+		OutputItems this
+		Skill Craft
+		Skill_Level 1
+		Effect "84347b13028340b8976033c08675d458" // Wrench
+	}
+	{
+		Name Repair
+		CategoryTag "732ee6ffeb18418985cf4f9fde33dd11" // Repair
+		Operation RepairTargetItem
+		InputItems "f2707771eebb4904b1e4b1f58929393b" // Purification Tablets
+		Effect "84347b13028340b8976033c08675d458" // Wrench
+	}
+]
+
 ConsumeAudioClip Sounds/DrinkSwallow.mp3

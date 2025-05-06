@@ -1,5 +1,6 @@
 # Unturned.SystemEx
 ## Content
+- [ArrayEx.cs](ArrayEx.cs)
 - [ByteDisplay.cs](ByteDisplay.cs)
 - [ConvertEx.cs](ConvertEx.cs)
 - [DictionaryEx.cs](DictionaryEx.cs)

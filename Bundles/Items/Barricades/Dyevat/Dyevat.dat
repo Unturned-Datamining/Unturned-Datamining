@@ -1,0 +1,65 @@
+﻿GUID d62080979dc245d6b1113255447d0d7f
+Type Barricade
+Rarity Rare
+Useable Barricade
+Build Barricade
+ID 1917
+
+Size_X 2
+Size_Y 2
+Size_Z 0.45
+
+Health 300
+Range 4
+Radius 0.4
+Offset 0.8
+
+Explosion 19
+
+Blueprints
+[
+	{
+		CategoryTag "bfac6026305f4737a95fd275ebff65a6" // Utilities
+		InputItems
+		[
+			"e73a23b102f24520a32ec0b2afaa6157 x 4" // Maple Plank
+			"46218740c256475b87dbc6a2e9a1fb19 x 6" // Maple Stick
+			"14901f32cd3240179fd6124324cc27e5 x 3" // Cloth
+			"5ff4bcf752554990bf06e103b996cef2" // Rope
+		]
+		OutputItems this
+		Effect "84347b13028340b8976033c08675d458" // Wrench
+	}
+	{
+		CategoryTag "bfac6026305f4737a95fd275ebff65a6" // Utilities
+		InputItems
+		[
+			"5a3c4302400e400b9b9486fbb5178eca x 4" // Birch Plank
+			"9c563bf14d4641a18873f338beaed128 x 6" // Birch Stick
+			"14901f32cd3240179fd6124324cc27e5 x 3" // Cloth
+			"5ff4bcf752554990bf06e103b996cef2" // Rope
+		]
+		OutputItems this
+		Effect "84347b13028340b8976033c08675d458" // Wrench
+	}
+	{
+		CategoryTag "bfac6026305f4737a95fd275ebff65a6" // Utilities
+		InputItems
+		[
+			"719bfdf2c2dc4be6ad5be44d044583e4 x 4" // Pine Plank
+			"55d9700ea53c477685458171932251f1 x 6" // Pine Stick
+			"14901f32cd3240179fd6124324cc27e5 x 3" // Cloth
+			"5ff4bcf752554990bf06e103b996cef2" // Rope
+		]
+		OutputItems this
+		Effect "84347b13028340b8976033c08675d458" // Wrench
+	}
+]
+
+PlaceableProvidesCraftingTags
+[
+	8e86b740dafc46f7bf98c5040c9b223e
+]
+
+PlacementAudioClip Sounds/WoodenPlacement.mp3
+Has_Clip_Prefab false

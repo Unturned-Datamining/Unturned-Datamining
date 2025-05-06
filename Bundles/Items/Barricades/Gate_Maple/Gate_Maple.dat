@@ -1,4 +1,4 @@
-GUID 366d616032814bc2aec723a67bcc7629
+﻿GUID 366d616032814bc2aec723a67bcc7629
 Type Barricade
 Rarity Uncommon
 Useable Barricade
@@ -16,13 +16,19 @@ Offset 1.25
 
 Explosion 19
 
-Blueprints 1
-Blueprint_0_Type Barricade
-Blueprint_0_Supplies 2
-Blueprint_0_Supply_0_ID 61
-Blueprint_0_Supply_0_Amount 8
-Blueprint_0_Supply_1_ID 67
-Blueprint_0_Supply_1_Amount 2
-Blueprint_0_Build 27
+Blueprints
+[
+	{
+		CategoryTag "31a59b5fec3f4ec5b2887b1ce4acb029" // Barricades
+		InputItems
+		[
+			"e73a23b102f24520a32ec0b2afaa6157 x 8" // Maple Plank
+			"21ede8ebffb14c5580e8c7ad149e335e x 2" // Metal Scrap
+		]
+		OutputItems this
+		Effect "84347b13028340b8976033c08675d458" // Wrench
+	}
+]
+
 PlacementAudioClip Sounds/WoodenPlacement.mp3
 Has_Clip_Prefab false

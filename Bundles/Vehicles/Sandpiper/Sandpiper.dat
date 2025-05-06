@@ -1,4 +1,4 @@
-GUID 1b8ade85b0d44fe09ba60a70df1cdcf1
+﻿GUID 1b8ade85b0d44fe09ba60a70df1cdcf1
 Type Vehicle
 Rarity Epic
 ID 92
@@ -33,17 +33,17 @@ Has_Clip_Prefab false
 
 PaintableSections
 [
-    {
-        Path Model_0
-        MaterialIndex 0
-    }
-    {
-        Path Model_1
-        MaterialIndex 0
-    }
+	{
+		Path Model_0
+		MaterialIndex 0
+	}
+	{
+		Path Model_1
+		MaterialIndex 0
+	}
 ]
 
 DefaultPaintColors
 [
-    #5786ae
+	#5786ae
 ]

@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -11,13 +12,14 @@ public class PowerTool
 
     private static List<Transform> barricadesInRadius = new List<Transform>();
 
-    private static List<InteractableFire> firesInRadius = new List<InteractableFire>();
-
-    private static List<InteractableOven> ovensInRadius = new List<InteractableOven>();
-
     private static List<InteractablePower> powerInRadius = new List<InteractablePower>();
 
     private static List<InteractableGenerator> generatorsInRadius = new List<InteractableGenerator>();
+
+    private static HashSet<TagAsset> availableCraftingTags = new HashSet<TagAsset>();
+
+    public static CachingAssetRef VanillaCraftingHeatTag { get; private set; } = CachingAssetRef.Parse("20f30322bbcc4b01a4f116d22b24c21a");
+
 
     public static void checkInteractables<T>(Vector3 point, float radius, ushort plant, List<T> interactablesInRadius) where T : Interactable
     {
@@ -63,27 +65,21 @@ public class PowerTool
         }
     }
 
+    /// <summary>
+    /// Nelson 2025-04-08: thank goodness that this didn't use the temperature system! (For some reason?) Makes it
+    /// relatively straightforward to convert campfires and ovens to Crafting Tags, and means vanilla has a test
+    /// case for the mod hook, too. (This method tests for CraftingHeatTag in radius.)
+    /// </summary>
+    [Obsolete("Replaced by Crafting Tags")]
     public static bool checkFires(Vector3 point, float radius)
     {
-        firesInRadius.Clear();
-        checkInteractables(point, radius, firesInRadius);
-        for (int i = 0; i < firesInRadius.Count; i++)
+        TagAsset tagAsset = VanillaCraftingHeatTag.Get<TagAsset>();
+        if (tagAsset == null)
         {
-            if (firesInRadius[i].isLit)
-            {
-                return true;
-            }
+            UnturnedLog.error("Missing vanilla crafting heat tag");
+            return false;
         }
-        ovensInRadius.Clear();
-        checkInteractables(point, radius, ovensInRadius);
-        for (int j = 0; j < ovensInRadius.Count; j++)
-        {
-            if (ovensInRadius[j].isWired && ovensInRadius[j].isLit)
-            {
-                return true;
-            }
-        }
-        return false;
+        return CraftingTagPhysicsUtil.IsTagAvailableAtPosition(point, radius, tagAsset);
     }
 
     public static List<InteractableGenerator> checkGenerators(Vector3 point, float radius, ushort plant)

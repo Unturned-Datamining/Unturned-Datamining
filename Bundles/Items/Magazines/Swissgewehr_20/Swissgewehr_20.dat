@@ -1,4 +1,4 @@
-GUID 41bd2b68446e497caed8954aba3b8f9c
+﻿GUID 41bd2b68446e497caed8954aba3b8f9c
 Type Magazine
 Rarity Rare
 ID 1490
@@ -16,30 +16,46 @@ Caliber_0 1
 
 Tracer 48
 
-Blueprints 5
-Blueprint_0_Type Ammo
-Blueprint_0_Supplies 1
-Blueprint_0_Supply_0_ID 43
-Blueprint_0_Build 30
-Blueprint_1_Type Ammo
-Blueprint_1_Supplies 1
-Blueprint_1_Supply_0_ID 6
-Blueprint_1_Build 30
-Blueprint_2_Type Ammo
-Blueprint_2_Supplies 1
-Blueprint_2_Supply_0_ID 17
-Blueprint_2_Build 30
-Blueprint_3_Type Ammo
-Blueprint_3_Supplies 1
-Blueprint_3_Supply_0_ID 1490
-Blueprint_3_Build 30
-Blueprint_4_Type Tool
-Blueprint_4_Supplies 1
-Blueprint_4_Supply_0_ID this
-Blueprint_4_Supply_0_AllowEmpty true
-Blueprint_4_Supply_0_Prioritization LowestAmount
-Blueprint_4_Product "67" // Metal Scrap
-Blueprint_4_Products 1
-Blueprint_4_Build 27
+Blueprints
+[
+	{
+		CategoryTag "d739926736374e5ba34b4ac6ffbb5c8f" // Ammunition
+		Operation FillTargetItem
+		InputItems "906623dc8e664dba854e18e812a30e12" // Low Caliber Military Ammunition Crate
+		Effect "03caec479dd2475c92e1c326e1720140" // Casing
+	}
+	{
+		CategoryTag "d739926736374e5ba34b4ac6ffbb5c8f" // Ammunition
+		Operation FillTargetItem
+		InputItems "dbfb1d0d11ca438e9dffb95f76e61274" // Military Magazine
+		Effect "03caec479dd2475c92e1c326e1720140" // Casing
+	}
+	{
+		CategoryTag "d739926736374e5ba34b4ac6ffbb5c8f" // Ammunition
+		Operation FillTargetItem
+		InputItems "87247d4bb3c548a1b34424bafa11e74a" // Military Drum
+		Effect "03caec479dd2475c92e1c326e1720140" // Casing
+	}
+	{
+		CategoryTag "d739926736374e5ba34b4ac6ffbb5c8f" // Ammunition
+		Operation FillTargetItem
+		InputItems this
+		Effect "03caec479dd2475c92e1c326e1720140" // Casing
+	}
+	{
+		Name Salvage
+		CategoryTag "7ed29f9101ae4523a3b2e389414b7bd9" // Salvage
+		InputItems
+		[
+			{
+				ID this
+				Prioritization LowestAmount
+				CountEmptyAsOne true
+			}
+		]
+		OutputItems "21ede8ebffb14c5580e8c7ad149e335e" // Metal Scrap
+		Effect "84347b13028340b8976033c08675d458" // Wrench
+	}
+]
 
 Paintable

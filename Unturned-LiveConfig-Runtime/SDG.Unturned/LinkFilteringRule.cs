@@ -15,40 +15,40 @@ public class LinkFilteringRule : IDatParseable
 
     public bool TryParse(IDatNode node)
     {
-        if (node is DatDictionary datDictionary)
+        if (node is IDatDictionary dictionary)
         {
-            action = datDictionary.ParseEnum("Action", ELinkFilteringAction.Allow);
-            if (datDictionary.TryGetList("Hosts", out var node2))
+            action = dictionary.ParseEnum("Action", ELinkFilteringAction.Allow);
+            if (dictionary.TryGetList("Hosts", out var node2))
             {
                 List<string> list = new List<string>(node2.Count);
                 foreach (IDatNode item2 in node2)
                 {
-                    if (item2 is DatValue datValue && !string.IsNullOrEmpty(datValue.value))
+                    if (item2 is IDatValue datValue && !string.IsNullOrEmpty(datValue.Value))
                     {
-                        list.Add(datValue.value);
+                        list.Add(datValue.Value);
                     }
                 }
                 hosts = list.ToArray();
             }
             else
             {
-                hosts = new string[1] { datDictionary.GetString("Host") };
+                hosts = new string[1] { dictionary.GetString("Host") };
             }
-            if (datDictionary.TryGetList("Paths", out var node3))
+            if (dictionary.TryGetList("Paths", out var node3))
             {
                 List<string> list2 = new List<string>(node3.Count);
                 foreach (IDatNode item3 in node3)
                 {
-                    if (item3 is DatValue datValue2 && !string.IsNullOrEmpty(datValue2.value))
+                    if (item3 is IDatValue datValue2 && !string.IsNullOrEmpty(datValue2.Value))
                     {
-                        list2.Add(datValue2.value);
+                        list2.Add(datValue2.Value);
                     }
                 }
                 pathRegexInputs = list2.ToArray();
             }
             else
             {
-                pathRegexInputs = new string[1] { datDictionary.GetString("Path") };
+                pathRegexInputs = new string[1] { dictionary.GetString("Path") };
             }
             if (pathRegexInputs != null && pathRegexInputs.Length != 0)
             {

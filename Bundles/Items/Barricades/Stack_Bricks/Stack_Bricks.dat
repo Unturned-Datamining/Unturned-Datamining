@@ -1,4 +1,4 @@
-GUID a621d1ed11fc414bbb94c6b4469349a7
+﻿GUID a621d1ed11fc414bbb94c6b4469349a7
 Type Barricade
 Useable Barricade
 Build Barricade
@@ -15,17 +15,21 @@ Offset 0.6
 Explosion 19
 Vulnerable
 
-Blueprints 2
-Blueprint_0_Type Gear
-Blueprint_0_Supply_0_ID 74
-Blueprint_0_Supply_0_Amount 10
-Blueprint_0_Build 27
-Blueprint_1_Type Gear
-Blueprint_1_Supply_0_ID 1915
-Blueprint_1_Supply_0_Amount 1
-Blueprint_1_Product 74
-Blueprint_1_Products 10
-Blueprint_1_Build 27
+Blueprints
+[
+	{
+		CategoryTag "cdb2df24b76d4c6e9d8411c940d8337f" // Gear
+		InputItems "cc444c3f2f354ff5a81f18cf9b980fff x 10" // Bricks
+		OutputItems this
+		Effect "84347b13028340b8976033c08675d458" // Wrench
+	}
+	{
+		CategoryTag "7ed29f9101ae4523a3b2e389414b7bd9" // Salvage
+		InputItems this
+		OutputItems "cc444c3f2f354ff5a81f18cf9b980fff x 10" // Bricks
+		Effect "84347b13028340b8976033c08675d458" // Wrench
+	}
+]
 
 Actions 1
 Action_0_Type Blueprint

@@ -456,53 +456,31 @@ public class PlayerDashboardInventoryUI
     {
         int index = selectionExtraActionsBox.FindIndexOfChild(button);
         Action action = actions[index];
-        if (!(Assets.find(EAssetType.ITEM, action.source) is ItemAsset itemAsset))
+        if (!(action.FindBlueprintOwnerAsset() is IBlueprintOwner blueprintOwner))
         {
             return;
         }
         Blueprint[] array = new Blueprint[action.blueprints.Length];
+        int num = -1;
         bool flag = false;
-        for (byte b = 0; b < array.Length; b++)
+        ActionBlueprint[] blueprints = action.blueprints;
+        foreach (ActionBlueprint actionBlueprint in blueprints)
         {
-            array[b] = itemAsset.blueprints[action.blueprints[b].id];
-            if (action.blueprints[b].isLink)
+            num++;
+            Blueprint blueprint = actionBlueprint.FindBlueprint(blueprintOwner);
+            if (blueprint == null)
             {
-                flag = true;
+                UnturnedLog.warn($"Unable to find action's blueprint {actionBlueprint}");
+                return;
             }
+            array[num] = blueprint;
+            flag |= actionBlueprint.isLink;
         }
         flag &= !InputEx.GetKey(ControlsSettings.SkipActionCraftingMenu);
         PlayerDashboardCraftingUI.filteredBlueprintsOverride = array;
         if (!flag)
         {
-            PlayerDashboardCraftingUI.updateSelection();
-            foreach (Blueprint blueprint in array)
-            {
-                if (!blueprint.hasSupplies)
-                {
-                    flag = true;
-                    break;
-                }
-                if (!blueprint.hasTool)
-                {
-                    flag = true;
-                    break;
-                }
-                if (!blueprint.hasItem)
-                {
-                    flag = true;
-                    break;
-                }
-                if (!blueprint.hasSkills)
-                {
-                    flag = true;
-                    break;
-                }
-                if (Player.player.equipment.isBusy)
-                {
-                    flag = true;
-                    break;
-                }
-            }
+            flag = Player.player.equipment.isBusy || !PlayerDashboardCraftingUI.UpdateFilteredBlueprintsAndGetAreAllCraftable();
         }
         if (flag)
         {
@@ -510,9 +488,10 @@ public class PlayerDashboardInventoryUI
             PlayerDashboardCraftingUI.open();
             return;
         }
+        bool key = InputEx.GetKey(ControlsSettings.other);
         foreach (Blueprint blueprint2 in array)
         {
-            Player.player.crafting.sendCraft(blueprint2.sourceItem.id, blueprint2.id, InputEx.GetKey(ControlsSettings.other));
+            Player.player.crafting.SendRequestToCraft(blueprint2, key);
         }
         PlayerDashboardCraftingUI.filteredBlueprintsOverride = null;
         closeSelection();
@@ -782,12 +761,12 @@ public class PlayerDashboardInventoryUI
                 Action action = selectedAsset.actions[i];
                 if (action.type == EActionType.BLUEPRINT)
                 {
-                    if (page < PlayerInventory.SLOTS || page >= PlayerInventory.STORAGE)
+                    if (page < PlayerInventory.SLOTS || page >= PlayerInventory.STORAGE || !(action.FindBlueprintOwnerAsset() is IBlueprintOwner blueprintOwner))
                     {
                         continue;
                     }
-                    Blueprint blueprint = (Assets.find(EAssetType.ITEM, action.source) as ItemAsset).blueprints[action.blueprints[0].id];
-                    if ((blueprint.skill == EBlueprintSkill.REPAIR && blueprint.level > Provider.modeConfigData.Gameplay.Repair_Level_Max) || (blueprint.type == EBlueprintType.REPAIR && selectedJar.item.quality == 100) || !blueprint.areConditionsMet(Player.player) || Player.player.crafting.isBlueprintBlacklisted(blueprint))
+                    Blueprint blueprint = action.blueprints[0].FindBlueprint(blueprintOwner);
+                    if ((blueprint.skill == EBlueprintSkill.REPAIR && blueprint.level > Provider.modeConfigData.Gameplay.Repair_Level_Max) || (blueprint.Operation == EBlueprintOperation.RepairTargetItem && selectedJar.item.quality >= 100) || !blueprint.areConditionsMet(Player.player) || Player.player.crafting.isBlueprintBlacklisted(blueprint))
                     {
                         continue;
                     }

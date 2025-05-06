@@ -4,38 +4,26 @@ namespace SDG.Unturned;
 
 public class DialogueElement
 {
+    protected NPCConditionsList conditionsList;
+
     protected NPCRewardsList rewardsList;
 
     public byte index { get; protected set; }
 
-    public INPCCondition[] conditions { get; protected set; }
+    [Obsolete]
+    public INPCCondition[] conditions => conditionsList.conditions;
 
+    [Obsolete]
     public INPCReward[] rewards => rewardsList.rewards;
 
     public bool areConditionsMet(Player player)
     {
-        if (conditions != null)
-        {
-            for (int i = 0; i < conditions.Length; i++)
-            {
-                if (!conditions[i].isConditionMet(player))
-                {
-                    return false;
-                }
-            }
-        }
-        return true;
+        return conditionsList.AreConditionsMet(player);
     }
 
     public void ApplyConditions(Player player)
     {
-        if (conditions != null)
-        {
-            for (int i = 0; i < conditions.Length; i++)
-            {
-                conditions[i].ApplyCondition(player);
-            }
-        }
+        conditionsList.ApplyConditions(player);
     }
 
     public void GrantRewards(Player player)
@@ -43,10 +31,10 @@ public class DialogueElement
         rewardsList.Grant(player);
     }
 
-    public DialogueElement(byte newIndex, INPCCondition[] newConditions, NPCRewardsList newRewardsList)
+    public DialogueElement(byte newIndex, NPCConditionsList newConditionsList, NPCRewardsList newRewardsList)
     {
         index = newIndex;
-        conditions = newConditions;
+        conditionsList = newConditionsList;
         rewardsList = newRewardsList;
     }
 

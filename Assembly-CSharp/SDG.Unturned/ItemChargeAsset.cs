@@ -60,27 +60,27 @@ public class ItemChargeAsset : ItemBarricadeAsset
         }
     }
 
-    public override void PopulateAsset(Bundle bundle, DatDictionary data, Local localization)
+    public override void PopulateAsset(in PopulateAssetParameters p)
     {
-        base.PopulateAsset(bundle, data, localization);
-        _range2 = data.ParseFloat("Range2");
-        playerDamage = data.ParseFloat("Player_Damage");
-        zombieDamage = data.ParseFloat("Zombie_Damage");
-        animalDamage = data.ParseFloat("Animal_Damage");
-        barricadeDamage = data.ParseFloat("Barricade_Damage");
-        structureDamage = data.ParseFloat("Structure_Damage");
-        vehicleDamage = data.ParseFloat("Vehicle_Damage");
-        resourceDamage = data.ParseFloat("Resource_Damage");
-        explosionLaunchSpeed = data.ParseFloat("Explosion_Launch_Speed", playerDamage * 0.1f);
-        if (data.ContainsKey("Object_Damage"))
+        base.PopulateAsset(in p);
+        _range2 = p.data.ParseFloat("Range2");
+        playerDamage = p.data.ParseFloat("Player_Damage");
+        zombieDamage = p.data.ParseFloat("Zombie_Damage");
+        animalDamage = p.data.ParseFloat("Animal_Damage");
+        barricadeDamage = p.data.ParseFloat("Barricade_Damage");
+        structureDamage = p.data.ParseFloat("Structure_Damage");
+        vehicleDamage = p.data.ParseFloat("Vehicle_Damage");
+        resourceDamage = p.data.ParseFloat("Resource_Damage");
+        explosionLaunchSpeed = p.data.ParseFloat("Explosion_Launch_Speed", playerDamage * 0.1f);
+        if (p.data.ContainsKey("Object_Damage"))
         {
-            objectDamage = data.ParseFloat("Object_Damage");
+            objectDamage = p.data.ParseFloat("Object_Damage");
         }
         else
         {
             objectDamage = resourceDamage;
         }
-        _explosion2 = data.ParseGuidOrLegacyId("Explosion2", out _detonationEffectGuid);
+        _explosion2 = p.data.ParseGuidOrLegacyId("Explosion2", out _detonationEffectGuid);
     }
 
     internal override void BuildCargoData(CargoBuilder builder)

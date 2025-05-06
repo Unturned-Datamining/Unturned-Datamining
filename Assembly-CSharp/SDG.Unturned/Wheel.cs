@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using UnityEngine;
 
 namespace SDG.Unturned;
@@ -9,6 +10,14 @@ public class Wheel
     private InteractableVehicle _vehicle;
 
     private WheelCollider _wheel;
+
+    private Transform colliderTransform;
+
+    private Vector3 colliderLocalCenter;
+
+    private float colliderRadius;
+
+    private float colliderSuspensionDistance;
 
     public Transform model;
 
@@ -169,8 +178,8 @@ public class Wheel
             {
                 TriggerEffectParameters parameters = new TriggerEffectParameters(effectAsset);
                 parameters.relevantDistance = EffectManager.SMALL;
-                parameters.position = wheel.transform.position;
-                parameters.SetDirection(wheel.transform.up);
+                parameters.position = colliderTransform.position;
+                parameters.SetDirection(colliderTransform.up);
                 parameters.reliable = true;
                 EffectManager.triggerEffect(parameters);
             }
@@ -308,20 +317,20 @@ public class Wheel
     /// </summary>
     private float CalculateNormalizedSuspensionPosition(Vector3 worldPosePosition)
     {
-        if (_wheel.suspensionDistance > float.Epsilon)
+        if (colliderSuspensionDistance > float.Epsilon)
         {
-            Vector3 vector = _wheel.transform.TransformPoint(_wheel.center);
-            Vector3 rhs = -_wheel.transform.up;
-            return Mathf.Clamp01(Vector3.Dot(worldPosePosition - vector, rhs) / _wheel.suspensionDistance);
+            Vector3 vector = colliderTransform.TransformPoint(colliderLocalCenter);
+            Vector3 rhs = -colliderTransform.up;
+            return Mathf.Clamp01(Vector3.Dot(worldPosePosition - vector, rhs) / colliderSuspensionDistance);
         }
         return 0f;
     }
 
     private float CalculateNormalizedSuspensionPosition(float distanceAlongSuspension)
     {
-        if (_wheel.suspensionDistance > float.Epsilon)
+        if (colliderSuspensionDistance > float.Epsilon)
         {
-            return Mathf.Clamp01(distanceAlongSuspension / _wheel.suspensionDistance);
+            return Mathf.Clamp01(distanceAlongSuspension / colliderSuspensionDistance);
         }
         return 0f;
     }
@@ -388,8 +397,8 @@ public class Wheel
                         _ => true, 
                     })
                     {
-                        Vector3 up = _wheel.transform.up;
-                        Vector3 b = _wheel.transform.forward * (0f - num);
+                        Vector3 up = colliderTransform.up;
+                        Vector3 b = colliderTransform.forward * (0f - num);
                         float t = vehicle.GetAnimatedForwardSpeedPercentageOfTargetSpeed() * 0.5f;
                         Quaternion rotation = Quaternion.LookRotation(Vector3.Lerp(up, b, t));
                         currentGroundEffect.transform.SetPositionAndRotation(groundHitPosition, rotation);
@@ -433,15 +442,15 @@ public class Wheel
             float distanceAlongSuspension;
             if (_isGrounded)
             {
-                Vector3 vector = _wheel.transform.TransformPoint(_wheel.center);
+                Vector3 vector = colliderTransform.TransformPoint(colliderLocalCenter);
                 Vector3 rhs = -vehicle.transform.up;
-                distanceAlongSuspension = Vector3.Dot(mostRecentGroundHit.point - vector, rhs) - _wheel.radius;
+                distanceAlongSuspension = Vector3.Dot(mostRecentGroundHit.point - vector, rhs) - colliderRadius;
                 string materialName = PhysicsTool.GetMaterialName(mostRecentGroundHit);
                 replicatedGroundMaterial = PhysicsMaterialNetTable.GetNetId(materialName);
             }
             else
             {
-                distanceAlongSuspension = _wheel.suspensionDistance;
+                distanceAlongSuspension = colliderSuspensionDistance;
                 replicatedGroundMaterial = PhysicsMaterialNetId.NULL;
             }
             replicatedSuspensionState = CalculateNormalizedSuspensionPosition(distanceAlongSuspension);
@@ -458,7 +467,7 @@ public class Wheel
         animatedSuspensionState = state;
         if (wheel != null)
         {
-            animatedModelSuspension = state * wheel.suspensionDistance;
+            animatedModelSuspension = state * colliderSuspensionDistance;
         }
     }
 
@@ -470,7 +479,7 @@ public class Wheel
         if (_wheel != null && isPhysical)
         {
             float num = _wheel.rpm / 60f;
-            float num2 = MathF.PI * 2f * _wheel.radius;
+            float num2 = MathF.PI * 2f * colliderRadius;
             return num * num2;
         }
         return 0f;
@@ -483,23 +492,23 @@ public class Wheel
     {
         if (config.modelUseColliderPose && _wheel != null)
         {
-            Vector3 vector = _wheel.transform.TransformPoint(_wheel.center);
+            Vector3 vector = colliderTransform.TransformPoint(colliderLocalCenter);
             Vector3 vector2 = -vehicle.transform.up;
-            Vector3 onNormal = -_wheel.transform.up;
+            Vector3 onNormal = -colliderTransform.up;
             if (_isPhysical)
             {
                 float num;
                 if (_wheel.GetGroundHit(out var hit))
                 {
                     Vector3 point = hit.point;
-                    num = Vector3.Dot(point - vector, vector2) - _wheel.radius;
+                    num = Vector3.Dot(point - vector, vector2) - colliderRadius;
                     string materialName = PhysicsTool.GetMaterialName(hit);
                     replicatedGroundMaterial = PhysicsMaterialNetTable.GetNetId(materialName);
                     UpdateMotionEffect(point, isVisualGrounded: true);
                 }
                 else
                 {
-                    num = _wheel.suspensionDistance;
+                    num = colliderSuspensionDistance;
                     replicatedGroundMaterial = PhysicsMaterialNetId.NULL;
                     UpdateMotionEffect(Vector3.zero, isVisualGrounded: false);
                 }
@@ -510,7 +519,7 @@ public class Wheel
                 if (copyCrawlerTrack != null)
                 {
                     float num2 = copyCrawlerTrack.speed * deltaTime;
-                    float num3 = MathF.PI * 2f * _wheel.radius;
+                    float num3 = MathF.PI * 2f * colliderRadius;
                     num4 = num2 / num3 * 360f;
                 }
                 else
@@ -531,14 +540,14 @@ public class Wheel
             {
                 float t = 1f - Mathf.Pow(2f, -13f * Time.deltaTime);
                 animatedSuspensionState = Mathf.Lerp(animatedSuspensionState, replicatedSuspensionState, t);
-                float num5 = animatedSuspensionState * _wheel.suspensionDistance;
+                float num5 = animatedSuspensionState * colliderSuspensionDistance;
                 MoveModelSuspension(num5, deltaTime);
                 Vector3 vector4 = Vector3.Project(vector2 * (animatedModelSuspension - config.modelSuspensionOffset), onNormal);
                 Vector3 position2 = vector + vector4;
-                if (_wheel.radius > float.Epsilon)
+                if (colliderRadius > float.Epsilon)
                 {
                     float num6 = vehicle.AnimatedForwardVelocity * deltaTime;
-                    float num7 = MathF.PI * 2f * _wheel.radius;
+                    float num7 = MathF.PI * 2f * colliderRadius;
                     float num8 = num6 / num7 * 360f;
                     rollAngleDegrees += num8;
                     rollAngleDegrees = (rollAngleDegrees % 360f + 360f) % 360f;
@@ -553,7 +562,7 @@ public class Wheel
                 model.SetPositionAndRotation(position2, rotation2);
                 if (animatedSuspensionState < 0.99f)
                 {
-                    UpdateMotionEffect(vector + vector2 * (num5 + _wheel.radius), isVisualGrounded: true);
+                    UpdateMotionEffect(vector + vector2 * (num5 + colliderRadius), isVisualGrounded: true);
                 }
                 else
                 {
@@ -567,9 +576,9 @@ public class Wheel
             if (_isPhysical && config.copyColliderRpmIndex >= 0)
             {
                 Wheel wheelAtIndex = vehicle.GetWheelAtIndex(config.copyColliderRpmIndex);
-                if (wheelAtIndex != null && wheelAtIndex.wheel != null && wheelAtIndex.wheel.radius > float.Epsilon)
+                if (wheelAtIndex != null && wheelAtIndex.wheel != null && wheelAtIndex.colliderRadius > float.Epsilon)
                 {
-                    float num9 = wheelAtIndex.wheel.radius * wheelAtIndex.wheel.rpm / config.modelRadius / 60f * 360f * deltaTime;
+                    float num9 = colliderRadius * wheelAtIndex.wheel.rpm / config.modelRadius / 60f * 360f * deltaTime;
                     rollAngleDegrees += num9;
                     rollAngleDegrees = (rollAngleDegrees % 360f + 360f) % 360f;
                 }
@@ -738,7 +747,7 @@ public class Wheel
     /// </summary>
     internal void CheckForTraps()
     {
-        Physics.Raycast(new Ray(wheel.transform.position, -wheel.transform.up), out var hitInfo, wheel.suspensionDistance + wheel.radius, 134217728);
+        Physics.Raycast(new Ray(colliderTransform.position, -colliderTransform.up), out var hitInfo, colliderSuspensionDistance + colliderRadius, 134217728);
         if (hitInfo.transform != null && hitInfo.transform.CompareTag("Barricade") && hitInfo.transform.GetComponent<InteractableTrapDamageTires>() != null)
         {
             askDamage();
@@ -754,6 +763,10 @@ public class Wheel
         config = newConfiguration;
         if (wheel != null)
         {
+            colliderTransform = _wheel.transform;
+            colliderRadius = wheel.radius;
+            colliderLocalCenter = wheel.center;
+            colliderSuspensionDistance = wheel.suspensionDistance;
             if (config.wasAutomaticallyGenerated)
             {
                 wheel.forceAppPointDistance = 0f;
@@ -840,5 +853,15 @@ public class Wheel
     public void reset()
     {
         Reset();
+    }
+
+    [Conditional("ENABLE_WHEEL_PROFILING")]
+    private void BeginSample(string name)
+    {
+    }
+
+    [Conditional("ENABLE_WHEEL_PROFILING")]
+    private void EndSample()
+    {
     }
 }

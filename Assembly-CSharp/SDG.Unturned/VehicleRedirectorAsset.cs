@@ -31,15 +31,15 @@ public class VehicleRedirectorAsset : Asset
     /// </summary>
     public Color32? SpawnPaintColor { get; protected set; }
 
-    public override void PopulateAsset(Bundle bundle, DatDictionary data, Local localization)
+    public override void PopulateAsset(in PopulateAssetParameters p)
     {
-        base.PopulateAsset(bundle, data, localization);
-        TargetVehicle = data.readAssetReference<VehicleAsset>("TargetVehicle");
-        if (data.TryParseColor32RGB("LoadPaintColor", out var value))
+        base.PopulateAsset(in p);
+        TargetVehicle = p.data.readAssetReference<VehicleAsset>("TargetVehicle");
+        if (p.data.TryParseColor32RGB("LoadPaintColor", out var value))
         {
             LoadPaintColor = value;
         }
-        if (data.TryParseColor32RGB("SpawnPaintColor", out var value2))
+        if (p.data.TryParseColor32RGB("SpawnPaintColor", out var value2))
         {
             SpawnPaintColor = value2;
         }

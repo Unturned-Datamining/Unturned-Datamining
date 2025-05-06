@@ -93,7 +93,7 @@ public class MenuPauseUI
         }
         else
         {
-            Provider.provider.browserService.open("http://steamcommunity.com/app/304930/announcements/");
+            Provider.provider.browserService.open("https://steamcommunity.com/app/304930/announcements/");
         }
     }
 

@@ -7,6 +7,11 @@ public class EffectAsset : Asset
 {
     protected GameObject _effect;
 
+    /// <summary>
+    /// If set, use OneShotAudioParameters to play this audio.
+    /// </summary>
+    public AudioReference OneShotAudio;
+
     protected GameObject[] _splatters;
 
     private bool _gore;
@@ -39,6 +44,9 @@ public class EffectAsset : Asset
 
     public float cameraShakeMagnitudeDegrees;
 
+    /// <summary>
+    /// Note: as of 2025-04-23 this *can* be null. (E.g., audio-only effects.)
+    /// </summary>
     public GameObject effect => _effect;
 
     public GameObject[] splatters => _splatters;
@@ -95,86 +103,83 @@ public class EffectAsset : Asset
         return Assets.FindEffectAssetByGuidOrLegacyId(blastmarkEffectGuid, blast);
     }
 
-    public override void PopulateAsset(Bundle bundle, DatDictionary data, Local localization)
+    public override void PopulateAsset(in PopulateAssetParameters p)
     {
-        base.PopulateAsset(bundle, data, localization);
-        if (id < 200 && !base.OriginAllowsVanillaLegacyId && !data.ContainsKey("Bypass_ID_Limit"))
+        base.PopulateAsset(in p);
+        if (id < 200 && !base.OriginAllowsVanillaLegacyId && !p.data.ContainsKey("Bypass_ID_Limit"))
         {
             throw new NotSupportedException("ID < 200");
         }
-        _effect = bundle.load<GameObject>("Effect");
-        if (effect == null)
-        {
-            throw new NotSupportedException("Missing effect gameobject");
-        }
-        _gore = data.ContainsKey("Gore");
-        _splatters = new GameObject[data.ParseUInt8("Splatter", 0)];
+        _effect = p.bundle.load<GameObject>("Effect");
+        OneShotAudio = p.data.ReadAudioReference("OneShotAudio", p.bundle);
+        _gore = p.data.ContainsKey("Gore");
+        _splatters = new GameObject[p.data.ParseUInt8("Splatter", 0)];
         for (int i = 0; i < splatters.Length; i++)
         {
-            splatters[i] = bundle.load<GameObject>("Splatter_" + i);
+            splatters[i] = p.bundle.load<GameObject>("Splatter_" + i);
             if (splatters[i] == null)
             {
                 Assets.ReportError(this, $"missing 'Splatter_{i}' gameobject");
             }
         }
-        _splatter = data.ParseUInt8("Splatters", 0);
-        _splatterLiquid = data.ContainsKey("Splatter_Liquid");
-        if (data.ContainsKey("Splatter_Temperature"))
+        _splatter = p.data.ParseUInt8("Splatters", 0);
+        _splatterLiquid = p.data.ContainsKey("Splatter_Liquid");
+        if (p.data.ContainsKey("Splatter_Temperature"))
         {
-            _splatterTemperature = (EPlayerTemperature)Enum.Parse(typeof(EPlayerTemperature), data.GetString("Splatter_Temperature"), ignoreCase: true);
+            _splatterTemperature = (EPlayerTemperature)Enum.Parse(typeof(EPlayerTemperature), p.data.GetString("Splatter_Temperature"), ignoreCase: true);
         }
         else
         {
             _splatterTemperature = EPlayerTemperature.NONE;
         }
-        _splatterLifetime = data.ParseFloat("Splatter_Lifetime");
-        if (data.ContainsKey("Splatter_Lifetime_Spread"))
+        _splatterLifetime = p.data.ParseFloat("Splatter_Lifetime");
+        if (p.data.ContainsKey("Splatter_Lifetime_Spread"))
         {
-            _splatterLifetimeSpread = data.ParseFloat("Splatter_Lifetime_Spread");
+            _splatterLifetimeSpread = p.data.ParseFloat("Splatter_Lifetime_Spread");
         }
         else
         {
             _splatterLifetimeSpread = 1f;
         }
-        _lifetime = data.ParseFloat("Lifetime");
-        if (data.ContainsKey("Lifetime_Spread"))
+        _lifetime = p.data.ParseFloat("Lifetime");
+        if (p.data.ContainsKey("Lifetime_Spread"))
         {
-            _lifetimeSpread = data.ParseFloat("Lifetime_Spread");
+            _lifetimeSpread = p.data.ParseFloat("Lifetime_Spread");
         }
         else
         {
             _lifetimeSpread = 4f;
         }
-        _isStatic = data.ContainsKey("Static");
-        isMusic = data.ParseBool("Is_Music");
-        if (data.ContainsKey("Preload"))
+        _isStatic = p.data.ContainsKey("Static");
+        isMusic = p.data.ParseBool("Is_Music");
+        if (p.data.ContainsKey("Preload"))
         {
-            _preload = data.ParseUInt8("Preload", 0);
+            _preload = p.data.ParseUInt8("Preload", 0);
         }
         else
         {
             _preload = 1;
         }
-        if (data.ContainsKey("Splatter_Preload"))
+        if (p.data.ContainsKey("Splatter_Preload"))
         {
-            _splatterPreload = data.ParseUInt8("Splatter_Preload", 0);
+            _splatterPreload = p.data.ParseUInt8("Splatter_Preload", 0);
         }
         else
         {
             _splatterPreload = (byte)(Mathf.CeilToInt((float)(int)splatter / (float)splatters.Length) * preload);
         }
-        _blast = data.ParseGuidOrLegacyId("Blast", out blastmarkEffectGuid);
-        relevantDistance = data.ParseFloat("Relevant_Distance", -1f);
-        spawnOnDedicatedServer = data.ContainsKey("Spawn_On_Dedicated_Server");
-        if (data.ContainsKey("Randomize_Rotation"))
+        _blast = p.data.ParseGuidOrLegacyId("Blast", out blastmarkEffectGuid);
+        relevantDistance = p.data.ParseFloat("Relevant_Distance", -1f);
+        spawnOnDedicatedServer = p.data.ContainsKey("Spawn_On_Dedicated_Server");
+        if (p.data.ContainsKey("Randomize_Rotation"))
         {
-            randomizeRotation = data.ParseBool("Randomize_Rotation");
+            randomizeRotation = p.data.ParseBool("Randomize_Rotation");
         }
         else
         {
             randomizeRotation = true;
         }
-        cameraShakeRadius = data.ParseFloat("CameraShake_Radius");
-        cameraShakeMagnitudeDegrees = data.ParseFloat("CameraShake_MagnitudeDegrees");
+        cameraShakeRadius = p.data.ParseFloat("CameraShake_Radius");
+        cameraShakeMagnitudeDegrees = p.data.ParseFloat("CameraShake_MagnitudeDegrees");
     }
 }

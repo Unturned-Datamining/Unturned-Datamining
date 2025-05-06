@@ -34,5 +34,14 @@ public enum ELoadingTip
     ORIENTATION,
     RED,
     STEADY,
-    SKIP_ACTION_CRAFTING_MENU
+    STREAMER,
+    SKIP_ACTION_CRAFTING_MENU,
+    WORKSTATION,
+    WORKSTATION_HEAT,
+    WORKSTATION_MEDICINE,
+    WORKSTATION_DYE,
+    /// <summary>
+    /// Marker for counting number of tips.
+    /// </summary>
+    MAX
 }

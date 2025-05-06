@@ -1,4 +1,4 @@
-GUID 3b1ae9b68f19425b8dc0345a6f3c7ffc
+﻿GUID 3b1ae9b68f19425b8dc0345a6f3c7ffc
 Type Gun
 Rarity Mythical
 Useable Gun
@@ -74,10 +74,13 @@ Shake_Max_Z -0.1
 
 Muzzle 42
 
-Blueprints 1
-Blueprint_0_Type Tool
-Blueprint_0_Supplies 1
-Blueprint_0_Supply_0_ID 1441
-Blueprint_0_Product 67
-Blueprint_0_Products 8
-Blueprint_0_Build 27
+Blueprints
+[
+	{
+		Name Salvage
+		CategoryTag "7ed29f9101ae4523a3b2e389414b7bd9" // Salvage
+		InputItems this
+		OutputItems "21ede8ebffb14c5580e8c7ad149e335e x 8" // Metal Scrap
+		Effect "84347b13028340b8976033c08675d458" // Wrench
+	}
+]

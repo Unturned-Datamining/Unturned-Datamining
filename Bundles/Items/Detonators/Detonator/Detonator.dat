@@ -1,4 +1,4 @@
-GUID 8d80a12a6f564850ab2478927648dd7a
+﻿GUID 8d80a12a6f564850ab2478927648dd7a
 Type Detonator
 Rarity Rare
 Useable Detonator
@@ -11,9 +11,13 @@ Size2_Z 0.45
 
 EquipableModelParent LeftHook
 
-Blueprints 1
-Blueprint_0_Type Tool
-Blueprint_0_Supply_0_ID 1240
-Blueprint_0_Product 67
-Blueprint_0_Products 2
-Blueprint_0_Build 27
+Blueprints
+[
+	{
+		Name Salvage
+		CategoryTag "7ed29f9101ae4523a3b2e389414b7bd9" // Salvage
+		InputItems this
+		OutputItems "21ede8ebffb14c5580e8c7ad149e335e x 2" // Metal Scrap
+		Effect "84347b13028340b8976033c08675d458" // Wrench
+	}
+]

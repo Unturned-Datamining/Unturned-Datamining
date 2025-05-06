@@ -91,6 +91,83 @@ public class INPCCondition
     {
     }
 
+    /// <summary>
+    /// Intended to replace filling data from constructor.
+    /// </summary>
+    internal virtual void PopulateV2(in PopulateConditionParameters p)
+    {
+        string @string = p.data.GetString("TextId");
+        if (!string.IsNullOrEmpty(@string))
+        {
+            string text = p.localization.read(@string);
+            if (!string.IsNullOrEmpty(text))
+            {
+                text = ItemTool.filterRarityRichText(text);
+                this.text = text;
+            }
+            else
+            {
+                p.ReportError("no text for condition text ID \"" + @string + "\"");
+            }
+        }
+        shouldReset = p.data.ParseBool("Reset");
+        if (p.data.TryGetString("UI_Requirements", out var value))
+        {
+            ParseUIRequirements(in p, value);
+        }
+    }
+
+    /// <summary>
+    /// Intended to replace filling data from constructor. Legacy is for backwards compatibility with Condition_#_Key
+    /// format, whereas V2 uses the list and dictionary features.
+    /// </summary>
+    internal virtual void PopulateLegacy(in PopulateConditionParameters p)
+    {
+        string desc = p.localization.read(p.legacyPrefix);
+        desc = ItemTool.filterRarityRichText(desc);
+        text = desc;
+        shouldReset = p.data.ContainsKey(p.legacyPrefix + "_Reset");
+        if (p.data.TryGetString(p.legacyPrefix + "_UI_Requirements", out var value))
+        {
+            ParseUIRequirements(in p, value);
+        }
+    }
+
+    private void ParseUIRequirements(in PopulateConditionParameters p, string uiRequirements)
+    {
+        string[] array = uiRequirements.Split(',', StringSplitOptions.RemoveEmptyEntries);
+        if (array == null || array.Length < 1)
+        {
+            p.ReportError("UI_Requirements are empty");
+            return;
+        }
+        List<int> list = new List<int>(array.Length);
+        string[] array2 = array;
+        foreach (string text in array2)
+        {
+            if (!int.TryParse(text, out var result))
+            {
+                p.ReportError("unable to parse UI Requirement index from \"" + text + "\"");
+            }
+            else if (result < 0 || result >= p.conditionsLength)
+            {
+                p.ReportError($"UI Requirement index {result} out of bounds");
+            }
+            else if (result == p.conditionIndex)
+            {
+                p.ReportError("UI Requirement depends on itself");
+            }
+            else
+            {
+                list.Add(result);
+            }
+        }
+        if (list.Count > 0)
+        {
+            uiRequirementIndices = list;
+        }
+    }
+
     public bool AreUIRequirementsMet(List<bool> areConditionsMet)
     {
         if (uiRequirementIndices == null || uiRequirementIndices.Count < 1)
@@ -107,6 +184,11 @@ public class INPCCondition
         return true;
     }
 
+    public INPCCondition()
+    {
+    }
+
+    [Obsolete]
     public INPCCondition(string newText, bool newShouldReset)
     {
         text = newText;

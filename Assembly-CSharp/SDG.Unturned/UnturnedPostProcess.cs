@@ -8,6 +8,13 @@ namespace SDG.Unturned;
 /// </summary>
 public class UnturnedPostProcess : MonoBehaviour
 {
+    private enum EPostProcessLayer
+    {
+        Base,
+        Viewmodel,
+        Scope
+    }
+
     private class PostProcessProfileWrapper
     {
         public PostProcessProfile profile;
@@ -26,7 +33,9 @@ public class UnturnedPostProcess : MonoBehaviour
 
         public Vignette vignette;
 
-        public PostProcessProfileWrapper(PostProcessProfile profile, bool viewmodel)
+        public DepthOfField dof;
+
+        public PostProcessProfileWrapper(PostProcessProfile profile, EPostProcessLayer layer)
         {
             this.profile = profile;
             ambientOcclusion = profile.AddSettings<AmbientOcclusion>();
@@ -48,7 +57,13 @@ public class UnturnedPostProcess : MonoBehaviour
             vignette = profile.AddSettings<Vignette>();
             vignette.active = false;
             vignette.rounded.Override(x: true);
-            if (!viewmodel)
+            if (layer == EPostProcessLayer.Base)
+            {
+                dof = profile.AddSettings<DepthOfField>();
+                dof.active = false;
+                dof.focusDistance.Override(1f);
+            }
+            if (layer != EPostProcessLayer.Viewmodel)
             {
                 profile.AddSettings<SkyFog>();
             }
@@ -59,6 +74,8 @@ public class UnturnedPostProcess : MonoBehaviour
 
     public const int VIEWMODEL_LAYER = 11;
 
+    public const int SCOPE_LAYER = 31;
+
     private bool _disableAntiAliasingForScreenshot;
 
     public Texture dirtTexture;
@@ -67,9 +84,13 @@ public class UnturnedPostProcess : MonoBehaviour
 
     private PostProcessProfileWrapper viewmodelProfile;
 
-    private PostProcessLayer basePostProcess;
+    private PostProcessProfileWrapper scopeProfile;
 
-    private PostProcessLayer viewmodelPostProcess;
+    private PostProcessLayer basePostProcessLayer;
+
+    private PostProcessLayer viewmodelPostProcessLayer;
+
+    private PostProcessLayer scopePostProcessLayer;
 
     public bool DisableAntiAliasingForScreenshot
     {
@@ -82,9 +103,13 @@ public class UnturnedPostProcess : MonoBehaviour
             if (_disableAntiAliasingForScreenshot != value)
             {
                 _disableAntiAliasingForScreenshot = value;
-                if (basePostProcess != null)
+                if (basePostProcessLayer != null)
                 {
-                    applyAntiAliasing(basePostProcess);
+                    applyAntiAliasing(basePostProcessLayer);
+                }
+                if (scopePostProcessLayer != null)
+                {
+                    applyAntiAliasing(scopePostProcessLayer);
                 }
             }
         }
@@ -96,9 +121,9 @@ public class UnturnedPostProcess : MonoBehaviour
     {
         get
         {
-            if (viewmodelPostProcess != null)
+            if (viewmodelPostProcessLayer != null)
             {
-                return viewmodelPostProcess.gameObject.activeInHierarchy;
+                return viewmodelPostProcessLayer.gameObject.activeInHierarchy;
             }
             return false;
         }
@@ -106,23 +131,23 @@ public class UnturnedPostProcess : MonoBehaviour
 
     public void setBaseCamera(Camera baseCamera)
     {
-        basePostProcess = baseCamera.GetComponent<PostProcessLayer>();
-        basePostProcess.fog.enabled = true;
-        basePostProcess.fog.excludeSkybox = true;
+        basePostProcessLayer = baseCamera.GetComponent<PostProcessLayer>();
+        basePostProcessLayer.fog.enabled = true;
+        basePostProcessLayer.fog.excludeSkybox = true;
     }
 
     public void setOverlayCamera(Camera overlayCamera)
     {
-        viewmodelPostProcess = overlayCamera.GetComponent<PostProcessLayer>();
-        viewmodelPostProcess.fog.enabled = false;
-        viewmodelPostProcess.fog.excludeSkybox = true;
+        viewmodelPostProcessLayer = overlayCamera.GetComponent<PostProcessLayer>();
+        viewmodelPostProcessLayer.fog.enabled = false;
+        viewmodelPostProcessLayer.fog.excludeSkybox = true;
     }
 
     public void setScopeCamera(Camera scopeCamera)
     {
-        PostProcessLayer component = scopeCamera.GetComponent<PostProcessLayer>();
-        component.fog.enabled = true;
-        component.fog.excludeSkybox = true;
+        scopePostProcessLayer = scopeCamera.GetComponent<PostProcessLayer>();
+        scopePostProcessLayer.fog.enabled = true;
+        scopePostProcessLayer.fog.excludeSkybox = true;
     }
 
     public void setIsHallucinating(bool isHallucinating)
@@ -131,6 +156,8 @@ public class UnturnedPostProcess : MonoBehaviour
         baseProfile.colorGrading.hueShift.Override(Random.Range(-180f, 180f));
         viewmodelProfile.colorGrading.active = isHallucinating;
         viewmodelProfile.colorGrading.hueShift.Override(Random.Range(-180f, 180f));
+        scopeProfile.colorGrading.active = isHallucinating;
+        scopeProfile.colorGrading.hueShift.Override(Random.Range(-180f, 180f));
         baseProfile.vignette.active = isHallucinating;
     }
 
@@ -150,9 +177,15 @@ public class UnturnedPostProcess : MonoBehaviour
     {
         tickHallucinationColorGrading(baseProfile, deltaTime);
         tickHallucinationColorGrading(viewmodelProfile, deltaTime);
+        tickHallucinationColorGrading(scopeProfile, deltaTime);
         float num = 0.333f;
         float num2 = 4f;
         baseProfile.vignette.intensity.Override(Mathf.Abs(Mathf.Sin(hallucinationTimer / num2)) * num);
+    }
+
+    public void SetIsMainBlurEnabled(bool enabled)
+    {
+        baseProfile.dof.active = enabled;
     }
 
     /// <summary>
@@ -160,9 +193,13 @@ public class UnturnedPostProcess : MonoBehaviour
     /// </summary>
     public void applyUserSettings()
     {
-        if (basePostProcess != null)
+        if (basePostProcessLayer != null)
         {
-            applyAntiAliasing(basePostProcess);
+            applyAntiAliasing(basePostProcessLayer);
+        }
+        if (scopePostProcessLayer != null)
+        {
+            applyAntiAliasing(scopePostProcessLayer);
         }
         syncAmbientOcclusion();
         syncBloom();
@@ -185,6 +222,7 @@ public class UnturnedPostProcess : MonoBehaviour
     {
         baseProfile.ambientOcclusion.active = GraphicsSettings.isAmbientOcclusionEnabled;
         viewmodelProfile.ambientOcclusion.active = GraphicsSettings.isAmbientOcclusionEnabled;
+        scopeProfile.ambientOcclusion.active = GraphicsSettings.isAmbientOcclusionEnabled;
     }
 
     private void syncBloom()
@@ -199,6 +237,7 @@ public class UnturnedPostProcess : MonoBehaviour
             baseProfile.bloom.active = GraphicsSettings.bloom;
             viewmodelProfile.bloom.active = false;
         }
+        scopeProfile.bloom.active = false;
     }
 
     private void syncChromaticAberration()
@@ -213,6 +252,7 @@ public class UnturnedPostProcess : MonoBehaviour
             baseProfile.chromaticAberration.active = GraphicsSettings.chromaticAberration;
             viewmodelProfile.chromaticAberration.active = false;
         }
+        scopeProfile.chromaticAberration.active = false;
     }
 
     private void syncFilmGrain()
@@ -227,12 +267,14 @@ public class UnturnedPostProcess : MonoBehaviour
             baseProfile.filmGrain.active = GraphicsSettings.filmGrain;
             viewmodelProfile.filmGrain.active = false;
         }
+        scopeProfile.filmGrain.active = false;
     }
 
     private void syncScreenSpaceReflections()
     {
         bool flag = GraphicsSettings.reflectionQuality != 0 && GraphicsSettings.renderMode == ERenderMode.DEFERRED;
         baseProfile.screenSpaceReflections.active = flag;
+        scopeProfile.screenSpaceReflections.active = false;
         if (flag)
         {
             ScreenSpaceReflectionPreset x = GraphicsSettings.reflectionQuality switch
@@ -268,15 +310,15 @@ public class UnturnedPostProcess : MonoBehaviour
         }
     }
 
-    private PostProcessProfileWrapper createGlobalProfile(string name, int layer)
+    private PostProcessProfileWrapper createGlobalProfile(string name, int physicsLayer, EPostProcessLayer layer)
     {
         GameObject obj = new GameObject(name);
         obj.transform.parent = base.transform;
-        obj.layer = layer;
+        obj.layer = physicsLayer;
         PostProcessVolume postProcessVolume = obj.AddComponent<PostProcessVolume>();
         postProcessVolume.isGlobal = true;
         postProcessVolume.priority = 1f;
-        return new PostProcessProfileWrapper(postProcessVolume.profile, layer == 11);
+        return new PostProcessProfileWrapper(postProcessVolume.profile, layer);
     }
 
     public void initialize()
@@ -288,8 +330,9 @@ public class UnturnedPostProcess : MonoBehaviour
         }
         instance = this;
         Object.DontDestroyOnLoad(this);
-        baseProfile = createGlobalProfile("Base", 8);
-        viewmodelProfile = createGlobalProfile("Viewmodel", 11);
+        baseProfile = createGlobalProfile("Base", 8, EPostProcessLayer.Base);
+        viewmodelProfile = createGlobalProfile("Viewmodel", 11, EPostProcessLayer.Viewmodel);
+        scopeProfile = createGlobalProfile("Scope", 31, EPostProcessLayer.Scope);
         viewmodelProfile.ambientOcclusion.intensity.Override(1f);
         if (Provider.preferenceData.Graphics.Use_Lens_Dirt)
         {
@@ -300,5 +343,6 @@ public class UnturnedPostProcess : MonoBehaviour
         }
         baseProfile.chromaticAberration.intensity.Override(Provider.preferenceData.Graphics.Chromatic_Aberration_Intensity);
         viewmodelProfile.chromaticAberration.intensity.Override(Provider.preferenceData.Graphics.Chromatic_Aberration_Intensity);
+        scopeProfile.chromaticAberration.intensity.Override(Provider.preferenceData.Graphics.Chromatic_Aberration_Intensity);
     }
 }

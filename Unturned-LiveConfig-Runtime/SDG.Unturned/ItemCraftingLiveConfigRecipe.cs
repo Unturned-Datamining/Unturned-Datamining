@@ -4,7 +4,7 @@ public class ItemCraftingLiveConfigRecipe
 {
     public LiveConfigItemCraftingRecipe[] recipes;
 
-    public void Parse(DatDictionary data)
+    public void Parse(IDatDictionary data)
     {
         recipes = data.ParseArrayOfStructs<LiveConfigItemCraftingRecipe>("Recipes");
         if (recipes == null)

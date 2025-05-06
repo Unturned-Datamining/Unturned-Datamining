@@ -34,6 +34,11 @@ public class ItemPlaceableAsset : ItemAsset
     /// </summary>
     public AssetReference<SpawnAsset> itemDroppedOnDestroy { get; protected set; }
 
+    /// <summary>
+    /// If non-null, this asset provides the listed crafting tags to nearby players.
+    /// </summary>
+    public CachingAssetRef[] PlaceableProvidedCraftingTags { get; protected set; }
+
     public ItemAsset FindSalvageItemAsset()
     {
         if (salvageItemRef.isValid)
@@ -50,10 +55,9 @@ public class ItemPlaceableAsset : ItemAsset
     {
         foreach (Blueprint blueprint in base.blueprints)
         {
-            if (blueprint.outputs.Length == 1 && blueprint.outputs[0].id == id)
+            if (blueprint.outputs.Length == 1 && blueprint.outputs[0].IsItem(this))
             {
-                BlueprintSupply blueprintSupply = blueprint.supplies[Random.Range(0, blueprint.supplies.Length)];
-                return Assets.find(EAssetType.ITEM, blueprintSupply.id) as ItemAsset;
+                return blueprint.supplies[Random.Range(0, blueprint.supplies.Length)].FindItemAsset();
             }
         }
         return null;
@@ -82,14 +86,35 @@ public class ItemPlaceableAsset : ItemAsset
         }
     }
 
-    public override void PopulateAsset(Bundle bundle, DatDictionary data, Local localization)
+    public override void BuildDescription(ItemDescriptionBuilder builder, Item itemInstance)
     {
-        base.PopulateAsset(bundle, data, localization);
-        CanZombiesTarget = data.ParseBool("Can_Zombies_Target", defaultValue: true);
-        salvageItemRef = data.readAssetReference<ItemAsset>("SalvageItem");
-        minItemsDroppedOnDestroy = data.ParseInt32("Min_Items_Dropped_On_Destroy");
-        maxItemsDroppedOnDestroy = data.ParseInt32("Max_Items_Dropped_On_Destroy");
-        itemDroppedOnDestroy = data.readAssetReference<SpawnAsset>("Item_Dropped_On_Destroy");
+        base.BuildDescription(builder, itemInstance);
+        if (builder.shouldRestrictToLegacyContent || PlaceableProvidedCraftingTags == null || PlaceableProvidedCraftingTags.Length == 0)
+        {
+            return;
+        }
+        Local localization = PlayerDashboardInventoryUI.localization;
+        int num = 25000;
+        builder.Append(localization.format("ItemDescription_ProvidesCraftingTags"), ++num);
+        for (int i = 0; i < PlaceableProvidedCraftingTags.Length; i++)
+        {
+            TagAsset tagAsset = PlaceableProvidedCraftingTags[i].Get<TagAsset>();
+            if (tagAsset != null)
+            {
+                builder.Append(localization.format("ItemDescription_ListItem", tagAsset.RichTextName), ++num);
+            }
+        }
+    }
+
+    public override void PopulateAsset(in PopulateAssetParameters p)
+    {
+        base.PopulateAsset(in p);
+        CanZombiesTarget = p.data.ParseBool("Can_Zombies_Target", defaultValue: true);
+        salvageItemRef = p.data.readAssetReference<ItemAsset>("SalvageItem");
+        minItemsDroppedOnDestroy = p.data.ParseInt32("Min_Items_Dropped_On_Destroy");
+        maxItemsDroppedOnDestroy = p.data.ParseInt32("Max_Items_Dropped_On_Destroy");
+        itemDroppedOnDestroy = p.data.readAssetReference<SpawnAsset>("Item_Dropped_On_Destroy");
+        PlaceableProvidedCraftingTags = p.data.ParseArrayOfStructs<CachingAssetRef>("PlaceableProvidesCraftingTags");
     }
 
     internal override void BuildCargoData(CargoBuilder builder)

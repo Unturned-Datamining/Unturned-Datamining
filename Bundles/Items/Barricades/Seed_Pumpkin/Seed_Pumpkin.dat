@@ -1,4 +1,4 @@
-GUID 544aedb190e8444994910d5ee348eaf2
+﻿GUID 544aedb190e8444994910d5ee348eaf2
 Type Farm
 Useable Barricade
 Build Farm
@@ -19,9 +19,15 @@ Grow 1046
 Explosion 43
 Vulnerable
 
-Blueprints 1
-Blueprint_0_Type Utilities
-Blueprint_0_Supply_0_ID 1046
-Blueprint_0_Build 27
+Blueprints
+[
+	{
+		CategoryTag "bfac6026305f4737a95fd275ebff65a6" // Utilities
+		InputItems "b62856039eca4808a5795a9e15d57182" // Pumpkin
+		OutputItems this
+		Effect "84347b13028340b8976033c08675d458" // Wrench
+	}
+]
+
 PlacementAudioClip Sounds/FoliagePlacement.mp3
 Has_Clip_Prefab false

@@ -60,26 +60,26 @@ public class ItemSentryAsset : ItemStorageAsset
         }
     }
 
-    public override void PopulateAsset(Bundle bundle, DatDictionary data, Local localization)
+    public override void PopulateAsset(in PopulateAssetParameters p)
     {
-        base.PopulateAsset(bundle, data, localization);
-        if (data.ContainsKey("Mode"))
+        base.PopulateAsset(in p);
+        if (p.data.ContainsKey("Mode"))
         {
-            _sentryMode = (ESentryMode)Enum.Parse(typeof(ESentryMode), data.GetString("Mode"), ignoreCase: true);
+            _sentryMode = (ESentryMode)Enum.Parse(typeof(ESentryMode), p.data.GetString("Mode"), ignoreCase: true);
         }
         else
         {
             _sentryMode = ESentryMode.NEUTRAL;
         }
-        requiresPower = data.ParseBool("Requires_Power", defaultValue: true);
-        infiniteAmmo = data.ParseBool("Infinite_Ammo");
-        infiniteQuality = data.ParseBool("Infinite_Quality");
-        AmmoConsumptionProbability = data.ParseFloat("AmmoConsumptionProbability", 1f);
-        QualityConsumptionProbability = data.ParseFloat("QualityConsumptionProbability", 1f);
-        detectionRadius = data.ParseFloat("Detection_Radius", 48f);
-        targetLossRadius = data.ParseFloat("Target_Loss_Radius", detectionRadius * 1.2f);
-        targetAcquiredEffect = data.readAssetReference("Target_Acquired_Effect", in defaultTargetAcquiredEffect);
-        targetLostEffect = data.readAssetReference("Target_Lost_Effect", in defaultTargetLostEffect);
+        requiresPower = p.data.ParseBool("Requires_Power", defaultValue: true);
+        infiniteAmmo = p.data.ParseBool("Infinite_Ammo");
+        infiniteQuality = p.data.ParseBool("Infinite_Quality");
+        AmmoConsumptionProbability = p.data.ParseFloat("AmmoConsumptionProbability", 1f);
+        QualityConsumptionProbability = p.data.ParseFloat("QualityConsumptionProbability", 1f);
+        detectionRadius = p.data.ParseFloat("Detection_Radius", 48f);
+        targetLossRadius = p.data.ParseFloat("Target_Loss_Radius", detectionRadius * 1.2f);
+        targetAcquiredEffect = p.data.readAssetReference("Target_Acquired_Effect", in defaultTargetAcquiredEffect);
+        targetLostEffect = p.data.readAssetReference("Target_Lost_Effect", in defaultTargetLostEffect);
     }
 
     internal override void BuildCargoData(CargoBuilder builder)

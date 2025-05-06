@@ -63,9 +63,11 @@ public class OptionsSettings
 
     private const byte SAVEDATA_VERSION_ADDED_SHOW_OUTBOUND_VOICE_CHAT_OFF_HINT = 61;
 
-    private const byte SAVEDATA_VERSION_NEWEST = 61;
+    private const byte SAVEDATA_VERSION_ADDED_SPRINT_FOV_OPTION = 62;
 
-    public static readonly byte SAVEDATA_VERSION = 61;
+    private const byte SAVEDATA_VERSION_NEWEST = 62;
+
+    public static readonly byte SAVEDATA_VERSION = 62;
 
     public static readonly byte MIN_FOV = 60;
 
@@ -204,6 +206,11 @@ public class OptionsSettings
     /// Multiplier for flinch away from damage source in <see cref="M:SDG.Unturned.PlayerLook.FlinchFromDamage(System.Byte,UnityEngine.Vector3)" />.
     /// </summary>
     public static float damageFlinchIntensity;
+
+    /// <summary>
+    /// [0, 1] Intensity of FOV boost while sprinting.
+    /// </summary>
+    public static float sprintFovBoostIntensity;
 
     public static Color crosshairColor;
 
@@ -545,7 +552,7 @@ public class OptionsSettings
 
     public static void apply()
     {
-        if (!Level.isLoaded && MainCamera.instance != null && !Level.isVR && !Dedicator.isVR)
+        if (!Level.isLoaded && MainCamera.instance != null)
         {
             MainCamera.instance.fieldOfView = DesiredVerticalFieldOfView;
         }
@@ -604,6 +611,7 @@ public class OptionsSettings
         cameraShakeIntensity = 1f;
         damageFlinchMode = EDamageFlinchMode.RollOnly;
         damageFlinchIntensity = 1f;
+        sprintFovBoostIntensity = 1f;
         crosshairColor = new Color(1f, 1f, 1f, 0.5f);
         hitmarkerColor = new Color(1f, 1f, 1f, 0.5f);
         criticalHitmarkerColor = new Color(1f, 0f, 0f, 0.5f);
@@ -1030,6 +1038,14 @@ public class OptionsSettings
         {
             ShowOutboundVoiceChatOffHint = true;
         }
+        if (b >= 62)
+        {
+            sprintFovBoostIntensity = block.readSingle();
+        }
+        else
+        {
+            sprintFovBoostIntensity = 1f;
+        }
         if (!Provider.isPro)
         {
             backgroundColor = new Color(0.9f, 0.9f, 0.9f);
@@ -1043,7 +1059,7 @@ public class OptionsSettings
     public static void save()
     {
         Block block = new Block();
-        block.writeByte(61);
+        block.writeByte(62);
         block.writeBoolean(value: false);
         block.writeBoolean(splashscreen);
         block.writeBoolean(timer);
@@ -1104,6 +1120,7 @@ public class OptionsSettings
         block.writeByte((byte)damageFlinchMode);
         block.writeSingle(damageFlinchIntensity);
         block.writeBoolean(ShowOutboundVoiceChatOffHint);
+        block.writeSingle(sprintFovBoostIntensity);
         ReadWrite.writeBlock("/Options.dat", useCloud: true, block);
     }
 }

@@ -1,4 +1,4 @@
-GUID d30e7917f90047268aca52822c98f416
+﻿GUID d30e7917f90047268aca52822c98f416
 Type Box
 ID 783
 
@@ -13,7 +13,6 @@ Drops 18
 Drop_0 -1
 
 // Legendary:
-
 // Digital Dynasty Nightraider
 Drop_1 500800
 
@@ -24,7 +23,6 @@ Drop_2 501800
 Drop_3 501000
 
 // Epic:
-
 // Miami Afterburner Scalar
 Drop_4 500900
 
@@ -38,7 +36,6 @@ Drop_6 501300
 Drop_7 501100
 
 // Rare:
-
 // Icepick Pickaxe
 Drop_8 501400
 

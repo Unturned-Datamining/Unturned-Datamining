@@ -1,4 +1,4 @@
-GUID 4670f8cfc41c4fff9bc61f2a98db59fe
+﻿GUID 4670f8cfc41c4fff9bc61f2a98db59fe
 Type Water
 Useable Consumeable
 ID 400
@@ -12,9 +12,14 @@ Food 10
 Water 5
 Virus 5
 
-Blueprints 1
-Blueprint_0_Type Supply
-Blueprint_0_Supply_0_ID 273
-Blueprint_0_Supply_0_Amount 2
-Blueprint_0_Build 27
+Blueprints
+[
+	{
+		CategoryTag "d089feb7e43f40c5a7dfcefc36998cfb" // Supplies
+		InputItems "543567f329764dbd970c27cf0c42b6d4 x 2" // Raw Russet Berries
+		OutputItems this
+		Effect "84347b13028340b8976033c08675d458" // Wrench
+	}
+]
+
 ConsumeAudioClip Sounds/EatSquishy.mp3

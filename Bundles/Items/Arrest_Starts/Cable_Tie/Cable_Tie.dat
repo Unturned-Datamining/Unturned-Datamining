@@ -1,4 +1,4 @@
-GUID 9d5d6f62c95f4aa6af2d89711064cd3c
+﻿GUID 9d5d6f62c95f4aa6af2d89711064cd3c
 Type Arrest_Start
 Useable Arrest_Start
 ID 1197
@@ -9,15 +9,23 @@ Size_Z 0.25
 
 Strength 64
 
-Blueprints 2
-Blueprint_0_Type Tool
-Blueprint_0_Supplies 2
-Blueprint_0_Supply_0_ID 65
-Blueprint_0_Supply_0_Amount 2
-Blueprint_0_Supply_1_ID 69
-Blueprint_0_Supply_1_Amount 1
-Blueprint_0_Build 27
-Blueprint_1_Type Tool
-Blueprint_1_Supply_0_ID 1197
-Blueprint_1_Product 65
-Blueprint_1_Build 27
+Blueprints
+[
+	{
+		CategoryTag "ad1804b6945145f3b308738b0b8ea447" // Tools
+		InputItems
+		[
+			"ebb61f2e64f24351a6ab905b5516060b x 2" // Wire
+			"8c25cf28c76a4634855f404c8972c0ae" // Tape
+		]
+		OutputItems this
+		Effect "84347b13028340b8976033c08675d458" // Wrench
+	}
+	{
+		Name Salvage
+		CategoryTag "7ed29f9101ae4523a3b2e389414b7bd9" // Salvage
+		InputItems this
+		OutputItems "ebb61f2e64f24351a6ab905b5516060b" // Wire
+		Effect "84347b13028340b8976033c08675d458" // Wrench
+	}
+]

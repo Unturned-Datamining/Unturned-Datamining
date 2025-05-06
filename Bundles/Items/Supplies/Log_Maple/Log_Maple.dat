@@ -1,4 +1,4 @@
-GUID 94f9c6aa09c249dfbce4f195c0271b9c
+﻿GUID 94f9c6aa09c249dfbce4f195c0271b9c
 Type Supply
 Rarity Uncommon
 ID 39
@@ -7,9 +7,12 @@ Size_X 2
 Size_Y 1
 Size_Z 0.35
 
-Actions 1
-Action_0_Type Blueprint
-Action_0_Source 1900
-Action_0_Blueprints 1
-Action_0_Blueprint_0_Index 0
-Action_0_Key Stack
+Actions
+[
+	{
+		Type Blueprint
+		BlueprintOwner "1f943f37293a41b1ada84cb18c4bd706" // Stack_Log_Maple
+		BlueprintName Stack
+		CommonTextId Stack
+	}
+]

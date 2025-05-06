@@ -1,4 +1,4 @@
-GUID 46218740c256475b87dbc6a2e9a1fb19
+﻿GUID 46218740c256475b87dbc6a2e9a1fb19
 Type Supply
 Rarity Uncommon
 ID 40
@@ -7,14 +7,24 @@ Size_X 1
 Size_Y 1
 Size_Z 0.4
 
-Blueprints 1
-Blueprint_0_Type Gear
-Blueprint_0_Supplies 1
-Blueprint_0_Supply_0_ID 61
-Blueprint_0_Supply_0_Amount 1
-Blueprint_0_Tool 141
-Blueprint_0_Products 4
-Blueprint_0_Build 27
+Blueprints
+[
+	{
+		CategoryTag "cdb2df24b76d4c6e9d8411c940d8337f" // Gear
+		InputItems
+		[
+			{
+				ID "e73a23b102f24520a32ec0b2afaa6157" // Maple Plank
+			}
+			{
+				ID "fd6bee4579884ee9ad0b729baf423ab1" // Saw
+				Delete false
+			}
+		]
+		OutputItems this x 4
+		Effect "84347b13028340b8976033c08675d458" // Wrench
+	}
+]
 
 Actions 1
 Action_0_Type Blueprint

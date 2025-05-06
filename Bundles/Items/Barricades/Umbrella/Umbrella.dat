@@ -1,4 +1,4 @@
-GUID 6d184c53fdeb4056a66ea949a67f01ed
+﻿GUID 6d184c53fdeb4056a66ea949a67f01ed
 Type Barricade
 Useable Barricade
 Build Freeform
@@ -16,13 +16,23 @@ Offset 1
 Explosion 37
 Vulnerable
 
-Blueprints 1
-Blueprint_0_Type Furniture
-Blueprint_0_Supplies 2
-Blueprint_0_Supply_0_ID 66
-Blueprint_0_Supply_0_Amount 7
-Blueprint_0_Supply_1_ID 285
-Blueprint_0_Supply_1_Amount 2
-Blueprint_0_Build 27
+Blueprints
+[
+	{
+		CategoryTag "b0c6cc0a8b4346be89aef697ecdb8e46" // Furniture
+		InputItems
+		[
+			"14901f32cd3240179fd6124324cc27e5 x 7" // Cloth
+			"656f319d2d194813b390edc6edd8a697 x 2" // Metal Bar
+		]
+		OutputItems this
+		RequiresNearbyCraftingTags
+		[
+			"7b82c125a5a54984b8bb26576b59e977" // Workbench
+		]
+		Effect "84347b13028340b8976033c08675d458" // Wrench
+	}
+]
+
 PlacementAudioClip Sounds/WoodenPlacement.mp3
 Has_Clip_Prefab false

@@ -1,4 +1,4 @@
-GUID 5a7281e9af4c435b8cb7f9f5acf05aa9
+﻿GUID 5a7281e9af4c435b8cb7f9f5acf05aa9
 Type Sentry
 Rarity Epic
 Useable Barricade
@@ -25,19 +25,36 @@ QualityConsumptionProbability 0.25
 
 Explosion 36
 
-Blueprints 1
-Blueprint_0_Type Utilities
-Blueprint_0_Supplies 3
-Blueprint_0_Supply_0_ID 459
-Blueprint_0_Supply_0_Amount 1
-Blueprint_0_Supply_1_ID 1220
-Blueprint_0_Supply_1_Amount 1
-Blueprint_0_Supply_2_ID 1008
-Blueprint_0_Supply_2_Amount 1
-Blueprint_0_Tool 76
-Blueprint_0_Level 3
-Blueprint_0_Skill Craft
-Blueprint_0_Build 27
+Blueprints
+[
+	{
+		CategoryTag "bfac6026305f4737a95fd275ebff65a6" // Utilities
+		InputItems
+		[
+			{
+				ID "3407a91dde0c4454b91d5af072f11a4c" // Spotlight
+			}
+			{
+				ID "4eb615311edb4ef98ee95d8c70ba3c25" // Metal Rifle Rack
+			}
+			{
+				ID "669bab19df634f859a2e61c39e428e59" // Rangefinder
+			}
+			{
+				ID "5830b84bf8074caa91cf3f4dde0dd19e" // Blowtorch
+				Delete false
+			}
+		]
+		OutputItems this
+		Skill Craft
+		Skill_Level 3
+		RequiresNearbyCraftingTags
+		[
+			"7b82c125a5a54984b8bb26576b59e977" // Workbench
+		]
+		Effect "84347b13028340b8976033c08675d458" // Wrench
+	}
+]
 
 Should_Close_When_Outside_Range true
 PlacementAudioClip Sounds/MetalPlacement.mp3

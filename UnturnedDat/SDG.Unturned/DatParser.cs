@@ -1,156 +1,148 @@
+using System.Collections.Generic;
 using System.IO;
-using System.Text;
 
 namespace SDG.Unturned;
 
 public class DatParser
 {
-    private TextReader inputReader;
+    private DatTokenizer tokenizer;
 
     private int currentLineNumber;
 
-    private int currentReadResult;
+    private DatToken currentToken;
 
-    private char currentChar;
+    private bool hasToken;
 
-    private bool hasChar;
+    private List<string> errorMessages;
 
-    private bool hasError;
+    private bool enableMetadata;
 
-    private string errorMessage;
+    private List<string> commentLines;
 
-    private StringBuilder stringBuilder;
+    private int commentStartingLineNumber;
 
-    public bool HasError => hasError;
+    private int commentEndingLineNumber;
+
+    public bool EnableMetadata
+    {
+        get
+        {
+            return enableMetadata;
+        }
+        set
+        {
+            enableMetadata = value;
+            if (enableMetadata && commentLines == null)
+            {
+                commentLines = new List<string>();
+            }
+        }
+    }
+
+    public bool HasError => errorMessages.Count > 0;
 
     public string ErrorMessage
     {
         get
         {
-            return errorMessage;
-        }
-        private set
-        {
-            errorMessage = value;
-            hasError = !string.IsNullOrEmpty(errorMessage);
+            if (errorMessages.Count <= 0)
+            {
+                return null;
+            }
+            return errorMessages[0];
         }
     }
+
+    public IReadOnlyList<string> ErrorMessages => errorMessages;
 
     public DatParser()
     {
-        stringBuilder = new StringBuilder();
+        tokenizer = new DatTokenizer();
+        errorMessages = new List<string>();
     }
 
-    public DatDictionary Parse(TextReader inputReader)
+    public IDatDictionary Parse(TextReader inputReader)
     {
-        this.inputReader = inputReader;
-        ErrorMessage = null;
-        hasChar = false;
+        tokenizer.EnableComments = enableMetadata;
+        tokenizer.Tokenize(inputReader);
+        errorMessages.Clear();
+        hasToken = false;
         currentLineNumber = 1;
-        ReadChar();
-        SkipUtf8Bom();
-        SkipWhitespaceAndComments();
-        DatDictionary datDictionary = new DatDictionary();
-        while (hasChar)
+        if (tokenizer.HasError)
         {
-            if (currentChar == '/')
-            {
-                SkipWhitespaceAndComments();
-                continue;
-            }
-            string key = ReadDictionaryKey();
-            SkipSpacesAndTabs();
-            IDatNode value = ReadDictionaryValue();
-            AddValueToDictionary(datDictionary, key, value);
+            errorMessages.AddRange(tokenizer.errorMessages);
         }
-        return datDictionary;
+        ReadToken();
+        DatDictionary datDictionary = new DatDictionary();
+        IDatDictionary datDictionary2 = datDictionary;
+        if (enableMetadata)
+        {
+            datDictionary2 = new DatDictionaryWithMetadata(datDictionary)
+            {
+                openingLineNumber = 1
+            };
+        }
+        while (hasToken)
+        {
+            switch (currentToken.type)
+            {
+            case EDatTokenType.Key:
+            {
+                string value = currentToken.value;
+                IDatNode value2 = ReadDictionaryValue();
+                AddValueToDictionary(datDictionary, datDictionary2, value, value2);
+                break;
+            }
+            case EDatTokenType.Comment:
+                BuildComment();
+                break;
+            default:
+                ReadToken();
+                break;
+            }
+        }
+        if (enableMetadata)
+        {
+            ((DatDictionaryWithMetadata)datDictionary2).closingLineNumber = currentLineNumber;
+        }
+        return datDictionary2;
     }
 
-    public DatDictionary Parse(string input)
+    public IDatDictionary Parse(string input)
     {
-        using StringReader stringReader = new StringReader(input);
-        return Parse(stringReader);
+        using StringReader inputReader = new StringReader(input);
+        return Parse(inputReader);
     }
 
-    public DatDictionary Parse(byte[] input)
+    public IDatDictionary Parse(byte[] input)
     {
         using MemoryStream stream = new MemoryStream(input);
-        using StreamReader streamReader = new StreamReader(stream);
-        return Parse(streamReader);
+        using StreamReader inputReader = new StreamReader(stream);
+        return Parse(inputReader);
     }
 
-    private void ReadChar()
+    private void ReadToken()
     {
-        bool flag = hasChar && currentChar == '\r';
-        currentReadResult = inputReader.Read();
-        hasChar = currentReadResult >= 0;
-        currentChar = (hasChar ? ((char)currentReadResult) : '\0');
-        currentLineNumber += ((hasChar && (currentChar == '\r' || (currentChar == '\n' && !flag))) ? 1 : 0);
-    }
-
-    private void SkipSpacesAndTabs()
-    {
-        while (hasChar && (currentChar == ' ' || currentChar == '\t'))
+        hasToken = tokenizer.ReadToken(out currentToken);
+        if (currentToken.type == EDatTokenType.LineBreak)
         {
-            ReadChar();
+            currentLineNumber++;
         }
     }
 
-    private void SkipUtf8Bom()
+    private void AddValueToDictionary(DatDictionary underlyingDictionary, IDatDictionary dictionary, string key, IDatNode value)
     {
-        if (!hasChar || currentChar != 'ï')
+        if (enableMetadata)
         {
-            return;
+            ((DatNodeWithMetadataBase)value).parentNode = dictionary;
         }
-        ReadChar();
-        if (hasChar && currentChar == '»')
+        if (dictionary.TryGetNode(key, out var node))
         {
-            ReadChar();
-            if (hasChar && currentChar == '¿')
-            {
-                ReadChar();
-            }
+            string nodeStringForErrorMessage = GetNodeStringForErrorMessage(node);
+            string nodeStringForErrorMessage2 = GetNodeStringForErrorMessage(value);
+            PushErrorMessage($"duplicate key \"{key}\" on line {currentLineNumber} replacing existing value {nodeStringForErrorMessage} with {nodeStringForErrorMessage2}");
         }
-    }
-
-    private void SkipWhitespaceAndComments()
-    {
-        while (hasChar)
-        {
-            if (currentChar == '/')
-            {
-                ReadChar();
-                while (hasChar && currentChar != '\n' && currentChar != '\r')
-                {
-                    ReadChar();
-                }
-                continue;
-            }
-            if (char.IsWhiteSpace(currentChar) || currentChar == ',')
-            {
-                ReadChar();
-                continue;
-            }
-            break;
-        }
-    }
-
-    private void AddValueToDictionary(DatDictionary dictionary, string key, IDatNode value)
-    {
-        if (hasError)
-        {
-            dictionary[key] = value;
-            return;
-        }
-        if (!dictionary.TryGetNode(key, out var node))
-        {
-            dictionary.Add(key, value);
-            return;
-        }
-        dictionary[key] = value;
-        string nodeStringForErrorMessage = GetNodeStringForErrorMessage(node);
-        string nodeStringForErrorMessage2 = GetNodeStringForErrorMessage(value);
-        ErrorMessage = $"duplicate key \"{key}\" on line {currentLineNumber} replacing existing value {nodeStringForErrorMessage} with {nodeStringForErrorMessage2}";
+        underlyingDictionary[key] = value;
     }
 
     private string GetNodeStringForErrorMessage(IDatNode node)
@@ -159,233 +151,259 @@ public class DatParser
         {
             return "null";
         }
-        if (node is DatList datList)
+        if (node is IDatList datList)
         {
             return $"list with {datList.Count} item(s)";
         }
-        if (node is DatDictionary datDictionary)
+        if (node is IDatDictionary datDictionary)
         {
             return $"dictionary with {datDictionary.Count} item(s)";
         }
-        if (node is DatValue datValue)
+        if (node is IDatValue datValue)
         {
-            if (datValue.value == null)
+            if (datValue.Value == null)
             {
                 return "value(null)";
             }
-            return "\"" + datValue.value + "\"";
+            return "\"" + datValue.Value + "\"";
         }
         return node.GetType().Name;
     }
 
+    private void BuildComment()
+    {
+        if (enableMetadata)
+        {
+            if (commentLines.Count < 1)
+            {
+                commentStartingLineNumber = currentLineNumber;
+            }
+            commentEndingLineNumber = currentLineNumber;
+            commentLines.Add(currentToken.value);
+        }
+        ReadToken();
+    }
+
+    private DatComment? ConsumePrefixComment()
+    {
+        DatComment? result = null;
+        if (enableMetadata && commentLines.Count > 0)
+        {
+            result = new DatComment
+            {
+                MessageLines = commentLines.ToArray(),
+                StartingLineNumber = commentStartingLineNumber,
+                EndingLineNumber = commentEndingLineNumber
+            };
+            commentLines.Clear();
+        }
+        return result;
+    }
+
     private IDatNode ReadDictionaryValue()
     {
-        string value = ReadString();
-        SkipWhitespaceAndComments();
-        if (hasChar)
+        int lineNumber = currentLineNumber;
+        ReadToken();
+        DatComment? prefixComment = ConsumePrefixComment();
+        DatToken datToken = currentToken;
+        if (hasToken && currentToken.type == EDatTokenType.Value)
         {
-            if (currentChar == '{')
+            ReadToken();
+        }
+        DatToken datToken2 = currentToken;
+        if (hasToken && currentToken.type == EDatTokenType.Comment)
+        {
+            ReadToken();
+        }
+        if (hasToken && currentToken.type == EDatTokenType.LineBreak)
+        {
+            ReadToken();
+        }
+        if (hasToken)
+        {
+            switch (currentToken.type)
             {
-                return ReadDictionary();
+            case EDatTokenType.OpenDictionary:
+            {
+                IDatDictionary datDictionary = ReadDictionary();
+                if (enableMetadata)
+                {
+                    ((DatDictionaryWithMetadata)datDictionary).prefixComment = prefixComment;
+                }
+                return datDictionary;
             }
-            if (currentChar == '[')
+            case EDatTokenType.OpenList:
             {
-                return ReadList();
+                IDatList datList = ReadList();
+                if (enableMetadata)
+                {
+                    ((DatListWithMetadata)datList).prefixComment = prefixComment;
+                }
+                return datList;
+            }
             }
         }
-        return new DatValue(value);
+        DatValue datValue = new DatValue((datToken.type == EDatTokenType.Value) ? datToken.value : null);
+        if (enableMetadata)
+        {
+            string inlineComment = ((datToken2.type == EDatTokenType.Comment) ? datToken2.value : null);
+            return new DatValueWithMetadata(datValue, lineNumber, inlineComment, prefixComment);
+        }
+        return datValue;
     }
 
-    private DatDictionary ReadDictionary()
+    private IDatDictionary ReadDictionary()
     {
         int num = currentLineNumber;
-        ReadChar();
-        SkipWhitespaceAndComments();
+        ReadToken();
         DatDictionary datDictionary = new DatDictionary();
-        bool flag = false;
-        while (hasChar)
+        IDatDictionary datDictionary2 = datDictionary;
+        if (enableMetadata)
         {
-            if (currentChar == '/')
+            datDictionary2 = new DatDictionaryWithMetadata(datDictionary);
+            commentLines.Clear();
+        }
+        bool flag = false;
+        while (hasToken && !flag)
+        {
+            switch (currentToken.type)
             {
-                SkipWhitespaceAndComments();
-                continue;
-            }
-            if (currentChar == '}')
-            {
-                ReadChar();
+            case EDatTokenType.CloseDictionary:
+                if (enableMetadata)
+                {
+                    DatDictionaryWithMetadata obj = (DatDictionaryWithMetadata)datDictionary2;
+                    obj.openingLineNumber = num;
+                    obj.closingLineNumber = currentLineNumber;
+                }
+                ReadToken();
                 flag = true;
                 break;
+            case EDatTokenType.Key:
+            {
+                string value = currentToken.value;
+                IDatNode value2 = ReadDictionaryValue();
+                AddValueToDictionary(datDictionary, datDictionary2, value, value2);
+                break;
             }
-            string key = ReadDictionaryKey();
-            SkipSpacesAndTabs();
-            IDatNode value = ReadDictionaryValue();
-            AddValueToDictionary(datDictionary, key, value);
+            case EDatTokenType.Comment:
+                BuildComment();
+                break;
+            default:
+                ReadToken();
+                break;
+            }
         }
-        if (!flag && !hasError)
+        if (!flag)
         {
-            ErrorMessage = $"missing closing curly bracket '}}' for dictionary opened on line {num}";
+            PushErrorMessage($"missing closing curly bracket '}}' for dictionary opened on line {num}");
         }
-        SkipWhitespaceAndComments();
-        return datDictionary;
+        return datDictionary2;
     }
 
-    private DatList ReadList()
+    private IDatList ReadList()
     {
         int num = currentLineNumber;
-        ReadChar();
-        SkipWhitespaceAndComments();
+        ReadToken();
         DatList datList = new DatList();
-        bool flag = false;
-        while (hasChar)
+        IDatList datList3;
+        if (!enableMetadata)
         {
-            if (currentChar == '/')
+            IDatList datList2 = datList;
+            datList3 = datList2;
+        }
+        else
+        {
+            IDatList datList2 = new DatListWithMetadata(datList);
+            datList3 = datList2;
+        }
+        IDatList datList4 = datList3;
+        if (enableMetadata)
+        {
+            commentLines.Clear();
+        }
+        bool flag = false;
+        while (hasToken && !flag)
+        {
+            switch (currentToken.type)
             {
-                SkipWhitespaceAndComments();
-                continue;
-            }
-            if (currentChar == ']')
-            {
-                ReadChar();
+            case EDatTokenType.CloseList:
+                if (enableMetadata)
+                {
+                    DatListWithMetadata obj2 = (DatListWithMetadata)datList4;
+                    obj2.openingLineNumber = num;
+                    obj2.closingLineNumber = currentLineNumber;
+                }
+                ReadToken();
                 flag = true;
                 break;
-            }
-            if (currentChar == '{')
+            case EDatTokenType.OpenDictionary:
             {
-                datList.Add(ReadDictionary());
-                continue;
-            }
-            if (currentChar == '[')
-            {
-                datList.Add(ReadList());
-                continue;
-            }
-            string value = ReadString();
-            SkipWhitespaceAndComments();
-            datList.Add(new DatValue(value));
-        }
-        if (!flag && !hasError)
-        {
-            ErrorMessage = $"missing closing bracket ']' for list opened on line {num}";
-        }
-        SkipWhitespaceAndComments();
-        return datList;
-    }
-
-    private string ReadDictionaryKey()
-    {
-        if (currentChar == '"')
-        {
-            return ReadQuotedString();
-        }
-        stringBuilder.Clear();
-        while (hasChar && !char.IsWhiteSpace(currentChar))
-        {
-            stringBuilder.Append(currentChar);
-            ReadChar();
-        }
-        return stringBuilder.ToString();
-    }
-
-    private string ReadString()
-    {
-        if (currentChar == '"')
-        {
-            return ReadQuotedString();
-        }
-        bool flag = false;
-        stringBuilder.Clear();
-        while (hasChar)
-        {
-            if (flag)
-            {
-                if (currentChar == 'n')
+                DatComment? prefixComment3 = ConsumePrefixComment();
+                IDatDictionary datDictionary = ReadDictionary();
+                if (enableMetadata)
                 {
-                    currentChar = '\n';
+                    DatDictionaryWithMetadata obj3 = (DatDictionaryWithMetadata)datDictionary;
+                    obj3.parentNode = datList4;
+                    obj3.prefixComment = prefixComment3;
                 }
-                else if (currentChar == 't')
+                datList.Add(datDictionary);
+                break;
+            }
+            case EDatTokenType.OpenList:
+            {
+                DatComment? prefixComment2 = ConsumePrefixComment();
+                IDatList datList5 = ReadList();
+                if (enableMetadata)
                 {
-                    currentChar = '\t';
+                    DatListWithMetadata obj = (DatListWithMetadata)datList5;
+                    obj.parentNode = datList4;
+                    obj.prefixComment = prefixComment2;
                 }
-                else if (currentChar != '\\')
+                datList.Add(datList5);
+                break;
+            }
+            case EDatTokenType.Value:
+            {
+                DatComment? prefixComment = ConsumePrefixComment();
+                string value = currentToken.value;
+                int lineNumber = currentLineNumber;
+                ReadToken();
+                DatValue datValue = new DatValue(value);
+                if (enableMetadata)
                 {
-                    stringBuilder.Append('\\');
-                    if (!hasError)
+                    string inlineComment = null;
+                    if (hasToken && currentToken.type == EDatTokenType.Comment)
                     {
-                        ErrorMessage = $"unrecognized escape sequence (\\{currentChar}) on line {currentLineNumber} - if this is a file path please use forward slash (/)";
+                        inlineComment = currentToken.value;
+                        ReadToken();
                     }
+                    DatValueWithMetadata datValueWithMetadata = new DatValueWithMetadata(datValue, lineNumber, inlineComment, prefixComment);
+                    datValueWithMetadata.parentNode = datList4;
+                    datList.Add(datValueWithMetadata);
                 }
-            }
-            else
-            {
-                if (currentChar == '\r' || currentChar == '\n')
+                else
                 {
-                    break;
+                    datList.Add(datValue);
                 }
-                if (currentChar == '\\')
-                {
-                    flag = true;
-                    ReadChar();
-                    continue;
-                }
+                break;
             }
-            flag = false;
-            stringBuilder.Append(currentChar);
-            ReadChar();
+            case EDatTokenType.Comment:
+                BuildComment();
+                break;
+            default:
+                ReadToken();
+                break;
+            }
         }
-        return stringBuilder.ToString();
+        if (!flag)
+        {
+            PushErrorMessage($"missing closing bracket ']' for list opened on line {num}");
+        }
+        return datList4;
     }
 
-    private string ReadQuotedString()
+    private void PushErrorMessage(string message)
     {
-        int num = currentLineNumber;
-        ReadChar();
-        bool flag = false;
-        bool flag2 = false;
-        stringBuilder.Clear();
-        while (hasChar)
-        {
-            if (flag)
-            {
-                if (currentChar == 'n')
-                {
-                    currentChar = '\n';
-                }
-                else if (currentChar == 't')
-                {
-                    currentChar = '\t';
-                }
-                else if (currentChar != '\\' && currentChar != '"')
-                {
-                    stringBuilder.Append('\\');
-                    if (!hasError)
-                    {
-                        ErrorMessage = $"unrecognized escape sequence (\\{currentChar}) on line {currentLineNumber} - if this is a file path please use forward slash (/)";
-                    }
-                }
-            }
-            else
-            {
-                if (currentChar == '"')
-                {
-                    ReadChar();
-                    flag2 = true;
-                    break;
-                }
-                if (currentChar == '\\')
-                {
-                    flag = true;
-                    ReadChar();
-                    continue;
-                }
-            }
-            flag = false;
-            stringBuilder.Append(currentChar);
-            ReadChar();
-        }
-        if (!flag2 && !hasError)
-        {
-            ErrorMessage = $"missing closing quotation mark (\") for string opened on line {num}";
-        }
-        return stringBuilder.ToString();
+        errorMessages.Add(message);
     }
 }

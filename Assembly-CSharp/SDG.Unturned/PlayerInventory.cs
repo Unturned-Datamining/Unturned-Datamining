@@ -248,101 +248,136 @@ public class PlayerInventory : PlayerCaller
         }
     }
 
-    public List<InventorySearch> search(EItemType type)
+    public void SearchContents(in PlayerInventorySearchParameters parameters)
     {
-        List<InventorySearch> result = new List<InventorySearch>();
-        search(result, type);
-        return result;
-    }
-
-    public void search(List<InventorySearch> search, EItemType type)
-    {
-        for (byte b = SLOTS; b < PAGES - 2; b++)
+        int num = ((!parameters.IncludeEquipmentSlots) ? SLOTS : 0);
+        byte b = (parameters.IncludeActiveStorageContainer ? STORAGE : ((byte)(STORAGE - 1)));
+        for (byte b2 = (byte)num; b2 <= b; b2++)
         {
-            items[b].search(search, type);
-        }
-    }
-
-    [Obsolete]
-    public List<InventorySearch> search(EItemType type, ushort[] calibers)
-    {
-        return search(type, calibers, allowZeroCaliber: true);
-    }
-
-    public List<InventorySearch> search(EItemType type, ushort[] calibers, bool allowZeroCaliber)
-    {
-        List<InventorySearch> result = new List<InventorySearch>();
-        foreach (ushort caliber in calibers)
-        {
-            search(result, type, caliber, allowZeroCaliber);
-        }
-        return result;
-    }
-
-    [Obsolete]
-    public void search(List<InventorySearch> search, EItemType type, ushort caliber)
-    {
-        this.search(search, type, caliber, allowZeroCaliber: true);
-    }
-
-    public void search(List<InventorySearch> search, EItemType type, ushort caliber, bool allowZeroCaliber)
-    {
-        for (byte b = SLOTS; b < PAGES - 2; b++)
-        {
-            items[b].search(search, type, caliber, allowZeroCaliber);
-        }
-    }
-
-    public List<InventorySearch> search(ushort id, bool findEmpty, bool findHealthy)
-    {
-        List<InventorySearch> result = new List<InventorySearch>();
-        search(result, id, findEmpty, findHealthy);
-        return result;
-    }
-
-    public void search(List<InventorySearch> search, ushort id, bool findEmpty, bool findHealthy)
-    {
-        for (byte b = SLOTS; b < PAGES - 2; b++)
-        {
-            items[b].search(search, id, findEmpty, findHealthy);
-        }
-    }
-
-    public List<InventorySearch> search(List<InventorySearch> search)
-    {
-        List<InventorySearch> list = new List<InventorySearch>();
-        for (int i = 0; i < search.Count; i++)
-        {
-            InventorySearch inventorySearch = search[i];
-            bool flag = true;
-            for (int j = 0; j < list.Count; j++)
+            Items items = this.items[b2];
+            if (items != null)
             {
-                InventorySearch inventorySearch2 = list[j];
-                if (inventorySearch2.jar.item.id == inventorySearch.jar.item.id && inventorySearch2.jar.item.amount == inventorySearch.jar.item.amount && inventorySearch2.jar.item.quality == inventorySearch.jar.item.quality)
+                items.SearchContents(in parameters);
+                if (parameters.MaxResultsCount > 0 && parameters.Results.Count >= parameters.MaxResultsCount)
                 {
-                    flag = false;
                     break;
                 }
             }
-            if (flag)
-            {
-                list.Add(inventorySearch);
-            }
         }
-        return list;
     }
 
-    public InventorySearch has(ushort id)
+    /// <summary>
+    /// Intended as nearly a drop-in replacement for <see cref="M:SDG.Unturned.PlayerInventory.search(System.Collections.Generic.List{SDG.Unturned.InventorySearch},SDG.Unturned.EItemType)" />.
+    /// </summary>
+    public void FindItemsByType(List<PlayerInventorySearchResultV2> results, EItemType type)
     {
-        for (byte b = 0; b < PAGES - 1; b++)
+        PlayerInventorySearchParameters playerInventorySearchParameters = default(PlayerInventorySearchParameters);
+        playerInventorySearchParameters.Results = results;
+        playerInventorySearchParameters.IncludeEquipmentSlots = false;
+        playerInventorySearchParameters.IncludeActiveStorageContainer = false;
+        playerInventorySearchParameters.ItemType = type;
+        playerInventorySearchParameters.IncludeEmpty = false;
+        playerInventorySearchParameters.IncludeMaxQuality = true;
+        PlayerInventorySearchParameters parameters = playerInventorySearchParameters;
+        SearchContents(in parameters);
+    }
+
+    /// <summary>
+    /// Intended as nearly a drop-in replacement for <see cref="M:SDG.Unturned.PlayerInventory.search(SDG.Unturned.EItemType,System.UInt16[],System.Boolean)" />.
+    /// </summary>
+    public void FindAttachmentsByCaliber(List<PlayerInventorySearchResultV2> results, EItemType itemType, ushort[] anyCaliberIds, bool includeUnspecifiedCaliber)
+    {
+        PlayerInventorySearchParameters playerInventorySearchParameters = default(PlayerInventorySearchParameters);
+        playerInventorySearchParameters.Results = results;
+        playerInventorySearchParameters.IncludeEquipmentSlots = false;
+        playerInventorySearchParameters.IncludeActiveStorageContainer = false;
+        playerInventorySearchParameters.ItemType = itemType;
+        playerInventorySearchParameters.IncludeEmpty = false;
+        playerInventorySearchParameters.IncludeMaxQuality = true;
+        playerInventorySearchParameters.AnyCaliberIds = anyCaliberIds;
+        playerInventorySearchParameters.IncludeUnspecifiedCaliber = includeUnspecifiedCaliber;
+        PlayerInventorySearchParameters parameters = playerInventorySearchParameters;
+        SearchContents(in parameters);
+    }
+
+    /// <summary>
+    /// Intended as nearly a drop-in replacement for <see cref="M:SDG.Unturned.PlayerInventory.search(System.Collections.Generic.List{SDG.Unturned.InventorySearch},SDG.Unturned.EItemType,System.UInt16,System.Boolean)" />.
+    /// </summary>
+    public void FindAttachmentsByCaliber(List<PlayerInventorySearchResultV2> results, EItemType itemType, ushort caliberId, bool includeUnspecifiedCaliber)
+    {
+        PlayerInventorySearchParameters playerInventorySearchParameters = default(PlayerInventorySearchParameters);
+        playerInventorySearchParameters.Results = results;
+        playerInventorySearchParameters.IncludeEquipmentSlots = false;
+        playerInventorySearchParameters.IncludeActiveStorageContainer = false;
+        playerInventorySearchParameters.ItemType = itemType;
+        playerInventorySearchParameters.IncludeEmpty = false;
+        playerInventorySearchParameters.IncludeMaxQuality = true;
+        playerInventorySearchParameters.CaliberId = caliberId;
+        playerInventorySearchParameters.IncludeUnspecifiedCaliber = includeUnspecifiedCaliber;
+        PlayerInventorySearchParameters parameters = playerInventorySearchParameters;
+        SearchContents(in parameters);
+    }
+
+    /// <summary>
+    /// Intended as nearly a drop-in replacement for <see cref="M:SDG.Unturned.PlayerInventory.search(System.Collections.Generic.List{SDG.Unturned.InventorySearch},System.UInt16,System.Boolean,System.Boolean)" />.
+    /// </summary>
+    public void FindItemsByAsset(List<PlayerInventorySearchResultV2> results, CachingBcAssetRef assetRef, bool includeEmpty, bool includeMaxQuality)
+    {
+        PlayerInventorySearchParameters playerInventorySearchParameters = default(PlayerInventorySearchParameters);
+        playerInventorySearchParameters.Results = results;
+        playerInventorySearchParameters.IncludeEquipmentSlots = false;
+        playerInventorySearchParameters.IncludeActiveStorageContainer = false;
+        playerInventorySearchParameters.AssetRef = assetRef;
+        playerInventorySearchParameters.IncludeEmpty = includeEmpty;
+        playerInventorySearchParameters.IncludeMaxQuality = includeMaxQuality;
+        PlayerInventorySearchParameters parameters = playerInventorySearchParameters;
+        SearchContents(in parameters);
+    }
+
+    /// <summary>
+    /// Intended as nearly a drop-in replacement for <see cref="M:SDG.Unturned.PlayerInventory.has(System.UInt16)" />.
+    /// </summary>
+    public void FindFirstItemByAsset(List<PlayerInventorySearchResultV2> results, CachingBcAssetRef assetRef)
+    {
+        PlayerInventorySearchParameters playerInventorySearchParameters = default(PlayerInventorySearchParameters);
+        playerInventorySearchParameters.Results = results;
+        playerInventorySearchParameters.IncludeEquipmentSlots = true;
+        playerInventorySearchParameters.IncludeActiveStorageContainer = true;
+        playerInventorySearchParameters.MaxResultsCount = 1;
+        playerInventorySearchParameters.AssetRef = assetRef;
+        playerInventorySearchParameters.IncludeEmpty = false;
+        playerInventorySearchParameters.IncludeMaxQuality = true;
+        PlayerInventorySearchParameters parameters = playerInventorySearchParameters;
+        SearchContents(in parameters);
+    }
+
+    /// <summary>
+    /// Intended as nearly a drop-in replacement for <see cref="M:SDG.Unturned.PlayerInventory.has(System.UInt16)" />.
+    /// This variant wraps FindFirstItemByAsset and manages the results list for you.
+    /// Only use result if true is returned, otherwise it's invalid.
+    /// </summary>
+    public bool FindFirstItemByAsset(CachingBcAssetRef assetRef, out PlayerInventorySearchResultV2 result)
+    {
+        using ScopedPlayerInventorySearchResultPool scopedPlayerInventorySearchResultPool = default(ScopedPlayerInventorySearchResultPool);
+        FindFirstItemByAsset(scopedPlayerInventorySearchResultPool.PooledResults, assetRef);
+        if (scopedPlayerInventorySearchResultPool.PooledResults.Count > 0)
         {
-            InventorySearch inventorySearch = items[b].has(id);
-            if (inventorySearch != null)
-            {
-                return inventorySearch;
-            }
+            result = scopedPlayerInventorySearchResultPool.PooledResults[0];
+            return true;
         }
-        return null;
+        result = default(PlayerInventorySearchResultV2);
+        return false;
+    }
+
+    /// <summary>
+    /// Intended as nearly a drop-in replacement for <see cref="M:SDG.Unturned.PlayerInventory.has(System.UInt16)" />.
+    /// This variant wraps FindFirstItemByAsset and manages the results list for you.
+    /// </summary>
+    public bool HasItemByAsset(CachingBcAssetRef assetRef)
+    {
+        using ScopedPlayerInventorySearchResultPool scopedPlayerInventorySearchResultPool = default(ScopedPlayerInventorySearchResultPool);
+        FindFirstItemByAsset(scopedPlayerInventorySearchResultPool.PooledResults, assetRef);
+        return scopedPlayerInventorySearchResultPool.PooledResults.Count > 0;
     }
 
     public bool tryAddItem(Item item, byte x, byte y, byte page, byte rot)
@@ -591,12 +626,6 @@ public class PlayerInventory : PlayerCaller
         return false;
     }
 
-    [Obsolete]
-    public void askDragItem(CSteamID steamID, byte page_0, byte x_0, byte y_0, byte page_1, byte x_1, byte y_1, byte rot_1)
-    {
-        ReceiveDragItem(page_0, x_0, y_0, page_1, x_1, y_1, rot_1);
-    }
-
     [SteamCall(ESteamCallValidation.ONLY_FROM_OWNER, ratelimitHz = 10, legacyName = "askDragItem")]
     public void ReceiveDragItem(byte page_0, byte x_0, byte y_0, byte page_1, byte x_1, byte y_1, byte rot_1)
     {
@@ -648,12 +677,6 @@ public class PlayerInventory : PlayerCaller
                 base.player.equipment.sendSlot(page_1);
             }
         }
-    }
-
-    [Obsolete]
-    public void askSwapItem(CSteamID steamID, byte page_0, byte x_0, byte y_0, byte rot_0, byte page_1, byte x_1, byte y_1, byte rot_1)
-    {
-        ReceiveSwapItem(page_0, x_0, y_0, rot_0, page_1, x_1, y_1, rot_1);
     }
 
     /// <summary>
@@ -752,12 +775,6 @@ public class PlayerInventory : PlayerCaller
         SendSwapItem.Invoke(GetNetId(), ENetReliability.Unreliable, page_0, x_0, y_0, rot_0, page_1, x_1, y_1, rot_1);
     }
 
-    [Obsolete]
-    public void askDropItem(CSteamID steamID, byte page, byte x, byte y)
-    {
-        ReceiveDropItem(page, x, y);
-    }
-
     [SteamCall(ESteamCallValidation.ONLY_FROM_OWNER, ratelimitHz = 10, legacyName = "askDropItem")]
     public void ReceiveDropItem(byte page, byte x, byte y)
     {
@@ -806,22 +823,10 @@ public class PlayerInventory : PlayerCaller
         SendDropItem.Invoke(GetNetId(), ENetReliability.Unreliable, page, x, y);
     }
 
-    [Obsolete]
-    public void tellUpdateAmount(CSteamID steamID, byte page, byte index, byte amount)
-    {
-        ReceiveUpdateAmount(page, index, amount);
-    }
-
     [SteamCall(ESteamCallValidation.ONLY_FROM_SERVER, legacyName = "tellUpdateAmount")]
     public void ReceiveUpdateAmount(byte page, byte index, byte amount)
     {
         updateAmount(page, index, amount);
-    }
-
-    [Obsolete]
-    public void tellUpdateQuality(CSteamID steamID, byte page, byte index, byte quality)
-    {
-        ReceiveUpdateQuality(page, index, quality);
     }
 
     [SteamCall(ESteamCallValidation.ONLY_FROM_SERVER, legacyName = "tellUpdateQuality")]
@@ -830,22 +835,10 @@ public class PlayerInventory : PlayerCaller
         updateQuality(page, index, quality);
     }
 
-    [Obsolete]
-    public void tellUpdateInvState(CSteamID steamID, byte page, byte index, byte[] state)
-    {
-        ReceiveUpdateInvState(page, index, state);
-    }
-
     [SteamCall(ESteamCallValidation.ONLY_FROM_SERVER, legacyName = "tellUpdateInvState")]
     public void ReceiveUpdateInvState(byte page, byte index, byte[] state)
     {
         updateState(page, index, state);
-    }
-
-    [Obsolete]
-    public void tellItemAdd(CSteamID steamID, byte page, byte x, byte y, byte rot, ushort id, byte amount, byte quality, byte[] state)
-    {
-        ReceiveItemAdd(page, x, y, rot, id, amount, quality, state);
     }
 
     [SteamCall(ESteamCallValidation.ONLY_FROM_SERVER, legacyName = "tellItemAdd")]
@@ -855,12 +848,6 @@ public class PlayerInventory : PlayerCaller
         {
             items[page].addItem(x, y, rot, new Item(id, amount, quality, state));
         }
-    }
-
-    [Obsolete]
-    public void tellItemRemove(CSteamID steamID, byte page, byte x, byte y)
-    {
-        ReceiveItemRemove(page, x, y);
     }
 
     [SteamCall(ESteamCallValidation.ONLY_FROM_SERVER, legacyName = "tellItemRemove")]
@@ -876,12 +863,6 @@ public class PlayerInventory : PlayerCaller
         }
     }
 
-    [Obsolete]
-    public void tellSize(CSteamID steamID, byte page, byte newWidth, byte newHeight)
-    {
-        ReceiveSize(page, newWidth, newHeight);
-    }
-
     [SteamCall(ESteamCallValidation.ONLY_FROM_SERVER, legacyName = "tellSize")]
     public void ReceiveSize(byte page, byte newWidth, byte newHeight)
     {
@@ -889,11 +870,6 @@ public class PlayerInventory : PlayerCaller
         {
             items[page].resize(newWidth, newHeight);
         }
-    }
-
-    [Obsolete]
-    public void tellStoraging(CSteamID steamID)
-    {
     }
 
     [SteamCall(ESteamCallValidation.ONLY_FROM_SERVER)]
@@ -925,11 +901,6 @@ public class PlayerInventory : PlayerCaller
         }
     }
 
-    [Obsolete]
-    public void tellInventory(CSteamID steamID)
-    {
-    }
-
     [SteamCall(ESteamCallValidation.ONLY_FROM_SERVER)]
     public void ReceiveInventory(in ClientInvocationContext context)
     {
@@ -957,11 +928,6 @@ public class PlayerInventory : PlayerCaller
         }
     }
 
-    [Obsolete]
-    public void askInventory(CSteamID steamID)
-    {
-    }
-
     internal void SendInitialPlayerState(SteamPlayer client)
     {
         if (base.channel.IsLocalPlayer)
@@ -979,29 +945,31 @@ public class PlayerInventory : PlayerCaller
         }
         else if (client == base.channel.owner)
         {
-            SendInventory.Invoke(GetNetId(), ENetReliability.Reliable, client.transportConnection, delegate(NetPakWriter writer)
-            {
-                for (byte b3 = 0; b3 < PAGES - 2; b3++)
-                {
-                    writer.WriteUInt8(items[b3].width);
-                    writer.WriteUInt8(items[b3].height);
-                    writer.WriteUInt8(items[b3].getItemCount());
-                    for (byte b4 = 0; b4 < items[b3].getItemCount(); b4++)
-                    {
-                        ItemJar item2 = items[b3].getItem(b4);
-                        writer.WriteUInt8(item2.x);
-                        writer.WriteUInt8(item2.y);
-                        writer.WriteUInt8(item2.rot);
-                        writer.WriteUInt16(item2.item.id);
-                        writer.WriteUInt8(item2.item.amount);
-                        writer.WriteUInt8(item2.item.quality);
-                        writer.WriteUInt8((byte)item2.item.state.Length);
-                        writer.WriteBytes(item2.item.state);
-                    }
-                }
-            });
+            SendInventory.Invoke(GetNetId(), ENetReliability.Reliable, client.transportConnection, SendInventory_Write);
         }
         ownerHasInventory = true;
+    }
+
+    private void SendInventory_Write(NetPakWriter writer)
+    {
+        for (byte b = 0; b < PAGES - 2; b++)
+        {
+            writer.WriteUInt8(items[b].width);
+            writer.WriteUInt8(items[b].height);
+            writer.WriteUInt8(items[b].getItemCount());
+            for (byte b2 = 0; b2 < items[b].getItemCount(); b2++)
+            {
+                ItemJar item = items[b].getItem(b2);
+                writer.WriteUInt8(item.x);
+                writer.WriteUInt8(item.y);
+                writer.WriteUInt8(item.rot);
+                writer.WriteUInt16(item.item.id);
+                writer.WriteUInt8(item.item.amount);
+                writer.WriteUInt8(item.item.quality);
+                writer.WriteUInt8((byte)item.item.state.Length);
+                writer.WriteBytes(item.item.state);
+            }
+        }
     }
 
     public void sendStorage()
@@ -1018,27 +986,31 @@ public class PlayerInventory : PlayerCaller
                 ItemJar item = items[STORAGE].getItem(b);
                 onItemAdded(STORAGE, b, item);
             }
-            return;
         }
-        SendStoraging.Invoke(GetNetId(), ENetReliability.Reliable, base.channel.owner.transportConnection, delegate(NetPakWriter writer)
+        else
         {
-            writer.WriteBit(isStorageTrunk);
-            writer.WriteUInt8(items[STORAGE].width);
-            writer.WriteUInt8(items[STORAGE].height);
-            writer.WriteUInt8(items[STORAGE].getItemCount());
-            for (byte b2 = 0; b2 < items[STORAGE].getItemCount(); b2++)
-            {
-                ItemJar item2 = items[STORAGE].getItem(b2);
-                writer.WriteUInt8(item2.x);
-                writer.WriteUInt8(item2.y);
-                writer.WriteUInt8(item2.rot);
-                writer.WriteUInt16(item2.item.id);
-                writer.WriteUInt8(item2.item.amount);
-                writer.WriteUInt8(item2.item.quality);
-                writer.WriteUInt8((byte)item2.item.state.Length);
-                writer.WriteBytes(item2.item.state);
-            }
-        });
+            SendStoraging.Invoke(GetNetId(), ENetReliability.Reliable, base.channel.owner.transportConnection, SendStoraging_Write);
+        }
+    }
+
+    private void SendStoraging_Write(NetPakWriter writer)
+    {
+        writer.WriteBit(isStorageTrunk);
+        writer.WriteUInt8(items[STORAGE].width);
+        writer.WriteUInt8(items[STORAGE].height);
+        writer.WriteUInt8(items[STORAGE].getItemCount());
+        for (byte b = 0; b < items[STORAGE].getItemCount(); b++)
+        {
+            ItemJar item = items[STORAGE].getItem(b);
+            writer.WriteUInt8(item.x);
+            writer.WriteUInt8(item.y);
+            writer.WriteUInt8(item.rot);
+            writer.WriteUInt16(item.item.id);
+            writer.WriteUInt8(item.item.amount);
+            writer.WriteUInt8(item.item.quality);
+            writer.WriteUInt8((byte)item.item.state.Length);
+            writer.WriteBytes(item.item.state);
+        }
     }
 
     public void updateItems(byte page, Items newItems)
@@ -1627,9 +1599,233 @@ public class PlayerInventory : PlayerCaller
         PlayerSavedata.writeBlock(base.channel.owner.playerID, "/Player/Inventory.dat", block);
     }
 
+    [Obsolete]
+    public void askDragItem(CSteamID steamID, byte page_0, byte x_0, byte y_0, byte page_1, byte x_1, byte y_1, byte rot_1)
+    {
+        ReceiveDragItem(page_0, x_0, y_0, page_1, x_1, y_1, rot_1);
+    }
+
+    [Obsolete]
+    public void askSwapItem(CSteamID steamID, byte page_0, byte x_0, byte y_0, byte rot_0, byte page_1, byte x_1, byte y_1, byte rot_1)
+    {
+        ReceiveSwapItem(page_0, x_0, y_0, rot_0, page_1, x_1, y_1, rot_1);
+    }
+
+    [Obsolete]
+    public void askDropItem(CSteamID steamID, byte page, byte x, byte y)
+    {
+        ReceiveDropItem(page, x, y);
+    }
+
+    [Obsolete]
+    public void tellUpdateAmount(CSteamID steamID, byte page, byte index, byte amount)
+    {
+        ReceiveUpdateAmount(page, index, amount);
+    }
+
+    [Obsolete]
+    public void tellUpdateQuality(CSteamID steamID, byte page, byte index, byte quality)
+    {
+        ReceiveUpdateQuality(page, index, quality);
+    }
+
+    [Obsolete]
+    public void tellUpdateInvState(CSteamID steamID, byte page, byte index, byte[] state)
+    {
+        ReceiveUpdateInvState(page, index, state);
+    }
+
+    [Obsolete]
+    public void tellItemAdd(CSteamID steamID, byte page, byte x, byte y, byte rot, ushort id, byte amount, byte quality, byte[] state)
+    {
+        ReceiveItemAdd(page, x, y, rot, id, amount, quality, state);
+    }
+
+    [Obsolete]
+    public void tellItemRemove(CSteamID steamID, byte page, byte x, byte y)
+    {
+        ReceiveItemRemove(page, x, y);
+    }
+
+    [Obsolete]
+    public void tellSize(CSteamID steamID, byte page, byte newWidth, byte newHeight)
+    {
+        ReceiveSize(page, newWidth, newHeight);
+    }
+
+    [Obsolete]
+    public void tellStoraging(CSteamID steamID)
+    {
+    }
+
+    [Obsolete]
+    public void tellInventory(CSteamID steamID)
+    {
+    }
+
+    [Obsolete]
+    public void askInventory(CSteamID steamID)
+    {
+    }
+
     [Conditional("LOG_INVENTORY_RPC_FAILURES")]
     private void LogRPCFailure(string format, params object[] args)
     {
         UnturnedLog.warn(format, args);
+    }
+
+    [Obsolete]
+    public List<InventorySearch> search(EItemType type, ushort[] calibers)
+    {
+        return search(type, calibers, allowZeroCaliber: true);
+    }
+
+    [Obsolete]
+    public void search(List<InventorySearch> search, EItemType type, ushort caliber)
+    {
+        this.search(search, type, caliber, allowZeroCaliber: true);
+    }
+
+    [Obsolete("Please use the overload taking a pre-allocated list instead (better for performance)")]
+    public List<InventorySearch> search(EItemType type)
+    {
+        List<InventorySearch> result = new List<InventorySearch>();
+        search(result, type);
+        return result;
+    }
+
+    [Obsolete("Please use the overload taking a pre-allocated list instead (better for performance)")]
+    public List<InventorySearch> search(ushort id, bool findEmpty, bool findHealthy)
+    {
+        List<InventorySearch> result = new List<InventorySearch>();
+        search(result, id, findEmpty, findHealthy);
+        return result;
+    }
+
+    /// <summary>
+    /// Please use SearchContents instead! To perform an equivalent search:
+    /// • Set IncludeEquipmentSlots to false.
+    /// • Set IncludeActiveStorageContainer to false.
+    /// • Set ItemType to type.
+    /// • Set IncludeEmpty to false.
+    /// • Set IncludeMaxQuality to true.
+    /// OR use the nearly drop-in replacement FindItemsByType.
+    /// </summary>
+    [Obsolete("Please use new search API instead! Refer to this method's comment for more information.")]
+    public void search(List<InventorySearch> search, EItemType type)
+    {
+        for (byte b = SLOTS; b < PAGES - 2; b++)
+        {
+            items[b].search(search, type);
+        }
+    }
+
+    /// <summary>
+    /// Please use SearchContents instead! To perform an equivalent search:
+    /// • Set IncludeEquipmentSlots to false.
+    /// • Set IncludeActiveStorageContainer to false.
+    /// • Set ItemType to type.
+    /// • Set IncludeEmpty to false.
+    /// • Set IncludeMaxQuality to true.
+    /// • Set AnyCaliberIds to calibers.
+    /// • Set IncludeUnspecifiedCaliber to allowZeroCaliber.
+    /// OR use the nearly drop-in replacement FindAttachmentsByCaliber.
+    /// </summary>
+    [Obsolete("Please use new search API instead! Refer to this method's comment for more information.")]
+    public List<InventorySearch> search(EItemType type, ushort[] calibers, bool allowZeroCaliber)
+    {
+        List<InventorySearch> result = new List<InventorySearch>();
+        foreach (ushort caliber in calibers)
+        {
+            search(result, type, caliber, allowZeroCaliber);
+        }
+        return result;
+    }
+
+    /// <summary>
+    /// Please use SearchContents instead! To perform an equivalent search:
+    /// • Set IncludeEquipmentSlots to false.
+    /// • Set IncludeActiveStorageContainer to false.
+    /// • Set ItemType to type.
+    /// • Set IncludeEmpty to false.
+    /// • Set IncludeMaxQuality to true.
+    /// • Set CaliberId to caliber.
+    /// • Set IncludeUnspecifiedCaliber to allowZeroCaliber.
+    /// OR use the nearly drop-in replacement FindAttachmentsByCaliber.
+    /// </summary>
+    [Obsolete("Please use new search API instead! Refer to this method's comment for more information.")]
+    public void search(List<InventorySearch> search, EItemType type, ushort caliber, bool allowZeroCaliber)
+    {
+        for (byte b = SLOTS; b < PAGES - 2; b++)
+        {
+            items[b].search(search, type, caliber, allowZeroCaliber);
+        }
+    }
+
+    /// <summary>
+    /// Please use SearchContents instead! To perform an equivalent search:
+    /// • Set IncludeEquipmentSlots to false.
+    /// • Set IncludeActiveStorageContainer to false.
+    /// • Set AssetRef to id.
+    /// • Set IncludeEmpty to findEmpty.
+    /// • Set IncludeMaxQuality to findHealthy.
+    /// OR use the nearly drop-in replacement FindItemsByAsset.
+    /// </summary>
+    [Obsolete("Please use new search API instead! Refer to this method's comment for more information.")]
+    public void search(List<InventorySearch> search, ushort id, bool findEmpty, bool findHealthy)
+    {
+        for (byte b = SLOTS; b < PAGES - 2; b++)
+        {
+            items[b].search(search, id, findEmpty, findHealthy);
+        }
+    }
+
+    [Obsolete("Unused in vanilla. Should probably not be used.")]
+    public List<InventorySearch> search(List<InventorySearch> search)
+    {
+        List<InventorySearch> list = new List<InventorySearch>();
+        for (int i = 0; i < search.Count; i++)
+        {
+            InventorySearch inventorySearch = search[i];
+            bool flag = true;
+            for (int j = 0; j < list.Count; j++)
+            {
+                InventorySearch inventorySearch2 = list[j];
+                if (inventorySearch2.jar.item.id == inventorySearch.jar.item.id && inventorySearch2.jar.item.amount == inventorySearch.jar.item.amount && inventorySearch2.jar.item.quality == inventorySearch.jar.item.quality)
+                {
+                    flag = false;
+                    break;
+                }
+            }
+            if (flag)
+            {
+                list.Add(inventorySearch);
+            }
+        }
+        return list;
+    }
+
+    /// <summary>
+    /// Please use SearchContents instead! To perform an equivalent search:
+    /// • Set IncludeEquipmentSlots to true.
+    /// • Set IncludeActiveStorageContainer to true.
+    /// • Set MaxResultsCount to 1.
+    /// • Set AssetRef to id.
+    /// • Set IncludeEmpty to false.
+    /// • Set IncludeMaxQuality to true.
+    /// OR use the nearly drop-in replacements FindFirstItemByAsset or HasItemByAsset.
+    /// </summary>
+    [Obsolete("Please use new search API instead! Refer to this method's comment for more information.")]
+    public InventorySearch has(ushort id)
+    {
+        for (byte b = 0; b < PAGES - 1; b++)
+        {
+            InventorySearch inventorySearch = items[b].has(id);
+            if (inventorySearch != null)
+            {
+                return inventorySearch;
+            }
+        }
+        return null;
     }
 }

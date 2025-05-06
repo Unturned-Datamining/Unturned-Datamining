@@ -1,4 +1,4 @@
-GUID b5c948f84f7e44ba882fc8cecf8ae731
+﻿GUID b5c948f84f7e44ba882fc8cecf8ae731
 Type Magazine
 Rarity Uncommon
 ID 347
@@ -16,17 +16,27 @@ Tracer 48
 
 Stuck 5
 
-Blueprints 2
-Blueprint_0_Type Repair
-Blueprint_0_Supplies 1
-Blueprint_0_Supply_0_ID 67
-Blueprint_0_Supply_0_Amount 1
-Blueprint_0_Build 27
-Blueprint_1_Type Tool
-Blueprint_1_Supplies 1
-Blueprint_1_Supply_0_ID this
-Blueprint_1_Supply_0_AllowEmpty true
-Blueprint_1_Supply_0_Prioritization LowestAmount
-Blueprint_1_Product "67" // Metal Scrap
-Blueprint_1_Products 1
-Blueprint_1_Build 27
+Blueprints
+[
+	{
+		Name Repair
+		CategoryTag "732ee6ffeb18418985cf4f9fde33dd11" // Repair
+		Operation RepairTargetItem
+		InputItems "21ede8ebffb14c5580e8c7ad149e335e" // Metal Scrap
+		Effect "84347b13028340b8976033c08675d458" // Wrench
+	}
+	{
+		Name Salvage
+		CategoryTag "7ed29f9101ae4523a3b2e389414b7bd9" // Salvage
+		InputItems
+		[
+			{
+				ID this
+				Prioritization LowestAmount
+				CountEmptyAsOne true
+			}
+		]
+		OutputItems "21ede8ebffb14c5580e8c7ad149e335e" // Metal Scrap
+		Effect "84347b13028340b8976033c08675d458" // Wrench
+	}
+]

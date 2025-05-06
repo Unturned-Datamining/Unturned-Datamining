@@ -1,4 +1,4 @@
-GUID cf5f376948bb46cc9ee2eb8b91c4642e
+﻿GUID cf5f376948bb46cc9ee2eb8b91c4642e
 Type Barricade
 Rarity Rare
 Useable Barricade
@@ -18,12 +18,15 @@ Vulnerable
 
 Explosion 97
 
-Blueprints 1
-Blueprint_0_Type Barricade
-Blueprint_0_Supply_0_ID 1298
-Blueprint_0_Supply_0_Amount 1
-Blueprint_0_Products 2
-Blueprint_0_Build 27
+Blueprints
+[
+	{
+		CategoryTag "31a59b5fec3f4ec5b2887b1ce4acb029" // Barricades
+		InputItems "306adf871cff47b48d09a3a5414def59" // Bulletproof Glass
+		OutputItems this x 2
+		Effect "84347b13028340b8976033c08675d458" // Wrench
+	}
+]
 
 Unsalvageable
 

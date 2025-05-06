@@ -39,6 +39,10 @@ public class PlayerInputPacket
 
     public EAttackInputFlags secondaryAttack;
 
+    public float yaw;
+
+    public float pitch;
+
     public virtual void read(SteamChannel channel, NetPakReader reader)
     {
         reader.ReadUInt32(out clientSimulationFrameNumber);
@@ -62,6 +66,8 @@ public class PlayerInputPacket
         {
             secondaryAttack |= EAttackInputFlags.Stop;
         }
+        reader.ReadFloat(out yaw);
+        reader.ReadFloat(out pitch);
         reader.ReadUInt8(out var value3);
         int num = value3;
         if (num <= 0)
@@ -325,6 +331,8 @@ public class PlayerInputPacket
         writer.WriteUInt16(keys);
         writer.WriteBits((uint)primaryAttack, 2);
         writer.WriteBits((uint)secondaryAttack, 2);
+        writer.WriteFloat(yaw);
+        writer.WriteFloat(pitch);
         if (clientsideInputs == null)
         {
             writer.WriteUInt8(0);

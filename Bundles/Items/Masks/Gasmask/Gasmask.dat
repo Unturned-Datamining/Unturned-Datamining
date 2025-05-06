@@ -1,4 +1,4 @@
-GUID d3c14d539f0246a7a203dbd992c4036b
+﻿GUID d3c14d539f0246a7a203dbd992c4036b
 Type Mask
 Rarity Rare
 Useable Clothing
@@ -16,9 +16,13 @@ Proof_Radiation
 Hair
 Beard
 
-Blueprints 1
-Blueprint_0_Type Apparel
-Blueprint_0_Supply_0_ID 1270
-Blueprint_0_Product 67
-Blueprint_0_Products 2
-Blueprint_0_Build 32
+Blueprints
+[
+	{
+		Name Salvage
+		CategoryTag "7ed29f9101ae4523a3b2e389414b7bd9" // Salvage
+		InputItems this
+		OutputItems "21ede8ebffb14c5580e8c7ad149e335e x 2" // Metal Scrap
+		Effect "7eceb9f7751d4634b572c8e236355104" // Rip
+	}
+]

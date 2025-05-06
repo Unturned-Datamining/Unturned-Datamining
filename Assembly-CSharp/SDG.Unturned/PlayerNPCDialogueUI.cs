@@ -148,7 +148,7 @@ public class PlayerNPCDialogueUI
         string text = ((local == null || !local.has("DefaultGoodbyeResponse")) ? localization.format("Goodbye") : local.format("DefaultGoodbyeResponse"));
         if (!string.IsNullOrEmpty(text))
         {
-            responses.Add(new DialogueResponse(0, null, 0, default(Guid), 0, default(Guid), 0, default(Guid), text, null, default(NPCRewardsList)));
+            responses.Add(new DialogueResponse(0, null, 0, default(Guid), 0, default(Guid), 0, default(Guid), text, default(NPCConditionsList), default(NPCRewardsList)));
         }
     }
 

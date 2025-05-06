@@ -16,7 +16,7 @@ public class WeatherAsset : WeatherAssetBase
         /// </summary>
         public ELightingColor levelEnum;
 
-        public WeatherColor(DatDictionary data)
+        public WeatherColor(IDatDictionary data)
         {
             if (data == null)
             {
@@ -60,7 +60,7 @@ public class WeatherAsset : WeatherAssetBase
 
         public float brightnessMultiplier;
 
-        public TimeValues(DatDictionary data)
+        public TimeValues(IDatDictionary data)
         {
             if (data == null)
             {
@@ -96,15 +96,15 @@ public class WeatherAsset : WeatherAssetBase
 
         public bool TryParse(IDatNode node)
         {
-            if (!(node is DatDictionary datDictionary))
+            if (!(node is IDatDictionary dictionary))
             {
                 return false;
             }
-            prefab = datDictionary.ParseStruct<MasterBundleReference<GameObject>>("Prefab");
-            emissionExponent = datDictionary.ParseFloat("Emission_Exponent");
-            pitch = datDictionary.ParseFloat("Pitch");
-            translateWithView = datDictionary.ParseBool("Translate_With_View");
-            rotateYawWithWind = datDictionary.ParseBool("Rotate_Yaw_With_Wind");
+            prefab = dictionary.ParseStruct<MasterBundleReference<GameObject>>("Prefab");
+            emissionExponent = dictionary.ParseFloat("Emission_Exponent");
+            pitch = dictionary.ParseFloat("Pitch");
+            translateWithView = dictionary.ParseBool("Translate_With_View");
+            rotateYawWithWind = dictionary.ParseBool("Rotate_Yaw_With_Wind");
             return true;
         }
     }
@@ -164,52 +164,52 @@ public class WeatherAsset : WeatherAssetBase
         blendFrom = ((blendKey == -1) ? blendTo : timeValues[blendKey]);
     }
 
-    public override void PopulateAsset(Bundle bundle, DatDictionary data, Local localization)
+    public override void PopulateAsset(in PopulateAssetParameters p)
     {
-        base.PopulateAsset(bundle, data, localization);
+        base.PopulateAsset(in p);
         if (base.componentType == typeof(WeatherComponentBase))
         {
             base.componentType = typeof(CustomWeatherComponent);
         }
-        overrideFog = data.ParseBool("Override_Fog");
-        overrideAtmosphericFog = data.ParseBool("Override_Atmospheric_Fog");
-        overrideCloudColors = data.ParseBool("Override_Cloud_Colors");
-        if (data.ContainsKey("Shadow_Strength_Multiplier"))
+        overrideFog = p.data.ParseBool("Override_Fog");
+        overrideAtmosphericFog = p.data.ParseBool("Override_Atmospheric_Fog");
+        overrideCloudColors = p.data.ParseBool("Override_Cloud_Colors");
+        if (p.data.ContainsKey("Shadow_Strength_Multiplier"))
         {
-            shadowStrengthMultiplier = data.ParseFloat("Shadow_Strength_Multiplier");
+            shadowStrengthMultiplier = p.data.ParseFloat("Shadow_Strength_Multiplier");
         }
         else
         {
             shadowStrengthMultiplier = 1f;
         }
-        if (data.ContainsKey("Fog_Blend_Exponent"))
+        if (p.data.ContainsKey("Fog_Blend_Exponent"))
         {
-            fogBlendExponent = data.ParseFloat("Fog_Blend_Exponent");
+            fogBlendExponent = p.data.ParseFloat("Fog_Blend_Exponent");
         }
         else
         {
             fogBlendExponent = 1f;
         }
-        if (data.ContainsKey("Cloud_Blend_Exponent"))
+        if (p.data.ContainsKey("Cloud_Blend_Exponent"))
         {
-            cloudBlendExponent = data.ParseFloat("Cloud_Blend_Exponent");
+            cloudBlendExponent = p.data.ParseFloat("Cloud_Blend_Exponent");
         }
         else
         {
             cloudBlendExponent = 1f;
         }
-        windMain = data.ParseFloat("Wind_Main");
-        staminaPerSecond = data.ParseFloat("Stamina_Per_Second");
-        healthPerSecond = data.ParseFloat("Health_Per_Second");
-        foodPerSecond = data.ParseFloat("Food_Per_Second");
-        waterPerSecond = data.ParseFloat("Water_Per_Second");
-        virusPerSecond = data.ParseFloat("Virus_Per_Second");
+        windMain = p.data.ParseFloat("Wind_Main");
+        staminaPerSecond = p.data.ParseFloat("Stamina_Per_Second");
+        healthPerSecond = p.data.ParseFloat("Health_Per_Second");
+        foodPerSecond = p.data.ParseFloat("Food_Per_Second");
+        waterPerSecond = p.data.ParseFloat("Water_Per_Second");
+        virusPerSecond = p.data.ParseFloat("Virus_Per_Second");
         timeValues = new TimeValues[4];
-        timeValues[0] = new TimeValues(data.GetDictionary("Dawn"));
-        timeValues[1] = new TimeValues(data.GetDictionary("Midday"));
-        timeValues[2] = new TimeValues(data.GetDictionary("Dusk"));
-        timeValues[3] = new TimeValues(data.GetDictionary("Midnight"));
-        if (data.TryGetList("Effects", out var node))
+        timeValues[0] = new TimeValues(p.data.GetDictionary("Dawn"));
+        timeValues[1] = new TimeValues(p.data.GetDictionary("Midday"));
+        timeValues[2] = new TimeValues(p.data.GetDictionary("Dusk"));
+        timeValues[3] = new TimeValues(p.data.GetDictionary("Midnight"));
+        if (p.data.TryGetList("Effects", out var node))
         {
             effects = new Effect[node.Count];
             for (int i = 0; i < node.Count; i++)

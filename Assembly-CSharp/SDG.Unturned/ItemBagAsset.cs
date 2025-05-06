@@ -19,13 +19,13 @@ public class ItemBagAsset : ItemClothingAsset
         }
     }
 
-    public override void PopulateAsset(Bundle bundle, DatDictionary data, Local localization)
+    public override void PopulateAsset(in PopulateAssetParameters p)
     {
-        base.PopulateAsset(bundle, data, localization);
+        base.PopulateAsset(in p);
         if (!isPro)
         {
-            _width = data.ParseUInt8("Width", 0);
-            _height = data.ParseUInt8("Height", 0);
+            _width = p.data.ParseUInt8("Width", 0);
+            _height = p.data.ParseUInt8("Height", 0);
         }
     }
 

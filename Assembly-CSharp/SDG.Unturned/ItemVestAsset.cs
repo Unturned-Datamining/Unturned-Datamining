@@ -10,12 +10,12 @@ public class ItemVestAsset : ItemBagAsset
 
     internal override GameObject ClothingPrefab => vest;
 
-    public override void PopulateAsset(Bundle bundle, DatDictionary data, Local localization)
+    public override void PopulateAsset(in PopulateAssetParameters p)
     {
-        base.PopulateAsset(bundle, data, localization);
+        base.PopulateAsset(in p);
         if (!Dedicator.IsDedicatedServer)
         {
-            _vest = loadRequiredAsset<GameObject>(bundle, "Vest");
+            _vest = loadRequiredAsset<GameObject>(p.bundle, "Vest");
             if ((bool)Assets.shouldValidateAssets)
             {
                 AssetValidation.ValidateLayersEqual(this, _vest, 10);

@@ -75,7 +75,7 @@ public class Item
         }
         if (origin != 0)
         {
-            amount = MathfEx.Max(itemAsset.amount, 1);
+            amount = MathfEx.Max(itemAsset.MaxAmountAsByte, 1);
         }
         else
         {
@@ -108,7 +108,7 @@ public class Item
         }
         if (origin != 0)
         {
-            amount = MathfEx.Max(itemAsset.amount, 1);
+            amount = MathfEx.Max(itemAsset.MaxAmountAsByte, 1);
         }
         else
         {

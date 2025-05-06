@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using UnityEngine;
 
 namespace SDG.Unturned;
@@ -8,23 +7,18 @@ public class NPCItemCondition : NPCLogicCondition
 {
     private static InventorySearchQualityAscendingComparator qualityAscendingComparator = new InventorySearchQualityAscendingComparator();
 
-    /// <summary>
-    /// isConditionMet can get called during applyCondition because item consume refreshes the UI.
-    /// </summary>
-    private static List<InventorySearch> search = new List<InventorySearch>();
+    private CachingBcAssetRef _itemAssetRef;
 
-    private static List<InventorySearch> applyConditionSearch = new List<InventorySearch>();
-
-    public Guid itemGuid;
-
-    [Obsolete]
-    public ushort id { get; protected set; }
+    public CachingBcAssetRef ItemAssetRef => _itemAssetRef;
 
     public ushort amount { get; protected set; }
 
+    [Obsolete]
+    public ushort id => ItemAssetRef.LegacyId;
+
     public ItemAsset GetItemAsset()
     {
-        return Assets.FindItemByGuidOrLegacyId<ItemAsset>(itemGuid, id);
+        return _itemAssetRef.Get<ItemAsset>();
     }
 
     public override bool isConditionMet(Player player)
@@ -34,12 +28,12 @@ public class NPCItemCondition : NPCLogicCondition
         {
             return false;
         }
-        search.Clear();
-        player.inventory.search(search, itemAsset.id, findEmpty: false, findHealthy: true);
+        using ScopedPlayerInventorySearchResultPool scopedPlayerInventorySearchResultPool = default(ScopedPlayerInventorySearchResultPool);
+        player.inventory.FindItemsByAsset(scopedPlayerInventorySearchResultPool.PooledResults, itemAsset, includeEmpty: false, includeMaxQuality: true);
         ushort num = 0;
-        foreach (InventorySearch item in search)
+        foreach (PlayerInventorySearchResultV2 pooledResult in scopedPlayerInventorySearchResultPool.PooledResults)
         {
-            num += item.jar.item.amount;
+            num += pooledResult.Jar.item.amount;
         }
         return doesLogicPass(num, amount);
     }
@@ -55,13 +49,13 @@ public class NPCItemCondition : NPCLogicCondition
         {
             return;
         }
-        applyConditionSearch.Clear();
-        player.inventory.search(applyConditionSearch, itemAsset.id, findEmpty: false, findHealthy: true);
-        applyConditionSearch.Sort(qualityAscendingComparator);
+        using ScopedPlayerInventorySearchResultPool scopedPlayerInventorySearchResultPool = default(ScopedPlayerInventorySearchResultPool);
+        player.inventory.FindItemsByAsset(scopedPlayerInventorySearchResultPool.PooledResults, itemAsset, includeEmpty: false, includeMaxQuality: true);
+        scopedPlayerInventorySearchResultPool.PooledResults.Sort(qualityAscendingComparator);
         uint num = amount;
-        foreach (InventorySearch item in applyConditionSearch)
+        foreach (PlayerInventorySearchResultV2 pooledResult in scopedPlayerInventorySearchResultPool.PooledResults)
         {
-            uint num2 = item.deleteAmount(player, num);
+            uint num2 = pooledResult.DeleteAmount(player, num);
             num -= num2;
             if (num == 0)
             {
@@ -80,12 +74,12 @@ public class NPCItemCondition : NPCLogicCondition
         if (itemAsset != null)
         {
             string arg = "<color=" + Palette.hex(ItemTool.getRarityColorUI(itemAsset.rarity)) + ">" + itemAsset.itemName + "</color>";
-            search.Clear();
-            player.inventory.search(search, itemAsset.id, findEmpty: false, findHealthy: true);
+            using ScopedPlayerInventorySearchResultPool scopedPlayerInventorySearchResultPool = default(ScopedPlayerInventorySearchResultPool);
+            player.inventory.FindItemsByAsset(scopedPlayerInventorySearchResultPool.PooledResults, itemAsset, includeEmpty: false, includeMaxQuality: true);
             int num = 0;
-            foreach (InventorySearch item in search)
+            foreach (PlayerInventorySearchResultV2 pooledResult in scopedPlayerInventorySearchResultPool.PooledResults)
             {
-                num += item.jar.item.amount;
+                num += pooledResult.Jar.item.amount;
             }
             return Local.FormatText(text, num, amount, arg);
         }
@@ -168,11 +162,58 @@ public class NPCItemCondition : NPCLogicCondition
         return sleekBox;
     }
 
+    internal override void PopulateV2(in PopulateConditionParameters p)
+    {
+        base.PopulateV2(in p);
+        if (!p.data.TryParseBcAssetRef("ID", EAssetType.ITEM, out _itemAssetRef))
+        {
+            p.ReportRequiredOptionInvalid("ID");
+        }
+        if (p.data.TryParseUInt16("Amount", out var value))
+        {
+            amount = value;
+        }
+        else
+        {
+            p.ReportRequiredOptionInvalid("Amount");
+        }
+        if (shouldReset && base.logicType != ENPCLogicType.GREATER_THAN_OR_EQUAL_TO)
+        {
+            base.logicType = ENPCLogicType.GREATER_THAN_OR_EQUAL_TO;
+            p.ReportError("Resetting item condition only compatible with >= comparison");
+        }
+    }
+
+    internal override void PopulateLegacy(in PopulateConditionParameters p)
+    {
+        base.PopulateLegacy(in p);
+        if (!p.data.TryParseBcAssetRef(p.legacyPrefix + "_ID", EAssetType.ITEM, out _itemAssetRef))
+        {
+            p.ReportRequiredOptionInvalid("ID");
+        }
+        if (p.data.TryParseUInt16(p.legacyPrefix + "_Amount", out var value))
+        {
+            amount = value;
+        }
+        else
+        {
+            p.ReportRequiredOptionInvalid("Amount");
+        }
+        if (shouldReset && base.logicType != ENPCLogicType.GREATER_THAN_OR_EQUAL_TO)
+        {
+            base.logicType = ENPCLogicType.GREATER_THAN_OR_EQUAL_TO;
+            p.ReportError("Resetting item condition only compatible with >= comparison");
+        }
+    }
+
+    public NPCItemCondition()
+    {
+    }
+
+    [Obsolete]
     public NPCItemCondition(Guid newItemGuid, ushort newID, ushort newAmount, ENPCLogicType newLogicType, string newText, bool newShouldReset)
         : base(newLogicType, newText, newShouldReset)
     {
-        itemGuid = newItemGuid;
-        id = newID;
         amount = newAmount;
     }
 }

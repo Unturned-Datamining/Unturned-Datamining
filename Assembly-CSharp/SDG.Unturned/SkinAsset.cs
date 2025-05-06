@@ -119,57 +119,57 @@ public class SkinAsset : Asset
         overrideMeshes = new List<Mesh>(0);
     }
 
-    public override void PopulateAsset(Bundle bundle, DatDictionary data, Local localization)
+    public override void PopulateAsset(in PopulateAssetParameters p)
     {
-        base.PopulateAsset(bundle, data, localization);
-        if (id < 2000 && !base.OriginAllowsVanillaLegacyId && !data.ContainsKey("Bypass_ID_Limit"))
+        base.PopulateAsset(in p);
+        if (id < 2000 && !base.OriginAllowsVanillaLegacyId && !p.data.ContainsKey("Bypass_ID_Limit"))
         {
             throw new NotSupportedException("ID < 2000");
         }
-        _isPattern = data.ContainsKey("Pattern");
-        if (data.ContainsKey("LightingTime"))
+        _isPattern = p.data.ContainsKey("Pattern");
+        if (p.data.ContainsKey("LightingTime"))
         {
-            lightingTime = data.ParseEnum("LightingTime", ELightingTime.DAWN);
+            lightingTime = p.data.ParseEnum("LightingTime", ELightingTime.DAWN);
         }
         else
         {
             lightingTime = null;
         }
-        _hasSight = data.ContainsKey("Sight");
-        _hasTactical = data.ContainsKey("Tactical");
-        _hasGrip = data.ContainsKey("Grip");
-        _hasBarrel = data.ContainsKey("Barrel");
-        _hasMagazine = data.ContainsKey("Magazine");
-        ShouldHideMagazine = data.ParseBool("Hide_Magazine");
-        ragdollEffect = data.ParseEnum("Ragdoll_Effect", ERagdollEffect.NONE);
-        specialAudioOverride = data.ReadAudioReference("SpecialAudioOverrideDef", bundle);
+        _hasSight = p.data.ContainsKey("Sight");
+        _hasTactical = p.data.ContainsKey("Tactical");
+        _hasGrip = p.data.ContainsKey("Grip");
+        _hasBarrel = p.data.ContainsKey("Barrel");
+        _hasMagazine = p.data.ContainsKey("Magazine");
+        ShouldHideMagazine = p.data.ParseBool("Hide_Magazine");
+        ragdollEffect = p.data.ParseEnum("Ragdoll_Effect", ERagdollEffect.NONE);
+        specialAudioOverride = p.data.ReadAudioReference("SpecialAudioOverrideDef", p.bundle);
         if (Dedicator.IsDedicatedServer)
         {
             return;
         }
-        _primarySkin = loadRequiredAsset<Material>(bundle, "Skin_Primary");
+        _primarySkin = loadRequiredAsset<Material>(p.bundle, "Skin_Primary");
         _secondarySkins = new Dictionary<ushort, Material>();
-        ushort num = data.ParseUInt16("Secondary_Skins", 0);
+        ushort num = p.data.ParseUInt16("Secondary_Skins", 0);
         for (ushort num2 = 0; num2 < num; num2++)
         {
-            ushort key = data.ParseUInt16("Secondary_" + num2, 0);
+            ushort key = p.data.ParseUInt16("Secondary_" + num2, 0);
             if (!secondarySkins.ContainsKey(key))
             {
-                Material value = loadRequiredAsset<Material>(bundle, "Skin_Secondary_" + key);
+                Material value = loadRequiredAsset<Material>(p.bundle, "Skin_Secondary_" + key);
                 secondarySkins.Add(key, value);
             }
         }
-        _attachmentSkin = bundle.load<Material>("Skin_Attachment");
-        _tertiarySkin = bundle.load<Material>("Skin_Tertiary");
+        _attachmentSkin = p.bundle.load<Material>("Skin_Attachment");
+        _tertiarySkin = p.bundle.load<Material>("Skin_Tertiary");
         if (attachmentSkin != null && tertiarySkin == null)
         {
             Assets.ReportError(this, "has Skin_Attachment material without a Skin_Tertiary material");
         }
-        ushort num3 = data.ParseUInt16("Override_Meshes", 0);
+        ushort num3 = p.data.ParseUInt16("Override_Meshes", 0);
         overrideMeshes = new List<Mesh>(num3);
         for (ushort num4 = 0; num4 < num3; num4++)
         {
-            GameObject gameObject = bundle.load<GameObject>("Override_Mesh_" + num4);
+            GameObject gameObject = p.bundle.load<GameObject>("Override_Mesh_" + num4);
             if (gameObject != null)
             {
                 MeshFilter component = gameObject.GetComponent<MeshFilter>();

@@ -7,12 +7,12 @@ public class ItemGearAsset : ItemClothingAsset
     /// </summary>
     public string hairOverride { get; protected set; }
 
-    public override void PopulateAsset(Bundle bundle, DatDictionary data, Local localization)
+    public override void PopulateAsset(in PopulateAssetParameters p)
     {
-        base.PopulateAsset(bundle, data, localization);
-        base.hairVisible = data.ContainsKey("Hair");
-        base.beardVisible = data.ContainsKey("Beard");
-        hairOverride = data.GetString("Hair_Override");
+        base.PopulateAsset(in p);
+        base.hairVisible = p.data.ContainsKey("Hair");
+        base.beardVisible = p.data.ContainsKey("Beard");
+        hairOverride = p.data.GetString("Hair_Override");
     }
 
     internal override void BuildCargoData(CargoBuilder builder)

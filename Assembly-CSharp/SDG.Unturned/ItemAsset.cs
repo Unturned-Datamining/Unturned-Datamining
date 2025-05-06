@@ -1,10 +1,11 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using Unturned.SystemEx;
 
 namespace SDG.Unturned;
 
-public class ItemAsset : Asset, ISkinableAsset
+public class ItemAsset : Asset, ISkinableAsset, IBlueprintOwner
 {
     /// <summary>
     /// Helper for plugins that want item prefabs server-side.
@@ -162,6 +163,8 @@ public class ItemAsset : Asset, ISkinableAsset
     /// </summary>
     protected const int DescSort_BuildableCommon = 20000;
 
+    protected const int DescSort_CraftingTags = 25000;
+
     protected const int DescSort_ExplosiveBulletDamage = 30000;
 
     protected const int DescSort_ExplosiveChargeDamage = 30000;
@@ -197,6 +200,8 @@ public class ItemAsset : Asset, ISkinableAsset
 
     protected const int DescSort_Detrimental = 1;
 
+    private static List<BlueprintSupply> tempBlueprintSupplies = new List<BlueprintSupply>();
+
     public bool shouldVerifyHash => _shouldVerifyHash;
 
     internal override bool ShouldVerifyHash => _shouldVerifyHash;
@@ -216,6 +221,11 @@ public class ItemAsset : Asset, ISkinableAsset
     public string itemName => _itemName;
 
     public string itemDescription => _itemDescription;
+
+    /// <summary>
+    /// Item name wrapped in color rich text tags according to rarity.
+    /// </summary>
+    public string RarityRichTextName => "<color=" + Palette.hex(ItemTool.getRarityColorUI(rarity)) + ">" + FriendlyName + "</color>";
 
     public string proPath => _proPath;
 
@@ -248,6 +258,19 @@ public class ItemAsset : Asset, ISkinableAsset
     /// </summary>
     public bool canUseUnderwater { get; protected set; }
 
+    /// <summary>
+    /// Nelson 2025-04-10: adding this for semantics because amount isn't an obvious name.
+    /// </summary>
+    public int MaxAmount => amount;
+
+    public byte MaxAmountAsByte => amount;
+
+    /// <summary>
+    /// If true, item should be removed when "amount" reaches zero.
+    /// Defaults to true except for magazines.
+    /// </summary>
+    public bool ShouldDeleteAtZeroAmount { get; protected set; }
+
     public byte count
     {
         get
@@ -274,7 +297,7 @@ public class ItemAsset : Asset, ISkinableAsset
             }
             if (UnityEngine.Random.value < num)
             {
-                return amount;
+                return MaxAmountAsByte;
             }
             return (byte)Mathf.CeilToInt((float)UnityEngine.Random.Range(countMin, countMax + 1) * num2);
         }
@@ -424,9 +447,9 @@ public class ItemAsset : Asset, ISkinableAsset
             Color32 color = ItemTool.getQualityColor((float)(int)itemInstance.quality / 100f);
             builder.Append("<color=" + Palette.hex(color) + ">" + PlayerDashboardInventoryUI.localization.format("Quality", itemInstance.quality) + "</color>", 400);
         }
-        if (amount > 1)
+        if (MaxAmount > 1)
         {
-            builder.Append(PlayerDashboardInventoryUI.localization.format("ItemDescription_AmountWithCapacity", itemInstance.amount, amount), 400);
+            builder.Append(PlayerDashboardInventoryUI.localization.format("ItemDescription_AmountWithCapacity", itemInstance.amount, MaxAmount), 400);
         }
         if (!builder.shouldRestrictToLegacyContent && equipableMovementSpeedMultiplier != 1f)
         {
@@ -478,7 +501,7 @@ public class ItemAsset : Asset, ISkinableAsset
     /// <summary>
     /// Find useableType by useable name.
     /// </summary>
-    private void updateUseableType(DatDictionary data)
+    private void updateUseableType(IDatDictionary data)
     {
         useable = data.GetString("Useable");
         if (string.IsNullOrEmpty(useable))
@@ -543,15 +566,25 @@ public class ItemAsset : Asset, ISkinableAsset
         }
     }
 
-    public override void PopulateAsset(Bundle bundle, DatDictionary data, Local localization)
+    public Asset GetBlueprintOwnerAsset()
     {
-        base.PopulateAsset(bundle, data, localization);
-        isPro = data.ContainsKey("Pro");
-        if (id < 2000 && !base.OriginAllowsVanillaLegacyId && !data.ContainsKey("Bypass_ID_Limit"))
+        return this;
+    }
+
+    public List<Blueprint> GetBlueprints()
+    {
+        return _blueprints;
+    }
+
+    public override void PopulateAsset(in PopulateAssetParameters p)
+    {
+        base.PopulateAsset(in p);
+        isPro = p.data.ContainsKey("Pro");
+        if (id < 2000 && !base.OriginAllowsVanillaLegacyId && !p.data.ContainsKey("Bypass_ID_Limit"))
         {
             throw new NotSupportedException("ID < 2000");
         }
-        _itemName = localization.read("Name");
+        _itemName = p.localization.read("Name");
         if (string.IsNullOrEmpty(_itemName))
         {
             _itemName = string.Empty;
@@ -560,14 +593,14 @@ public class ItemAsset : Asset, ISkinableAsset
         {
             Assets.ReportError(this, "Display name has leading or trailing whitespace");
         }
-        _itemDescription = localization.format("Description");
+        _itemDescription = p.localization.format("Description");
         _itemDescription = ItemTool.filterRarityRichText(itemDescription);
         RichTextUtil.replaceNewlineMarkup(ref _itemDescription);
-        instantiatedItemName = data.GetString("Instantiated_Item_Name_Override", id.ToString());
-        type = (EItemType)Enum.Parse(typeof(EItemType), data.GetString("Type"), ignoreCase: true);
-        if (data.ContainsKey("Rarity"))
+        instantiatedItemName = p.data.GetString("Instantiated_Item_Name_Override", id.ToString());
+        type = (EItemType)Enum.Parse(typeof(EItemType), p.data.GetString("Type"), ignoreCase: true);
+        if (p.data.ContainsKey("Rarity"))
         {
-            rarity = (EItemRarity)Enum.Parse(typeof(EItemRarity), data.GetString("Rarity"), ignoreCase: true);
+            rarity = (EItemRarity)Enum.Parse(typeof(EItemRarity), p.data.GetString("Rarity"), ignoreCase: true);
         }
         else
         {
@@ -575,7 +608,7 @@ public class ItemAsset : Asset, ISkinableAsset
         }
         if (isPro)
         {
-            econIconUseId = data.ParseBool("Econ_Icon_Use_Id");
+            econIconUseId = p.data.ParseBool("Econ_Icon_Use_Id");
             if (type == EItemType.SHIRT)
             {
                 _proPath = "/Shirts";
@@ -614,57 +647,57 @@ public class ItemAsset : Asset, ISkinableAsset
             }
             _proPath = _proPath + "/" + name;
         }
-        size_x = data.ParseUInt8("Size_X", 0);
+        size_x = p.data.ParseUInt8("Size_X", 0);
         if (size_x < 1)
         {
             size_x = 1;
         }
-        size_y = data.ParseUInt8("Size_Y", 0);
+        size_y = p.data.ParseUInt8("Size_Y", 0);
         if (size_y < 1)
         {
             size_y = 1;
         }
-        iconCameraOrthographicSize = data.ParseFloat("Size_Z", -1f);
-        isEligibleForAutomaticIconMeasurements = data.ParseBool("Use_Auto_Icon_Measurements", defaultValue: true);
-        econIconCameraOrthographicSize = data.ParseFloat("Size2_Z", -1f);
-        sharedSkinLookupID = data.ParseUInt16("Shared_Skin_Lookup_ID", id);
-        SharedSkinShouldApplyVisuals = data.ParseBool("Shared_Skin_Apply_Visuals", defaultValue: true);
-        amount = data.ParseUInt8("Amount", 0);
+        iconCameraOrthographicSize = p.data.ParseFloat("Size_Z", -1f);
+        isEligibleForAutomaticIconMeasurements = p.data.ParseBool("Use_Auto_Icon_Measurements", defaultValue: true);
+        econIconCameraOrthographicSize = p.data.ParseFloat("Size2_Z", -1f);
+        sharedSkinLookupID = p.data.ParseUInt16("Shared_Skin_Lookup_ID", id);
+        SharedSkinShouldApplyVisuals = p.data.ParseBool("Shared_Skin_Apply_Visuals", defaultValue: true);
+        amount = p.data.ParseUInt8("Amount", 0);
         if (amount < 1)
         {
             amount = 1;
         }
-        countMin = data.ParseUInt8("Count_Min", 0);
+        countMin = p.data.ParseUInt8("Count_Min", 0);
         if (countMin < 1)
         {
             countMin = 1;
         }
-        countMax = data.ParseUInt8("Count_Max", 0);
+        countMax = p.data.ParseUInt8("Count_Max", 0);
         if (countMax < 1)
         {
             countMax = 1;
         }
-        if (data.ContainsKey("Quality_Min"))
+        if (p.data.ContainsKey("Quality_Min"))
         {
-            qualityMin = data.ParseUInt8("Quality_Min", 0);
+            qualityMin = p.data.ParseUInt8("Quality_Min", 0);
         }
         else
         {
             qualityMin = 10;
         }
-        if (data.ContainsKey("Quality_Max"))
+        if (p.data.ContainsKey("Quality_Max"))
         {
-            qualityMax = data.ParseUInt8("Quality_Max", 0);
+            qualityMax = p.data.ParseUInt8("Quality_Max", 0);
         }
         else
         {
             qualityMax = 90;
         }
-        if (data.TryParseEnum<EEquipableModelParent>("EquipableModelParent", out var value))
+        if (p.data.TryParseEnum<EEquipableModelParent>("EquipableModelParent", out var value))
         {
             EquipableModelParent = value;
         }
-        else if (data.ContainsKey("Backward"))
+        else if (p.data.ContainsKey("Backward"))
         {
             EquipableModelParent = EEquipableModelParent.LeftHook;
         }
@@ -672,25 +705,25 @@ public class ItemAsset : Asset, ISkinableAsset
         {
             EquipableModelParent = EEquipableModelParent.RightHook;
         }
-        shouldLeftHandedCharactersMirrorEquippedItem = data.ParseBool("Left_Handed_Characters_Mirror_Equipable", defaultValue: true);
-        isEligibleForAutoStatDescriptions = data.ParseBool("Use_Auto_Stat_Descriptions", defaultValue: true);
-        shouldProcedurallyAnimateInertia = data.ParseBool("Procedurally_Animate_Inertia", defaultValue: true);
-        updateUseableType(data);
+        shouldLeftHandedCharactersMirrorEquippedItem = p.data.ParseBool("Left_Handed_Characters_Mirror_Equipable", defaultValue: true);
+        isEligibleForAutoStatDescriptions = p.data.ParseBool("Use_Auto_Stat_Descriptions", defaultValue: true);
+        shouldProcedurallyAnimateInertia = p.data.ParseBool("Procedurally_Animate_Inertia", defaultValue: true);
+        updateUseableType(p.data);
         bool defaultValue = useableType != null;
-        canPlayerEquip = data.ParseBool("Can_Player_Equip", defaultValue);
-        equipableMovementSpeedMultiplier = data.ParseFloat("Equipable_Movement_Speed_Multiplier", 1f);
+        canPlayerEquip = p.data.ParseBool("Can_Player_Equip", defaultValue);
+        equipableMovementSpeedMultiplier = p.data.ParseFloat("Equipable_Movement_Speed_Multiplier", 1f);
         if (canPlayerEquip)
         {
-            _equip = LoadRedirectableAsset<AudioClip>(bundle, "Equip", data, "EquipAudioClip");
-            inspectAudio = data.ReadAudioReference("InspectAudioDef", bundle);
-            MasterBundleReference<GameObject> masterBundleReference = data.readMasterBundleReference<GameObject>("EquipablePrefab", bundle);
+            _equip = LoadRedirectableAsset<AudioClip>(p.bundle, "Equip", p.data, "EquipAudioClip");
+            inspectAudio = p.data.ReadAudioReference("InspectAudioDef", p.bundle);
+            MasterBundleReference<GameObject> masterBundleReference = p.data.readMasterBundleReference<GameObject>("EquipablePrefab", p.bundle);
             if (masterBundleReference.isValid)
             {
                 equipablePrefab = masterBundleReference.loadAsset();
             }
             if (!isPro)
             {
-                GameObject gameObject = bundle.load<GameObject>("Animations");
+                GameObject gameObject = p.bundle.load<GameObject>("Animations");
                 if (gameObject != null)
                 {
                     initAnimations(gameObject);
@@ -701,25 +734,25 @@ public class ItemAsset : Asset, ISkinableAsset
                 }
             }
         }
-        if (data.ContainsKey("InventoryAudio"))
+        if (p.data.ContainsKey("InventoryAudio"))
         {
-            inventoryAudio = data.ReadAudioReference("InventoryAudio", bundle);
+            inventoryAudio = p.data.ReadAudioReference("InventoryAudio", p.bundle);
         }
         else
         {
             inventoryAudio = GetDefaultInventoryAudio();
         }
-        slot = data.ParseEnum("Slot", ESlotType.NONE);
+        slot = p.data.ParseEnum("Slot", ESlotType.NONE);
         bool defaultValue2 = slot != ESlotType.PRIMARY;
-        canUseUnderwater = data.ParseBool("Can_Use_Underwater", defaultValue2);
+        canUseUnderwater = p.data.ParseBool("Can_Use_Underwater", defaultValue2);
         if (!Dedicator.IsDedicatedServer || type == EItemType.GUN || type == EItemType.MELEE || (bool)shouldAlwaysLoadItemPrefab)
         {
-            _item = bundle.load<GameObject>("Item");
+            _item = p.bundle.load<GameObject>("Item");
             if (item == null)
             {
                 if (!isPro || type == EItemType.SHIRT || type == EItemType.PANTS)
                 {
-                    throw new NotSupportedException("missing \"Item\" GameObject (expected at " + bundle.WhereLoadLookedToString("Item") + ")");
+                    throw new NotSupportedException("missing \"Item\" GameObject (expected at " + p.bundle.WhereLoadLookedToString("Item") + ")");
                 }
             }
             else
@@ -735,130 +768,696 @@ public class ItemAsset : Asset, ISkinableAsset
                 AssetValidation.searchGameObjectForErrors(this, item);
             }
         }
-        byte b = data.ParseUInt8("Blueprints", 0);
-        byte b2 = data.ParseUInt8("Actions", 0);
-        bool flag = data.ParseBool("Add_Default_Actions", b2 == 0);
-        _blueprints = new List<Blueprint>(b);
-        _actions = new List<Action>(b2);
-        for (byte b3 = 0; b3 < b; b3++)
+        bool flag = p.data.ParseBool("Add_Default_Actions", _actions.Count == 0);
+        bool flag2 = false;
+        if (p.data.TryGetNode("Blueprints", out var node))
         {
-            if (!data.ContainsKey("Blueprint_" + b3 + "_Type"))
+            if (node is IDatValue valueNode)
+            {
+                if (valueNode.TryParseUInt8(out var value2))
+                {
+                    flag2 = true;
+                    PopulateBlueprintsLegacy(p.data, value2, p.localization, flag);
+                }
+                else
+                {
+                    ReportAssetError("unable to parse Blueprints count");
+                }
+            }
+            else if (node is IDatList blueprintsList)
+            {
+                _blueprints = PopulateBlueprintsV2(blueprintsList, p.localization, this);
+            }
+        }
+        if (_blueprints == null)
+        {
+            _blueprints = new List<Blueprint>();
+        }
+        else if (_blueprints.Count > 255)
+        {
+            ReportAssetError($"has more than {byte.MaxValue} Blueprints which breaks some assumptions");
+        }
+        if (p.data.TryGetNode("Actions", out var node2))
+        {
+            if (node2 is IDatValue valueNode2)
+            {
+                if (valueNode2.TryParseUInt8(out var value3))
+                {
+                    PopulateActionsLegacy(p.data, value3, p.localization);
+                }
+                else
+                {
+                    ReportAssetError("unable to parse Actions count");
+                }
+            }
+            else if (node2 is IDatList actionsList)
+            {
+                PopulateActionsV2(actionsList, p.localization);
+            }
+        }
+        if (_actions == null)
+        {
+            _actions = new List<Action>();
+        }
+        if (flag)
+        {
+            bool flag3 = false;
+            bool flag4 = false;
+            bool flag5 = false;
+            for (byte b = 0; b < blueprints.Count; b++)
+            {
+                Blueprint blueprint = blueprints[b];
+                if (blueprint.Operation == EBlueprintOperation.RepairTargetItem)
+                {
+                    if (!flag4)
+                    {
+                        if (flag2)
+                        {
+                            blueprint.Name = "Repair";
+                        }
+                        flag4 = true;
+                        Action action = new Action(0, EActionType.BLUEPRINT, new ActionBlueprint[1]
+                        {
+                            new ActionBlueprint(b, newLink: true)
+                        }, null, null, "Repair");
+                        action.blueprintOwnerRef = this;
+                        actions.Insert(0, action);
+                    }
+                }
+                else if (blueprint.Operation == EBlueprintOperation.FillTargetItem)
+                {
+                    flag3 = true;
+                }
+                else if (blueprint.supplies.Length == 1 && blueprint.supplies[0].IsItem(this) && !flag5)
+                {
+                    if (flag2)
+                    {
+                        blueprint.Name = "Salvage";
+                    }
+                    flag5 = true;
+                    Action action2 = new Action(0, EActionType.BLUEPRINT, new ActionBlueprint[1]
+                    {
+                        new ActionBlueprint(b, type == EItemType.GUN || type == EItemType.MELEE)
+                    }, null, null, "Salvage");
+                    action2.blueprintOwnerRef = this;
+                    actions.Add(action2);
+                }
+            }
+            if (flag3)
+            {
+                List<ActionBlueprint> list = new List<ActionBlueprint>();
+                for (byte b2 = 0; b2 < blueprints.Count; b2++)
+                {
+                    if (blueprints[b2].Operation == EBlueprintOperation.FillTargetItem)
+                    {
+                        ActionBlueprint actionBlueprint = new ActionBlueprint(b2, newLink: true);
+                        list.Add(actionBlueprint);
+                    }
+                }
+                Action action3 = new Action(0, EActionType.BLUEPRINT, list.ToArray(), null, null, "Refill");
+                action3.blueprintOwnerRef = this;
+                actions.Add(action3);
+            }
+        }
+        _shouldVerifyHash = !p.data.ContainsKey("Bypass_Hash_Verification");
+        overrideShowQuality = p.data.ContainsKey("Override_Show_Quality");
+        shouldDropOnDeath = p.data.ParseBool("Should_Drop_On_Death", defaultValue: true);
+        allowManualDrop = p.data.ParseBool("Allow_Manual_Drop", defaultValue: true);
+        shouldDeleteAtZeroQuality = p.data.ParseBool("Should_Delete_At_Zero_Quality");
+        shouldDestroyItemColliders = p.data.ParseBool("Destroy_Item_Colliders", defaultValue: true);
+        ShouldDeleteAtZeroAmount = p.data.ParseBool("Should_Delete_At_Zero_Amount", type != EItemType.MAGAZINE);
+        if (type == EItemType.MAGAZINE && p.data.ContainsKey("Delete_Empty"))
+        {
+            ShouldDeleteAtZeroAmount = true;
+        }
+        if (!Dedicator.IsDedicatedServer && id < 2000 && doesItemTypeHaveSkins)
+        {
+            _albedoBase = p.bundle.load<Texture2D>("Albedo_Base");
+            _metallicBase = p.bundle.load<Texture2D>("Metallic_Base");
+            _emissionBase = p.bundle.load<Texture2D>("Emission_Base");
+        }
+    }
+
+    /// <summary>
+    /// V2 is for newer dat list features.
+    /// </summary>
+    internal static List<Blueprint> PopulateBlueprintsV2(IDatList blueprintsList, Local localization, Asset assetContext)
+    {
+        List<Blueprint> list = new List<Blueprint>(blueprintsList.Count);
+        int num = -1;
+        foreach (IDatNode blueprints in blueprintsList)
+        {
+            num++;
+            if (!(blueprints is IDatDictionary datDictionary))
+            {
+                continue;
+            }
+            EBlueprintType value;
+            bool flag = datDictionary.TryParseEnum<EBlueprintType>("Type", out value);
+            if (!datDictionary.TryParseEnum<EBlueprintOperation>("Operation", out var value2) && flag)
+            {
+                switch (value)
+                {
+                case EBlueprintType.AMMO:
+                    value2 = EBlueprintOperation.FillTargetItem;
+                    break;
+                case EBlueprintType.REPAIR:
+                    value2 = EBlueprintOperation.RepairTargetItem;
+                    break;
+                }
+            }
+            BlueprintSupply[] newSupplies;
+            if (datDictionary.TryGetNode("InputItems", out var node))
+            {
+                if (node is IDatList datList)
+                {
+                    List<BlueprintSupply> list2 = new List<BlueprintSupply>(datList.Count);
+                    foreach (IDatNode item in datList)
+                    {
+                        BlueprintSupply blueprintSupply = ParseBlueprintInputItem(value2, item, assetContext);
+                        string path;
+                        if (blueprintSupply != null)
+                        {
+                            list2.Add(blueprintSupply);
+                        }
+                        else if (item.TryGetNodePath(out path))
+                        {
+                            item.TryGetParsedLineNumber(out var lineNumber);
+                            assetContext.ReportAssetError($"unable to parse blueprint input item {path} on line {lineNumber}");
+                        }
+                        else
+                        {
+                            assetContext.ReportAssetError($"unable to parse blueprint {num} input item");
+                        }
+                    }
+                    newSupplies = list2.ToArray();
+                }
+                else
+                {
+                    BlueprintSupply blueprintSupply2 = ParseBlueprintInputItem(value2, node, assetContext);
+                    if (blueprintSupply2 != null)
+                    {
+                        newSupplies = new BlueprintSupply[1] { blueprintSupply2 };
+                    }
+                    else
+                    {
+                        assetContext.ReportAssetError("unable to parse InputItems");
+                        newSupplies = new BlueprintSupply[0];
+                    }
+                }
+            }
+            else
+            {
+                newSupplies = new BlueprintSupply[0];
+            }
+            BlueprintOutput[] newOutputs;
+            if (datDictionary.TryGetNode("OutputItems", out var node2))
+            {
+                if (node2 is IDatList datList2)
+                {
+                    List<BlueprintOutput> list3 = new List<BlueprintOutput>(datList2.Count);
+                    foreach (IDatNode item2 in datList2)
+                    {
+                        BlueprintOutput blueprintOutput = ParseBlueprintOutputItem(item2, assetContext);
+                        string path2;
+                        if (blueprintOutput != null)
+                        {
+                            list3.Add(blueprintOutput);
+                        }
+                        else if (item2.TryGetNodePath(out path2))
+                        {
+                            item2.TryGetParsedLineNumber(out var lineNumber2);
+                            assetContext.ReportAssetError($"unable to parse blueprint output item {path2} on line {lineNumber2}");
+                        }
+                        else
+                        {
+                            assetContext.ReportAssetError($"unable to parse blueprint {num} output item");
+                        }
+                    }
+                    newOutputs = list3.ToArray();
+                }
+                else
+                {
+                    BlueprintOutput blueprintOutput2 = ParseBlueprintOutputItem(node2, assetContext);
+                    if (blueprintOutput2 != null)
+                    {
+                        newOutputs = new BlueprintOutput[1] { blueprintOutput2 };
+                    }
+                    else
+                    {
+                        assetContext.ReportAssetError("unable to parse OutputItems");
+                        newOutputs = new BlueprintOutput[0];
+                    }
+                }
+            }
+            else
+            {
+                newOutputs = new BlueprintOutput[0];
+            }
+            CachingBcAssetRef effectAssetRef = datDictionary.ParseGuidOrLegacyIdV2("Effect", EAssetType.EFFECT);
+            byte b = datDictionary.ParseUInt8("Skill_Level", 0);
+            EBlueprintSkill eBlueprintSkill = datDictionary.ParseEnum("Skill", EBlueprintSkill.NONE);
+            if (eBlueprintSkill != 0 && b == 0)
+            {
+                assetContext.ReportAssetError($"blueprint has Skill {eBlueprintSkill} without Skill_Level");
+            }
+            else if (b > 0 && eBlueprintSkill == EBlueprintSkill.NONE)
+            {
+                assetContext.ReportAssetError($"blueprint has Skill_Level {b} without Skill");
+            }
+            bool newTransferState = datDictionary.ParseBool("StateTransfer");
+            bool newWithoutAttachments = datDictionary.ParseBool("StateTransfer_DeleteAttachments");
+            string @string = datDictionary.GetString("Map");
+            NPCConditionsList newQuestConditionsList = default(NPCConditionsList);
+            newQuestConditionsList.Parse(datDictionary, localization, assetContext, "Conditions");
+            NPCRewardsList newQuestRewardsList = default(NPCRewardsList);
+            newQuestRewardsList.Parse(datDictionary, localization, assetContext, "Rewards");
+            Blueprint blueprint = new Blueprint((byte)list.Count, newSupplies, newOutputs, b, eBlueprintSkill, newTransferState, newWithoutAttachments, @string, newQuestConditionsList, newQuestRewardsList);
+            blueprint.Owner = assetContext as IBlueprintOwner;
+            blueprint.effectAssetRef = effectAssetRef;
+            blueprint.canBeVisibleWhenSearchedWithoutRequiredItems = datDictionary.ParseBool("Searchable", defaultValue: true);
+            blueprint.CanBeVisibleWithUnmetConditions = datDictionary.ParseBool("VisibleWithUnmetConditions");
+            blueprint.Name = datDictionary.GetString("Name");
+            blueprint.RequiresNearbyCraftingTags = datDictionary.ParseArrayOfStructs<CachingAssetRef>("RequiresNearbyCraftingTags");
+            blueprint._operation = value2;
+            if (blueprint.Operation != 0)
+            {
+                CachingBcAssetRef assetRef;
+                if (datDictionary.TryGetString("TargetItem", out var value3))
+                {
+                    if (!ParseItemString(value3, out assetRef, out var _, assetContext))
+                    {
+                        assetRef = assetContext;
+                    }
+                }
+                else
+                {
+                    assetRef = assetContext;
+                }
+                switch (value2)
+                {
+                case EBlueprintOperation.RepairTargetItem:
+                {
+                    BlueprintSupply blueprintSupply4 = new BlueprintSupply(0, newCritical: true, 1, newTreatEmptyAsOne: false, ECraftingInputPrioritization.LowestQuality);
+                    blueprintSupply4.ItemRef = assetRef;
+                    blueprintSupply4.ShouldIncludeMaxQuality = false;
+                    blueprintSupply4.ShouldConsume = false;
+                    blueprint.TargetItem = blueprintSupply4;
+                    break;
+                }
+                case EBlueprintOperation.FillTargetItem:
+                {
+                    BlueprintSupply blueprintSupply3 = new BlueprintSupply(0, newCritical: true, 1, newTreatEmptyAsOne: true, ECraftingInputPrioritization.HighestAmount);
+                    blueprintSupply3.ItemRef = assetRef;
+                    blueprintSupply3.ShouldConsume = false;
+                    blueprintSupply3.ShouldExcludeFullAmount = true;
+                    blueprint.TargetItem = blueprintSupply3;
+                    if (blueprint.supplies.Length != 0)
+                    {
+                        blueprint.supplies[0]._isCritical = true;
+                    }
+                    break;
+                }
+                }
+            }
+            if (!datDictionary.TryParseAssetRef("CategoryTag", out blueprint._categoryTagRef) && flag)
+            {
+                blueprint._categoryTagRef = value.GetCategoryTagRef();
+            }
+            if (blueprint.RequiresNearbyCraftingTags == null && datDictionary.ParseBool("RequiresHeat", eBlueprintSkill == EBlueprintSkill.COOK))
+            {
+                blueprint.RequiresNearbyCraftingTags = new CachingAssetRef[1] { PowerTool.VanillaCraftingHeatTag };
+            }
+            list.Add(blueprint);
+        }
+        return list;
+    }
+
+    private static BlueprintSupply ParseBlueprintInputItem(EBlueprintOperation operation, IDatNode inputItemNode, Asset assetContext)
+    {
+        ECraftingInputPrioritization eCraftingInputPrioritization = ((operation != EBlueprintOperation.FillTargetItem) ? ECraftingInputPrioritization.LowestQuality : ECraftingInputPrioritization.LowestAmount);
+        ECraftingInputCountingMethod eCraftingInputCountingMethod = ((operation == EBlueprintOperation.FillTargetItem) ? ECraftingInputCountingMethod.TotalAmount : ECraftingInputCountingMethod.TotalItems);
+        if (inputItemNode is IDatDictionary dictionary)
+        {
+            if (!dictionary.TryParseBcAssetRef("ID", EAssetType.ITEM, out var assetRef))
+            {
+                if (!string.Equals(dictionary.GetString("ID"), "this", StringComparison.InvariantCultureIgnoreCase))
+                {
+                    assetContext.ReportAssetError("Unable to parse blueprint input item ID: \"" + dictionary.GetString("ID") + "\"");
+                    return null;
+                }
+                assetRef = assetContext;
+            }
+            bool newCritical = dictionary.ParseBool("Critical");
+            bool flag = dictionary.ParseBool("CountEmptyAsOne");
+            bool shouldIncludeEmptyAmount = dictionary.ParseBool("AllowEmpty", flag);
+            bool flag2 = dictionary.ParseBool("Delete", defaultValue: true);
+            if (!flag2)
+            {
+                eCraftingInputCountingMethod = ECraftingInputCountingMethod.TotalItems;
+            }
+            ECraftingInputPrioritization newPrioritization = dictionary.ParseEnum("Prioritization", eCraftingInputPrioritization);
+            ECraftingInputCountingMethod countingMethod = dictionary.ParseEnum("CountingMethod", eCraftingInputCountingMethod);
+            byte b = dictionary.ParseUInt8("Amount", 1);
+            if (b < 1)
+            {
+                b = 1;
+            }
+            return new BlueprintSupply(0, newCritical, b, flag, newPrioritization)
+            {
+                ShouldConsume = flag2,
+                ShouldIncludeEmptyAmount = shouldIncludeEmptyAmount,
+                ShouldExcludeFullAmount = !dictionary.ParseBool("AllowFull", defaultValue: true),
+                ShouldIncludeMaxQuality = dictionary.ParseBool("AllowMaxQuality", defaultValue: true),
+                CountingMethod = countingMethod,
+                ItemRef = assetRef
+            };
+        }
+        if (inputItemNode is IDatValue datValue)
+        {
+            if (!ParseItemString(datValue.Value, out var assetRef2, out var newAmount, assetContext))
+            {
+                return null;
+            }
+            return new BlueprintSupply(0, newCritical: false, newAmount, newTreatEmptyAsOne: false, eCraftingInputPrioritization)
+            {
+                ShouldConsume = true,
+                ItemRef = assetRef2,
+                CountingMethod = eCraftingInputCountingMethod
+            };
+        }
+        return null;
+    }
+
+    private static BlueprintOutput ParseBlueprintOutputItem(IDatNode outputItemNode, Asset assetContext)
+    {
+        if (outputItemNode is IDatDictionary dictionary)
+        {
+            if (!dictionary.TryParseBcAssetRef("ID", EAssetType.ITEM, out var assetRef))
+            {
+                if (string.Equals(dictionary.GetString("ID"), "this", StringComparison.InvariantCultureIgnoreCase))
+                {
+                    assetRef = assetContext;
+                }
+                else
+                {
+                    assetContext.ReportAssetError("Unable to parse blueprint output item ID: \"" + dictionary.GetString("ID") + "\"");
+                }
+            }
+            byte b = dictionary.ParseUInt8("Amount", 1);
+            if (b < 1)
+            {
+                b = 1;
+            }
+            EItemOrigin newOrigin = dictionary.ParseEnum("Origin", EItemOrigin.CRAFT);
+            return new BlueprintOutput(0, b, newOrigin)
+            {
+                ItemRef = assetRef
+            };
+        }
+        if (outputItemNode is IDatValue datValue)
+        {
+            if (!ParseItemString(datValue.Value, out var assetRef2, out var newAmount, assetContext))
+            {
+                return null;
+            }
+            return new BlueprintOutput(0, newAmount, EItemOrigin.CRAFT)
+            {
+                ItemRef = assetRef2
+            };
+        }
+        return null;
+    }
+
+    private static bool ParseItemString(string input, out CachingBcAssetRef assetRef, out byte amount, Asset assetContext)
+    {
+        assetRef = CachingBcAssetRef.Empty;
+        amount = 1;
+        int num = input.IndexOf('x');
+        string text;
+        if (num < 0)
+        {
+            text = input;
+        }
+        else
+        {
+            text = input.Substring(0, num);
+            string text2 = input.Substring(num + 1);
+            if (!byte.TryParse(text2, out amount))
+            {
+                assetContext.ReportAssetError("Unable to parse blueprint input item amount: \"" + text2 + "\"");
+                return false;
+            }
+            if (amount < 1)
+            {
+                amount = 1;
+            }
+        }
+        if (!CachingBcAssetRef.TryParse(text, EAssetType.ITEM, out assetRef))
+        {
+            if (!string.Equals(text.Trim(), "this", StringComparison.InvariantCultureIgnoreCase))
+            {
+                assetContext.ReportAssetError("Unable to parse blueprint input item ID: \"" + text + "\"");
+                return false;
+            }
+            assetRef = assetContext;
+        }
+        return true;
+    }
+
+    /// <summary>
+    /// Legacy is for backwards compatibility with Blueprint_# format.
+    /// </summary>
+    private void PopulateBlueprintsLegacy(IDatDictionary data, byte blueprintCount, Local localization, bool shouldAddDefaultActions)
+    {
+        _blueprints = new List<Blueprint>(blueprintCount);
+        for (byte b = 0; b < blueprintCount; b++)
+        {
+            if (!data.ContainsKey("Blueprint_" + b + "_Type"))
             {
                 throw new NotSupportedException("Missing blueprint type");
             }
-            EBlueprintType eBlueprintType = (EBlueprintType)Enum.Parse(typeof(EBlueprintType), data.GetString("Blueprint_" + b3 + "_Type"), ignoreCase: true);
-            byte b4 = data.ParseUInt8("Blueprint_" + b3 + "_Supplies", 0);
-            if (b4 < 1)
+            EBlueprintOperation eBlueprintOperation = EBlueprintOperation.None;
+            EBlueprintType eBlueprintType = (EBlueprintType)Enum.Parse(typeof(EBlueprintType), data.GetString("Blueprint_" + b + "_Type"), ignoreCase: true);
+            switch (eBlueprintType)
             {
-                b4 = 1;
+            case EBlueprintType.AMMO:
+                eBlueprintOperation = EBlueprintOperation.FillTargetItem;
+                break;
+            case EBlueprintType.REPAIR:
+                eBlueprintOperation = EBlueprintOperation.RepairTargetItem;
+                break;
             }
-            BlueprintSupply[] array = new BlueprintSupply[b4];
-            for (byte b5 = 0; b5 < array.Length; b5++)
+            ECraftingInputPrioritization defaultValue = ((eBlueprintOperation != EBlueprintOperation.FillTargetItem) ? ECraftingInputPrioritization.LowestQuality : ECraftingInputPrioritization.LowestAmount);
+            ECraftingInputCountingMethod countingMethod = ((eBlueprintOperation == EBlueprintOperation.FillTargetItem) ? ECraftingInputCountingMethod.TotalAmount : ECraftingInputCountingMethod.TotalItems);
+            byte b2 = data.ParseUInt8("Blueprint_" + b + "_Supplies", 0);
+            if (b2 < 1)
             {
-                string text = "Blueprint_" + b3 + "_Supply_" + b5 + "_ID";
-                if (!data.TryParseUInt16(text, out var value2))
+                b2 = 1;
+            }
+            tempBlueprintSupplies.Clear();
+            for (byte b3 = 0; b3 < b2; b3++)
+            {
+                string text = "Blueprint_" + b + "_Supply_" + b3 + "_ID";
+                if (!data.TryParseUInt16(text, out var value))
                 {
                     if (string.Equals(data.GetString(text), "this", StringComparison.InvariantCultureIgnoreCase))
                     {
-                        value2 = id;
+                        value = id;
                     }
                     else
                     {
                         Assets.ReportError(this, "Unable to parse " + text + ": \"" + data.GetString(text) + "\"");
                     }
                 }
-                bool newCritical = data.ContainsKey("Blueprint_" + b3 + "_Supply_" + b5 + "_Critical");
-                bool newTreatEmptyAsOne = data.ParseBool("Blueprint_" + b3 + "_Supply_" + b5 + "_AllowEmpty");
-                ECraftingInputPrioritization defaultValue3 = ((eBlueprintType != EBlueprintType.AMMO) ? ECraftingInputPrioritization.LowestQuality : ECraftingInputPrioritization.LowestAmount);
-                ECraftingInputPrioritization newPrioritization = data.ParseEnum("Blueprint_" + b3 + "_Supply_" + b5 + "_Prioritization", defaultValue3);
-                byte b6 = data.ParseUInt8("Blueprint_" + b3 + "_Supply_" + b5 + "_Amount", 0);
-                if (b6 < 1)
+                bool flag = data.ContainsKey("Blueprint_" + b + "_Supply_" + b3 + "_Critical");
+                flag = flag || (eBlueprintOperation == EBlueprintOperation.FillTargetItem && b3 == 0);
+                bool newTreatEmptyAsOne = data.ParseBool("Blueprint_" + b + "_Supply_" + b3 + "_AllowEmpty");
+                ECraftingInputPrioritization newPrioritization = data.ParseEnum("Blueprint_" + b + "_Supply_" + b3 + "_Prioritization", defaultValue);
+                byte b4 = data.ParseUInt8("Blueprint_" + b + "_Supply_" + b3 + "_Amount", 0);
+                if (b4 < 1)
                 {
-                    b6 = 1;
+                    b4 = 1;
                 }
-                array[b5] = new BlueprintSupply(value2, newCritical, b6, newTreatEmptyAsOne, newPrioritization);
+                BlueprintSupply blueprintSupply = new BlueprintSupply(0, flag, b4, newTreatEmptyAsOne, newPrioritization);
+                blueprintSupply.ItemRef = new CachingBcAssetRef(EAssetType.ITEM, value);
+                blueprintSupply.CountingMethod = countingMethod;
+                tempBlueprintSupplies.Add(blueprintSupply);
             }
-            byte b7 = data.ParseUInt8("Blueprint_" + b3 + "_Outputs", 0);
-            BlueprintOutput[] array2;
-            if (b7 > 0)
+            ushort num = data.ParseUInt16("Blueprint_" + b + "_Tool", 0);
+            bool newCritical = data.ContainsKey("Blueprint_" + b + "_Tool_Critical");
+            if (num != 0)
             {
-                array2 = new BlueprintOutput[b7];
-                for (byte b8 = 0; b8 < array2.Length; b8++)
-                {
-                    ushort newID = data.ParseUInt16("Blueprint_" + b3 + "_Output_" + b8 + "_ID", 0);
-                    byte b9 = data.ParseUInt8("Blueprint_" + b3 + "_Output_" + b8 + "_Amount", 0);
-                    if (b9 < 1)
-                    {
-                        b9 = 1;
-                    }
-                    EItemOrigin newOrigin = data.ParseEnum("Blueprint_" + b3 + "_Output_" + b8 + "_Origin", EItemOrigin.CRAFT);
-                    array2[b8] = new BlueprintOutput(newID, b9, newOrigin);
-                }
+                BlueprintSupply blueprintSupply2 = new BlueprintSupply(0, newCritical, 1, newTreatEmptyAsOne: false, ECraftingInputPrioritization.LowestQuality);
+                blueprintSupply2.ItemRef = new CachingBcAssetRef(EAssetType.ITEM, num);
+                blueprintSupply2.ShouldConsume = false;
+                tempBlueprintSupplies.Add(blueprintSupply2);
+            }
+            BlueprintOutput[] array;
+            if (eBlueprintOperation != 0)
+            {
+                array = new BlueprintOutput[0];
             }
             else
             {
-                array2 = new BlueprintOutput[1];
-                ushort num = data.ParseUInt16("Blueprint_" + b3 + "_Product", 0);
-                if (num == 0)
+                byte b5 = data.ParseUInt8("Blueprint_" + b + "_Outputs", 0);
+                if (b5 > 0)
                 {
-                    num = id;
+                    array = new BlueprintOutput[b5];
+                    for (byte b6 = 0; b6 < array.Length; b6++)
+                    {
+                        ushort legacyId = data.ParseUInt16("Blueprint_" + b + "_Output_" + b6 + "_ID", 0);
+                        byte b7 = data.ParseUInt8("Blueprint_" + b + "_Output_" + b6 + "_Amount", 0);
+                        if (b7 < 1)
+                        {
+                            b7 = 1;
+                        }
+                        EItemOrigin newOrigin = data.ParseEnum("Blueprint_" + b + "_Output_" + b6 + "_Origin", EItemOrigin.CRAFT);
+                        array[b6] = new BlueprintOutput(0, b7, newOrigin);
+                        array[b6].ItemRef = new CachingBcAssetRef(EAssetType.ITEM, legacyId);
+                    }
                 }
-                byte b10 = data.ParseUInt8("Blueprint_" + b3 + "_Products", 0);
-                if (b10 < 1)
+                else
                 {
-                    b10 = 1;
+                    array = new BlueprintOutput[1];
+                    ushort num2 = data.ParseUInt16("Blueprint_" + b + "_Product", 0);
+                    if (num2 == 0)
+                    {
+                        num2 = id;
+                    }
+                    byte b8 = data.ParseUInt8("Blueprint_" + b + "_Products", 0);
+                    if (b8 < 1)
+                    {
+                        b8 = 1;
+                    }
+                    EItemOrigin newOrigin2 = data.ParseEnum("Blueprint_" + b + "_Origin", EItemOrigin.CRAFT);
+                    array[0] = new BlueprintOutput(0, b8, newOrigin2);
+                    array[0].ItemRef = new CachingBcAssetRef(EAssetType.ITEM, num2);
                 }
-                EItemOrigin newOrigin2 = data.ParseEnum("Blueprint_" + b3 + "_Origin", EItemOrigin.CRAFT);
-                array2[0] = new BlueprintOutput(num, b10, newOrigin2);
             }
-            ushort newTool = data.ParseUInt16("Blueprint_" + b3 + "_Tool", 0);
-            bool newToolCritical = data.ContainsKey("Blueprint_" + b3 + "_Tool_Critical");
-            Guid guid;
-            ushort newBuild = data.ParseGuidOrLegacyId("Blueprint_" + b3 + "_Build", out guid);
-            byte b11 = data.ParseUInt8("Blueprint_" + b3 + "_Level", 0);
-            EBlueprintSkill newSkill = EBlueprintSkill.NONE;
-            if (b11 > 0)
+            CachingBcAssetRef effectAssetRef = data.ParseGuidOrLegacyIdV2("Blueprint_" + b + "_Build", EAssetType.EFFECT);
+            byte b9 = data.ParseUInt8("Blueprint_" + b + "_Level", 0);
+            EBlueprintSkill eBlueprintSkill = EBlueprintSkill.NONE;
+            if (b9 > 0)
             {
-                newSkill = (EBlueprintSkill)Enum.Parse(typeof(EBlueprintSkill), data.GetString("Blueprint_" + b3 + "_Skill"), ignoreCase: true);
+                eBlueprintSkill = (EBlueprintSkill)Enum.Parse(typeof(EBlueprintSkill), data.GetString("Blueprint_" + b + "_Skill"), ignoreCase: true);
             }
-            bool newTransferState = data.ContainsKey("Blueprint_" + b3 + "_State_Transfer");
-            bool newWithoutAttachments = data.ParseBool("Blueprint_" + b3 + "_State_Transfer_Delete_Attachments");
-            string @string = data.GetString("Blueprint_" + b3 + "_Map");
-            INPCCondition[] array3 = new INPCCondition[data.ParseUInt8("Blueprint_" + b3 + "_Conditions", 0)];
-            NPCTool.readConditions(data, localization, "Blueprint_" + b3 + "_Condition_", array3, this);
+            bool newTransferState = data.ContainsKey("Blueprint_" + b + "_State_Transfer");
+            bool newWithoutAttachments = data.ParseBool("Blueprint_" + b + "_State_Transfer_Delete_Attachments");
+            string @string = data.GetString("Blueprint_" + b + "_Map");
+            NPCConditionsList newQuestConditionsList = default(NPCConditionsList);
+            newQuestConditionsList.Parse(data, localization, this, "Blueprint_" + b + "_Conditions", "Blueprint_" + b + "_Condition_");
             NPCRewardsList newQuestRewardsList = default(NPCRewardsList);
-            newQuestRewardsList.Parse(data, localization, this, "Blueprint_" + b3 + "_Rewards", "Blueprint_" + b3 + "_Reward_");
-            Blueprint blueprint = new Blueprint(this, b3, eBlueprintType, array, array2, newTool, newToolCritical, newBuild, guid, b11, newSkill, newTransferState, newWithoutAttachments, @string, array3, newQuestRewardsList);
-            blueprint.canBeVisibleWhenSearchedWithoutRequiredItems = data.ParseBool($"Blueprint_{b3}_Searchable", defaultValue: true);
+            newQuestRewardsList.Parse(data, localization, this, "Blueprint_" + b + "_Rewards", "Blueprint_" + b + "_Reward_");
+            Blueprint blueprint = new Blueprint(b, tempBlueprintSupplies.ToArray(), array, b9, eBlueprintSkill, newTransferState, newWithoutAttachments, @string, newQuestConditionsList, newQuestRewardsList);
+            blueprint.Owner = this;
+            blueprint.effectAssetRef = effectAssetRef;
+            blueprint.canBeVisibleWhenSearchedWithoutRequiredItems = data.ParseBool($"Blueprint_{b}_Searchable", defaultValue: true);
+            blueprint._operation = eBlueprintOperation;
+            CachingAssetRef categoryTagRef = ((!shouldAddDefaultActions || eBlueprintOperation != 0 || tempBlueprintSupplies.Count != 1 || !tempBlueprintSupplies[0].IsItem(this)) ? eBlueprintType.GetCategoryTagRef() : EBlueprintTypeEx.salvageCategoryTagRef);
+            blueprint._categoryTagRef = categoryTagRef;
+            switch (eBlueprintOperation)
+            {
+            case EBlueprintOperation.RepairTargetItem:
+            {
+                BlueprintSupply blueprintSupply4 = new BlueprintSupply(0, newCritical: true, 1, newTreatEmptyAsOne: false, ECraftingInputPrioritization.LowestQuality);
+                blueprintSupply4.ItemRef = this;
+                blueprintSupply4.ShouldIncludeMaxQuality = false;
+                blueprintSupply4.ShouldConsume = false;
+                blueprint.TargetItem = blueprintSupply4;
+                break;
+            }
+            case EBlueprintOperation.FillTargetItem:
+            {
+                BlueprintSupply blueprintSupply3 = new BlueprintSupply(0, newCritical: true, 1, newTreatEmptyAsOne: true, ECraftingInputPrioritization.HighestAmount);
+                blueprintSupply3.ItemRef = this;
+                blueprintSupply3.ShouldConsume = false;
+                blueprintSupply3.ShouldExcludeFullAmount = true;
+                blueprint.TargetItem = blueprintSupply3;
+                break;
+            }
+            }
+            if (eBlueprintSkill == EBlueprintSkill.COOK)
+            {
+                blueprint.RequiresNearbyCraftingTags = new CachingAssetRef[1] { PowerTool.VanillaCraftingHeatTag };
+            }
             blueprints.Add(blueprint);
         }
-        for (byte b12 = 0; b12 < b2; b12++)
+    }
+
+    /// <summary>
+    /// V2 is for newer dat list features.
+    /// </summary>
+    private void PopulateActionsV2(IDatList actionsList, Local localization)
+    {
+        _actions = new List<Action>(actionsList.Count);
+        int num = -1;
+        foreach (IDatNode actions in actionsList)
         {
-            if (!data.ContainsKey("Action_" + b12 + "_Type"))
+            num++;
+            if (!(actions is IDatDictionary dictionary))
+            {
+                continue;
+            }
+            if (!dictionary.TryParseEnum<EActionType>("Type", out var value))
+            {
+                ReportAssetError("unable to parse action Type \"" + dictionary.GetString("Type") + "\"");
+                continue;
+            }
+            if (!dictionary.TryGetString("BlueprintName", out var value2))
+            {
+                ReportAssetError("action requires BlueprintName property");
+                continue;
+            }
+            if (!dictionary.TryParseAssetRef("BlueprintOwner", out var assetRef))
+            {
+                assetRef = this;
+            }
+            bool newLink = dictionary.ParseBool("BlueprintLink");
+            string newText = null;
+            string newTooltip = null;
+            string @string = dictionary.GetString("CommonTextId");
+            if (string.IsNullOrEmpty(@string))
+            {
+                if (dictionary.TryGetString("TextId", out var value3))
+                {
+                    newText = localization.format(value3);
+                }
+                if (dictionary.TryGetString("TooltipId", out var value4))
+                {
+                    newTooltip = localization.format(value4);
+                }
+            }
+            ActionBlueprint actionBlueprint = new ActionBlueprint(-1, newLink);
+            actionBlueprint.blueprintName = value2;
+            ActionBlueprint[] newBlueprints = new ActionBlueprint[1] { actionBlueprint };
+            Action action = new Action(0, value, newBlueprints, newText, newTooltip, @string);
+            action.blueprintOwnerRef = assetRef;
+            this.actions.Add(action);
+        }
+    }
+
+    /// <summary>
+    /// Legacy is for backwards compatibility with Action_# format.
+    /// </summary>
+    private void PopulateActionsLegacy(IDatDictionary data, byte actionCount, Local localization)
+    {
+        _actions = new List<Action>(actionCount);
+        for (byte b = 0; b < actionCount; b++)
+        {
+            if (!data.ContainsKey("Action_" + b + "_Type"))
             {
                 throw new NotSupportedException("Missing action type");
             }
-            EActionType newType = (EActionType)Enum.Parse(typeof(EActionType), data.GetString("Action_" + b12 + "_Type"), ignoreCase: true);
-            byte b13 = data.ParseUInt8("Action_" + b12 + "_Blueprints", 0);
-            if (b13 < 1)
-            {
-                b13 = 1;
-            }
-            ActionBlueprint[] array4 = new ActionBlueprint[b13];
-            for (byte b14 = 0; b14 < array4.Length; b14++)
-            {
-                byte newID2 = data.ParseUInt8("Action_" + b12 + "_Blueprint_" + b14 + "_Index", 0);
-                bool newLink = data.ContainsKey("Action_" + b12 + "_Blueprint_" + b14 + "_Link");
-                array4[b14] = new ActionBlueprint(newID2, newLink);
-            }
-            string string2 = data.GetString("Action_" + b12 + "_Key");
+            EActionType newType = (EActionType)Enum.Parse(typeof(EActionType), data.GetString("Action_" + b + "_Type"), ignoreCase: true);
+            string @string = data.GetString("Action_" + b + "_Key");
             string newText;
             string newTooltip;
-            if (string.IsNullOrEmpty(string2))
+            if (string.IsNullOrEmpty(@string))
             {
-                string key = "Action_" + b12 + "_Text";
+                string key = "Action_" + b + "_Text";
                 newText = ((!localization.has(key)) ? data.GetString(key) : localization.format(key));
-                string key2 = "Action_" + b12 + "_Tooltip";
+                string key2 = "Action_" + b + "_Tooltip";
                 newTooltip = ((!localization.has(key2)) ? data.GetString(key2) : localization.format(key2));
             }
             else
@@ -866,73 +1465,283 @@ public class ItemAsset : Asset, ISkinableAsset
                 newText = string.Empty;
                 newTooltip = string.Empty;
             }
-            ushort num2 = data.ParseUInt16("Action_" + b12 + "_Source", 0);
-            if (num2 == 0)
+            string key3 = "Action_" + b + "_Source";
+            if (!data.TryParseBcAssetRef(key3, EAssetType.ITEM, out var assetRef))
             {
-                num2 = id;
+                assetRef = this;
             }
-            actions.Add(new Action(num2, newType, array4, newText, newTooltip, string2));
+            byte b2 = data.ParseUInt8("Action_" + b + "_Blueprints", 0);
+            if (b2 < 1)
+            {
+                b2 = 1;
+            }
+            ActionBlueprint[] array = new ActionBlueprint[b2];
+            Action action = new Action(0, newType, array, newText, newTooltip, @string);
+            action.blueprintOwnerRef = assetRef;
+            for (byte b3 = 0; b3 < array.Length; b3++)
+            {
+                int newIndex = -1;
+                string key4 = "Action_" + b + "_Blueprint_" + b3 + "_Name";
+                if (!data.TryGetString(key4, out var value))
+                {
+                    newIndex = data.ParseUInt8("Action_" + b + "_Blueprint_" + b3 + "_Index", 0);
+                }
+                bool newLink = data.ContainsKey("Action_" + b + "_Blueprint_" + b3 + "_Link");
+                ActionBlueprint actionBlueprint = new ActionBlueprint(newIndex, newLink);
+                actionBlueprint.blueprintName = value;
+                array[b3] = actionBlueprint;
+            }
+            actions.Add(action);
+        }
+    }
+
+    internal override void PreResaveAsset(IDatDictionary data)
+    {
+        base.PreResaveAsset(data);
+        if (data.ParseUInt8("Blueprints", 0) <= 0)
+        {
+            return;
+        }
+        bool flag = true;
+        foreach (Blueprint blueprint in blueprints)
+        {
+            if (blueprint.questConditions != null || blueprint.questRewards != null)
+            {
+                flag = false;
+                break;
+            }
         }
         if (flag)
         {
-            bool flag2 = false;
-            bool flag3 = false;
-            bool flag4 = false;
-            for (byte b15 = 0; b15 < blueprints.Count; b15++)
+            ConvertLegacyBlueprintsFormat(data);
+        }
+        else
+        {
+            UnturnedLog.info("Cannot automatically convert " + base.FriendlyNameWithFriendlyType + " Blueprints (yet) because they use conditions/rewards");
+        }
+    }
+
+    private void ConvertLegacyBlueprintsFormat(IDatDictionary data)
+    {
+        IEditableDatDictionary editableDatDictionary = data.Edit();
+        UnturnedLog.info("Converting " + base.FriendlyNameWithFriendlyType + " Blueprints format");
+        List<string> list = new List<string>();
+        foreach (KeyValuePair<string, IDatNode> datum in data)
+        {
+            if (datum.Key.StartsWith("Blueprint_", StringComparison.InvariantCultureIgnoreCase))
             {
-                Blueprint blueprint2 = blueprints[b15];
-                if (blueprint2.type == EBlueprintType.REPAIR)
-                {
-                    if (!flag3)
-                    {
-                        flag3 = true;
-                        Action action = new Action(id, EActionType.BLUEPRINT, new ActionBlueprint[1]
-                        {
-                            new ActionBlueprint(b15, newLink: true)
-                        }, null, null, "Repair");
-                        actions.Insert(0, action);
-                    }
-                }
-                else if (blueprint2.type == EBlueprintType.AMMO)
-                {
-                    flag2 = true;
-                }
-                else if (blueprint2.supplies.Length == 1 && blueprint2.supplies[0].id == id && !flag4)
-                {
-                    flag4 = true;
-                    Action action2 = new Action(id, EActionType.BLUEPRINT, new ActionBlueprint[1]
-                    {
-                        new ActionBlueprint(b15, type == EItemType.GUN || type == EItemType.MELEE)
-                    }, null, null, "Salvage");
-                    actions.Add(action2);
-                }
-            }
-            if (flag2)
-            {
-                List<ActionBlueprint> list = new List<ActionBlueprint>();
-                for (byte b16 = 0; b16 < blueprints.Count; b16++)
-                {
-                    if (blueprints[b16].type == EBlueprintType.AMMO)
-                    {
-                        ActionBlueprint actionBlueprint = new ActionBlueprint(b16, newLink: true);
-                        list.Add(actionBlueprint);
-                    }
-                }
-                Action action3 = new Action(id, EActionType.BLUEPRINT, list.ToArray(), null, null, "Refill");
-                actions.Add(action3);
+                list.Add(datum.Key);
             }
         }
-        _shouldVerifyHash = !data.ContainsKey("Bypass_Hash_Verification");
-        overrideShowQuality = data.ContainsKey("Override_Show_Quality");
-        shouldDropOnDeath = data.ParseBool("Should_Drop_On_Death", defaultValue: true);
-        allowManualDrop = data.ParseBool("Allow_Manual_Drop", defaultValue: true);
-        shouldDeleteAtZeroQuality = data.ParseBool("Should_Delete_At_Zero_Quality");
-        shouldDestroyItemColliders = data.ParseBool("Destroy_Item_Colliders", defaultValue: true);
-        if (!Dedicator.IsDedicatedServer && id < 2000 && doesItemTypeHaveSkins)
+        UnturnedLog.info("Removing keys: " + string.Join(", ", list));
+        foreach (string item in list)
         {
-            _albedoBase = bundle.load<Texture2D>("Albedo_Base");
-            _metallicBase = bundle.load<Texture2D>("Metallic_Base");
-            _emissionBase = bundle.load<Texture2D>("Emission_Base");
+            editableDatDictionary.Remove(item);
+        }
+        IEditableDatList editableDatList = editableDatDictionary.ReplaceWithList("Blueprints");
+        editableDatList.SetMargins(1);
+        foreach (Blueprint blueprint in blueprints)
+        {
+            IEditableDatDictionary editableDatDictionary2 = editableDatList.AddDictionary();
+            if (!string.IsNullOrEmpty(blueprint.Name))
+            {
+                editableDatDictionary2.AddValue("Name").SetString(blueprint.Name);
+            }
+            if (blueprint.CategoryTagRef.IsAssigned)
+            {
+                editableDatDictionary2.AddValue("CategoryTag").SetAssetRefWithInlineComment(blueprint.CategoryTagRef);
+            }
+            if (blueprint.Operation != 0)
+            {
+                editableDatDictionary2.AddValue("Operation").SetEnumString(blueprint.Operation);
+            }
+            ECraftingInputPrioritization eCraftingInputPrioritization = ((blueprint.Operation != EBlueprintOperation.FillTargetItem) ? ECraftingInputPrioritization.LowestQuality : ECraftingInputPrioritization.LowestAmount);
+            _ = blueprint.Operation;
+            if (!blueprint.supplies.IsNullOrEmpty())
+            {
+                bool flag = false;
+                for (int i = 0; i < blueprint.supplies.Length; i++)
+                {
+                    BlueprintSupply blueprintSupply = blueprint.supplies[i];
+                    bool flag2 = i == 0 && blueprint.Operation == EBlueprintOperation.FillTargetItem;
+                    if (blueprintSupply.isCritical != flag2)
+                    {
+                        flag = true;
+                        break;
+                    }
+                    if (!blueprintSupply.ShouldConsume)
+                    {
+                        flag = true;
+                        break;
+                    }
+                    if (blueprintSupply.Prioritization != eCraftingInputPrioritization)
+                    {
+                        flag = true;
+                        break;
+                    }
+                    if (blueprintSupply.ShouldCountEmptyAsOne)
+                    {
+                        flag = true;
+                        break;
+                    }
+                }
+                if (flag)
+                {
+                    IEditableDatList editableDatList2 = editableDatDictionary2.AddList("InputItems");
+                    BlueprintSupply[] supplies = blueprint.supplies;
+                    foreach (BlueprintSupply blueprintSupply2 in supplies)
+                    {
+                        IEditableDatDictionary editableDatDictionary3 = editableDatList2.AddDictionary();
+                        if (blueprintSupply2.ItemRef.IsReferenceTo(this))
+                        {
+                            editableDatDictionary3.AddValue("ID").SetString("this");
+                        }
+                        else
+                        {
+                            editableDatDictionary3.AddValue("ID").SetAssetRefWithInlineComment(blueprintSupply2.ItemRef);
+                        }
+                        if (blueprintSupply2.amount != 1)
+                        {
+                            editableDatDictionary3.AddValue("Amount").SetInt32(blueprintSupply2.amount);
+                        }
+                        if (blueprintSupply2.isCritical)
+                        {
+                            editableDatDictionary3.AddValue("Critical").SetBool(value: true);
+                        }
+                        if (!blueprintSupply2.ShouldConsume)
+                        {
+                            editableDatDictionary3.AddValue("Delete").SetBool(value: false);
+                        }
+                        if (blueprintSupply2.Prioritization != eCraftingInputPrioritization)
+                        {
+                            editableDatDictionary3.AddValue("Prioritization").SetEnumString(blueprintSupply2.Prioritization);
+                        }
+                        if (blueprintSupply2.ShouldCountEmptyAsOne)
+                        {
+                            editableDatDictionary3.AddValue("CountEmptyAsOne").SetBool(value: true);
+                        }
+                    }
+                }
+                else if (blueprint.supplies.Length > 1)
+                {
+                    IEditableDatList editableDatList3 = editableDatDictionary2.AddList("InputItems");
+                    BlueprintSupply[] supplies = blueprint.supplies;
+                    foreach (BlueprintSupply blueprintSupply3 in supplies)
+                    {
+                        IEditableDatValue valueNode = editableDatList3.AddValue();
+                        ConvertSimpleItemRefAndAmount(blueprintSupply3.ItemRef, blueprintSupply3.amount, valueNode);
+                    }
+                }
+                else
+                {
+                    BlueprintSupply blueprintSupply4 = blueprint.supplies[0];
+                    ConvertSimpleItemRefAndAmount(blueprintSupply4.ItemRef, blueprintSupply4.amount, editableDatDictionary2.AddValue("InputItems"));
+                }
+            }
+            if (!blueprint.outputs.IsNullOrEmpty())
+            {
+                bool flag3 = false;
+                BlueprintOutput[] outputs = blueprint.outputs;
+                foreach (BlueprintOutput blueprintOutput in outputs)
+                {
+                    flag3 |= blueprintOutput.origin != EItemOrigin.CRAFT;
+                }
+                if (flag3)
+                {
+                    IEditableDatList editableDatList4 = editableDatDictionary2.AddList("OutputItems");
+                    outputs = blueprint.outputs;
+                    foreach (BlueprintOutput blueprintOutput2 in outputs)
+                    {
+                        IEditableDatDictionary editableDatDictionary4 = editableDatList4.AddDictionary();
+                        if (blueprintOutput2.ItemRef.IsReferenceTo(this))
+                        {
+                            editableDatDictionary4.AddValue("ID").SetString("this");
+                        }
+                        else
+                        {
+                            editableDatDictionary4.AddValue("ID").SetAssetRefWithInlineComment(blueprintOutput2.ItemRef);
+                        }
+                        if (blueprintOutput2.amount != 1)
+                        {
+                            editableDatDictionary4.AddValue("Amount").SetInt32(blueprintOutput2.amount);
+                        }
+                        if (blueprintOutput2.origin != EItemOrigin.CRAFT)
+                        {
+                            editableDatDictionary4.AddValue("Origin").SetString(blueprintOutput2.origin.ToStringPascalCase());
+                        }
+                    }
+                }
+                else if (blueprint.outputs.Length > 1)
+                {
+                    IEditableDatList editableDatList5 = editableDatDictionary2.AddList("OutputItems");
+                    outputs = blueprint.outputs;
+                    foreach (BlueprintOutput blueprintOutput3 in outputs)
+                    {
+                        IEditableDatValue valueNode2 = editableDatList5.AddValue();
+                        ConvertSimpleItemRefAndAmount(blueprintOutput3.ItemRef, blueprintOutput3.amount, valueNode2);
+                    }
+                }
+                else
+                {
+                    BlueprintOutput blueprintOutput4 = blueprint.outputs[0];
+                    ConvertSimpleItemRefAndAmount(blueprintOutput4.ItemRef, blueprintOutput4.amount, editableDatDictionary2.AddValue("OutputItems"));
+                }
+            }
+            if (blueprint.skill != 0)
+            {
+                editableDatDictionary2.AddValue("Skill").SetString(blueprint.skill.ToStringPascalCase());
+                editableDatDictionary2.AddValue("Skill_Level").SetInt32(blueprint.level);
+            }
+            if (blueprint.transferState)
+            {
+                editableDatDictionary2.AddValue("StateTransfer").SetBool(value: true);
+                if (blueprint.withoutAttachments)
+                {
+                    editableDatDictionary2.AddValue("StateTransfer_DeleteAttachments").SetBool(value: true);
+                }
+            }
+            if (!string.IsNullOrEmpty(blueprint.map))
+            {
+                editableDatDictionary2.AddValue("Map").SetString(blueprint.map);
+            }
+            if (!blueprint.canBeVisibleWhenSearchedWithoutRequiredItems)
+            {
+                editableDatDictionary2.AddValue("Searchable").SetBool(value: false);
+            }
+            if (blueprint.RequiresNearbyCraftingTags != null && blueprint.RequiresNearbyCraftingTags.Length != 0)
+            {
+                IEditableDatList editableDatList6 = editableDatDictionary2.AddList("RequiresNearbyCraftingTags");
+                CachingAssetRef[] requiresNearbyCraftingTags = blueprint.RequiresNearbyCraftingTags;
+                foreach (CachingAssetRef assetRef in requiresNearbyCraftingTags)
+                {
+                    editableDatList6.AddValue().SetAssetRefWithInlineComment(assetRef);
+                }
+            }
+            if (blueprint.effectAssetRef.IsAssigned)
+            {
+                editableDatDictionary2.AddValue("Effect").SetAssetRefWithInlineComment(blueprint.effectAssetRef);
+            }
+        }
+    }
+
+    private void ConvertSimpleItemRefAndAmount(CachingBcAssetRef itemRef, int amount, IEditableDatValue valueNode)
+    {
+        if (itemRef.IsReferenceTo(this))
+        {
+            if (amount > 1)
+            {
+                valueNode.SetString($"this x {amount}");
+            }
+            else
+            {
+                valueNode.SetString("this");
+            }
+            return;
+        }
+        valueNode.SetAssetRefWithInlineComment(itemRef);
+        if (amount > 1)
+        {
+            valueNode.Value += $" x {amount}";
         }
     }
 
@@ -947,7 +1756,7 @@ public class ItemAsset : Asset, ISkinableAsset
         orAddDeclaration2.Append("GUID", GUID);
         orAddDeclaration2.Append("Actions", actions.Count);
         orAddDeclaration2.Append("Allow_Manual_Drop", allowManualDrop);
-        orAddDeclaration2.Append("Amount", amount);
+        orAddDeclaration2.Append("Amount", MaxAmount);
         orAddDeclaration2.Append("Blueprints", (object)blueprints.Count);
         orAddDeclaration2.Append("Can_Player_Equip", canPlayerEquip);
         orAddDeclaration2.Append("Can_Use_Underwater", canUseUnderwater);
@@ -989,8 +1798,6 @@ public class ItemAsset : Asset, ISkinableAsset
             cargoDeclaration.Append("State_Transfer", blueprints[b].transferState);
             cargoDeclaration.Append("State_Transfer_Delete_Attachments", blueprints[b].withoutAttachments);
             cargoDeclaration.Append("Supplies", blueprints[b].supplies.Length);
-            cargoDeclaration.Append("Tool", blueprints[b].tool);
-            cargoDeclaration.Append("Tool_Critical", blueprints[b].toolCritical);
             cargoDeclaration.Append("Type", blueprints[b].type);
             for (byte b2 = 0; b2 < blueprints[b].supplies.Length; b2++)
             {
@@ -998,8 +1805,10 @@ public class ItemAsset : Asset, ISkinableAsset
                 cargoDeclaration2.Append("GUID", GUID);
                 cargoDeclaration2.Append("blueprintIndex", b);
                 cargoDeclaration2.Append("supplyIndex", b2);
-                cargoDeclaration2.Append("ID", blueprints[b].supplies[b2].id);
+                cargoDeclaration2.Append("ID", blueprints[b].supplies[b2].ItemRef.LegacyId);
+                cargoDeclaration2.Append("ItemGUID", blueprints[b].supplies[b2].ItemRef.Guid);
                 cargoDeclaration2.Append("Critical", blueprints[b].supplies[b2].isCritical);
+                cargoDeclaration2.Append("Delete", blueprints[b].supplies[b2].ShouldConsume);
                 cargoDeclaration2.Append("Amount", blueprints[b].supplies[b2].amount);
             }
             for (byte b3 = 0; b3 < blueprints[b].outputs.Length; b3++)
@@ -1008,7 +1817,8 @@ public class ItemAsset : Asset, ISkinableAsset
                 cargoDeclaration3.Append("GUID", GUID);
                 cargoDeclaration3.Append("blueprintIndex", b);
                 cargoDeclaration3.Append("outputIndex", b3);
-                cargoDeclaration3.Append("ID", blueprints[b].outputs[b3].id);
+                cargoDeclaration3.Append("ID", blueprints[b].outputs[b3].ItemRef.LegacyId);
+                cargoDeclaration3.Append("ItemGUID", blueprints[b].outputs[b3].ItemRef.Guid);
                 cargoDeclaration3.Append("Amount", blueprints[b].outputs[b3].amount);
                 cargoDeclaration3.Append("Origin", blueprints[b].outputs[b3].origin);
             }

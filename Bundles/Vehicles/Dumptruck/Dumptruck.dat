@@ -1,4 +1,4 @@
-GUID 019a8e4bfada44bcb2783e64dca11f1a
+﻿GUID 019a8e4bfada44bcb2783e64dca11f1a
 Type Vehicle
 Rarity Rare
 ID 141
@@ -40,67 +40,67 @@ Explosion_Force_Multiplier 2
 
 PaintableSections
 [
-    {
-        Path Model_0
-        MaterialIndex 0
-    }
-    {
-        Path Model_1
-        MaterialIndex 0
-    }
-    {
-        Path Wheels/Wheel_0/Model_0
-        MaterialIndex 0
-    }
-    {
-        Path Wheels/Wheel_0/Model_1
-        MaterialIndex 0
-    }
-    {
-        Path Wheels/Wheel_1/Model_0
-        MaterialIndex 0
-    }
-    {
-        Path Wheels/Wheel_1/Model_1
-        MaterialIndex 0
-    }
-    {
-        Path Wheels/Wheel_2/Model_0
-        MaterialIndex 0
-    }
-    {
-        Path Wheels/Wheel_2/Model_1
-        MaterialIndex 0
-    }
-    {
-        Path Wheels/Wheel_3/Model_0
-        MaterialIndex 0
-    }
-    {
-        Path Wheels/Wheel_3/Model_1
-        MaterialIndex 0
-    }
-    {
-        Path Wheels/Wheel_2/Wheel_4/Model_0
-        MaterialIndex 0
-    }
-    {
-        Path Wheels/Wheel_2/Wheel_4/Model_1
-        MaterialIndex 0
-    }
-    {
-        Path Wheels/Wheel_3/Wheel_5/Model_0
-        MaterialIndex 0
-    }
-    {
-        Path Wheels/Wheel_3/Wheel_5/Model_1
-        MaterialIndex 0
-    }
+	{
+		Path Model_0
+		MaterialIndex 0
+	}
+	{
+		Path Model_1
+		MaterialIndex 0
+	}
+	{
+		Path Wheels/Wheel_0/Model_0
+		MaterialIndex 0
+	}
+	{
+		Path Wheels/Wheel_0/Model_1
+		MaterialIndex 0
+	}
+	{
+		Path Wheels/Wheel_1/Model_0
+		MaterialIndex 0
+	}
+	{
+		Path Wheels/Wheel_1/Model_1
+		MaterialIndex 0
+	}
+	{
+		Path Wheels/Wheel_2/Model_0
+		MaterialIndex 0
+	}
+	{
+		Path Wheels/Wheel_2/Model_1
+		MaterialIndex 0
+	}
+	{
+		Path Wheels/Wheel_3/Model_0
+		MaterialIndex 0
+	}
+	{
+		Path Wheels/Wheel_3/Model_1
+		MaterialIndex 0
+	}
+	{
+		Path Wheels/Wheel_2/Wheel_4/Model_0
+		MaterialIndex 0
+	}
+	{
+		Path Wheels/Wheel_2/Wheel_4/Model_1
+		MaterialIndex 0
+	}
+	{
+		Path Wheels/Wheel_3/Wheel_5/Model_0
+		MaterialIndex 0
+	}
+	{
+		Path Wheels/Wheel_3/Wheel_5/Model_1
+		MaterialIndex 0
+	}
 ]
 
 DefaultPaintColors
 [
-    #d5a72c
+	#d5a72c
 ]
 
 WheelConfigurations

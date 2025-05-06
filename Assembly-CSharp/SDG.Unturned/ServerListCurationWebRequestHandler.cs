@@ -22,10 +22,13 @@ internal class ServerListCurationWebRequestHandler : MonoBehaviour
         try
         {
             DatParser datParser = new DatParser();
-            DatDictionary data = datParser.Parse(request.downloadHandler.data);
+            IDatDictionary data = datParser.Parse(request.downloadHandler.data);
             if (datParser.HasError)
             {
-                Debug.LogError("Error parsing server curation file from \"" + webItem.webLink.url + "\": \"" + datParser.ErrorMessage + "\"");
+                foreach (string errorMessage in datParser.ErrorMessages)
+                {
+                    Debug.LogError("Error parsing server curation file from \"" + webItem.webLink.url + "\": \"" + errorMessage + "\"");
+                }
                 webItem.ErrorMessage = "Parsing error: \"" + datParser.ErrorMessage + "\"";
                 webItem.NotifyRequestComplete(null);
             }

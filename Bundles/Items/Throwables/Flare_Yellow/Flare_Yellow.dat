@@ -1,4 +1,4 @@
-GUID e1116457d44f47a5bb73c36ca58bd183
+﻿GUID e1116457d44f47a5bb73c36ca58bd183
 Type Throwable
 Useable Throwable
 ID 260
@@ -7,18 +7,21 @@ Size_X 1
 Size_Y 1
 Size_Z 0.45
 
-Blueprints 2
-Blueprint_0_Type Tool
-Blueprint_0_Supply_0_ID "1277" // Yellow Flare Sconce
-Blueprint_0_Supply_0_Amount 1
-Blueprint_0_Products 2
-Blueprint_0_Build 27
-Blueprint_1_Type Tool
-Blueprint_1_Supplies 1
-Blueprint_1_Supply_0_ID this
-Blueprint_1_Supply_0_Amount 3
-Blueprint_1_Product "75" // Chemicals
-Blueprint_1_Products 1
-Blueprint_1_Level 2
-Blueprint_1_Skill Craft
-Blueprint_1_Build 27
+Blueprints
+[
+	{
+		CategoryTag "ad1804b6945145f3b308738b0b8ea447" // Tools
+		InputItems "48303a446214402fa8db745f568151e3" // Yellow Flare Sconce
+		OutputItems this x 2
+		Effect "84347b13028340b8976033c08675d458" // Wrench
+	}
+	{
+		Name Salvage
+		CategoryTag "7ed29f9101ae4523a3b2e389414b7bd9" // Salvage
+		InputItems this x 3
+		OutputItems "7aee55ea2abf4f3fb70c4b2677da0e14" // Chemicals
+		Skill Craft
+		Skill_Level 2
+		Effect "84347b13028340b8976033c08675d458" // Wrench
+	}
+]

@@ -50,7 +50,7 @@ public class LinkFilteringLiveConfig
         return defaultAction;
     }
 
-    public void Parse(DatDictionary data)
+    public void Parse(IDatDictionary data)
     {
         if (data.TryGetList("Rules", out var node))
         {

@@ -1,4 +1,4 @@
-GUID 59d94c3978fc42d582a9a1e84278070b
+﻿GUID 59d94c3978fc42d582a9a1e84278070b
 Type Barricade
 Useable Barricade
 Build Torch
@@ -14,13 +14,19 @@ Offset 0.2
 
 Explosion 28
 
-Blueprints 1
-Blueprint_0_Type Utilities
-Blueprint_0_Supplies 2
-Blueprint_0_Supply_0_ID 38
-Blueprint_0_Supply_0_Amount 4
-Blueprint_0_Supply_1_ID 67
-Blueprint_0_Supply_1_Amount 2
-Blueprint_0_Build 27
+Blueprints
+[
+	{
+		CategoryTag "bfac6026305f4737a95fd275ebff65a6" // Utilities
+		InputItems
+		[
+			"9c563bf14d4641a18873f338beaed128 x 4" // Birch Stick
+			"21ede8ebffb14c5580e8c7ad149e335e x 2" // Metal Scrap
+		]
+		OutputItems this
+		Effect "84347b13028340b8976033c08675d458" // Wrench
+	}
+]
+
 PlacementAudioClip Sounds/WoodenPlacement.mp3
 Has_Clip_Prefab false

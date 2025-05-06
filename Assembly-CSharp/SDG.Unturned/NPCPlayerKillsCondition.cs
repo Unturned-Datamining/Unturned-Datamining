@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 
 namespace SDG.Unturned;
@@ -48,6 +49,53 @@ public class NPCPlayerKillsCondition : INPCCondition
         associatedFlags.Add(id);
     }
 
+    internal override void PopulateV2(in PopulateConditionParameters p)
+    {
+        base.PopulateV2(in p);
+        if (p.data.TryParseUInt16("ID", out var num))
+        {
+            id = num;
+        }
+        else
+        {
+            p.ReportRequiredOptionInvalid("ID");
+        }
+        if (p.data.TryParseInt16("Value", out var num2))
+        {
+            value = num2;
+        }
+        else
+        {
+            p.ReportRequiredOptionInvalid("Value");
+        }
+    }
+
+    internal override void PopulateLegacy(in PopulateConditionParameters p)
+    {
+        base.PopulateLegacy(in p);
+        if (p.data.TryParseUInt16(p.legacyPrefix + "_ID", out var num))
+        {
+            id = num;
+        }
+        else
+        {
+            p.ReportRequiredOptionInvalid("ID");
+        }
+        if (p.data.TryParseInt16(p.legacyPrefix + "_Value", out var num2))
+        {
+            value = num2;
+        }
+        else
+        {
+            p.ReportRequiredOptionInvalid("Value");
+        }
+    }
+
+    public NPCPlayerKillsCondition()
+    {
+    }
+
+    [Obsolete]
     public NPCPlayerKillsCondition(ushort newID, short newValue, string newText, bool newShouldReset)
         : base(newText, newShouldReset)
     {

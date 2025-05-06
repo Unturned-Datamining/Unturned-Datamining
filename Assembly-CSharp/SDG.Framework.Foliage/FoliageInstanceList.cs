@@ -9,17 +9,15 @@ public class FoliageInstanceList : IPoolable
 {
     public AssetReference<FoliageInstancedMeshInfoAsset> assetReference;
 
+    internal bool isLoadedAndRenderable;
+
+    internal FoliageInstancingBatchConfig batchConfig;
+
     public List<List<Matrix4x4>> matrices { get; protected set; }
 
     public List<List<bool>> clearWhenBaked { get; protected set; }
 
     public bool isAssetLoaded { get; protected set; }
-
-    public Mesh mesh { get; protected set; }
-
-    public Material material { get; protected set; }
-
-    public bool castShadows { get; protected set; }
 
     public bool tileDither { get; protected set; }
 
@@ -43,8 +41,7 @@ public class FoliageInstanceList : IPoolable
         }
         clearWhenBaked.Clear();
         isAssetLoaded = false;
-        mesh = null;
-        material = null;
+        isLoadedAndRenderable = false;
     }
 
     public bool IsListEmpty()
@@ -180,13 +177,14 @@ public class FoliageInstanceList : IPoolable
                 }
             }
         }
-        mesh = Assets.load(foliageInstancedMeshInfoAsset.mesh);
-        material = Assets.load(foliageInstancedMeshInfoAsset.material);
+        Mesh mesh = Assets.load(foliageInstancedMeshInfoAsset.mesh);
+        Material material = Assets.load(foliageInstancedMeshInfoAsset.material);
         if (material != null && !material.enableInstancing)
         {
             material.enableInstancing = true;
         }
-        castShadows = foliageInstancedMeshInfoAsset.castShadows;
+        bool castShadows = foliageInstancedMeshInfoAsset.castShadows;
+        batchConfig = new FoliageInstancingBatchConfig(mesh, material, castShadows);
         tileDither = foliageInstancedMeshInfoAsset.tileDither;
         if (foliageInstancedMeshInfoAsset.drawDistance == -1)
         {
@@ -196,6 +194,7 @@ public class FoliageInstanceList : IPoolable
         {
             sqrDrawDistance = foliageInstancedMeshInfoAsset.drawDistance * foliageInstancedMeshInfoAsset.drawDistance;
         }
+        isLoadedAndRenderable = mesh != null && material != null;
     }
 
     public FoliageInstanceList()

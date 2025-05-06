@@ -1,4 +1,4 @@
-GUID 20044da6daee4a12bba1b35eaa4c61e0
+﻿GUID 20044da6daee4a12bba1b35eaa4c61e0
 Type Vehicle
 Rarity Legendary
 
@@ -55,22 +55,22 @@ Explosion_Force_Multiplier 2
 
 PaintableSections
 [
-    {
-        Path Model_0
-        MaterialIndex 0
-    }
-    {
-        Path Turrets/Turret_1/Yaw/Pitch/Model_0
-        MaterialIndex 0
-    }
-    {
-        Path Turrets/Turret_1/Yaw/Model_0
-        MaterialIndex 0
-    }
-    {
-        Path Turrets/Turret_1/Yaw/Model_1
-        MaterialIndex 0
-    }
+	{
+		Path Model_0
+		MaterialIndex 0
+	}
+	{
+		Path Turrets/Turret_1/Yaw/Pitch/Model_0
+		MaterialIndex 0
+	}
+	{
+		Path Turrets/Turret_1/Yaw/Model_0
+		MaterialIndex 0
+	}
+	{
+		Path Turrets/Turret_1/Yaw/Model_1
+		MaterialIndex 0
+	}
 ]
 
 DefaultPaintColors
@@ -83,26 +83,26 @@ DefaultPaintColors
 
 ExplosionBurnMaterialSections
 [
-    {
-        Path Model_0
-        MaterialIndex 0
-    }
-    {
-        Path Turrets/Turret_1/Yaw/Pitch/Model_0
-        MaterialIndex 0
-    }
-    {
-        Path Turrets/Turret_1/Yaw/Model_0
-        MaterialIndex 0
-    }
-    {
-        Path Turrets/Turret_1/Yaw/Model_1
-        MaterialIndex 0
-    }
-    {
-        Path Model_2
+	{
+		Path Model_0
+		MaterialIndex 0
+	}
+	{
+		Path Turrets/Turret_1/Yaw/Pitch/Model_0
+		MaterialIndex 0
+	}
+	{
+		Path Turrets/Turret_1/Yaw/Model_0
+		MaterialIndex 0
+	}
+	{
+		Path Turrets/Turret_1/Yaw/Model_1
+		MaterialIndex 0
+	}
+	{
+		Path Model_2
 		AllMaterials true
-    }
+	}
 ]
 
 CrawlerTrackTilingMaterials

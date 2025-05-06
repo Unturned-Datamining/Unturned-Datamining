@@ -1,4 +1,4 @@
-GUID 03cb6774a05944f1b13d1a3943680906
+﻿GUID 03cb6774a05944f1b13d1a3943680906
 Type Box
 ID 785
 
@@ -13,18 +13,15 @@ Drops 16
 Drop_0 -1
 
 // Legendary:
-
 Drop_1 506700
 Drop_2 506400
 
 // Epic:
-
 Drop_3 506600
 Drop_4 506100
 Drop_5 506500
 
 // Rare:
-
 Drop_6 506300
 Drop_7 506200
 Drop_8 506000

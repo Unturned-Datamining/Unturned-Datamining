@@ -1,3 +1,5 @@
+using System;
+
 namespace SDG.Unturned;
 
 public class NPCShortFlagCondition : NPCFlagCondition
@@ -34,6 +36,37 @@ public class NPCShortFlagCondition : NPCFlagCondition
         return Local.FormatText(text, num, value);
     }
 
+    internal override void PopulateV2(in PopulateConditionParameters p)
+    {
+        base.PopulateV2(in p);
+        if (p.data.TryParseInt16("Value", out var num))
+        {
+            value = num;
+        }
+        else
+        {
+            p.ReportRequiredOptionInvalid("Value");
+        }
+    }
+
+    internal override void PopulateLegacy(in PopulateConditionParameters p)
+    {
+        base.PopulateLegacy(in p);
+        if (p.data.TryParseInt16(p.legacyPrefix + "_Value", out var num))
+        {
+            value = num;
+        }
+        else
+        {
+            p.ReportRequiredOptionInvalid("Value");
+        }
+    }
+
+    public NPCShortFlagCondition()
+    {
+    }
+
+    [Obsolete]
     public NPCShortFlagCondition(ushort newID, short newValue, bool newAllowUnset, ENPCLogicType newLogicType, string newText, bool newShouldReset)
         : base(newID, newAllowUnset, newLogicType, newText, newShouldReset)
     {

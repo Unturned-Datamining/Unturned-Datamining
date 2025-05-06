@@ -1,4 +1,4 @@
-GUID 9fac086e1b194a3e97fb77f8940208de
+﻿GUID 9fac086e1b194a3e97fb77f8940208de
 Type Refill
 Rarity Uncommon
 Useable Refill
@@ -10,16 +10,22 @@ Size_Z 0.35
 
 Clean_Water 35
 
-Blueprints 2
-Blueprint_0_Type Repair
-Blueprint_0_Supply_0_ID 392
-Blueprint_0_Supply_0_Amount 1
-Blueprint_0_Build 27
-Blueprint_1_Type Tool
-Blueprint_1_Supplies 1
-Blueprint_1_Supply_0_ID this
-Blueprint_1_Product "67" // Metal Scrap
-Blueprint_1_Products 2
-Blueprint_1_Build 27
+Blueprints
+[
+	{
+		Name Repair
+		CategoryTag "732ee6ffeb18418985cf4f9fde33dd11" // Repair
+		Operation RepairTargetItem
+		InputItems "f2707771eebb4904b1e4b1f58929393b" // Purification Tablets
+		Effect "84347b13028340b8976033c08675d458" // Wrench
+	}
+	{
+		Name Salvage
+		CategoryTag "7ed29f9101ae4523a3b2e389414b7bd9" // Salvage
+		InputItems this
+		OutputItems "21ede8ebffb14c5580e8c7ad149e335e x 2" // Metal Scrap
+		Effect "84347b13028340b8976033c08675d458" // Wrench
+	}
+]
 
 ConsumeAudioClip Sounds/DrinkSwallow.mp3

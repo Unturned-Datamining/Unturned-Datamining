@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 
 namespace SDG.Unturned;
 
@@ -20,8 +19,6 @@ public class ItemCurrencyAsset : Asset
         /// </summary>
         public bool isVisibleInVendorMenu;
     }
-
-    private static List<InventorySearch> search = new List<InventorySearch>();
 
     private static ItemCurrencyComparer valueComparer = new ItemCurrencyComparer();
 
@@ -53,11 +50,11 @@ public class ItemCurrencyAsset : Asset
             {
                 continue;
             }
-            search.Clear();
-            player.inventory.search(search, itemAsset.id, findEmpty: false, findHealthy: true);
-            foreach (InventorySearch item2 in search)
+            using ScopedPlayerInventorySearchResultPool scopedPlayerInventorySearchResultPool = default(ScopedPlayerInventorySearchResultPool);
+            player.inventory.FindItemsByAsset(scopedPlayerInventorySearchResultPool.PooledResults, itemAsset, includeEmpty: false, includeMaxQuality: true);
+            foreach (PlayerInventorySearchResultV2 pooledResult in scopedPlayerInventorySearchResultPool.PooledResults)
             {
-                num += item2.jar.item.amount * entry.value;
+                num += pooledResult.Jar.item.amount * entry.value;
             }
         }
         return num;
@@ -118,16 +115,18 @@ public class ItemCurrencyAsset : Asset
                 continue;
             }
             uint num2 = (requiredValue - num - 1) / entry.value + 1;
-            List<InventorySearch> list = new List<InventorySearch>();
-            player.inventory.search(list, itemAsset.id, findEmpty: false, findHealthy: true);
-            foreach (InventorySearch item2 in list)
+            using (ScopedPlayerInventorySearchResultPool scopedPlayerInventorySearchResultPool = default(ScopedPlayerInventorySearchResultPool))
             {
-                uint num3 = item2.deleteAmount(player, num2);
-                num2 -= num3;
-                num += num3 * entry.value;
-                if (num2 == 0)
+                player.inventory.FindItemsByAsset(scopedPlayerInventorySearchResultPool.PooledResults, itemAsset, includeEmpty: false, includeMaxQuality: true);
+                foreach (PlayerInventorySearchResultV2 pooledResult in scopedPlayerInventorySearchResultPool.PooledResults)
                 {
-                    break;
+                    uint num3 = pooledResult.DeleteAmount(player, num2);
+                    num2 -= num3;
+                    num += num3 * entry.value;
+                    if (num2 == 0)
+                    {
+                        break;
+                    }
                 }
             }
             if (num >= requiredValue)
@@ -143,23 +142,23 @@ public class ItemCurrencyAsset : Asset
         return true;
     }
 
-    public override void PopulateAsset(Bundle bundle, DatDictionary data, Local localization)
+    public override void PopulateAsset(in PopulateAssetParameters p)
     {
-        base.PopulateAsset(bundle, data, localization);
-        valueFormat = data.GetString("ValueFormat");
-        defaultConditionFormat = data.GetString("DefaultConditionFormat");
+        base.PopulateAsset(in p);
+        valueFormat = p.data.GetString("ValueFormat");
+        defaultConditionFormat = p.data.GetString("DefaultConditionFormat");
         if (string.IsNullOrEmpty(defaultConditionFormat) && !string.IsNullOrEmpty(valueFormat))
         {
             defaultConditionFormat = valueFormat + " / " + valueFormat.Replace("{0", "{1");
         }
-        if (data.TryGetList("Entries", out var node))
+        if (p.data.TryGetList("Entries", out var node))
         {
             int count = node.Count;
             entries = new Entry[count];
             for (int i = 0; i < count; i++)
             {
                 Entry entry = default(Entry);
-                if (node[i] is DatDictionary datDictionary)
+                if (node[i] is IDatDictionary datDictionary)
                 {
                     entry.item = datDictionary.ParseStruct<AssetReference<ItemAsset>>("Item");
                     entry.value = datDictionary.ParseUInt32("Value");

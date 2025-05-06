@@ -1,4 +1,4 @@
-GUID 251cb1cc223c4f5ea3ff0deeb192a9bb
+﻿GUID 251cb1cc223c4f5ea3ff0deeb192a9bb
 Type Trap
 Rarity Epic
 Useable Barricade
@@ -32,28 +32,35 @@ Explosion 36
 Vulnerable
 Unrepairable
 
-Blueprints 2
-Blueprint_0_Type Tool
-Blueprint_0_Supplies 4
-Blueprint_0_Supply_0_ID 67
-Blueprint_0_Supply_0_Amount 3
-Blueprint_0_Supply_1_ID 65
-Blueprint_0_Supply_1_Amount 2
-Blueprint_0_Supply_2_ID 73
-Blueprint_0_Supply_2_Amount 1
-Blueprint_0_Supply_3_ID 1242
-Blueprint_0_Supply_3_Amount 1
-Blueprint_0_Level 1
-Blueprint_0_Skill Craft
-Blueprint_0_Build 32
-Blueprint_1_Type Tool
-Blueprint_1_Supplies 1
-Blueprint_1_Supply_0_ID this
-Blueprint_1_Supply_0_Amount 1
-Blueprint_1_Product "73" // Explosives
-Blueprint_1_Products 1
-Blueprint_1_Level 2
-Blueprint_1_Skill Craft
-Blueprint_1_Build 27
+Blueprints
+[
+	{
+		CategoryTag "ad1804b6945145f3b308738b0b8ea447" // Tools
+		InputItems
+		[
+			"21ede8ebffb14c5580e8c7ad149e335e x 3" // Metal Scrap
+			"ebb61f2e64f24351a6ab905b5516060b x 2" // Wire
+			"8ce5c560166545499432d6e01ce399cc" // Raw Explosives
+			"e028fce70a3343c8be7837421318b847" // Makeshift Grenade
+		]
+		OutputItems this
+		Skill Craft
+		Skill_Level 1
+		RequiresNearbyCraftingTags
+		[
+			"99896da563a748148460c67b9962874f" // Pharmaceutical
+		]
+		Effect "7eceb9f7751d4634b572c8e236355104" // Rip
+	}
+	{
+		Name Salvage
+		CategoryTag "7ed29f9101ae4523a3b2e389414b7bd9" // Salvage
+		InputItems this
+		OutputItems "8ce5c560166545499432d6e01ce399cc" // Raw Explosives
+		Skill Craft
+		Skill_Level 2
+		Effect "84347b13028340b8976033c08675d458" // Wrench
+	}
+]
 
 Has_Clip_Prefab false

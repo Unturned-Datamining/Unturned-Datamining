@@ -1,4 +1,4 @@
-GUID 7f06b16642724683bd61584a52fde981
+﻿GUID 7f06b16642724683bd61584a52fde981
 Type Supply
 Rarity Uncommon
 ID 68
@@ -7,12 +7,15 @@ Size_X 2
 Size_Y 2
 Size_Z 0.5
 
-Blueprints 1
-Blueprint_0_Type Gear
-Blueprint_0_Supplies 1
-Blueprint_0_Supply_0_ID 67
-Blueprint_0_Supply_0_Amount 2
-Blueprint_0_Build 27
+Blueprints
+[
+	{
+		CategoryTag "cdb2df24b76d4c6e9d8411c940d8337f" // Gear
+		InputItems "21ede8ebffb14c5580e8c7ad149e335e x 2" // Metal Scrap
+		OutputItems this
+		Effect "84347b13028340b8976033c08675d458" // Wrench
+	}
+]
 
 Actions 1
 Action_0_Type Blueprint

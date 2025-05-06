@@ -1,4 +1,4 @@
-GUID 0c8f9650c7cc439799026f1012d900ab
+﻿GUID 0c8f9650c7cc439799026f1012d900ab
 Type Magazine
 Rarity Mythical
 ID 1443
@@ -28,18 +28,28 @@ Object_Damage 125
 Explosion 136
 Explosive
 
-Blueprints 2
-Blueprint_0_Type Ammo
-Blueprint_0_Supplies 1
-Blueprint_0_Supply_0_ID 1443
-Blueprint_0_Build 30
-Blueprint_1_Type Tool
-Blueprint_1_Supplies 1
-Blueprint_1_Supply_0_ID this
-Blueprint_1_Supply_0_AllowEmpty true
-Blueprint_1_Supply_0_Prioritization LowestAmount
-Blueprint_1_Product "285" // Metal Bar
-Blueprint_1_Products 5
-Blueprint_1_Build 27
+Blueprints
+[
+	{
+		CategoryTag "d739926736374e5ba34b4ac6ffbb5c8f" // Ammunition
+		Operation FillTargetItem
+		InputItems this
+		Effect "03caec479dd2475c92e1c326e1720140" // Casing
+	}
+	{
+		Name Salvage
+		CategoryTag "7ed29f9101ae4523a3b2e389414b7bd9" // Salvage
+		InputItems
+		[
+			{
+				ID this
+				Prioritization LowestAmount
+				CountEmptyAsOne true
+			}
+		]
+		OutputItems "656f319d2d194813b390edc6edd8a697 x 5" // Metal Bar
+		Effect "84347b13028340b8976033c08675d458" // Wrench
+	}
+]
 
 Delete_Empty

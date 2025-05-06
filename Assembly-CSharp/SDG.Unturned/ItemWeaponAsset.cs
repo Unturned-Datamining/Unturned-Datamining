@@ -265,65 +265,65 @@ public class ItemWeaponAsset : ItemAsset
         animalDamageMultiplier = new AnimalDamageMultiplier(0f, 0f, 0f, 0f);
     }
 
-    public override void PopulateAsset(Bundle bundle, DatDictionary data, Local localization)
+    public override void PopulateAsset(in PopulateAssetParameters p)
     {
-        base.PopulateAsset(bundle, data, localization);
-        int num = data.ParseInt32("BladeIDs");
+        base.PopulateAsset(in p);
+        int num = p.data.ParseInt32("BladeIDs");
         if (num > 0)
         {
             bladeIDs = new byte[num];
             for (int i = 0; i < num; i++)
             {
-                bladeIDs[i] = data.ParseUInt8("BladeID_" + i, 0);
+                bladeIDs[i] = p.data.ParseUInt8("BladeID_" + i, 0);
             }
         }
         else
         {
             bladeIDs = new byte[1];
-            bladeIDs[0] = data.ParseUInt8("BladeID", 0);
+            bladeIDs[0] = p.data.ParseUInt8("BladeID", 0);
         }
-        range = data.ParseFloat("Range");
-        playerDamageMultiplier = new PlayerDamageMultiplier(data.ParseFloat("Player_Damage"), data.ParseFloat("Player_Leg_Multiplier"), data.ParseFloat("Player_Arm_Multiplier"), data.ParseFloat("Player_Spine_Multiplier"), data.ParseFloat("Player_Skull_Multiplier"));
-        playerDamageBleeding = data.ParseEnum("Player_Damage_Bleeding", DamagePlayerParameters.Bleeding.Default);
-        playerDamageBones = data.ParseEnum("Player_Damage_Bones", DamagePlayerParameters.Bones.None);
-        playerDamageFood = data.ParseFloat("Player_Damage_Food");
-        playerDamageWater = data.ParseFloat("Player_Damage_Water");
-        playerDamageVirus = data.ParseFloat("Player_Damage_Virus");
-        playerDamageHallucination = data.ParseFloat("Player_Damage_Hallucination");
-        zombieDamageMultiplier = new ZombieDamageMultiplier(data.ParseFloat("Zombie_Damage"), data.ParseFloat("Zombie_Leg_Multiplier"), data.ParseFloat("Zombie_Arm_Multiplier"), data.ParseFloat("Zombie_Spine_Multiplier"), data.ParseFloat("Zombie_Skull_Multiplier"));
-        animalDamageMultiplier = new AnimalDamageMultiplier(data.ParseFloat("Animal_Damage"), data.ParseFloat("Animal_Leg_Multiplier"), data.ParseFloat("Animal_Spine_Multiplier"), data.ParseFloat("Animal_Skull_Multiplier"));
-        barricadeDamage = data.ParseFloat("Barricade_Damage");
-        structureDamage = data.ParseFloat("Structure_Damage");
-        vehicleDamage = data.ParseFloat("Vehicle_Damage");
-        resourceDamage = data.ParseFloat("Resource_Damage");
-        if (data.ContainsKey("Object_Damage"))
+        range = p.data.ParseFloat("Range");
+        playerDamageMultiplier = new PlayerDamageMultiplier(p.data.ParseFloat("Player_Damage"), p.data.ParseFloat("Player_Leg_Multiplier"), p.data.ParseFloat("Player_Arm_Multiplier"), p.data.ParseFloat("Player_Spine_Multiplier"), p.data.ParseFloat("Player_Skull_Multiplier"));
+        playerDamageBleeding = p.data.ParseEnum("Player_Damage_Bleeding", DamagePlayerParameters.Bleeding.Default);
+        playerDamageBones = p.data.ParseEnum("Player_Damage_Bones", DamagePlayerParameters.Bones.None);
+        playerDamageFood = p.data.ParseFloat("Player_Damage_Food");
+        playerDamageWater = p.data.ParseFloat("Player_Damage_Water");
+        playerDamageVirus = p.data.ParseFloat("Player_Damage_Virus");
+        playerDamageHallucination = p.data.ParseFloat("Player_Damage_Hallucination");
+        zombieDamageMultiplier = new ZombieDamageMultiplier(p.data.ParseFloat("Zombie_Damage"), p.data.ParseFloat("Zombie_Leg_Multiplier"), p.data.ParseFloat("Zombie_Arm_Multiplier"), p.data.ParseFloat("Zombie_Spine_Multiplier"), p.data.ParseFloat("Zombie_Skull_Multiplier"));
+        animalDamageMultiplier = new AnimalDamageMultiplier(p.data.ParseFloat("Animal_Damage"), p.data.ParseFloat("Animal_Leg_Multiplier"), p.data.ParseFloat("Animal_Spine_Multiplier"), p.data.ParseFloat("Animal_Skull_Multiplier"));
+        barricadeDamage = p.data.ParseFloat("Barricade_Damage");
+        structureDamage = p.data.ParseFloat("Structure_Damage");
+        vehicleDamage = p.data.ParseFloat("Vehicle_Damage");
+        resourceDamage = p.data.ParseFloat("Resource_Damage");
+        if (p.data.ContainsKey("Object_Damage"))
         {
-            objectDamage = data.ParseFloat("Object_Damage");
+            objectDamage = p.data.ParseFloat("Object_Damage");
         }
         else
         {
             objectDamage = resourceDamage;
         }
-        durability = data.ParseFloat("Durability");
-        wear = data.ParseUInt8("Wear", 0);
+        durability = p.data.ParseFloat("Durability");
+        wear = p.data.ParseUInt8("Wear", 0);
         if (wear < 1)
         {
             wear = 1;
         }
-        isInvulnerable = data.ContainsKey("Invulnerable");
-        if (data.ContainsKey("Allow_Flesh_Fx"))
+        isInvulnerable = p.data.ContainsKey("Invulnerable");
+        if (p.data.ContainsKey("Allow_Flesh_Fx"))
         {
-            allowFleshFx = data.ParseBool("Allow_Flesh_Fx");
+            allowFleshFx = p.data.ParseBool("Allow_Flesh_Fx");
         }
         else
         {
             allowFleshFx = true;
         }
-        if (data.ContainsKey("Stun_Zombie_Always"))
+        if (p.data.ContainsKey("Stun_Zombie_Always"))
         {
             zombieStunOverride = EZombieStunOverride.Always;
         }
-        else if (data.ContainsKey("Stun_Zombie_Never"))
+        else if (p.data.ContainsKey("Stun_Zombie_Never"))
         {
             zombieStunOverride = EZombieStunOverride.Never;
         }
@@ -331,7 +331,7 @@ public class ItemWeaponAsset : ItemAsset
         {
             zombieStunOverride = EZombieStunOverride.None;
         }
-        bypassAllowedToDamagePlayer = data.ParseBool("Bypass_Allowed_To_Damage_Player");
+        bypassAllowedToDamagePlayer = p.data.ParseBool("Bypass_Allowed_To_Damage_Player");
     }
 
     internal override void BuildCargoData(CargoBuilder builder)

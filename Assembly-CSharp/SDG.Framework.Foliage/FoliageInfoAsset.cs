@@ -130,29 +130,29 @@ public abstract class FoliageInfoAsset : Asset
         return false;
     }
 
-    public override void PopulateAsset(Bundle bundle, DatDictionary data, Local localization)
+    public override void PopulateAsset(in PopulateAssetParameters p)
     {
-        base.PopulateAsset(bundle, data, localization);
-        density = data.ParseFloat("Density");
-        minNormalPositionOffset = data.ParseFloat("Min_Normal_Position_Offset");
-        maxNormalPositionOffset = data.ParseFloat("Max_Normal_Position_Offset");
-        normalRotationOffset = data.ParseVector3("Normal_Rotation_Offset");
-        if (data.ContainsKey("Normal_Rotation_Alignment"))
+        base.PopulateAsset(in p);
+        density = p.data.ParseFloat("Density");
+        minNormalPositionOffset = p.data.ParseFloat("Min_Normal_Position_Offset");
+        maxNormalPositionOffset = p.data.ParseFloat("Max_Normal_Position_Offset");
+        normalRotationOffset = p.data.ParseVector3("Normal_Rotation_Offset");
+        if (p.data.ContainsKey("Normal_Rotation_Alignment"))
         {
-            normalRotationAlignment = data.ParseFloat("Normal_Rotation_Alignment");
+            normalRotationAlignment = p.data.ParseFloat("Normal_Rotation_Alignment");
         }
         else
         {
             normalRotationAlignment = 1f;
         }
-        minSurfaceWeight = data.ParseFloat("Min_Weight");
-        maxSurfaceWeight = data.ParseFloat("Max_Weight");
-        minSurfaceAngle = data.ParseFloat("Min_Angle");
-        maxSurfaceAngle = data.ParseFloat("Max_Angle");
-        minRotation = data.ParseVector3("Min_Rotation");
-        maxRotation = data.ParseVector3("Max_Rotation");
-        minScale = data.ParseVector3("Min_Scale");
-        maxScale = data.ParseVector3("Max_Scale");
+        minSurfaceWeight = p.data.ParseFloat("Min_Weight");
+        maxSurfaceWeight = p.data.ParseFloat("Max_Weight");
+        minSurfaceAngle = p.data.ParseFloat("Min_Angle");
+        maxSurfaceAngle = p.data.ParseFloat("Max_Angle");
+        minRotation = p.data.ParseVector3("Min_Rotation");
+        maxRotation = p.data.ParseVector3("Max_Rotation");
+        minScale = p.data.ParseVector3("Min_Scale");
+        maxScale = p.data.ParseVector3("Max_Scale");
     }
 
     protected virtual void resetFoliageInfo()

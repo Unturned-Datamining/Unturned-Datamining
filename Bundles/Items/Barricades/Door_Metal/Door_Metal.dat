@@ -1,4 +1,4 @@
-GUID 8d0b21995b084db3a91bb7a75d777f75
+﻿GUID 8d0b21995b084db3a91bb7a75d777f75
 Type Barricade
 Rarity Epic
 Useable Barricade
@@ -18,13 +18,23 @@ Locked
 
 Explosion 36
 
-Blueprints 1
-Blueprint_0_Type Barricade
-Blueprint_0_Supplies 2
-Blueprint_0_Supply_0_ID 68
-Blueprint_0_Supply_0_Amount 2
-Blueprint_0_Supply_1_ID 67
-Blueprint_0_Supply_1_Amount 1
-Blueprint_0_Build 27
+Blueprints
+[
+	{
+		CategoryTag "31a59b5fec3f4ec5b2887b1ce4acb029" // Barricades
+		InputItems
+		[
+			"7f06b16642724683bd61584a52fde981 x 2" // Metal Sheet
+			"21ede8ebffb14c5580e8c7ad149e335e" // Metal Scrap
+		]
+		OutputItems this
+		RequiresNearbyCraftingTags
+		[
+			"7b82c125a5a54984b8bb26576b59e977" // Workbench
+		]
+		Effect "84347b13028340b8976033c08675d458" // Wrench
+	}
+]
+
 PlacementAudioClip Sounds/MetalPlacement.mp3
 Has_Clip_Prefab false

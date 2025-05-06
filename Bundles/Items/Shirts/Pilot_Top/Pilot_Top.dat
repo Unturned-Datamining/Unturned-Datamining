@@ -1,4 +1,4 @@
-GUID dce4cb8f520041289111467f11e1204e
+﻿GUID dce4cb8f520041289111467f11e1204e
 Type Shirt
 Rarity Uncommon
 Useable Clothing
@@ -13,14 +13,24 @@ Height 3
 
 Armor 0.95
 
-Blueprints 2
-Blueprint_0_Type Apparel
-Blueprint_0_Supply_0_ID 1358
-Blueprint_0_Product 66
-Blueprint_0_Products 2
-Blueprint_0_Build 32
-Blueprint_1_Type Repair
-Blueprint_1_Supplies 1
-Blueprint_1_Supply_0_ID 66
-Blueprint_1_Supply_0_Amount 2
-Blueprint_1_Build 32
+Blueprints
+[
+	{
+		Name Salvage
+		CategoryTag "7ed29f9101ae4523a3b2e389414b7bd9" // Salvage
+		InputItems this
+		OutputItems "14901f32cd3240179fd6124324cc27e5 x 2" // Cloth
+		Effect "7eceb9f7751d4634b572c8e236355104" // Rip
+	}
+	{
+		Name Repair
+		CategoryTag "732ee6ffeb18418985cf4f9fde33dd11" // Repair
+		Operation RepairTargetItem
+		InputItems "14901f32cd3240179fd6124324cc27e5 x 2" // Cloth
+		RequiresNearbyCraftingTags
+		[
+			"7b82c125a5a54984b8bb26576b59e977" // Workbench
+		]
+		Effect "7eceb9f7751d4634b572c8e236355104" // Rip
+	}
+]

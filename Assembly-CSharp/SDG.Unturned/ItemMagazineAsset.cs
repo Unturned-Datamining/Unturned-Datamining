@@ -48,8 +48,6 @@ public class ItemMagazineAsset : ItemCaliberAsset
 
     protected bool _isExplosive;
 
-    private bool _deleteEmpty;
-
     public GameObject magazine => _magazine;
 
     public byte pellets => _pellets;
@@ -103,7 +101,8 @@ public class ItemMagazineAsset : ItemCaliberAsset
 
     public bool isExplosive => _isExplosive;
 
-    public bool deleteEmpty => _deleteEmpty;
+    [Obsolete("Moved into ItemAsset and renamed to ShouldDeleteAtZeroAmount.")]
+    public bool deleteEmpty => base.ShouldDeleteAtZeroAmount;
 
     /// <summary>
     /// Should amount be filled to capacity when detached?
@@ -169,48 +168,47 @@ public class ItemMagazineAsset : ItemCaliberAsset
         }
     }
 
-    public override void PopulateAsset(Bundle bundle, DatDictionary data, Local localization)
+    public override void PopulateAsset(in PopulateAssetParameters p)
     {
-        base.PopulateAsset(bundle, data, localization);
-        _magazine = loadRequiredAsset<GameObject>(bundle, "Magazine");
-        _pellets = data.ParseUInt8("Pellets", 0);
+        base.PopulateAsset(in p);
+        _magazine = loadRequiredAsset<GameObject>(p.bundle, "Magazine");
+        _pellets = p.data.ParseUInt8("Pellets", 0);
         if (pellets < 1)
         {
             _pellets = 1;
         }
-        _stuck = data.ParseUInt8("Stuck", 0);
-        projectileDamageMultiplier = data.ParseFloat("Projectile_Damage_Multiplier", 1f);
-        projectileBlastRadiusMultiplier = data.ParseFloat("Projectile_Blast_Radius_Multiplier", 1f);
-        projectileLaunchForceMultiplier = data.ParseFloat("Projectile_Launch_Force_Multiplier", 1f);
-        _range = data.ParseFloat("Range");
-        playerDamage = data.ParseFloat("Player_Damage");
-        zombieDamage = data.ParseFloat("Zombie_Damage");
-        animalDamage = data.ParseFloat("Animal_Damage");
-        barricadeDamage = data.ParseFloat("Barricade_Damage");
-        structureDamage = data.ParseFloat("Structure_Damage");
-        vehicleDamage = data.ParseFloat("Vehicle_Damage");
-        resourceDamage = data.ParseFloat("Resource_Damage");
-        explosionLaunchSpeed = data.ParseFloat("Explosion_Launch_Speed", playerDamage * 0.1f);
-        _explosion = data.ParseGuidOrLegacyId("Explosion", out explosionEffectGuid);
-        if (data.ContainsKey("Object_Damage"))
+        _stuck = p.data.ParseUInt8("Stuck", 0);
+        projectileDamageMultiplier = p.data.ParseFloat("Projectile_Damage_Multiplier", 1f);
+        projectileBlastRadiusMultiplier = p.data.ParseFloat("Projectile_Blast_Radius_Multiplier", 1f);
+        projectileLaunchForceMultiplier = p.data.ParseFloat("Projectile_Launch_Force_Multiplier", 1f);
+        _range = p.data.ParseFloat("Range");
+        playerDamage = p.data.ParseFloat("Player_Damage");
+        zombieDamage = p.data.ParseFloat("Zombie_Damage");
+        animalDamage = p.data.ParseFloat("Animal_Damage");
+        barricadeDamage = p.data.ParseFloat("Barricade_Damage");
+        structureDamage = p.data.ParseFloat("Structure_Damage");
+        vehicleDamage = p.data.ParseFloat("Vehicle_Damage");
+        resourceDamage = p.data.ParseFloat("Resource_Damage");
+        explosionLaunchSpeed = p.data.ParseFloat("Explosion_Launch_Speed", playerDamage * 0.1f);
+        _explosion = p.data.ParseGuidOrLegacyId("Explosion", out explosionEffectGuid);
+        if (p.data.ContainsKey("Object_Damage"))
         {
-            objectDamage = data.ParseFloat("Object_Damage");
+            objectDamage = p.data.ParseFloat("Object_Damage");
         }
         else
         {
             objectDamage = resourceDamage;
         }
-        _tracer = data.ParseGuidOrLegacyId("Tracer", out tracerEffectGuid);
-        _impact = data.ParseGuidOrLegacyId("Impact", out _impactEffectGuid);
-        _speed = data.ParseFloat("Speed");
+        _tracer = p.data.ParseGuidOrLegacyId("Tracer", out tracerEffectGuid);
+        _impact = p.data.ParseGuidOrLegacyId("Impact", out _impactEffectGuid);
+        _speed = p.data.ParseFloat("Speed");
         if (speed < 0.01f)
         {
             _speed = 1f;
         }
-        _isExplosive = data.ContainsKey("Explosive");
-        spawnExplosionOnDedicatedServer = data.ContainsKey("Spawn_Explosion_On_Dedicated_Server");
-        _deleteEmpty = data.ContainsKey("Delete_Empty");
-        shouldFillAfterDetach = data.ParseBool("Should_Fill_After_Detach");
+        _isExplosive = p.data.ContainsKey("Explosive");
+        spawnExplosionOnDedicatedServer = p.data.ContainsKey("Spawn_Explosion_On_Dedicated_Server");
+        shouldFillAfterDetach = p.data.ParseBool("Should_Fill_After_Detach");
     }
 
     internal override void BuildCargoData(CargoBuilder builder)

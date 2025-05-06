@@ -6,10 +6,9 @@ namespace SDG.Unturned;
 
 public class NPCVehicleReward : INPCReward
 {
-    public Guid VehicleGuid { get; protected set; }
+    private CachingBcAssetRef _vehicleAssetRef;
 
-    [Obsolete]
-    public ushort id { get; protected set; }
+    public CachingBcAssetRef VehicleAssetRef => _vehicleAssetRef;
 
     public string spawnpoint { get; protected set; }
 
@@ -18,13 +17,19 @@ public class NPCVehicleReward : INPCReward
     /// </summary>
     public Color32? paintColor { get; protected set; }
 
+    [Obsolete]
+    public Guid VehicleGuid => _vehicleAssetRef.Guid;
+
+    [Obsolete]
+    public ushort id => _vehicleAssetRef.LegacyId;
+
     /// <summary>
     /// Returned asset is not necessarily a vehicle asset yet: It can also be a VehicleRedirectorAsset which the
     /// vehicle spawner requires to properly set paint color.
     /// </summary>
     public Asset FindAsset()
     {
-        return Assets.FindBaseVehicleAssetByGuidOrLegacyId(VehicleGuid, id);
+        return _vehicleAssetRef.Get();
     }
 
     public VehicleAsset FindVehicleAssetAndHandleRedirects()
@@ -94,11 +99,65 @@ public class NPCVehicleReward : INPCReward
         return sleekBox;
     }
 
+    internal override void PopulateV2(in PopulateRewardParameters p)
+    {
+        base.PopulateV2(in p);
+        if (!p.data.TryParseBcAssetRef("ID", EAssetType.VEHICLE, out _vehicleAssetRef))
+        {
+            p.ReportRequiredOptionInvalid("ID");
+        }
+        if (p.data.TryGetString("Spawnpoint", out var value))
+        {
+            spawnpoint = value;
+        }
+        else
+        {
+            p.ReportRequiredOptionInvalid("Spawnpoint");
+        }
+        if (p.data.TryParseColor32RGB("PaintColor", out var value2))
+        {
+            paintColor = value2;
+        }
+        else
+        {
+            paintColor = null;
+        }
+    }
+
+    internal override void PopulateLegacy(in PopulateRewardParameters p)
+    {
+        base.PopulateLegacy(in p);
+        if (!p.data.TryParseBcAssetRef(p.legacyPrefix + "_ID", EAssetType.VEHICLE, out _vehicleAssetRef))
+        {
+            p.ReportRequiredOptionInvalid("ID");
+        }
+        if (p.data.TryGetString(p.legacyPrefix + "_Spawnpoint", out var value))
+        {
+            spawnpoint = value;
+        }
+        else
+        {
+            p.ReportRequiredOptionInvalid("Spawnpoint");
+        }
+        if (p.data.TryParseColor32RGB(p.legacyPrefix + "_PaintColor", out var value2))
+        {
+            paintColor = value2;
+        }
+        else
+        {
+            paintColor = null;
+        }
+    }
+
+    public NPCVehicleReward()
+    {
+    }
+
+    [Obsolete]
     public NPCVehicleReward(Guid newVehicleGuid, ushort newID, string newSpawnpoint, Color32? newPaintColor, string newText)
         : base(newText)
     {
-        VehicleGuid = newVehicleGuid;
-        id = newID;
+        _vehicleAssetRef = new CachingBcAssetRef(newVehicleGuid, EAssetType.VEHICLE, newID);
         spawnpoint = newSpawnpoint;
         paintColor = newPaintColor;
     }

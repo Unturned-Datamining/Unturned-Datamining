@@ -153,13 +153,13 @@ public class ItemStructureAsset : ItemPlaceableAsset
         }
     }
 
-    public override void PopulateAsset(Bundle bundle, DatDictionary data, Local localization)
+    public override void PopulateAsset(in PopulateAssetParameters p)
     {
-        base.PopulateAsset(bundle, data, localization);
+        base.PopulateAsset(in p);
         bool flag;
-        if (Dedicator.IsDedicatedServer && data.ParseBool("Has_Clip_Prefab", defaultValue: true))
+        if (Dedicator.IsDedicatedServer && p.data.ParseBool("Has_Clip_Prefab", defaultValue: true))
         {
-            _structure = bundle.load<GameObject>("Clip");
+            _structure = p.bundle.load<GameObject>("Clip");
             if (structure == null)
             {
                 flag = true;
@@ -177,7 +177,7 @@ public class ItemStructureAsset : ItemPlaceableAsset
         }
         if (flag)
         {
-            _structure = bundle.load<GameObject>("Structure");
+            _structure = p.bundle.load<GameObject>("Structure");
             if (structure == null)
             {
                 Assets.ReportError(this, "missing \"Structure\" GameObject");
@@ -200,26 +200,26 @@ public class ItemStructureAsset : ItemPlaceableAsset
                 }
             }
         }
-        placementPreviewRef = data.readMasterBundleReference<GameObject>("PlacementPreviewPrefab", bundle);
-        _nav = bundle.load<GameObject>("Nav");
-        _use = LoadRedirectableAsset<AudioClip>(bundle, "Use", data, "PlacementAudioClip");
-        _construct = (EConstruct)Enum.Parse(typeof(EConstruct), data.GetString("Construct"), ignoreCase: true);
-        _health = data.ParseUInt16("Health", 0);
-        _range = data.ParseFloat("Range");
-        _explosion = data.ParseGuidOrLegacyId("Explosion", out _explosionGuid);
-        canBeDamaged = data.ParseBool("Can_Be_Damaged", defaultValue: true);
-        eligibleForPooling = data.ParseBool("Eligible_For_Pooling", defaultValue: true);
-        requiresPillars = data.ParseBool("Requires_Pillars", defaultValue: true);
-        _isVulnerable = data.ContainsKey("Vulnerable");
-        _isRepairable = !data.ContainsKey("Unrepairable");
-        _proofExplosion = data.ContainsKey("Proof_Explosion");
-        _isUnpickupable = data.ContainsKey("Unpickupable");
-        _isSalvageable = !data.ContainsKey("Unsalvageable");
-        salvageDurationMultiplier = data.ParseFloat("Salvage_Duration_Multiplier", 1f);
-        _isSaveable = !data.ContainsKey("Unsaveable");
-        if (data.ContainsKey("Armor_Tier"))
+        placementPreviewRef = p.data.readMasterBundleReference<GameObject>("PlacementPreviewPrefab", p.bundle);
+        _nav = p.bundle.load<GameObject>("Nav");
+        _use = LoadRedirectableAsset<AudioClip>(p.bundle, "Use", p.data, "PlacementAudioClip");
+        _construct = (EConstruct)Enum.Parse(typeof(EConstruct), p.data.GetString("Construct"), ignoreCase: true);
+        _health = p.data.ParseUInt16("Health", 0);
+        _range = p.data.ParseFloat("Range");
+        _explosion = p.data.ParseGuidOrLegacyId("Explosion", out _explosionGuid);
+        canBeDamaged = p.data.ParseBool("Can_Be_Damaged", defaultValue: true);
+        eligibleForPooling = p.data.ParseBool("Eligible_For_Pooling", defaultValue: true);
+        requiresPillars = p.data.ParseBool("Requires_Pillars", defaultValue: true);
+        _isVulnerable = p.data.ContainsKey("Vulnerable");
+        _isRepairable = !p.data.ContainsKey("Unrepairable");
+        _proofExplosion = p.data.ContainsKey("Proof_Explosion");
+        _isUnpickupable = p.data.ContainsKey("Unpickupable");
+        _isSalvageable = !p.data.ContainsKey("Unsalvageable");
+        salvageDurationMultiplier = p.data.ParseFloat("Salvage_Duration_Multiplier", 1f);
+        _isSaveable = !p.data.ContainsKey("Unsaveable");
+        if (p.data.ContainsKey("Armor_Tier"))
         {
-            armorTier = (EArmorTier)Enum.Parse(typeof(EArmorTier), data.GetString("Armor_Tier"), ignoreCase: true);
+            armorTier = (EArmorTier)Enum.Parse(typeof(EArmorTier), p.data.GetString("Armor_Tier"), ignoreCase: true);
         }
         else if (name.Contains("Metal") || name.Contains("Brick"))
         {
@@ -229,8 +229,8 @@ public class ItemStructureAsset : ItemPlaceableAsset
         {
             armorTier = EArmorTier.LOW;
         }
-        foliageCutRadius = data.ParseFloat("Foliage_Cut_Radius", 6f);
-        terrainTestHeight = data.ParseFloat("Terrain_Test_Height", 10f);
+        foliageCutRadius = p.data.ParseFloat("Foliage_Cut_Radius", 6f);
+        terrainTestHeight = p.data.ParseFloat("Terrain_Test_Height", 10f);
     }
 
     internal override void BuildCargoData(CargoBuilder builder)

@@ -24,7 +24,7 @@ public class SleekCuratedLevelLink : SleekWrapper
         {
             if (Provider.provider.browserService.canOpenBrowser)
             {
-                string url = "http://steamcommunity.com/sharedfiles/filedetails/?id=" + curatedMap.Workshop_File_Id;
+                string url = "https://steamcommunity.com/sharedfiles/filedetails/?id=" + curatedMap.Workshop_File_Id;
                 Provider.provider.browserService.open(url);
             }
             else

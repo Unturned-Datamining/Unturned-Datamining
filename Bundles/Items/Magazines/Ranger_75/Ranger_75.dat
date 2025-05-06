@@ -1,4 +1,4 @@
-GUID 05cd21ecaa214ee0a05ca3274c1564b1
+﻿GUID 05cd21ecaa214ee0a05ca3274c1564b1
 Type Magazine
 Rarity Epic
 ID 125
@@ -19,26 +19,40 @@ Aim_Duration_Multiplier 1.25
 Tracer 48
 Speed 0.9
 
-Blueprints 4
-Blueprint_0_Type Ammo
-Blueprint_0_Supplies 1
-Blueprint_0_Supply_0_ID 119
-Blueprint_0_Build 30
-Blueprint_1_Type Ammo
-Blueprint_1_Supplies 1
-Blueprint_1_Supply_0_ID 123
-Blueprint_1_Build 30
-Blueprint_2_Type Ammo
-Blueprint_2_Supplies 1
-Blueprint_2_Supply_0_ID 125
-Blueprint_2_Build 30
-Blueprint_3_Type Tool
-Blueprint_3_Supplies 1
-Blueprint_3_Supply_0_ID this
-Blueprint_3_Supply_0_AllowEmpty true
-Blueprint_3_Supply_0_Prioritization LowestAmount
-Blueprint_3_Product "67" // Metal Scrap
-Blueprint_3_Products 1
-Blueprint_3_Build 27
+Blueprints
+[
+	{
+		CategoryTag "d739926736374e5ba34b4ac6ffbb5c8f" // Ammunition
+		Operation FillTargetItem
+		InputItems "5f609a8593504f2c88402cf2c45b49d3" // Low Caliber Ranger Ammunition Box
+		Effect "03caec479dd2475c92e1c326e1720140" // Casing
+	}
+	{
+		CategoryTag "d739926736374e5ba34b4ac6ffbb5c8f" // Ammunition
+		Operation FillTargetItem
+		InputItems "d5389a47976849ecad40c4f7d6b43789" // Ranger Magazine
+		Effect "03caec479dd2475c92e1c326e1720140" // Casing
+	}
+	{
+		CategoryTag "d739926736374e5ba34b4ac6ffbb5c8f" // Ammunition
+		Operation FillTargetItem
+		InputItems this
+		Effect "03caec479dd2475c92e1c326e1720140" // Casing
+	}
+	{
+		Name Salvage
+		CategoryTag "7ed29f9101ae4523a3b2e389414b7bd9" // Salvage
+		InputItems
+		[
+			{
+				ID this
+				Prioritization LowestAmount
+				CountEmptyAsOne true
+			}
+		]
+		OutputItems "21ede8ebffb14c5580e8c7ad149e335e" // Metal Scrap
+		Effect "84347b13028340b8976033c08675d458" // Wrench
+	}
+]
 
 Paintable

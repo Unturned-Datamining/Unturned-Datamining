@@ -1,8 +1,10 @@
+using System;
+
 namespace SDG.Unturned;
 
 public class Action
 {
-    private ushort _source;
+    internal CachingBcAssetRef blueprintOwnerRef;
 
     private EActionType _type;
 
@@ -13,8 +15,6 @@ public class Action
     private string _tooltip;
 
     private string _key;
-
-    public ushort source => _source;
 
     public EActionType type => _type;
 
@@ -46,9 +46,16 @@ public class Action
         }
     }
 
+    [Obsolete("Please use FindBlueprintOwnerAsset for GUID support")]
+    public ushort source => blueprintOwnerRef.LegacyId;
+
+    public Asset FindBlueprintOwnerAsset()
+    {
+        return blueprintOwnerRef.Get();
+    }
+
     public Action(ushort newSource, EActionType newType, ActionBlueprint[] newBlueprints, string newText, string newTooltip, string newKey)
     {
-        _source = newSource;
         _type = newType;
         _blueprints = newBlueprints;
         _text = newText;

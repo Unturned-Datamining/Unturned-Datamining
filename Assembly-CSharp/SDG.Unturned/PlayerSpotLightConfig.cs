@@ -34,7 +34,7 @@ public struct PlayerSpotLightConfig
         return $"(Enabled: {isEnabled} Range: {range}m Angle: {angle}° Color: {color})";
     }
 
-    public PlayerSpotLightConfig(DatDictionary data)
+    public PlayerSpotLightConfig(IDatDictionary data)
     {
         isEnabled = data.ParseBool("SpotLight_Enabled", defaultValue: true);
         range = data.ParseFloat("SpotLight_Range", 64f);

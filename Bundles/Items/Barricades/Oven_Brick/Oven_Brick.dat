@@ -1,0 +1,59 @@
+﻿GUID abb0b130e3c3490bbd7f758194bf2410
+Type Barricade
+Rarity Rare
+Useable Barricade
+Build Campfire
+ID 1919
+
+Size_X 2
+Size_Y 2
+Size_Z 0.4
+
+Health 500
+Range 4
+Radius 0.5
+Offset 0.75
+
+Explosion 19
+
+PlaceableProvidesCraftingTags
+[
+	20f30322bbcc4b01a4f116d22b24c21a
+	d2cc65b749e5477f95103601df89cdbc
+]
+RequiresHeatSourceCraftingTagConversion false
+
+Blueprints
+[
+	{
+		CategoryTag "bfac6026305f4737a95fd275ebff65a6" // Utilities
+		InputItems
+		[
+			{
+				ID "cc444c3f2f354ff5a81f18cf9b980fff" // Bricks
+				Amount 5
+			}
+			{
+				ID "7f06b16642724683bd61584a52fde981" // Metal Sheet
+			}
+			{
+				ID "fdac7ad3db9c46109fa6a4e137969ad6" // Campfire
+			}
+			{
+				ID "5830b84bf8074caa91cf3f4dde0dd19e" // Blowtorch
+				Delete false
+			}
+		]
+		OutputItems this
+		Skill Craft
+		Skill_Level 2
+		RequiresNearbyCraftingTags
+		[
+			"7b82c125a5a54984b8bb26576b59e977" // Workbench
+		]
+		Effect "84347b13028340b8976033c08675d458" // Wrench
+	}
+]
+
+PlacementAudioClip Sounds/WoodenPlacement.mp3
+Has_Clip_Prefab false

@@ -91,31 +91,31 @@ internal class VehicleWheelConfiguration : IDatParseable
 
     public bool TryParse(IDatNode node)
     {
-        if (node is DatDictionary datDictionary)
+        if (node is IDatDictionary dictionary)
         {
-            wheelColliderPath = datDictionary.GetString("WheelColliderPath");
-            isColliderPowered = datDictionary.ParseBool("IsColliderPowered");
-            modelPath = datDictionary.GetString("ModelPath");
-            isModelSteered = datDictionary.ParseBool("IsModelSteered");
-            modelUseColliderPose = datDictionary.ParseBool("ModelUseColliderPose");
-            modelRadius = datDictionary.ParseFloat("ModelRadius", -1f);
-            copyColliderRpmIndex = datDictionary.ParseInt32("CopyColliderRpmIndex", -1);
-            copyCrawlerTrackSpeedIndex = datDictionary.ParseInt16("CopyCrawlerTrackSpeedIndex", -1);
-            steeringAngleMultiplier = datDictionary.ParseFloat("SteeringAngleMultiplier", 1f);
-            modelSuspensionOffset = datDictionary.ParseFloat("ModelSuspensionOffset");
-            modelSuspensionSpeed = datDictionary.ParseFloat("ModelSuspensionSpeed", -1f);
+            wheelColliderPath = dictionary.GetString("WheelColliderPath");
+            isColliderPowered = dictionary.ParseBool("IsColliderPowered");
+            modelPath = dictionary.GetString("ModelPath");
+            isModelSteered = dictionary.ParseBool("IsModelSteered");
+            modelUseColliderPose = dictionary.ParseBool("ModelUseColliderPose");
+            modelRadius = dictionary.ParseFloat("ModelRadius", -1f);
+            copyColliderRpmIndex = dictionary.ParseInt32("CopyColliderRpmIndex", -1);
+            copyCrawlerTrackSpeedIndex = dictionary.ParseInt16("CopyCrawlerTrackSpeedIndex", -1);
+            steeringAngleMultiplier = dictionary.ParseFloat("SteeringAngleMultiplier", 1f);
+            modelSuspensionOffset = dictionary.ParseFloat("ModelSuspensionOffset");
+            modelSuspensionSpeed = dictionary.ParseFloat("ModelSuspensionSpeed", -1f);
             EWheelMotionEffectsMode defaultValue = (modelUseColliderPose ? EWheelMotionEffectsMode.BothDirections : EWheelMotionEffectsMode.None);
-            motionEffectsMode = datDictionary.ParseEnum("MotionEffects", defaultValue);
-            canExplode = datDictionary.ParseBool("CanExplode", defaultValue: true);
-            if (datDictionary.ParseBool("IsColliderSteered"))
+            motionEffectsMode = dictionary.ParseEnum("MotionEffects", defaultValue);
+            canExplode = dictionary.ParseBool("CanExplode", defaultValue: true);
+            if (dictionary.ParseBool("IsColliderSteered"))
             {
                 steeringMode = EWheelSteeringMode.SteeringAngle;
             }
             else
             {
-                steeringMode = datDictionary.ParseEnum("SteeringMode", EWheelSteeringMode.None);
+                steeringMode = dictionary.ParseEnum("SteeringMode", EWheelSteeringMode.None);
             }
-            crawlerTrackForwardMode = datDictionary.ParseEnum("CrawlerTrackForwardMode", ECrawlerTrackForwardMode.Auto);
+            crawlerTrackForwardMode = dictionary.ParseEnum("CrawlerTrackForwardMode", ECrawlerTrackForwardMode.Auto);
             return true;
         }
         return false;

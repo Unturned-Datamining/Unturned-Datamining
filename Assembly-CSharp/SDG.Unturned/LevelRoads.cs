@@ -29,9 +29,11 @@ public class LevelRoads
 
     private static bool isListeningForLandscape;
 
-    internal static RegionIncrementalVisibilityTracker regionTracker;
+    private static RegionIncrementalVisibilityTracker regionTracker;
 
     private static Dictionary<Vector2Int, RegionVisibilityData> regionTrackerData = new Dictionary<Vector2Int, RegionVisibilityData>();
+
+    internal static bool shouldInstantlyLoad = false;
 
     private static CommandLineFlag shouldIncludeRoadsInLevelBatching = new CommandLineFlag(defaultValue: true, "-ExcludeRoadsFromBatching");
 
@@ -213,6 +215,7 @@ public class LevelRoads
         roads = new List<Road>();
         regionSegmentRenderers = new Dictionary<Vector2Int, List<MeshRenderer>>();
         regionTracker = new RegionIncrementalVisibilityTracker();
+        shouldInstantlyLoad = true;
         if (ReadWrite.fileExists(Level.info.path + "/Environment/Roads.dat", useCloud: false, usePath: false))
         {
             River river = new River(Level.info.path + "/Environment/Roads.dat", usePath: false);
@@ -464,6 +467,15 @@ public class LevelRoads
     {
         if (regionTracker == null || regionSegmentRenderers == null || regionSegmentRenderers.Count < 1)
         {
+            return;
+        }
+        Vector2Int coordinateVector2Int = Regions.GetCoordinateVector2Int(MainCamera.RenderingPosition);
+        shouldInstantlyLoad |= (coordinateVector2Int - regionTracker.CameraCoord).sqrMagnitude >= 4;
+        regionTracker.CameraCoord = coordinateVector2Int;
+        if (shouldInstantlyLoad)
+        {
+            shouldInstantlyLoad = false;
+            ImmediatelySyncRegionalVisibility();
             return;
         }
         regionTrackerData.Clear();

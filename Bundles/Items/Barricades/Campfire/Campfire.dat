@@ -1,4 +1,4 @@
-GUID fdac7ad3db9c46109fa6a4e137969ad6
+﻿GUID fdac7ad3db9c46109fa6a4e137969ad6
 Type Barricade
 Rarity Uncommon
 Useable Barricade
@@ -17,18 +17,27 @@ Offset 0.7
 Explosion 19
 Vulnerable
 
-Blueprints 3
-Blueprint_0_Type Utilities
-Blueprint_0_Supply_0_ID 37
-Blueprint_0_Supply_0_Amount 5
-Blueprint_0_Build 27
-Blueprint_1_Type Utilities
-Blueprint_1_Supply_0_ID 39
-Blueprint_1_Supply_0_Amount 5
-Blueprint_1_Build 27
-Blueprint_2_Type Utilities
-Blueprint_2_Supply_0_ID 41
-Blueprint_2_Supply_0_Amount 5
-Blueprint_2_Build 27
+Blueprints
+[
+	{
+		CategoryTag "bfac6026305f4737a95fd275ebff65a6" // Utilities
+		InputItems "ccfd125a44cf487fbd3d471f15a854af x 5" // Birch Log
+		OutputItems this
+		Effect "84347b13028340b8976033c08675d458" // Wrench
+	}
+	{
+		CategoryTag "bfac6026305f4737a95fd275ebff65a6" // Utilities
+		InputItems "94f9c6aa09c249dfbce4f195c0271b9c x 5" // Maple Log
+		OutputItems this
+		Effect "84347b13028340b8976033c08675d458" // Wrench
+	}
+	{
+		CategoryTag "bfac6026305f4737a95fd275ebff65a6" // Utilities
+		InputItems "86bf08032a5147f9871e362e40812771 x 5" // Pine Log
+		OutputItems this
+		Effect "84347b13028340b8976033c08675d458" // Wrench
+	}
+]
+
 PlacementAudioClip Sounds/WoodenPlacement.mp3
 Has_Clip_Prefab false

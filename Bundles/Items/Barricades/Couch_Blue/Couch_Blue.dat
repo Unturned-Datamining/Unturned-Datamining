@@ -1,4 +1,4 @@
-GUID f8d149f415724a4ba9831b4032bd0c2a
+﻿GUID f8d149f415724a4ba9831b4032bd0c2a
 Type Barricade
 Useable Barricade
 Build Barricade
@@ -15,14 +15,26 @@ Offset 0.75
 
 Explosion 37
 
-Blueprints 1
-Blueprint_0_Type Furniture
-Blueprint_0_Supplies 2
-Blueprint_0_Supply_0_ID 66
-Blueprint_0_Supply_0_Amount 11
-Blueprint_0_Supply_1_ID 255
-Blueprint_0_Supply_1_Amount 1
-Blueprint_0_Supply_1_Critical
-Blueprint_0_Build 27
+Blueprints
+[
+	{
+		CategoryTag "b0c6cc0a8b4346be89aef697ecdb8e46" // Furniture
+		InputItems
+		[
+			{
+				ID "37dcda8892bc43f29c2538f8e26c3a90" // White Couch
+				Critical true
+			}
+			"2e3326e006904aae90aead15bcc2e8a3" // Blue Flare
+		]
+		RequiresNearbyCraftingTags
+		[
+			"8e86b740dafc46f7bf98c5040c9b223e" // DyeVat
+		]
+		OutputItems this
+		Effect "61edeaee95b742a3a0b589f769261cdb" // DyeVatCraftingEffect
+	}
+]
+
 PlacementAudioClip Sounds/WoodenPlacement.mp3
 Has_Clip_Prefab false

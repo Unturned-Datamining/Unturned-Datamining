@@ -1,4 +1,4 @@
-GUID 6eb5c705c58c472d9ed366708ac90750
+﻿GUID 6eb5c705c58c472d9ed366708ac90750
 Type Barrel
 ID 477
 
@@ -8,36 +8,65 @@ Size_Z 0.125
 
 Silenced
 Volume 0.8
-Durability 10
+Durability 5
 
 Ballistic_Drop 1.2
 
 Ballistic_Damage_Multiplier 0.8
 
-Blueprints 3
-Blueprint_0_Type Tool
-Blueprint_0_Supplies 2
-Blueprint_0_Supply_0_ID 72
-Blueprint_0_Supply_0_Amount 2
-Blueprint_0_Supply_1_ID 69
-Blueprint_0_Supply_1_Amount 1
-Blueprint_0_Tool 76
-Blueprint_0_Level 1
-Blueprint_0_Skill Craft
-Blueprint_0_Build 27
-Blueprint_1_Type Repair
-Blueprint_1_Supplies 2
-Blueprint_1_Supply_0_ID 72
-Blueprint_1_Supply_0_Amount 1
-Blueprint_1_Supply_1_ID 69
-Blueprint_1_Supply_1_Amount 1
-Blueprint_1_Tool 76
-Blueprint_1_Level 1
-Blueprint_1_Skill Repair
-Blueprint_1_Build 27
-Blueprint_2_Type Tool
-Blueprint_2_Supplies 1
-Blueprint_2_Supply_0_ID this
-Blueprint_2_Product "67" // Metal Scrap
-Blueprint_2_Products 1
-Blueprint_2_Build 27
+Blueprints
+[
+	{
+		CategoryTag "ad1804b6945145f3b308738b0b8ea447" // Tools
+		InputItems
+		[
+			{
+				ID "c0b0f4a9f46c49a59f4558210bf36da5" // Metal Can
+				Amount 2
+			}
+			{
+				ID "8c25cf28c76a4634855f404c8972c0ae" // Tape
+			}
+			{
+				ID "5830b84bf8074caa91cf3f4dde0dd19e" // Blowtorch
+				Delete false
+			}
+		]
+		OutputItems this
+		Skill Craft
+		Skill_Level 1
+		Effect "84347b13028340b8976033c08675d458" // Wrench
+	}
+	{
+		Name Repair
+		CategoryTag "732ee6ffeb18418985cf4f9fde33dd11" // Repair
+		Operation RepairTargetItem
+		InputItems
+		[
+			{
+				ID "c0b0f4a9f46c49a59f4558210bf36da5" // Metal Can
+			}
+			{
+				ID "8c25cf28c76a4634855f404c8972c0ae" // Tape
+			}
+			{
+				ID "5830b84bf8074caa91cf3f4dde0dd19e" // Blowtorch
+				Delete false
+			}
+		]
+		Skill Repair
+		Skill_Level 1
+		RequiresNearbyCraftingTags
+		[
+			"7b82c125a5a54984b8bb26576b59e977" // Workbench
+		]
+		Effect "84347b13028340b8976033c08675d458" // Wrench
+	}
+	{
+		Name Salvage
+		CategoryTag "7ed29f9101ae4523a3b2e389414b7bd9" // Salvage
+		InputItems this
+		OutputItems "21ede8ebffb14c5580e8c7ad149e335e" // Metal Scrap
+		Effect "84347b13028340b8976033c08675d458" // Wrench
+	}
+]

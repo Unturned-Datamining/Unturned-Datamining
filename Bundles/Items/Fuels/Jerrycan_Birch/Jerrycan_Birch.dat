@@ -1,4 +1,4 @@
-GUID 0078ced43dc1454b98c4d0246a4c18ab
+﻿GUID 0078ced43dc1454b98c4d0246a4c18ab
 Type Fuel
 Useable Fuel
 ID 1115
@@ -9,13 +9,18 @@ Size_Z 0.6
 
 Fuel 275
 
-Blueprints 1
-Blueprint_0_Type Tool
-Blueprint_0_Supplies 2
-Blueprint_0_Supply_0_ID 62
-Blueprint_0_Supply_0_Amount 7
-Blueprint_0_Supply_1_ID 69
-Blueprint_0_Supply_1_Amount 2
-Blueprint_0_Level 1
-Blueprint_0_Skill Craft
-Blueprint_0_Build 27
+Blueprints
+[
+	{
+		CategoryTag "ad1804b6945145f3b308738b0b8ea447" // Tools
+		InputItems
+		[
+			"5a3c4302400e400b9b9486fbb5178eca x 7" // Birch Plank
+			"8c25cf28c76a4634855f404c8972c0ae x 2" // Tape
+		]
+		OutputItems this
+		Skill Craft
+		Skill_Level 1
+		Effect "84347b13028340b8976033c08675d458" // Wrench
+	}
+]

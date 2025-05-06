@@ -6,10 +6,10 @@ public class ItemVehiclePaintToolAsset : ItemToolAsset
 {
     public Color32 PaintColor { get; protected set; }
 
-    public override void PopulateAsset(Bundle bundle, DatDictionary data, Local localization)
+    public override void PopulateAsset(in PopulateAssetParameters p)
     {
-        base.PopulateAsset(bundle, data, localization);
-        if (data.TryParseColor32RGB("PaintColor", out var value))
+        base.PopulateAsset(in p);
+        if (p.data.TryParseColor32RGB("PaintColor", out var value))
         {
             PaintColor = value;
         }

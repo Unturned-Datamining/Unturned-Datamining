@@ -142,59 +142,45 @@ public class LevelVisibility
 
     public static void load()
     {
-        if (Level.isVR)
+        if (!Level.isEditor)
         {
-            roadsVisible = false;
-            _navigationVisible = false;
-            _itemsVisible = false;
-            playersVisible = false;
-            _zombiesVisible = false;
-            _vehiclesVisible = false;
-            borderVisible = false;
-            _animalsVisible = false;
+            return;
+        }
+        if (ReadWrite.fileExists(Level.info.path + "/Level/Visibility.dat", useCloud: false, usePath: false))
+        {
+            River river = new River(Level.info.path + "/Level/Visibility.dat", usePath: false);
+            byte b = river.readByte();
+            if (b > 0)
+            {
+                roadsVisible = river.readBoolean();
+                navigationVisible = river.readBoolean();
+                river.readBoolean();
+                itemsVisible = river.readBoolean();
+                playersVisible = river.readBoolean();
+                zombiesVisible = river.readBoolean();
+                vehiclesVisible = river.readBoolean();
+                borderVisible = river.readBoolean();
+                if (b > 1)
+                {
+                    animalsVisible = river.readBoolean();
+                }
+                else
+                {
+                    _animalsVisible = true;
+                }
+                river.closeRiver();
+            }
         }
         else
         {
-            if (!Level.isEditor)
-            {
-                return;
-            }
-            if (ReadWrite.fileExists(Level.info.path + "/Level/Visibility.dat", useCloud: false, usePath: false))
-            {
-                River river = new River(Level.info.path + "/Level/Visibility.dat", usePath: false);
-                byte b = river.readByte();
-                if (b > 0)
-                {
-                    roadsVisible = river.readBoolean();
-                    navigationVisible = river.readBoolean();
-                    river.readBoolean();
-                    itemsVisible = river.readBoolean();
-                    playersVisible = river.readBoolean();
-                    zombiesVisible = river.readBoolean();
-                    vehiclesVisible = river.readBoolean();
-                    borderVisible = river.readBoolean();
-                    if (b > 1)
-                    {
-                        animalsVisible = river.readBoolean();
-                    }
-                    else
-                    {
-                        _animalsVisible = true;
-                    }
-                    river.closeRiver();
-                }
-            }
-            else
-            {
-                _roadsVisible = true;
-                _navigationVisible = true;
-                _itemsVisible = true;
-                _playersVisible = true;
-                _zombiesVisible = true;
-                _vehiclesVisible = true;
-                _borderVisible = true;
-                _animalsVisible = true;
-            }
+            _roadsVisible = true;
+            _navigationVisible = true;
+            _itemsVisible = true;
+            _playersVisible = true;
+            _zombiesVisible = true;
+            _vehiclesVisible = true;
+            _borderVisible = true;
+            _animalsVisible = true;
         }
     }
 
