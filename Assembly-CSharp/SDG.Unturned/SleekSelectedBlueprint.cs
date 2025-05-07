@@ -369,34 +369,14 @@ public class SleekSelectedBlueprint : SleekWrapper
 
     private void PopulateSkills()
     {
-        skillContainer.IsVisible = SelectedBlueprint.skill != EBlueprintSkill.NONE;
+        skillContainer.IsVisible = SelectedBlueprint.RequiresSkill;
         if (skillContainer.IsVisible)
         {
-            int num;
-            int num2;
-            switch (SelectedBlueprint.skill)
-            {
-            case EBlueprintSkill.CRAFT:
-                num = 2;
-                num2 = 1;
-                break;
-            case EBlueprintSkill.COOK:
-                num = 2;
-                num2 = 3;
-                break;
-            case EBlueprintSkill.REPAIR:
-                num = 2;
-                num2 = 7;
-                break;
-            default:
-                num = 0;
-                num2 = 0;
-                UnturnedLog.error($"Unknown blueprint skill requirement: {SelectedBlueprint.skill}");
-                break;
-            }
-            bool flag = Player.player.skills.skills[num][num2].level >= SelectedBlueprint.level;
+            int skillSpecialityIndex = SelectedBlueprint.SkillSpecialityIndex;
+            int skillIndex = SelectedBlueprint.SkillIndex;
+            bool flag = Player.player.skills.skills[skillSpecialityIndex][skillIndex].level >= SelectedBlueprint.level;
             Local localization = PlayerDashboardSkillsUI.localization;
-            string arg = localization.format("Speciality_" + num + "_Skill_" + num2);
+            string arg = localization.format("Speciality_" + skillSpecialityIndex + "_Skill_" + skillIndex);
             string arg2 = localization.format("Level_" + SelectedBlueprint.level);
             skillBox.Text = PlayerDashboardCraftingUI.localization.format("Requirements_Skill", arg, arg2);
             skillBox.TextColor = (flag ? ESleekTint.FONT : ESleekTint.BAD);

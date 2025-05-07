@@ -1016,23 +1016,31 @@ public class ItemAsset : Asset, ISkinableAsset, IBlueprintOwner
             }
             CachingBcAssetRef effectAssetRef = datDictionary.ParseGuidOrLegacyIdV2("Effect", EAssetType.EFFECT);
             byte b = datDictionary.ParseUInt8("Skill_Level", 0);
-            EBlueprintSkill eBlueprintSkill = datDictionary.ParseEnum("Skill", EBlueprintSkill.NONE);
-            if (eBlueprintSkill != 0 && b == 0)
+            int specialityIndex = -1;
+            int skillIndex = -1;
+            if (b > 0)
             {
-                assetContext.ReportAssetError($"blueprint has Skill {eBlueprintSkill} without Skill_Level");
-            }
-            else if (b > 0 && eBlueprintSkill == EBlueprintSkill.NONE)
-            {
-                assetContext.ReportAssetError($"blueprint has Skill_Level {b} without Skill");
+                if (datDictionary.TryParseEnum<EBlueprintSkill>("Skill", out var value3))
+                {
+                    value3.ToSkillIndices(out specialityIndex, out skillIndex);
+                }
+                else
+                {
+                    string @string = datDictionary.GetString("Skill");
+                    if (!PlayerSkills.TryParseIndices(@string, out specialityIndex, out skillIndex))
+                    {
+                        assetContext.ReportAssetError("unable to parse blueprint Skill \"" + @string + "\"");
+                    }
+                }
             }
             bool newTransferState = datDictionary.ParseBool("StateTransfer");
             bool newWithoutAttachments = datDictionary.ParseBool("StateTransfer_DeleteAttachments");
-            string @string = datDictionary.GetString("Map");
+            string string2 = datDictionary.GetString("Map");
             NPCConditionsList newQuestConditionsList = default(NPCConditionsList);
             newQuestConditionsList.Parse(datDictionary, localization, assetContext, "Conditions");
             NPCRewardsList newQuestRewardsList = default(NPCRewardsList);
             newQuestRewardsList.Parse(datDictionary, localization, assetContext, "Rewards");
-            Blueprint blueprint = new Blueprint((byte)list.Count, newSupplies, newOutputs, b, eBlueprintSkill, newTransferState, newWithoutAttachments, @string, newQuestConditionsList, newQuestRewardsList);
+            Blueprint blueprint = new Blueprint((byte)list.Count, newSupplies, newOutputs, b, EBlueprintSkill.NONE, newTransferState, newWithoutAttachments, string2, newQuestConditionsList, newQuestRewardsList);
             blueprint.Owner = assetContext as IBlueprintOwner;
             blueprint.effectAssetRef = effectAssetRef;
             blueprint.canBeVisibleWhenSearchedWithoutRequiredItems = datDictionary.ParseBool("Searchable", defaultValue: true);
@@ -1040,12 +1048,14 @@ public class ItemAsset : Asset, ISkinableAsset, IBlueprintOwner
             blueprint.Name = datDictionary.GetString("Name");
             blueprint.RequiresNearbyCraftingTags = datDictionary.ParseArrayOfStructs<CachingAssetRef>("RequiresNearbyCraftingTags");
             blueprint._operation = value2;
+            blueprint.SkillSpecialityIndex = specialityIndex;
+            blueprint.SkillIndex = skillIndex;
             if (blueprint.Operation != 0)
             {
                 CachingBcAssetRef assetRef;
-                if (datDictionary.TryGetString("TargetItem", out var value3))
+                if (datDictionary.TryGetString("TargetItem", out var value4))
                 {
-                    if (!ParseItemString(value3, out assetRef, out var _, assetContext))
+                    if (!ParseItemString(value4, out assetRef, out var _, assetContext))
                     {
                         assetRef = assetContext;
                     }
@@ -1084,7 +1094,7 @@ public class ItemAsset : Asset, ISkinableAsset, IBlueprintOwner
             {
                 blueprint._categoryTagRef = value.GetCategoryTagRef();
             }
-            if (blueprint.RequiresNearbyCraftingTags == null && datDictionary.ParseBool("RequiresHeat", eBlueprintSkill == EBlueprintSkill.COOK))
+            if (blueprint.RequiresNearbyCraftingTags == null && datDictionary.ParseBool("RequiresHeat", blueprint.GetLegacyBlueprintSkill() == EBlueprintSkill.COOK))
             {
                 blueprint.RequiresNearbyCraftingTags = new CachingAssetRef[1] { PowerTool.VanillaCraftingHeatTag };
             }
@@ -1354,6 +1364,9 @@ public class ItemAsset : Asset, ISkinableAsset, IBlueprintOwner
             blueprint.effectAssetRef = effectAssetRef;
             blueprint.canBeVisibleWhenSearchedWithoutRequiredItems = data.ParseBool($"Blueprint_{b}_Searchable", defaultValue: true);
             blueprint._operation = eBlueprintOperation;
+            eBlueprintSkill.ToSkillIndices(out var specialityIndex, out var skillIndex);
+            blueprint.SkillSpecialityIndex = specialityIndex;
+            blueprint.SkillIndex = skillIndex;
             CachingAssetRef categoryTagRef = ((!shouldAddDefaultActions || eBlueprintOperation != 0 || tempBlueprintSupplies.Count != 1 || !tempBlueprintSupplies[0].IsItem(this)) ? eBlueprintType.GetCategoryTagRef() : EBlueprintTypeEx.salvageCategoryTagRef);
             blueprint._categoryTagRef = categoryTagRef;
             switch (eBlueprintOperation)
@@ -1687,9 +1700,10 @@ public class ItemAsset : Asset, ISkinableAsset, IBlueprintOwner
                     ConvertSimpleItemRefAndAmount(blueprintOutput4.ItemRef, blueprintOutput4.amount, editableDatDictionary2.AddValue("OutputItems"));
                 }
             }
-            if (blueprint.skill != 0)
+            EBlueprintSkill legacyBlueprintSkill = blueprint.GetLegacyBlueprintSkill();
+            if (legacyBlueprintSkill != 0)
             {
-                editableDatDictionary2.AddValue("Skill").SetString(blueprint.skill.ToStringPascalCase());
+                editableDatDictionary2.AddValue("Skill").SetString(legacyBlueprintSkill.ToStringPascalCase());
                 editableDatDictionary2.AddValue("Skill_Level").SetInt32(blueprint.level);
             }
             if (blueprint.transferState)
@@ -1794,7 +1808,7 @@ public class ItemAsset : Asset, ISkinableAsset, IBlueprintOwner
             cargoDeclaration.Append("Map", blueprints[b].map);
             cargoDeclaration.Append("Outputs", blueprints[b].outputs.Length);
             cargoDeclaration.Append("Searchable", blueprints[b].canBeVisibleWhenSearchedWithoutRequiredItems);
-            cargoDeclaration.Append("Skill", blueprints[b].skill);
+            cargoDeclaration.Append("Skill", blueprints[b].GetLegacyBlueprintSkill());
             cargoDeclaration.Append("State_Transfer", blueprints[b].transferState);
             cargoDeclaration.Append("State_Transfer_Delete_Attachments", blueprints[b].withoutAttachments);
             cargoDeclaration.Append("Supplies", blueprints[b].supplies.Length);

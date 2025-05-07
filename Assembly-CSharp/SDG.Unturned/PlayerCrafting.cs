@@ -281,7 +281,7 @@ public class PlayerCrafting : PlayerCaller
         {
             return true;
         }
-        if (blueprint.skill == EBlueprintSkill.REPAIR && blueprint.level > Provider.modeConfigData.Gameplay.Repair_Level_Max)
+        if (blueprint.GetLegacyBlueprintSkill() == EBlueprintSkill.REPAIR && blueprint.level > Provider.modeConfigData.Gameplay.Repair_Level_Max)
         {
             return true;
         }
@@ -306,25 +306,13 @@ public class PlayerCrafting : PlayerCaller
     internal void UpdateBlueprintStaticStatus(in UpdateBlueprintStatusParameters p)
     {
         Blueprint blueprint = p.status.blueprint;
-        if (blueprint.skill != 0)
+        if (blueprint.RequiresSkill)
         {
-            int num = 0;
-            switch (blueprint.skill)
-            {
-            case EBlueprintSkill.CRAFT:
-                num = base.player.skills.skills[2][1].level;
-                break;
-            case EBlueprintSkill.COOK:
-                num = base.player.skills.skills[2][3].level;
-                break;
-            case EBlueprintSkill.REPAIR:
-                num = base.player.skills.skills[2][7].level;
-                break;
-            }
-            if (num < blueprint.level)
+            int playerSkillLevel = blueprint.GetPlayerSkillLevel(base.player);
+            if (playerSkillLevel < blueprint.level)
             {
                 p.status.isMissingRequiredSkill = true;
-                p.logCallback?.Invoke($"skill {blueprint.skill} level {num}) is less than required {blueprint.level}");
+                p.logCallback?.Invoke($"skill {blueprint.DebugGetSkillName()} level {playerSkillLevel}) is less than required {blueprint.level}");
                 if (p.shouldExitEarly)
                 {
                     return;
@@ -572,6 +560,7 @@ public class PlayerCrafting : PlayerCaller
         bool flag = false;
         for (int i = 0; i < 64; i++)
         {
+            activeBlueprintStatus.ResetDynamicStatus();
             UpdateBlueprintDynamicStatus(in p);
             if (!activeBlueprintStatus.IsCraftable)
             {
@@ -692,27 +681,28 @@ public class PlayerCrafting : PlayerCaller
             }
             blueprint.ApplyConditions(base.player);
             blueprint.GrantRewards(base.player);
-            if (!flag)
-            {
-                flag = true;
-                SendRefreshCrafting.Invoke(GetNetId(), ENetReliability.Reliable, base.channel.GetOwnerTransportConnection());
-                base.player.sendStat(EPlayerStat.FOUND_CRAFTS);
-                EffectAsset effectAsset = blueprint.FindBuildEffectAsset();
-                if (effectAsset != null)
-                {
-                    TriggerEffectParameters parameters = new TriggerEffectParameters(effectAsset);
-                    parameters.position = base.transform.position;
-                    parameters.relevantDistance = EffectManager.SMALL;
-                    EffectManager.triggerEffect(parameters);
-                    if (Provider.isServer)
-                    {
-                        AlertTool.alert(base.transform.position, 8f);
-                    }
-                }
-            }
+            flag = true;
             if (!asManyAsPossible || blueprint.Operation != 0)
             {
                 break;
+            }
+        }
+        if (!flag)
+        {
+            return;
+        }
+        SendRefreshCrafting.Invoke(GetNetId(), ENetReliability.Reliable, base.channel.GetOwnerTransportConnection());
+        base.player.sendStat(EPlayerStat.FOUND_CRAFTS);
+        EffectAsset effectAsset = blueprint.FindBuildEffectAsset();
+        if (effectAsset != null)
+        {
+            TriggerEffectParameters parameters = new TriggerEffectParameters(effectAsset);
+            parameters.position = base.transform.position;
+            parameters.relevantDistance = EffectManager.SMALL;
+            EffectManager.triggerEffect(parameters);
+            if (Provider.isServer)
+            {
+                AlertTool.alert(base.transform.position, 8f);
             }
         }
     }

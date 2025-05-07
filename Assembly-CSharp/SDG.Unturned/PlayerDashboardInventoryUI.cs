@@ -766,7 +766,7 @@ public class PlayerDashboardInventoryUI
                         continue;
                     }
                     Blueprint blueprint = action.blueprints[0].FindBlueprint(blueprintOwner);
-                    if ((blueprint.skill == EBlueprintSkill.REPAIR && blueprint.level > Provider.modeConfigData.Gameplay.Repair_Level_Max) || (blueprint.Operation == EBlueprintOperation.RepairTargetItem && selectedJar.item.quality >= 100) || !blueprint.areConditionsMet(Player.player) || Player.player.crafting.isBlueprintBlacklisted(blueprint))
+                    if ((blueprint.GetLegacyBlueprintSkill() == EBlueprintSkill.REPAIR && blueprint.level > Provider.modeConfigData.Gameplay.Repair_Level_Max) || (blueprint.Operation == EBlueprintOperation.RepairTargetItem && selectedJar.item.quality >= 100) || !blueprint.areConditionsMet(Player.player) || Player.player.crafting.isBlueprintBlacklisted(blueprint))
                     {
                         continue;
                     }
@@ -1787,16 +1787,33 @@ public class PlayerDashboardInventoryUI
         }
     }
 
+    private static void UpdateHeaderIcon(int index, ItemAsset asset, byte quality, byte[] state)
+    {
+        float num;
+        float num2;
+        if (asset.size_y > 2)
+        {
+            num = 50f;
+            num2 = num * ((float)(int)asset.size_x / (float)(int)asset.size_y);
+        }
+        else
+        {
+            num2 = (float)(int)asset.size_x * 25f;
+            num = (float)(int)asset.size_y * 25f;
+        }
+        headerItemIcons[index].SizeOffset_X = num2;
+        headerItemIcons[index].SizeOffset_Y = num;
+        headerItemIcons[index].PositionOffset_Y = (0f - num) / 2f;
+        headerItemIcons[index].Refresh(asset.id, quality, state, asset, Mathf.RoundToInt(num2), Mathf.RoundToInt(num));
+    }
+
     private static void onShirtUpdated(ushort newShirtObsolete, byte newShirtQuality, byte[] newShirtState)
     {
         ItemAsset shirtAsset = Player.player.clothing.shirtAsset;
         if (shirtAsset != null)
         {
             headers[3].Text = shirtAsset.itemName;
-            headers[3].GetChildAtIndex(0).SizeOffset_X = shirtAsset.size_x * 25;
-            headers[3].GetChildAtIndex(0).SizeOffset_Y = shirtAsset.size_y * 25;
-            headers[3].GetChildAtIndex(0).PositionOffset_Y = (0f - headers[3].GetChildAtIndex(0).SizeOffset_Y) / 2f;
-            headerItemIcons[3].Refresh(shirtAsset.id, newShirtQuality, newShirtState);
+            UpdateHeaderIcon(3, shirtAsset, newShirtQuality, newShirtState);
             ((ISleekLabel)headers[3].GetChildAtIndex(2)).Text = newShirtQuality + "%";
             Color rarityColorUI = ItemTool.getRarityColorUI(shirtAsset.rarity);
             headers[3].BackgroundColor = SleekColor.BackgroundIfLight(rarityColorUI);
@@ -1815,10 +1832,7 @@ public class PlayerDashboardInventoryUI
             if (pantsAsset != null)
             {
                 headers[4].Text = pantsAsset.itemName;
-                headers[4].GetChildAtIndex(0).SizeOffset_X = pantsAsset.size_x * 25;
-                headers[4].GetChildAtIndex(0).SizeOffset_Y = pantsAsset.size_y * 25;
-                headers[4].GetChildAtIndex(0).PositionOffset_Y = (0f - headers[4].GetChildAtIndex(0).SizeOffset_Y) / 2f;
-                headerItemIcons[4].Refresh(pantsAsset.id, newPantsQuality, newPantsState);
+                UpdateHeaderIcon(4, pantsAsset, newPantsQuality, newPantsState);
                 ((ISleekLabel)headers[4].GetChildAtIndex(2)).Text = newPantsQuality + "%";
                 Color rarityColorUI = ItemTool.getRarityColorUI(pantsAsset.rarity);
                 headers[4].BackgroundColor = SleekColor.BackgroundIfLight(rarityColorUI);
@@ -1838,10 +1852,7 @@ public class PlayerDashboardInventoryUI
             if (hatAsset != null)
             {
                 headers[7].Text = hatAsset.itemName;
-                headers[7].GetChildAtIndex(0).SizeOffset_X = hatAsset.size_x * 25;
-                headers[7].GetChildAtIndex(0).SizeOffset_Y = hatAsset.size_y * 25;
-                headers[7].GetChildAtIndex(0).PositionOffset_Y = (0f - headers[7].GetChildAtIndex(0).SizeOffset_Y) / 2f;
-                headerItemIcons[7].Refresh(newHatObsolete, newHatQuality, newHatState);
+                UpdateHeaderIcon(7, hatAsset, newHatQuality, newHatState);
                 ((ISleekLabel)headers[7].GetChildAtIndex(2)).Text = newHatQuality + "%";
                 Color rarityColorUI = ItemTool.getRarityColorUI(hatAsset.rarity);
                 headers[7].BackgroundColor = SleekColor.BackgroundIfLight(rarityColorUI);
@@ -1861,10 +1872,7 @@ public class PlayerDashboardInventoryUI
         if (backpackAsset != null)
         {
             headers[1].Text = backpackAsset.itemName;
-            headers[1].GetChildAtIndex(0).SizeOffset_X = backpackAsset.size_x * 25;
-            headers[1].GetChildAtIndex(0).SizeOffset_Y = backpackAsset.size_y * 25;
-            headers[1].GetChildAtIndex(0).PositionOffset_Y = (0f - headers[1].GetChildAtIndex(0).SizeOffset_Y) / 2f;
-            headerItemIcons[1].Refresh(backpackAsset.id, newBackpackQuality, newBackpackState);
+            UpdateHeaderIcon(1, backpackAsset, newBackpackQuality, newBackpackState);
             ((ISleekLabel)headers[1].GetChildAtIndex(2)).Text = newBackpackQuality + "%";
             Color rarityColorUI = ItemTool.getRarityColorUI(backpackAsset.rarity);
             headers[1].BackgroundColor = SleekColor.BackgroundIfLight(rarityColorUI);
@@ -1881,10 +1889,7 @@ public class PlayerDashboardInventoryUI
         if (vestAsset != null)
         {
             headers[2].Text = vestAsset.itemName;
-            headers[2].GetChildAtIndex(0).SizeOffset_X = vestAsset.size_x * 25;
-            headers[2].GetChildAtIndex(0).SizeOffset_Y = vestAsset.size_y * 25;
-            headers[2].GetChildAtIndex(0).PositionOffset_Y = (0f - headers[2].GetChildAtIndex(0).SizeOffset_Y) / 2f;
-            headerItemIcons[2].Refresh(vestAsset.id, newVestQuality, newVestState);
+            UpdateHeaderIcon(2, vestAsset, newVestQuality, newVestState);
             ((ISleekLabel)headers[2].GetChildAtIndex(2)).Text = newVestQuality + "%";
             Color rarityColorUI = ItemTool.getRarityColorUI(vestAsset.rarity);
             headers[2].BackgroundColor = SleekColor.BackgroundIfLight(rarityColorUI);
@@ -1903,10 +1908,7 @@ public class PlayerDashboardInventoryUI
             if (maskAsset != null)
             {
                 headers[8].Text = maskAsset.itemName;
-                headers[8].GetChildAtIndex(0).SizeOffset_X = maskAsset.size_x * 25;
-                headers[8].GetChildAtIndex(0).SizeOffset_Y = maskAsset.size_y * 25;
-                headers[8].GetChildAtIndex(0).PositionOffset_Y = (0f - headers[8].GetChildAtIndex(0).SizeOffset_Y) / 2f;
-                headerItemIcons[8].Refresh(maskAsset.id, newMaskQuality, newMaskState);
+                UpdateHeaderIcon(8, maskAsset, newMaskQuality, newMaskState);
                 ((ISleekLabel)headers[8].GetChildAtIndex(2)).Text = newMaskQuality + "%";
                 Color rarityColorUI = ItemTool.getRarityColorUI(maskAsset.rarity);
                 headers[8].BackgroundColor = SleekColor.BackgroundIfLight(rarityColorUI);
@@ -1928,10 +1930,7 @@ public class PlayerDashboardInventoryUI
             if (glassesAsset != null)
             {
                 headers[9].Text = glassesAsset.itemName;
-                headers[9].GetChildAtIndex(0).SizeOffset_X = glassesAsset.size_x * 25;
-                headers[9].GetChildAtIndex(0).SizeOffset_Y = glassesAsset.size_y * 25;
-                headers[9].GetChildAtIndex(0).PositionOffset_Y = (0f - headers[9].GetChildAtIndex(0).SizeOffset_Y) / 2f;
-                headerItemIcons[9].Refresh(glassesAsset.id, newGlassesQuality, newGlassesState);
+                UpdateHeaderIcon(9, glassesAsset, newGlassesQuality, newGlassesState);
                 ((ISleekLabel)headers[9].GetChildAtIndex(2)).Text = newGlassesQuality + "%";
                 Color rarityColorUI = ItemTool.getRarityColorUI(glassesAsset.rarity);
                 headers[9].BackgroundColor = SleekColor.BackgroundIfLight(rarityColorUI);

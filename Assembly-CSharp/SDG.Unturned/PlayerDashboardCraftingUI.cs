@@ -576,6 +576,10 @@ public class PlayerDashboardCraftingUI
     private static void OnClickedCategoryFilterButton(CachingAssetRef categoryTagRef)
     {
         filteredBlueprintsOverride = null;
+        if (!InputEx.GetKey(ControlsSettings.modify))
+        {
+            ClearFilters();
+        }
         if (blueprintCategoryFilterRef == categoryTagRef)
         {
             blueprintCategoryFilterRef.Clear();
@@ -595,6 +599,10 @@ public class PlayerDashboardCraftingUI
             return;
         }
         filteredBlueprintsOverride = null;
+        if (!InputEx.GetKey(ControlsSettings.modify))
+        {
+            ClearFilters();
+        }
         if (filterTagProvider == tagProvider)
         {
             filterTagProvider = null;
@@ -726,6 +734,7 @@ public class PlayerDashboardCraftingUI
         showIgnored = false;
         itemNameFilter = string.Empty;
         filterRequiresAnyOfTags = new HashSet<TagAsset>();
+        filterTagProvider = null;
         backdropBox = Glazier.Get().CreateBox();
         backdropBox.PositionOffset_Y = 60f;
         backdropBox.SizeOffset_Y = -60f;

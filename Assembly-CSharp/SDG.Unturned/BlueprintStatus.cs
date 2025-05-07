@@ -95,6 +95,21 @@ internal class BlueprintStatus
 
     public void Reset()
     {
+        isMissingRequiredSkill = false;
+        missingCraftingTagsCount = 0;
+        ResetDynamicStatus();
+    }
+
+    /// <summary>
+    /// Reset values set by PlayerCrafting.UpdateBlueprintDynamicStatus.
+    /// </summary>
+    public void ResetDynamicStatus()
+    {
+        isMissingAnyNpcConditions = false;
+        isMissingTargetItem = false;
+        totalMissingInputItemsCount = 0;
+        isMissingAnyCriticalInputItem = false;
+        hasAnyInputItem = false;
         inputItemsPool.AddRange(inputItems);
         inputItems.Clear();
         if (targetStatus != null)
@@ -102,13 +117,6 @@ internal class BlueprintStatus
             inputItemsPool.Add(targetStatus);
             targetStatus = null;
         }
-        isMissingRequiredSkill = false;
-        missingCraftingTagsCount = 0;
-        isMissingAnyNpcConditions = false;
-        isMissingTargetItem = false;
-        totalMissingInputItemsCount = 0;
-        isMissingAnyCriticalInputItem = false;
-        hasAnyInputItem = false;
     }
 
     public BlueprintInputItemStatus AddInputItem()

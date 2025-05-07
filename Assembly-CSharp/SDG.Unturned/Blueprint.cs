@@ -26,8 +26,6 @@ public class Blueprint
 
     private byte _level;
 
-    private EBlueprintSkill _skill;
-
     private bool _transferState;
 
     /// <summary>
@@ -92,7 +90,11 @@ public class Blueprint
 
     public byte level => _level;
 
-    public EBlueprintSkill skill => _skill;
+    public int SkillSpecialityIndex { get; internal set; } = -1;
+
+
+    public int SkillIndex { get; internal set; } = -1;
+
 
     public bool transferState => _transferState;
 
@@ -130,6 +132,18 @@ public class Blueprint
                 {
                     return true;
                 }
+            }
+            return false;
+        }
+    }
+
+    public bool RequiresSkill
+    {
+        get
+        {
+            if (SkillSpecialityIndex >= 0 && SkillIndex >= 0)
+            {
+                return level > 0;
             }
             return false;
         }
@@ -204,6 +218,9 @@ public class Blueprint
         }
     }
 
+    [Obsolete("Replaced in favor of supporting all skills, ideally more customizable in future.")]
+    public EBlueprintSkill skill => GetLegacyBlueprintSkill();
+
     public Asset GetOwnerAsset()
     {
         return Owner.GetBlueprintOwnerAsset();
@@ -250,6 +267,23 @@ public class Blueprint
     public EffectAsset FindBuildEffectAsset()
     {
         return effectAssetRef.Get<EffectAsset>();
+    }
+
+    public string DebugGetSkillName()
+    {
+        if (RequiresSkill)
+        {
+            switch ((EPlayerSpeciality)SkillSpecialityIndex)
+            {
+            case EPlayerSpeciality.OFFENSE:
+                return ((EPlayerOffense)SkillIndex).ToString();
+            case EPlayerSpeciality.DEFENSE:
+                return ((EPlayerDefense)SkillIndex).ToString();
+            case EPlayerSpeciality.SUPPORT:
+                return ((EPlayerSupport)SkillIndex).ToString();
+            }
+        }
+        return null;
     }
 
     public bool areConditionsMet(Player player)
@@ -324,6 +358,31 @@ public class Blueprint
         return false;
     }
 
+    public EBlueprintSkill GetLegacyBlueprintSkill()
+    {
+        if (SkillSpecialityIndex == 2)
+        {
+            if (SkillIndex == 1)
+            {
+                return EBlueprintSkill.CRAFT;
+            }
+            if (SkillIndex == 3)
+            {
+                return EBlueprintSkill.COOK;
+            }
+            if (SkillIndex == 7)
+            {
+                return EBlueprintSkill.REPAIR;
+            }
+        }
+        return EBlueprintSkill.NONE;
+    }
+
+    public int GetPlayerSkillLevel(Player player)
+    {
+        return player.skills.skills[SkillSpecialityIndex][SkillIndex].level;
+    }
+
     [Obsolete]
     public Blueprint(ItemAsset newSourceItem, byte newID, EBlueprintType newType, BlueprintSupply[] newSupplies, BlueprintOutput[] newOutputs, ushort newTool, bool newToolCritical, ushort newBuild, byte newLevel, EBlueprintSkill newSkill, bool newTransferState, string newMap, NPCConditionsList newQuestConditionsList, NPCRewardsList newQuestRewardsList)
         : this(newID, newSupplies, newOutputs, newLevel, newSkill, newTransferState, newWithoutAttachments: false, newMap, newQuestConditionsList, newQuestRewardsList)
@@ -336,7 +395,6 @@ public class Blueprint
         _supplies = newSupplies;
         _outputs = newOutputs;
         _level = newLevel;
-        _skill = newSkill;
         _transferState = newTransferState;
         withoutAttachments = newWithoutAttachments;
         map = newMap;

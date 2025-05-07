@@ -200,7 +200,8 @@ public class PhysicsTool
             int instanceID = physicMaterial.GetInstanceID();
             if (!physicsMaterialToName.TryGetValue(instanceID, out value))
             {
-                physicsMaterialToName[instanceID] = physicMaterial.name;
+                value = physicMaterial.name;
+                physicsMaterialToName[instanceID] = value;
             }
         }
         return value;
