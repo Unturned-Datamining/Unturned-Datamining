@@ -38,6 +38,7 @@
 | (?i)(Беbrи)                                                                           | HiddenFromAllServerLists          |
 | (?i)(Беbриks)                                                                         | HiddenFromAllServerLists          |
 | (Бeбpиks)                                                                             | HiddenFromAllServerLists          |
+| (?i)(] wiped)                                                                         | HiddenFromAllServerLists          |
 | (?i)(MegaNine)                                                                        | HiddenFromInternetServerList      |
 
 ## Description filters
