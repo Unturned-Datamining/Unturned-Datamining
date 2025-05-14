@@ -17,4 +17,6 @@ public class VehicleIconInfo
     public bool readableOnCPU;
 
     public VehicleIconReady callback;
+
+    internal int handle;
 }

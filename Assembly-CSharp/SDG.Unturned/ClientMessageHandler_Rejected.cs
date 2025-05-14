@@ -181,6 +181,9 @@ internal static class ClientMessageHandler_Rejected
         case ESteamRejection.BAD_PACKET_RATE_LIMITING:
             Provider._connectionFailureInfo = ESteamConnectionFailureInfo.BAD_PACKET_RATE_LIMITING;
             break;
+        case ESteamRejection.TOO_MANY_CLIENTS_WITH_SAME_IP_ADDRESS:
+            Provider._connectionFailureInfo = ESteamConnectionFailureInfo.TOO_MANY_CLIENTS_WITH_SAME_IP_ADDRESS;
+            break;
         default:
             Provider._connectionFailureInfo = ESteamConnectionFailureInfo.REJECT_UNKNOWN;
             Provider._connectionFailureReason = value.ToString();

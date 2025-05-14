@@ -27,8 +27,7 @@ Blueprints
 		Skill_Level 3
 		RequiresNearbyCraftingTags
 		[
-			"20f30322bbcc4b01a4f116d22b24c21a" // Heat Source
-			"d2cc65b749e5477f95103601df89cdbc" // Oven
+			"d2cc65b749e5477f95103601df89cdbc" // Enclosed Heat Source
 		]
 		Effect "84347b13028340b8976033c08675d458" // Wrench
 	}

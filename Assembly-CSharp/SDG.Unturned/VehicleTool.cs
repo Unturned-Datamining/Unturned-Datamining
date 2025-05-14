@@ -8,6 +8,8 @@ public class VehicleTool : MonoBehaviour
 {
     private static Queue<VehicleIconInfo> icons;
 
+    private static int handleCounter = 1;
+
     /// <summary>
     /// Handles VehicleRedirectorAsset (if any) and returns actual vehicle asset (if any).
     /// </summary>
@@ -186,7 +188,7 @@ public class VehicleTool : MonoBehaviour
         return obj;
     }
 
-    public static void getIcon(ushort id, ushort skin, VehicleAsset vehicleAsset, SkinAsset skinAsset, int x, int y, bool readableOnCPU, VehicleIconReady callback)
+    public static int getIcon(ushort id, ushort skin, VehicleAsset vehicleAsset, SkinAsset skinAsset, int x, int y, bool readableOnCPU, VehicleIconReady callback)
     {
         if (vehicleAsset != null && id != vehicleAsset.id)
         {
@@ -205,7 +207,10 @@ public class VehicleTool : MonoBehaviour
         vehicleIconInfo.y = y;
         vehicleIconInfo.readableOnCPU = readableOnCPU;
         vehicleIconInfo.callback = callback;
+        vehicleIconInfo.handle = handleCounter;
         icons.Enqueue(vehicleIconInfo);
+        handleCounter++;
+        return vehicleIconInfo.handle;
     }
 
     internal static Vector3 GetPositionForVehicle(Player player)
@@ -268,7 +273,7 @@ public class VehicleTool : MonoBehaviour
             {
                 float size2_z = vehicleIconInfo.vehicleAsset.size2_z;
                 Texture2D texture = ItemTool.captureIcon(vehicleIconInfo.id, vehicleIconInfo.skin, vehicle, transform, vehicleIconInfo.x, vehicleIconInfo.y, size2_z, vehicleIconInfo.readableOnCPU);
-                vehicleIconInfo.callback?.Invoke(texture);
+                vehicleIconInfo.callback?.Invoke(vehicleIconInfo.handle, texture);
             }
         }
     }

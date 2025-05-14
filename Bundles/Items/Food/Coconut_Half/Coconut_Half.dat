@@ -17,6 +17,18 @@ Blueprints
 		CategoryTag "d089feb7e43f40c5a7dfcefc36998cfb" // Supplies
 		InputItems "4eb2a43ed6144aedb491c2d9bdae69e1" // Whole Coconut
 		OutputItems "this x 2" // Split Coconut
+		RequiresNearbyCraftingTags
+		[
+			"68816064e2ce44839c3f35da55033cba" // Food Prepping Workstation
+		]
+		Effect "84347b13028340b8976033c08675d458" // Wrench
+	}
+	{
+		CategoryTag "d089feb7e43f40c5a7dfcefc36998cfb" // Supplies
+		InputItems "4eb2a43ed6144aedb491c2d9bdae69e1" // Whole Coconut
+		OutputItems "this x 2" // Split Coconut
+		Skill Overkill
+		Skill_Level 1
 		Effect "84347b13028340b8976033c08675d458" // Wrench
 	}
 ]

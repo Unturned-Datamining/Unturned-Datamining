@@ -736,6 +736,10 @@ public class PlayerUI : MonoBehaviour
             messageBox.SizeOffset_X = 600f;
             messageLabel.Text = PlayerLifeUI.localization.format("Tutorial_Fire", MenuConfigurationControlsUI.getKeyCodeText(ControlsSettings.crafting));
             break;
+        case EPlayerMessage.TUTORIAL_WORKSTATION:
+            messageBox.SizeOffset_X = 600f;
+            messageLabel.Text = ItemTool.filterRarityRichText(PlayerLifeUI.localization.format("Tutorial_Workstation", MenuConfigurationControlsUI.getKeyCodeText(ControlsSettings.crafting)));
+            break;
         case EPlayerMessage.CLAIM:
             messageLabel.Text = PlayerLifeUI.localization.format("Claim");
             break;

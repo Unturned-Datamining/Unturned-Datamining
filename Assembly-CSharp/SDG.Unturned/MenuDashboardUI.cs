@@ -1582,6 +1582,9 @@ public class MenuDashboardUI
             case ESteamConnectionFailureInfo.BAD_PACKET_RATE_LIMITING:
                 text = localization.format("Bad_Packet_Rate_Limiting");
                 break;
+            case ESteamConnectionFailureInfo.TOO_MANY_CLIENTS_WITH_SAME_IP_ADDRESS:
+                text = localization.format("Too_Many_Clients_With_Same_IP_Address");
+                break;
             case ESteamConnectionFailureInfo.SERVER_MAP_ADVERTISEMENT_MISMATCH:
                 text = localization.format("Server_Map_Advertisement_Mismatch");
                 break;

@@ -26,7 +26,7 @@ Blueprints
 		Skill_Level 2
 		RequiresNearbyCraftingTags
 		[
-			"20f30322bbcc4b01a4f116d22b24c21a" // Heat Source
+			"68816064e2ce44839c3f35da55033cba" // Cooking Table
 		]
 		Effect "84347b13028340b8976033c08675d458" // Wrench
 	}

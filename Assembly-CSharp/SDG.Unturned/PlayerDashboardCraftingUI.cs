@@ -53,6 +53,8 @@ public class PlayerDashboardCraftingUI
 
     private static SleekList<BlueprintStatus> blueprintsScrollBox;
 
+    private static Stack<SleekBlueprint> pooledBlueprintWidgets;
+
     private static ISleekBox blueprintsListEmptyInfoBox;
 
     private static ISleekButton resetFiltersButton;
@@ -109,6 +111,8 @@ public class PlayerDashboardCraftingUI
     private static HashSet<ItemAsset> availableItemAssets = new HashSet<ItemAsset>();
 
     private static StringBuilder filteringDescriptionSb = new StringBuilder();
+
+    private static Comparison<BlueprintStatus> visibleBlueprintsComparison = CompareVisibleBlueprints;
 
     private static CustomSampler refreshCraftableBlueprintsSampler = CustomSampler.Create("RefreshCraftableBlueprints");
 
@@ -524,7 +528,7 @@ public class PlayerDashboardCraftingUI
                 }
             }
         }
-        visibleBlueprints.Sort(CompareVisibleBlueprints);
+        visibleBlueprints.Sort(visibleBlueprintsComparison);
         SetSelectedBlueprintStatus(selectedBlueprintStatus);
         blueprintsScrollBox.ForceRebuildElements();
         blueprintsListEmptyInfoBox.IsVisible = visibleBlueprints.Count == 0;
@@ -672,9 +676,24 @@ public class PlayerDashboardCraftingUI
 
     private static ISleekElement onCreateBlueprint(BlueprintStatus blueprintStatus)
     {
-        SleekBlueprint sleekBlueprint = new SleekBlueprint(blueprintStatus);
-        sleekBlueprint.OnClickedBlueprint += OnClickedBlueprint;
-        return sleekBlueprint;
+        if (pooledBlueprintWidgets.TryPop(out var result))
+        {
+            result.IsVisible = true;
+        }
+        else
+        {
+            result = new SleekBlueprint();
+            result.OnClickedBlueprint += OnClickedBlueprint;
+        }
+        result.SetBlueprintStatus(blueprintStatus);
+        return result;
+    }
+
+    private static void OnRemoveBlueprintElement(ISleekElement element)
+    {
+        SleekBlueprint sleekBlueprint = (SleekBlueprint)element;
+        sleekBlueprint.IsVisible = false;
+        pooledBlueprintWidgets.Push(sleekBlueprint);
     }
 
     /// <summary>
@@ -747,6 +766,7 @@ public class PlayerDashboardCraftingUI
         visibleBlueprints = new List<BlueprintStatus>();
         updatedBlueprints = new List<BlueprintStatus>();
         blueprintStatusPool = new List<BlueprintStatus>();
+        pooledBlueprintWidgets = new Stack<SleekBlueprint>();
         blueprintsContainer = Glazier.Get().CreateFrame();
         blueprintsContainer.PositionOffset_X = 250f;
         blueprintsContainer.PositionOffset_Y = 10f;
@@ -769,8 +789,10 @@ public class PlayerDashboardCraftingUI
         blueprintsScrollBox.PositionOffset_Y = 40f;
         blueprintsScrollBox.SizeScale_X = 1f;
         blueprintsScrollBox.SizeScale_Y = 1f;
-        blueprintsScrollBox.itemHeight = 195;
+        blueprintsScrollBox.itemHeight = 160;
         blueprintsScrollBox.onCreateElement = onCreateBlueprint;
+        SleekList<BlueprintStatus> sleekList = blueprintsScrollBox;
+        sleekList.OnRemoveElement = (Action<ISleekElement>)Delegate.Combine(sleekList.OnRemoveElement, new Action<ISleekElement>(OnRemoveBlueprintElement));
         blueprintsScrollBox.SetData(visibleBlueprints);
         blueprintsContainer.AddChild(blueprintsScrollBox);
         filtersScrollView = Glazier.Get().CreateScrollView();

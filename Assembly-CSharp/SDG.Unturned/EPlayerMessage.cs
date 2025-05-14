@@ -155,5 +155,9 @@ public enum EPlayerMessage
     /// <summary>
     /// Vehicle doesn't support spray paints.
     /// </summary>
-    NOT_PAINTABLE
+    NOT_PAINTABLE,
+    /// <summary>
+    /// Explaining that some blueprints require workstations.
+    /// </summary>
+    TUTORIAL_WORKSTATION
 }

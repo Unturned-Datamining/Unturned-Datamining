@@ -416,7 +416,7 @@ public class LoadingUI : MonoBehaviour
         NotifyLevelLoadingProgress(0f);
         Local local = Localization.read("/Menu/MenuTips.dat");
         int num = (int)tip;
-        int maxExclusive = 38;
+        int maxExclusive = 40;
         int num2;
         do
         {
@@ -424,7 +424,7 @@ public class LoadingUI : MonoBehaviour
         }
         while (num2 == num);
         tip = (ELoadingTip)num2;
-        string s = ((OptionsSettings.streamer && Provider.streamerNames != null && Provider.streamerNames.Count > 0 && Provider.streamerNames[0] == "Nelson AI") ? local.format("Streamer") : (tip switch
+        string s = ((OptionsSettings.ShouldAnonymizeMultiplayerDetails && Provider.streamerNames != null && Provider.streamerNames.Count > 0 && Provider.streamerNames[0] == "Alpha" && UnityEngine.Random.value < 0.5f) ? local.format("Streamer") : (tip switch
         {
             ELoadingTip.HOTKEY => local.format("Hotkey"), 
             ELoadingTip.EQUIP => local.format("Equip", MenuConfigurationControlsUI.getKeyCodeText(ControlsSettings.other)), 
@@ -461,8 +461,10 @@ public class LoadingUI : MonoBehaviour
             ELoadingTip.SKIP_ACTION_CRAFTING_MENU => local.format("SkipActionCraftingMenu", MenuConfigurationControlsUI.getKeyCodeText(ControlsSettings.SkipActionCraftingMenu)), 
             ELoadingTip.WORKSTATION => local.format("Workstation"), 
             ELoadingTip.WORKSTATION_HEAT => local.format("WorkstationHeat"), 
+            ELoadingTip.WORKSTATION_FOOD => local.format("WorkstationFood"), 
             ELoadingTip.WORKSTATION_MEDICINE => local.format("WorkstationMedicine"), 
             ELoadingTip.WORKSTATION_DYE => local.format("WorkstationDye"), 
+            ELoadingTip.WORKSTATION_CLOTHES => local.format("WorkstationClothes"), 
             _ => "#" + tip, 
         }));
         if (Level.info != null)
@@ -506,7 +508,7 @@ public class LoadingUI : MonoBehaviour
                 {
                     text = localization.format("Offline");
                 }
-                loadingProgressBar.DescriptionText = localization.format("Loading_Level_Play", localizedName, Level.version, OptionsSettings.streamer ? localization.format("Streamer") : Provider.serverName, text);
+                loadingProgressBar.DescriptionText = localization.format("Loading_Level_Play", localizedName, Level.version, OptionsSettings.ShouldAnonymizeMultiplayerDetails ? localization.format("Streamer") : Provider.serverName, text);
             }
             else
             {

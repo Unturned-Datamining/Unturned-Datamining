@@ -99,6 +99,10 @@ public class TagAsset : Asset
         if (p.data.ParseBool("HasIcon", defaultValue: true))
         {
             Icon = LoadRedirectableAsset<Texture2D>(p.bundle, "Icon", p.data, "IconPath");
+            if (Icon == null)
+            {
+                ReportAssetError("missing Icon texture");
+            }
             ShouldTintIcon = p.data.ParseBool("TintIcon", defaultValue: true);
         }
     }

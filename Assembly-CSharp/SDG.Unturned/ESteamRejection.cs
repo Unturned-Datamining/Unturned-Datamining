@@ -118,5 +118,10 @@ public enum ESteamRejection
     /// <summary>
     /// Received too many invalid messages from connection in a short window.
     /// </summary>
-    BAD_PACKET_RATE_LIMITING
+    BAD_PACKET_RATE_LIMITING,
+    /// <summary>
+    /// Server limits how many clients are joining from the same IP address.
+    /// (public issue #5001)
+    /// </summary>
+    TOO_MANY_CLIENTS_WITH_SAME_IP_ADDRESS
 }

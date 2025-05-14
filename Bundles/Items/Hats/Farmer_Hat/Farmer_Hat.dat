@@ -29,7 +29,7 @@ Blueprints
 		InputItems "375ee1fb16a848ff8bc5be5d4fafb4fc x 1" // Wheat
 		RequiresNearbyCraftingTags
 		[
-			"7b82c125a5a54984b8bb26576b59e977" // Workbench
+			"2ac5ddc545a848008c0308d21f5d2e6b" // Spinning Wheel
 		]
 		Effect "7eceb9f7751d4634b572c8e236355104" // Rip
 	}
@@ -41,6 +41,10 @@ Blueprints
 			"14901f32cd3240179fd6124324cc27e5 x 2" // Cloth
 		]
 		OutputItems this
+		RequiresNearbyCraftingTags
+		[
+			"2ac5ddc545a848008c0308d21f5d2e6b" // Spinning Wheel
+		]
 		Effect "7eceb9f7751d4634b572c8e236355104" // Rip
 	}
 ]

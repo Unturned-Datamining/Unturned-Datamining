@@ -128,7 +128,7 @@ public class ChatManager : SteamCaller
         text = text.Trim();
         ControlsSettings.formatPluginHotkeysIntoText(ref text);
         ProfanityFilter.ApplyFilter(OptionsSettings.filter, ref text);
-        if (OptionsSettings.streamer)
+        if (OptionsSettings.ShouldAnonymizeMultiplayerDetails)
         {
             color = Color.white;
         }

@@ -134,7 +134,7 @@ internal static class ClientMessageHandler_Accepted
         reader.ReadFloat(out Provider._modeConfigData.Gameplay.AirStrafing_Deceleration_Multiplier);
         reader.ReadFloat(out Provider._modeConfigData.Gameplay.ThirdPerson_RecoilMultiplier);
         reader.ReadFloat(out Provider._modeConfigData.Gameplay.ThirdPerson_SpreadMultiplier);
-        if (OptionsSettings.streamer)
+        if (OptionsSettings.ShouldHideRichPresence)
         {
             SteamFriends.SetRichPresence("connect", "");
         }

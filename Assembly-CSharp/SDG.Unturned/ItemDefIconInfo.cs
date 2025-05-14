@@ -19,13 +19,13 @@ public class ItemDefIconInfo
     /// </summary>
     private bool hasLarge;
 
-    public void onSmallItemIconReady(Texture2D texture)
+    public void onSmallItemIconReady(int handle, Texture2D texture)
     {
         hasSmall = true;
         complete();
     }
 
-    public void onLargeItemIconReady(Texture2D texture)
+    public void onLargeItemIconReady(int handle, Texture2D texture)
     {
         byte[] bytes = texture.EncodeToPNG();
         UnturnedLog.info(extraPath);

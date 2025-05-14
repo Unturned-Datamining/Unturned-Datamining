@@ -38,8 +38,10 @@ public enum ELoadingTip
     SKIP_ACTION_CRAFTING_MENU,
     WORKSTATION,
     WORKSTATION_HEAT,
+    WORKSTATION_FOOD,
     WORKSTATION_MEDICINE,
     WORKSTATION_DYE,
+    WORKSTATION_CLOTHES,
     /// <summary>
     /// Marker for counting number of tips.
     /// </summary>

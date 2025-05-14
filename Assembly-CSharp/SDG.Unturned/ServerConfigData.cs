@@ -15,6 +15,8 @@ public class ServerConfigData
 
     public float Timeout_Game_Seconds;
 
+    [NonSerialized]
+    [Obsolete]
     public float Max_Packets_Per_Second;
 
     /// <summary>
@@ -40,6 +42,23 @@ public class ServerConfigData
     /// For example a value of 1 means the client will be kicked the first time they call the method off-cooldown. (not recommended)
     /// </summary>
     public int Rate_Limit_Kick_Threshold;
+
+    /// <summary>
+    /// Only applicable when Fake IP is off. When a client is connecting, if their connection would push the number
+    /// of simultaneous connections from the same IP address past this number, they are prevented from joining.
+    ///
+    /// May be useful to prevent against fake join requests coming from a single source IP. (public issue #5001)
+    ///
+    /// Defaults to a high value because some regions will have many more clients with the same IPv4 address than
+    /// others. For example, due to Carrier-grade NAT (CGNAT).
+    /// </summary>
+    public int Max_Clients_With_Same_IP_Address = 64;
+
+    /// <summary>
+    /// Whether rejections for Max_Clients_With_Same_IP_Address should log to command output. Useful for checking
+    /// if the limit is appropriate.
+    /// </summary>
+    public bool Max_Clients_With_Same_IP_Address_Log_Warnings = true;
 
     /// <summary>
     /// Ordinarily the server should be receiving multiple input packets per second from a client. If more than this
@@ -146,7 +165,6 @@ public class ServerConfigData
         Max_Ping_Milliseconds = 750u;
         Timeout_Queue_Seconds = 15f;
         Timeout_Game_Seconds = 30f;
-        Max_Packets_Per_Second = 50f;
         Join_Rate_Limit_Window_Seconds = 40f;
         Bad_Packet_Rate_Limit_Window_Seconds = 2.5f;
         Bad_Packet_Rate_Limit_Threshold = 10;

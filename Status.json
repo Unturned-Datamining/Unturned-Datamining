@@ -41,8 +41,8 @@
 	"Game":
 	{
 		"Major_Version": 25,
-		"Minor_Version": 4,
-		"Patch_Version": 101,
+		"Minor_Version": 5,
+		"Patch_Version": 0,
 		"GrantPackageIDs":
 		[
 			487
@@ -61,7 +61,7 @@
 	},
 	"News":
 	{
-		"Announcements_Count": 3
+		"Announcements_Count": 1
 	},
 	"Maps":
 	{

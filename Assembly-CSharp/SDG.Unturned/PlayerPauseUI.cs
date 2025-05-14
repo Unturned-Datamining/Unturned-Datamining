@@ -112,7 +112,7 @@ public class PlayerPauseUI
             {
                 text = localization.format("Offline");
             }
-            serverBox.Text = localization.format("Server_WithVersion", localizedName, Level.version, OptionsSettings.streamer ? localization.format("Streamer") : Provider.serverName, text);
+            serverBox.Text = localization.format("Server_WithVersion", localizedName, Level.version, OptionsSettings.ShouldAnonymizeMultiplayerDetails ? localization.format("Streamer") : Provider.serverName, text);
         }
         container.AnimateIntoView();
     }

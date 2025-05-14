@@ -27,6 +27,12 @@ public class SleekList<T> : SleekWrapper where T : class
 
     public CreateElement onCreateElement;
 
+    /// <summary>
+    /// Allows pooling elements.
+    /// If set, this is called rather than removing element from scroll view.
+    /// </summary>
+    public Action<ISleekElement> OnRemoveElement;
+
     private List<T> data;
 
     private List<VisibleEntry> visibleEntries = new List<VisibleEntry>();
@@ -83,9 +89,22 @@ public class SleekList<T> : SleekWrapper where T : class
         UpdateVisibleRange();
     }
 
+    private void DestroyAllChildren()
+    {
+        if (OnRemoveElement != null)
+        {
+            foreach (VisibleEntry visibleEntry in visibleEntries)
+            {
+                OnRemoveElement(visibleEntry.element);
+            }
+            return;
+        }
+        scrollView.RemoveAllChildren();
+    }
+
     public void ForceRebuildElements()
     {
-        scrollView.RemoveAllChildren();
+        DestroyAllChildren();
         visibleEntries.Clear();
         NotifyDataChanged();
     }
@@ -141,7 +160,7 @@ public class SleekList<T> : SleekWrapper where T : class
     {
         if (data == null || data.Count == 0 || onCreateElement == null)
         {
-            scrollView.RemoveAllChildren();
+            DestroyAllChildren();
             visibleEntries.Clear();
             return;
         }
@@ -154,7 +173,14 @@ public class SleekList<T> : SleekWrapper where T : class
             int num5 = IndexOfItemWithinRange(visibleEntry.item, num2, num3);
             if (num5 == -1)
             {
-                scrollView.RemoveChild(visibleEntry.element);
+                if (OnRemoveElement != null)
+                {
+                    OnRemoveElement(visibleEntry.element);
+                }
+                else
+                {
+                    scrollView.RemoveChild(visibleEntry.element);
+                }
                 visibleEntries.RemoveAtFast(num4);
             }
             else
@@ -172,7 +198,10 @@ public class SleekList<T> : SleekWrapper where T : class
                 sleekElement.SizeOffset_Y = itemHeight;
                 sleekElement.SizeScale_X = 1f;
                 sleekElement.PositionOffset_Y = i * (itemHeight + itemPadding);
-                scrollView.AddChild(sleekElement);
+                if (sleekElement.Parent != this)
+                {
+                    scrollView.AddChild(sleekElement);
+                }
                 visibleEntries.Add(new VisibleEntry(item, sleekElement));
             }
         }

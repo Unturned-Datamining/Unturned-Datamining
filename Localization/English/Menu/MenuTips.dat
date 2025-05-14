@@ -34,5 +34,7 @@ Streamer Customize the names displayed in streamer mode by modifying StreamerNam
 SkipActionCraftingMenu Skip visiting the crafting menu when performing an action in an item's context menu by holding [{0}] while clicking it.
 Workstation Most items require a workstation to craft or repair. Get started by making a <color=uncommon>Simple Workbench</color>!
 WorkstationHeat Raw food can be cooked at heat sources such as the <color=uncommon>Campfire</color> or <color=rare>Brick Oven</color>
-WorkstationMedicine High-quality medicine requires a <color=epic>Pharmaceutical Table</color> to craft.
+WorkstationFood Create better foods with a <color=rare>Food Prep Station</color> or enclosed heat source like the <color=epic>Electric Stove</color>.
+WorkstationMedicine High-quality medicine and explosives requires a <color=epic>Chemistry Lab</color> to craft.
 WorkstationDye Dye clothing and furniture at a <color=rare>Dye Vat</color>.
+WorkstationClothes Clothing can be repaired from a <color=rare>Spinning Wheel</color>

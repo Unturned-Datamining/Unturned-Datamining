@@ -113,7 +113,7 @@ public class SleekPlayer : SleekWrapper
     {
         player = newPlayer;
         this.context = context;
-        Texture2D texture = (OptionsSettings.streamer ? null : ((!Provider.isServer) ? Provider.provider.communityService.getIcon(player.playerID.steamID) : Provider.provider.communityService.getIcon(Provider.user)));
+        Texture2D texture = (OptionsSettings.ShouldAnonymizeMultiplayerDetails ? null : ((!Provider.isServer) ? Provider.provider.communityService.getIcon(player.playerID.steamID) : Provider.provider.communityService.getIcon(Provider.user)));
         SleekColor backgroundColor = ESleekTint.BACKGROUND;
         SleekColor textColor = ESleekTint.FOREGROUND;
         if (player.isAdmin && !Provider.isServer)

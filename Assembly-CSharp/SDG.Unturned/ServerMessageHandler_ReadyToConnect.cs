@@ -357,6 +357,11 @@ internal static class ServerMessageHandler_ReadyToConnect
             Provider.reject(transportConnection, ESteamRejection.SKIN_COLOR_WITHIN_THRESHOLD_OF_TERRAIN_COLOR);
             return;
         }
+        if (Provider.IsBlockedByMaxClientsWithSameIpAddressRule(transportConnection, includeQueuedPlayers: true))
+        {
+            Provider.reject(transportConnection, ESteamRejection.TOO_MANY_CLIENTS_WITH_SAME_IP_ADDRESS);
+            return;
+        }
         SteamPending steamPending = new SteamPending(transportConnection, steamPlayerID, value6, value10, value11, value12, value13, value14, value15, value16, value17, value18, value19, value20, value21, value22, value23, pendingPackageSkins.ToArray(), value24, value26, value27, value4);
         byte queuePosition;
         bool flag7;

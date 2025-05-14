@@ -17,7 +17,7 @@ Details_RepairDescription Quality +{0} (from {1} to {2})
 Details_FillTitle Fill {0}
 Details_FillDescription Amount +{0} (from x{1} to x{2})
 Details_SalvageTitle Salvage {0}
-Details_CraftTitle Build {0}
+Details_CraftTitle Craft {0}
 Details_TargetItem Target
 Details_InputItems Ingredients
 Details_ToolItems Tools

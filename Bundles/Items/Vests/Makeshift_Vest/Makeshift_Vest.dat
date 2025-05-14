@@ -22,6 +22,10 @@ Blueprints
 			"21ede8ebffb14c5580e8c7ad149e335e x 5" // Metal Scrap
 		]
 		OutputItems this
+		RequiresNearbyCraftingTags
+		[
+			"2ac5ddc545a848008c0308d21f5d2e6b" // Spinning Wheel
+		]
 		Effect "7eceb9f7751d4634b572c8e236355104" // Rip
 	}
 	{

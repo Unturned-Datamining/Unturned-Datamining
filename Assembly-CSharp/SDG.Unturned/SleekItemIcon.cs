@@ -6,6 +6,8 @@ public class SleekItemIcon : SleekWrapper
 {
     private ISleekImage internalImage;
 
+    private int expectedHandle;
+
     public byte rot
     {
         set
@@ -45,22 +47,22 @@ public class SleekItemIcon : SleekWrapper
 
     public void Refresh(ushort id, byte quality, byte[] state)
     {
-        ItemTool.getIcon(id, quality, state, OnIconReady);
+        expectedHandle = ItemTool.getIcon(id, quality, state, OnIconReady);
     }
 
     public void Refresh(ushort id, byte quality, byte[] state, ItemAsset itemAsset)
     {
-        ItemTool.getIcon(id, quality, state, itemAsset, OnIconReady);
+        expectedHandle = ItemTool.getIcon(id, quality, state, itemAsset, OnIconReady);
     }
 
     public void Refresh(ushort id, byte quality, byte[] state, ItemAsset itemAsset, int widthOverride, int heightOverride)
     {
-        ItemTool.getIcon(id, quality, state, itemAsset, widthOverride, heightOverride, OnIconReady);
+        expectedHandle = ItemTool.getIcon(id, quality, state, itemAsset, widthOverride, heightOverride, OnIconReady);
     }
 
     public void Refresh(ItemAsset itemAsset, int widthOverride, int heightOverride)
     {
-        ItemTool.getIcon(itemAsset.id, 100, itemAsset.getState(), itemAsset, widthOverride, heightOverride, OnIconReady);
+        expectedHandle = ItemTool.getIcon(itemAsset.id, 100, itemAsset.getState(), itemAsset, widthOverride, heightOverride, OnIconReady);
     }
 
     public override void OnDestroy()
@@ -76,9 +78,9 @@ public class SleekItemIcon : SleekWrapper
         AddChild(internalImage);
     }
 
-    private void OnIconReady(Texture2D texture)
+    private void OnIconReady(int handle, Texture2D texture)
     {
-        if (internalImage != null)
+        if (internalImage != null && (handle == -1 || handle == expectedHandle))
         {
             internalImage.Texture = texture;
         }

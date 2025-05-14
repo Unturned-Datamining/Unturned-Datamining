@@ -65,9 +65,11 @@ public class OptionsSettings
 
     private const byte SAVEDATA_VERSION_ADDED_SPRINT_FOV_OPTION = 62;
 
-    private const byte SAVEDATA_VERSION_NEWEST = 62;
+    private const byte SAVEDATA_VERSION_SEPARATED_STREAMER_MODE = 63;
 
-    public static readonly byte SAVEDATA_VERSION = 62;
+    private const byte SAVEDATA_VERSION_NEWEST = 63;
+
+    public static readonly byte SAVEDATA_VERSION = 63;
 
     public static readonly byte MIN_FOV = 60;
 
@@ -152,7 +154,10 @@ public class OptionsSettings
     [Obsolete("Renamed to ShouldHitmarkersFollowWorldPosition")]
     public static bool hitmarker;
 
+    [Obsolete("Separated into ShouldAnonymizeMultiplayerDetails and ShouldHideRichPresence")]
     public static bool streamer;
+
+    private static bool _hideRichPresence;
 
     public static bool featuredWorkshop;
 
@@ -419,6 +424,46 @@ public class OptionsSettings
         }
     }
 
+    /// <summary>
+    /// If true, hide identifiable details of other multiplayer clients like avatars, player names, number of
+    /// players online, server name, etc. Live streamers may find this useful to help prevent stream sniping.
+    ///
+    /// Separated from the older "streamer mode" option.
+    /// </summary>
+    public static bool ShouldAnonymizeMultiplayerDetails
+    {
+        get
+        {
+            return streamer;
+        }
+        set
+        {
+            streamer = value;
+        }
+    }
+
+    /// <summary>
+    /// If true, don't share details like "editing map X" or "join" with Steam. Useful for anyone who might be
+    /// targeted / followed into servers, or who has a project to keep secret.
+    ///
+    /// Separated from the older "streamer mode" option.
+    /// </summary>
+    public static bool ShouldHideRichPresence
+    {
+        get
+        {
+            return _hideRichPresence;
+        }
+        set
+        {
+            if (_hideRichPresence != value)
+            {
+                _hideRichPresence = value;
+                Provider.updateRichPresence();
+            }
+        }
+    }
+
     public static Color cursorColor
     {
         get
@@ -594,7 +639,8 @@ public class OptionsSettings
         hints = true;
         proUI = true;
         ShouldHitmarkersFollowWorldPosition = false;
-        streamer = false;
+        ShouldAnonymizeMultiplayerDetails = false;
+        ShouldHideRichPresence = false;
         featuredWorkshop = true;
         showHotbar = true;
         pauseWhenUnfocused = true;
@@ -765,13 +811,18 @@ public class OptionsSettings
         {
             ShouldHitmarkersFollowWorldPosition = false;
         }
-        if (b > 21)
+        if (b >= 63)
         {
-            streamer = block.readBoolean();
+            ShouldAnonymizeMultiplayerDetails = block.readBoolean();
+        }
+        else if (b > 21)
+        {
+            ShouldHideRichPresence = (ShouldAnonymizeMultiplayerDetails = block.readBoolean());
         }
         else
         {
-            streamer = false;
+            ShouldAnonymizeMultiplayerDetails = false;
+            ShouldHideRichPresence = false;
         }
         if (b > 25)
         {
@@ -1046,6 +1097,10 @@ public class OptionsSettings
         {
             sprintFovBoostIntensity = 1f;
         }
+        if (b >= 63)
+        {
+            ShouldHideRichPresence = block.readBoolean();
+        }
         if (!Provider.isPro)
         {
             backgroundColor = new Color(0.9f, 0.9f, 0.9f);
@@ -1059,7 +1114,7 @@ public class OptionsSettings
     public static void save()
     {
         Block block = new Block();
-        block.writeByte(62);
+        block.writeByte(63);
         block.writeBoolean(value: false);
         block.writeBoolean(splashscreen);
         block.writeBoolean(timer);
@@ -1079,7 +1134,7 @@ public class OptionsSettings
         block.writeBoolean(value: false);
         block.writeBoolean(proUI);
         block.writeBoolean(ShouldHitmarkersFollowWorldPosition);
-        block.writeBoolean(streamer);
+        block.writeBoolean(ShouldAnonymizeMultiplayerDetails);
         block.writeBoolean(featuredWorkshop);
         block.writeBoolean(showHotbar);
         block.writeBoolean(pauseWhenUnfocused);
@@ -1121,6 +1176,7 @@ public class OptionsSettings
         block.writeSingle(damageFlinchIntensity);
         block.writeBoolean(ShowOutboundVoiceChatOffHint);
         block.writeSingle(sprintFovBoostIntensity);
+        block.writeBoolean(ShouldHideRichPresence);
         ReadWrite.writeBlock("/Options.dat", useCloud: true, block);
     }
 }

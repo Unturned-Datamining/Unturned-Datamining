@@ -117,7 +117,8 @@ public class MenuPlayOnlineSafetyUI : SleekFullscreenBox
 
     private void OnStreamerModeToggled(ISleekToggle toggle, bool state)
     {
-        OptionsSettings.streamer = state;
+        OptionsSettings.ShouldAnonymizeMultiplayerDetails = state;
+        OptionsSettings.ShouldHideRichPresence = state;
         SynchronizeValues();
     }
 
@@ -138,8 +139,9 @@ public class MenuPlayOnlineSafetyUI : SleekFullscreenBox
         outboundVoiceChatToggle.IsInteractable = OptionsSettings.chatVoiceIn;
         outboundVoiceChat_Header.TextColor = new SleekColor(ESleekTint.FONT, OptionsSettings.chatVoiceIn ? 1f : 0.5f);
         outboundVoiceChat_Description.TextColor = new SleekColor(ESleekTint.RICH_TEXT_DEFAULT, OptionsSettings.chatVoiceIn ? 1f : 0.5f);
-        streamerModeToggle.Value = OptionsSettings.streamer;
-        streamerMode_Header.Text = localization.format("StreamerMode_Header", localization.format(OptionsSettings.streamer ? "Feature_On" : "Feature_Off"));
+        bool flag = OptionsSettings.ShouldAnonymizeMultiplayerDetails && OptionsSettings.ShouldHideRichPresence;
+        streamerModeToggle.Value = flag;
+        streamerMode_Header.Text = localization.format("StreamerMode_Header", localization.format(flag ? "Feature_On" : "Feature_Off"));
         dontShowAgainToggle.Value = OptionsSettings.wantsToHideOnlineSafetyMenu;
     }
 

@@ -136,7 +136,7 @@ public class SteamPlayer : SteamConnectedClientBase
     {
         get
         {
-            if (OptionsSettings.streamer && playerID.steamID != Provider.user)
+            if (OptionsSettings.ShouldAnonymizeMultiplayerDetails && playerID.steamID != Provider.user)
             {
                 return false;
             }
@@ -150,7 +150,7 @@ public class SteamPlayer : SteamConnectedClientBase
     {
         get
         {
-            if (OptionsSettings.streamer && playerID.steamID != Provider.user)
+            if (OptionsSettings.ShouldAnonymizeMultiplayerDetails && playerID.steamID != Provider.user)
             {
                 return false;
             }

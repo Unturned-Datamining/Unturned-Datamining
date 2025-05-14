@@ -32,5 +32,7 @@ public class ItemIconInfo
 
     internal bool isEligibleForCaching;
 
+    internal int handle;
+
     public ItemIconReady callback;
 }

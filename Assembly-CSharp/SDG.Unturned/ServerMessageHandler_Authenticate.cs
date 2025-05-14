@@ -39,25 +39,31 @@ internal static class ServerMessageHandler_Authenticate
             }
             UnturnedLog.info($"Submitted Steam authentication request for queued player {steamPending.playerID}");
         }
-        if (ReadEconomyDetails(steamPending, reader))
+        if (!ReadEconomyDetails(steamPending, reader))
         {
-            if (steamPending.playerID.group == CSteamID.Nil || (bool)Dedicator.offlineOnly)
-            {
-                steamPending.hasGroup = true;
-            }
-            else if (!SteamGameServer.RequestUserGroupStatus(steamPending.playerID.steamID, steamPending.playerID.group))
-            {
-                steamPending.playerID.group = CSteamID.Nil;
-                steamPending.hasGroup = true;
-            }
-            else
-            {
-                UnturnedLog.info($"Submitted Steam group request for queued player {steamPending.playerID}");
-            }
-            if (steamPending.canAcceptYet)
-            {
-                Provider.accept(steamPending);
-            }
+            return;
+        }
+        if (Provider.IsBlockedByMaxClientsWithSameIpAddressRule(transportConnection, includeQueuedPlayers: false))
+        {
+            Provider.reject(transportConnection, ESteamRejection.TOO_MANY_CLIENTS_WITH_SAME_IP_ADDRESS);
+            return;
+        }
+        if (steamPending.playerID.group == CSteamID.Nil || (bool)Dedicator.offlineOnly)
+        {
+            steamPending.hasGroup = true;
+        }
+        else if (!SteamGameServer.RequestUserGroupStatus(steamPending.playerID.steamID, steamPending.playerID.group))
+        {
+            steamPending.playerID.group = CSteamID.Nil;
+            steamPending.hasGroup = true;
+        }
+        else
+        {
+            UnturnedLog.info($"Submitted Steam group request for queued player {steamPending.playerID}");
+        }
+        if (steamPending.canAcceptYet)
+        {
+            Provider.accept(steamPending);
         }
     }
 

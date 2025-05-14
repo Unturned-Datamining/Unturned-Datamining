@@ -31,7 +31,7 @@ public class SleekChatEntryV1 : SleekWrapper
             _representingChatMessage = value;
             if (string.IsNullOrEmpty(_representingChatMessage.iconURL))
             {
-                Texture2D texture = ((!OptionsSettings.streamer && _representingChatMessage.speaker != null) ? Provider.provider.communityService.getIcon(_representingChatMessage.speaker.playerID.steamID, shouldCache: true) : null);
+                Texture2D texture = ((!OptionsSettings.ShouldAnonymizeMultiplayerDetails && _representingChatMessage.speaker != null) ? Provider.provider.communityService.getIcon(_representingChatMessage.speaker.playerID.steamID, shouldCache: true) : null);
                 avatarImage.Texture = texture;
                 avatarImage.IsVisible = true;
                 remoteImage.IsVisible = false;

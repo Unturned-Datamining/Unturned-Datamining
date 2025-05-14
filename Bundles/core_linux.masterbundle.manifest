@@ -1,9 +1,9 @@
 ManifestFileVersion: 0
-CRC: 2368471034
+CRC: 144341174
 Hashes:
   AssetFileHash:
     serializedVersion: 2
-    Hash: b4703200f3e68abf17241e5d544b32aa
+    Hash: 610886e345d5d00df6ae0262af58572a
   TypeTreeHash:
     serializedVersion: 2
     Hash: 49ad314d7545c707b1d76e2f0d39250c
@@ -384,6 +384,7 @@ Assets:
 - Assets/CoreMasterBundle/Items/Barricades/Torch_Birch/Barricade.prefab
 - Assets/CoreMasterBundle/Skins/Patterns/Multicam_1024x1024/Skin_Primary.mat
 - Assets/CoreMasterBundle/Items/Elver/Elver_Top_0/Emission.png
+- Assets/CoreMasterBundle/Items/Barricades/SpinningWheel/Animations.prefab
 - Assets/CoreMasterBundle/Objects/Small/Business/Wheel_5/Object.prefab
 - Assets/CoreMasterBundle/Items/Shirts/Jersey_Mexico/Shirt.png
 - Assets/CoreMasterBundle/Skins/Zubeknakov/Elemental/Skin_Secondary_151.mat
@@ -750,6 +751,7 @@ Assets:
 - Assets/CoreMasterBundle/Items/Structures/Garage_Brick/Animations.prefab
 - Assets/CoreMasterBundle/Items/Shirts/Plaid_Red_Shirt/Shirt.png
 - Assets/CoreMasterBundle/Objects/Medium/Parks/Jetski_Red/Nav.prefab
+- Assets/CoreMasterBundle/Items/Barricades/SpinningWheel/Preview.prefab
 - Assets/CoreMasterBundle/Items/Arid/Arid_Suit_Bottoms_3/Material.mat
 - Assets/CoreMasterBundle/Objects/Large/Buildings/Lodge_1/Object.prefab
 - Assets/CoreMasterBundle/Skins/Timberwolf/Dragon/Skin_Tertiary.mat
@@ -1436,6 +1438,7 @@ Assets:
 - Assets/CoreMasterBundle/Objects/Medium/Parks/Umbrella_0/Nav.prefab
 - Assets/CoreMasterBundle/Terrain/Materials/Fallback/Black.png
 - Assets/CoreMasterBundle/Items/Arid/Arid_Arrowhead/Item.prefab
+- Assets/CoreMasterBundle/Trees/Quartz_3/Resource.prefab
 - Assets/CoreMasterBundle/Items/Shirts/Ghillie_Top_Arctic/Animations.prefab
 - Assets/CoreMasterBundle/Items/Medical/Vitamins/Item.prefab
 - Assets/CoreMasterBundle/Effects/Guns/Paintball_Red/Effect.prefab
@@ -1919,6 +1922,7 @@ Assets:
 - Assets/CoreMasterBundle/Items/Frost/Frost_Puffy/Item.prefab
 - Assets/CoreMasterBundle/Items/Guns/Swissgewehr/Metallic_Base.png
 - Assets/CoreMasterBundle/Items/Shirts/Hoodie_Power/Shirt.png
+- Assets/CoreMasterBundle/Items/Barricades/FoodPrepStation/Item.prefab
 - Assets/CoreMasterBundle/Items/Hats/Medusa/Item.prefab
 - Assets/CoreMasterBundle/Objects/Large/Military/Door_Research/Object.prefab
 - Assets/CoreMasterBundle/Items/Pants/Prisoner_Bottom/Item.prefab
@@ -2037,7 +2041,7 @@ Assets:
 - Assets/CoreMasterBundle/Objects/Large/Business/Machinery_0/Triggers.prefab
 - Assets/CoreMasterBundle/Objects/Large/Roads/Dock_1/Object.prefab
 - Assets/CoreMasterBundle/Items/Structures/Post_Metal/Nav.prefab
-- Assets/CoreMasterBundle/Items/Barricades/Dyevat/Barricade.prefab
+- Assets/CoreMasterBundle/Items/Barricades/DyeVat/Barricade.prefab
 - Assets/CoreMasterBundle/Items/Backpacks/Blueknight_Cape/Material.mat
 - Assets/CoreMasterBundle/Items/Pants/Snowman_Bottom/Pants.png
 - Assets/CoreMasterBundle/Objects/Mooki/Bistro_0/Object.prefab
@@ -2163,6 +2167,7 @@ Assets:
 - Assets/CoreMasterBundle/Sounds/Inventory/SmallGunAttachment/gun_pistol_load_bullet_04.wav
 - Assets/CoreMasterBundle/Objects/Medium/Business/Computer_0/Object.prefab
 - Assets/CoreMasterBundle/Items/Barricades/Sandbag/Nav.prefab
+- Assets/CoreMasterBundle/Items/Barricades/SpinningWheel/Item.prefab
 - Assets/CoreMasterBundle/Objects/Large/Vehicles/SUV_Purple/Object.prefab
 - Assets/CoreMasterBundle/Trees/Maple_3/Debris.prefab
 - Assets/CoreMasterBundle/Items/Barricades/Umbrella_Green/Animations.prefab
@@ -2547,7 +2552,7 @@ Assets:
 - Assets/CoreMasterBundle/Skins/Nightraider/Tribal/Skin_Secondary_123.mat
 - Assets/CoreMasterBundle/Items/Pants/Trunks_Purple/Pants.png
 - Assets/CoreMasterBundle/Objects/Large/Buildings/Bunker_0/Nav.prefab
-- Assets/CoreMasterBundle/Items/Barricades/Pharmaceutical/Nav.prefab
+- Assets/CoreMasterBundle/Items/Barricades/ChemistryLab/Nav.prefab
 - Assets/CoreMasterBundle/Items/Structures/Garage_Metal/Item.prefab
 - Assets/CoreMasterBundle/Objects/Medium/Fences/Fence_Wood_Broken_1/Object.prefab
 - Assets/CoreMasterBundle/Level/Dropship.prefab
@@ -2827,7 +2832,7 @@ Assets:
 - Assets/CoreMasterBundle/Skins/Bluntforce/UMarine/Skin_Secondary_8.mat
 - Assets/CoreMasterBundle/Items/Barricades/Seed_Tomato/Barricade.prefab
 - Assets/CoreMasterBundle/Skins/Anniversary_10/Classic_Katana/Override_Mesh_0.prefab
-- Assets/CoreMasterBundle/Items/Barricades/Pharmaceutical/Barricade.prefab
+- Assets/CoreMasterBundle/Items/Barricades/ChemistryLab/Barricade.prefab
 - Assets/CoreMasterBundle/Items/PBS/PBS_Container_Pack/Backpack.prefab
 - Assets/CoreMasterBundle/Items/Boxes/Halloween2024_Box/Item.prefab
 - Assets/CoreMasterBundle/Skins/Honeybadger/UMarine/Skin_Secondary_148.mat
@@ -2946,6 +2951,7 @@ Assets:
 - Assets/CoreMasterBundle/Terrain/Materials/Peaks/Grass_04.png
 - Assets/CoreMasterBundle/Skins/Ekho/Accelerator/Skin_Tertiary.mat
 - Assets/CoreMasterBundle/Skins/Scalar/Deimos/Skin_Primary.mat
+- Assets/CoreMasterBundle/UI/CraftingTagIcons/Sewing.png
 - Assets/CoreMasterBundle/Items/Shirts/Hoodie_Yellow/Material.mat
 - Assets/CoreMasterBundle/Objects/Large/Buildings/House_00_Burned/Object.prefab
 - Assets/CoreMasterBundle/Objects/Medium/Business/Quarry_Catwalk_4/Object.prefab
@@ -2972,7 +2978,7 @@ Assets:
 - Assets/CoreMasterBundle/Items/Sights/Red_Cross_Scope/Item.prefab
 - Assets/CoreMasterBundle/Skins/Peacemaker/Blueprint/Skin_Primary.mat
 - Assets/CoreMasterBundle/Items/Food/Bass_Cooked/Item.prefab
-- Assets/CoreMasterBundle/Items/Barricades/Pharmaceutical/Item.prefab
+- Assets/CoreMasterBundle/Items/Barricades/ChemistryLab/Item.prefab
 - Assets/CoreMasterBundle/Effects/Physics/Footstep/Snow_Run/footstep_snow_run_10.wav
 - Assets/CoreMasterBundle/Skins/Snayperskya/Nativ/Skin_Attachment.mat
 - Assets/CoreMasterBundle/Skins/Bane/Steampunk/Skin_Secondary_1485.mat
@@ -3780,6 +3786,7 @@ Assets:
 - Assets/CoreMasterBundle/Items/Outfits/LonelyMusician/LonelyMusician_WesternBowtie/Vest.prefab
 - Assets/CoreMasterBundle/Objects/Medium/Business/Wheel_4/Nav.prefab
 - Assets/CoreMasterBundle/Objects/Medium/Business/Barrel_1/Nav.prefab
+- Assets/CoreMasterBundle/Items/Supplies/Quartz/Item.prefab
 - Assets/CoreMasterBundle/Items/Vests/Scarf_White/Vest.prefab
 - Assets/CoreMasterBundle/Objects/Medium/Fences/Fence_Wood_Broken_2/Object.prefab
 - Assets/CoreMasterBundle/Skins/Patterns/Desert_1024x1024/Skin_Tertiary.mat
@@ -5061,7 +5068,7 @@ Assets:
 - Assets/CoreMasterBundle/Skins/Honeybadger/Insane/Skin_Primary.mat
 - Assets/CoreMasterBundle/Objects/Large/Vehicles/Plane_0/Object.prefab
 - Assets/CoreMasterBundle/Items/Guns/Ekho/Metallic_Base.png
-- Assets/CoreMasterBundle/Items/Barricades/Pharmaceutical/Animations.prefab
+- Assets/CoreMasterBundle/Items/Barricades/ChemistryLab/Animations.prefab
 - Assets/CoreMasterBundle/Effects/Physics/Footstep/MetalHigh_Run/footstep_metal_high_run_02.wav
 - Assets/CoreMasterBundle/Items/Tools/Vehicle_Spraypaint_ClassicPurple/Item.prefab
 - Assets/CoreMasterBundle/Skins/Zubeknakov/Elemental/Skin_Secondary_1004.mat
@@ -5479,6 +5486,7 @@ Assets:
 - Assets/CoreMasterBundle/Items/Hats/Anniversary_1_Gold/Item.prefab
 - Assets/CoreMasterBundle/Effects/Explosions/Metal_3/Material.mat
 - Assets/CoreMasterBundle/Effects/Physics/Footstep/Concrete_Run/footstep_concrete_run_21.wav
+- Assets/CoreMasterBundle/Items/Barricades/FoodPrepStation/Barricade.prefab
 - Assets/CoreMasterBundle/Objects/Large/Buildings/Tent_4/Slots.prefab
 - Assets/CoreMasterBundle/Skins/Eaglefire/Jackpot/Skin_Secondary_6.mat
 - Assets/CoreMasterBundle/Items/Guns/Scalar/Animations.prefab
@@ -5602,6 +5610,7 @@ Assets:
 - Assets/CoreMasterBundle/Mythics/Frost_Icicles/System_Area.prefab
 - Assets/CoreMasterBundle/Objects/Large/Buildings/Office_2/Nav.prefab
 - Assets/CoreMasterBundle/Terrain/Materials/Peaks/Scorched_00.png
+- Assets/CoreMasterBundle/Trees/Quartz_0/Stump.prefab
 - Assets/CoreMasterBundle/Objects/Medium/Parks/Junglegym_0/Nav.prefab
 - Assets/CoreMasterBundle/Effects/Physics/Footstep/Snow_Walk/Footstep_Snow_Walk.asset
 - Assets/CoreMasterBundle/Objects/Large/Vehicles/Sleigh_00/Nav.prefab
@@ -6207,7 +6216,7 @@ Assets:
 - Assets/CoreMasterBundle/Skins/Teklowvka/Watermelon/Skin_Primary.mat
 - Assets/CoreMasterBundle/Skins/Fusilaut/Formal/Skin_Attachment.mat
 - Assets/CoreMasterBundle/Items/Shirts/Irish_Luck_Top/Shirt.png
-- Assets/CoreMasterBundle/Items/Barricades/Oven/Barricade.prefab
+- Assets/CoreMasterBundle/Items/Barricades/Oven_Electric/Barricade.prefab
 - Assets/CoreMasterBundle/Skins/Grizzly/Zone_Defender/Skin_Primary.mat
 - Assets/CoreMasterBundle/Items/Barricades/Plate_Large_Birch_Equilateral/Barricade.prefab
 - Assets/CoreMasterBundle/Items/Outfits/Hooligan/Hooligan_Bottom/Item.prefab
@@ -6519,6 +6528,7 @@ Assets:
 - Assets/CoreMasterBundle/Effects/General/Sleeve/Effect.prefab
 - Assets/CoreMasterBundle/Items/Kuwait2/Kuwait_Private_Eye_Pipe/Mask.prefab
 - Assets/CoreMasterBundle/Skins/Fusilaut/Formal/Skin_Tertiary.mat
+- Assets/CoreMasterBundle/Trees/Quartz_0/Resource.prefab
 - Assets/CoreMasterBundle/Items/Tools/Vehicle_Spraypaint_MediumBrown/Animations.prefab
 - Assets/CoreMasterBundle/Items/Shirts/Samurai_Top/Material.mat
 - Assets/CoreMasterBundle/Skins/Avenger/Faultline/Skin_Secondary_1022.mat
@@ -6580,6 +6590,7 @@ Assets:
 - Assets/CoreMasterBundle/Items/Backpacks/Travelpack_Red/Backpack.prefab
 - Assets/CoreMasterBundle/Objects/Medium/Business/Shelf_4/Object.prefab
 - Assets/CoreMasterBundle/Objects/Large/Buildings/Roundhouse_1/Object.prefab
+- Assets/CoreMasterBundle/Trees/Quartz_1/Resource.prefab
 - Assets/CoreMasterBundle/Objects/Small/Quests/Tray_00_Off/Object.prefab
 - Assets/CoreMasterBundle/Items/Shirts/Diving_Top/Material.mat
 - Assets/CoreMasterBundle/Effects/Impacts/Concrete_WithDecal_NoAudio/Material_Decal.mat
@@ -7095,6 +7106,7 @@ Assets:
 - Assets/CoreMasterBundle/Objects/Large/Roads/Tunnel_Line_Cap_0/Object.prefab
 - Assets/CoreMasterBundle/Items/Barricades/Claymore/Use.mp3
 - Assets/CoreMasterBundle/Items/Backpacks/Skater_Skateboard/Item.prefab
+- Assets/CoreMasterBundle/Items/Barricades/SpinningWheel/Barricade.prefab
 - Assets/CoreMasterBundle/Items/Structures/Garage_Pine/Item.prefab
 - Assets/CoreMasterBundle/Items/Pants/Trouser_Pants_Pro/Material.mat
 - Assets/CoreMasterBundle/Items/Shirts/Coalition_Top_Commander/Animations.prefab
@@ -7160,6 +7172,7 @@ Assets:
 - Assets/CoreMasterBundle/Items/Hats/Toy_Soldier_Hat/Item.prefab
 - Assets/CoreMasterBundle/Objects/Large/Roads/Bridge_Line_5/Object.prefab
 - Assets/CoreMasterBundle/Items/Barricades/Flare_Red/Item.prefab
+- Assets/CoreMasterBundle/Items/Barricades/FoodPrepStation/Animations.prefab
 - Assets/CoreMasterBundle/Objects/Large/Buildings/House_06_Burned/Skybox.prefab
 - Assets/CoreMasterBundle/Skins/Bulldog/Phoenix/Skin_Attachment.mat
 - Assets/CoreMasterBundle/Objects/Medium/Rubble/Debris_1/Object.prefab
@@ -7493,7 +7506,7 @@ Assets:
 - Assets/CoreMasterBundle/Effects/Explosions/XMAS_Present_00/Texture.png
 - Assets/CoreMasterBundle/Skins/MP40/Yellowcake/Skin_Secondary_1478.mat
 - Assets/CoreMasterBundle/Effects/Impacts/Water_Static/Water.mp3
-- Assets/CoreMasterBundle/Items/Barricades/Oven/Nav.prefab
+- Assets/CoreMasterBundle/Items/Barricades/Oven_Electric/Nav.prefab
 - Assets/CoreMasterBundle/Objects/Large/Vehicles/Ship_0/Nav.prefab
 - Assets/CoreMasterBundle/Skins/Axe_Pick/GA_ClimbingPick/Override_Mesh_0.prefab
 - Assets/CoreMasterBundle/Items/Hats/FranceHistorical_Helmet_Poilus/Item.prefab
@@ -7834,6 +7847,7 @@ Assets:
 - Assets/CoreMasterBundle/Skins/Patterns/Chamsai_1024x1024/Skin_Tertiary.mat
 - Assets/CoreMasterBundle/Effects/Impacts/Concrete_WithDecal_NoAudio/Material.mat
 - Assets/CoreMasterBundle/Items/Masks/Balaclava_White/Animations.prefab
+- Assets/CoreMasterBundle/Trees/Quartz_2/Stump.prefab
 - Assets/CoreMasterBundle/Items/Barricades/Table_Cir_Pine/Barricade.prefab
 - Assets/CoreMasterBundle/Items/Barricades/Counter_Metal/Barricade.prefab
 - Assets/CoreMasterBundle/Items/Barricades/Library_Birch/Nav.prefab
@@ -8208,7 +8222,7 @@ Assets:
 - Assets/CoreMasterBundle/Items/Backpacks/Shark_Fin/Backpack.prefab
 - Assets/CoreMasterBundle/Items/Barricades/Plate_Small_Pine/Nav.prefab
 - Assets/CoreMasterBundle/Items/Structures/Pillar_Brick/Animations.prefab
-- Assets/CoreMasterBundle/Items/Barricades/Oven/Animations.prefab
+- Assets/CoreMasterBundle/Items/Barricades/Oven_Electric/Animations.prefab
 - Assets/CoreMasterBundle/Effects/Explosions/Present_3/Effect.prefab
 - Assets/CoreMasterBundle/Items/Barricades/Umbrella_Purple/Item.prefab
 - Assets/CoreMasterBundle/Mythics/Rio_ThornyRoses/System_Area.prefab
@@ -8386,7 +8400,7 @@ Assets:
 - Assets/CoreMasterBundle/Items/Shirts/Plaid_Orange_Shirt/Shirt.png
 - Assets/CoreMasterBundle/Items/Barricades/Plaque_Pine/Barricade.prefab
 - Assets/CoreMasterBundle/Skins/Avenger/Toy/Skin_Secondary_1022.mat
-- Assets/CoreMasterBundle/Items/Barricades/Dyevat/Nav.prefab
+- Assets/CoreMasterBundle/Items/Barricades/DyeVat/Nav.prefab
 - Assets/CoreMasterBundle/Items/Pants/Diving_Bottom/Animations.prefab
 - Assets/CoreMasterBundle/Objects/Mooki/Bistro_0/Skybox.prefab
 - Assets/CoreMasterBundle/Objects/Large/Buildings/Bunker_3/Object.prefab
@@ -8793,7 +8807,7 @@ Assets:
 - Assets/CoreMasterBundle/Items/Vests/Poncho_Black/Vest.prefab
 - Assets/CoreMasterBundle/Items/Kuwait2/Kuwait_Assorted_Bank_Heister/Item.prefab
 - Assets/CoreMasterBundle/Items/Magazines/Dragonfang_150/Magazine.prefab
-- Assets/CoreMasterBundle/Items/Barricades/Dyevat/Item.prefab
+- Assets/CoreMasterBundle/Items/Barricades/DyeVat/Item.prefab
 - Assets/CoreMasterBundle/Items/Guns/Kryzkarek/Shoot.mp3
 - Assets/CoreMasterBundle/Items/Barricades/Sign_Birch/Nav.prefab
 - Assets/CoreMasterBundle/Items/RioRemastered/Free/Crop_Top/Rio_Crop_Orange/Item.prefab
@@ -8809,6 +8823,7 @@ Assets:
 - Assets/CoreMasterBundle/Objects/Large/Vehicles/Sedan_Black/Nav.prefab
 - Assets/CoreMasterBundle/Items/Barricades/Oven_Brick/Nav.prefab
 - Assets/CoreMasterBundle/Items/Kuwait/Kuwait_Mask_Purple/Mask.prefab
+- Assets/CoreMasterBundle/Items/Barricades/SpinningWheel/Nav.prefab
 - Assets/CoreMasterBundle/Items/Structures/Rampart_Metal/Structure.prefab
 - Assets/CoreMasterBundle/Skins/Nykorev/Sandstorm/Skin_Secondary_128.mat
 - Assets/CoreMasterBundle/Items/Guns/Avenger/Shoot.mp3
@@ -9022,6 +9037,7 @@ Assets:
 - Assets/CoreMasterBundle/Items/Guns/Timberwolf/Albedo_Base.png
 - Assets/CoreMasterBundle/Items/Hats/Viking/Item.prefab
 - Assets/CoreMasterBundle/Items/Barricades/Spotlight/Item.prefab
+- Assets/CoreMasterBundle/UI/CraftingTagIcons/Kitchen.png
 - Assets/CoreMasterBundle/Items/Pants/Leather_Bottom/Animations.prefab
 - Assets/CoreMasterBundle/Items/Barricades/Bedroll_Red/Animations.prefab
 - Assets/CoreMasterBundle/Items/Magazines/Schofield_5/Magazine.prefab
@@ -9271,6 +9287,7 @@ Assets:
 - Assets/CoreMasterBundle/Items/Hats/Astronaut/Item.prefab
 - Assets/CoreMasterBundle/Items/Kuwait/Kuwait_CaracalShirt/Shirt.png
 - Assets/CoreMasterBundle/Objects/Medium/Business/Mannequin_1/Object.prefab
+- Assets/CoreMasterBundle/Trees/Quartz_1/Stump.prefab
 - Assets/CoreMasterBundle/Items/Barricades/Table_Cir_Birch/Barricade.prefab
 - Assets/CoreMasterBundle/Skins/Heartbreaker/Opal_Shatter/Skin_Secondary_17.mat
 - Assets/CoreMasterBundle/Objects/Medium/Furniture/Grave_1/Object.prefab
@@ -10034,7 +10051,7 @@ Assets:
 - Assets/CoreMasterBundle/Items/Arid/Arid_Surplus_Jacket/Material.mat
 - Assets/CoreMasterBundle/Items/Outfits/Executioner/Executioner_Vest/Item.prefab
 - Assets/CoreMasterBundle/Items/Buak/Buak_Scarf_Purple/Vest.prefab
-- Assets/CoreMasterBundle/Items/Barricades/Dyevat/Animations.prefab
+- Assets/CoreMasterBundle/Items/Barricades/DyeVat/Animations.prefab
 - Assets/CoreMasterBundle/Objects/Large/Buildings/Barn_0/Nav.prefab
 - Assets/CoreMasterBundle/Objects/Medium/Fences/Fence_Wood_Broken_3/Nav.prefab
 - Assets/CoreMasterBundle/Vehicles/Makeshift_Vehicle_1_Seat/Vehicle.prefab
@@ -10530,6 +10547,7 @@ Assets:
 - Assets/CoreMasterBundle/Objects/Material_Palettes/Apartment/Apartment_3.mat
 - Assets/CoreMasterBundle/Items/Outfits/CanyonArena_Cowboy/Cowboy_Backpack_0/Backpack.prefab
 - Assets/CoreMasterBundle/Objects/Large/Roads/Bridge_Line_Cap_4/Skybox.prefab
+- Assets/CoreMasterBundle/Trees/Quartz_3/Stump.prefab
 - Assets/CoreMasterBundle/Objects/Medium/Quests/Treasure/Treasure_On/Object.prefab
 - Assets/CoreMasterBundle/Objects/Medium/Business/Scaffhold_2/Object.prefab
 - Assets/CoreMasterBundle/Skins/Maplestrike/Bomber/Skin_Secondary_153.mat
@@ -10586,6 +10604,7 @@ Assets:
 - Assets/CoreMasterBundle/Items/Vests/SpiderFriend/Item.prefab
 - Assets/CoreMasterBundle/Items/Outfits/Demon/DemonTail/Backpack.prefab
 - Assets/CoreMasterBundle/Mythics/Sugar_Rush/System_Third.prefab
+- Assets/CoreMasterBundle/Trees/Quartz_2/Resource.prefab
 - Assets/CoreMasterBundle/Objects/Large/Scenery/Grass_4/Object.prefab
 - Assets/CoreMasterBundle/Items/Masks/Bandana_Black/Item.prefab
 - Assets/CoreMasterBundle/Skins/Maplestrike/Accelerator/Skin_Attachment.mat
@@ -11219,6 +11238,7 @@ Assets:
 - Assets/CoreMasterBundle/Skins/Augewehr/Insane/Skin_Secondary_144.mat
 - Assets/CoreMasterBundle/Items/Barricades/Glass_Oneway/Animations.prefab
 - Assets/CoreMasterBundle/Items/Outfits/Arid_Tourist/Arid_Tourist_Pockets/Vest.prefab
+- Assets/CoreMasterBundle/Items/Barricades/FoodPrepStation/Nav.prefab
 - Assets/CoreMasterBundle/Terrain/Foliage/Grass/Washington/Grass_00_Material.mat
 - Assets/CoreMasterBundle/Items/Barricades/Beach_Green/Barricade.prefab
 - Assets/CoreMasterBundle/Items/Guns/Bulldog/Animations.prefab
@@ -11909,7 +11929,7 @@ Assets:
 - Assets/CoreMasterBundle/Effects/Physics/Footstep/Sand_Run/Footstep_Sand_Run.asset
 - Assets/CoreMasterBundle/Objects/Medium/Furniture/Luggage_Random/Object.prefab
 - Assets/CoreMasterBundle/Trees/Maple_2/Debris.prefab
-- Assets/CoreMasterBundle/Items/Barricades/Oven/Item.prefab
+- Assets/CoreMasterBundle/Items/Barricades/Oven_Electric/Item.prefab
 - Assets/CoreMasterBundle/Items/Guns/Ekho/Animations.prefab
 - Assets/CoreMasterBundle/Effects/Physics/Footstep/Dirt_Walk/footstep_dirt_walk_run_08.wav
 - Assets/CoreMasterBundle/Items/Outfits/CanyonArena_Militia/Militia_Bottoms/Item.prefab

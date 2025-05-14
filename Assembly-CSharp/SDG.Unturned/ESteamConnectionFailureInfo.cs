@@ -155,5 +155,10 @@ public enum ESteamConnectionFailureInfo
     /// <summary>
     /// Same as CUSTOM, but shows the "verify game files" prompt.
     /// </summary>
-    CUSTOM_SHOULD_VERIFY_GAME_FILES
+    CUSTOM_SHOULD_VERIFY_GAME_FILES,
+    /// <summary>
+    /// Server limits how many clients are joining from the same IP address.
+    /// (public issue #5001)
+    /// </summary>
+    TOO_MANY_CLIENTS_WITH_SAME_IP_ADDRESS
 }

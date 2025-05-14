@@ -1,0 +1,67 @@
+﻿GUID 8f8e8f21d93a430fae61bf5d8a3a8545
+Type Storage
+Rarity Rare
+Useable Barricade
+Build Storage
+ID 1921
+
+Size_X 2
+Size_Y 2
+Size_Z 0.4
+
+Health 300
+Range 4
+Radius 0.4
+Offset 0.75
+
+Storage_X 5
+Storage_Y 3
+Display
+Locked
+
+Explosion 19
+
+Blueprints
+[
+	{
+		CategoryTag "bfac6026305f4737a95fd275ebff65a6" // Utilities
+		InputItems
+		[
+			"e73a23b102f24520a32ec0b2afaa6157 x 8" // Maple Plank
+			"cc444c3f2f354ff5a81f18cf9b980fff x 2" // Bricks
+			"4b68587f5cad45eaab5e07ed0e6fd3b3" // Nails
+		]
+		OutputItems this
+		Effect "84347b13028340b8976033c08675d458" // Wrench
+	}
+	{
+		CategoryTag "bfac6026305f4737a95fd275ebff65a6" // Utilities
+		InputItems
+		[
+			"5a3c4302400e400b9b9486fbb5178eca x 8" // Birch Plank
+			"cc444c3f2f354ff5a81f18cf9b980fff x 2" // Bricks
+			"4b68587f5cad45eaab5e07ed0e6fd3b3" // Nails
+		]
+		OutputItems this
+		Effect "84347b13028340b8976033c08675d458" // Wrench
+	}
+	{
+		CategoryTag "bfac6026305f4737a95fd275ebff65a6" // Utilities
+		InputItems
+		[
+			"719bfdf2c2dc4be6ad5be44d044583e4 x 8" // Pine Plank
+			"cc444c3f2f354ff5a81f18cf9b980fff x 2" // Bricks
+			"4b68587f5cad45eaab5e07ed0e6fd3b3" // Nails
+		]
+		OutputItems this
+		Effect "84347b13028340b8976033c08675d458" // Wrench
+	}
+]
+
+PlaceableProvidesCraftingTags
+[
+	68816064e2ce44839c3f35da55033cba
+]
+
+PlacementAudioClip Sounds/WoodenPlacement.mp3
+Has_Clip_Prefab false

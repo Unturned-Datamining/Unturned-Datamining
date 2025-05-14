@@ -1,14 +1,22 @@
 using System;
-using System.Collections.Generic;
 using SDG.NetPak;
 using SDG.NetTransport;
-using UnityEngine;
 
 namespace SDG.Unturned;
 
 internal static class ServerMessageHandler_GetWorkshopFiles
 {
     private static readonly NetLength MAX_FILES = new NetLength(255u);
+
+    /// <summary>
+    /// Nelson 2025-05-13: replacing the "workshop request log" which used transport connection hash code with this
+    /// more recent IP address and Steam ID rate limiter.
+    /// </summary>
+    private static TransportConnectionRateLimiter rateLimiter = new TransportConnectionRateLimiter
+    {
+        window = 30f,
+        threshold = 1
+    };
 
     internal static void ReadMessage(ITransportConnection transportConnection, NetPakReader reader)
     {
@@ -27,40 +35,14 @@ internal static class ServerMessageHandler_GetWorkshopFiles
             Provider.refuseGarbageConnection(transportConnection, "invalid header string");
             return;
         }
-        int hashCode = transportConnection.GetHashCode();
-        float realtimeSinceStartup = Time.realtimeSinceStartup;
-        bool flag = false;
-        for (int num = Provider.workshopRequests.Count - 1; num >= 0; num--)
+        if (rateLimiter.IsBlocked(transportConnection))
         {
-            Provider.WorkshopRequestLog value2 = Provider.workshopRequests[num];
-            bool flag2 = realtimeSinceStartup - value2.realTime < 30f;
-            if (value2.sender == hashCode)
+            if ((bool)NetMessages.shouldLogBadMessages)
             {
-                value2.realTime = realtimeSinceStartup;
-                Provider.workshopRequests[num] = value2;
-                if (flag2)
-                {
-                    if ((bool)NetMessages.shouldLogBadMessages)
-                    {
-                        UnturnedLog.info($"Ignoring GetWorkshopFiles message from {transportConnection} because they requested recently");
-                    }
-                    Provider.IncrementBadPacketsFromConnection(transportConnection);
-                    return;
-                }
-                flag = true;
-                break;
+                UnturnedLog.info($"Ignoring GetWorkshopFiles message from {transportConnection} because they requested recently");
             }
-            if (!flag2)
-            {
-                Provider.workshopRequests.RemoveAtFast(num);
-            }
-        }
-        if (!flag)
-        {
-            Provider.WorkshopRequestLog item = default(Provider.WorkshopRequestLog);
-            item.sender = hashCode;
-            item.realTime = realtimeSinceStartup;
-            Provider.workshopRequests.Add(item);
+            Provider.IncrementBadPacketsFromConnection(transportConnection);
+            return;
         }
         NetMessages.SendMessageToClient(EClientMessage.DownloadWorkshopFiles, ENetReliability.Reliable, transportConnection, delegate(NetPakWriter writer)
         {

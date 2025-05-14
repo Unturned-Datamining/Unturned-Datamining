@@ -8,6 +8,8 @@ public class SleekEconIcon : SleekWrapper
 
     private bool isExpectingIconReadyCallback;
 
+    private int expectingIconReadyCallbackHandle;
+
     private int currentItemDefId = int.MinValue;
 
     public SleekColor color
@@ -44,14 +46,14 @@ public class SleekEconIcon : SleekWrapper
             if (vehicleAsset != null)
             {
                 internalImage.IsVisible = false;
-                VehicleTool.getIcon(vehicleAsset.id, skinAsset.id, vehicleAsset, skinAsset, 400, 400, readableOnCPU: false, OnIconReady);
+                expectingIconReadyCallbackHandle = VehicleTool.getIcon(vehicleAsset.id, skinAsset.id, vehicleAsset, skinAsset, 400, 400, readableOnCPU: false, OnIconReady);
                 isExpectingIconReadyCallback = true;
                 return;
             }
             if (itemAsset != null)
             {
                 internalImage.IsVisible = false;
-                ItemTool.getIcon(itemAsset.id, skinAsset.id, 100, itemAsset.getState(), itemAsset, skinAsset, string.Empty, string.Empty, 400, 400, scale: true, readableOnCPU: false, OnIconReady);
+                expectingIconReadyCallbackHandle = ItemTool.getIcon(itemAsset.id, skinAsset.id, 100, itemAsset.getState(), itemAsset, skinAsset, string.Empty, string.Empty, 400, 400, scale: true, readableOnCPU: false, OnIconReady);
                 isExpectingIconReadyCallback = true;
                 return;
             }
@@ -82,9 +84,9 @@ public class SleekEconIcon : SleekWrapper
         AddChild(internalImage);
     }
 
-    private void OnIconReady(Texture2D texture)
+    private void OnIconReady(int handle, Texture2D texture)
     {
-        if (internalImage != null && isExpectingIconReadyCallback)
+        if (internalImage != null && isExpectingIconReadyCallback && (handle == -1 || handle == expectingIconReadyCallbackHandle))
         {
             internalImage.SetTextureAndShouldDestroy(texture, shouldDestroyTexture: true);
             internalImage.IsVisible = texture != null;

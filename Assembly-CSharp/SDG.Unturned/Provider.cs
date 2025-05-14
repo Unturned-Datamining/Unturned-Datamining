@@ -43,21 +43,6 @@ public class Provider : MonoBehaviour
     public delegate void ServerWritingPacketHandler(CSteamID remoteSteamId, ESteamPacket type, byte[] payload, int size, int channel);
 
     /// <summary>
-    /// Workshop info is requested prior to authenticating so that it can be downloaded before joining,
-    /// but cheat devs are abusing this to spam the server with workshop requests. This class keeps
-    /// track of who and when requested that information.
-    /// </summary>
-    internal struct WorkshopRequestLog
-    {
-        /// <summary>
-        /// Hash code of remote connection.
-        /// </summary>
-        public int sender;
-
-        public float realTime;
-    }
-
-    /// <summary>
     /// The server ignores workshop info requests if it's been less than 30 seconds,
     /// so we cache that info for 1 minute in-case we try to connect again right away.
     /// </summary>
@@ -442,8 +427,6 @@ public class Provider : MonoBehaviour
 
     [Obsolete]
     public static ServerWritingPacketHandler onServerWritingPacket;
-
-    internal static List<WorkshopRequestLog> workshopRequests = new List<WorkshopRequestLog>();
 
     internal static List<CachedWorkshopResponse> cachedWorkshopResponses = new List<CachedWorkshopResponse>();
 
@@ -1297,7 +1280,11 @@ public class Provider : MonoBehaviour
 
     private static void updateSteamRichPresence()
     {
-        if (Level.info != null)
+        if (OptionsSettings.ShouldHideRichPresence)
+        {
+            SteamFriends.ClearRichPresence();
+        }
+        else if (Level.info != null)
         {
             if (Level.isEditor)
             {
@@ -1650,6 +1637,62 @@ public class Provider : MonoBehaviour
             }
         }
         return null;
+    }
+
+    /// <summary>
+    /// includeQueuedPlayers ensures player won't be kicked because someone on the same IP joined after them.
+    /// </summary>
+    public static bool IsBlockedByMaxClientsWithSameIpAddressRule(ITransportConnection transportConnection, bool includeQueuedPlayers)
+    {
+        if (configData.Server.Use_FakeIP)
+        {
+            return false;
+        }
+        if (!transportConnection.TryGetIPv4Address(out var address))
+        {
+            return false;
+        }
+        int max_Clients_With_Same_IP_Address = configData.Server.Max_Clients_With_Same_IP_Address;
+        int num = 0;
+        if (includeQueuedPlayers)
+        {
+            foreach (KeyValuePair<ITransportConnection, SteamPending> item in _transportConnectionToPendingPlayerMap)
+            {
+                ITransportConnection key = item.Key;
+                if (!transportConnection.Equals(key) && key.TryGetIPv4Address(out var address2) && address == address2)
+                {
+                    num++;
+                    if (num >= max_Clients_With_Same_IP_Address)
+                    {
+                        break;
+                    }
+                }
+            }
+        }
+        if (num < max_Clients_With_Same_IP_Address)
+        {
+            foreach (KeyValuePair<ITransportConnection, SteamPlayer> item2 in _transportConnectionToPlayerMap)
+            {
+                ITransportConnection key2 = item2.Key;
+                if (!transportConnection.Equals(key2) && key2.TryGetIPv4Address(out var address3) && address == address3)
+                {
+                    num++;
+                    if (num >= max_Clients_With_Same_IP_Address)
+                    {
+                        break;
+                    }
+                }
+            }
+        }
+        if (num + 1 > max_Clients_With_Same_IP_Address)
+        {
+            if (configData.Server.Max_Clients_With_Same_IP_Address_Log_Warnings)
+            {
+                CommandWindow.LogWarning($"Connection {transportConnection} hit limit ({max_Clients_With_Same_IP_Address}) for max clients with same IP address");
+            }
+            return true;
+        }
+        return false;
     }
 
     /// <summary>

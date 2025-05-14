@@ -21,6 +21,14 @@ public class PlayerCrafting : PlayerCaller
 
     private static InventorySearchAmountDescendingComparator amountDescendingComparator = new InventorySearchAmountDescendingComparator();
 
+    private static Comparison<PlayerInventorySearchResultV2> qualityAscendingComparison = qualityAscendingComparator.Compare;
+
+    private static Comparison<PlayerInventorySearchResultV2> qualityDescendingComparison = qualityDescendingComparator.Compare;
+
+    private static Comparison<PlayerInventorySearchResultV2> amountAscendingComparison = amountAscendingComparator.Compare;
+
+    private static Comparison<PlayerInventorySearchResultV2> amountDescendingComparison = amountDescendingComparator.Compare;
+
     [Obsolete("Use the static onCraftBlueprintRequested for ease-of-use instead.")]
     public PlayerCraftingRequestHandler onCraftingRequested;
 
@@ -32,6 +40,8 @@ public class PlayerCrafting : PlayerCaller
     public CraftingUpdated onCraftingUpdated;
 
     internal static System.Action OnLocalPlayerIgnoredBlueprintsChanged;
+
+    private static Comparison<NearbyCraftingTagProvider> localPlayerNearbyTagProvidersComparison = CompareLocalPlayerNearbyTagProviders;
 
     private static readonly ServerInstanceMethod<byte, byte, byte> SendStripAttachments = ServerInstanceMethod<byte, byte, byte>.Get(typeof(PlayerCrafting), "ReceiveStripAttachments");
 
@@ -124,7 +134,12 @@ public class PlayerCrafting : PlayerCaller
                 }
             }
         }
-        localPlayerNearbyTagProviders.Sort((NearbyCraftingTagProvider lhs, NearbyCraftingTagProvider rhs) => lhs.asset.FriendlyName.CompareTo(rhs.asset.FriendlyName));
+        localPlayerNearbyTagProviders.Sort(localPlayerNearbyTagProvidersComparison);
+    }
+
+    private static int CompareLocalPlayerNearbyTagProviders(NearbyCraftingTagProvider lhs, NearbyCraftingTagProvider rhs)
+    {
+        return lhs.asset.FriendlyName.CompareTo(rhs.asset.FriendlyName);
     }
 
     /// <summary>
@@ -453,16 +468,16 @@ public class PlayerCrafting : PlayerCaller
         switch (inputItemConfig.Prioritization)
         {
         case ECraftingInputPrioritization.LowestAmount:
-            inputStatus.searchResults.Sort(amountAscendingComparator);
+            inputStatus.searchResults.Sort(amountAscendingComparison);
             break;
         case ECraftingInputPrioritization.HighestAmount:
-            inputStatus.searchResults.Sort(amountDescendingComparator);
+            inputStatus.searchResults.Sort(amountDescendingComparison);
             break;
         case ECraftingInputPrioritization.LowestQuality:
-            inputStatus.searchResults.Sort(qualityAscendingComparator);
+            inputStatus.searchResults.Sort(qualityAscendingComparison);
             break;
         case ECraftingInputPrioritization.HighestQuality:
-            inputStatus.searchResults.Sort(qualityDescendingComparator);
+            inputStatus.searchResults.Sort(qualityDescendingComparison);
             break;
         default:
             UnturnedLog.warn($"unhandled crafting input prioritization ({inputItemConfig.Prioritization})");

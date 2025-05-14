@@ -29,7 +29,7 @@ Blueprints
 		InputItems "21ede8ebffb14c5580e8c7ad149e335e x 3" // Metal Scrap
 		RequiresNearbyCraftingTags
 		[
-			"7b82c125a5a54984b8bb26576b59e977" // Workbench
+			"2ac5ddc545a848008c0308d21f5d2e6b" // Spinning Wheel
 		]
 		Effect "84347b13028340b8976033c08675d458" // Wrench
 	}

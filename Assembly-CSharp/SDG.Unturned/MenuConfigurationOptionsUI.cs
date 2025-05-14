@@ -40,7 +40,9 @@ public class MenuConfigurationOptionsUI
 
     private static ISleekToggle hintsToggle;
 
-    private static ISleekToggle streamerToggle;
+    private static ISleekToggle anonymizeMultiplerDetailsToggle;
+
+    private static ISleekToggle hideRichPresenceToggle;
 
     private static ISleekToggle featuredWorkshopToggle;
 
@@ -235,9 +237,14 @@ public class MenuConfigurationOptionsUI
         OptionsSettings.hints = state;
     }
 
-    private static void onToggledStreamerToggle(ISleekToggle toggle, bool state)
+    private static void OnAnonymizeMultiplayerDetailsToggled(ISleekToggle toggle, bool state)
     {
-        OptionsSettings.streamer = state;
+        OptionsSettings.ShouldAnonymizeMultiplayerDetails = state;
+    }
+
+    private static void OnHideRichPresenceToggled(ISleekToggle toggle, bool state)
+    {
+        OptionsSettings.ShouldHideRichPresence = state;
     }
 
     private static void onToggledFeaturedWorkshopToggle(ISleekToggle toggle, bool state)
@@ -451,7 +458,8 @@ public class MenuConfigurationOptionsUI
         chatVoiceAlwaysRecordingToggle.IsInteractable = OptionsSettings.chatVoiceIn && OptionsSettings.EnableOutboundVoiceChat;
         showOutboundVoiceChatOffHintToggle.Value = OptionsSettings.ShowOutboundVoiceChatOffHint;
         hintsToggle.Value = OptionsSettings.hints;
-        streamerToggle.Value = OptionsSettings.streamer;
+        anonymizeMultiplerDetailsToggle.Value = OptionsSettings.ShouldAnonymizeMultiplayerDetails;
+        hideRichPresenceToggle.Value = OptionsSettings.ShouldHideRichPresence;
         featuredWorkshopToggle.Value = OptionsSettings.featuredWorkshop;
         showHotbarToggle.Value = OptionsSettings.showHotbar;
         pauseWhenUnfocusedToggle.Value = OptionsSettings.pauseWhenUnfocused;
@@ -607,13 +615,23 @@ public class MenuConfigurationOptionsUI
         hintsToggle.OnValueChanged += onToggledHintsToggle;
         optionsBox.AddChild(hintsToggle);
         num += 50f;
-        streamerToggle = Glazier.Get().CreateToggle();
-        streamerToggle.PositionOffset_Y = num;
-        streamerToggle.SizeOffset_X = 40f;
-        streamerToggle.SizeOffset_Y = 40f;
-        streamerToggle.AddLabel(localization.format("Streamer_Toggle_Label"), ESleekSide.RIGHT);
-        streamerToggle.OnValueChanged += onToggledStreamerToggle;
-        optionsBox.AddChild(streamerToggle);
+        anonymizeMultiplerDetailsToggle = Glazier.Get().CreateToggle();
+        anonymizeMultiplerDetailsToggle.PositionOffset_Y = num;
+        anonymizeMultiplerDetailsToggle.SizeOffset_X = 40f;
+        anonymizeMultiplerDetailsToggle.SizeOffset_Y = 40f;
+        anonymizeMultiplerDetailsToggle.AddLabel(localization.format("AnonymizeMultiplayerDetails_Label"), ESleekSide.RIGHT);
+        anonymizeMultiplerDetailsToggle.TooltipText = localization.format("AnonymizeMultiplayerDetails_Tooltip");
+        anonymizeMultiplerDetailsToggle.OnValueChanged += OnAnonymizeMultiplayerDetailsToggled;
+        optionsBox.AddChild(anonymizeMultiplerDetailsToggle);
+        num += 50f;
+        hideRichPresenceToggle = Glazier.Get().CreateToggle();
+        hideRichPresenceToggle.PositionOffset_Y = num;
+        hideRichPresenceToggle.SizeOffset_X = 40f;
+        hideRichPresenceToggle.SizeOffset_Y = 40f;
+        hideRichPresenceToggle.AddLabel(localization.format("HideRichPresence_Label"), ESleekSide.RIGHT);
+        hideRichPresenceToggle.TooltipText = localization.format("HideRichPresence_Tooltip");
+        hideRichPresenceToggle.OnValueChanged += OnHideRichPresenceToggled;
+        optionsBox.AddChild(hideRichPresenceToggle);
         num += 50f;
         featuredWorkshopToggle = Glazier.Get().CreateToggle();
         featuredWorkshopToggle.PositionOffset_Y = num;

@@ -18,6 +18,10 @@ ShowOutboundVoiceChatOffHint_Label Show Outbound Voice Off Hint
 ShowOutboundVoiceChatOffHint_Tooltip Shows a muted icon in HUD when outbound voice chat is off.
 Hints_Toggle_Label Show Hints
 Streamer_Toggle_Label Streamer Mode
+AnonymizeMultiplayerDetails_Label Anonymize Multiplayer Details
+AnonymizeMultiplayerDetails_Tooltip Useful for live streamers to help prevent stream sniping.
+HideRichPresence_Label Hide Steam Rich Presence
+HideRichPresence_Tooltip Prevents players from joining on you and hides your status message.
 Featured_Workshop_Toggle_Label Featured Workshop
 Show_Hotbar_Toggle_Label Show Hotbar
 Pause_When_Unfocused_Label Pause While Alt-Tabbing

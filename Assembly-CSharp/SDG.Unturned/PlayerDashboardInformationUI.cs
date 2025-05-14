@@ -354,7 +354,7 @@ public class PlayerDashboardInformationUI
             Vector2 vector = ProjectWorldPositionToMap(client.player.transform.position);
             sleekImage.PositionScale_X = vector.x;
             sleekImage.PositionScale_Y = vector.y;
-            if (OptionsSettings.streamer || !showPlayerAvatarsToggle.Value)
+            if (OptionsSettings.ShouldAnonymizeMultiplayerDetails || !showPlayerAvatarsToggle.Value)
             {
                 sleekImage.Texture = icons.load<Texture2D>("RemotePlayer");
                 sleekImage.TintColor = client.markerColor;
@@ -465,7 +465,7 @@ public class PlayerDashboardInformationUI
             synchronizeMapVisibility(mapButtonState.state);
             updateDynamicMap();
             RefreshQuestsButtonLabel();
-            if (OptionsSettings.streamer)
+            if (OptionsSettings.ShouldAnonymizeMultiplayerDetails)
             {
                 playersButton.text = localization.format("Streamer");
             }

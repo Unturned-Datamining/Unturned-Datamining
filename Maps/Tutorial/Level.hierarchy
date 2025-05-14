@@ -1,0 +1,192 @@
+"Available_Instance_ID" "4"
+"Items"
+[
+	{
+		"Type" "SDG.Framework.Landscapes.Landscape, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null"
+		"Instance_ID" "1"
+		"Item"
+		{
+			"Tiles"
+			[
+				{
+					"Coord"
+					{
+						"X" "-1"
+						"Y" "-1"
+					}
+					"Materials"
+					[
+						{
+							"GUID" "e52b20e26b7c47c89aa5a350938f8f42"
+						}
+						{
+							"GUID" "22b77c4c51514b0fbb66765eedf1a7f4"
+						}
+						{
+							"GUID" "3d7717c2bc074401853b2fdacd9db1ba"
+						}
+						{
+							"GUID" "a14df8dd9bb44f1d967a53f43bde54e6"
+						}
+						{
+							"GUID" "8729d40d361c4947be4188c70dd7100b"
+						}
+						{
+							"GUID" "684f4b28200d4ceb9c5362d78d2c9619"
+						}
+						{
+							"GUID" "e25f0351181f4ad1a9c0dc31d2fedade"
+						}
+						{
+							"GUID" "8a2b6f2215d6460f8b6fece2ccd9c208"
+						}
+					]
+				}
+				{
+					"Coord"
+					{
+						"X" "-1"
+						"Y" "0"
+					}
+					"Materials"
+					[
+						{
+							"GUID" "e52b20e26b7c47c89aa5a350938f8f42"
+						}
+						{
+							"GUID" "22b77c4c51514b0fbb66765eedf1a7f4"
+						}
+						{
+							"GUID" "3d7717c2bc074401853b2fdacd9db1ba"
+						}
+						{
+							"GUID" "a14df8dd9bb44f1d967a53f43bde54e6"
+						}
+						{
+							"GUID" "8729d40d361c4947be4188c70dd7100b"
+						}
+						{
+							"GUID" "684f4b28200d4ceb9c5362d78d2c9619"
+						}
+						{
+							"GUID" "e25f0351181f4ad1a9c0dc31d2fedade"
+						}
+						{
+							"GUID" "8a2b6f2215d6460f8b6fece2ccd9c208"
+						}
+					]
+				}
+				{
+					"Coord"
+					{
+						"X" "0"
+						"Y" "-1"
+					}
+					"Materials"
+					[
+						{
+							"GUID" "e52b20e26b7c47c89aa5a350938f8f42"
+						}
+						{
+							"GUID" "22b77c4c51514b0fbb66765eedf1a7f4"
+						}
+						{
+							"GUID" "3d7717c2bc074401853b2fdacd9db1ba"
+						}
+						{
+							"GUID" "a14df8dd9bb44f1d967a53f43bde54e6"
+						}
+						{
+							"GUID" "8729d40d361c4947be4188c70dd7100b"
+						}
+						{
+							"GUID" "684f4b28200d4ceb9c5362d78d2c9619"
+						}
+						{
+							"GUID" "e25f0351181f4ad1a9c0dc31d2fedade"
+						}
+						{
+							"GUID" "8a2b6f2215d6460f8b6fece2ccd9c208"
+						}
+					]
+				}
+				{
+					"Coord"
+					{
+						"X" "0"
+						"Y" "0"
+					}
+					"Materials"
+					[
+						{
+							"GUID" "e52b20e26b7c47c89aa5a350938f8f42"
+						}
+						{
+							"GUID" "22b77c4c51514b0fbb66765eedf1a7f4"
+						}
+						{
+							"GUID" "3d7717c2bc074401853b2fdacd9db1ba"
+						}
+						{
+							"GUID" "a14df8dd9bb44f1d967a53f43bde54e6"
+						}
+						{
+							"GUID" "8729d40d361c4947be4188c70dd7100b"
+						}
+						{
+							"GUID" "684f4b28200d4ceb9c5362d78d2c9619"
+						}
+						{
+							"GUID" "e25f0351181f4ad1a9c0dc31d2fedade"
+						}
+						{
+							"GUID" "8a2b6f2215d6460f8b6fece2ccd9c208"
+						}
+					]
+				}
+			]
+		}
+	}
+	{
+		"Type" "SDG.Framework.Foliage.FoliageSystem, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null"
+		"Instance_ID" "2"
+		"Item"
+		{
+			"Version" "2"
+			"Tiles"
+			[
+			]
+		}
+	}
+	{
+		"Type" "SDG.Framework.Foliage.FoliageVolume, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null"
+		"Instance_ID" "3"
+		"Item"
+		{
+			"Position"
+			{
+				"X" "0"
+				"Y" "0"
+				"Z" "0"
+			}
+			"Rotation"
+			{
+				"X" "0"
+				"Y" "0"
+				"Z" "0"
+				"W" "1"
+			}
+			"Scale"
+			{
+				"X" "1024"
+				"Y" "2048"
+				"Z" "1024"
+			}
+			"Shape" "Box"
+			"Mode" "ADDITIVE"
+			"Instanced_Meshes" "true"
+			"Resources" "true"
+			"Objects" "true"
+		}
+	}
+]

@@ -45,7 +45,7 @@ public class SteamPlayerID
     {
         get
         {
-            if (OptionsSettings.streamer)
+            if (OptionsSettings.ShouldAnonymizeMultiplayerDetails)
             {
                 return streamerName;
             }
@@ -57,7 +57,7 @@ public class SteamPlayerID
     {
         get
         {
-            if (OptionsSettings.streamer)
+            if (OptionsSettings.ShouldAnonymizeMultiplayerDetails)
             {
                 return streamerName;
             }
@@ -73,7 +73,7 @@ public class SteamPlayerID
     {
         get
         {
-            if (OptionsSettings.streamer && steamID != Provider.user)
+            if (OptionsSettings.ShouldAnonymizeMultiplayerDetails && steamID != Provider.user)
             {
                 return streamerName;
             }

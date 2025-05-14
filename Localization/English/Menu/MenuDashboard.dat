@@ -47,6 +47,7 @@ SkinColorWithinThresholdOfTerrainColor Your character's skin color is too simila
 Steam_ID_Mismatch Your Steam account doesn't match the one used to connect to the server.
 Connect_Rate_Limiting Received too many join requests from your connection, sorry! Please try again in a few minutes.
 Bad_Packet_Rate_Limiting Something went wrong with your connection, sorry! Please try again in a few minutes.
+Too_Many_Clients_With_Same_IP_Address Reached a limit on the number of players from your IP address, sorry! Please try again in a few minutes.
 
 Version This server is running version {0} of the game, whereas you are running version {1}.
 Pro_Server You require Gold to join this server.

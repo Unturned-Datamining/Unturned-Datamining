@@ -1339,6 +1339,14 @@ public class Assets : MonoBehaviour
             {
                 return false;
             }
+            if (myBlueprint.SkillSpecialityIndex != yourBlueprint.SkillSpecialityIndex)
+            {
+                return false;
+            }
+            if (myBlueprint.SkillIndex != yourBlueprint.SkillIndex)
+            {
+                return false;
+            }
             if (myBlueprint.CategoryTagRef != yourBlueprint.CategoryTagRef)
             {
                 return false;
@@ -1364,6 +1372,14 @@ public class Assets : MonoBehaviour
                 return false;
             }
             if (myBlueprint.questRewards != null && myBlueprint.questRewards.Length != yourBlueprint.questRewards.Length)
+            {
+                return false;
+            }
+            if (myBlueprint.RequiresNearbyCraftingTags != null != (yourBlueprint.RequiresNearbyCraftingTags != null))
+            {
+                return false;
+            }
+            if (myBlueprint.RequiresNearbyCraftingTags != null && myBlueprint.RequiresNearbyCraftingTags.Length != yourBlueprint.RequiresNearbyCraftingTags.Length)
             {
                 return false;
             }
@@ -1404,6 +1420,16 @@ public class Assets : MonoBehaviour
                 for (int l = 0; l < myBlueprint.questRewards.Length; l++)
                 {
                     if (!myBlueprint.questRewards[l].Equals(yourBlueprint.questRewards[l]))
+                    {
+                        return false;
+                    }
+                }
+            }
+            if (myBlueprint.RequiresNearbyCraftingTags != null)
+            {
+                for (int m = 0; m < myBlueprint.RequiresNearbyCraftingTags.Length; m++)
+                {
+                    if (!myBlueprint.RequiresNearbyCraftingTags[m].Equals(yourBlueprint.RequiresNearbyCraftingTags[m]))
                     {
                         return false;
                     }

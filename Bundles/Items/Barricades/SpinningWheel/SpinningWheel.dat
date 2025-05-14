@@ -1,0 +1,87 @@
+﻿GUID cd32f764c1524311a780aee00717099d
+Type Barricade
+Rarity Rare
+Useable Barricade
+Build Barricade
+ID 1922
+
+Size_X 2
+Size_Y 2
+Size_Z 0.4
+
+Health 500
+Range 4
+Radius 0.5
+Offset 1.0
+
+Explosion 19
+
+Blueprints
+[
+	{
+		CategoryTag "bfac6026305f4737a95fd275ebff65a6" // Utilities
+		InputItems
+		[
+			"e73a23b102f24520a32ec0b2afaa6157 x 5" // Maple Plank
+			"46218740c256475b87dbc6a2e9a1fb19 x 6" // Maple Stick
+			"656f319d2d194813b390edc6edd8a697 x 2" // Metal Bar
+			"4b68587f5cad45eaab5e07ed0e6fd3b3" // Nails
+			"14901f32cd3240179fd6124324cc27e5" // Cloth
+		]
+		OutputItems this
+		Skill Craft
+		Skill_Level 1
+		RequiresNearbyCraftingTags
+		[
+			"7b82c125a5a54984b8bb26576b59e977" // Workbench
+		]
+		Effect "84347b13028340b8976033c08675d458" // Wrench
+	}
+	{
+		CategoryTag "bfac6026305f4737a95fd275ebff65a6" // Utilities
+		InputItems
+		[
+			"5a3c4302400e400b9b9486fbb5178eca x 5" // Birch Plank
+			"9c563bf14d4641a18873f338beaed128 x 6" // Birch Stick
+			"656f319d2d194813b390edc6edd8a697 x 2" // Metal Bar
+			"4b68587f5cad45eaab5e07ed0e6fd3b3" // Nails
+			"14901f32cd3240179fd6124324cc27e5" // Cloth
+		]
+		OutputItems this
+		Skill Craft
+		Skill_Level 1
+		RequiresNearbyCraftingTags
+		[
+			"7b82c125a5a54984b8bb26576b59e977" // Workbench
+		]
+		Effect "84347b13028340b8976033c08675d458" // Wrench
+	}
+	{
+		CategoryTag "bfac6026305f4737a95fd275ebff65a6" // Utilities
+		InputItems
+		[
+			"719bfdf2c2dc4be6ad5be44d044583e4 x 5" // Pine Plank
+			"55d9700ea53c477685458171932251f1 x 6" // Pine Stick
+			"656f319d2d194813b390edc6edd8a697 x 2" // Metal Bar
+			"4b68587f5cad45eaab5e07ed0e6fd3b3" // Nails
+			"14901f32cd3240179fd6124324cc27e5" // Cloth
+		]
+		OutputItems this
+		Skill Craft
+		Skill_Level 1
+		RequiresNearbyCraftingTags
+		[
+			"7b82c125a5a54984b8bb26576b59e977" // Workbench
+		]
+		Effect "84347b13028340b8976033c08675d458" // Wrench
+	}
+]
+
+PlaceableProvidesCraftingTags
+[
+	2ac5ddc545a848008c0308d21f5d2e6b
+]
+
+PlacementAudioClip Sounds/WoodenPlacement.mp3
+PlacementPreviewPrefab Items/Barricades/Spinningwheel/Preview.prefab
+Has_Clip_Prefab false

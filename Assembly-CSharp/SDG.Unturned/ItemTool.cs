@@ -34,6 +34,8 @@ public class ItemTool : MonoBehaviour
 
     private static Queue<ItemIconInfo> icons;
 
+    private static int handleCounter = 1;
+
     private string currentIconTags;
 
     private string currentIconDynamicProps;
@@ -460,18 +462,18 @@ public class ItemTool : MonoBehaviour
         return texture2D;
     }
 
-    public static void getIcon(ushort id, byte quality, byte[] state, ItemIconReady callback)
+    public static int getIcon(ushort id, byte quality, byte[] state, ItemIconReady callback)
     {
         ItemAsset itemAsset = Assets.find(EAssetType.ITEM, id) as ItemAsset;
-        getIcon(id, quality, state, itemAsset, callback);
+        return getIcon(id, quality, state, itemAsset, callback);
     }
 
-    public static void getIcon(ushort id, byte quality, byte[] state, ItemAsset itemAsset, ItemIconReady callback)
+    public static int getIcon(ushort id, byte quality, byte[] state, ItemAsset itemAsset, ItemIconReady callback)
     {
-        getIcon(id, quality, state, itemAsset, itemAsset.size_x * 50, itemAsset.size_y * 50, callback);
+        return getIcon(id, quality, state, itemAsset, itemAsset.size_x * 50, itemAsset.size_y * 50, callback);
     }
 
-    public static void getIcon(ushort id, byte quality, byte[] state, ItemAsset itemAsset, int x, int y, ItemIconReady callback)
+    public static int getIcon(ushort id, byte quality, byte[] state, ItemAsset itemAsset, int x, int y, ItemIconReady callback)
     {
         ushort num = 0;
         SkinAsset skinAsset = null;
@@ -491,10 +493,10 @@ public class ItemTool : MonoBehaviour
                 Player.player.channel.owner.getTagsAndDynamicPropsForItem(itemdefid, out tags, out dynamic_props);
             }
         }
-        getIcon(id, num, quality, state, itemAsset, skinAsset, tags, dynamic_props, x, y, scale: false, readableOnCPU: false, callback);
+        return getIcon(id, num, quality, state, itemAsset, skinAsset, tags, dynamic_props, x, y, scale: false, readableOnCPU: false, callback);
     }
 
-    public static void getIcon(ushort id, ushort skin, byte quality, byte[] state, ItemAsset itemAsset, SkinAsset skinAsset, string tags, string dynamic_props, int x, int y, bool scale, bool readableOnCPU, ItemIconReady callback)
+    public static int getIcon(ushort id, ushort skin, byte quality, byte[] state, ItemAsset itemAsset, SkinAsset skinAsset, string tags, string dynamic_props, int x, int y, bool scale, bool readableOnCPU, ItemIconReady callback)
     {
         if (itemAsset == null)
         {
@@ -502,7 +504,7 @@ public class ItemTool : MonoBehaviour
             if (itemAsset == null)
             {
                 UnturnedLog.warn($"getIcon called with null item, unable to find by legacy id {id}");
-                return;
+                return -1;
             }
             UnturnedLog.warn($"getIcon called with null item, found \"{itemAsset.name}\" by legacy id {id}");
         }
@@ -513,8 +515,8 @@ public class ItemTool : MonoBehaviour
             {
                 if (value != null)
                 {
-                    callback(value);
-                    return;
+                    callback(-1, value);
+                    return -1;
                 }
                 iconCache.Remove(itemAsset);
             }
@@ -523,7 +525,7 @@ public class ItemTool : MonoBehaviour
                 if (icon.isEligibleForCaching && icon.itemAsset == itemAsset)
                 {
                     icon.callback = (ItemIconReady)Delegate.Combine(icon.callback, callback);
-                    return;
+                    return icon.handle;
                 }
             }
         }
@@ -542,7 +544,10 @@ public class ItemTool : MonoBehaviour
         itemIconInfo.readableOnCPU = readableOnCPU;
         itemIconInfo.isEligibleForCaching = flag;
         itemIconInfo.callback = callback;
+        itemIconInfo.handle = handleCounter;
         icons.Enqueue(itemIconInfo);
+        handleCounter++;
+        return itemIconInfo.handle;
     }
 
     public static Texture2D captureIcon(ushort id, ushort skin, Transform model, Transform icon, int width, int height, float orthoSize, bool readableOnCPU)
@@ -749,7 +754,7 @@ public class ItemTool : MonoBehaviour
         {
             try
             {
-                itemIconInfo.callback(texture2D);
+                itemIconInfo.callback(itemIconInfo.handle, texture2D);
             }
             catch (Exception e)
             {

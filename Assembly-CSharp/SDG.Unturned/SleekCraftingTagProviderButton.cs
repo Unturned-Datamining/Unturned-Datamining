@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Text;
 using UnityEngine;
 
@@ -7,6 +8,10 @@ namespace SDG.Unturned;
 public class SleekCraftingTagProviderButton : SleekWrapper
 {
     public ICraftingTagProvider tagProvider;
+
+    private Asset currentAsset;
+
+    private HashSet<TagAsset> currentTags = new HashSet<TagAsset>();
 
     private ISleekButton button;
 
@@ -21,6 +26,12 @@ public class SleekCraftingTagProviderButton : SleekWrapper
     internal void SetTagProvider(NearbyCraftingTagProvider tagProvider)
     {
         this.tagProvider = tagProvider.component;
+        if (currentAsset != null && currentAsset.Equals(tagProvider.asset) && currentTags.SetEquals(tagProvider.tags))
+        {
+            return;
+        }
+        currentAsset = tagProvider.asset;
+        currentTags.Clear();
         string arg;
         if (tagProvider.asset is ItemAsset itemAsset)
         {
@@ -47,6 +58,7 @@ public class SleekCraftingTagProviderButton : SleekWrapper
         bool flag = true;
         foreach (TagAsset tag in tagProvider.tags)
         {
+            currentTags.Add(tag);
             if (!flag)
             {
                 tagsSb.Append(PlayerDashboardCraftingUI.localization.format("Requirements_Separator"));
