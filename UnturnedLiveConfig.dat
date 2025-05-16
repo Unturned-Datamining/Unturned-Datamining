@@ -1,14 +1,6 @@
 MainMenuAlert
 {
 	Id 68
-	Header 3vs3 European Unturned League - Sign Up!
-	Body From the organizers: "Register with your friends and compete in the 3vs3 European Unturned League!"
-	Color #37db00
-	Link https://discord.gg/k66FNaDknP
-	IconURL https://cdn.smartlydressedgames.com/Images/EUL.png
-	UseTimeWindow true
-	StartTime 2025-05-14 15:00:00
-	EndTime 2025-05-20 15:00:00
 }
 MainMenuWorkshop
 {
