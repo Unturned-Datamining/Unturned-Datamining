@@ -67,9 +67,11 @@ public class OptionsSettings
 
     private const byte SAVEDATA_VERSION_SEPARATED_STREAMER_MODE = 63;
 
-    private const byte SAVEDATA_VERSION_NEWEST = 63;
+    private const byte SAVEDATA_VERSION_ADDED_CLICK_BLUEPRINT_TO_CRAFT = 64;
 
-    public static readonly byte SAVEDATA_VERSION = 63;
+    private const byte SAVEDATA_VERSION_NEWEST = 64;
+
+    public static readonly byte SAVEDATA_VERSION = 64;
 
     public static readonly byte MIN_FOV = 60;
 
@@ -378,6 +380,8 @@ public class OptionsSettings
         }
     }
 
+    public static bool ShouldClickBlueprintToCraft { get; set; }
+
     public static bool proUI
     {
         get
@@ -634,6 +638,7 @@ public class OptionsSettings
         chatVoiceIn = false;
         EnableOutboundVoiceChat = false;
         ShowOutboundVoiceChatOffHint = true;
+        ShouldClickBlueprintToCraft = false;
         metric = true;
         talk = false;
         hints = true;
@@ -1101,6 +1106,14 @@ public class OptionsSettings
         {
             ShouldHideRichPresence = block.readBoolean();
         }
+        if (b >= 64)
+        {
+            ShouldClickBlueprintToCraft = block.readBoolean();
+        }
+        else
+        {
+            ShouldClickBlueprintToCraft = false;
+        }
         if (!Provider.isPro)
         {
             backgroundColor = new Color(0.9f, 0.9f, 0.9f);
@@ -1114,7 +1127,7 @@ public class OptionsSettings
     public static void save()
     {
         Block block = new Block();
-        block.writeByte(63);
+        block.writeByte(64);
         block.writeBoolean(value: false);
         block.writeBoolean(splashscreen);
         block.writeBoolean(timer);
@@ -1177,6 +1190,7 @@ public class OptionsSettings
         block.writeBoolean(ShowOutboundVoiceChatOffHint);
         block.writeSingle(sprintFovBoostIntensity);
         block.writeBoolean(ShouldHideRichPresence);
+        block.writeBoolean(ShouldClickBlueprintToCraft);
         ReadWrite.writeBlock("/Options.dat", useCloud: true, block);
     }
 }

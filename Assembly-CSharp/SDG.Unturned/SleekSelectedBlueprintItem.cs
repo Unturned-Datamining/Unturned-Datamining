@@ -116,8 +116,17 @@ public class SleekSelectedBlueprintItem : SleekWrapper
             itemImage.Clear();
         }
         itemImage.Refresh(itemAsset.id, quality, state, itemAsset, Mathf.RoundToInt(itemImage.SizeOffset_X), Mathf.RoundToInt(itemImage.SizeOffset_Y));
-        nameLabel.TextColor = ItemTool.getRarityColorUI(itemAsset.rarity);
+        Color rarityColorUI = ItemTool.getRarityColorUI(itemAsset.rarity);
+        nameLabel.TextColor = rarityColorUI;
         nameLabel.Text = itemAsset.itemName;
+        Local localization = PlayerDashboardInventoryUI.localization;
+        int rarity = (int)itemAsset.rarity;
+        string arg = localization.format("Rarity_" + rarity);
+        Local localization2 = PlayerDashboardInventoryUI.localization;
+        rarity = (int)itemAsset.type;
+        string arg2 = localization2.format("Type_" + rarity);
+        string text = PlayerDashboardInventoryUI.localization.format("Rarity_Type_Label", arg, arg2);
+        backgroundBox.TooltipText = "<color=" + Palette.hex(rarityColorUI) + ">" + text + "</color>\n" + itemAsset.itemDescription;
     }
 
     public SleekSelectedBlueprintItem()
@@ -126,6 +135,8 @@ public class SleekSelectedBlueprintItem : SleekWrapper
         backgroundBox = Glazier.Get().CreateBox();
         backgroundBox.SizeScale_X = 1f;
         backgroundBox.SizeScale_Y = 1f;
+        backgroundBox.TextColor = ESleekTint.RICH_TEXT_DEFAULT;
+        backgroundBox.AllowRichText = true;
         AddChild(backgroundBox);
         itemImage = new SleekItemIcon();
         itemImage.PositionOffset_X = 5f;

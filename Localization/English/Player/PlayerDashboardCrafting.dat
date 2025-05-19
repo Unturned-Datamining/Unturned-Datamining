@@ -6,6 +6,8 @@ BlueprintAmountLabel {0} of {1}
 BlueprintAmountLabel_Missing {0} of {1} {2}
 MissingAmount (need {0} more)
 
+BlueprintCategoryLabel Category: {0}
+
 BlueprintTitle_ItemSeparator " + "
 BlueprintTitle_ToolItem (Tool)
 BlueprintTitle_OutputSeparator " = "
@@ -30,7 +32,7 @@ Details_TagMissing (missing)
 
 Search_Field_Hint Blueprint Name Filter
 Search Search
-Search_Tooltip Search
+Search_Tooltip Find blueprints mentioning this text.
 Hide_Uncraftable_Toggle_Label Hide Uncraftable
 Hide_Uncraftable_Toggle_Tooltip Exclude blueprints you can't currently craft.
 Show_Ignored_Toggle_Label Show Ignored
@@ -38,6 +40,8 @@ Show_Ignored_Toggle_Tooltip Include blueprints you've blocked.
 No_Blueprints No blueprints available matching these filters.
 NoBlueprints_ZeroAvailableItems You have no items to craft with.
 NoBlueprints_HasAvailableItems No blueprints use the items you have.
+Favorites_Label Favorites
+Favorites_Tooltip Find blueprints you've starred.
 
 Header_Categories Categories
 Header_TagProviders Workstations
@@ -45,20 +49,30 @@ Header_AvailableTags Capabilities
 
 FilteringDescription_Format Filtering blueprints {0}:
 FilteringDescription_Separator " and "
+FilteringDescription_Favorites_Format you {0}
+FilteringDescription_Favorites_Label Favorited
 FilteringDescription_Name mentioning "{0}"
 FilteringDescription_TagProvider using {0}
 FilteringDescription_Tag requiring {0}
 FilteringDescription_Category in {0} category
+FilteringDescription_Category_Multiple in {0} categories
+FilteringDescription_Category_Separator ", "
 
 TagProvider_Tooltip {0} capabilities:
 
 ResetFilters_Label Reset Filters
 ResetFilters_Tooltip Show blueprints craftable with your available items. (default)
 
-VisibilityButton_Visible_Label Visible
-VisibilityButton_Visible_Tooltip Shown and allowed to craft. Click to ignore this blueprint.
+// Nelson 2025-05-16: renaming Visibility to Preferences.
+VisibilityButton_Visible_Label Default
+VisibilityButton_Visible_Tooltip Shown and allowed to craft. Click to ignore or favorite this blueprint.
 VisibilityButton_Hidden_Label Ignored
 VisibilityButton_Hidden_Tooltip Hidden and blocked from crafting. Click to unblock this blueprint.
+PreferencesButton_Favorited_Label Favorited
+PreferencesButton_Favorited_Tooltip Included in your Favorites. Click to unfavorite this blueprint.
+
+CombineFiltersTooltip Combine Filters [{0}]
+InvertSkipCraftingTooltip Toggle Details Panel [{0}]
 
 Craft Craft
 

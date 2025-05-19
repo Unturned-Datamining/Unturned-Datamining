@@ -34,17 +34,20 @@ public class CommandQuest : Command
             }
             flag = true;
         }
-        QuestAsset questAsset = null;
         string text = componentsFromSerial[(!flag) ? 1u : 0u];
-        ushort result2;
+        QuestAsset questAsset;
         if (Guid.TryParse(text, out var result))
         {
             questAsset = Assets.find<QuestAsset>(result);
         }
-        else if (!ushort.TryParse(text, out result2))
+        else
         {
-            CommandWindow.LogError(localization.format("InvalidNumberErrorText", text));
-            return;
+            if (!ushort.TryParse(text, out var result2))
+            {
+                CommandWindow.LogError(localization.format("InvalidNumberErrorText", text));
+                return;
+            }
+            questAsset = Assets.find(EAssetType.NPC, result2) as QuestAsset;
         }
         if (questAsset != null)
         {

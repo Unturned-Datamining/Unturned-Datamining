@@ -1,11 +1,14 @@
 using System;
 using UnityEngine;
+using Unturned.SystemEx;
 
 namespace SDG.Unturned;
 
 internal class BarricadeRefComponent : MonoBehaviour, IExplosionDamageable, IEquatable<IExplosionDamageable>, ICraftingTagProvider
 {
     internal BarricadeDrop tempNotSureIfBarricadeShouldBeAComponentYet;
+
+    private CraftingTagProviderComponent modHook;
 
     public bool IsEligibleForExplosionDamage
     {
@@ -71,12 +74,29 @@ internal class BarricadeRefComponent : MonoBehaviour, IExplosionDamageable, IEqu
                 }
             }
         }
-        p.ApplyModHooks(base.gameObject);
+        if (modHook != null)
+        {
+            p.ApplyModHooks(modHook);
+        }
+    }
+
+    public bool HasAnyCraftingTagsConfigured()
+    {
+        if (!(modHook != null))
+        {
+            return !(tempNotSureIfBarricadeShouldBeAComponentYet?.asset?.PlaceableProvidedCraftingTags.IsNullOrEmpty() ?? true);
+        }
+        return true;
     }
 
     public bool Equals(ICraftingTagProvider obj)
     {
         return this == obj;
+    }
+
+    private void Start()
+    {
+        modHook = GetComponent<CraftingTagProviderComponent>();
     }
 
     void IExplosionDamageable.ApplyExplosionDamage(in ExplosionParameters explosionParameters, ref ExplosionDamageParameters damageParameters)

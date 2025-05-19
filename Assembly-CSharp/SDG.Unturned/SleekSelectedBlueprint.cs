@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Text;
 using UnityEngine;
 using Unturned.SystemEx;
 
@@ -9,15 +10,17 @@ public class SleekSelectedBlueprint : SleekWrapper
 {
     private ItemAsset currentPrimaryItemAsset;
 
+    private static StringBuilder tooltipSb = new StringBuilder();
+
     private BlueprintStatus status;
 
     private ISleekScrollView detailScrollView;
 
     private SleekButtonIcon craftButton;
 
-    private SleekButtonState visibilityButton;
+    private SleekButtonState preferencesButton;
 
-    private ISleekElement summaryContainer;
+    private ISleekBox summaryContainer;
 
     private ISleekLabel titleLabel;
 
@@ -115,7 +118,7 @@ public class SleekSelectedBlueprint : SleekWrapper
             }
             detailScrollView.ContentSizeOffset = new Vector2(0f, num);
             RefreshCraftButtonTooltip();
-            RefreshIsIgnoring(Player.player.crafting.getIgnoringBlueprint(status.blueprint));
+            RefreshPreferences(PlayerCrafting.GetBlueprintPreferences(status.blueprint));
         }
     }
 
@@ -136,6 +139,7 @@ public class SleekSelectedBlueprint : SleekWrapper
             primaryItemIcon.SizeOffset_Y = primaryItemIcon.SizeOffset_X * num;
         }
         primaryItemIcon.Refresh(asset.id, 100, state, asset, Mathf.RoundToInt(primaryItemIcon.SizeOffset_X), Mathf.RoundToInt(primaryItemIcon.SizeOffset_Y));
+        summaryContainer.TooltipText = asset.itemDescription;
     }
 
     /// <summary>
@@ -260,13 +264,17 @@ public class SleekSelectedBlueprint : SleekWrapper
         nonConsumingInputIndices.Clear();
         for (int i = 0; i < SelectedBlueprint.supplies.Length; i++)
         {
-            if (SelectedBlueprint.supplies[i].ShouldConsume)
+            BlueprintSupply blueprintSupply = SelectedBlueprint.supplies[i];
+            if (blueprintSupply.FindItemAsset() != null)
             {
-                consumingInputIndices.Add(i);
-            }
-            else
-            {
-                nonConsumingInputIndices.Add(i);
+                if (blueprintSupply.ShouldConsume)
+                {
+                    consumingInputIndices.Add(i);
+                }
+                else
+                {
+                    nonConsumingInputIndices.Add(i);
+                }
             }
         }
         float offset = 0f;
@@ -340,25 +348,28 @@ public class SleekSelectedBlueprint : SleekWrapper
         int i = 0;
         for (int j = 0; j < SelectedBlueprint.outputs.Length; j++)
         {
-            BlueprintOutput output = SelectedBlueprint.outputs[j];
-            SleekSelectedBlueprintItem sleekSelectedBlueprintItem;
-            if (i < outputItemWidgets.Count)
+            BlueprintOutput blueprintOutput = SelectedBlueprint.outputs[j];
+            if (blueprintOutput.FindItemAsset() != null)
             {
-                sleekSelectedBlueprintItem = outputItemWidgets[i];
-                sleekSelectedBlueprintItem.IsVisible = true;
+                SleekSelectedBlueprintItem sleekSelectedBlueprintItem;
+                if (i < outputItemWidgets.Count)
+                {
+                    sleekSelectedBlueprintItem = outputItemWidgets[i];
+                    sleekSelectedBlueprintItem.IsVisible = true;
+                }
+                else
+                {
+                    sleekSelectedBlueprintItem = new SleekSelectedBlueprintItem();
+                    sleekSelectedBlueprintItem.SizeScale_X = 1f;
+                    outputItemsContainer.AddChild(sleekSelectedBlueprintItem);
+                    outputItemWidgets.Add(sleekSelectedBlueprintItem);
+                }
+                sleekSelectedBlueprintItem.PositionOffset_Y = num;
+                sleekSelectedBlueprintItem.blueprintStatus = status;
+                sleekSelectedBlueprintItem.SetOutputItem(status, blueprintOutput, j);
+                num += sleekSelectedBlueprintItem.SizeOffset_Y;
+                i++;
             }
-            else
-            {
-                sleekSelectedBlueprintItem = new SleekSelectedBlueprintItem();
-                sleekSelectedBlueprintItem.SizeScale_X = 1f;
-                outputItemsContainer.AddChild(sleekSelectedBlueprintItem);
-                outputItemWidgets.Add(sleekSelectedBlueprintItem);
-            }
-            sleekSelectedBlueprintItem.PositionOffset_Y = num;
-            sleekSelectedBlueprintItem.blueprintStatus = status;
-            sleekSelectedBlueprintItem.SetOutputItem(status, output, j);
-            num += sleekSelectedBlueprintItem.SizeOffset_Y;
-            i++;
         }
         outputItemsContainer.SizeOffset_Y = num;
         for (; i < outputItemWidgets.Count; i++)
@@ -484,11 +495,10 @@ public class SleekSelectedBlueprint : SleekWrapper
         }
     }
 
-    private void OnSwappedVisibilityState(SleekButtonState button, int state)
+    private void OnSwappedPreferencesState(SleekButtonState button, int state)
     {
-        bool isIgnoring = state == 1;
-        Player.player.crafting.setIgnoringBlueprint(status.blueprint, isIgnoring);
-        RefreshIsIgnoring(isIgnoring);
+        PlayerCrafting.SetBlueprintPreferences(status.blueprint, (EBlueprintPreferences)state);
+        RefreshPreferences((EBlueprintPreferences)state);
     }
 
     private void RefreshCraftButtonTooltip()
@@ -496,17 +506,17 @@ public class SleekSelectedBlueprint : SleekWrapper
         if (status.IsCraftable)
         {
             craftButton.tooltip = PlayerDashboardInventoryUI.localization.format("ActionBlueprint_CraftAllTooltip", MenuConfigurationControlsUI.getKeyCodeText(ControlsSettings.other));
+            return;
         }
-        else
-        {
-            craftButton.tooltip = PlayerDashboardCraftingUI.BuildNotCraftableTooltip(status);
-        }
+        tooltipSb.Clear();
+        PlayerDashboardCraftingUI.BuildNotCraftableTooltip(tooltipSb, status);
+        craftButton.tooltip = tooltipSb.ToString();
     }
 
-    private void RefreshIsIgnoring(bool isIgnoring)
+    private void RefreshPreferences(EBlueprintPreferences preferences)
     {
-        craftButton.isClickable = !isIgnoring && status.IsCraftable;
-        visibilityButton.state = (isIgnoring ? 1 : 0);
+        craftButton.isClickable = preferences != EBlueprintPreferences.Ignored && status.IsCraftable;
+        preferencesButton.state = (int)preferences;
     }
 
     public SleekSelectedBlueprint()
@@ -529,18 +539,20 @@ public class SleekSelectedBlueprint : SleekWrapper
         craftButton.fontSize = ESleekFontSize.Medium;
         craftButton.iconColor = ESleekTint.FOREGROUND;
         AddChild(craftButton);
-        visibilityButton = new SleekButtonState(20, new GUIContent(localization.format("VisibilityButton_Visible_Label"), icons.load<Texture2D>("BlueprintVisibleIcon"), localization.format("VisibilityButton_Visible_Tooltip")), new GUIContent(localization.format("VisibilityButton_Hidden_Label"), icons.load<Texture2D>("BlueprintHiddenIcon"), localization.format("VisibilityButton_Hidden_Tooltip")));
-        visibilityButton.PositionOffset_Y = -30f;
-        visibilityButton.PositionScale_Y = 1f;
-        visibilityButton.SizeScale_X = 1f;
-        visibilityButton.SizeOffset_Y = 30f;
-        SleekButtonState sleekButtonState = visibilityButton;
-        sleekButtonState.onSwappedState = (SwappedState)Delegate.Combine(sleekButtonState.onSwappedState, new SwappedState(OnSwappedVisibilityState));
-        visibilityButton.UseContentTooltip = true;
-        visibilityButton.button.iconColor = ESleekTint.FOREGROUND;
-        AddChild(visibilityButton);
+        preferencesButton = new SleekButtonState(20, new GUIContent(localization.format("VisibilityButton_Visible_Label"), icons.load<Texture2D>("BlueprintVisibleIcon"), localization.format("VisibilityButton_Visible_Tooltip")), new GUIContent(localization.format("VisibilityButton_Hidden_Label"), icons.load<Texture2D>("BlueprintHiddenIcon"), localization.format("VisibilityButton_Hidden_Tooltip")), new GUIContent(localization.format("PreferencesButton_Favorited_Label"), icons.load<Texture2D>("FavoriteBlueprintIcon"), localization.format("PreferencesButton_Favorited_Tooltip")));
+        preferencesButton.PositionOffset_Y = -30f;
+        preferencesButton.PositionScale_Y = 1f;
+        preferencesButton.SizeScale_X = 1f;
+        preferencesButton.SizeOffset_Y = 30f;
+        SleekButtonState sleekButtonState = preferencesButton;
+        sleekButtonState.onSwappedState = (SwappedState)Delegate.Combine(sleekButtonState.onSwappedState, new SwappedState(OnSwappedPreferencesState));
+        preferencesButton.UseContentTooltip = true;
+        preferencesButton.button.iconColor = ESleekTint.FOREGROUND;
+        AddChild(preferencesButton);
         summaryContainer = Glazier.Get().CreateBox();
         summaryContainer.SizeScale_X = 1f;
+        summaryContainer.AllowRichText = true;
+        summaryContainer.TextColor = ESleekTint.RICH_TEXT_DEFAULT;
         detailScrollView.AddChild(summaryContainer);
         titleLabel = Glazier.Get().CreateLabel();
         titleLabel.SizeScale_X = 1f;

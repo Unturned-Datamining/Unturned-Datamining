@@ -67,14 +67,14 @@ internal class BlueprintStatus
                 BlueprintInputItemStatus blueprintInputItemStatus = inputItems[i];
                 if (blueprintInputItemStatus.isMissingRequiredAmount)
                 {
-                    float t = Mathf.Clamp01((float)blueprintInputItemStatus.totalAmount / (float)(int)blueprintSupply.amount);
+                    float t = Mathf.Clamp01((float)blueprintInputItemStatus.totalAmount / (float)blueprintSupply.amount);
                     normalizedCraftability *= Mathf.Lerp(0.1f, 1f, t);
                 }
             }
         }
         if (blueprint.TargetItem != null && targetStatus.isMissingRequiredAmount)
         {
-            float t2 = Mathf.Clamp01((float)targetStatus.totalAmount / (float)(int)blueprint.TargetItem.amount);
+            float t2 = Mathf.Clamp01((float)targetStatus.totalAmount / (float)blueprint.TargetItem.amount);
             normalizedCraftability *= Mathf.Lerp(0.1f, 1f, t2);
         }
         if (isMissingRequiredSkill)

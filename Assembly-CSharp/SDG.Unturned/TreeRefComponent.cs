@@ -7,6 +7,8 @@ internal class TreeRefComponent : MonoBehaviour, IExplosionDamageable, IEquatabl
 {
     public ResourceSpawnpoint owner;
 
+    private CraftingTagProviderComponent modHook;
+
     public bool IsEligibleForExplosionDamage
     {
         get
@@ -60,12 +62,25 @@ internal class TreeRefComponent : MonoBehaviour, IExplosionDamageable, IEquatabl
 
     public void GetAvailableTags(ref CraftingTagProviderGetAvailableTagsParameters p)
     {
-        p.ApplyModHooks(base.gameObject);
+        if (modHook != null)
+        {
+            p.ApplyModHooks(modHook);
+        }
+    }
+
+    public bool HasAnyCraftingTagsConfigured()
+    {
+        return modHook != null;
     }
 
     public bool Equals(ICraftingTagProvider obj)
     {
         return this == obj;
+    }
+
+    private void Start()
+    {
+        modHook = GetComponent<CraftingTagProviderComponent>();
     }
 
     void IExplosionDamageable.ApplyExplosionDamage(in ExplosionParameters explosionParameters, ref ExplosionDamageParameters damageParameters)

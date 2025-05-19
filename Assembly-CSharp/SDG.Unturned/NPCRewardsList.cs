@@ -42,7 +42,11 @@ public struct NPCRewardsList
     /// </summary>
     public void Parse(IDatDictionary data, Local localization, Asset assetContext, string countKey, string prefixKey)
     {
-        if (data.TryGetNode(countKey, out var node) && node is IDatValue valueNode)
+        if (!data.TryGetNode(countKey, out var node))
+        {
+            return;
+        }
+        if (node is IDatValue valueNode)
         {
             int num = valueNode.ParseInt32();
             if (num > 0)
@@ -50,6 +54,10 @@ public struct NPCRewardsList
                 rewards = new INPCReward[num];
                 NPCTool.readRewards(data, localization, prefixKey, rewards, assetContext);
             }
+        }
+        else if (node is IDatList listNode)
+        {
+            Parse(localization, assetContext, listNode, countKey);
         }
     }
 

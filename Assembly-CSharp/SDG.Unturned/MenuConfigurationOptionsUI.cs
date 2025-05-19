@@ -38,6 +38,8 @@ public class MenuConfigurationOptionsUI
 
     private static ISleekToggle showOutboundVoiceChatOffHintToggle;
 
+    private static ISleekToggle clickBlueprintToCraftToggle;
+
     private static ISleekToggle hintsToggle;
 
     private static ISleekToggle anonymizeMultiplerDetailsToggle;
@@ -230,6 +232,11 @@ public class MenuConfigurationOptionsUI
     private static void OnToggledShowOutboundVoiceChatOffHint(ISleekToggle toggle, bool state)
     {
         OptionsSettings.ShowOutboundVoiceChatOffHint = state;
+    }
+
+    private static void OnClickBlueprintToCraftToggled(ISleekToggle toggle, bool state)
+    {
+        OptionsSettings.ShouldClickBlueprintToCraft = state;
     }
 
     private static void onToggledHintsToggle(ISleekToggle toggle, bool state)
@@ -457,6 +464,7 @@ public class MenuConfigurationOptionsUI
         chatVoiceAlwaysRecordingToggle.Value = OptionsSettings.VoiceAlwaysRecording;
         chatVoiceAlwaysRecordingToggle.IsInteractable = OptionsSettings.chatVoiceIn && OptionsSettings.EnableOutboundVoiceChat;
         showOutboundVoiceChatOffHintToggle.Value = OptionsSettings.ShowOutboundVoiceChatOffHint;
+        clickBlueprintToCraftToggle.Value = OptionsSettings.ShouldClickBlueprintToCraft;
         hintsToggle.Value = OptionsSettings.hints;
         anonymizeMultiplerDetailsToggle.Value = OptionsSettings.ShouldAnonymizeMultiplayerDetails;
         hideRichPresenceToggle.Value = OptionsSettings.ShouldHideRichPresence;
@@ -614,6 +622,15 @@ public class MenuConfigurationOptionsUI
         hintsToggle.AddLabel(localization.format("Hints_Toggle_Label"), ESleekSide.RIGHT);
         hintsToggle.OnValueChanged += onToggledHintsToggle;
         optionsBox.AddChild(hintsToggle);
+        num += 50f;
+        clickBlueprintToCraftToggle = Glazier.Get().CreateToggle();
+        clickBlueprintToCraftToggle.PositionOffset_Y = num;
+        clickBlueprintToCraftToggle.SizeOffset_X = 40f;
+        clickBlueprintToCraftToggle.SizeOffset_Y = 40f;
+        clickBlueprintToCraftToggle.AddLabel(localization.format("ClickBlueprintToCraft_Label"), ESleekSide.RIGHT);
+        clickBlueprintToCraftToggle.TooltipText = localization.format("ClickBlueprintToCraft_Tooltip");
+        clickBlueprintToCraftToggle.OnValueChanged += OnClickBlueprintToCraftToggled;
+        optionsBox.AddChild(clickBlueprintToCraftToggle);
         num += 50f;
         anonymizeMultiplerDetailsToggle = Glazier.Get().CreateToggle();
         anonymizeMultiplerDetailsToggle.PositionOffset_Y = num;

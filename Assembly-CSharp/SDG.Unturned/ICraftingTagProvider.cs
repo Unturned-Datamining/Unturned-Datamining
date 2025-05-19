@@ -14,4 +14,10 @@ public interface ICraftingTagProvider
     Asset GetTagProviderAsset();
 
     void GetAvailableTags(ref CraftingTagProviderGetAvailableTagsParameters p);
+
+    /// <summary>
+    /// True if GetAvailableTags can ever add any tags.
+    /// Used to skip unnecessary line-of-sight tests against (for example) ordinary structures and the like.
+    /// </summary>
+    bool HasAnyCraftingTagsConfigured();
 }

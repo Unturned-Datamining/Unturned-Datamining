@@ -6,6 +6,8 @@ internal class LevelObjectRefComponent : MonoBehaviour, ICraftingTagProvider
 {
     internal LevelObject levelObjectOwner;
 
+    private CraftingTagProviderComponent modHook;
+
     public Asset GetTagProviderAsset()
     {
         return levelObjectOwner?.asset;
@@ -13,11 +15,24 @@ internal class LevelObjectRefComponent : MonoBehaviour, ICraftingTagProvider
 
     public void GetAvailableTags(ref CraftingTagProviderGetAvailableTagsParameters p)
     {
-        p.ApplyModHooks(base.gameObject);
+        if (modHook != null)
+        {
+            p.ApplyModHooks(modHook);
+        }
+    }
+
+    public bool HasAnyCraftingTagsConfigured()
+    {
+        return modHook != null;
     }
 
     public bool Equals(ICraftingTagProvider obj)
     {
         return this == obj;
+    }
+
+    private void Start()
+    {
+        modHook = GetComponent<CraftingTagProviderComponent>();
     }
 }

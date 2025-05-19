@@ -30,10 +30,21 @@ public static class CraftingTagPhysicsUtil
         for (int i = 0; i < num; i++)
         {
             Transform transform = colliders[i]?.transform;
-            if (!(transform == null))
+            if (transform == null)
             {
-                ICraftingTagProvider componentInParent = transform.GetComponentInParent<ICraftingTagProvider>();
-                if (componentInParent != null)
+                continue;
+            }
+            ICraftingTagProvider componentInParent = transform.GetComponentInParent<ICraftingTagProvider>();
+            if (componentInParent == null || !componentInParent.HasAnyCraftingTagsConfigured())
+            {
+                continue;
+            }
+            Transform transform2 = (componentInParent as Component)?.transform;
+            if (!(transform2 == null))
+            {
+                int num2 = 268468224;
+                num2 &= ~(1 << transform2.gameObject.layer);
+                if (!Physics.Linecast(position, transform2.position, out var _, num2, QueryTriggerInteraction.Ignore))
                 {
                     results.Add(componentInParent);
                 }

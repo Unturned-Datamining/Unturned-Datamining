@@ -87,6 +87,8 @@ public class InteractableVehicle : Interactable, IExplosionDamageable, IEquatabl
 
     protected VehicleEventHook eventHook;
 
+    private CraftingTagProviderComponent craftingTagProviderModHook;
+
     private bool _isDrowned;
 
     private float _lastDead;
@@ -989,7 +991,15 @@ public class InteractableVehicle : Interactable, IExplosionDamageable, IEquatabl
 
     public void GetAvailableTags(ref CraftingTagProviderGetAvailableTagsParameters p)
     {
-        p.ApplyModHooks(base.gameObject);
+        if (craftingTagProviderModHook != null)
+        {
+            p.ApplyModHooks(craftingTagProviderModHook);
+        }
+    }
+
+    public bool HasAnyCraftingTagsConfigured()
+    {
+        return craftingTagProviderModHook != null;
     }
 
     public bool Equals(ICraftingTagProvider obj)
@@ -4000,6 +4010,7 @@ public class InteractableVehicle : Interactable, IExplosionDamageable, IEquatabl
     {
         safeInit(asset);
         eventHook = base.gameObject.GetComponent<VehicleEventHook>();
+        craftingTagProviderModHook = base.gameObject.GetComponent<CraftingTagProviderComponent>();
         engineCurvesComponent = base.gameObject.GetComponentInChildren<EngineCurvesComponent>(includeInactive: true);
         if (Provider.isServer)
         {

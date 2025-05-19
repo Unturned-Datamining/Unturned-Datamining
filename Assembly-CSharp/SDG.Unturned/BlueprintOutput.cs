@@ -6,7 +6,7 @@ public class BlueprintOutput
 {
     private CachingBcAssetRef _itemRef;
 
-    public ushort amount;
+    public int amount;
 
     public EItemOrigin origin;
 
@@ -45,7 +45,7 @@ public class BlueprintOutput
         return _itemRef.IsReferenceTo(asset);
     }
 
-    public BlueprintOutput(ushort newID, byte newAmount, EItemOrigin newOrigin)
+    public BlueprintOutput(ushort newID, int newAmount, EItemOrigin newOrigin)
     {
         amount = newAmount;
         origin = newOrigin;

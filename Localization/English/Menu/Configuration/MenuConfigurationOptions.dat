@@ -17,6 +17,8 @@ VoiceAlwaysRecording_Tooltip Avoid hitches related to starting and stopping reco
 ShowOutboundVoiceChatOffHint_Label Show Outbound Voice Off Hint
 ShowOutboundVoiceChatOffHint_Tooltip Shows a muted icon in HUD when outbound voice chat is off.
 Hints_Toggle_Label Show Hints
+ClickBlueprintToCraft_Label Click Blueprint to Craft
+ClickBlueprintToCraft_Tooltip Skips the blueprint details panel in the crafting menu.
 Streamer_Toggle_Label Streamer Mode
 AnonymizeMultiplayerDetails_Label Anonymize Multiplayer Details
 AnonymizeMultiplayerDetails_Tooltip Useful for live streamers to help prevent stream sniping.

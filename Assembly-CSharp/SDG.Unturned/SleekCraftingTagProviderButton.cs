@@ -66,6 +66,9 @@ public class SleekCraftingTagProviderButton : SleekWrapper
             tagsSb.Append(tag.RichTextOrPreferredFontColor);
             flag = false;
         }
+        tagsSb.AppendLine();
+        tagsSb.AppendLine();
+        tagsSb.Append(PlayerDashboardCraftingUI.localization.format("CombineFiltersTooltip", MenuConfigurationControlsUI.getKeyCodeText(ControlsSettings.modify)));
         button.TooltipText = tagsSb.ToString();
     }
 

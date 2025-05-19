@@ -63,12 +63,14 @@ public class PlayerDashboardCraftingUI
 
     private static ISleekToggle showIgnoredToggle;
 
+    private static SleekButtonIcon favoritesButton;
+
     /// <summary>
     /// Used by inventory item context menu to override which blueprints are shown.
     /// </summary>
     public static Blueprint[] filteredBlueprintsOverride;
 
-    private static CachingAssetRef blueprintCategoryFilterRef;
+    private static HashSet<TagAsset> filterAnyOfCategories;
 
     private static HashSet<TagAsset> filterRequiresAnyOfTags;
 
@@ -81,6 +83,8 @@ public class PlayerDashboardCraftingUI
     private static bool hideUncraftable;
 
     private static bool showIgnored;
+
+    private static bool filterFavorites;
 
     private static string itemNameFilter;
 
@@ -106,11 +110,11 @@ public class PlayerDashboardCraftingUI
     /// </summary>
     private static SleekSelectedBlueprint selectedBlueprintMenu;
 
-    private static StringBuilder craftTooltipBuilder = new StringBuilder();
-
     private static HashSet<ItemAsset> availableItemAssets = new HashSet<ItemAsset>();
 
     private static StringBuilder filteringDescriptionSb = new StringBuilder();
+
+    private static StringBuilder filteringDescriptionCategoriesSb = new StringBuilder();
 
     private static Comparison<BlueprintStatus> visibleBlueprintsComparison = CompareVisibleBlueprints;
 
@@ -143,9 +147,8 @@ public class PlayerDashboardCraftingUI
         }
     }
 
-    internal static string BuildNotCraftableTooltip(BlueprintStatus status)
+    internal static void BuildNotCraftableTooltip(StringBuilder craftTooltipBuilder, BlueprintStatus status)
     {
-        craftTooltipBuilder.Clear();
         craftTooltipBuilder.AppendLine(localization.format("NotCraftable_Header"));
         Blueprint blueprint = status.blueprint;
         if (status.isMissingTargetItem && blueprint.TargetItem != null)
@@ -202,7 +205,6 @@ public class PlayerDashboardCraftingUI
             craftTooltipBuilder.Append(localization.format("NotCraftable_LineItemPrefix"));
             craftTooltipBuilder.AppendLine(localization.format("NotCraftable_UnmetConditions"));
         }
-        return craftTooltipBuilder.ToString();
     }
 
     private static bool DoesAnyItemNameContainString(Blueprint blueprint)
@@ -270,7 +272,11 @@ public class PlayerDashboardCraftingUI
                 if (!crafting.IsBlueprintPermanentlyDisabled(blueprint))
                 {
                     loadedBlueprints.Add(blueprint);
-                    hashSet.Add(blueprint.GetCategoryTag());
+                    TagAsset categoryTag = blueprint.GetCategoryTag();
+                    if (categoryTag != null)
+                    {
+                        hashSet.Add(categoryTag);
+                    }
                 }
             }
         }
@@ -314,6 +320,7 @@ public class PlayerDashboardCraftingUI
                 sleekTagButton.SizeOffset_X = 50f;
                 sleekTagButton.SizeOffset_Y = 50f;
                 sleekTagButton.OnClicked += OnClickedCategoryFilterButton;
+                sleekTagButton.TooltipAppendedText = "\n\n" + localization.format("CombineFiltersTooltip", MenuConfigurationControlsUI.getKeyCodeText(ControlsSettings.modify));
                 categoriesContainer.AddChild(sleekTagButton);
                 categoryTagButtons.Add(sleekTagButton);
             }
@@ -373,6 +380,12 @@ public class PlayerDashboardCraftingUI
             showIgnoredToggle.PositionOffset_Y = num;
             num += showIgnoredToggle.SizeOffset_Y;
         }
+        if (favoritesButton.IsVisible)
+        {
+            favoritesButton.PositionOffset_Y = num;
+            num += favoritesButton.SizeOffset_Y;
+            num += 10f;
+        }
         if (categoriesContainer.IsVisible)
         {
             categoriesContainer.PositionOffset_Y = num;
@@ -392,19 +405,47 @@ public class PlayerDashboardCraftingUI
     {
         Player.player.crafting.UpdateAvailableCraftingTags();
         RefreshTagProviderButtons();
-        TagAsset tagAsset = blueprintCategoryFilterRef.Get<TagAsset>();
         bool flag = !string.IsNullOrEmpty(itemNameFilter);
         bool flag2 = false;
         filteringDescriptionSb.Clear();
-        if (tagAsset != null)
+        if (filterFavorites)
         {
             flag2 = true;
             if (filteringDescriptionSb.Length > 0)
             {
                 filteringDescriptionSb.Append(localization.format("FilteringDescription_Separator"));
             }
-            string format = localization.format("FilteringDescription_Category");
-            filteringDescriptionSb.AppendFormat(format, tagAsset.RichTextOrPreferredFontColor);
+            string format = localization.format("FilteringDescription_Favorites_Format");
+            string arg = "<color=" + Palette.hex(OptionsSettings.fontColor) + ">" + localization.format("FilteringDescription_Favorites_Label") + "</color>";
+            filteringDescriptionSb.AppendFormat(format, arg);
+        }
+        if (filterAnyOfCategories != null && filterAnyOfCategories.Count > 0)
+        {
+            flag2 = true;
+            if (filteringDescriptionSb.Length > 0)
+            {
+                filteringDescriptionSb.Append(localization.format("FilteringDescription_Separator"));
+            }
+            if (filterAnyOfCategories.Count == 1)
+            {
+                TagAsset tagAsset = filterAnyOfCategories.First();
+                string format2 = localization.format("FilteringDescription_Category");
+                filteringDescriptionSb.AppendFormat(format2, tagAsset?.RichTextOrPreferredFontColor);
+            }
+            else
+            {
+                filteringDescriptionCategoriesSb.Clear();
+                foreach (TagAsset filterAnyOfCategory in filterAnyOfCategories)
+                {
+                    if (filteringDescriptionCategoriesSb.Length > 0)
+                    {
+                        filteringDescriptionCategoriesSb.Append(localization.format("FilteringDescription_Category_Separator"));
+                    }
+                    filteringDescriptionCategoriesSb.Append(filterAnyOfCategory?.RichTextOrPreferredFontColor);
+                }
+                string format3 = localization.format("FilteringDescription_Category_Multiple");
+                filteringDescriptionSb.AppendFormat(format3, filteringDescriptionCategoriesSb);
+            }
         }
         if (filterTagProvider != null)
         {
@@ -413,10 +454,10 @@ public class PlayerDashboardCraftingUI
             {
                 filteringDescriptionSb.Append(localization.format("FilteringDescription_Separator"));
             }
-            string format2 = localization.format("FilteringDescription_TagProvider");
+            string format4 = localization.format("FilteringDescription_TagProvider");
             Asset tagProviderAsset = filterTagProvider.GetTagProviderAsset();
-            string arg = ((tagProviderAsset == null) ? filterTagProvider.ToString() : ((!(tagProviderAsset is ItemAsset itemAsset)) ? tagProviderAsset.FriendlyName : itemAsset.RarityRichTextName));
-            filteringDescriptionSb.AppendFormat(format2, arg);
+            string arg2 = ((tagProviderAsset == null) ? filterTagProvider.ToString() : ((!(tagProviderAsset is ItemAsset itemAsset)) ? tagProviderAsset.FriendlyName : itemAsset.RarityRichTextName));
+            filteringDescriptionSb.AppendFormat(format4, arg2);
         }
         else if (filterRequiresAnyOfTags.Count == 1)
         {
@@ -425,9 +466,9 @@ public class PlayerDashboardCraftingUI
             {
                 filteringDescriptionSb.Append(localization.format("FilteringDescription_Separator"));
             }
-            string format3 = localization.format("FilteringDescription_Tag");
+            string format5 = localization.format("FilteringDescription_Tag");
             TagAsset tagAsset2 = filterRequiresAnyOfTags.First();
-            filteringDescriptionSb.AppendFormat(format3, tagAsset2.RichTextOrPreferredFontColor);
+            filteringDescriptionSb.AppendFormat(format5, tagAsset2.RichTextOrPreferredFontColor);
         }
         if (flag)
         {
@@ -436,9 +477,9 @@ public class PlayerDashboardCraftingUI
             {
                 filteringDescriptionSb.Append(localization.format("FilteringDescription_Separator"));
             }
-            string format4 = localization.format("FilteringDescription_Name");
-            string arg2 = "<color=" + Palette.hex(OptionsSettings.fontColor) + ">" + itemNameFilter + "</color>";
-            filteringDescriptionSb.AppendFormat(format4, arg2);
+            string format6 = localization.format("FilteringDescription_Name");
+            string arg3 = "<color=" + Palette.hex(OptionsSettings.fontColor) + ">" + itemNameFilter + "</color>";
+            filteringDescriptionSb.AppendFormat(format6, arg3);
         }
         filteringDescriptionButton.IsVisible = flag2;
         if (flag2)
@@ -461,9 +502,17 @@ public class PlayerDashboardCraftingUI
                 {
                     foreach (Blueprint loadedBlueprint in loadedBlueprints)
                     {
-                        if (tagAsset != null && loadedBlueprint.GetCategoryTag() != tagAsset)
+                        if (filterFavorites && PlayerCrafting.GetBlueprintPreferences(loadedBlueprint) != EBlueprintPreferences.Favorited)
                         {
                             continue;
+                        }
+                        if (filterAnyOfCategories.Count > 0)
+                        {
+                            TagAsset categoryTag = loadedBlueprint.GetCategoryTag();
+                            if (categoryTag == null || !filterAnyOfCategories.Contains(categoryTag))
+                            {
+                                continue;
+                            }
                         }
                         if (filterRequiresAnyOfTags.Count > 0)
                         {
@@ -503,9 +552,10 @@ public class PlayerDashboardCraftingUI
         visibleBlueprints.Clear();
         Blueprint selectedBlueprint = selectedBlueprintMenu.SelectedBlueprint;
         BlueprintStatus selectedBlueprintStatus = null;
+        bool flag4 = flag || filterFavorites;
         foreach (Blueprint filteredBlueprint in filteredBlueprints)
         {
-            if (!showIgnored && Player.player.crafting.getIgnoringBlueprint(filteredBlueprint))
+            if (!showIgnored && PlayerCrafting.GetBlueprintPreferences(filteredBlueprint) == EBlueprintPreferences.Ignored)
             {
                 continue;
             }
@@ -518,7 +568,7 @@ public class PlayerDashboardCraftingUI
             UpdateBlueprintStatusParameters p = updateBlueprintStatusParameters;
             Player.player.crafting.UpdateBlueprintStaticStatus(in p);
             Player.player.crafting.UpdateBlueprintDynamicStatus(in p);
-            if ((!hideUncraftable || blueprintStatus.IsCraftable) && (!blueprintStatus.isMissingAnyCriticalInputItem || (flag && filteredBlueprint.canBeVisibleWhenSearchedWithoutRequiredItems)) && (filteredBlueprint.canBeVisibleWhenSearchedWithoutRequiredItems || blueprintStatus.hasAnyInputItem) && (!blueprintStatus.isMissingAnyNpcConditions || filteredBlueprint.CanBeVisibleWithUnmetConditions))
+            if ((!hideUncraftable || blueprintStatus.IsCraftable) && ((!blueprintStatus.isMissingAnyCriticalInputItem && blueprintStatus.hasAnyInputItem) || (filteredBlueprint.canBeVisibleWhenSearchedWithoutRequiredItems && flag4)) && (!blueprintStatus.isMissingAnyNpcConditions || filteredBlueprint.CanBeVisibleWithUnmetConditions))
             {
                 blueprintStatus.UpdateCraftabilityScore();
                 visibleBlueprints.Add(blueprintStatus);
@@ -570,27 +620,30 @@ public class PlayerDashboardCraftingUI
     private static void ClearFilters()
     {
         filteredBlueprintsOverride = null;
-        blueprintCategoryFilterRef.Clear();
+        filterAnyOfCategories.Clear();
         filterRequiresAnyOfTags.Clear();
         filterTagProvider = null;
         searchField.Text = "";
         itemNameFilter = null;
+        filterFavorites = false;
     }
 
     private static void OnClickedCategoryFilterButton(CachingAssetRef categoryTagRef)
     {
         filteredBlueprintsOverride = null;
-        if (!InputEx.GetKey(ControlsSettings.modify))
+        TagAsset tagAsset = categoryTagRef.Get<TagAsset>();
+        if (tagAsset == null)
         {
-            ClearFilters();
+            UnturnedLog.info("Clicked category tag is missing");
+            return;
         }
-        if (blueprintCategoryFilterRef == categoryTagRef)
+        if (!filterAnyOfCategories.Remove(tagAsset))
         {
-            blueprintCategoryFilterRef.Clear();
-        }
-        else
-        {
-            blueprintCategoryFilterRef = categoryTagRef;
+            if (!InputEx.GetKey(ControlsSettings.modify))
+            {
+                ClearFilters();
+            }
+            filterAnyOfCategories.Add(tagAsset);
         }
         RefreshBlueprintList();
     }
@@ -603,10 +656,6 @@ public class PlayerDashboardCraftingUI
             return;
         }
         filteredBlueprintsOverride = null;
-        if (!InputEx.GetKey(ControlsSettings.modify))
-        {
-            ClearFilters();
-        }
         if (filterTagProvider == tagProvider)
         {
             filterTagProvider = null;
@@ -614,6 +663,10 @@ public class PlayerDashboardCraftingUI
         }
         else
         {
+            if (!InputEx.GetKey(ControlsSettings.modify))
+            {
+                ClearFilters();
+            }
             filterTagProvider = tagProvider;
             filterRequiresAnyOfTags.Clear();
             CraftingTagProviderGetAvailableTagsParameters p = default(CraftingTagProviderGetAvailableTagsParameters);
@@ -644,6 +697,13 @@ public class PlayerDashboardCraftingUI
     private static void onEnteredSearchField(ISleekField field)
     {
         filteredBlueprintsOverride = null;
+        if (!Input.GetKey(ControlsSettings.modify))
+        {
+            filterAnyOfCategories.Clear();
+            filterRequiresAnyOfTags.Clear();
+            filterTagProvider = null;
+            filterFavorites = false;
+        }
         itemNameFilter = searchField.Text;
         RefreshBlueprintList();
     }
@@ -653,11 +713,29 @@ public class PlayerDashboardCraftingUI
         onEnteredSearchField(searchField);
     }
 
+    private static void OnClickedFavoritesButton(ISleekElement button)
+    {
+        filteredBlueprintsOverride = null;
+        if (filterFavorites)
+        {
+            filterFavorites = false;
+        }
+        else
+        {
+            if (!InputEx.GetKey(ControlsSettings.modify))
+            {
+                ClearFilters();
+            }
+            filterFavorites = true;
+        }
+        RefreshBlueprintList();
+    }
+
     private static void OnClickedBlueprint(BlueprintStatus blueprintStatus)
     {
         bool key = InputEx.GetKey(ControlsSettings.SkipActionCraftingMenu);
         bool key2 = InputEx.GetKey(ControlsSettings.other);
-        if ((key || key2) && blueprintStatus.IsCraftable)
+        if ((key2 || key != OptionsSettings.ShouldClickBlueprintToCraft) && blueprintStatus.IsCraftable)
         {
             if (!Player.player.equipment.isBusy)
             {
@@ -714,19 +792,30 @@ public class PlayerDashboardCraftingUI
         return blueprintStatus;
     }
 
-    private static void RefreshShowIgnoredToggleVisible()
+    private static void RefreshShowIgnoredToggleAndFavoritesButtonVisible()
     {
-        bool isIgnoringAnyBlueprints = Player.player.crafting.IsIgnoringAnyBlueprints;
-        if (showIgnoredToggle.IsVisible != isIgnoringAnyBlueprints)
+        bool flag = false;
+        bool hasIgnoredAnyBlueprints = PlayerCrafting.HasIgnoredAnyBlueprints;
+        if (showIgnoredToggle.IsVisible != hasIgnoredAnyBlueprints)
         {
-            showIgnoredToggle.IsVisible = isIgnoringAnyBlueprints;
+            flag = true;
+            showIgnoredToggle.IsVisible = hasIgnoredAnyBlueprints;
+        }
+        bool hasFavoritedAnyBlueprints = PlayerCrafting.HasFavoritedAnyBlueprints;
+        if (favoritesButton.IsVisible != hasFavoritedAnyBlueprints)
+        {
+            flag = true;
+            favoritesButton.IsVisible = hasFavoritedAnyBlueprints;
+        }
+        if (flag)
+        {
             OrganizeFiltersColumn();
         }
     }
 
     internal void OnDestroy()
     {
-        PlayerCrafting.OnLocalPlayerIgnoredBlueprintsChanged = (System.Action)Delegate.Remove(PlayerCrafting.OnLocalPlayerIgnoredBlueprintsChanged, new System.Action(RefreshShowIgnoredToggleVisible));
+        PlayerCrafting.OnLocalPlayerBlueprintPreferencesChanged = (System.Action)Delegate.Remove(PlayerCrafting.OnLocalPlayerBlueprintPreferencesChanged, new System.Action(RefreshShowIgnoredToggleAndFavoritesButtonVisible));
     }
 
     public PlayerDashboardCraftingUI()
@@ -748,12 +837,13 @@ public class PlayerDashboardCraftingUI
         PlayerUI.container.AddChild(container);
         active = false;
         filteredBlueprintsOverride = null;
-        blueprintCategoryFilterRef = null;
+        filterAnyOfCategories = new HashSet<TagAsset>();
         hideUncraftable = false;
         showIgnored = false;
         itemNameFilter = string.Empty;
         filterRequiresAnyOfTags = new HashSet<TagAsset>();
         filterTagProvider = null;
+        filterFavorites = false;
         backdropBox = Glazier.Get().CreateBox();
         backdropBox.PositionOffset_Y = 60f;
         backdropBox.SizeOffset_Y = -60f;
@@ -784,6 +874,7 @@ public class PlayerDashboardCraftingUI
         filteringDescriptionButton.shadowStyle = ETextContrastContext.InconspicuousBackdrop;
         filteringDescriptionButton.iconColor = ESleekTint.FOREGROUND;
         filteringDescriptionButton.onClickedButton += OnClickedClearFilters;
+        filteringDescriptionButton.tooltip = localization.format("ResetFilters_Label") + "\n" + localization.format("ResetFilters_Tooltip");
         blueprintsContainer.AddChild(filteringDescriptionButton);
         blueprintsScrollBox = new SleekList<BlueprintStatus>();
         blueprintsScrollBox.PositionOffset_Y = 40f;
@@ -844,21 +935,29 @@ public class PlayerDashboardCraftingUI
         showIgnoredToggle.Value = showIgnored;
         showIgnoredToggle.OnValueChanged += OnShowIgnoredToggled;
         filtersScrollView.AddChild(showIgnoredToggle);
-        RefreshShowIgnoredToggleVisible();
         searchField = Glazier.Get().CreateStringField();
         searchField.SizeScale_X = 1f;
         searchField.SizeOffset_Y = 30f;
         searchField.PlaceholderText = localization.format("Search_Field_Hint");
         searchField.OnTextSubmitted += onEnteredSearchField;
+        searchField.TooltipText = localization.format("CombineFiltersTooltip", MenuConfigurationControlsUI.getKeyCodeText(ControlsSettings.modify));
         filtersScrollView.AddChild(searchField);
         searchButton = Glazier.Get().CreateButton();
         searchButton.PositionOffset_Y = 30f;
         searchButton.SizeScale_X = 1f;
         searchButton.SizeOffset_Y = 30f;
         searchButton.Text = localization.format("Search");
-        searchButton.TooltipText = localization.format("Search_Tooltip");
+        searchButton.TooltipText = localization.format("Search_Tooltip") + "\n\n" + searchField.TooltipText;
         searchButton.OnClicked += onClickedSearchButton;
         filtersScrollView.AddChild(searchButton);
+        favoritesButton = new SleekButtonIcon(icons.load<Texture2D>("FavoriteBlueprintIcon"), 40);
+        favoritesButton.SizeScale_X = 1f;
+        favoritesButton.SizeOffset_Y = 50f;
+        favoritesButton.text = localization.format("Favorites_Label");
+        favoritesButton.tooltip = localization.format("Favorites_Tooltip") + "\n\n" + searchField.TooltipText;
+        favoritesButton.onClickedButton += OnClickedFavoritesButton;
+        filtersScrollView.AddChild(favoritesButton);
+        RefreshShowIgnoredToggleAndFavoritesButtonVisible();
         blueprintsListEmptyInfoBox = Glazier.Get().CreateBox();
         blueprintsListEmptyInfoBox.PositionOffset_Y = 40f;
         blueprintsListEmptyInfoBox.SizeOffset_Y = 50f;
@@ -890,7 +989,7 @@ public class PlayerDashboardCraftingUI
         inventory.onInventoryResized = (InventoryResized)Delegate.Combine(inventory.onInventoryResized, new InventoryResized(onInventoryResized));
         PlayerCrafting crafting = Player.player.crafting;
         crafting.onCraftingUpdated = (CraftingUpdated)Delegate.Combine(crafting.onCraftingUpdated, new CraftingUpdated(onCraftingUpdated));
-        PlayerCrafting.OnLocalPlayerIgnoredBlueprintsChanged = (System.Action)Delegate.Combine(PlayerCrafting.OnLocalPlayerIgnoredBlueprintsChanged, new System.Action(RefreshShowIgnoredToggleVisible));
+        PlayerCrafting.OnLocalPlayerBlueprintPreferencesChanged = (System.Action)Delegate.Combine(PlayerCrafting.OnLocalPlayerBlueprintPreferencesChanged, new System.Action(RefreshShowIgnoredToggleAndFavoritesButtonVisible));
     }
 
     private static int CompareCategoryTags(TagAsset lhs, TagAsset rhs)

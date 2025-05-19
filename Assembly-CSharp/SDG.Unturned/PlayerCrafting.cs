@@ -11,7 +11,9 @@ public class PlayerCrafting : PlayerCaller
 {
     private const byte SAVEDATA_VERSION_BLUEPRINT_IGNORE_BY_GUID = 2;
 
-    private const byte SAVEDATA_VERSION_NEWEST = 2;
+    private const byte SAVEDATA_VERSION_ADDED_BLUEPRINT_PREFERENCES = 3;
+
+    private const byte SAVEDATA_VERSION_NEWEST = 3;
 
     private static InventorySearchQualityAscendingComparator qualityAscendingComparator = new InventorySearchQualityAscendingComparator();
 
@@ -39,8 +41,6 @@ public class PlayerCrafting : PlayerCaller
 
     public CraftingUpdated onCraftingUpdated;
 
-    internal static System.Action OnLocalPlayerIgnoredBlueprintsChanged;
-
     private static Comparison<NearbyCraftingTagProvider> localPlayerNearbyTagProvidersComparison = CompareLocalPlayerNearbyTagProviders;
 
     private static readonly ServerInstanceMethod<byte, byte, byte> SendStripAttachments = ServerInstanceMethod<byte, byte, byte>.Get(typeof(PlayerCrafting), "ReceiveStripAttachments");
@@ -49,9 +49,15 @@ public class PlayerCrafting : PlayerCaller
 
     private static readonly ServerInstanceMethod<Guid, byte, bool> SendCraft = ServerInstanceMethod<Guid, byte, bool>.Get(typeof(PlayerCrafting), "ReceiveCraft");
 
-    private Dictionary<Guid, List<byte>> ignoredBlueprints = new Dictionary<Guid, List<byte>>();
+    internal static System.Action OnLocalPlayerBlueprintPreferencesChanged;
 
-    private bool isLoadingIgnoredBlueprints;
+    private static Dictionary<Guid, List<BlueprintPreferencesPair>> localPlayerBlueprintPreferences = new Dictionary<Guid, List<BlueprintPreferencesPair>>();
+
+    private static int ignoredBlueprintsCount;
+
+    private static int favoritedBlueprintsCount;
+
+    private static bool isLoadingBlueprintPreferences;
 
     /// <summary>
     /// Why isn't tags list public visibility? Because if adding features to (for example) consume a resource when
@@ -71,15 +77,20 @@ public class PlayerCrafting : PlayerCaller
 
     private static CustomSampler updateBlueprintDynamicStatusSampler = CustomSampler.Create("UpdateBlueprintDynamicStatus");
 
-    public bool IsIgnoringAnyBlueprints => ignoredBlueprints.Count > 0;
+    public static bool HasIgnoredAnyBlueprints => ignoredBlueprintsCount > 0;
+
+    public static bool HasFavoritedAnyBlueprints => favoritedBlueprintsCount > 0;
+
+    [Obsolete("Removed from dedicated server builds and made static")]
+    public bool IsIgnoringAnyBlueprints => localPlayerBlueprintPreferences.Count > 0;
 
     /// <summary>
     /// Find nearby crafting tag providers and query their tags.
     /// </summary>
     public void UpdateAvailableCraftingTags()
     {
-        Vector3 position = base.transform.position;
-        float radius = 16f;
+        Vector3 position = base.transform.position + Vector3.up;
+        float radius = 8f;
         nearbyCraftingTags.Clear();
         if (!base.channel.IsLocalPlayer)
         {
@@ -665,6 +676,10 @@ public class PlayerCrafting : PlayerCaller
             foreach (BlueprintOutput blueprintOutput in outputs)
             {
                 ItemAsset itemAsset = blueprintOutput.FindItemAsset();
+                if (itemAsset == null)
+                {
+                    continue;
+                }
                 for (int l = 0; l < blueprintOutput.amount; l++)
                 {
                     if (blueprint.transferState)
@@ -749,31 +764,38 @@ public class PlayerCrafting : PlayerCaller
     }
 
     /// <summary>
-    /// Get whether this player is ignoring a blueprint.
+    /// Get local player's per-blueprint preferences.
     /// </summary>
-    public bool getIgnoringBlueprint(Blueprint blueprint)
+    public static EBlueprintPreferences GetBlueprintPreferences(Blueprint blueprint)
     {
         if (blueprint == null)
         {
-            return false;
+            return EBlueprintPreferences.None;
         }
         Asset ownerAsset = blueprint.GetOwnerAsset();
         if (ownerAsset == null)
         {
-            return false;
+            return EBlueprintPreferences.None;
         }
-        if (ignoredBlueprints.TryGetValue(ownerAsset.GUID, out var value))
+        if (localPlayerBlueprintPreferences.TryGetValue(ownerAsset.GUID, out var value))
         {
-            return value.Contains(blueprint.Index);
+            foreach (BlueprintPreferencesPair item in value)
+            {
+                if (item.index == blueprint.Index)
+                {
+                    return item.preferences;
+                }
+            }
         }
-        return false;
+        return EBlueprintPreferences.None;
     }
 
     /// <summary>
-    /// Set whether this player is ignoring a blueprint.
-    /// This is a kludge to help with accidentally crafting items like blindfolds.
+    /// Set local player's per-blueprint preferences.
+    /// This is helpful both to prevent accidentally crafting certain blueprints (like blindfolds) when click to
+    /// craft is enabled, and to save frequently used blueprints.
     /// </summary>
-    public void setIgnoringBlueprint(Blueprint blueprint, bool isIgnoring)
+    public static void SetBlueprintPreferences(Blueprint blueprint, EBlueprintPreferences preferences)
     {
         if (blueprint == null)
         {
@@ -785,30 +807,91 @@ public class PlayerCrafting : PlayerCaller
             return;
         }
         bool flag;
-        if (ignoredBlueprints.TryGetValue(ownerAsset.GUID, out var value))
+        if (localPlayerBlueprintPreferences.TryGetValue(ownerAsset.GUID, out var value))
         {
-            flag = value.Remove(blueprint.Index) != isIgnoring;
-            if (isIgnoring)
+            byte index = blueprint.Index;
+            int num = -1;
+            for (int i = 0; i < value.Count; i++)
             {
-                value.Add(blueprint.Index);
+                if (value[i].index == index)
+                {
+                    num = i;
+                    break;
+                }
             }
-            else if (value.Count < 1)
+            if (num >= 0)
             {
-                ignoredBlueprints.Remove(ownerAsset.GUID);
+                EBlueprintPreferences preferences2 = value[num].preferences;
+                flag = preferences != preferences2;
+                if (flag)
+                {
+                    switch (preferences2)
+                    {
+                    case EBlueprintPreferences.Ignored:
+                        ignoredBlueprintsCount--;
+                        break;
+                    case EBlueprintPreferences.Favorited:
+                        favoritedBlueprintsCount--;
+                        break;
+                    }
+                    if (preferences != 0)
+                    {
+                        value[num] = new BlueprintPreferencesPair
+                        {
+                            index = blueprint.Index,
+                            preferences = preferences
+                        };
+                    }
+                    else
+                    {
+                        value.RemoveAt(num);
+                    }
+                }
+            }
+            else
+            {
+                flag = preferences != EBlueprintPreferences.None;
+                if (flag)
+                {
+                    value.Add(new BlueprintPreferencesPair
+                    {
+                        index = index,
+                        preferences = preferences
+                    });
+                }
             }
         }
         else
         {
-            flag = isIgnoring;
-            if (isIgnoring)
+            flag = preferences != EBlueprintPreferences.None;
+            if (flag)
             {
-                value = new List<byte> { blueprint.Index };
-                ignoredBlueprints.Add(ownerAsset.GUID, value);
+                value = new List<BlueprintPreferencesPair>
+                {
+                    new BlueprintPreferencesPair
+                    {
+                        index = blueprint.Index,
+                        preferences = preferences
+                    }
+                };
+                localPlayerBlueprintPreferences.Add(ownerAsset.GUID, value);
             }
         }
-        if (!isLoadingIgnoredBlueprints && flag)
+        if (flag)
         {
-            OnLocalPlayerIgnoredBlueprintsChanged?.Invoke();
+            switch (preferences)
+            {
+            case EBlueprintPreferences.Ignored:
+                ignoredBlueprintsCount++;
+                break;
+            case EBlueprintPreferences.Favorited:
+                favoritedBlueprintsCount++;
+                break;
+            }
+        }
+        if (!isLoadingBlueprintPreferences && flag)
+        {
+            OnLocalPlayerBlueprintPreferencesChanged?.Invoke();
         }
     }
 
@@ -816,7 +899,7 @@ public class PlayerCrafting : PlayerCaller
     {
         if (base.channel.IsLocalPlayer)
         {
-            load();
+            LoadBlueprintPreferences();
         }
     }
 
@@ -824,13 +907,15 @@ public class PlayerCrafting : PlayerCaller
     {
         if (base.channel.IsLocalPlayer)
         {
-            save();
+            SaveBlueprintPreferences();
         }
     }
 
-    private void load()
+    private void LoadBlueprintPreferences()
     {
-        isLoadingIgnoredBlueprints = true;
+        isLoadingBlueprintPreferences = true;
+        ignoredBlueprintsCount = 0;
+        favoritedBlueprintsCount = 0;
         try
         {
             if (ReadWrite.fileExists("/Cloud/Ignored_Blueprints.dat", useCloud: false))
@@ -848,12 +933,13 @@ public class PlayerCrafting : PlayerCaller
                         for (int j = 0; j < num; j++)
                         {
                             byte index = block.readByte();
+                            EBlueprintPreferences preferences = (EBlueprintPreferences)((b < 3) ? 1 : block.readByte());
                             if (blueprintOwner != null)
                             {
                                 Blueprint blueprintByIndex = blueprintOwner.GetBlueprintByIndex(index);
                                 if (blueprintByIndex != null)
                                 {
-                                    setIgnoringBlueprint(blueprintByIndex, isIgnoring: true);
+                                    SetBlueprintPreferences(blueprintByIndex, preferences);
                                 }
                             }
                         }
@@ -870,33 +956,34 @@ public class PlayerCrafting : PlayerCaller
                             Blueprint blueprintByIndex2 = blueprintOwner2.GetBlueprintByIndex(index2);
                             if (blueprintByIndex2 != null)
                             {
-                                setIgnoringBlueprint(blueprintByIndex2, isIgnoring: true);
+                                SetBlueprintPreferences(blueprintByIndex2, EBlueprintPreferences.Ignored);
                             }
                         }
                     }
                 }
-                OnLocalPlayerIgnoredBlueprintsChanged?.Invoke();
+                OnLocalPlayerBlueprintPreferencesChanged?.Invoke();
             }
         }
         catch (Exception e)
         {
             UnturnedLog.exception(e, "Caught exception loading ignored blueprints:");
         }
-        isLoadingIgnoredBlueprints = false;
+        isLoadingBlueprintPreferences = false;
     }
 
-    private void save()
+    private void SaveBlueprintPreferences()
     {
         Block block = new Block();
-        block.writeByte(2);
-        block.writeInt32(ignoredBlueprints.Count);
-        foreach (KeyValuePair<Guid, List<byte>> ignoredBlueprint in ignoredBlueprints)
+        block.writeByte(3);
+        block.writeInt32(localPlayerBlueprintPreferences.Count);
+        foreach (KeyValuePair<Guid, List<BlueprintPreferencesPair>> localPlayerBlueprintPreference in localPlayerBlueprintPreferences)
         {
-            block.writeGUID(ignoredBlueprint.Key);
-            block.writeInt32(ignoredBlueprint.Value.Count);
-            foreach (byte item in ignoredBlueprint.Value)
+            block.writeGUID(localPlayerBlueprintPreference.Key);
+            block.writeInt32(localPlayerBlueprintPreference.Value.Count);
+            foreach (BlueprintPreferencesPair item in localPlayerBlueprintPreference.Value)
             {
-                block.writeByte(item);
+                block.writeByte(item.index);
+                block.writeByte((byte)item.preferences);
             }
         }
         ReadWrite.writeBlock("/Cloud/Ignored_Blueprints.dat", useCloud: false, block);
@@ -914,5 +1001,17 @@ public class PlayerCrafting : PlayerCaller
         {
             ReceiveCraft(in context, itemAsset.GUID, index, force);
         }
+    }
+
+    [Obsolete("Removed from dedicated server builds and made static")]
+    public bool getIgnoringBlueprint(Blueprint blueprint)
+    {
+        return GetBlueprintPreferences(blueprint) == EBlueprintPreferences.Ignored;
+    }
+
+    [Obsolete("Removed from dedicated server builds and made static")]
+    public void setIgnoringBlueprint(Blueprint blueprint, bool isIgnoring)
+    {
+        SetBlueprintPreferences(blueprint, isIgnoring ? EBlueprintPreferences.Ignored : EBlueprintPreferences.None);
     }
 }

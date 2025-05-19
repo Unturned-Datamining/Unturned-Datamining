@@ -17,27 +17,40 @@ public class SleekTagButton : SleekWrapper
         }
         set
         {
-            if (_tagRef != value)
+            if (!(_tagRef != value))
             {
-                _tagRef = value;
-                TagAsset tagAsset = _tagRef.Get<TagAsset>();
-                if (tagAsset != null)
+                return;
+            }
+            _tagRef = value;
+            TagAsset tagAsset = _tagRef.Get<TagAsset>();
+            if (tagAsset != null)
+            {
+                iconButton.icon = tagAsset.Icon;
+                iconButton.iconColor = (tagAsset.ShouldTintIcon ? ESleekTint.FOREGROUND : ESleekTint.NONE);
+                iconButton.textColor = tagAsset.NameColorOrPreferredFontColor;
+                if (string.IsNullOrEmpty(TooltipAppendedText))
                 {
-                    iconButton.icon = tagAsset.Icon;
-                    iconButton.iconColor = (tagAsset.ShouldTintIcon ? ESleekTint.FOREGROUND : ESleekTint.NONE);
-                    iconButton.textColor = tagAsset.NameColorOrPreferredFontColor;
                     iconButton.tooltip = tagAsset.PlainTextName;
-                    iconButton.text = (EnableLabel ? tagAsset.PlainTextName : string.Empty);
                 }
                 else
                 {
-                    iconButton.icon = null;
-                    iconButton.tooltip = string.Empty;
-                    iconButton.text = string.Empty;
+                    iconButton.tooltip = tagAsset.PlainTextName + TooltipAppendedText;
                 }
+                iconButton.text = (EnableLabel ? tagAsset.PlainTextName : string.Empty);
+            }
+            else
+            {
+                iconButton.icon = null;
+                iconButton.tooltip = string.Empty;
+                iconButton.text = string.Empty;
             }
         }
     }
+
+    /// <summary>
+    /// Extra text added to tooltip.
+    /// </summary>
+    public string TooltipAppendedText { get; set; }
 
     public bool EnableLabel { get; set; }
 

@@ -1407,9 +1407,9 @@ public class Assets : MonoBehaviour
             }
             if (myBlueprint.questConditions != null)
             {
-                for (int k = 0; k < myBlueprint.questConditions.Length; k++)
+                for (int m = 0; m < myBlueprint.questConditions.Length; m++)
                 {
-                    if (!myBlueprint.questConditions[k].Equals(yourBlueprint.questConditions[k]))
+                    if (!myBlueprint.questConditions[m].Equals(yourBlueprint.questConditions[m]))
                     {
                         return false;
                     }
@@ -1417,9 +1417,9 @@ public class Assets : MonoBehaviour
             }
             if (myBlueprint.questRewards != null)
             {
-                for (int l = 0; l < myBlueprint.questRewards.Length; l++)
+                for (int n = 0; n < myBlueprint.questRewards.Length; n++)
                 {
-                    if (!myBlueprint.questRewards[l].Equals(yourBlueprint.questRewards[l]))
+                    if (!myBlueprint.questRewards[n].Equals(yourBlueprint.questRewards[n]))
                     {
                         return false;
                     }
@@ -1427,9 +1427,9 @@ public class Assets : MonoBehaviour
             }
             if (myBlueprint.RequiresNearbyCraftingTags != null)
             {
-                for (int m = 0; m < myBlueprint.RequiresNearbyCraftingTags.Length; m++)
+                for (int num = 0; num < myBlueprint.RequiresNearbyCraftingTags.Length; num++)
                 {
-                    if (!myBlueprint.RequiresNearbyCraftingTags[m].Equals(yourBlueprint.RequiresNearbyCraftingTags[m]))
+                    if (!myBlueprint.RequiresNearbyCraftingTags[num].Equals(yourBlueprint.RequiresNearbyCraftingTags[num]))
                     {
                         return false;
                     }
@@ -1460,14 +1460,29 @@ public class Assets : MonoBehaviour
                         }
                     }
                 }
+                if (blueprint.supplies != null && blueprint.supplies.Length > 1)
+                {
+                    for (int j = 0; j < blueprint.supplies.Length - 1; j++)
+                    {
+                        for (int k = j + 1; k < blueprint.supplies.Length; k++)
+                        {
+                            BlueprintSupply obj = blueprint.supplies[j];
+                            BlueprintSupply other = blueprint.supplies[k];
+                            if (obj.Equals(other))
+                            {
+                                ReportError(itemAsset, $"blueprint [{b}] input items [{j}] and [{k}] are identical");
+                            }
+                        }
+                    }
+                }
             }
-            for (int j = 0; j < list.Count; j++)
+            for (int l = 0; l < list.Count; l++)
             {
-                if (j == i)
+                if (l == i)
                 {
                     continue;
                 }
-                ItemAsset itemAsset2 = list[j];
+                ItemAsset itemAsset2 = list[l];
                 for (byte b3 = 0; b3 < itemAsset.blueprints.Count; b3++)
                 {
                     Blueprint blueprint2 = itemAsset.blueprints[b3];

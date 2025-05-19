@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using UnityEngine;
 
 namespace SDG.Unturned;
 
@@ -10,14 +9,13 @@ public struct CraftingTagProviderGetAvailableTagsParameters
     /// </summary>
     public HashSet<TagAsset> ResultTags { get; set; }
 
-    internal void ApplyModHooks(GameObject gameObject)
+    internal void ApplyModHooks(CraftingTagProviderComponent provider)
     {
-        CraftingTagProviderComponent craftingTagProviderComponent = gameObject?.GetComponent<CraftingTagProviderComponent>();
-        if (craftingTagProviderComponent == null || craftingTagProviderComponent.modifiers == null)
+        if (provider == null || provider.modifiers == null)
         {
             return;
         }
-        CraftingTagModifierComponent[] modifiers = craftingTagProviderComponent.modifiers;
+        CraftingTagModifierComponent[] modifiers = provider.modifiers;
         foreach (CraftingTagModifierComponent craftingTagModifierComponent in modifiers)
         {
             if (craftingTagModifierComponent == null || craftingTagModifierComponent.activationRequirement switch

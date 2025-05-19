@@ -8,7 +8,7 @@ public class BlueprintSupply : IEquatable<BlueprintSupply>
 
     internal bool _isCritical;
 
-    public ushort amount;
+    public int amount;
 
     /// <summary>
     /// Note: if calling ItemRef.Get() please use FindItemAsset instead to avoid redundant asset lookups.
@@ -135,7 +135,7 @@ public class BlueprintSupply : IEquatable<BlueprintSupply>
         return $"(Item: {_itemRef} Amount: {amount} Critical: {isCritical} CountEmptyAsOne: {ShouldCountEmptyAsOne}\r\n CountingMethod: {CountingMethod} IncludeEmpty: {ShouldIncludeEmptyAmount} ExcludeFull: {ShouldExcludeFullAmount}\r\n IncludeMaxQuality: {ShouldIncludeMaxQuality} Prioritization: {Prioritization} Consume: {ShouldConsume})";
     }
 
-    public BlueprintSupply(ushort newID, bool newCritical, byte newAmount, bool newTreatEmptyAsOne, ECraftingInputPrioritization newPrioritization)
+    public BlueprintSupply(ushort newID, bool newCritical, int newAmount, bool newTreatEmptyAsOne, ECraftingInputPrioritization newPrioritization)
     {
         _isCritical = newCritical;
         ShouldCountEmptyAsOne = newTreatEmptyAsOne;

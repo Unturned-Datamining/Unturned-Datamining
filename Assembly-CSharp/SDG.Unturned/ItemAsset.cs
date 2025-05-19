@@ -768,7 +768,8 @@ public class ItemAsset : Asset, ISkinableAsset, IBlueprintOwner
                 AssetValidation.searchGameObjectForErrors(this, item);
             }
         }
-        bool flag = p.data.ParseBool("Add_Default_Actions", _actions.Count == 0);
+        bool defaultValue3 = !p.data.ContainsKey("Actions");
+        bool flag = p.data.ParseBool("Add_Default_Actions", defaultValue3);
         bool flag2 = false;
         if (p.data.TryGetNode("Blueprints", out var node))
         {
@@ -1128,12 +1129,12 @@ public class ItemAsset : Asset, ISkinableAsset, IBlueprintOwner
             }
             ECraftingInputPrioritization newPrioritization = dictionary.ParseEnum("Prioritization", eCraftingInputPrioritization);
             ECraftingInputCountingMethod countingMethod = dictionary.ParseEnum("CountingMethod", eCraftingInputCountingMethod);
-            byte b = dictionary.ParseUInt8("Amount", 1);
-            if (b < 1)
+            int num = dictionary.ParseInt32("Amount", 1);
+            if (num < 1)
             {
-                b = 1;
+                num = 1;
             }
-            return new BlueprintSupply(0, newCritical, b, flag, newPrioritization)
+            return new BlueprintSupply(0, newCritical, num, flag, newPrioritization)
             {
                 ShouldConsume = flag2,
                 ShouldIncludeEmptyAmount = shouldIncludeEmptyAmount,
@@ -1174,13 +1175,13 @@ public class ItemAsset : Asset, ISkinableAsset, IBlueprintOwner
                     assetContext.ReportAssetError("Unable to parse blueprint output item ID: \"" + dictionary.GetString("ID") + "\"");
                 }
             }
-            byte b = dictionary.ParseUInt8("Amount", 1);
-            if (b < 1)
+            int num = dictionary.ParseInt32("Amount", 1);
+            if (num < 1)
             {
-                b = 1;
+                num = 1;
             }
             EItemOrigin newOrigin = dictionary.ParseEnum("Origin", EItemOrigin.CRAFT);
-            return new BlueprintOutput(0, b, newOrigin)
+            return new BlueprintOutput(0, num, newOrigin)
             {
                 ItemRef = assetRef
             };
@@ -1199,7 +1200,7 @@ public class ItemAsset : Asset, ISkinableAsset, IBlueprintOwner
         return null;
     }
 
-    private static bool ParseItemString(string input, out CachingBcAssetRef assetRef, out byte amount, Asset assetContext)
+    private static bool ParseItemString(string input, out CachingBcAssetRef assetRef, out int amount, Asset assetContext)
     {
         assetRef = CachingBcAssetRef.Empty;
         amount = 1;
@@ -1213,7 +1214,7 @@ public class ItemAsset : Asset, ISkinableAsset, IBlueprintOwner
         {
             text = input.Substring(0, num);
             string text2 = input.Substring(num + 1);
-            if (!byte.TryParse(text2, out amount))
+            if (!int.TryParse(text2, out amount))
             {
                 assetContext.ReportAssetError("Unable to parse blueprint input item amount: \"" + text2 + "\"");
                 return false;
@@ -1284,22 +1285,22 @@ public class ItemAsset : Asset, ISkinableAsset, IBlueprintOwner
                 flag = flag || (eBlueprintOperation == EBlueprintOperation.FillTargetItem && b3 == 0);
                 bool newTreatEmptyAsOne = data.ParseBool("Blueprint_" + b + "_Supply_" + b3 + "_AllowEmpty");
                 ECraftingInputPrioritization newPrioritization = data.ParseEnum("Blueprint_" + b + "_Supply_" + b3 + "_Prioritization", defaultValue);
-                byte b4 = data.ParseUInt8("Blueprint_" + b + "_Supply_" + b3 + "_Amount", 0);
-                if (b4 < 1)
+                int num = data.ParseInt32("Blueprint_" + b + "_Supply_" + b3 + "_Amount");
+                if (num < 1)
                 {
-                    b4 = 1;
+                    num = 1;
                 }
-                BlueprintSupply blueprintSupply = new BlueprintSupply(0, flag, b4, newTreatEmptyAsOne, newPrioritization);
+                BlueprintSupply blueprintSupply = new BlueprintSupply(0, flag, num, newTreatEmptyAsOne, newPrioritization);
                 blueprintSupply.ItemRef = new CachingBcAssetRef(EAssetType.ITEM, value);
                 blueprintSupply.CountingMethod = countingMethod;
                 tempBlueprintSupplies.Add(blueprintSupply);
             }
-            ushort num = data.ParseUInt16("Blueprint_" + b + "_Tool", 0);
+            ushort num2 = data.ParseUInt16("Blueprint_" + b + "_Tool", 0);
             bool newCritical = data.ContainsKey("Blueprint_" + b + "_Tool_Critical");
-            if (num != 0)
+            if (num2 != 0)
             {
                 BlueprintSupply blueprintSupply2 = new BlueprintSupply(0, newCritical, 1, newTreatEmptyAsOne: false, ECraftingInputPrioritization.LowestQuality);
-                blueprintSupply2.ItemRef = new CachingBcAssetRef(EAssetType.ITEM, num);
+                blueprintSupply2.ItemRef = new CachingBcAssetRef(EAssetType.ITEM, num2);
                 blueprintSupply2.ShouldConsume = false;
                 tempBlueprintSupplies.Add(blueprintSupply2);
             }
@@ -1310,45 +1311,45 @@ public class ItemAsset : Asset, ISkinableAsset, IBlueprintOwner
             }
             else
             {
-                byte b5 = data.ParseUInt8("Blueprint_" + b + "_Outputs", 0);
-                if (b5 > 0)
+                byte b4 = data.ParseUInt8("Blueprint_" + b + "_Outputs", 0);
+                if (b4 > 0)
                 {
-                    array = new BlueprintOutput[b5];
-                    for (byte b6 = 0; b6 < array.Length; b6++)
+                    array = new BlueprintOutput[b4];
+                    for (byte b5 = 0; b5 < array.Length; b5++)
                     {
-                        ushort legacyId = data.ParseUInt16("Blueprint_" + b + "_Output_" + b6 + "_ID", 0);
-                        byte b7 = data.ParseUInt8("Blueprint_" + b + "_Output_" + b6 + "_Amount", 0);
-                        if (b7 < 1)
+                        ushort legacyId = data.ParseUInt16("Blueprint_" + b + "_Output_" + b5 + "_ID", 0);
+                        int num3 = data.ParseInt32("Blueprint_" + b + "_Output_" + b5 + "_Amount");
+                        if (num3 < 1)
                         {
-                            b7 = 1;
+                            num3 = 1;
                         }
-                        EItemOrigin newOrigin = data.ParseEnum("Blueprint_" + b + "_Output_" + b6 + "_Origin", EItemOrigin.CRAFT);
-                        array[b6] = new BlueprintOutput(0, b7, newOrigin);
-                        array[b6].ItemRef = new CachingBcAssetRef(EAssetType.ITEM, legacyId);
+                        EItemOrigin newOrigin = data.ParseEnum("Blueprint_" + b + "_Output_" + b5 + "_Origin", EItemOrigin.CRAFT);
+                        array[b5] = new BlueprintOutput(0, num3, newOrigin);
+                        array[b5].ItemRef = new CachingBcAssetRef(EAssetType.ITEM, legacyId);
                     }
                 }
                 else
                 {
                     array = new BlueprintOutput[1];
-                    ushort num2 = data.ParseUInt16("Blueprint_" + b + "_Product", 0);
-                    if (num2 == 0)
+                    ushort num4 = data.ParseUInt16("Blueprint_" + b + "_Product", 0);
+                    if (num4 == 0)
                     {
-                        num2 = id;
+                        num4 = id;
                     }
-                    byte b8 = data.ParseUInt8("Blueprint_" + b + "_Products", 0);
-                    if (b8 < 1)
+                    byte b6 = data.ParseUInt8("Blueprint_" + b + "_Products", 0);
+                    if (b6 < 1)
                     {
-                        b8 = 1;
+                        b6 = 1;
                     }
                     EItemOrigin newOrigin2 = data.ParseEnum("Blueprint_" + b + "_Origin", EItemOrigin.CRAFT);
-                    array[0] = new BlueprintOutput(0, b8, newOrigin2);
-                    array[0].ItemRef = new CachingBcAssetRef(EAssetType.ITEM, num2);
+                    array[0] = new BlueprintOutput(0, b6, newOrigin2);
+                    array[0].ItemRef = new CachingBcAssetRef(EAssetType.ITEM, num4);
                 }
             }
             CachingBcAssetRef effectAssetRef = data.ParseGuidOrLegacyIdV2("Blueprint_" + b + "_Build", EAssetType.EFFECT);
-            byte b9 = data.ParseUInt8("Blueprint_" + b + "_Level", 0);
+            byte b7 = data.ParseUInt8("Blueprint_" + b + "_Level", 0);
             EBlueprintSkill eBlueprintSkill = EBlueprintSkill.NONE;
-            if (b9 > 0)
+            if (b7 > 0)
             {
                 eBlueprintSkill = (EBlueprintSkill)Enum.Parse(typeof(EBlueprintSkill), data.GetString("Blueprint_" + b + "_Skill"), ignoreCase: true);
             }
@@ -1359,7 +1360,7 @@ public class ItemAsset : Asset, ISkinableAsset, IBlueprintOwner
             newQuestConditionsList.Parse(data, localization, this, "Blueprint_" + b + "_Conditions", "Blueprint_" + b + "_Condition_");
             NPCRewardsList newQuestRewardsList = default(NPCRewardsList);
             newQuestRewardsList.Parse(data, localization, this, "Blueprint_" + b + "_Rewards", "Blueprint_" + b + "_Reward_");
-            Blueprint blueprint = new Blueprint(b, tempBlueprintSupplies.ToArray(), array, b9, eBlueprintSkill, newTransferState, newWithoutAttachments, @string, newQuestConditionsList, newQuestRewardsList);
+            Blueprint blueprint = new Blueprint(b, tempBlueprintSupplies.ToArray(), array, b7, eBlueprintSkill, newTransferState, newWithoutAttachments, @string, newQuestConditionsList, newQuestRewardsList);
             blueprint.Owner = this;
             blueprint.effectAssetRef = effectAssetRef;
             blueprint.canBeVisibleWhenSearchedWithoutRequiredItems = data.ParseBool($"Blueprint_{b}_Searchable", defaultValue: true);
