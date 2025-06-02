@@ -19,6 +19,7 @@
 | 89.111.168.0/21 | HiddenFromAllServerLists     |
 | 212.22.85.29    | HiddenFromAllServerLists     |
 | 46.174.51.182   | HiddenFromInternetServerList |
+| 109.172.30.100  | HiddenFromInternetServerList |
 
 ## Name filters
 | Regex                                                                                 | BanFlags                          |
@@ -79,3 +80,12 @@
 | 85568392931735316 | HiddenFromInternetServerList |
 | 85568392933086384 | HiddenFromInternetServerList |
 | 85568392932085893 | HiddenFromInternetServerList |
+| 85568392934727749 | HiddenFromInternetServerList |
+| 85568392934832312 | HiddenFromInternetServerList |
+| 85568392934832317 | HiddenFromInternetServerList |
+| 85568392934832315 | HiddenFromInternetServerList |
+| 85568392934835349 | HiddenFromInternetServerList |
+| 85568392934835347 | HiddenFromInternetServerList |
+| 85568392934835350 | HiddenFromInternetServerList |
+| 85568392934832311 | HiddenFromInternetServerList |
+| 85568392934835348 | HiddenFromInternetServerList |
