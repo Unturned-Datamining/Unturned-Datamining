@@ -172,6 +172,21 @@ LinkFiltering
 			]
 			Path (?i)^\\/profile\\/nelson.smartlydressed.games
 		}
+		{
+			Action Deny
+			Host bebrix.shop
+		}
+		{
+			Action Deny
+			Hosts
+			[
+				discord.gg
+				www.discord.gg
+				t.me
+				www.t.me
+			]
+			Path (?i).*(bebrix)
+		}
 	]
 	DefaultAction UseSteamLinkFilter
 }
