@@ -11,7 +11,6 @@
 | 194.147.90.158  | HiddenFromAllServerLists     |
 | 79.174.94.30    | HiddenFromAllServerLists     |
 | 79.174.84.163   | HiddenFromAllServerLists     |
-| 194.67.88.169   | HiddenFromAllServerLists     |
 | 193.227.241.118 | HiddenFromAllServerLists     |
 | 46.174.55.176   | HiddenFromAllServerLists     |
 | 79.174.93.100   | HiddenFromAllServerLists     |
@@ -21,6 +20,7 @@
 | 95.163.221.161  | HiddenFromAllServerLists     |
 | 212.22.85.72    | HiddenFromAllServerLists     |
 | 79.174.80.229   | HiddenFromAllServerLists     |
+| 194.67.88.0/24  | HiddenFromAllServerLists     |
 | 46.174.51.182   | HiddenFromInternetServerList |
 | 109.172.30.100  | HiddenFromInternetServerList |
 
