@@ -17,10 +17,10 @@
 | 91.197.96.0/22  | HiddenFromAllServerLists     |
 | 89.111.168.0/21 | HiddenFromAllServerLists     |
 | 212.22.85.29    | HiddenFromAllServerLists     |
-| 95.163.221.161  | HiddenFromAllServerLists     |
 | 212.22.85.72    | HiddenFromAllServerLists     |
 | 79.174.80.229   | HiddenFromAllServerLists     |
 | 194.67.88.0/24  | HiddenFromAllServerLists     |
+| 95.163.192.0/18 | HiddenFromAllServerLists     |
 | 46.174.51.182   | HiddenFromInternetServerList |
 | 109.172.30.100  | HiddenFromInternetServerList |
 
