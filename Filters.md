@@ -1,28 +1,28 @@
 # Host bans
 
 ## IPv4 filters
-| Address         | BanFlags                     |
-| --------------- | ---------------------------- |
-| 156.236.84.205  | QueryPingWarning             |
-| 194.147.90.86   | HiddenFromInternetServerList |
-| 37.230.210.234  | HiddenFromInternetServerList |
-| 195.140.147.193 | HiddenFromInternetServerList |
-| 85.215.57.110   | HiddenFromInternetServerList |
-| 194.147.90.158  | HiddenFromAllServerLists     |
-| 79.174.94.30    | HiddenFromAllServerLists     |
-| 79.174.84.163   | HiddenFromAllServerLists     |
-| 193.227.241.118 | HiddenFromAllServerLists     |
-| 46.174.55.176   | HiddenFromAllServerLists     |
-| 79.174.93.100   | HiddenFromAllServerLists     |
-| 91.197.96.0/22  | HiddenFromAllServerLists     |
-| 89.111.168.0/21 | HiddenFromAllServerLists     |
-| 212.22.85.29    | HiddenFromAllServerLists     |
-| 212.22.85.72    | HiddenFromAllServerLists     |
-| 79.174.80.229   | HiddenFromAllServerLists     |
-| 194.67.88.0/24  | HiddenFromAllServerLists     |
-| 95.163.192.0/18 | HiddenFromAllServerLists     |
-| 46.174.51.182   | HiddenFromInternetServerList |
-| 109.172.30.100  | HiddenFromInternetServerList |
+| Address          | BanFlags                     |
+| ---------------- | ---------------------------- |
+| 156.236.84.205   | QueryPingWarning             |
+| 194.147.90.86    | HiddenFromInternetServerList |
+| 37.230.210.234   | HiddenFromInternetServerList |
+| 195.140.147.193  | HiddenFromInternetServerList |
+| 85.215.57.110    | HiddenFromInternetServerList |
+| 194.147.90.158   | HiddenFromAllServerLists     |
+| 79.174.94.30     | HiddenFromAllServerLists     |
+| 79.174.84.163    | HiddenFromAllServerLists     |
+| 193.227.241.0/24 | HiddenFromAllServerLists     |
+| 46.174.55.176    | HiddenFromAllServerLists     |
+| 79.174.93.100    | HiddenFromAllServerLists     |
+| 91.197.96.0/22   | HiddenFromAllServerLists     |
+| 89.111.168.0/21  | HiddenFromAllServerLists     |
+| 212.22.85.29     | HiddenFromAllServerLists     |
+| 212.22.85.72     | HiddenFromAllServerLists     |
+| 79.174.80.229    | HiddenFromAllServerLists     |
+| 194.67.88.0/24   | HiddenFromAllServerLists     |
+| 95.163.192.0/18  | HiddenFromAllServerLists     |
+| 46.174.51.182    | HiddenFromInternetServerList |
+| 109.172.30.100   | HiddenFromInternetServerList |
 
 ## Name filters
 | Regex                                                                                 | BanFlags                          |
