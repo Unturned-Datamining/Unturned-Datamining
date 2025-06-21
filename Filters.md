@@ -18,6 +18,7 @@
 | 194.67.88.0/24   | HiddenFromAllServerLists     |
 | 95.163.192.0/18  | HiddenFromAllServerLists     |
 | 79.174.80.0/20   | HiddenFromAllServerLists     |
+| 194.58.114.0/24  | HiddenFromAllServerLists     |
 | 46.174.51.182    | HiddenFromInternetServerList |
 | 109.172.30.100   | HiddenFromInternetServerList |
 
