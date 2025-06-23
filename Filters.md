@@ -19,6 +19,7 @@
 | 95.163.192.0/18  | HiddenFromAllServerLists     |
 | 79.174.80.0/20   | HiddenFromAllServerLists     |
 | 194.58.114.0/24  | HiddenFromAllServerLists     |
+| 31.31.207.0/24   | HiddenFromAllServerLists     |
 | 46.174.51.182    | HiddenFromInternetServerList |
 | 109.172.30.100   | HiddenFromInternetServerList |
 
@@ -40,6 +41,7 @@
 | (?i)(Беbrи)                                                                           | HiddenFromAllServerLists          |
 | (?i)(Беbриks)                                                                         | HiddenFromAllServerLists          |
 | (Бeбpиks)                                                                             | HiddenFromAllServerLists          |
+| (?i)(БЕБРА)                                                                           | HiddenFromAllServerLists          |
 | (?i)(] wiped)                                                                         | HiddenFromAllServerLists          |
 | (?i)(MegaNine)                                                                        | HiddenFromInternetServerList      |
 
