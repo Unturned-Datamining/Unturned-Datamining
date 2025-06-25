@@ -22,19 +22,14 @@ public class FoliageResourceInfoAsset : FoliageInfoAsset
 
     public override int getInstanceCountInVolume(IShapeVolume volume)
     {
-        Bounds worldBounds = volume.worldBounds;
-        RegionBounds regionBounds = new RegionBounds(worldBounds);
         int num = 0;
-        for (byte b = regionBounds.min.x; b <= regionBounds.max.x; b++)
+        foreach (Vector2Int item in Regions.GetCoordinateBoundsInt(volume.worldBounds))
         {
-            for (byte b2 = regionBounds.min.y; b2 <= regionBounds.max.y; b2++)
+            foreach (ResourceSpawnpoint item2 in LevelGround.GetTreesOrNullInRegion(item))
             {
-                foreach (ResourceSpawnpoint item in LevelGround.trees[b, b2])
+                if (resource.isReferenceTo(item2.asset) && volume.containsPoint(item2.point))
                 {
-                    if (resource.isReferenceTo(item.asset) && volume.containsPoint(item.point))
-                    {
-                        num++;
-                    }
+                    num++;
                 }
             }
         }

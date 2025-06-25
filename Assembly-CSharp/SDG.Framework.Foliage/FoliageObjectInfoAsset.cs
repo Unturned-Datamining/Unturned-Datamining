@@ -29,7 +29,7 @@ public class FoliageObjectInfoAsset : FoliageInfoAsset
             {
                 foreach (LevelObject item in LevelObjects.objects[b, b2])
                 {
-                    if (obj.isReferenceTo(item.asset) && volume.containsPoint(item.transform.position))
+                    if (obj.isReferenceTo(item.asset) && !(item.transform == null) && volume.containsPoint(item.transform.position))
                     {
                         num++;
                     }

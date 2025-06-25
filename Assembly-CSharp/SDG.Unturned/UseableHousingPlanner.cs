@@ -7,13 +7,91 @@ namespace SDG.Unturned;
 
 public class UseableHousingPlanner : Useable
 {
+    private struct ItemOption
+    {
+        public ItemStructureAsset asset;
+
+        public BlueprintStatus blueprintStatus;
+
+        public ItemOption(ItemStructureAsset asset, BlueprintStatus blueprintStatus)
+        {
+            this.asset = asset;
+            this.blueprintStatus = blueprintStatus;
+        }
+    }
+
+    private class SleekHousingPlannerOption : SleekWrapper
+    {
+        private UseableHousingPlanner useable;
+
+        private ItemOption option;
+
+        private ISleekButton button;
+
+        private SleekItemIcon icon;
+
+        private ISleekLabel amountLabel;
+
+        public SleekHousingPlannerOption(UseableHousingPlanner useable, ItemOption option)
+        {
+            this.useable = useable;
+            this.option = option;
+            ItemStructureAsset asset = option.asset;
+            base.SizeOffset_X = asset.size_x * 50;
+            base.SizeOffset_Y = asset.size_y * 50;
+            Color rarityColorUI = ItemTool.getRarityColorUI(asset.rarity);
+            button = Glazier.Get().CreateButton();
+            button.SizeScale_X = 1f;
+            button.SizeScale_Y = 1f;
+            button.BackgroundColor = SleekColor.BackgroundIfLight(rarityColorUI);
+            button.TextColor = rarityColorUI;
+            button.TooltipText = asset.itemName;
+            button.OnClicked += OnClicked;
+            AddChild(button);
+            icon = new SleekItemIcon();
+            icon.SizeScale_X = 1f;
+            icon.SizeScale_Y = 1f;
+            icon.Refresh(asset, Mathf.RoundToInt(base.SizeOffset_X), Mathf.RoundToInt(base.SizeOffset_Y));
+            AddChild(icon);
+            amountLabel = Glazier.Get().CreateLabel();
+            amountLabel.PositionScale_Y = 1f;
+            amountLabel.SizeOffset_Y = 30f;
+            amountLabel.SizeScale_X = 1f;
+            if (asset.size_x == 1 || asset.size_y == 1)
+            {
+                amountLabel.PositionOffset_X = 0f;
+                amountLabel.PositionOffset_Y = -30f;
+                amountLabel.SizeOffset_X = 0f;
+                amountLabel.FontSize = ESleekFontSize.Small;
+            }
+            else
+            {
+                amountLabel.PositionOffset_X = 5f;
+                amountLabel.PositionOffset_Y = -35f;
+                amountLabel.SizeOffset_X = -10f;
+                amountLabel.FontSize = ESleekFontSize.Default;
+            }
+            useable.itemAmounts.TryGetValue(asset.id, out var value);
+            int num = option.blueprintStatus?.EstimateFirstOutputMaxAmount() ?? 0;
+            amountLabel.Text = $"{value}+{num}";
+            amountLabel.TextAlignment = TextAnchor.LowerLeft;
+            amountLabel.TextContrastContext = ETextContrastContext.InconspicuousBackdrop;
+            AddChild(amountLabel);
+        }
+
+        private void OnClicked(ISleekElement button)
+        {
+            useable.SetSelectedOption(option);
+        }
+    }
+
     private static MasterBundleReference<OneShotAudioDefinition> popupAudioRef = new MasterBundleReference<OneShotAudioDefinition>("core.masterbundle", "Sounds/Popup/Popup.asset");
 
     private static MasterBundleReference<AudioClip> errorClipRef = new MasterBundleReference<AudioClip>("core.masterbundle", "Sounds/Error.wav");
 
     private static readonly ClientInstanceMethod<bool> SendPlaceHousingItemResult = ClientInstanceMethod<bool>.Get(typeof(UseableHousingPlanner), "ReceivePlaceHousingItemResult");
 
-    private static readonly ServerInstanceMethod<Guid, Vector3, float> SendPlaceHousingItem = ServerInstanceMethod<Guid, Vector3, float>.Get(typeof(UseableHousingPlanner), "ReceivePlaceHousingItem");
+    private static readonly ServerInstanceMethod<Guid, Vector3, float, Guid, byte> SendPlaceHousingItem = ServerInstanceMethod<Guid, Vector3, float, Guid, byte>.Get(typeof(UseableHousingPlanner), "ReceivePlaceHousingItem");
 
     /// <summary>
     /// Stripped-down version of structure prefab for previewing where the structure will be spawned.
@@ -50,19 +128,19 @@ public class UseableHousingPlanner : Useable
     /// </summary>
     private float foundationPositionOffset;
 
-    private ItemStructureAsset selectedAsset;
+    private ItemOption selectedOption;
 
     private bool isItemSelectionMenuOpen;
 
     private ISleekElement itemSelectionContainer;
 
-    private SleekJars floorsMenu;
+    private SleekCircularContainer floorsMenu;
 
-    private SleekJars roofsMenu;
+    private SleekCircularContainer roofsMenu;
 
-    private SleekJars wallsMenu;
+    private SleekCircularContainer wallsMenu;
 
-    private SleekJars pillarsMenu;
+    private SleekCircularContainer pillarsMenu;
 
     private ISleekLabel floorsLabel;
 
@@ -87,21 +165,42 @@ public class UseableHousingPlanner : Useable
 
     private ISleekLabel selectedItemNameLabel;
 
-    private ISleekLabel selectedItemQuantityLabel;
+    private ISleekLabel selectedItemAvailableAmountLabel;
+
+    private ISleekLabel selectedItemCraftableAmountLabel;
+
+    /// <summary>
+    /// Blueprints which create a structure item.
+    /// </summary>
+    private List<Blueprint> relevantBlueprints;
+
+    /// <summary>
+    /// One craftable blueprint per potential structure item.
+    /// </summary>
+    private Dictionary<ItemStructureAsset, BlueprintStatus> craftableBlueprints;
+
+    /// <summary>
+    /// Recycled blueprint statuses.
+    /// </summary>
+    private Stack<BlueprintStatus> blueprintStatusPool;
 
     private List<PlayerInventorySearchResultV2> itemSearchResults;
 
-    private List<PlayerInventorySearchResultV2> floors;
+    private List<ItemOption> allOptions;
 
-    private List<PlayerInventorySearchResultV2> roofs;
+    private List<ItemOption> floors;
 
-    private List<PlayerInventorySearchResultV2> walls;
+    private List<ItemOption> roofs;
 
-    private List<PlayerInventorySearchResultV2> pillars;
+    private List<ItemOption> walls;
+
+    private List<ItemOption> pillars;
 
     private Dictionary<ushort, int> itemAmounts;
 
     private int cachedSearchIndex = -1;
+
+    private int cachedAssetListChangeCounter = -1;
 
     private const float MENU_RADIUS = 128f;
 
@@ -111,7 +210,13 @@ public class UseableHousingPlanner : Useable
 
     private const float RADIAL_BACKDROP_ALPHA = 0.2f;
 
+    private static Local localization;
+
+    private const bool bypassWorkstationRequirements = true;
+
     public override bool isUseableShowingMenu => isItemSelectionMenuOpen;
+
+    private bool HasSelection => selectedOption.asset != null;
 
     [SteamCall(ESteamCallValidation.ONLY_FROM_SERVER)]
     public void ReceivePlaceHousingItemResult(bool success)
@@ -142,7 +247,7 @@ public class UseableHousingPlanner : Useable
         }
     }
 
-    private bool ReceivePlaceHousingItemInternal(in ServerInvocationContext context, Guid assetGuid, Vector3 position, float yaw)
+    private bool ReceivePlaceHousingItemInternal(in ServerInvocationContext context, Guid assetGuid, Vector3 position, float yaw, Guid blueprintGuid, byte blueprintIndex)
     {
         if ((position - base.player.look.aim.position).sqrMagnitude > 256f)
         {
@@ -158,7 +263,36 @@ public class UseableHousingPlanner : Useable
         }
         if (!base.player.inventory.FindFirstItemByAsset(itemStructureAsset, out var result))
         {
-            return false;
+            Asset asset = Assets.find(blueprintGuid);
+            if (asset == null)
+            {
+                return false;
+            }
+            if (!(asset is IBlueprintOwner blueprintOwner))
+            {
+                return false;
+            }
+            Blueprint blueprintByIndex = blueprintOwner.GetBlueprintByIndex(blueprintIndex);
+            if (blueprintByIndex == null)
+            {
+                return false;
+            }
+            if (blueprintByIndex.outputs == null || blueprintByIndex.outputs.Length != 1)
+            {
+                return false;
+            }
+            if (blueprintByIndex.outputs[0].FindItemAsset() != itemStructureAsset)
+            {
+                return false;
+            }
+            if (!base.player.crafting.HandleCraftRequestInternal(in context, blueprintByIndex, asManyAsPossible: false, playEffect: false, bypassWorkstationRequirements: true))
+            {
+                return false;
+            }
+            if (!base.player.inventory.FindFirstItemByAsset(itemStructureAsset, out result))
+            {
+                return false;
+            }
         }
         string obstructionHint = string.Empty;
         if (UseableHousingUtils.ValidatePendingPlacement(itemStructureAsset, ref position, yaw, ref obstructionHint) != 0)
@@ -175,9 +309,9 @@ public class UseableHousingPlanner : Useable
     }
 
     [SteamCall(ESteamCallValidation.ONLY_FROM_OWNER, ratelimitHz = 5)]
-    public void ReceivePlaceHousingItem(in ServerInvocationContext context, Guid assetGuid, Vector3 position, float yaw)
+    public void ReceivePlaceHousingItem(in ServerInvocationContext context, Guid assetGuid, Vector3 position, float yaw, Guid blueprintGuid, byte blueprintIndex)
     {
-        bool arg = ReceivePlaceHousingItemInternal(in context, assetGuid, position, yaw);
+        bool arg = ReceivePlaceHousingItemInternal(in context, assetGuid, position, yaw, blueprintGuid, blueprintIndex);
         SendPlaceHousingItemResult.Invoke(GetNetId(), ENetReliability.Unreliable, base.channel.GetOwnerTransportConnection(), arg);
     }
 
@@ -187,9 +321,21 @@ public class UseableHousingPlanner : Useable
         {
             return false;
         }
-        if (base.channel.IsLocalPlayer && selectedAsset != null && UpdatePendingPlacement())
+        if (base.channel.IsLocalPlayer && HasSelection && UpdatePendingPlacement())
         {
-            SendPlaceHousingItem.Invoke(GetNetId(), ENetReliability.Reliable, selectedAsset.GUID, pendingPlacementPosition, pendingPlacementYaw + customRotationOffset);
+            itemAmounts.TryGetValue(selectedOption.asset.id, out var value);
+            Guid arg = default(Guid);
+            byte arg2 = 0;
+            if (value < 1 && selectedOption.blueprintStatus?.blueprint != null)
+            {
+                Asset ownerAsset = selectedOption.blueprintStatus.blueprint.GetOwnerAsset();
+                if (ownerAsset != null)
+                {
+                    arg = ownerAsset.GUID;
+                    arg2 = selectedOption.blueprintStatus.blueprint.Index;
+                }
+            }
+            SendPlaceHousingItem.Invoke(GetNetId(), ENetReliability.Reliable, selectedOption.asset.GUID, pendingPlacementPosition, pendingPlacementYaw + customRotationOffset, arg, arg2);
             return true;
         }
         return false;
@@ -197,13 +343,26 @@ public class UseableHousingPlanner : Useable
 
     public override bool startSecondary()
     {
-        if (base.channel.IsLocalPlayer && selectedAsset != null)
+        if (base.channel.IsLocalPlayer && HasSelection)
         {
-            if (selectedAsset.construct == EConstruct.FLOOR_POLY || selectedAsset.construct == EConstruct.ROOF_POLY)
+            float num;
+            switch (selectedOption.asset.construct)
             {
+            case EConstruct.FLOOR_POLY:
+            case EConstruct.ROOF_POLY:
                 return false;
+            case EConstruct.FLOOR:
+            case EConstruct.ROOF:
+                num = 90f;
+                break;
+            case EConstruct.WALL:
+            case EConstruct.RAMPART:
+                num = 180f;
+                break;
+            default:
+                num = 30f;
+                break;
             }
-            float num = ((selectedAsset.construct != 0 && selectedAsset.construct != EConstruct.ROOF) ? ((selectedAsset.construct != EConstruct.RAMPART && selectedAsset.construct != EConstruct.WALL) ? 30f : 180f) : 90f);
             if (InputEx.GetKey(KeyCode.LeftShift))
             {
                 num *= -1f;
@@ -219,11 +378,15 @@ public class UseableHousingPlanner : Useable
         base.player.animator.play("Equip", smooth: true);
         if (base.channel.IsLocalPlayer)
         {
+            relevantBlueprints = new List<Blueprint>();
+            craftableBlueprints = new Dictionary<ItemStructureAsset, BlueprintStatus>();
+            blueprintStatusPool = new Stack<BlueprintStatus>();
             itemSearchResults = new List<PlayerInventorySearchResultV2>();
-            floors = new List<PlayerInventorySearchResultV2>();
-            roofs = new List<PlayerInventorySearchResultV2>();
-            walls = new List<PlayerInventorySearchResultV2>();
-            pillars = new List<PlayerInventorySearchResultV2>();
+            allOptions = new List<ItemOption>();
+            floors = new List<ItemOption>();
+            roofs = new List<ItemOption>();
+            walls = new List<ItemOption>();
+            pillars = new List<ItemOption>();
             itemAmounts = new Dictionary<ushort, int>();
             selectedItemBox = Glazier.Get().CreateBox();
             selectedItemBox.PositionOffset_Y = -50f;
@@ -242,16 +405,26 @@ public class UseableHousingPlanner : Useable
             selectedItemNameLabel.FontSize = ESleekFontSize.Large;
             selectedItemBox.AddChild(selectedItemNameLabel);
             selectedItemNameLabel.TextContrastContext = ETextContrastContext.InconspicuousBackdrop;
-            selectedItemQuantityLabel = Glazier.Get().CreateLabel();
-            selectedItemQuantityLabel.PositionOffset_X = 10f;
-            selectedItemQuantityLabel.SizeScale_X = 1f;
-            selectedItemQuantityLabel.SizeScale_Y = 1f;
-            selectedItemQuantityLabel.SizeOffset_X = -20f;
-            selectedItemQuantityLabel.TextAlignment = TextAnchor.MiddleLeft;
-            selectedItemQuantityLabel.FontSize = ESleekFontSize.Large;
-            selectedItemBox.AddChild(selectedItemQuantityLabel);
-            selectedItemQuantityLabel.TextContrastContext = ETextContrastContext.InconspicuousBackdrop;
-            Local local = Localization.read("/Player/Useable/PlayerUseableHousingPlanner.dat");
+            selectedItemAvailableAmountLabel = Glazier.Get().CreateLabel();
+            selectedItemAvailableAmountLabel.PositionOffset_X = 10f;
+            selectedItemAvailableAmountLabel.SizeScale_X = 1f;
+            selectedItemAvailableAmountLabel.SizeOffset_X = -20f;
+            selectedItemAvailableAmountLabel.SizeOffset_Y = 30f;
+            selectedItemAvailableAmountLabel.TextAlignment = TextAnchor.MiddleLeft;
+            selectedItemAvailableAmountLabel.FontSize = ESleekFontSize.Medium;
+            selectedItemBox.AddChild(selectedItemAvailableAmountLabel);
+            selectedItemAvailableAmountLabel.TextContrastContext = ETextContrastContext.InconspicuousBackdrop;
+            selectedItemCraftableAmountLabel = Glazier.Get().CreateLabel();
+            selectedItemCraftableAmountLabel.PositionOffset_X = 10f;
+            selectedItemCraftableAmountLabel.PositionOffset_Y = 20f;
+            selectedItemCraftableAmountLabel.SizeScale_X = 1f;
+            selectedItemCraftableAmountLabel.SizeOffset_X = -20f;
+            selectedItemCraftableAmountLabel.SizeOffset_Y = 30f;
+            selectedItemCraftableAmountLabel.TextAlignment = TextAnchor.MiddleLeft;
+            selectedItemCraftableAmountLabel.FontSize = ESleekFontSize.Medium;
+            selectedItemBox.AddChild(selectedItemCraftableAmountLabel);
+            selectedItemCraftableAmountLabel.TextContrastContext = ETextContrastContext.InconspicuousBackdrop;
+            localization = Localization.read("/Player/Useable/PlayerUseableHousingPlanner.dat");
             Bundle bundle = Bundles.getBundle("/Bundles/Textures/Player/Icons/Useable/PlayerUseableHousingPlanner/PlayerUseableHousingPlanner.unity3d");
             Texture texture = bundle.load<Texture>("RadialMenu");
             bundle.unload();
@@ -277,7 +450,7 @@ public class UseableHousingPlanner : Useable
             floorsLabel.SizeOffset_X = 256f;
             floorsLabel.SizeOffset_Y = 256f;
             floorsLabel.FontSize = ESleekFontSize.Large;
-            floorsLabel.Text = local.format("Floors");
+            floorsLabel.Text = localization.format("Floors");
             itemSelectionContainer.AddChild(floorsLabel);
             floorsLabel.TextContrastContext = ETextContrastContext.ColorfulBackdrop;
             noFloorItemsLabel = Glazier.Get().CreateLabel();
@@ -289,7 +462,7 @@ public class UseableHousingPlanner : Useable
             noFloorItemsLabel.SizeOffset_Y = 256f;
             noFloorItemsLabel.FontSize = ESleekFontSize.Medium;
             noFloorItemsLabel.TextColor = ESleekTint.BAD;
-            noFloorItemsLabel.Text = local.format("NoItems");
+            noFloorItemsLabel.Text = localization.format("NoItems");
             noFloorItemsLabel.IsVisible = false;
             itemSelectionContainer.AddChild(noFloorItemsLabel);
             noFloorItemsLabel.TextContrastContext = ETextContrastContext.ColorfulBackdrop;
@@ -310,7 +483,7 @@ public class UseableHousingPlanner : Useable
             roofsLabel.SizeOffset_X = 256f;
             roofsLabel.SizeOffset_Y = 256f;
             roofsLabel.FontSize = ESleekFontSize.Large;
-            roofsLabel.Text = local.format("Roofs");
+            roofsLabel.Text = localization.format("Roofs");
             itemSelectionContainer.AddChild(roofsLabel);
             roofsLabel.TextContrastContext = ETextContrastContext.ColorfulBackdrop;
             noRoofItemsLabel = Glazier.Get().CreateLabel();
@@ -322,7 +495,7 @@ public class UseableHousingPlanner : Useable
             noRoofItemsLabel.SizeOffset_Y = 256f;
             noRoofItemsLabel.FontSize = ESleekFontSize.Medium;
             noRoofItemsLabel.TextColor = ESleekTint.BAD;
-            noRoofItemsLabel.Text = local.format("NoItems");
+            noRoofItemsLabel.Text = localization.format("NoItems");
             noRoofItemsLabel.IsVisible = false;
             itemSelectionContainer.AddChild(noRoofItemsLabel);
             noRoofItemsLabel.TextContrastContext = ETextContrastContext.ColorfulBackdrop;
@@ -343,7 +516,7 @@ public class UseableHousingPlanner : Useable
             wallsLabel.SizeOffset_X = 256f;
             wallsLabel.SizeOffset_Y = 256f;
             wallsLabel.FontSize = ESleekFontSize.Large;
-            wallsLabel.Text = local.format("Walls");
+            wallsLabel.Text = localization.format("Walls");
             itemSelectionContainer.AddChild(wallsLabel);
             wallsLabel.TextContrastContext = ETextContrastContext.ColorfulBackdrop;
             noWallItemsLabel = Glazier.Get().CreateLabel();
@@ -355,7 +528,7 @@ public class UseableHousingPlanner : Useable
             noWallItemsLabel.SizeOffset_Y = 256f;
             noWallItemsLabel.FontSize = ESleekFontSize.Medium;
             noWallItemsLabel.TextColor = ESleekTint.BAD;
-            noWallItemsLabel.Text = local.format("NoItems");
+            noWallItemsLabel.Text = localization.format("NoItems");
             noWallItemsLabel.IsVisible = false;
             itemSelectionContainer.AddChild(noWallItemsLabel);
             noWallItemsLabel.TextContrastContext = ETextContrastContext.ColorfulBackdrop;
@@ -376,7 +549,7 @@ public class UseableHousingPlanner : Useable
             pillarsLabel.SizeOffset_X = 256f;
             pillarsLabel.SizeOffset_Y = 256f;
             pillarsLabel.FontSize = ESleekFontSize.Large;
-            pillarsLabel.Text = local.format("Pillars");
+            pillarsLabel.Text = localization.format("Pillars");
             itemSelectionContainer.AddChild(pillarsLabel);
             pillarsLabel.TextContrastContext = ETextContrastContext.ColorfulBackdrop;
             noPillarItemsLabel = Glazier.Get().CreateLabel();
@@ -388,10 +561,42 @@ public class UseableHousingPlanner : Useable
             noPillarItemsLabel.SizeOffset_Y = 256f;
             noPillarItemsLabel.FontSize = ESleekFontSize.Medium;
             noPillarItemsLabel.TextColor = ESleekTint.BAD;
-            noPillarItemsLabel.Text = local.format("NoItems");
+            noPillarItemsLabel.Text = localization.format("NoItems");
             noPillarItemsLabel.IsVisible = false;
             itemSelectionContainer.AddChild(noPillarItemsLabel);
             noPillarItemsLabel.TextContrastContext = ETextContrastContext.ColorfulBackdrop;
+            floorsMenu = new SleekCircularContainer(128f, MathF.PI * 3f / 4f);
+            floorsMenu.PositionScale_X = 0.5f;
+            floorsMenu.PositionScale_Y = 0.5f;
+            floorsMenu.PositionOffset_X = 50f;
+            floorsMenu.PositionOffset_Y = -306f;
+            floorsMenu.SizeOffset_X = 256f;
+            floorsMenu.SizeOffset_Y = 256f;
+            itemSelectionContainer.AddChild(floorsMenu);
+            roofsMenu = new SleekCircularContainer(128f, 3.926991f);
+            roofsMenu.PositionScale_X = 0.5f;
+            roofsMenu.PositionScale_Y = 0.5f;
+            roofsMenu.PositionOffset_X = 50f;
+            roofsMenu.PositionOffset_Y = 50f;
+            roofsMenu.SizeOffset_X = 256f;
+            roofsMenu.SizeOffset_Y = 256f;
+            itemSelectionContainer.AddChild(roofsMenu);
+            wallsMenu = new SleekCircularContainer(128f, MathF.PI / 4f);
+            wallsMenu.PositionScale_X = 0.5f;
+            wallsMenu.PositionScale_Y = 0.5f;
+            wallsMenu.PositionOffset_X = -306f;
+            wallsMenu.PositionOffset_Y = -306f;
+            wallsMenu.SizeOffset_X = 256f;
+            wallsMenu.SizeOffset_Y = 256f;
+            itemSelectionContainer.AddChild(wallsMenu);
+            pillarsMenu = new SleekCircularContainer(128f, 5.4977875f);
+            pillarsMenu.PositionScale_X = 0.5f;
+            pillarsMenu.PositionScale_Y = 0.5f;
+            pillarsMenu.PositionOffset_X = -306f;
+            pillarsMenu.PositionOffset_Y = 50f;
+            pillarsMenu.SizeOffset_X = 256f;
+            pillarsMenu.SizeOffset_Y = 256f;
+            itemSelectionContainer.AddChild(pillarsMenu);
             PlayerUI.message(EPlayerMessage.HOUSING_PLANNER_TUTORIAL, "");
         }
     }
@@ -401,7 +606,7 @@ public class UseableHousingPlanner : Useable
         if (base.channel.IsLocalPlayer)
         {
             SetItemSelectionMenuOpen(isOpen: false);
-            SetSelectedAsset(null);
+            DestroyPlacementPreview();
             PlayerUI.container.RemoveChild(selectedItemBox);
             PlayerUI.container.RemoveChild(itemSelectionContainer);
         }
@@ -416,6 +621,10 @@ public class UseableHousingPlanner : Useable
         if (base.player.inventory.doesSearchNeedRefresh(ref cachedSearchIndex))
         {
             RefreshAvailableItems();
+        }
+        if (Assets.HasCurrentAssetMappingChanged(ref cachedAssetListChangeCounter))
+        {
+            RefreshRelevantBlueprints();
         }
         if (InputEx.GetKeyUp(ControlsSettings.attach))
         {
@@ -449,26 +658,6 @@ public class UseableHousingPlanner : Useable
         }
         isItemSelectionMenuOpen = isOpen;
         PlayerUI.isLocked = isOpen;
-        if (floorsMenu != null)
-        {
-            itemSelectionContainer.RemoveChild(floorsMenu);
-            floorsMenu = null;
-        }
-        if (roofsMenu != null)
-        {
-            itemSelectionContainer.RemoveChild(roofsMenu);
-            roofsMenu = null;
-        }
-        if (wallsMenu != null)
-        {
-            itemSelectionContainer.RemoveChild(wallsMenu);
-            wallsMenu = null;
-        }
-        if (pillarsMenu != null)
-        {
-            itemSelectionContainer.RemoveChild(pillarsMenu);
-            pillarsMenu = null;
-        }
         if (isOpen)
         {
             PlayerLifeUI.close();
@@ -482,30 +671,59 @@ public class UseableHousingPlanner : Useable
         {
             return;
         }
+        RefreshAllCraftableBlueprints();
         floors.Clear();
         roofs.Clear();
         walls.Clear();
         pillars.Clear();
         foreach (PlayerInventorySearchResultV2 itemSearchResult in itemSearchResults)
         {
-            switch (itemSearchResult.GetAsset<ItemStructureAsset>().construct)
+            ItemStructureAsset asset = itemSearchResult.GetAsset<ItemStructureAsset>();
+            craftableBlueprints.TryGetValue(asset, out var value);
+            switch (asset.construct)
             {
             case EConstruct.FLOOR:
             case EConstruct.FLOOR_POLY:
-                floors.Add(itemSearchResult);
+                floors.Add(new ItemOption(asset, value));
                 break;
             case EConstruct.ROOF:
             case EConstruct.ROOF_POLY:
-                roofs.Add(itemSearchResult);
+                roofs.Add(new ItemOption(asset, value));
                 break;
             case EConstruct.WALL:
             case EConstruct.RAMPART:
-                walls.Add(itemSearchResult);
+                walls.Add(new ItemOption(asset, value));
                 break;
             case EConstruct.PILLAR:
             case EConstruct.POST:
-                pillars.Add(itemSearchResult);
+                pillars.Add(new ItemOption(asset, value));
                 break;
+            }
+        }
+        foreach (KeyValuePair<ItemStructureAsset, BlueprintStatus> craftableBlueprint in craftableBlueprints)
+        {
+            ItemStructureAsset key = craftableBlueprint.Key;
+            if (!itemAmounts.ContainsKey(key.id))
+            {
+                switch (key.construct)
+                {
+                case EConstruct.FLOOR:
+                case EConstruct.FLOOR_POLY:
+                    floors.Add(new ItemOption(key, craftableBlueprint.Value));
+                    break;
+                case EConstruct.ROOF:
+                case EConstruct.ROOF_POLY:
+                    roofs.Add(new ItemOption(key, craftableBlueprint.Value));
+                    break;
+                case EConstruct.WALL:
+                case EConstruct.RAMPART:
+                    walls.Add(new ItemOption(key, craftableBlueprint.Value));
+                    break;
+                case EConstruct.PILLAR:
+                case EConstruct.POST:
+                    pillars.Add(new ItemOption(key, craftableBlueprint.Value));
+                    break;
+                }
             }
         }
         floors.Sort(CompareItemNames);
@@ -516,105 +734,61 @@ public class UseableHousingPlanner : Useable
         noRoofItemsLabel.IsVisible = roofs.Count < 1;
         noWallItemsLabel.IsVisible = walls.Count < 1;
         noPillarItemsLabel.IsVisible = pillars.Count < 1;
-        floorsMenu = new SleekJars(128f, floors, MathF.PI * 3f / 4f);
-        floorsMenu.PositionScale_X = 0.5f;
-        floorsMenu.PositionScale_Y = 0.5f;
-        floorsMenu.PositionOffset_X = 50f;
-        floorsMenu.PositionOffset_Y = -306f;
-        floorsMenu.SizeOffset_X = 256f;
-        floorsMenu.SizeOffset_Y = 256f;
-        SleekJars sleekJars = floorsMenu;
-        sleekJars.onClickedJar = (ClickedJar)Delegate.Combine(sleekJars.onClickedJar, new ClickedJar(OnSelectedFloorItem));
-        itemSelectionContainer.AddChild(floorsMenu);
-        roofsMenu = new SleekJars(128f, roofs, 3.926991f);
-        roofsMenu.PositionScale_X = 0.5f;
-        roofsMenu.PositionScale_Y = 0.5f;
-        roofsMenu.PositionOffset_X = 50f;
-        roofsMenu.PositionOffset_Y = 50f;
-        roofsMenu.SizeOffset_X = 256f;
-        roofsMenu.SizeOffset_Y = 256f;
-        SleekJars sleekJars2 = roofsMenu;
-        sleekJars2.onClickedJar = (ClickedJar)Delegate.Combine(sleekJars2.onClickedJar, new ClickedJar(OnSelectedRoofItem));
-        itemSelectionContainer.AddChild(roofsMenu);
-        wallsMenu = new SleekJars(128f, walls, MathF.PI / 4f);
-        wallsMenu.PositionScale_X = 0.5f;
-        wallsMenu.PositionScale_Y = 0.5f;
-        wallsMenu.PositionOffset_X = -306f;
-        wallsMenu.PositionOffset_Y = -306f;
-        wallsMenu.SizeOffset_X = 256f;
-        wallsMenu.SizeOffset_Y = 256f;
-        SleekJars sleekJars3 = wallsMenu;
-        sleekJars3.onClickedJar = (ClickedJar)Delegate.Combine(sleekJars3.onClickedJar, new ClickedJar(OnSelectedWallItem));
-        itemSelectionContainer.AddChild(wallsMenu);
-        pillarsMenu = new SleekJars(128f, pillars, 5.4977875f);
-        pillarsMenu.PositionScale_X = 0.5f;
-        pillarsMenu.PositionScale_Y = 0.5f;
-        pillarsMenu.PositionOffset_X = -306f;
-        pillarsMenu.PositionOffset_Y = 50f;
-        pillarsMenu.SizeOffset_X = 256f;
-        pillarsMenu.SizeOffset_Y = 256f;
-        SleekJars sleekJars4 = pillarsMenu;
-        sleekJars4.onClickedJar = (ClickedJar)Delegate.Combine(sleekJars4.onClickedJar, new ClickedJar(OnSelectedPillarItem));
-        itemSelectionContainer.AddChild(pillarsMenu);
+        PopulateCircularMenu(floorsMenu, floors);
+        PopulateCircularMenu(roofsMenu, roofs);
+        PopulateCircularMenu(wallsMenu, walls);
+        PopulateCircularMenu(pillarsMenu, pillars);
     }
 
-    private void OnSelectedFloorItem(SleekJars jars, int index)
+    private void PopulateCircularMenu(SleekCircularContainer container, List<ItemOption> options)
     {
-        ItemStructureAsset asset = floors[index].GetAsset<ItemStructureAsset>();
-        SetSelectedAsset(asset);
+        container.RemoveAllChildren();
+        foreach (ItemOption option in options)
+        {
+            SleekHousingPlannerOption sleek = new SleekHousingPlannerOption(this, option);
+            container.AddChild(sleek);
+        }
+        container.UpdateLayout();
     }
 
-    private void OnSelectedRoofItem(SleekJars jars, int index)
+    private void DestroyPlacementPreview()
     {
-        ItemStructureAsset asset = roofs[index].GetAsset<ItemStructureAsset>();
-        SetSelectedAsset(asset);
-    }
-
-    private void OnSelectedWallItem(SleekJars jars, int index)
-    {
-        ItemStructureAsset asset = walls[index].GetAsset<ItemStructureAsset>();
-        SetSelectedAsset(asset);
-    }
-
-    private void OnSelectedPillarItem(SleekJars jars, int index)
-    {
-        ItemStructureAsset asset = pillars[index].GetAsset<ItemStructureAsset>();
-        SetSelectedAsset(asset);
-    }
-
-    private void SetSelectedAsset(ItemStructureAsset selectedAsset)
-    {
-        this.selectedAsset = selectedAsset;
         if (placementPreviewTransform != null)
         {
             UnityEngine.Object.Destroy(placementPreviewTransform.gameObject);
             placementPreviewTransform = null;
         }
+    }
+
+    private void ClearSelectedOption()
+    {
+        SetSelectedOption(default(ItemOption));
+    }
+
+    private void SetSelectedOption(ItemOption selectedOption)
+    {
+        this.selectedOption = selectedOption;
+        DestroyPlacementPreview();
         isPlacementPreviewValid = false;
         foundationPositionOffset = 0f;
         customRotationOffset = 0f;
         animatedRotationOffset = 0f;
-        if (selectedAsset != null)
+        if (HasSelection)
         {
-            placementPreviewTransform = UseableHousingUtils.InstantiatePlacementPreview(selectedAsset);
-            selectedItemNameLabel.Text = selectedAsset.itemName;
-            selectedItemNameLabel.TextColor = ItemTool.getRarityColorUI(selectedAsset.rarity);
-            if (itemAmounts.TryGetValue(selectedAsset.id, out var value))
-            {
-                selectedItemQuantityLabel.Text = "x" + value;
-                selectedItemQuantityLabel.IsVisible = true;
-            }
-            else
-            {
-                selectedItemQuantityLabel.IsVisible = false;
-            }
+            placementPreviewTransform = UseableHousingUtils.InstantiatePlacementPreview(selectedOption.asset);
+            selectedItemNameLabel.Text = selectedOption.asset.itemName;
+            selectedItemNameLabel.TextColor = ItemTool.getRarityColorUI(selectedOption.asset.rarity);
+            itemAmounts.TryGetValue(selectedOption.asset.id, out var value);
+            int num = selectedOption.blueprintStatus?.EstimateFirstOutputMaxAmount() ?? 0;
+            selectedItemAvailableAmountLabel.Text = localization.format("AvailableAmount", value);
+            selectedItemCraftableAmountLabel.Text = localization.format("CraftableAmount", num);
         }
-        selectedItemBox.IsVisible = selectedAsset != null;
+        selectedItemBox.IsVisible = HasSelection;
     }
 
     private bool UpdatePendingPlacement()
     {
-        if (!UseableHousingUtils.FindPlacement(selectedAsset, base.player, customRotationOffset, foundationPositionOffset, out pendingPlacementPosition, out pendingPlacementYaw))
+        if (!UseableHousingUtils.FindPlacement(selectedOption.asset, base.player, customRotationOffset, foundationPositionOffset, out pendingPlacementPosition, out pendingPlacementYaw))
         {
             return false;
         }
@@ -623,6 +797,85 @@ public class UseableHousingPlanner : Useable
             return false;
         }
         return true;
+    }
+
+    /// <summary>
+    /// Search loaded assets for blueprints that output a single structure item and are
+    /// available on the current map.
+    /// </summary>
+    private void RefreshRelevantBlueprints()
+    {
+        if (!Level.IsCraftingAllowedByLevel)
+        {
+            return;
+        }
+        PlayerCrafting crafting = base.player.crafting;
+        relevantBlueprints.Clear();
+        foreach (IBlueprintOwner blueprintOwner in PlayerDashboardCraftingUI.GetBlueprintOwners())
+        {
+            foreach (Blueprint blueprint in blueprintOwner.GetBlueprints())
+            {
+                if (blueprint.outputs != null && blueprint.outputs.Length == 1 && blueprint.outputs[0].FindItemAsset<ItemStructureAsset>() != null && !crafting.IsBlueprintPermanentlyDisabled(blueprint))
+                {
+                    relevantBlueprints.Add(blueprint);
+                }
+            }
+        }
+    }
+
+    /// <summary>
+    /// Update status of all relevant blueprints.
+    /// </summary>
+    private void RefreshAllCraftableBlueprints()
+    {
+        foreach (BlueprintStatus value in craftableBlueprints.Values)
+        {
+            blueprintStatusPool.Push(value);
+        }
+        craftableBlueprints.Clear();
+        PlayerCrafting crafting = base.player.crafting;
+        foreach (Blueprint relevantBlueprint in relevantBlueprints)
+        {
+            ItemStructureAsset itemStructureAsset = relevantBlueprint.outputs[0].FindItemAsset<ItemStructureAsset>();
+            if (itemStructureAsset == null || craftableBlueprints.ContainsKey(itemStructureAsset))
+            {
+                continue;
+            }
+            BlueprintStatus blueprintStatus = CreateBlueprintStatus();
+            blueprintStatus.blueprint = relevantBlueprint;
+            UpdateBlueprintStatusParameters updateBlueprintStatusParameters = default(UpdateBlueprintStatusParameters);
+            updateBlueprintStatusParameters.status = blueprintStatus;
+            updateBlueprintStatusParameters.shouldExitEarly = true;
+            UpdateBlueprintStatusParameters p = updateBlueprintStatusParameters;
+            crafting.UpdateBlueprintStaticStatus(in p, bypassWorkstationRequirements: true);
+            if (!blueprintStatus.IsCraftable)
+            {
+                blueprintStatusPool.Push(blueprintStatus);
+                continue;
+            }
+            crafting.UpdateBlueprintDynamicStatus(in p);
+            if (!blueprintStatus.IsCraftable)
+            {
+                blueprintStatusPool.Push(blueprintStatus);
+            }
+            else
+            {
+                craftableBlueprints.Add(itemStructureAsset, blueprintStatus);
+            }
+        }
+    }
+
+    /// <summary>
+    /// Get a blank status from the pool or construct a new one.
+    /// </summary>
+    private BlueprintStatus CreateBlueprintStatus()
+    {
+        if (blueprintStatusPool.TryPop(out var result))
+        {
+            result.Reset();
+            return result;
+        }
+        return new BlueprintStatus();
     }
 
     /// <summary>
@@ -643,26 +896,37 @@ public class UseableHousingPlanner : Useable
             }
             itemAmounts[playerInventorySearchResultV.Jar.item.id] = value + playerInventorySearchResultV.Jar.item.amount;
         }
-        if (selectedAsset != null)
+        if (HasSelection)
         {
-            if (itemAmounts.TryGetValue(selectedAsset.id, out var value2))
+            itemAmounts.TryGetValue(selectedOption.asset.id, out var value2);
+            int num2 = 0;
+            if (selectedOption.blueprintStatus != null)
             {
-                selectedItemQuantityLabel.Text = "x" + value2;
+                selectedOption.blueprintStatus.ResetDynamicStatus();
+                UpdateBlueprintStatusParameters updateBlueprintStatusParameters = default(UpdateBlueprintStatusParameters);
+                updateBlueprintStatusParameters.status = selectedOption.blueprintStatus;
+                updateBlueprintStatusParameters.shouldExitEarly = true;
+                UpdateBlueprintStatusParameters p = updateBlueprintStatusParameters;
+                base.player.crafting.UpdateBlueprintDynamicStatus(in p);
+                num2 = selectedOption.blueprintStatus.EstimateFirstOutputMaxAmount();
+            }
+            if (value2 > 0 || num2 > 0)
+            {
+                selectedItemAvailableAmountLabel.Text = localization.format("AvailableAmount", value2);
+                selectedItemCraftableAmountLabel.Text = localization.format("CraftableAmount", num2);
             }
             else
             {
-                SetSelectedAsset(null);
+                ClearSelectedOption();
             }
         }
     }
 
-    private int CompareItemNames(PlayerInventorySearchResultV2 lhs, PlayerInventorySearchResultV2 rhs)
+    private int CompareItemNames(ItemOption lhs, ItemOption rhs)
     {
-        ItemAsset asset = lhs.GetAsset();
-        ItemAsset asset2 = rhs.GetAsset();
-        if (asset != null && asset2 != null)
+        if (lhs.asset != null && rhs.asset != null)
         {
-            return asset.itemName.CompareTo(asset2.itemName);
+            return lhs.asset.itemName.CompareTo(rhs.asset.itemName);
         }
         return 0;
     }

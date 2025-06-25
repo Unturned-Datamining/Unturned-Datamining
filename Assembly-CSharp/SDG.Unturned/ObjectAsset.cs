@@ -18,11 +18,16 @@ public class ObjectAsset : Asset
     /// <summary>
     /// Prevents calling getOrLoad redundantly if asset does not exist.
     /// </summary>
-    private bool hasLoadedModel;
+    private bool hasCalledLoadModel;
 
     private IDeferredAsset<GameObject> clientModel;
 
     private IDeferredAsset<GameObject> legacyServerModel;
+
+    /// <summary>
+    /// If set, overrides model prefab in the level editor. 
+    /// </summary>
+    private IDeferredAsset<GameObject> editorModel;
 
     public IDeferredAsset<GameObject> skyboxGameObject;
 
@@ -234,6 +239,11 @@ public class ObjectAsset : Asset
     public bool ShouldLoadNavInEditor { get; private set; }
 
     /// <summary>
+    /// If true, object is not loaded when clutter is turned off in graphics menu.
+    /// </summary>
+    public bool IsClutter { get; set; }
+
+    /// <summary>
     /// If true, zombies can attack this object if it's blocking them. Defaults to false.
     /// </summary>
     public bool RubbleCanZombiesDamage { get; protected set; }
@@ -265,11 +275,19 @@ public class ObjectAsset : Asset
 
     public override EAssetType assetCategory => EAssetType.OBJECT;
 
-    public GameObject GetOrLoadModel()
+    public GameObject GetOrLoadModel(bool isEditor = false)
     {
-        if (!hasLoadedModel)
+        if (isEditor && editorModel != null)
         {
-            hasLoadedModel = true;
+            GameObject orLoad = editorModel.getOrLoad();
+            if (orLoad != null)
+            {
+                return orLoad;
+            }
+        }
+        if (!hasCalledLoadModel)
+        {
+            hasCalledLoadModel = true;
             if (legacyServerModel != null)
             {
                 loadedModel = legacyServerModel.getOrLoad();
@@ -626,14 +644,14 @@ public class ObjectAsset : Asset
             {
                 loadedModel = Resources.Load<GameObject>("Characters/NPC_Client");
             }
-            hasLoadedModel = true;
+            hasCalledLoadModel = true;
             useScale = true;
             interactability = EObjectInteractability.NPC;
             chart = EObjectChart.IGNORE;
         }
         else if (type == EObjectType.DECAL)
         {
-            hasLoadedModel = true;
+            hasCalledLoadModel = true;
             float num = p.data.ParseFloat("Decal_X", 1f);
             float num2 = p.data.ParseFloat("Decal_Y", 1f);
             if (Dedicator.IsDedicatedServer)
@@ -829,6 +847,10 @@ public class ObjectAsset : Asset
                 p.bundle.loadDeferred("Clip", out legacyServerModel, (LoadedAssetDeferredCallback<GameObject>)OnServerModelLoaded);
             }
             p.bundle.loadDeferred("Object", out clientModel, (LoadedAssetDeferredCallback<GameObject>)OnClientModelLoaded);
+            if (p.data.ParseBool("Has_Editor_Prefab"))
+            {
+                p.bundle.loadDeferred("Editor", out editorModel, (LoadedAssetDeferredCallback<GameObject>)null);
+            }
             if (!Dedicator.IsDedicatedServer)
             {
                 p.bundle.loadDeferred("Skybox", out skyboxGameObject, (LoadedAssetDeferredCallback<GameObject>)null);
@@ -915,6 +937,7 @@ public class ObjectAsset : Asset
         ShouldLoadNavInEditor = p.data.ParseBool("Load_Nav_In_Editor", defaultValue2);
         visibilityConditionsList.Parse(p.data, p.localization, this, "Conditions", "Condition_");
         conditions = visibilityConditionsList.conditions;
+        IsClutter = p.data.ParseBool("Is_Clutter");
     }
 
     [Obsolete("Removed shouldSend parameter")]

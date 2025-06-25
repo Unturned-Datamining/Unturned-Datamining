@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
 using System.Globalization;
+using Steamworks;
+using Unturned.SystemEx;
 
 namespace SDG.Unturned;
 
@@ -8,50 +10,48 @@ public class CommandLine
 {
     public static GetCommands onGetCommands;
 
+    internal static string commandLineOverride;
+
     /// <summary>
+    /// Full argument string. Defaults to Environment.CommandLine.
+    ///
+    /// Nelson 2025-06-17: By default, Steam shows a warning nowadays when the game is launched with externally-provided
+    /// command-line arguments. For example, when joining a friend via rich presence. The solution is to use the arg
+    /// string provided by SteamApps.GetLaunchCommandLine, which also supports *changing* the arguments while the app is
+    /// running. If the environment-provided command-line doesn't contain it, the game will append Steam's launch options.
+    ///
+    /// Note: Steam override isn't applied until Steam is initialized. (after Dedicator and ModuleManager) Please refer to
+    /// Setup.cs for the full initialization order.
+    /// </summary>
+    public static string Get()
+    {
+        return commandLineOverride;
+    }
+
+    /// <summary>
+    /// Nelson 2025-06-16: Steam doesn't handle "server code" connect URL, but we now support
+    /// it for rich presence joins via server code for easier inviting friends to private servers.
+    ///
     /// When Steam parses a steam://connect/ip:port URL it requires the query port (e.g. 27015).
     /// </summary>
-    public static bool TryGetSteamConnect(string line, out uint ip, out ushort queryPort, out string pass)
+    public static bool TryGetSteamConnect(string line, out uint ip, out ushort queryPort, out string pass, out CSteamID serverCode)
     {
         ip = 0u;
         queryPort = 0;
         pass = "";
-        int num = line.ToLower().IndexOf("+connect ");
-        if (num != -1)
+        serverCode = CSteamID.Nil;
+        TryParseValue(line, "+password", out pass);
+        if (!TryParseValue(line, "+connect", out var value))
         {
-            int num2 = line.IndexOf(':', num + 9);
-            string text = line.Substring(num + 9, num2 - num - 9);
-            if (Parser.checkIP(text))
-            {
-                ip = Parser.getUInt32FromIP(text);
-            }
-            else if (!uint.TryParse(text, NumberStyles.Any, CultureInfo.InvariantCulture, out ip))
-            {
-                return false;
-            }
-            int num3 = line.IndexOf(' ', num2 + 1);
-            if (num3 == -1)
-            {
-                if (!ushort.TryParse(line.Substring(num2 + 1, line.Length - num2 - 1), NumberStyles.Any, CultureInfo.InvariantCulture, out queryPort))
-                {
-                    return false;
-                }
-                int num4 = line.ToLower().IndexOf("+password ");
-                if (num4 != -1)
-                {
-                    pass = line.Substring(num4 + 10, line.Length - num4 - 10);
-                }
-                return true;
-            }
-            if (!ushort.TryParse(line.Substring(num2 + 1, num3 - num2 - 1), NumberStyles.Any, CultureInfo.InvariantCulture, out queryPort))
-            {
-                return false;
-            }
-            int num5 = line.ToLower().IndexOf("+password ");
-            if (num5 != -1)
-            {
-                pass = line.Substring(num5 + 10, line.Length - num5 - 10);
-            }
+            return false;
+        }
+        if (ulong.TryParse(value, out serverCode.m_SteamID))
+        {
+            return true;
+        }
+        if (IPv4Address.TryParseWithOptionalPort(value, out ip, out ushort? optionalPort) && optionalPort.HasValue)
+        {
+            queryPort = optionalPort.Value;
             return true;
         }
         return false;
@@ -138,45 +138,45 @@ public class CommandLine
     {
         visibility = ESteamServerVisibility.LAN;
         id = "";
-        string commandLine = Environment.CommandLine;
-        int num = commandLine.ToLower().IndexOf("+secureserver", StringComparison.OrdinalIgnoreCase);
+        string text = Get();
+        int num = text.ToLower().IndexOf("+secureserver", StringComparison.OrdinalIgnoreCase);
         if (num != -1)
         {
             visibility = ESteamServerVisibility.Internet;
-            id = commandLine.Substring(num + 14, commandLine.Length - num - 14);
+            id = text.Substring(num + 14, text.Length - num - 14);
             if (id == "Singleplayer")
             {
                 return false;
             }
             return true;
         }
-        int num2 = commandLine.ToLower().IndexOf("+insecureserver", StringComparison.OrdinalIgnoreCase);
+        int num2 = text.ToLower().IndexOf("+insecureserver", StringComparison.OrdinalIgnoreCase);
         if (num2 != -1)
         {
             visibility = ESteamServerVisibility.Internet;
-            id = commandLine.Substring(num2 + 16, commandLine.Length - num2 - 16);
+            id = text.Substring(num2 + 16, text.Length - num2 - 16);
             if (id == "Singleplayer")
             {
                 return false;
             }
             return true;
         }
-        int num3 = commandLine.ToLower().IndexOf("+internetserver", StringComparison.OrdinalIgnoreCase);
+        int num3 = text.ToLower().IndexOf("+internetserver", StringComparison.OrdinalIgnoreCase);
         if (num3 != -1)
         {
             visibility = ESteamServerVisibility.Internet;
-            id = commandLine.Substring(num3 + 16, commandLine.Length - num3 - 16);
+            id = text.Substring(num3 + 16, text.Length - num3 - 16);
             if (id == "Singleplayer")
             {
                 return false;
             }
             return true;
         }
-        int num4 = commandLine.ToLower().IndexOf("+lanserver", StringComparison.OrdinalIgnoreCase);
+        int num4 = text.ToLower().IndexOf("+lanserver", StringComparison.OrdinalIgnoreCase);
         if (num4 != -1)
         {
             visibility = ESteamServerVisibility.LAN;
-            id = commandLine.Substring(num4 + 11, commandLine.Length - num4 - 11);
+            id = text.Substring(num4 + 11, text.Length - num4 - 11);
             if (id == "Singleplayer")
             {
                 return false;
@@ -309,6 +309,11 @@ public class CommandLine
 
     public static bool TryParseValue(string key, out string value)
     {
-        return TryParseValue(Environment.CommandLine, key, out value);
+        return TryParseValue(Get(), key, out value);
+    }
+
+    static CommandLine()
+    {
+        commandLineOverride = Environment.CommandLine;
     }
 }

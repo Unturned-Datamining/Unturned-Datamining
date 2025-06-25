@@ -77,6 +77,7 @@ public class UnturnedNexus : IModuleNexus
         Assets.assetTypes.addType("Redirector", typeof(RedirectorAsset));
         Assets.assetTypes.addType("ServerCuration", typeof(ServerListCurationAsset));
         Assets.assetTypes.addType("Tag", typeof(TagAsset));
+        Assets.assetTypes.addType("Road", typeof(RoadAsset));
         Assets.useableTypes.addType("Barricade", typeof(UseableBarricade));
         Assets.useableTypes.addType("Battery_Vehicle", typeof(UseableVehicleBattery));
         Assets.useableTypes.addType("Carjack", typeof(UseableCarjack));
@@ -168,6 +169,7 @@ public class UnturnedNexus : IModuleNexus
         Assets.assetTypes.removeType("Redirector");
         Assets.assetTypes.removeType("ServerCuration");
         Assets.assetTypes.removeType("Tag");
+        Assets.assetTypes.removeType("Road");
         Assets.useableTypes.removeType("Barricade");
         Assets.useableTypes.removeType("Carjack");
         Assets.useableTypes.removeType("Clothing");

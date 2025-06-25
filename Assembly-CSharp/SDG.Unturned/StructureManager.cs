@@ -63,10 +63,6 @@ public class StructureManager : SteamCaller
 
     internal static HousingConnections housingConnections;
 
-    private static List<StructureInstantiationParameters> pendingInstantiations;
-
-    private static List<StructureInstantiationParameters> instantiationsToInsert;
-
     private static List<StructureRegion> regionsPendingDestroy;
 
     private static uint instanceCount;
@@ -86,12 +82,7 @@ public class StructureManager : SteamCaller
     /// </summary>
     private Dictionary<int, Stack<GameObject>> pool;
 
-    private Stopwatch instantiationTimer = new Stopwatch();
-
-    /// <summary>
-    /// Instantiate at least this many structures per frame even if we exceed our time budget.
-    /// </summary>
-    private const int MIN_INSTANTIATIONS_PER_FRAME = 5;
+    private Stopwatch destroyTimer = new Stopwatch();
 
     private const int MIN_DESTROY_PER_FRAME = 10;
 
@@ -467,7 +458,7 @@ public class StructureManager : SteamCaller
         StructureDrop structureDrop = NetIdRegistry.Get<StructureDrop>(netId);
         if (structureDrop == null)
         {
-            CancelInstantiationByNetId(netId);
+            PlaceableInstantiationManager.CancelInstantiationByNetId(netId, 2u);
         }
         else
         {
@@ -543,7 +534,7 @@ public class StructureManager : SteamCaller
         {
             StructureRegion region = regions[x, y];
             DestroyAllInRegion(region);
-            CancelInstantiationsInRegion(region);
+            PlaceableInstantiationManager.CancelInstantiationsInRegion(region, 2u);
         }
     }
 
@@ -670,23 +661,19 @@ public class StructureManager : SteamCaller
     {
         if (tryGetRegion(x, y, out var region) && (Provider.isServer || region.isNetworked))
         {
-            float sortOrder = 0f;
-            if (MainCamera.instance != null)
-            {
-                sortOrder = (MainCamera.instance.transform.position - point).sqrMagnitude;
-            }
-            StructureInstantiationParameters item = default(StructureInstantiationParameters);
-            item.region = region;
-            item.assetId = id;
-            item.position = point;
-            item.rotation = rotation;
-            item.hp = 100;
-            item.owner = owner;
-            item.group = group;
-            item.netId = netId;
-            item.sortOrder = sortOrder;
-            NetInvocationDeferralRegistry.MarkDeferred(item.netId, 2u);
-            pendingInstantiations.Insert(pendingInstantiations.FindInsertionIndex(item), item);
+            PlaceableInstantiationParameters instantiation = default(PlaceableInstantiationParameters);
+            instantiation.type = EPlaceableInstantiationType.Structure;
+            instantiation.region = region;
+            instantiation.assetId = id;
+            instantiation.position = point;
+            instantiation.rotation = rotation;
+            instantiation.hp = 100;
+            instantiation.owner = owner;
+            instantiation.group = group;
+            instantiation.netId = netId;
+            instantiation.UpdateSortOrder();
+            NetInvocationDeferralRegistry.MarkDeferred(instantiation.netId, 2u);
+            PlaceableInstantiationManager.AddInstantiation(ref instantiation);
         }
     }
 
@@ -723,23 +710,23 @@ public class StructureManager : SteamCaller
         if (value4 > 0)
         {
             reader.ReadFloat(out var value5);
-            instantiationsToInsert.Clear();
             for (ushort num = 0; num < value4; num++)
             {
-                StructureInstantiationParameters item = default(StructureInstantiationParameters);
-                item.region = region;
-                item.sortOrder = value5;
-                reader.ReadGuid(out item.assetId);
-                reader.ReadClampedVector3(out item.position, 13, 11);
-                reader.ReadSpecialYawOrQuaternion(out item.rotation, 23);
-                reader.ReadUInt8(out item.hp);
-                reader.ReadUInt64(out item.owner);
-                reader.ReadUInt64(out item.group);
-                reader.ReadNetId(out item.netId);
-                NetInvocationDeferralRegistry.MarkDeferred(item.netId, 2u);
-                instantiationsToInsert.Add(item);
+                PlaceableInstantiationParameters instantiation = default(PlaceableInstantiationParameters);
+                instantiation.type = EPlaceableInstantiationType.Structure;
+                instantiation.region = region;
+                instantiation.sortOrder = value5;
+                instantiation.UpdateSortOrder();
+                reader.ReadGuid(out instantiation.assetId);
+                reader.ReadClampedVector3(out instantiation.position, 13, 11);
+                reader.ReadSpecialYawOrQuaternion(out instantiation.rotation, 23);
+                reader.ReadUInt8(out instantiation.hp);
+                reader.ReadUInt64(out instantiation.owner);
+                reader.ReadUInt64(out instantiation.group);
+                reader.ReadNetId(out instantiation.netId);
+                NetInvocationDeferralRegistry.MarkDeferred(instantiation.netId, 2u);
+                PlaceableInstantiationManager.AddInstantiation(ref instantiation);
             }
-            pendingInstantiations.InsertRange(pendingInstantiations.FindInsertionIndex(instantiationsToInsert[0]), instantiationsToInsert);
         }
         Level.isLoadingStructures = false;
     }
@@ -765,7 +752,7 @@ public class StructureManager : SteamCaller
                 int num3 = 0;
                 while (num2 < region.drops.Count)
                 {
-                    num3 += 44;
+                    num3 += 49;
                     num2++;
                     if (num3 > Block.BUFFER_SIZE / 2)
                     {
@@ -849,8 +836,6 @@ public class StructureManager : SteamCaller
     /// </summary>
     internal static void ClearNetworkStuff()
     {
-        pendingInstantiations = new List<StructureInstantiationParameters>();
-        instantiationsToInsert = new List<StructureInstantiationParameters>();
         regionsPendingDestroy = new List<StructureRegion>();
     }
 
@@ -899,7 +884,7 @@ public class StructureManager : SteamCaller
                             regions[b, b2].isPendingDestroy = true;
                             regionsPendingDestroy.Add(regions[b, b2]);
                         }
-                        CancelInstantiationsInRegion(regions[b, b2]);
+                        PlaceableInstantiationManager.CancelInstantiationsInRegion(regions[b, b2], 2u);
                         regions[b, b2].isNetworked = false;
                     }
                 }
@@ -1187,31 +1172,6 @@ public class StructureManager : SteamCaller
         }
     }
 
-    private static void CancelInstantiationsInRegion(StructureRegion region)
-    {
-        for (int num = pendingInstantiations.Count - 1; num >= 0; num--)
-        {
-            if (pendingInstantiations[num].region == region)
-            {
-                NetInvocationDeferralRegistry.Cancel(pendingInstantiations[num].netId, 2u);
-                pendingInstantiations.RemoveAt(num);
-            }
-        }
-    }
-
-    private static void CancelInstantiationByNetId(NetId netId)
-    {
-        for (int num = pendingInstantiations.Count - 1; num >= 0; num--)
-        {
-            if (pendingInstantiations[num].netId == netId)
-            {
-                NetInvocationDeferralRegistry.Cancel(netId, 2u);
-                pendingInstantiations.RemoveAt(num);
-                break;
-            }
-        }
-    }
-
     internal void DestroyOrReleaseStructure(StructureDrop drop)
     {
         try
@@ -1236,50 +1196,38 @@ public class StructureManager : SteamCaller
         }
     }
 
+    internal static void HandleInstantiation(ref PlaceableInstantiationParameters instantiation)
+    {
+        StructureRegion region = (StructureRegion)instantiation.region;
+        if (instance.spawnStructure(region, instantiation.assetId, instantiation.position, instantiation.rotation, instantiation.hp, instantiation.owner, instantiation.group, instantiation.netId) != null)
+        {
+            NetInvocationDeferralRegistry.Invoke(instantiation.netId, 2u);
+        }
+        else
+        {
+            NetInvocationDeferralRegistry.Cancel(instantiation.netId, 2u);
+        }
+    }
+
     private void Update()
     {
         if (MainCamera.instance != null)
         {
             housingConnections.DrawGizmos();
         }
-        if (!Provider.isConnected)
+        if (!Provider.isConnected || regionsPendingDestroy == null || regionsPendingDestroy.Count <= 0)
         {
             return;
         }
-        if (pendingInstantiations != null && pendingInstantiations.Count > 0)
-        {
-            instantiationTimer.Restart();
-            int num = 0;
-            do
-            {
-                StructureInstantiationParameters structureInstantiationParameters = pendingInstantiations[num];
-                if (spawnStructure(structureInstantiationParameters.region, structureInstantiationParameters.assetId, structureInstantiationParameters.position, structureInstantiationParameters.rotation, structureInstantiationParameters.hp, structureInstantiationParameters.owner, structureInstantiationParameters.group, structureInstantiationParameters.netId) != null)
-                {
-                    NetInvocationDeferralRegistry.Invoke(structureInstantiationParameters.netId, 2u);
-                }
-                else
-                {
-                    NetInvocationDeferralRegistry.Cancel(structureInstantiationParameters.netId, 2u);
-                }
-                num++;
-            }
-            while (num < pendingInstantiations.Count && (instantiationTimer.ElapsedMilliseconds < 1 || num < 5));
-            pendingInstantiations.RemoveRange(0, num);
-            instantiationTimer.Stop();
-        }
-        if (regionsPendingDestroy == null || regionsPendingDestroy.Count <= 0)
-        {
-            return;
-        }
-        instantiationTimer.Restart();
-        int num2 = 0;
+        destroyTimer.Restart();
+        int num = 0;
         do
         {
             StructureRegion tail = regionsPendingDestroy.GetTail();
             if (tail.drops.Count > 0)
             {
                 tail.DestroyTail();
-                num2++;
+                num++;
                 if (tail.drops.Count < 1)
                 {
                     tail.isPendingDestroy = false;
@@ -1292,7 +1240,7 @@ public class StructureManager : SteamCaller
                 regionsPendingDestroy.RemoveTail();
             }
         }
-        while (regionsPendingDestroy.Count > 0 && (instantiationTimer.ElapsedMilliseconds < 1 || num2 < 10));
-        instantiationTimer.Stop();
+        while (regionsPendingDestroy.Count > 0 && (destroyTimer.ElapsedMilliseconds < 1 || num < 10));
+        destroyTimer.Stop();
     }
 }

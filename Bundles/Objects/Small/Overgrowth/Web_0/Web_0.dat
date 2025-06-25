@@ -7,3 +7,6 @@ Rubble_Reset 60
 Rubble_Health 1
 Rubble_Effect 59
 Has_Clip_Prefab false
+
+// Not clutter because this is the non-auto-holiday variant.
+// Likely decorative in many cases, but helps themeing in caves.

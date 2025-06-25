@@ -247,6 +247,7 @@ public class MenuPlaySingleplayerUI
 
     private static void onClickedPlayButton(ISleekElement button)
     {
+        Level.UpdateLevelReference(ref selectedLevel);
         if (selectedLevel != null)
         {
             Provider.map = selectedLevel.name;

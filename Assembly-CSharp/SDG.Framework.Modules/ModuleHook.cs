@@ -46,6 +46,11 @@ public class ModuleHook : MonoBehaviour
     /// </summary>
     private static CommandLineFlag shouldSearchModulesForDLLs = new CommandLineFlag(defaultValue: true, "-NoVanillaAssemblySearch");
 
+    /// <summary>
+    /// If set, search for .dll and .module files in this directory instead of in Unturned/Modules.
+    /// </summary>
+    private static CommandLineString modulesPathOverride = new CommandLineString("-ModulesPath");
+
     public static List<Module> modules { get; protected set; }
 
     /// <summary>
@@ -398,13 +403,16 @@ public class ModuleHook : MonoBehaviour
     /// <returns>Root folder for modules.</returns>
     private string getModulesRootPath()
     {
-        string pATH = ReadWrite.PATH;
-        pATH += "/Modules";
-        if (!Directory.Exists(pATH))
+        if (modulesPathOverride.hasValue)
         {
-            Directory.CreateDirectory(pATH);
+            return modulesPathOverride.value;
         }
-        return pATH;
+        string text = Path.Join(ReadWrite.PATH, "Modules");
+        if (!Directory.Exists(text))
+        {
+            Directory.CreateDirectory(text);
+        }
+        return text;
     }
 
     /// <summary>
@@ -450,6 +458,7 @@ public class ModuleHook : MonoBehaviour
     {
         List<ModuleConfig> list = new List<ModuleConfig>();
         string modulesRootPath = getModulesRootPath();
+        UnturnedLog.info("Looking for module files in: " + modulesRootPath);
         findModules(modulesRootPath, list);
         return list;
     }
@@ -613,19 +622,19 @@ public class ModuleHook : MonoBehaviour
 
     private static bool isModuleDisabledByCommandLine(string moduleName)
     {
-        string commandLine = Environment.CommandLine;
-        int num = commandLine.IndexOf(moduleName, StringComparison.OrdinalIgnoreCase);
+        string text = CommandLine.Get();
+        int num = text.IndexOf(moduleName, StringComparison.OrdinalIgnoreCase);
         if (num == -1)
         {
             return false;
         }
-        string text = "-disableModule/";
-        int num2 = num - text.Length;
+        string text2 = "-disableModule/";
+        int num2 = num - text2.Length;
         if (num2 < 0)
         {
             return false;
         }
-        if (commandLine.Substring(num2, text.Length) == text)
+        if (text.Substring(num2, text2.Length) == text2)
         {
             return true;
         }

@@ -16,6 +16,8 @@ Tracer 55
 
 Stuck 100
 
+Should_Delete_At_Zero_Amount true
+
 Range 8
 Player_Damage 15
 Zombie_Damage 125

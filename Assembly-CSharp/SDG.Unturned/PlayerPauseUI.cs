@@ -16,6 +16,8 @@ public class PlayerPauseUI
 
     private static SleekButtonIcon returnButton;
 
+    private static SleekButtonIcon inviteFriendsButton;
+
     private static SleekButtonIcon optionsButton;
 
     private static SleekButtonIcon displayButton;
@@ -47,6 +49,8 @@ public class PlayerPauseUI
     private static SleekButtonIcon favoriteButton;
 
     private static SleekButtonIcon bookmarkButton;
+
+    private static SleekButtonIcon copyServerCodeButton;
 
     private static ISleekButton quicksaveButton;
 
@@ -147,6 +151,17 @@ public class PlayerPauseUI
         closeAndGotoAppropriateHUD();
     }
 
+    private static void OnInviteFriendsClicked(ISleekElement button)
+    {
+        string text = "+connect " + ClientMessageHandler_Accepted.RichPresenceConnectionTarget;
+        if (!string.IsNullOrEmpty(Provider.CurrentServerConnectParameters.password))
+        {
+            text = text + " +password \"" + Provider.CurrentServerConnectParameters.password + "\"";
+        }
+        UnturnedLog.info("Sending rich presence invite: " + text);
+        SteamFriends.ActivateGameOverlayInviteDialogConnectString(text);
+    }
+
     private static void onClickedOptionsButton(ISleekElement button)
     {
         close();
@@ -226,6 +241,11 @@ public class PlayerPauseUI
         UpdateBookmarkButton();
     }
 
+    private static void OnCopyServerCodeClicked(ISleekElement button)
+    {
+        GUIUtility.systemCopyBuffer = Provider.server.ToString();
+    }
+
     private static void onClickedQuicksaveButton(ISleekElement button)
     {
         SaveManager.save();
@@ -269,6 +289,7 @@ public class PlayerPauseUI
         texture2D.LoadImage(data, markNonReadable: true);
         spyImage.Texture = texture2D;
         returnButton.PositionOffset_X = -435f;
+        inviteFriendsButton.PositionOffset_X = -435f;
         optionsButton.PositionOffset_X = -435f;
         displayButton.PositionOffset_X = -435f;
         graphicsButton.PositionOffset_X = -435f;
@@ -317,7 +338,7 @@ public class PlayerPauseUI
         container.SizeScale_Y = 1f;
         PlayerUI.container.AddChild(container);
         active = false;
-        int num = -265;
+        int num = -290;
         returnButton = new SleekButtonIcon(icons.load<Texture2D>("Return"));
         returnButton.PositionOffset_X = -100f;
         returnButton.PositionOffset_Y = num;
@@ -332,6 +353,23 @@ public class PlayerPauseUI
         returnButton.fontSize = ESleekFontSize.Medium;
         container.AddChild(returnButton);
         num += 60;
+        if (!Provider.isServer && SteamUtils.IsOverlayEnabled())
+        {
+            inviteFriendsButton = new SleekButtonIcon(MenuDashboardUI.icons.load<Texture2D>("Invite"), 40);
+            inviteFriendsButton.PositionOffset_X = -100f;
+            inviteFriendsButton.PositionOffset_Y = num;
+            inviteFriendsButton.PositionScale_X = 0.5f;
+            inviteFriendsButton.PositionScale_Y = 0.5f;
+            inviteFriendsButton.SizeOffset_X = 200f;
+            inviteFriendsButton.SizeOffset_Y = 50f;
+            inviteFriendsButton.text = localization.format("InviteFriends_Label");
+            inviteFriendsButton.tooltip = localization.format("InviteFriends_Tooltip");
+            inviteFriendsButton.onClickedButton += OnInviteFriendsClicked;
+            inviteFriendsButton.iconColor = ESleekTint.FOREGROUND;
+            inviteFriendsButton.fontSize = ESleekFontSize.Medium;
+            container.AddChild(inviteFriendsButton);
+            num += 60;
+        }
         optionsButton = new SleekButtonIcon(icons.load<Texture2D>("Options"));
         optionsButton.PositionOffset_X = -100f;
         optionsButton.PositionOffset_Y = num;
@@ -521,65 +559,68 @@ public class PlayerPauseUI
             container.AddChild(quicksaveButton);
             favoriteButton = null;
             bookmarkButton = null;
+            copyServerCodeButton = null;
         }
         else
         {
             quicksaveButton = null;
             favoriteButton = null;
             bookmarkButton = null;
-            if (Provider.CanFavoriteCurrentServer)
+            copyServerCodeButton = null;
+            int num2 = 1;
+            bool canFavoriteCurrentServer = Provider.CanFavoriteCurrentServer;
+            num2 += (canFavoriteCurrentServer ? 1 : 0);
+            bool canBookmarkCurrentServer = Provider.CanBookmarkCurrentServer;
+            num2 += (canBookmarkCurrentServer ? 1 : 0);
+            float num3 = ((num2 > 1) ? 0.5f : 0.25f);
+            float num4 = num3 / (float)num2;
+            serverBox.SizeScale_X = 1f - num3;
+            float num5 = serverBox.SizeScale_X;
+            if (canFavoriteCurrentServer)
             {
                 favoriteButton = new SleekButtonIcon(null);
+                favoriteButton.PositionOffset_X = 5f;
                 favoriteButton.PositionOffset_Y = -50f;
+                favoriteButton.PositionScale_X = num5;
                 favoriteButton.PositionScale_Y = 1f;
+                favoriteButton.SizeOffset_X = -10f;
                 favoriteButton.SizeOffset_Y = 50f;
+                favoriteButton.SizeScale_X = num4;
                 favoriteButton.tooltip = localization.format("Favorite_Button_Tooltip");
                 favoriteButton.fontSize = ESleekFontSize.Medium;
                 favoriteButton.onClickedButton += onClickedFavoriteButton;
                 container.AddChild(favoriteButton);
+                num5 += num4;
             }
-            if (Provider.CanBookmarkCurrentServer)
+            if (canBookmarkCurrentServer)
             {
                 bookmarkButton = new SleekButtonIcon(null, 40);
+                bookmarkButton.PositionOffset_X = 5f;
                 bookmarkButton.PositionOffset_Y = -50f;
+                bookmarkButton.PositionScale_X = num5;
                 bookmarkButton.PositionScale_Y = 1f;
+                bookmarkButton.SizeOffset_X = -10f;
                 bookmarkButton.SizeOffset_Y = 50f;
+                bookmarkButton.SizeScale_X = num4;
                 bookmarkButton.tooltip = MenuPlayServerInfoUI.localization.format("Bookmark_Button_Tooltip");
                 bookmarkButton.fontSize = ESleekFontSize.Medium;
                 bookmarkButton.onClickedButton += OnClickedBookmarkButton;
                 container.AddChild(bookmarkButton);
+                num5 += num4;
             }
-            if (favoriteButton != null && bookmarkButton != null)
-            {
-                favoriteButton.PositionScale_X = 0.5f;
-                favoriteButton.PositionOffset_X = 5f;
-                favoriteButton.SizeOffset_X = -10f;
-                favoriteButton.SizeScale_X = 0.25f;
-                bookmarkButton.PositionScale_X = 0.75f;
-                bookmarkButton.PositionOffset_X = 5f;
-                bookmarkButton.SizeOffset_X = -5f;
-                bookmarkButton.SizeScale_X = 0.25f;
-                serverBox.SizeScale_X = 0.5f;
-            }
-            else if (favoriteButton != null)
-            {
-                favoriteButton.PositionScale_X = 0.75f;
-                favoriteButton.PositionOffset_X = 5f;
-                favoriteButton.SizeOffset_X = -5f;
-                favoriteButton.SizeScale_X = 0.25f;
-            }
-            else if (bookmarkButton != null)
-            {
-                bookmarkButton.PositionScale_X = 0.75f;
-                bookmarkButton.PositionOffset_X = 5f;
-                bookmarkButton.SizeOffset_X = -5f;
-                bookmarkButton.SizeScale_X = 0.25f;
-            }
-            else
-            {
-                serverBox.SizeScale_X = 1f;
-                serverBox.SizeOffset_X = 0f;
-            }
+            copyServerCodeButton = new SleekButtonIcon(MenuDashboardUI.icons.load<Texture2D>("Clipboard"), 40);
+            copyServerCodeButton.PositionOffset_X = 5f;
+            copyServerCodeButton.PositionOffset_Y = -50f;
+            copyServerCodeButton.PositionScale_X = num5;
+            copyServerCodeButton.PositionScale_Y = 1f;
+            copyServerCodeButton.SizeOffset_X = -5f;
+            copyServerCodeButton.SizeOffset_Y = 50f;
+            copyServerCodeButton.SizeScale_X = num4;
+            copyServerCodeButton.text = MenuPlayServerInfoUI.localization.format("CopyServerCode_Label");
+            copyServerCodeButton.tooltip = MenuPlayServerInfoUI.localization.format("CopyServerCode_Tooltip");
+            copyServerCodeButton.onClickedButton += OnCopyServerCodeClicked;
+            copyServerCodeButton.fontSize = ESleekFontSize.Medium;
+            container.AddChild(copyServerCodeButton);
         }
         new MenuConfigurationOptionsUI();
         new MenuConfigurationDisplayUI();

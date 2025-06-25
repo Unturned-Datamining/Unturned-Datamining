@@ -46,6 +46,13 @@ public class PlayerInput : PlayerCaller
 
     private Queue<InputInfo> inputs;
 
+    /// <summary>
+    /// Server tracks history of this player's bounding box to assist with validating hits.
+    /// Some padding is added to reduce false positives sliding against walls (substep) and
+    /// player movement inside vehicles.
+    /// </summary>
+    internal BoundsHistory serverBoundsHistory;
+
     private PlayerInputPacket clientPendingInput;
 
     private List<ClientMovementInput> clientInputHistory;
@@ -527,6 +534,10 @@ public class PlayerInput : PlayerCaller
         {
             return;
         }
+        if (Provider.isServer)
+        {
+            serverBoundsHistory.AddCharacterControllerBounds(base.player.movement.controller);
+        }
         if (base.channel.IsLocalPlayer)
         {
             if (count % SAMPLES == 0)
@@ -787,6 +798,11 @@ public class PlayerInput : PlayerCaller
         if (base.channel.IsLocalPlayer && Provider.isServer)
         {
             inputs = new Queue<InputInfo>();
+        }
+        if (Provider.isServer)
+        {
+            serverBoundsHistory = new BoundsHistory();
+            serverBoundsHistory.Expansion = 0.75f;
         }
         if (base.channel.IsLocalPlayer)
         {

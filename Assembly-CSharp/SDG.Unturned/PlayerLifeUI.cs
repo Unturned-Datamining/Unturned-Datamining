@@ -7,13 +7,6 @@ namespace SDG.Unturned;
 
 public class PlayerLifeUI
 {
-    private struct CachedHotbarItem
-    {
-        public ushort id;
-
-        public byte[] state;
-    }
-
     public static Local localization;
 
     public static Bundle icons;
@@ -84,11 +77,9 @@ public class PlayerLifeUI
 
     private static ISleekElement hotbarContainer;
 
-    private static SleekItemIcon[] hotbarImages;
+    private static SleekHotbarEntry[] hotbarItems;
 
-    private static ISleekLabel[] hotbarLabels;
-
-    private static CachedHotbarItem[] cachedHotbarValues;
+    private static int previousEquippedHotbarIndex;
 
     public static ISleekLabel statTrackerLabel;
 
@@ -107,8 +98,6 @@ public class PlayerLifeUI
     private static ISleekButton facepalmButton;
 
     private static ISleekButton tPoseButton;
-
-    public static SleekScopeOverlay scopeOverlay;
 
     public static ISleekImage binocularsOverlay;
 
@@ -436,39 +425,16 @@ public class PlayerLifeUI
         }
     }
 
-    private static void updateHotbarItem(ref float offset, ItemJar jar, byte index)
+    private static void updateHotbarItem(ref float offset, ref float maxHeight, ItemJar jar, byte index)
     {
-        SleekItemIcon sleekItemIcon = hotbarImages[index];
-        ISleekLabel sleekLabel = hotbarLabels[index];
-        ushort num = 0;
-        byte[] array = null;
-        if (jar != null && jar.item != null)
+        SleekHotbarEntry sleekHotbarEntry = hotbarItems[index];
+        sleekHotbarEntry.UpdateItem(jar);
+        if (sleekHotbarEntry.IsVisible)
         {
-            num = jar.item.id;
-            array = jar.item.state;
-        }
-        if (cachedHotbarValues[index].id != num || cachedHotbarValues[index].state != array)
-        {
-            cachedHotbarValues[index].id = num;
-            cachedHotbarValues[index].state = array;
-            ItemAsset itemAsset = Assets.find(EAssetType.ITEM, num) as ItemAsset;
-            sleekItemIcon.IsVisible = itemAsset != null;
-            sleekLabel.IsVisible = itemAsset != null;
-            if (itemAsset != null)
-            {
-                sleekItemIcon.SizeOffset_X = itemAsset.size_x * 25;
-                sleekItemIcon.SizeOffset_Y = itemAsset.size_y * 25;
-                sleekItemIcon.Refresh(jar.item.id, jar.item.quality, jar.item.state, itemAsset);
-            }
-        }
-        sleekItemIcon.PositionOffset_X = offset;
-        sleekLabel.PositionOffset_X = offset + sleekItemIcon.SizeOffset_X - 55f;
-        if (sleekItemIcon.IsVisible)
-        {
-            offset += sleekItemIcon.SizeOffset_X;
-            hotbarContainer.SizeOffset_X = offset;
+            sleekHotbarEntry.PositionOffset_X = offset;
+            offset += sleekHotbarEntry.SizeOffset_X;
             offset += 5f;
-            hotbarContainer.SizeOffset_Y = Mathf.Max(hotbarContainer.SizeOffset_Y, sleekItemIcon.SizeOffset_Y);
+            maxHeight = Mathf.Max(maxHeight, sleekHotbarEntry.SizeOffset_Y);
         }
     }
 
@@ -482,13 +448,35 @@ public class PlayerLifeUI
             return;
         }
         hotbarContainer.IsVisible = !PlayerUI.messageBox.IsVisible && !PlayerUI.messageBox2.IsVisible && OptionsSettings.showHotbar;
-        if (!Player.player.inventory.doesSearchNeedRefresh(ref cachedHotbarSearch))
+        if (!hotbarContainer.IsVisible)
         {
             return;
         }
+        int num = Player.player.equipment.FindEquippedHotkeyButton();
+        if (previousEquippedHotbarIndex != num)
+        {
+            if (previousEquippedHotbarIndex >= 0)
+            {
+                hotbarItems[previousEquippedHotbarIndex].IsEquipped = false;
+            }
+            previousEquippedHotbarIndex = num;
+            if (num >= 0)
+            {
+                hotbarItems[num].IsEquipped = true;
+            }
+        }
+        if (!Player.player.inventory.doesSearchNeedRefresh(ref cachedHotbarSearch))
+        {
+            if (num >= 0)
+            {
+                hotbarItems[num].UpdateQuality();
+            }
+            return;
+        }
         float offset = 0f;
-        updateHotbarItem(ref offset, Player.player.inventory.getItem(0, 0), 0);
-        updateHotbarItem(ref offset, Player.player.inventory.getItem(1, 0), 1);
+        float maxHeight = 0f;
+        updateHotbarItem(ref offset, ref maxHeight, Player.player.inventory.getItem(0, 0), 0);
+        updateHotbarItem(ref offset, ref maxHeight, Player.player.inventory.getItem(1, 0), 1);
         for (byte b = 0; b < Player.player.equipment.hotkeys.Length; b++)
         {
             HotkeyInfo hotkeyInfo = Player.player.equipment.hotkeys[b];
@@ -502,8 +490,10 @@ public class PlayerLifeUI
                     itemJar = null;
                 }
             }
-            updateHotbarItem(ref offset, itemJar, (byte)(b + 2));
+            updateHotbarItem(ref offset, ref maxHeight, itemJar, (byte)(b + 2));
         }
+        hotbarContainer.SizeOffset_X = Mathf.Max(0f, offset - 5f);
+        hotbarContainer.SizeOffset_Y = maxHeight;
         hotbarContainer.PositionOffset_X = hotbarContainer.SizeOffset_X / -2f;
         hotbarContainer.PositionOffset_Y = -80f - hotbarContainer.SizeOffset_Y;
     }
@@ -1701,32 +1691,14 @@ public class PlayerLifeUI
         container.AddChild(hotbarContainer);
         hotbarContainer.IsVisible = false;
         cachedHotbarSearch = -1;
-        cachedHotbarValues = new CachedHotbarItem[10];
-        hotbarImages = new SleekItemIcon[cachedHotbarValues.Length];
-        for (int l = 0; l < hotbarImages.Length; l++)
+        previousEquippedHotbarIndex = -1;
+        hotbarItems = new SleekHotbarEntry[10];
+        for (int l = 0; l < hotbarItems.Length; l++)
         {
-            SleekItemIcon sleekItemIcon = new SleekItemIcon
-            {
-                color = new Color(1f, 1f, 1f, 0.5f)
-            };
-            hotbarContainer.AddChild(sleekItemIcon);
-            sleekItemIcon.IsVisible = false;
-            hotbarImages[l] = sleekItemIcon;
-        }
-        hotbarLabels = new ISleekLabel[cachedHotbarValues.Length];
-        for (int m = 0; m < hotbarLabels.Length; m++)
-        {
-            ISleekLabel sleekLabel2 = Glazier.Get().CreateLabel();
-            sleekLabel2.PositionOffset_Y = 5f;
-            sleekLabel2.SizeOffset_X = 50f;
-            sleekLabel2.SizeOffset_Y = 30f;
-            sleekLabel2.Text = ControlsSettings.getEquipmentHotkeyText(m);
-            sleekLabel2.TextAlignment = TextAnchor.UpperRight;
-            sleekLabel2.TextColor = new SleekColor(ESleekTint.FONT, 0.75f);
-            sleekLabel2.TextContrastContext = ETextContrastContext.InconspicuousBackdrop;
-            hotbarContainer.AddChild(sleekLabel2);
-            sleekLabel2.IsVisible = false;
-            hotbarLabels[m] = sleekLabel2;
+            SleekHotbarEntry sleekHotbarEntry = new SleekHotbarEntry(l);
+            hotbarContainer.AddChild(sleekHotbarEntry);
+            hotbarItems[l] = sleekHotbarEntry;
+            sleekHotbarEntry.IsVisible = false;
         }
         statTrackerLabel = Glazier.Get().CreateLabel();
         statTrackerLabel.PositionOffset_X = -100f;
@@ -1740,22 +1712,17 @@ public class PlayerLifeUI
         statTrackerLabel.FontSize = ESleekFontSize.Default;
         container.AddChild(statTrackerLabel);
         statTrackerLabel.IsVisible = false;
-        scopeOverlay = new SleekScopeOverlay();
-        scopeOverlay.SizeScale_X = 1f;
-        scopeOverlay.SizeScale_Y = 1f;
-        scopeOverlay.IsVisible = false;
-        PlayerUI.window.AddChild(scopeOverlay);
         binocularsOverlay = Glazier.Get().CreateImage((Texture2D)Resources.Load("Overlay/Binoculars"));
         binocularsOverlay.SizeScale_X = 1f;
         binocularsOverlay.SizeScale_Y = 1f;
         PlayerUI.window.AddChild(binocularsOverlay);
         binocularsOverlay.IsVisible = false;
         faceButtons = new ISleekButton[Customization.FACES_FREE + Customization.FACES_PRO];
-        for (int n = 0; n < faceButtons.Length; n++)
+        for (int m = 0; m < faceButtons.Length; m++)
         {
-            float num = MathF.PI * 4f * ((float)n / (float)faceButtons.Length);
+            float num = MathF.PI * 4f * ((float)m / (float)faceButtons.Length);
             float num2 = 210f;
-            if (n >= faceButtons.Length / 2)
+            if (m >= faceButtons.Length / 2)
             {
                 num += MathF.PI / (float)(faceButtons.Length / 2);
                 num2 += 30f;
@@ -1782,9 +1749,9 @@ public class PlayerLifeUI
             sleekImage2.PositionOffset_Y = 2f;
             sleekImage2.SizeOffset_X = 16f;
             sleekImage2.SizeOffset_Y = 16f;
-            sleekImage2.Texture = (Texture2D)Resources.Load("Faces/" + n + "/Texture");
+            sleekImage2.Texture = (Texture2D)Resources.Load("Faces/" + m + "/Texture");
             sleekImage.AddChild(sleekImage2);
-            if (n >= Customization.FACES_FREE)
+            if (m >= Customization.FACES_FREE)
             {
                 if (Provider.isPro)
                 {
@@ -1810,7 +1777,7 @@ public class PlayerLifeUI
             {
                 sleekButton.OnClicked += onClickedFaceButton;
             }
-            faceButtons[n] = sleekButton;
+            faceButtons[m] = sleekButton;
         }
         surrenderButton = Glazier.Get().CreateButton();
         surrenderButton.PositionOffset_X = -160f;
@@ -1891,7 +1858,7 @@ public class PlayerLifeUI
         tPoseButton.IsVisible = false;
         activeHitmarkers = new List<HitmarkerInfo>(16);
         hitmarkersPool = new List<SleekHitmarker>(16);
-        for (int num3 = 0; num3 < 16; num3++)
+        for (int n = 0; n < 16; n++)
         {
             ReleaseHitmarker(NewHitmarker());
         }

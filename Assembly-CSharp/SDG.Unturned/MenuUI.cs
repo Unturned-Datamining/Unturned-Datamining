@@ -39,6 +39,8 @@ public class MenuUI : MonoBehaviour
 
     private Transform target;
 
+    private static bool hasHandledCommandLineConnectionRequests;
+
     private static bool hasPanned;
 
     private static bool hasTitled;
@@ -701,6 +703,44 @@ public class MenuUI : MonoBehaviour
         }
     }
 
+    internal IEnumerator HandleCommandLineConnectionRequests()
+    {
+        yield return null;
+        ulong lobby;
+        if (CommandLine.TryGetSteamConnect(CommandLine.Get(), out var ip, out var queryPort, out var pass, out var serverCode))
+        {
+            if (serverCode.IsValid())
+            {
+                if (serverCode.BGameServerAccount())
+                {
+                    Provider.connect(new ServerConnectParameters(serverCode, pass), null, null);
+                    UnturnedLog.info($"Command-line connect server code: {serverCode} Password: \"{pass}\"");
+                }
+                else
+                {
+                    UnturnedLog.warn($"Unable to join +connect non-gameserver code ({serverCode.GetEAccountType()})");
+                }
+            }
+            else
+            {
+                SteamConnectionInfo steamConnectionInfo = new SteamConnectionInfo(ip, queryPort, pass);
+                UnturnedLog.info("Command-line connect IP: {0} Port: {1} Password: '{2}'", Parser.getIPFromUInt32(steamConnectionInfo.ip), steamConnectionInfo.port, steamConnectionInfo.password);
+                MenuPlayConnectUI.connect(steamConnectionInfo, shouldAutoJoin: false, MenuPlayServerInfoUI.EServerInfoOpenContext.CONNECT);
+            }
+        }
+        else if (CommandLine.tryGetLobby(CommandLine.Get(), out lobby))
+        {
+            UnturnedLog.info("Lobby: " + lobby);
+            Lobbies.joinLobby(new CSteamID(lobby));
+        }
+    }
+
+    internal IEnumerator HandlePendingServerRelayRequest()
+    {
+        yield return null;
+        MenuPlayConnectUI.HandlePendingServerRelayRequest();
+    }
+
     internal void customStart()
     {
         Time.timeScale = 1f;
@@ -773,6 +813,15 @@ public class MenuUI : MonoBehaviour
                 base.transform.rotation = title.rotation;
             }
             hasPanned = true;
+            if (!hasHandledCommandLineConnectionRequests)
+            {
+                hasHandledCommandLineConnectionRequests = true;
+                StartCoroutine(HandleCommandLineConnectionRequests());
+            }
+            else if (MenuPlayConnectUI.hasPendingServerRelay)
+            {
+                StartCoroutine(HandlePendingServerRelayRequest());
+            }
             UnturnedLog.info("Menu UI ready");
         }
     }

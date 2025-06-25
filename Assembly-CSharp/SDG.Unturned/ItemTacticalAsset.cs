@@ -26,7 +26,18 @@ public class ItemTacticalAsset : ItemCaliberAsset
 
     public bool isMelee => _isMelee;
 
+    public ItemTacticalAssetMeleeProperties MeleeProperties { get; set; }
+
     public Color laserColor { get; protected set; }
+
+    public override void BuildDescription(ItemDescriptionBuilder builder, Item itemInstance)
+    {
+        base.BuildDescription(builder, itemInstance);
+        if (!builder.shouldRestrictToLegacyContent && MeleeProperties != null)
+        {
+            MeleeProperties.BuildDescription(builder);
+        }
+    }
 
     public override void PopulateAsset(in PopulateAssetParameters p)
     {
@@ -40,6 +51,11 @@ public class ItemTacticalAsset : ItemCaliberAsset
         }
         _isRangefinder = p.data.ContainsKey("Rangefinder");
         _isMelee = p.data.ContainsKey("Melee");
+        if (_isMelee)
+        {
+            MeleeProperties = new ItemTacticalAssetMeleeProperties();
+            MeleeProperties.PopulateAsset(in p);
+        }
         Color value = p.data.LegacyParseColor("Laser_Color", Color.red);
         value = MathfEx.Clamp01(value);
         value.a = 1f;

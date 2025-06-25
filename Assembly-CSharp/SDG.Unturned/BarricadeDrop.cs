@@ -218,23 +218,18 @@ public class BarricadeDrop
             BarricadeManager.onSalvageBarricadeRequested(player.channel.owner.playerID.steamID, x, y, plant, index, ref shouldAllow);
         }
         BarricadeDrop.OnSalvageRequested_Global?.Invoke(this, context.GetCallingPlayer(), ref shouldAllow);
-        if (!shouldAllow || asset.isUnpickupable)
+        if (shouldAllow && !asset.isUnpickupable)
         {
-            return;
-        }
-        if (serversideData.barricade.health >= asset.health)
-        {
-            player.inventory.forceAddItem(new Item(serversideData.barricade.asset.id, EItemOrigin.NATURE), auto: true);
-        }
-        else if (asset.isSalvageable)
-        {
-            ItemAsset itemAsset = asset.FindSalvageItemAsset();
-            if (itemAsset != null)
+            if (serversideData.barricade.health >= asset.health)
             {
-                player.inventory.forceAddItem(new Item(itemAsset, EItemOrigin.NATURE), auto: true);
+                player.inventory.forceAddItem(new Item(serversideData.barricade.asset.id, EItemOrigin.NATURE), auto: true);
             }
+            else if (asset.isSalvageable)
+            {
+                asset.GrantSalvageItems(player);
+            }
+            BarricadeManager.destroyBarricade(this, x, y, plant);
         }
-        BarricadeManager.destroyBarricade(this, x, y, plant);
     }
 
     internal void CustomDestroy()

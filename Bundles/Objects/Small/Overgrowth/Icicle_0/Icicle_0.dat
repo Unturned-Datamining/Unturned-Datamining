@@ -7,3 +7,7 @@ Rubble_Reset 60
 Rubble_Health 1
 Rubble_Effect 63
 Has_Clip_Prefab false
+
+// May be important to level themeing, but other visual cues like
+// snow weather and snow terrain should accomplish the same.
+Is_Clutter true

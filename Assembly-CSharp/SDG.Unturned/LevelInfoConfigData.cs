@@ -124,6 +124,11 @@ public class LevelInfoConfigData
     /// </summary>
     public int Batching_Version;
 
+    /// <summary>
+    /// If true, map creator has verified the clutter option works as-expected.
+    /// </summary>
+    public bool Enable_Clutter_Option;
+
     public bool Use_Arena_Compactor;
 
     public List<ArenaLoadout> Arena_Loadouts;

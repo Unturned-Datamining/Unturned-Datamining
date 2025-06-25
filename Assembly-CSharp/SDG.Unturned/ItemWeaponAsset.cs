@@ -56,6 +56,8 @@ public class ItemWeaponAsset : ItemAsset
 
     public EZombieStunOverride zombieStunOverride { get; protected set; }
 
+    public float ZombieRagdollForceMultiplier { get; set; }
+
     /// <summary>
     /// Get animal or player damage based on game mode config.
     /// </summary>
@@ -331,6 +333,7 @@ public class ItemWeaponAsset : ItemAsset
         {
             zombieStunOverride = EZombieStunOverride.None;
         }
+        ZombieRagdollForceMultiplier = p.data.ParseFloat("Zombie_Ragdoll_Force_Multiplier", 1f);
         bypassAllowedToDamagePlayer = p.data.ParseBool("Bypass_Allowed_To_Damage_Player");
     }
 

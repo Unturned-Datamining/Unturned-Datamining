@@ -62,8 +62,9 @@ public struct PlayerInventorySearchResultV2
     /// <summary>
     /// Serverside delete an amount of this item.
     /// </summary>
+    /// <param name="alwaysDeleteAtZeroAmount">False for crafting where original item can be kept, true when selling to vendors.</param>
     /// <returns>Total amount deleted.</returns>
-    public uint DeleteAmount(Player player, uint desiredAmount)
+    public uint DeleteAmount(Player player, uint desiredAmount, bool alwaysDeleteAtZeroAmount = true)
     {
         DequipIfEquipped(player);
         uint amount = _jar.item.amount;
@@ -73,8 +74,7 @@ public struct PlayerInventorySearchResultV2
             return desiredAmount;
         }
         player.inventory.sendUpdateAmount(_jarOwner.page, _jar.x, _jar.y, 0);
-        ItemAsset asset = GetAsset();
-        if (asset == null || asset.ShouldDeleteAtZeroAmount)
+        if (alwaysDeleteAtZeroAmount || (GetAsset()?.ShouldDeleteAtZeroAmount ?? true))
         {
             player.crafting.removeItem(_jarOwner.page, _jar);
             if (_jarOwner.page < PlayerInventory.SLOTS)

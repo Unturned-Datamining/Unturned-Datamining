@@ -8,6 +8,8 @@ public class EditorRoads : MonoBehaviour
 
     public static byte selected;
 
+    public static CachingAssetRef selectedAssetRef;
+
     private static Road _road;
 
     private static RoadPath _path;

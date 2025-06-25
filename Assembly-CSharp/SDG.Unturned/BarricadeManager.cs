@@ -75,10 +75,6 @@ public class BarricadeManager : SteamCaller
 
     private static List<BarricadeRegion> backwardsCompatVehicleRegions;
 
-    private static List<BarricadeInstantiationParameters> pendingInstantiations;
-
-    private static List<BarricadeInstantiationParameters> instantiationsToInsert;
-
     private static List<BarricadeRegion> regionsPendingDestroy;
 
     private static List<Collider> barricadeColliders;
@@ -91,6 +87,8 @@ public class BarricadeManager : SteamCaller
 
     private static readonly ClientStaticMethod<byte, byte> SendClearRegionBarricades = ClientStaticMethod<byte, byte>.Get(ReceiveClearRegionBarricades);
 
+    private static List<Transform> tempTransforms = new List<Transform>();
+
     private static readonly ClientStaticMethod<NetId, Guid, byte[], Vector3, Quaternion, ulong, ulong, NetId> SendSingleBarricade = ClientStaticMethod<NetId, Guid, byte[], Vector3, Quaternion, ulong, ulong, NetId>.Get(ReceiveSingleBarricade);
 
     private static readonly ClientStaticMethod SendMultipleBarricades = ClientStaticMethod.Get(ReceiveMultipleBarricades);
@@ -100,12 +98,7 @@ public class BarricadeManager : SteamCaller
     /// </summary>
     private Dictionary<int, Stack<GameObject>> pool;
 
-    private Stopwatch instantiationTimer = new Stopwatch();
-
-    /// <summary>
-    /// Instantiate at least this many barricades per frame even if we exceed our time budget.
-    /// </summary>
-    private const int MIN_INSTANTIATIONS_PER_FRAME = 5;
+    private Stopwatch destroyTimer = new Stopwatch();
 
     private const int MIN_DESTROY_PER_FRAME = 10;
 
@@ -1203,28 +1196,32 @@ public class BarricadeManager : SteamCaller
         ushort pendingTotalDamage = (ushort)(damage * times);
         bool shouldAllow = true;
         onDamageBarricadeRequested?.Invoke(instigatorSteamID, transform, ref pendingTotalDamage, ref shouldAllow, damageOrigin);
-        if (!shouldAllow || pendingTotalDamage < 1)
+        if (shouldAllow && pendingTotalDamage >= 1)
         {
-            return;
-        }
-        barricadeDrop.serversideData.barricade.askDamage(pendingTotalDamage);
-        if (barricadeDrop.serversideData.barricade.isDead)
-        {
-            EffectAsset effectAsset = asset.FindExplosionEffectAsset();
-            if (effectAsset != null)
+            barricadeDrop.serversideData.barricade.askDamage(pendingTotalDamage);
+            if (barricadeDrop.serversideData.barricade.isDead)
             {
-                TriggerEffectParameters parameters = new TriggerEffectParameters(effectAsset);
-                parameters.position = transform.position + Vector3.down * asset.offset;
-                parameters.relevantDistance = EffectManager.MEDIUM;
-                parameters.reliable = true;
-                EffectManager.triggerEffect(parameters);
+                PlayBarricadeExplosionEffect(barricadeDrop);
+                asset.SpawnItemDropsOnDestroy(transform.position);
+                destroyBarricade(barricadeDrop, x, y, plant);
             }
-            asset.SpawnItemDropsOnDestroy(transform.position);
-            destroyBarricade(barricadeDrop, x, y, plant);
+            else
+            {
+                sendHealthChanged(x, y, plant, barricadeDrop);
+            }
         }
-        else
+    }
+
+    private static void PlayBarricadeExplosionEffect(BarricadeDrop barricade)
+    {
+        EffectAsset effectAsset = barricade?.asset?.FindExplosionEffectAsset();
+        if (effectAsset != null && !(barricade?.model == null))
         {
-            sendHealthChanged(x, y, plant, barricadeDrop);
+            TriggerEffectParameters parameters = new TriggerEffectParameters(effectAsset);
+            parameters.position = barricade.model.position + Vector3.down * barricade.asset.offset;
+            parameters.relevantDistance = EffectManager.MEDIUM;
+            parameters.reliable = true;
+            EffectManager.triggerEffect(parameters);
         }
     }
 
@@ -1402,7 +1399,7 @@ public class BarricadeManager : SteamCaller
         BarricadeRegion region;
         if (barricadeDrop == null)
         {
-            CancelInstantiationByNetId(netId);
+            PlaceableInstantiationManager.CancelInstantiationByNetId(netId, 3u);
         }
         else if (tryGetRegion(barricadeDrop.model, out x, out y, out plant, out region))
         {
@@ -1422,9 +1419,8 @@ public class BarricadeManager : SteamCaller
     {
         if (Provider.isServer || regions[x, y].isNetworked)
         {
-            BarricadeRegion region = regions[x, y];
-            DestroyAllInRegion(region);
-            CancelInstantiationsInRegion(region);
+            DestroyAllInRegion(regions[x, y]);
+            PlaceableInstantiationManager.CancelInstantiationsInRegion(regions[x, y], 3u);
         }
     }
 
@@ -1452,6 +1448,31 @@ public class BarricadeManager : SteamCaller
             for (byte b2 = 0; b2 < Regions.WORLD_SIZE; b2++)
             {
                 askClearRegionBarricades(b, b2);
+            }
+        }
+    }
+
+    /// <summary>
+    /// Destroy barricades whose pivots are within sphere.
+    /// </summary>
+    public static void DestroyBarricadesInSphere(Vector3 center, float radius, bool playEffect, bool spawnItems)
+    {
+        tempTransforms.Clear();
+        PowerTool.GetBarricadeTransformsInSphere(center, radius, tempTransforms);
+        foreach (Transform tempTransform in tempTransforms)
+        {
+            BarricadeDrop barricadeDrop = BarricadeDrop.FindByRootFast(tempTransform);
+            if (barricadeDrop != null && tryGetRegion(tempTransform, out var x, out var y, out var plant, out var _))
+            {
+                if (playEffect)
+                {
+                    PlayBarricadeExplosionEffect(barricadeDrop);
+                }
+                if (spawnItems && barricadeDrop.asset != null)
+                {
+                    barricadeDrop.asset.SpawnItemDropsOnDestroy(tempTransform.position);
+                }
+                destroyBarricade(barricadeDrop, x, y, plant);
             }
         }
     }
@@ -1786,24 +1807,20 @@ public class BarricadeManager : SteamCaller
         }
         if (Provider.isServer || region.isNetworked)
         {
-            float sortOrder = 0f;
-            if (MainCamera.instance != null)
-            {
-                sortOrder = (MainCamera.instance.transform.position - point).sqrMagnitude;
-            }
-            BarricadeInstantiationParameters item = default(BarricadeInstantiationParameters);
-            item.region = region;
-            item.assetId = assetId;
-            item.state = state;
-            item.position = point;
-            item.rotation = rotation;
-            item.hp = 100;
-            item.owner = owner;
-            item.group = group;
-            item.netId = netId;
-            item.sortOrder = sortOrder;
+            PlaceableInstantiationParameters instantiation = default(PlaceableInstantiationParameters);
+            instantiation.type = EPlaceableInstantiationType.Barricade;
+            instantiation.region = region;
+            instantiation.assetId = assetId;
+            instantiation.state = state;
+            instantiation.position = point;
+            instantiation.rotation = rotation;
+            instantiation.hp = 100;
+            instantiation.owner = owner;
+            instantiation.group = group;
+            instantiation.netId = netId;
+            instantiation.UpdateSortOrder();
             NetInvocationDeferralRegistry.MarkDeferred(netId, 3u);
-            pendingInstantiations.Insert(pendingInstantiations.FindInsertionIndex(item), item);
+            PlaceableInstantiationManager.AddInstantiation(ref instantiation);
         }
     }
 
@@ -1856,27 +1873,27 @@ public class BarricadeManager : SteamCaller
         if (value5 > 0)
         {
             reader.ReadFloat(out var value6);
-            instantiationsToInsert.Clear();
             for (ushort num = 0; num < value5; num++)
             {
-                BarricadeInstantiationParameters item = default(BarricadeInstantiationParameters);
-                item.region = region;
-                item.sortOrder = value6;
-                reader.ReadGuid(out item.assetId);
+                PlaceableInstantiationParameters instantiation = default(PlaceableInstantiationParameters);
+                instantiation.type = EPlaceableInstantiationType.Barricade;
+                instantiation.region = region;
+                instantiation.sortOrder = value6;
+                instantiation.UpdateSortOrder();
+                reader.ReadGuid(out instantiation.assetId);
                 reader.ReadUInt8(out var value7);
                 byte[] array = new byte[value7];
                 reader.ReadBytes(array);
-                item.state = array;
-                reader.ReadClampedVector3(out item.position, 13, 11);
-                reader.ReadSpecialYawOrQuaternion(out item.rotation, 23);
-                reader.ReadUInt8(out item.hp);
-                reader.ReadUInt64(out item.owner);
-                reader.ReadUInt64(out item.group);
-                reader.ReadNetId(out item.netId);
-                NetInvocationDeferralRegistry.MarkDeferred(item.netId, 3u);
-                instantiationsToInsert.Add(item);
+                instantiation.state = array;
+                reader.ReadClampedVector3(out instantiation.position, 13, 11);
+                reader.ReadSpecialYawOrQuaternion(out instantiation.rotation, 23);
+                reader.ReadUInt8(out instantiation.hp);
+                reader.ReadUInt64(out instantiation.owner);
+                reader.ReadUInt64(out instantiation.group);
+                reader.ReadNetId(out instantiation.netId);
+                NetInvocationDeferralRegistry.MarkDeferred(instantiation.netId, 3u);
+                PlaceableInstantiationManager.AddInstantiation(ref instantiation);
             }
-            pendingInstantiations.InsertRange(pendingInstantiations.FindInsertionIndex(instantiationsToInsert[0]), instantiationsToInsert);
         }
         Level.isLoadingBarricades = false;
     }
@@ -2041,7 +2058,7 @@ public class BarricadeManager : SteamCaller
             {
                 vehicleBarricadeRegion.barricades.Clear();
                 DestroyAllInRegion(vehicleBarricadeRegion);
-                CancelInstantiationsInRegion(vehicleBarricadeRegion);
+                PlaceableInstantiationManager.CancelInstantiationsInRegion(vehicleBarricadeRegion, 3u);
                 NetIdRegistry.Release(vehicleBarricadeRegion._netId);
                 internalVehicleRegions.RemoveAt(num);
                 backwardsCompatVehicleRegions = null;
@@ -2059,7 +2076,7 @@ public class BarricadeManager : SteamCaller
             {
                 barricadeRegion.barricades.Clear();
                 DestroyAllInRegion(barricadeRegion);
-                CancelInstantiationsInRegion(barricadeRegion);
+                PlaceableInstantiationManager.CancelInstantiationsInRegion(barricadeRegion, 3u);
                 break;
             }
         }
@@ -2338,8 +2355,6 @@ public class BarricadeManager : SteamCaller
     /// </summary>
     internal static void ClearNetworkStuff()
     {
-        pendingInstantiations = new List<BarricadeInstantiationParameters>();
-        instantiationsToInsert = new List<BarricadeInstantiationParameters>();
         regionsPendingDestroy = new List<BarricadeRegion>();
     }
 
@@ -2389,7 +2404,7 @@ public class BarricadeManager : SteamCaller
                             regions[b, b2].isPendingDestroy = true;
                             regionsPendingDestroy.Add(regions[b, b2]);
                         }
-                        CancelInstantiationsInRegion(regions[b, b2]);
+                        PlaceableInstantiationManager.CancelInstantiationsInRegion(regions[b, b2], 3u);
                         regions[b, b2].isNetworked = false;
                     }
                 }
@@ -2779,31 +2794,6 @@ public class BarricadeManager : SteamCaller
         }
     }
 
-    private static void CancelInstantiationsInRegion(BarricadeRegion region)
-    {
-        for (int num = pendingInstantiations.Count - 1; num >= 0; num--)
-        {
-            if (pendingInstantiations[num].region == region)
-            {
-                NetInvocationDeferralRegistry.Cancel(pendingInstantiations[num].netId, 3u);
-                pendingInstantiations.RemoveAt(num);
-            }
-        }
-    }
-
-    private static void CancelInstantiationByNetId(NetId netId)
-    {
-        for (int num = pendingInstantiations.Count - 1; num >= 0; num--)
-        {
-            if (pendingInstantiations[num].netId == netId)
-            {
-                NetInvocationDeferralRegistry.Cancel(netId, 3u);
-                pendingInstantiations.RemoveAt(num);
-                break;
-            }
-        }
-    }
-
     internal void DestroyOrReleaseBarricade(ItemBarricadeAsset asset, GameObject instance)
     {
         Transform transform = instance.transform;
@@ -2838,46 +2828,39 @@ public class BarricadeManager : SteamCaller
         }
     }
 
+    internal static void HandleInstantiation(ref PlaceableInstantiationParameters instantiation)
+    {
+        BarricadeRegion region = (BarricadeRegion)instantiation.region;
+        if (instance.spawnBarricade(region, instantiation.assetId, instantiation.state, instantiation.position, instantiation.rotation, instantiation.hp, instantiation.owner, instantiation.group, instantiation.netId) != null)
+        {
+            NetInvocationDeferralRegistry.Invoke(instantiation.netId, 3u);
+        }
+        else
+        {
+            NetInvocationDeferralRegistry.Cancel(instantiation.netId, 3u);
+        }
+    }
+
     private void Update()
     {
         if (!Provider.isConnected)
         {
             return;
         }
-        if (pendingInstantiations != null && pendingInstantiations.Count > 0)
-        {
-            instantiationTimer.Restart();
-            int num = 0;
-            do
-            {
-                BarricadeInstantiationParameters barricadeInstantiationParameters = pendingInstantiations[num];
-                if (spawnBarricade(barricadeInstantiationParameters.region, barricadeInstantiationParameters.assetId, barricadeInstantiationParameters.state, barricadeInstantiationParameters.position, barricadeInstantiationParameters.rotation, barricadeInstantiationParameters.hp, barricadeInstantiationParameters.owner, barricadeInstantiationParameters.group, barricadeInstantiationParameters.netId) != null)
-                {
-                    NetInvocationDeferralRegistry.Invoke(barricadeInstantiationParameters.netId, 3u);
-                }
-                else
-                {
-                    NetInvocationDeferralRegistry.Cancel(barricadeInstantiationParameters.netId, 3u);
-                }
-                num++;
-            }
-            while (num < pendingInstantiations.Count && (instantiationTimer.ElapsedMilliseconds < 1 || num < 5));
-            pendingInstantiations.RemoveRange(0, num);
-            instantiationTimer.Stop();
-        }
+        PlaceableInstantiationManager.ProcessPendingInstantiations();
         if (regionsPendingDestroy == null || regionsPendingDestroy.Count <= 0)
         {
             return;
         }
-        instantiationTimer.Restart();
-        int num2 = 0;
+        destroyTimer.Restart();
+        int num = 0;
         do
         {
             BarricadeRegion tail = regionsPendingDestroy.GetTail();
             if (tail.drops.Count > 0)
             {
                 tail.DestroyTail();
-                num2++;
+                num++;
                 if (tail.drops.Count < 1)
                 {
                     tail.isPendingDestroy = false;
@@ -2890,7 +2873,7 @@ public class BarricadeManager : SteamCaller
                 regionsPendingDestroy.RemoveTail();
             }
         }
-        while (regionsPendingDestroy.Count > 0 && (instantiationTimer.ElapsedMilliseconds < 1 || num2 < 10));
-        instantiationTimer.Stop();
+        while (regionsPendingDestroy.Count > 0 && (destroyTimer.ElapsedMilliseconds < 1 || num < 10));
+        destroyTimer.Stop();
     }
 }

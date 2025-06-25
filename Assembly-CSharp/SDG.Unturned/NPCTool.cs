@@ -167,7 +167,7 @@ public class NPCTool
             typeof(NPCDateCounterCondition),
             typeof(NPCPlayerLifeStaminaCondition)
         };
-        rewardTypes = new Type[25]
+        rewardTypes = new Type[26]
         {
             null,
             typeof(NPCExperienceReward),
@@ -193,7 +193,8 @@ public class NPCTool
             typeof(NPCRewardsListAssetReward),
             typeof(NPCCutsceneModeReward),
             typeof(NPCPlayerLifeStaminaReward),
-            typeof(NPCEffectReward)
+            typeof(NPCEffectReward),
+            typeof(NPCAirdropReward)
         };
     }
 }

@@ -9,7 +9,13 @@ public class LevelRoads
 {
     public static readonly byte SAVEDATA_ROADS_VERSION = 2;
 
-    public static readonly byte SAVEDATA_PATHS_VERSION = 5;
+    public const byte SAVEDATA_PATHS_VERSION_INITIAL = 5;
+
+    public const byte SAVEDATA_PATHS_VERSION_ADDED_ROAD_ASSET = 6;
+
+    private const byte SAVEDATA_PATHS_VERSION_NEWEST = 6;
+
+    public static readonly byte SAVEDATA_PATHS_VERSION = 6;
 
     private static Transform _models;
 
@@ -64,6 +70,18 @@ public class LevelRoads
     /// </summary>
     public static float RoadMaxDistance { get; set; }
 
+    public static void GatherUniqueAssets(List<RoadAsset> assets)
+    {
+        foreach (Road road in roads)
+        {
+            RoadAsset roadAsset = road.GetRoadAsset();
+            if (roadAsset != null && !assets.Contains(roadAsset))
+            {
+                assets.Add(roadAsset);
+            }
+        }
+    }
+
     public static void setEnabled(bool isEnabled)
     {
         for (int i = 0; i < roads.Count; i++)
@@ -74,7 +92,7 @@ public class LevelRoads
 
     public static Transform addRoad(Vector3 point)
     {
-        roads.Add(new Road(EditorRoads.selected, 0));
+        roads.Add(new Road(EditorRoads.selected, EditorRoads.selectedAssetRef, 0));
         return roads[roads.Count - 1].addVertex(0, point);
     }
 
@@ -119,6 +137,31 @@ public class LevelRoads
             if (roads[i].road == road || roads[i].road == road.parent)
             {
                 return materials[roads[i].material];
+            }
+        }
+        return null;
+    }
+
+    public static RoadMaterial GetLegacyRoadConfig(int materialIndex)
+    {
+        if (_materials == null || materialIndex < 0 || materialIndex >= _materials.Length)
+        {
+            return null;
+        }
+        return _materials[materialIndex];
+    }
+
+    public static Road FindRoadByRootTransform(Transform transform)
+    {
+        if (transform == null)
+        {
+            return null;
+        }
+        foreach (Road road in roads)
+        {
+            if (road.road == transform)
+            {
+                return road;
             }
         }
         return null;
@@ -251,6 +294,7 @@ public class LevelRoads
                     ushort num3 = river2.readUInt16();
                     byte newMaterial = river2.readByte();
                     bool newLoop = b4 > 2 && river2.readBoolean();
+                    CachingAssetRef newRoadAssetRef = ((b4 < 6) ? CachingAssetRef.Empty : ((CachingAssetRef)river2.readGUID()));
                     List<RoadJoint> list = new List<RoadJoint>();
                     for (ushort num4 = 0; num4 < num3; num4++)
                     {
@@ -289,7 +333,7 @@ public class LevelRoads
                             }
                         }
                     }
-                    roads.Add(new Road(newMaterial, num2, newLoop, list));
+                    roads.Add(new Road(newMaterial, newRoadAssetRef, num2, newLoop, list));
                 }
             }
             else if (b4 > 0)
@@ -354,7 +398,7 @@ public class LevelRoads
         }
         river.closeRiver();
         river = new River(Level.info.path + "/Environment/Paths.dat", usePath: false);
-        river.writeByte(SAVEDATA_PATHS_VERSION);
+        river.writeByte(6);
         ushort num = 0;
         for (ushort num2 = 0; num2 < roads.Count; num2++)
         {
@@ -364,17 +408,18 @@ public class LevelRoads
             }
         }
         river.writeUInt16(num);
-        for (ushort num3 = 0; num3 < roads.Count; num3++)
+        foreach (Road road in roads)
         {
-            List<RoadJoint> joints = roads[num3].joints;
+            List<RoadJoint> joints = road.joints;
             if (joints.Count > 1)
             {
                 river.writeUInt16((ushort)joints.Count);
-                river.writeByte(roads[num3].material);
-                river.writeBoolean(roads[num3].isLoop);
-                for (ushort num4 = 0; num4 < joints.Count; num4++)
+                river.writeByte(road.material);
+                river.writeBoolean(road.isLoop);
+                river.writeGUID(road.RoadAssetRef.Guid);
+                for (ushort num3 = 0; num3 < joints.Count; num3++)
                 {
-                    RoadJoint roadJoint = joints[num4];
+                    RoadJoint roadJoint = joints[num3];
                     river.writeSingleVector3(roadJoint.vertex);
                     river.writeSingleVector3(roadJoint.getTangent(0));
                     river.writeSingleVector3(roadJoint.getTangent(1));
@@ -395,7 +440,7 @@ public class LevelRoads
             road.buildMesh();
             levelBatching?.AddRoad(road);
         }
-        if (!Dedicator.IsDedicatedServer && !Level.isEditor && (bool)shouldDeactivateDistantRoads)
+        if (!Dedicator.IsDedicatedServer && !Level.isEditor && (bool)shouldDeactivateDistantRoads && !GraphicsSettings.WantsCinematicMode)
         {
             PopulateRegionSegmentRenderers();
         }

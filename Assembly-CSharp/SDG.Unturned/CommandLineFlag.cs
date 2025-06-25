@@ -19,7 +19,7 @@ public class CommandLineFlag
     {
         this.defaultValue = defaultValue;
         this.flag = flag;
-        bool flag2 = Environment.CommandLine.IndexOf(flag, StringComparison.InvariantCultureIgnoreCase) >= 0;
+        bool flag2 = CommandLine.Get().IndexOf(flag, StringComparison.InvariantCultureIgnoreCase) >= 0;
         value = (flag2 ? (!defaultValue) : defaultValue);
     }
 }

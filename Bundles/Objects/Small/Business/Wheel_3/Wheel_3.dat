@@ -2,3 +2,5 @@
 Type Small
 ID 269
 Has_Clip_Prefab false
+
+// Not clutter because floating vehicles look bad.

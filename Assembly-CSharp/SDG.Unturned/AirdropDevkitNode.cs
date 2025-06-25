@@ -1,6 +1,8 @@
+using System;
 using SDG.Framework.Devkit;
 using SDG.Framework.IO.FormattedFiles;
 using UnityEngine;
+using Unturned.SystemEx;
 
 namespace SDG.Unturned;
 
@@ -15,28 +17,56 @@ public class AirdropDevkitNode : TempNodeBase
             this.node = node;
             base.SizeOffset_X = 400f;
             float num = 0f;
-            ISleekUInt16Field sleekUInt16Field = Glazier.Get().CreateUInt16Field();
-            sleekUInt16Field.PositionOffset_Y = num;
-            sleekUInt16Field.SizeOffset_X = 200f;
-            sleekUInt16Field.SizeOffset_Y = 30f;
-            sleekUInt16Field.Value = node.id;
-            sleekUInt16Field.AddLabel("ID", ESleekSide.RIGHT);
-            sleekUInt16Field.OnValueChanged += OnIdTyped;
-            AddChild(sleekUInt16Field);
-            num += sleekUInt16Field.SizeOffset_Y + 10f;
+            SleekBcAssetField sleekBcAssetField = new SleekBcAssetField(EAssetType.SPAWN);
+            sleekBcAssetField.PositionOffset_Y = num;
+            sleekBcAssetField.SizeOffset_X = 200f;
+            sleekBcAssetField.SizeOffset_Y = 60f;
+            sleekBcAssetField.Value = node.CargoSpawnTableRef;
+            sleekBcAssetField.AddLabel("ID", ESleekSide.RIGHT);
+            sleekBcAssetField.OnValueChanged += OnIdTyped;
+            AddChild(sleekBcAssetField);
+            num += sleekBcAssetField.SizeOffset_Y + 10f;
             base.SizeOffset_Y = num - 10f;
         }
 
-        private void OnIdTyped(ISleekUInt16Field field, ushort state)
+        private void OnIdTyped(SleekBcAssetField field)
         {
-            node.id = state;
+            node.CargoSpawnTableRef = field.Value;
         }
     }
 
+    [Obsolete("Replaced by CargoSpawnTableRef")]
     public ushort id;
 
     [SerializeField]
+    internal Guid _cargoSpawnTableGuid;
+
+    [SerializeField]
     private BoxCollider boxCollider;
+
+    public CachingBcAssetRef CargoSpawnTableRef
+    {
+        get
+        {
+            return new CachingBcAssetRef(_cargoSpawnTableGuid, EAssetType.SPAWN, id);
+        }
+        set
+        {
+            id = value.LegacyId;
+            _cargoSpawnTableGuid = value.Guid;
+        }
+    }
+
+    public SpawnAsset GetCargoSpawnTableOrLogWarning()
+    {
+        CachingBcAssetRef cargoSpawnTableRef = CargoSpawnTableRef;
+        SpawnAsset spawnAsset = cargoSpawnTableRef.Get<SpawnAsset>();
+        if (spawnAsset == null)
+        {
+            UnturnedLog.warn($"Unable to find cargo spawn table ({cargoSpawnTableRef}) for airdrop marker at {base.transform.position}");
+        }
+        return spawnAsset;
+    }
 
     internal override ISleekElement CreateMenu()
     {
@@ -51,13 +81,28 @@ public class AirdropDevkitNode : TempNodeBase
     protected override void readHierarchyItem(IFormattedFileReader reader)
     {
         base.readHierarchyItem(reader);
-        id = reader.readValue<ushort>("SpawnTable_ID");
+        string text = reader.readValue("SpawnTable_ID");
+        if (ushort.TryParse(text, out id))
+        {
+            _cargoSpawnTableGuid = Guid.Empty;
+        }
+        else if (Guid.TryParse(text, out _cargoSpawnTableGuid))
+        {
+            id = 0;
+        }
     }
 
     protected override void writeHierarchyItem(IFormattedFileWriter writer)
     {
         base.writeHierarchyItem(writer);
-        writer.writeValue("SpawnTable_ID", id);
+        if (!_cargoSpawnTableGuid.IsEmpty())
+        {
+            writer.writeValue("SpawnTable_ID", _cargoSpawnTableGuid);
+        }
+        else
+        {
+            writer.writeValue("SpawnTable_ID", id);
+        }
     }
 
     private void OnEnable()

@@ -229,11 +229,7 @@ public class StructureDrop
             }
             else if (asset.isSalvageable)
             {
-                ItemAsset itemAsset = asset.FindSalvageItemAsset();
-                if (itemAsset != null)
-                {
-                    player.inventory.forceAddItem(new Item(itemAsset, EItemOrigin.NATURE), auto: true);
-                }
+                asset.GrantSalvageItems(player);
             }
         }
         StructureManager.destroyStructure(this, x, y, (_model.position - player.transform.position).normalized * 100f, wasPickedUp: true);

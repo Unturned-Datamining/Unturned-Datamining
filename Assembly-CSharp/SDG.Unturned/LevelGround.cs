@@ -38,7 +38,9 @@ public class LevelGround : MonoBehaviour
 
     private const byte SAVEDATA_TREES_VERSION_ADDED_GUID = 6;
 
-    private const byte SAVEDATA_TREES_VERSION_NEWEST = 6;
+    private const byte SAVEDATA_TREES_VERSION_INT_REGION_COORDS = 7;
+
+    private const byte SAVEDATA_TREES_VERSION_NEWEST = 7;
 
     public static readonly byte SAVEDATA_TREES_VERSION;
 
@@ -71,6 +73,11 @@ public class LevelGround : MonoBehaviour
 
     private static List<ResourceSpawnpoint>[,] _trees;
 
+    /// <summary>
+    /// Nelson 2025-06-10: replacement for _trees. Enables trees outside the "insane" level bounds.
+    /// </summary>
+    private static RegionDictionary<ResourceSpawnpoint> _regionTrees;
+
     private static int _total;
 
     private static RegionIncrementalVisibilityTracker regionTracker;
@@ -86,6 +93,8 @@ public class LevelGround : MonoBehaviour
     private static TerrainData _data;
 
     private static TerrainData _data2;
+
+    private static List<ResourceSpawnpoint> saveTreesAllTreesList;
 
     public static float triplanarPrimarySize
     {
@@ -183,6 +192,7 @@ public class LevelGround : MonoBehaviour
     [Obsolete("Legacy terrain game object only exists for auto-conversion")]
     public static Transform models2 => _models2;
 
+    [Obsolete("Replaced by GetTree* helper methods and GatherAllTrees")]
     public static List<ResourceSpawnpoint>[,] trees => _trees;
 
     public static int total => _total;
@@ -203,23 +213,56 @@ public class LevelGround : MonoBehaviour
 
     public static TerrainData data2 => _data2;
 
+    public static int GetTreeCountInRegion(Vector2Int coord)
+    {
+        return (_regionTrees?.GetListOrNull(coord)?.Count).GetValueOrDefault();
+    }
+
+    public static int GetTreeCountInRegion(byte x, byte y)
+    {
+        return GetTreeCountInRegion(new Vector2Int(x, y));
+    }
+
+    public static List<ResourceSpawnpoint> GetTreesOrNullInRegion(Vector2Int coord)
+    {
+        return _regionTrees?.GetListOrNull(coord);
+    }
+
+    public static List<ResourceSpawnpoint> GetTreesOrNullInRegion(byte x, byte y)
+    {
+        return GetTreesOrNullInRegion(new Vector2Int(x, y));
+    }
+
+    /// <summary>
+    /// Append all trees in the level to results list.
+    /// </summary>
+    public static void GatherAllTrees(List<ResourceSpawnpoint> results)
+    {
+        _regionTrees?.GatherAllItems(results);
+    }
+
+    public static void ForceUpdateSkyboxActive()
+    {
+        if (_regionTrees == null)
+        {
+            return;
+        }
+        foreach (List<ResourceSpawnpoint> value in _regionTrees.data.Values)
+        {
+            foreach (ResourceSpawnpoint item in value)
+            {
+                item?.UpdateSkyboxActive();
+            }
+        }
+    }
+
     internal static ResourceSpawnpoint FindResourceSpawnpointByTransform(Transform transform)
     {
         if (transform != null)
         {
             transform = transform.root;
         }
-        if (transform != null && Regions.tryGetCoordinate(transform.position, out var x, out var y))
-        {
-            foreach (ResourceSpawnpoint item in _trees[x, y])
-            {
-                if (item.model == transform)
-                {
-                    return item;
-                }
-            }
-        }
-        return null;
+        return (transform?.GetComponent<TreeRefComponent>())?.owner;
     }
 
     [Obsolete]
@@ -332,38 +375,45 @@ public class LevelGround : MonoBehaviour
 
     protected static void handlePreBakeTile(FoliageBakeSettings bakeSettings, FoliageTile foliageTile)
     {
-        if (!bakeSettings.bakeResources || !Regions.tryGetCoordinate(foliageTile.worldBounds.center, out var x, out var y))
+        if (!bakeSettings.bakeResources)
         {
             return;
         }
-        for (int num = trees[x, y].Count - 1; num >= 0; num--)
+        Bounds worldBounds = foliageTile.worldBounds;
+        foreach (Vector2Int item in Regions.GetCoordinateBoundsInt(worldBounds))
         {
-            ResourceSpawnpoint resourceSpawnpoint = trees[x, y][num];
-            if (resourceSpawnpoint.isGenerated)
+            List<ResourceSpawnpoint> treesOrNullInRegion = GetTreesOrNullInRegion(item);
+            if (treesOrNullInRegion == null)
             {
-                Vector3 min = foliageTile.worldBounds.min;
-                if (!(resourceSpawnpoint.point.x < min.x) && !(resourceSpawnpoint.point.z < min.z))
+                continue;
+            }
+            for (int num = treesOrNullInRegion.Count - 1; num >= 0; num--)
+            {
+                ResourceSpawnpoint resourceSpawnpoint = treesOrNullInRegion[num];
+                if (resourceSpawnpoint.isGenerated && worldBounds.ContainsXZ(resourceSpawnpoint.point))
                 {
-                    Vector3 max = foliageTile.worldBounds.max;
-                    if (!(resourceSpawnpoint.point.x > max.x) && !(resourceSpawnpoint.point.z > max.z))
-                    {
-                        resourceSpawnpoint.destroy();
-                        trees[x, y].RemoveAt(num);
-                    }
+                    resourceSpawnpoint.destroy();
+                    treesOrNullInRegion.RemoveAt(num);
                 }
+            }
+            if (treesOrNullInRegion.Count < 1)
+            {
+                _regionTrees.ReleaseListIfEmpty(item);
             }
         }
     }
 
     public static void addSpawn(Vector3 point, Guid guid, bool isGenerated = false)
     {
-        if (Regions.tryGetCoordinate(point, out var x, out var y))
+        ResourceSpawnpoint resourceSpawnpoint = new ResourceSpawnpoint(0, guid, point, isGenerated, NetId.INVALID);
+        resourceSpawnpoint.SetIsActiveInRegion(isActive: true);
+        Vector2Int coordinateVector2Int = Regions.GetCoordinateVector2Int(point);
+        _regionTrees.GetOrAddList(coordinateVector2Int).Add(resourceSpawnpoint);
+        if (Regions.IsVector2IntWithinLegacyRange(coordinateVector2Int))
         {
-            ResourceSpawnpoint resourceSpawnpoint = new ResourceSpawnpoint(0, guid, point, isGenerated, NetId.INVALID);
-            resourceSpawnpoint.SetIsActiveInRegion(isActive: true);
-            trees[x, y].Add(resourceSpawnpoint);
-            _total++;
+            _trees[coordinateVector2Int.x, coordinateVector2Int.y].Add(resourceSpawnpoint);
         }
+        _total++;
     }
 
     [Obsolete("Replaced by overload which takes GUID rather than legacy ID")]
@@ -382,25 +432,31 @@ public class LevelGround : MonoBehaviour
 
     public static void removeSpawn(Vector3 point, float radius)
     {
-        radius *= radius;
-        for (byte b = 0; b < Regions.WORLD_SIZE; b++)
+        float num = radius * radius;
+        Regions.GetCoordinateBoundsVector2Int(point, radius, out var min, out var max);
+        for (int i = min.x; i <= max.x; i++)
         {
-            for (byte b2 = 0; b2 < Regions.WORLD_SIZE; b2++)
+            for (int j = min.y; j <= max.y; j++)
             {
-                List<ResourceSpawnpoint> list = new List<ResourceSpawnpoint>();
-                for (int i = 0; i < trees[b, b2].Count; i++)
+                Vector2Int coord = new Vector2Int(i, j);
+                List<ResourceSpawnpoint> listOrNull = _regionTrees.GetListOrNull(coord);
+                if (listOrNull == null)
                 {
-                    ResourceSpawnpoint resourceSpawnpoint = trees[b, b2][i];
-                    if ((resourceSpawnpoint.point - point).sqrMagnitude < radius)
+                    continue;
+                }
+                for (int num2 = listOrNull.Count - 1; num2 >= 0; num2--)
+                {
+                    ResourceSpawnpoint resourceSpawnpoint = listOrNull[num2];
+                    if ((resourceSpawnpoint.point - point).sqrMagnitude < num)
                     {
                         resourceSpawnpoint.destroy();
-                    }
-                    else
-                    {
-                        list.Add(resourceSpawnpoint);
+                        listOrNull.RemoveAt(num2);
                     }
                 }
-                _trees[b, b2] = list;
+                if (listOrNull.IsEmpty())
+                {
+                    _regionTrees.ReleaseListIfEmpty(coord);
+                }
             }
         }
     }
@@ -603,17 +659,18 @@ public class LevelGround : MonoBehaviour
     protected static void loadTrees()
     {
         _trees = new List<ResourceSpawnpoint>[Regions.WORLD_SIZE, Regions.WORLD_SIZE];
-        _total = 0;
-        shouldInstantlyLoad = true;
-        regionTracker = new RegionIncrementalVisibilityTracker();
-        skyboxRegionTracker = new RegionIncrementalVisibilityTracker();
         for (byte b = 0; b < Regions.WORLD_SIZE; b++)
         {
             for (byte b2 = 0; b2 < Regions.WORLD_SIZE; b2++)
             {
-                trees[b, b2] = new List<ResourceSpawnpoint>();
+                _trees[b, b2] = new List<ResourceSpawnpoint>();
             }
         }
+        _total = 0;
+        shouldInstantlyLoad = true;
+        regionTracker = new RegionIncrementalVisibilityTracker();
+        skyboxRegionTracker = new RegionIncrementalVisibilityTracker();
+        _regionTrees = new RegionDictionary<ResourceSpawnpoint>();
         treesHash = new byte[20];
         if (!ReadWrite.fileExists(Level.info.path + "/Terrain/Trees.dat", useCloud: false, usePath: false))
         {
@@ -630,72 +687,120 @@ public class LevelGround : MonoBehaviour
             }
             bool flag = Level.isEditor && EditorAssetRedirector.HasRedirects;
             LevelBatching levelBatching = (Level.shouldUseLevelBatching ? LevelBatching.Get() : null);
-            for (byte b4 = 0; b4 < Regions.WORLD_SIZE; b4++)
+            if (b3 >= 7)
             {
-                for (byte b5 = 0; b5 < Regions.WORLD_SIZE; b5++)
+                int num = river.readInt32();
+                for (int i = 0; i < num; i++)
                 {
-                    ushort num = river.readUInt16();
-                    for (ushort num2 = 0; num2 < num; num2++)
+                    Guid guid = river.readGUID();
+                    Vector3 vector = river.readSingleVector3();
+                    bool newGenerated = river.readBoolean();
+                    if (guid == Guid.Empty)
                     {
-                        if (b3 > 4)
+                        continue;
+                    }
+                    if (treeRedirectorMap != null)
+                    {
+                        guid = treeRedirectorMap.redirect(guid)?.GUID ?? Guid.Empty;
+                    }
+                    else if (flag)
+                    {
+                        ResourceAsset resourceAsset = EditorAssetRedirector.Redirect<ResourceAsset>(guid);
+                        if (resourceAsset != null)
                         {
-                            ushort num3 = river.readUInt16();
-                            Guid guid = ((b3 >= 6) ? river.readGUID() : Guid.Empty);
-                            Vector3 newPoint = river.readSingleVector3();
-                            bool newGenerated = river.readBoolean();
-                            if (num3 != 0 || guid != Guid.Empty)
-                            {
-                                if (treeRedirectorMap != null)
-                                {
-                                    ResourceAsset resourceAsset = treeRedirectorMap.redirect(guid);
-                                    if (resourceAsset == null)
-                                    {
-                                        num3 = 0;
-                                        guid = Guid.Empty;
-                                    }
-                                    else
-                                    {
-                                        num3 = resourceAsset.id;
-                                        guid = resourceAsset.GUID;
-                                    }
-                                }
-                                else if (flag)
-                                {
-                                    ResourceAsset resourceAsset2 = EditorAssetRedirector.Redirect<ResourceAsset>(guid);
-                                    if (resourceAsset2 != null)
-                                    {
-                                        num3 = resourceAsset2.id;
-                                        guid = resourceAsset2.GUID;
-                                    }
-                                }
-                                if (num3 != 0 || guid != Guid.Empty)
-                                {
-                                    NetId treeNetId = LevelNetIdRegistry.GetTreeNetId(b4, b5, num2);
-                                    ResourceSpawnpoint resourceSpawnpoint = new ResourceSpawnpoint(num3, guid, newPoint, newGenerated, treeNetId);
-                                    if (resourceSpawnpoint.asset == null && (bool)Assets.shouldLoadAnyAssets)
-                                    {
-                                        UnturnedLog.error("Tree with no asset in region {0}, {1}: {2} {3}", b4, b5, num3, guid);
-                                    }
-                                    trees[b4, b5].Add(resourceSpawnpoint);
-                                    levelBatching?.AddResourceSpawnpoint(resourceSpawnpoint);
-                                    _total++;
-                                }
-                            }
+                            guid = resourceAsset.GUID;
                         }
-                        else
+                    }
+                    if (!(guid == Guid.Empty))
+                    {
+                        NetId treeNetIdV = LevelNetIdRegistry.GetTreeNetIdV2(i);
+                        ResourceSpawnpoint resourceSpawnpoint = new ResourceSpawnpoint(0, guid, vector, newGenerated, treeNetIdV);
+                        if (resourceSpawnpoint.asset == null && (bool)Assets.shouldLoadAnyAssets)
                         {
-                            byte b6 = river.readByte();
-                            ushort num4 = 3;
-                            Vector3 newPoint2 = river.readSingleVector3();
-                            bool newGenerated2 = river.readBoolean();
-                            NetId treeNetId2 = LevelNetIdRegistry.GetTreeNetId(b4, b5, num2);
-                            ResourceSpawnpoint resourceSpawnpoint2 = new ResourceSpawnpoint(num4, newPoint2, newGenerated2, treeNetId2);
-                            if (resourceSpawnpoint2.asset == null && (bool)Assets.shouldLoadAnyAssets)
+                            UnturnedLog.error("Tree with no asset at {0} (ID: {1})", vector, guid);
+                        }
+                        Vector2Int coordinateVector2Int = Regions.GetCoordinateVector2Int(vector);
+                        _regionTrees.GetOrAddList(coordinateVector2Int).Add(resourceSpawnpoint);
+                        if (Regions.IsVector2IntWithinLegacyRange(coordinateVector2Int))
+                        {
+                            _trees[coordinateVector2Int.x, coordinateVector2Int.y].Add(resourceSpawnpoint);
+                        }
+                        levelBatching?.AddResourceSpawnpoint(resourceSpawnpoint);
+                        _total++;
+                    }
+                }
+            }
+            else
+            {
+                for (byte b4 = 0; b4 < Regions.WORLD_SIZE; b4++)
+                {
+                    for (byte b5 = 0; b5 < Regions.WORLD_SIZE; b5++)
+                    {
+                        ushort num2 = river.readUInt16();
+                        for (ushort num3 = 0; num3 < num2; num3++)
+                        {
+                            if (b3 > 4)
                             {
-                                UnturnedLog.error("Tree with no asset in region {0}, {1}: {2} {3}", b4, b5, num4, b6);
+                                ushort num4 = river.readUInt16();
+                                Guid guid2 = ((b3 >= 6) ? river.readGUID() : Guid.Empty);
+                                Vector3 newPoint = river.readSingleVector3();
+                                bool newGenerated2 = river.readBoolean();
+                                if (num4 != 0 || guid2 != Guid.Empty)
+                                {
+                                    if (treeRedirectorMap != null)
+                                    {
+                                        ResourceAsset resourceAsset2 = treeRedirectorMap.redirect(guid2);
+                                        if (resourceAsset2 == null)
+                                        {
+                                            num4 = 0;
+                                            guid2 = Guid.Empty;
+                                        }
+                                        else
+                                        {
+                                            num4 = resourceAsset2.id;
+                                            guid2 = resourceAsset2.GUID;
+                                        }
+                                    }
+                                    else if (flag)
+                                    {
+                                        ResourceAsset resourceAsset3 = EditorAssetRedirector.Redirect<ResourceAsset>(guid2);
+                                        if (resourceAsset3 != null)
+                                        {
+                                            num4 = resourceAsset3.id;
+                                            guid2 = resourceAsset3.GUID;
+                                        }
+                                    }
+                                    if (num4 != 0 || guid2 != Guid.Empty)
+                                    {
+                                        NetId treeNetId = LevelNetIdRegistry.GetTreeNetId(b4, b5, num3);
+                                        ResourceSpawnpoint resourceSpawnpoint2 = new ResourceSpawnpoint(num4, guid2, newPoint, newGenerated2, treeNetId);
+                                        if (resourceSpawnpoint2.asset == null && (bool)Assets.shouldLoadAnyAssets)
+                                        {
+                                            UnturnedLog.error("Tree with no asset in region {0}, {1}: {2} {3}", b4, b5, num4, guid2);
+                                        }
+                                        _regionTrees.GetOrAddList(b4, b5).Add(resourceSpawnpoint2);
+                                        _trees[b4, b5].Add(resourceSpawnpoint2);
+                                        levelBatching?.AddResourceSpawnpoint(resourceSpawnpoint2);
+                                        _total++;
+                                    }
+                                }
                             }
-                            trees[b4, b5].Add(resourceSpawnpoint2);
-                            _total++;
+                            else
+                            {
+                                byte b6 = river.readByte();
+                                ushort num5 = 3;
+                                Vector3 newPoint2 = river.readSingleVector3();
+                                bool newGenerated3 = river.readBoolean();
+                                NetId treeNetId2 = LevelNetIdRegistry.GetTreeNetId(b4, b5, num3);
+                                ResourceSpawnpoint resourceSpawnpoint3 = new ResourceSpawnpoint(num5, newPoint2, newGenerated3, treeNetId2);
+                                if (resourceSpawnpoint3.asset == null && (bool)Assets.shouldLoadAnyAssets)
+                                {
+                                    UnturnedLog.error("Tree with no asset in region {0}, {1}: {2} {3}", b4, b5, num5, b6);
+                                }
+                                _regionTrees.GetOrAddList(b4, b5).Add(resourceSpawnpoint3);
+                                _trees[b4, b5].Add(resourceSpawnpoint3);
+                                _total++;
+                            }
                         }
                     }
                 }
@@ -978,32 +1083,30 @@ public class LevelGround : MonoBehaviour
     protected static void saveTrees()
     {
         River river = new River(Level.info.path + "/Terrain/Trees.dat", usePath: false);
-        river.writeByte(6);
-        for (byte b = 0; b < Regions.WORLD_SIZE; b++)
+        river.writeByte(7);
+        if (saveTreesAllTreesList == null)
         {
-            for (byte b2 = 0; b2 < Regions.WORLD_SIZE; b2++)
+            saveTreesAllTreesList = new List<ResourceSpawnpoint>();
+        }
+        else
+        {
+            saveTreesAllTreesList.Clear();
+        }
+        GatherAllTrees(saveTreesAllTreesList);
+        river.writeInt32(saveTreesAllTreesList.Count);
+        foreach (ResourceSpawnpoint saveTreesAllTrees in saveTreesAllTreesList)
+        {
+            if (saveTreesAllTrees != null && saveTreesAllTrees.model != null && saveTreesAllTrees.guid != Guid.Empty)
             {
-                List<ResourceSpawnpoint> list = trees[b, b2];
-                river.writeUInt16((ushort)list.Count);
-                for (ushort num = 0; num < list.Count; num++)
-                {
-                    ResourceSpawnpoint resourceSpawnpoint = list[num];
-                    ushort id = resourceSpawnpoint.id;
-                    if (resourceSpawnpoint != null && resourceSpawnpoint.model != null && (id != 0 || resourceSpawnpoint.guid != Guid.Empty))
-                    {
-                        river.writeUInt16(id);
-                        river.writeGUID(resourceSpawnpoint.guid);
-                        river.writeSingleVector3(resourceSpawnpoint.point);
-                        river.writeBoolean(resourceSpawnpoint.isGenerated);
-                    }
-                    else
-                    {
-                        river.writeUInt16(0);
-                        river.writeGUID(Guid.Empty);
-                        river.writeSingleVector3(Vector3.zero);
-                        river.writeBoolean(value: true);
-                    }
-                }
+                river.writeGUID(saveTreesAllTrees.guid);
+                river.writeSingleVector3(saveTreesAllTrees.point);
+                river.writeBoolean(saveTreesAllTrees.isGenerated);
+            }
+            else
+            {
+                river.writeGUID(Guid.Empty);
+                river.writeSingleVector3(Vector3.zero);
+                river.writeBoolean(value: true);
             }
         }
         river.closeRiver();
@@ -1054,13 +1157,13 @@ public class LevelGround : MonoBehaviour
         regionTracker.UpdateRegions(regionTrackerData);
         foreach (KeyValuePair<Vector2Int, RegionVisibilityData> regionTrackerDatum in regionTrackerData)
         {
-            Vector2Int key = regionTrackerDatum.Key;
-            if (!Regions.checkSafe(key.x, key.y))
+            List<ResourceSpawnpoint> treesOrNullInRegion = GetTreesOrNullInRegion(regionTrackerDatum.Key);
+            if (treesOrNullInRegion == null)
             {
                 continue;
             }
             RegionVisibilityData value = regionTrackerDatum.Value;
-            foreach (ResourceSpawnpoint item in trees[key.x, key.y])
+            foreach (ResourceSpawnpoint item in treesOrNullInRegion)
             {
                 item.SetIsActiveInRegion(value.isInsideMask);
             }
@@ -1071,13 +1174,13 @@ public class LevelGround : MonoBehaviour
         skyboxRegionTracker.UpdateRegions(regionTrackerData);
         foreach (KeyValuePair<Vector2Int, RegionVisibilityData> regionTrackerDatum2 in regionTrackerData)
         {
-            Vector2Int key2 = regionTrackerDatum2.Key;
-            if (!Regions.checkSafe(key2.x, key2.y))
+            List<ResourceSpawnpoint> treesOrNullInRegion2 = GetTreesOrNullInRegion(regionTrackerDatum2.Key);
+            if (treesOrNullInRegion2 == null)
             {
                 continue;
             }
             RegionVisibilityData value2 = regionTrackerDatum2.Value;
-            foreach (ResourceSpawnpoint item2 in trees[key2.x, key2.y])
+            foreach (ResourceSpawnpoint item2 in treesOrNullInRegion2)
             {
                 item2.SetIsSkyboxActiveInRegion(value2.isInsideMask);
             }
@@ -1106,16 +1209,16 @@ public class LevelGround : MonoBehaviour
         foreach (KeyValuePair<Vector2Int, RegionVisibilityData> regionTrackerDatum in regionTrackerData)
         {
             Vector2Int key = regionTrackerDatum.Key;
-            if (!Regions.checkSafe(key.x, key.y))
+            List<ResourceSpawnpoint> treesOrNullInRegion = GetTreesOrNullInRegion(key);
+            if (treesOrNullInRegion == null)
             {
                 regionTracker.NotifyRegionFinishedUpdating(key);
                 continue;
             }
             RegionVisibilityData value = regionTrackerDatum.Value;
-            List<ResourceSpawnpoint> list = trees[key.x, key.y];
-            if (value.progressIndex < list.Count)
+            if (value.progressIndex < treesOrNullInRegion.Count)
             {
-                list[value.progressIndex].SetIsActiveInRegion(value.isInsideMask);
+                treesOrNullInRegion[value.progressIndex].SetIsActiveInRegion(value.isInsideMask);
             }
             else
             {
@@ -1128,16 +1231,16 @@ public class LevelGround : MonoBehaviour
         foreach (KeyValuePair<Vector2Int, RegionVisibilityData> regionTrackerDatum2 in regionTrackerData)
         {
             Vector2Int key2 = regionTrackerDatum2.Key;
-            if (!Regions.checkSafe(key2.x, key2.y))
+            List<ResourceSpawnpoint> treesOrNullInRegion2 = GetTreesOrNullInRegion(key2);
+            if (treesOrNullInRegion2 == null)
             {
                 skyboxRegionTracker.NotifyRegionFinishedUpdating(key2);
                 continue;
             }
             RegionVisibilityData value2 = regionTrackerDatum2.Value;
-            List<ResourceSpawnpoint> list2 = trees[key2.x, key2.y];
-            if (value2.progressIndex < list2.Count)
+            if (value2.progressIndex < treesOrNullInRegion2.Count)
             {
-                list2[value2.progressIndex].SetIsSkyboxActiveInRegion(value2.isInsideMask);
+                treesOrNullInRegion2[value2.progressIndex].SetIsSkyboxActiveInRegion(value2.isInsideMask);
             }
             else
             {
@@ -1148,7 +1251,7 @@ public class LevelGround : MonoBehaviour
 
     private void Update()
     {
-        if (Level.isLoaded && !Dedicator.IsDedicatedServer && trees != null && !(MainCamera.instance == null))
+        if (Level.isLoaded && !Dedicator.IsDedicatedServer && _regionTrees != null && !(MainCamera.instance == null))
         {
             tickRegionalVisibility();
         }
@@ -1204,7 +1307,7 @@ public class LevelGround : MonoBehaviour
         _Triplanar_Tertiary_Weight = -1;
         _triplanarTertiaryWeight = 0.2f;
         obstructionColliders = new Collider[16];
-        SAVEDATA_TREES_VERSION = 6;
+        SAVEDATA_TREES_VERSION = 7;
         RESOURCE_REGIONS = 3;
         ALPHAMAPS = 2;
         regionTrackerData = new Dictionary<Vector2Int, RegionVisibilityData>();

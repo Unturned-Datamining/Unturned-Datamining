@@ -653,6 +653,7 @@ public class InteractableSentry : InteractableStorage
                                     parameters.allowBackstab = false;
                                     parameters.respectArmor = true;
                                     parameters.instigator = this;
+                                    parameters.RagdollForceMultiplier = ((ItemGunAsset)displayAsset).ZombieRagdollForceMultiplier;
                                     DamageTool.damageZombie(parameters, out kill, out xp);
                                 }
                                 else if (targetAnimal != null)
@@ -885,7 +886,7 @@ public class InteractableSentry : InteractableStorage
         Zombie zombie = null;
         Animal animal = null;
         InteractableVehicle interactableVehicle = null;
-        if (Provider.isPvP)
+        if (Provider.isPvP && sentryAsset.CanTargetPlayers)
         {
             float sqrRadius = ((targetPlayer != null) ? num4 : num5);
             playersInRadius.Clear();
@@ -927,105 +928,111 @@ public class InteractableSentry : InteractableStorage
                 flag = true;
             }
         }
-        float sqrRadius2 = ((!flag && targetZombie != null) ? num4 : num5);
-        zombiesInRadius.Clear();
-        ZombieManager.getZombiesInRadius(fromPoint, sqrRadius2, zombiesInRadius);
-        for (int j = 0; j < zombiesInRadius.Count; j++)
+        if (sentryAsset.CanTargetZombies)
         {
-            Zombie zombie2 = zombiesInRadius[j];
-            if (zombie2.isDead || !zombie2.isHunting)
+            float sqrRadius2 = ((!flag && targetZombie != null) ? num4 : num5);
+            zombiesInRadius.Clear();
+            ZombieManager.getZombiesInRadius(fromPoint, sqrRadius2, zombiesInRadius);
+            for (int j = 0; j < zombiesInRadius.Count; j++)
             {
-                continue;
-            }
-            Vector3 position = zombie2.transform.position;
-            switch (zombie2.speciality)
-            {
-            case EZombieSpeciality.CRAWLER:
-                position += new Vector3(0f, 0.25f, 0f);
-                break;
-            case EZombieSpeciality.MEGA:
-                position += new Vector3(0f, 2.625f, 0f);
-                break;
-            case EZombieSpeciality.NORMAL:
-                position += new Vector3(0f, 1.75f, 0f);
-                break;
-            case EZombieSpeciality.SPRINTER:
-                position += new Vector3(0f, 1f, 0f);
-                break;
-            }
-            float sqrMagnitude2 = (position - fromPoint).sqrMagnitude;
-            if (zombie2 != targetZombie && sqrMagnitude2 > num5)
-            {
-                continue;
-            }
-            Vector3 vector3 = position - fromPoint;
-            float magnitude2 = vector3.magnitude;
-            Vector3 vector4 = vector3 / magnitude2;
-            if (zombie2 != targetZombie && Vector3.Dot(vector4, aimTransform.forward) < 0.5f)
-            {
-                continue;
-            }
-            if (magnitude2 > 0.025f)
-            {
-                Physics.Raycast(new Ray(fromPoint, vector4), out var hitInfo2, magnitude2 - 0.025f, RayMasks.BLOCK_SENTRY);
-                if (hitInfo2.transform != null && hitInfo2.transform != base.transform)
+                Zombie zombie2 = zombiesInRadius[j];
+                if (zombie2.isDead || !zombie2.isHunting)
                 {
                     continue;
                 }
-                Physics.Raycast(new Ray(fromPoint + vector4 * (magnitude2 - 0.025f), -vector4), out hitInfo2, magnitude2 - 0.025f, RayMasks.DAMAGE_SERVER);
-                if (hitInfo2.transform != null && hitInfo2.transform != base.transform)
+                Vector3 position = zombie2.transform.position;
+                switch (zombie2.speciality)
+                {
+                case EZombieSpeciality.CRAWLER:
+                    position += new Vector3(0f, 0.25f, 0f);
+                    break;
+                case EZombieSpeciality.MEGA:
+                    position += new Vector3(0f, 2.625f, 0f);
+                    break;
+                case EZombieSpeciality.NORMAL:
+                    position += new Vector3(0f, 1.75f, 0f);
+                    break;
+                case EZombieSpeciality.SPRINTER:
+                    position += new Vector3(0f, 1f, 0f);
+                    break;
+                }
+                float sqrMagnitude2 = (position - fromPoint).sqrMagnitude;
+                if (zombie2 != targetZombie && sqrMagnitude2 > num5)
                 {
                     continue;
                 }
+                Vector3 vector3 = position - fromPoint;
+                float magnitude2 = vector3.magnitude;
+                Vector3 vector4 = vector3 / magnitude2;
+                if (zombie2 != targetZombie && Vector3.Dot(vector4, aimTransform.forward) < 0.5f)
+                {
+                    continue;
+                }
+                if (magnitude2 > 0.025f)
+                {
+                    Physics.Raycast(new Ray(fromPoint, vector4), out var hitInfo2, magnitude2 - 0.025f, RayMasks.BLOCK_SENTRY);
+                    if (hitInfo2.transform != null && hitInfo2.transform != base.transform)
+                    {
+                        continue;
+                    }
+                    Physics.Raycast(new Ray(fromPoint + vector4 * (magnitude2 - 0.025f), -vector4), out hitInfo2, magnitude2 - 0.025f, RayMasks.DAMAGE_SERVER);
+                    if (hitInfo2.transform != null && hitInfo2.transform != base.transform)
+                    {
+                        continue;
+                    }
+                }
+                num5 = sqrMagnitude2;
+                player = null;
+                zombie = zombie2;
+                flag = true;
             }
-            num5 = sqrMagnitude2;
-            player = null;
-            zombie = zombie2;
-            flag = true;
         }
-        float sqrRadius3 = ((!flag && targetAnimal != null) ? num4 : num5);
-        animalsInRadius.Clear();
-        AnimalManager.getAnimalsInRadius(fromPoint, sqrRadius3, animalsInRadius);
-        for (int k = 0; k < animalsInRadius.Count; k++)
+        if (sentryAsset.CanTargetAnimals)
         {
-            Animal animal2 = animalsInRadius[k];
-            if (animal2.isDead)
+            float sqrRadius3 = ((!flag && targetAnimal != null) ? num4 : num5);
+            animalsInRadius.Clear();
+            AnimalManager.getAnimalsInRadius(fromPoint, sqrRadius3, animalsInRadius);
+            for (int k = 0; k < animalsInRadius.Count; k++)
             {
-                continue;
-            }
-            Vector3 position2 = animal2.transform.position;
-            float sqrMagnitude3 = (position2 - fromPoint).sqrMagnitude;
-            if (animal2 != targetAnimal && sqrMagnitude3 > num5)
-            {
-                continue;
-            }
-            Vector3 vector5 = position2 - fromPoint;
-            float magnitude3 = vector5.magnitude;
-            Vector3 vector6 = vector5 / magnitude3;
-            if (animal2 != targetAnimal && Vector3.Dot(vector6, aimTransform.forward) < 0.5f)
-            {
-                continue;
-            }
-            if (magnitude3 > 0.025f)
-            {
-                Physics.Raycast(new Ray(fromPoint, vector6), out var hitInfo3, magnitude3 - 0.025f, RayMasks.BLOCK_SENTRY);
-                if (hitInfo3.transform != null && hitInfo3.transform != base.transform)
+                Animal animal2 = animalsInRadius[k];
+                if (animal2.isDead)
                 {
                     continue;
                 }
-                Physics.Raycast(new Ray(fromPoint + vector6 * (magnitude3 - 0.025f), -vector6), out hitInfo3, magnitude3 - 0.025f, RayMasks.DAMAGE_SERVER);
-                if (hitInfo3.transform != null && hitInfo3.transform != base.transform)
+                Vector3 position2 = animal2.transform.position;
+                float sqrMagnitude3 = (position2 - fromPoint).sqrMagnitude;
+                if (animal2 != targetAnimal && sqrMagnitude3 > num5)
                 {
                     continue;
                 }
+                Vector3 vector5 = position2 - fromPoint;
+                float magnitude3 = vector5.magnitude;
+                Vector3 vector6 = vector5 / magnitude3;
+                if (animal2 != targetAnimal && Vector3.Dot(vector6, aimTransform.forward) < 0.5f)
+                {
+                    continue;
+                }
+                if (magnitude3 > 0.025f)
+                {
+                    Physics.Raycast(new Ray(fromPoint, vector6), out var hitInfo3, magnitude3 - 0.025f, RayMasks.BLOCK_SENTRY);
+                    if (hitInfo3.transform != null && hitInfo3.transform != base.transform)
+                    {
+                        continue;
+                    }
+                    Physics.Raycast(new Ray(fromPoint + vector6 * (magnitude3 - 0.025f), -vector6), out hitInfo3, magnitude3 - 0.025f, RayMasks.DAMAGE_SERVER);
+                    if (hitInfo3.transform != null && hitInfo3.transform != base.transform)
+                    {
+                        continue;
+                    }
+                }
+                num5 = sqrMagnitude3;
+                player = null;
+                zombie = null;
+                animal = animal2;
+                flag = true;
             }
-            num5 = sqrMagnitude3;
-            player = null;
-            zombie = null;
-            animal = animal2;
-            flag = true;
         }
-        if (Provider.isPvP && sentryMode == ESentryMode.HOSTILE)
+        if (Provider.isPvP && sentryMode == ESentryMode.HOSTILE && sentryAsset.CanTargetVehicles)
         {
             float sqrRadius4 = ((!flag && targetVehicle != null) ? num4 : num5);
             vehiclesInRadius.Clear();

@@ -1,0 +1,11 @@
+GUID 318ed502f80d4798a96c324a43593315
+Type Road
+
+Width 8
+Depth 0.8
+OffsetAlongNormal -0.2
+RepeatDistanceScale 4
+
+TexturePath Roads/TwoLane_TwoWay_Passing.png
+
+VanillaPhysicsMaterial Concrete_Static

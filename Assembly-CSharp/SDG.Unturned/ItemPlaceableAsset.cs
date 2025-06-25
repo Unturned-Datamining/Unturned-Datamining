@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 namespace SDG.Unturned;
@@ -8,6 +9,10 @@ namespace SDG.Unturned;
 /// </summary>
 public class ItemPlaceableAsset : ItemAsset
 {
+    private CachingAssetRef _salvageItemRef;
+
+    private CachingAssetRef _itemDroppedOnDestroyRef;
+
     /// <summary>
     /// If true, this item is eligible for zombies to detect and attack when stuck.
     /// Defaults to true.
@@ -15,9 +20,29 @@ public class ItemPlaceableAsset : ItemAsset
     public bool CanZombiesTarget { get; protected set; }
 
     /// <summary>
-    /// Item recovered when picked up below 100% health.
+    /// Item or spawn table recovered when picked up below 100% health.
     /// </summary>
-    public AssetReference<ItemAsset> salvageItemRef { get; protected set; }
+    public CachingAssetRef SalvageItemRef
+    {
+        get
+        {
+            return _salvageItemRef;
+        }
+        set
+        {
+            _salvageItemRef = value;
+        }
+    }
+
+    /// <summary>
+    /// Minimum number of items to recover when salvaged.
+    /// </summary>
+    public int MinItemsRecoveredOnSalvage { get; protected set; }
+
+    /// <summary>
+    /// Maximum number of items to recover when salvaged.
+    /// </summary>
+    public int MaxItemsRecoveredOnSalvage { get; set; }
 
     /// <summary>
     /// Minimum number of items to drop when destroyed.
@@ -30,20 +55,39 @@ public class ItemPlaceableAsset : ItemAsset
     public int maxItemsDroppedOnDestroy { get; protected set; }
 
     /// <summary>
-    /// Spawn table for items dropped when destroyed.
+    /// Item or spawn table dropped when destroyed.
     /// </summary>
-    public AssetReference<SpawnAsset> itemDroppedOnDestroy { get; protected set; }
+    public CachingAssetRef ItemDroppedOnDestroyRef
+    {
+        get
+        {
+            return _itemDroppedOnDestroyRef;
+        }
+        set
+        {
+            _itemDroppedOnDestroyRef = value;
+        }
+    }
 
     /// <summary>
     /// If non-null, this asset provides the listed crafting tags to nearby players.
     /// </summary>
     public CachingAssetRef[] PlaceableProvidedCraftingTags { get; protected set; }
 
+    [Obsolete("Replaced by SalvageItemRef which supports spawn tables as well")]
+    public AssetReference<ItemAsset> salvageItemRef => new AssetReference<ItemAsset>(SalvageItemRef.Guid);
+
+    [Obsolete("Replaced by ItemDroppedOnDestroyRef which supports items as well")]
+    public AssetReference<SpawnAsset> ItemDroppedOnDestroy => new AssetReference<SpawnAsset>(_itemDroppedOnDestroyRef.Guid);
+
+    /// <summary>
+    /// Note: this assumes SalvageItemRef points to an ItemAsset.
+    /// </summary>
     public ItemAsset FindSalvageItemAsset()
     {
-        if (salvageItemRef.isValid)
+        if (SalvageItemRef.IsAssigned)
         {
-            return salvageItemRef.Find();
+            return SalvageItemRef.Get<ItemAsset>();
         }
         return FindDefaultSalvageItemAsset();
     }
@@ -51,37 +95,81 @@ public class ItemPlaceableAsset : ItemAsset
     /// <summary>
     /// By default a crafting ingredient is salvaged.
     /// </summary>
-    internal ItemAsset FindDefaultSalvageItemAsset()
+    public ItemAsset FindDefaultSalvageItemAsset()
     {
         foreach (Blueprint blueprint in base.blueprints)
         {
             if (blueprint.outputs.Length == 1 && blueprint.outputs[0].IsItem(this))
             {
-                return blueprint.supplies[Random.Range(0, blueprint.supplies.Length)].FindItemAsset();
+                return blueprint.supplies[UnityEngine.Random.Range(0, blueprint.supplies.Length)].FindItemAsset();
             }
         }
         return null;
     }
 
-    internal void SpawnItemDropsOnDestroy(Vector3 position)
+    public void GrantSalvageItems(Player player)
     {
-        int value = Random.Range(minItemsDroppedOnDestroy, maxItemsDroppedOnDestroy + 1);
+        int value = UnityEngine.Random.Range(MinItemsRecoveredOnSalvage, MaxItemsRecoveredOnSalvage + 1);
         value = Mathf.Clamp(value, 0, 100);
         if (value < 1)
         {
             return;
         }
-        SpawnAsset spawnAsset = itemDroppedOnDestroy.Find();
-        if (spawnAsset == null)
+        Asset asset = _salvageItemRef.Get();
+        if (asset is SpawnAsset spawnAsset)
+        {
+            for (int i = 0; i < value; i++)
+            {
+                ItemAsset itemAsset = SpawnTableTool.Resolve<ItemAsset>(spawnAsset, EAssetType.ITEM, OnGetItemRecoveredOnSalvageSpawnTableErrorContext);
+                if (itemAsset != null)
+                {
+                    player.inventory.forceAddItem(new Item(itemAsset, EItemOrigin.NATURE), auto: true);
+                }
+            }
+            return;
+        }
+        ItemAsset itemAsset2 = asset as ItemAsset;
+        if (itemAsset2 == null)
+        {
+            itemAsset2 = FindDefaultSalvageItemAsset();
+            if (itemAsset2 == null)
+            {
+                return;
+            }
+        }
+        for (int j = 0; j < value; j++)
+        {
+            player.inventory.forceAddItem(new Item(itemAsset2, EItemOrigin.NATURE), auto: true);
+        }
+    }
+
+    internal void SpawnItemDropsOnDestroy(Vector3 position)
+    {
+        int value = UnityEngine.Random.Range(minItemsDroppedOnDestroy, maxItemsDroppedOnDestroy + 1);
+        value = Mathf.Clamp(value, 0, 100);
+        if (value < 1)
         {
             return;
         }
-        for (int i = 0; i < value; i++)
+        Asset asset = _itemDroppedOnDestroyRef.Get();
+        if (asset is SpawnAsset spawnAsset)
         {
-            ushort num = SpawnTableTool.ResolveLegacyId(spawnAsset, EAssetType.ITEM, OnGetItemDroppedOnDestroySpawnTableErrorContext);
-            if (num > 0)
+            for (int i = 0; i < value; i++)
             {
-                ItemManager.dropItem(new Item(num, EItemOrigin.NATURE), position + new Vector3(Random.Range(-2f, 2f), 2f, Random.Range(-2f, 2f)), playEffect: false, Dedicator.IsDedicatedServer, wideSpread: true);
+                ItemAsset itemAsset = SpawnTableTool.Resolve<ItemAsset>(spawnAsset, EAssetType.ITEM, OnGetItemDroppedOnDestroySpawnTableErrorContext);
+                if (itemAsset != null)
+                {
+                    ItemManager.dropItem(new Item(itemAsset, EItemOrigin.NATURE), position + new Vector3(UnityEngine.Random.Range(-2f, 2f), 2f, UnityEngine.Random.Range(-2f, 2f)), playEffect: false, Dedicator.IsDedicatedServer, wideSpread: true);
+                }
+            }
+            return;
+        }
+        ItemAsset asset2 = asset as ItemAsset;
+        if (asset != null)
+        {
+            for (int j = 0; j < value; j++)
+            {
+                ItemManager.dropItem(new Item(asset2, EItemOrigin.NATURE), position + new Vector3(UnityEngine.Random.Range(-2f, 2f), 2f, UnityEngine.Random.Range(-2f, 2f)), playEffect: false, Dedicator.IsDedicatedServer, wideSpread: true);
             }
         }
     }
@@ -110,10 +198,34 @@ public class ItemPlaceableAsset : ItemAsset
     {
         base.PopulateAsset(in p);
         CanZombiesTarget = p.data.ParseBool("Can_Zombies_Target", defaultValue: true);
-        salvageItemRef = p.data.readAssetReference<ItemAsset>("SalvageItem");
-        minItemsDroppedOnDestroy = p.data.ParseInt32("Min_Items_Dropped_On_Destroy");
-        maxItemsDroppedOnDestroy = p.data.ParseInt32("Max_Items_Dropped_On_Destroy");
-        itemDroppedOnDestroy = p.data.readAssetReference<SpawnAsset>("Item_Dropped_On_Destroy");
+        if (p.data.TryParseInt32("Items_Recovered_On_Salvage", out var value))
+        {
+            MinItemsRecoveredOnSalvage = value;
+            maxItemsDroppedOnDestroy = value;
+        }
+        else
+        {
+            MinItemsRecoveredOnSalvage = p.data.ParseInt32("Min_Items_Recovered_On_Salvage", 1);
+            MaxItemsRecoveredOnSalvage = p.data.ParseInt32("Max_Items_Recovered_On_Salvage", 1);
+        }
+        if (!p.data.TryParseAssetRef("SalvageItem", out _salvageItemRef) && string.Equals(p.data.GetString("SalvageItem"), "this", StringComparison.InvariantCultureIgnoreCase))
+        {
+            _salvageItemRef = this;
+        }
+        if (p.data.TryParseInt32("Items_Dropped_On_Destroy", out var value2))
+        {
+            minItemsDroppedOnDestroy = value2;
+            maxItemsDroppedOnDestroy = value2;
+        }
+        else
+        {
+            minItemsDroppedOnDestroy = p.data.ParseInt32("Min_Items_Dropped_On_Destroy");
+            maxItemsDroppedOnDestroy = p.data.ParseInt32("Max_Items_Dropped_On_Destroy");
+        }
+        if (!p.data.TryParseAssetRef("Item_Dropped_On_Destroy", out _itemDroppedOnDestroyRef) && string.Equals(p.data.GetString("Item_Dropped_On_Destroy"), "this", StringComparison.InvariantCultureIgnoreCase))
+        {
+            _itemDroppedOnDestroyRef = this;
+        }
         PlaceableProvidedCraftingTags = p.data.ParseArrayOfStructs<CachingAssetRef>("PlaceableProvidesCraftingTags");
     }
 
@@ -123,14 +235,19 @@ public class ItemPlaceableAsset : ItemAsset
         CargoDeclaration orAddDeclaration = builder.GetOrAddDeclaration("Placeable");
         orAddDeclaration.Append("GUID", GUID);
         orAddDeclaration.Append("Can_Zombies_Target", CanZombiesTarget);
-        orAddDeclaration.Append("SalvageItem", salvageItemRef);
+        orAddDeclaration.Append("SalvageItem", SalvageItemRef);
         orAddDeclaration.Append("Min_Items_Dropped_On_Destroy", minItemsDroppedOnDestroy);
         orAddDeclaration.Append("Max_Items_Dropped_On_Destroy", maxItemsDroppedOnDestroy);
-        orAddDeclaration.Append("Item_Dropped_On_Destroy", itemDroppedOnDestroy);
+        orAddDeclaration.Append("Item_Dropped_On_Destroy", ItemDroppedOnDestroyRef);
     }
 
     private string OnGetItemDroppedOnDestroySpawnTableErrorContext()
     {
         return FriendlyName + " items dropped on destroy";
+    }
+
+    private string OnGetItemRecoveredOnSalvageSpawnTableErrorContext()
+    {
+        return FriendlyName + " items recovered on salvage";
     }
 }

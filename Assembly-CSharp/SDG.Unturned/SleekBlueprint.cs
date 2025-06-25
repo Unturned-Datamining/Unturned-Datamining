@@ -41,7 +41,7 @@ public class SleekBlueprint : SleekWrapper
 
     internal event Clicked OnClickedBlueprint;
 
-    private void RefreshPreferences()
+    private void RefreshPreferencesAndTooltip()
     {
         EBlueprintPreferences blueprintPreferences = PlayerCrafting.GetBlueprintPreferences(blueprint);
         if (blueprintPreferences != 0)
@@ -63,12 +63,44 @@ public class SleekBlueprint : SleekWrapper
         {
             preferencesIcon.IsVisible = false;
         }
+        Local localization = PlayerDashboardCraftingUI.localization;
+        tooltipSb.Clear();
+        tooltipSb.AppendLine(titleLabel.Text);
+        TagAsset categoryTag = blueprint.GetCategoryTag();
+        if (categoryTag != null)
+        {
+            tooltipSb.AppendFormat(localization.format("BlueprintCategoryLabel"), categoryTag.RichTextOrPreferredFontColor);
+            tooltipSb.AppendLine();
+        }
+        tooltipSb.AppendLine();
+        if (blueprintPreferences != EBlueprintPreferences.Ignored && blueprintStatus.IsCraftable)
+        {
+            string keyCodeText = MenuConfigurationControlsUI.getKeyCodeText(ControlsSettings.SkipActionCraftingMenu);
+            if (OptionsSettings.ShouldClickBlueprintToCraft)
+            {
+                string format = localization.format("InvertSkipCraftingTooltip");
+                tooltipSb.AppendFormat(format, keyCodeText);
+            }
+            else
+            {
+                string format2 = PlayerDashboardInventoryUI.localization.format("ActionBlueprint_SkipCraftingTooltip");
+                tooltipSb.AppendFormat(format2, keyCodeText);
+            }
+            tooltipSb.AppendLine();
+            string keyCodeText2 = MenuConfigurationControlsUI.getKeyCodeText(ControlsSettings.other);
+            tooltipSb.AppendFormat(PlayerDashboardInventoryUI.localization.format("ActionBlueprint_CraftAllTooltip"), keyCodeText2);
+        }
+        else
+        {
+            PlayerDashboardCraftingUI.BuildNotCraftableTooltip(tooltipSb, blueprintStatus, blueprintPreferences);
+        }
+        backgroundButton.TooltipText = tooltipSb.ToString();
     }
 
     public override void OnDestroy()
     {
         base.OnDestroy();
-        PlayerCrafting.OnLocalPlayerBlueprintPreferencesChanged = (System.Action)Delegate.Remove(PlayerCrafting.OnLocalPlayerBlueprintPreferencesChanged, new System.Action(RefreshPreferences));
+        PlayerCrafting.OnLocalPlayerBlueprintPreferencesChanged = (System.Action)Delegate.Remove(PlayerCrafting.OnLocalPlayerBlueprintPreferencesChanged, new System.Action(RefreshPreferencesAndTooltip));
     }
 
     internal SleekBlueprint()
@@ -116,7 +148,7 @@ public class SleekBlueprint : SleekWrapper
         preferencesIcon.SizeOffset_Y = 40f;
         preferencesIcon.TintColor = new SleekColor(ESleekTint.FOREGROUND, 0.5f);
         AddChild(preferencesIcon);
-        PlayerCrafting.OnLocalPlayerBlueprintPreferencesChanged = (System.Action)Delegate.Combine(PlayerCrafting.OnLocalPlayerBlueprintPreferencesChanged, new System.Action(RefreshPreferences));
+        PlayerCrafting.OnLocalPlayerBlueprintPreferencesChanged = (System.Action)Delegate.Combine(PlayerCrafting.OnLocalPlayerBlueprintPreferencesChanged, new System.Action(RefreshPreferencesAndTooltip));
     }
 
     internal void SetBlueprintStatus(BlueprintStatus blueprintStatus)
@@ -377,43 +409,12 @@ public class SleekBlueprint : SleekWrapper
         }
         string text2 = titleSb.ToString();
         titleLabel.Text = text2;
-        tooltipSb.Clear();
-        tooltipSb.AppendLine(text2);
-        TagAsset categoryTag = blueprint.GetCategoryTag();
-        if (categoryTag != null)
-        {
-            tooltipSb.AppendFormat(localization.format("BlueprintCategoryLabel"), categoryTag.RichTextOrPreferredFontColor);
-            tooltipSb.AppendLine();
-        }
-        tooltipSb.AppendLine();
-        if (blueprintStatus.IsCraftable)
-        {
-            string keyCodeText = MenuConfigurationControlsUI.getKeyCodeText(ControlsSettings.SkipActionCraftingMenu);
-            if (OptionsSettings.ShouldClickBlueprintToCraft)
-            {
-                string format = localization.format("InvertSkipCraftingTooltip");
-                tooltipSb.AppendFormat(format, keyCodeText);
-            }
-            else
-            {
-                string format2 = PlayerDashboardInventoryUI.localization.format("ActionBlueprint_SkipCraftingTooltip");
-                tooltipSb.AppendFormat(format2, keyCodeText);
-            }
-            tooltipSb.AppendLine();
-            string keyCodeText2 = MenuConfigurationControlsUI.getKeyCodeText(ControlsSettings.other);
-            tooltipSb.AppendFormat(PlayerDashboardInventoryUI.localization.format("ActionBlueprint_CraftAllTooltip"), keyCodeText2);
-        }
-        else
-        {
-            PlayerDashboardCraftingUI.BuildNotCraftableTooltip(tooltipSb, blueprintStatus);
-        }
-        backgroundButton.TooltipText = tooltipSb.ToString();
         num2 -= 5f;
         formulaLabelsContainer.PositionOffset_X = (0f - num2) / 2f;
         formulaLabelsContainer.SizeOffset_X = num2;
         formulaImagesContainer.PositionOffset_X = (0f - num2) / 2f;
         formulaImagesContainer.SizeOffset_X = num2;
-        RefreshPreferences();
+        RefreshPreferencesAndTooltip();
         for (; i < pooledItemIcons.Count; i++)
         {
             pooledItemIcons[i].IsVisible = false;

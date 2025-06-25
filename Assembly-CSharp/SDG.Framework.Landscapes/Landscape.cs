@@ -50,7 +50,7 @@ public class Landscape : DevkitHierarchyItemBase
 
     public static readonly float HALF_SPLATMAP_WORLD_UNIT = 2f;
 
-    public static readonly int BASEMAP_RESOLUTION = 128;
+    public static readonly int BASEMAP_RESOLUTION = 256;
 
     public static readonly int SPLATMAP_COUNT = 2;
 

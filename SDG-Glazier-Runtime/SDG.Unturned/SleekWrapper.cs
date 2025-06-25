@@ -274,6 +274,11 @@ public class SleekWrapper : ISleekElement
         return implementation.GetChildAtIndex(index);
     }
 
+    public int GetChildCount()
+    {
+        return implementation.GetChildCount();
+    }
+
     public void Update()
     {
         implementation.Update();

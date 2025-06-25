@@ -50,8 +50,6 @@ public class MenuPlayConnectUI
 
     private static ISleekImage serverCodeIcon;
 
-    private static bool isLaunched;
-
     /// <param name="shouldAutoJoin">If true the server is immediately joined, otherwise show server details beforehand.</param>
     public static void connect(SteamConnectionInfo info, bool shouldAutoJoin, MenuPlayServerInfoUI.EServerInfoOpenContext openContext)
     {
@@ -349,6 +347,28 @@ public class MenuPlayConnectUI
         close();
     }
 
+    internal static void HandlePendingServerRelayRequest()
+    {
+        hasPendingServerRelay = false;
+        UnturnedLog.info("Relay connect IP: {0} Port: {1} Code: {2} Password: \"{3}\"", Parser.getIPFromUInt32(serverRelayIP), serverRelayPort, serverRelayServerCode, serverRelayPassword);
+        bool shouldAutoJoin = !serverRelayWaitOnMenu;
+        if (serverRelayServerCode != CSteamID.Nil)
+        {
+            if (serverRelayServerCode.BGameServerAccount())
+            {
+                Provider.connect(new ServerConnectParameters(serverRelayServerCode, serverRelayPassword), null, null);
+            }
+            else
+            {
+                UnturnedLog.warn($"Unable to join non-gameserver code ({serverRelayServerCode.GetEAccountType()})");
+            }
+        }
+        else
+        {
+            connect(new SteamConnectionInfo(serverRelayIP, serverRelayPort, serverRelayPassword), shouldAutoJoin, MenuPlayServerInfoUI.EServerInfoOpenContext.CONNECT);
+        }
+    }
+
     public void OnDestroy()
     {
         Provider.provider.matchmakingService.onAttemptUpdated -= onAttemptUpdated;
@@ -452,43 +472,6 @@ public class MenuPlayConnectUI
         RefreshServerCodeInfo();
         Provider.provider.matchmakingService.onAttemptUpdated += onAttemptUpdated;
         Provider.provider.matchmakingService.onTimedOut += onTimedOut;
-        if (!isLaunched)
-        {
-            isLaunched = true;
-            ulong lobby;
-            if (CommandLine.TryGetSteamConnect(Environment.CommandLine, out var ip, out var queryPort, out var pass))
-            {
-                SteamConnectionInfo steamConnectionInfo = new SteamConnectionInfo(ip, queryPort, pass);
-                UnturnedLog.info("Command-line connect IP: {0} Port: {1} Password: '{2}'", Parser.getIPFromUInt32(steamConnectionInfo.ip), steamConnectionInfo.port, steamConnectionInfo.password);
-                connect(steamConnectionInfo, shouldAutoJoin: false, MenuPlayServerInfoUI.EServerInfoOpenContext.CONNECT);
-            }
-            else if (CommandLine.tryGetLobby(Environment.CommandLine, out lobby))
-            {
-                UnturnedLog.info("Lobby: " + lobby);
-                Lobbies.joinLobby(new CSteamID(lobby));
-            }
-        }
-        else if (hasPendingServerRelay)
-        {
-            hasPendingServerRelay = false;
-            UnturnedLog.info("Relay connect IP: {0} Port: {1} Code: {2} Password: \"{3}\"", Parser.getIPFromUInt32(serverRelayIP), serverRelayPort, serverRelayServerCode, serverRelayPassword);
-            bool shouldAutoJoin = !serverRelayWaitOnMenu;
-            if (serverRelayServerCode != CSteamID.Nil)
-            {
-                if (serverRelayServerCode.BGameServerAccount())
-                {
-                    Provider.connect(new ServerConnectParameters(serverRelayServerCode, serverRelayPassword), null, null);
-                }
-                else
-                {
-                    UnturnedLog.warn($"Unable to join non-gameserver code ({serverRelayServerCode.GetEAccountType()})");
-                }
-            }
-            else
-            {
-                connect(new SteamConnectionInfo(serverRelayIP, serverRelayPort, serverRelayPassword), shouldAutoJoin, MenuPlayServerInfoUI.EServerInfoOpenContext.CONNECT);
-            }
-        }
         backButton = new SleekButtonIcon(MenuDashboardUI.icons.load<Texture2D>("Exit"));
         backButton.PositionOffset_Y = -50f;
         backButton.PositionScale_Y = 1f;

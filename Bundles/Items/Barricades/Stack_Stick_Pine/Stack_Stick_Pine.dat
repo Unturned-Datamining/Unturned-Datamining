@@ -32,6 +32,11 @@ Blueprints
 	}
 ]
 
+Items_Recovered_On_Salvage 1
+SalvageItem this
+Items_Dropped_On_Destroy 1
+Item_Dropped_On_Destroy this
+
 Actions 1
 Action_0_Type Blueprint
 Action_0_Source 1908

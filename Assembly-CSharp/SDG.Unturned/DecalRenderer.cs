@@ -60,6 +60,10 @@ public class DecalRenderer : MonoBehaviour
         buffer.SetGlobalVector(ambientSkyID, RenderSettings.ambientSkyColor.linear);
         buffer.SetGlobalVector(ambientGroundID, RenderSettings.ambientGroundColor.linear);
         float num2 = 128f + GraphicsSettings.normalizedDrawDistance * 128f;
+        if (GraphicsSettings.WantsCinematicMode)
+        {
+            num2 = 16384f;
+        }
         buffer.SetRenderTarget(DIFFUSE, BuiltinRenderTextureType.CameraTarget);
         foreach (Decal item in DecalSystem.decalsDiffuse)
         {

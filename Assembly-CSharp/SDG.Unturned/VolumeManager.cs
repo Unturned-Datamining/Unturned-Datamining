@@ -102,6 +102,18 @@ public class VolumeManager<TVolume, TManager> : VolumeManagerBase where TVolume 
         return GetFirstOverlappingVolume(position) != null;
     }
 
+    public void GetOverlappingVolumesWithAlpha(Vector3 position, List<VolumeAlphaPair<TVolume>> results)
+    {
+        results.Clear();
+        foreach (TVolume allVolume in allVolumes)
+        {
+            if (allVolume.IsPositionInsideVolumeWithAlpha(position, out var alpha))
+            {
+                results.Add(new VolumeAlphaPair<TVolume>(allVolume, alpha));
+            }
+        }
+    }
+
     public override bool Raycast(Ray ray, out RaycastHit hitInfo, float maxDistance)
     {
         TVolume hitVolume;

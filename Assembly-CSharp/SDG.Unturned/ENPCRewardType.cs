@@ -26,5 +26,6 @@ public enum ENPCRewardType
     REWARDS_LIST_ASSET,
     CUTSCENE_MODE,
     PLAYER_LIFE_STAMINA,
-    EFFECT
+    EFFECT,
+    AIRDROP
 }

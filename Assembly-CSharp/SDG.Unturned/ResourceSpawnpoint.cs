@@ -248,22 +248,23 @@ public class ResourceSpawnpoint
 
     internal void UpdateActive()
     {
-        bool flag = isAlive;
-        bool flag2 = !isAlive;
+        bool flag = isActiveInRegion || GraphicsSettings.WantsCinematicMode;
+        bool flag2 = isAlive;
+        bool flag3 = !isAlive;
         if (asset != null && asset.isForage)
         {
-            flag = true;
             flag2 = true;
+            flag3 = true;
             model?.Find("Forage")?.gameObject.SetActive(isAlive);
         }
-        bool flag3 = areConditionsMet && (Dedicator.IsDedicatedServer || isActiveInRegion);
+        bool flag4 = areConditionsMet && (Dedicator.IsDedicatedServer || flag);
         if (model != null)
         {
-            model.gameObject.SetActive(flag3 && flag);
+            model.gameObject.SetActive(flag4 && flag2);
         }
         if (stump != null)
         {
-            stump.gameObject.SetActive(flag3 && flag2);
+            stump.gameObject.SetActive(flag4 && flag3);
         }
         if (!Dedicator.IsDedicatedServer)
         {
@@ -275,7 +276,7 @@ public class ResourceSpawnpoint
     {
         if (skybox != null)
         {
-            bool flag = GraphicsSettings.landmarkQuality >= EGraphicQuality.MEDIUM;
+            bool flag = GraphicsSettings.landmarkQuality >= EGraphicQuality.MEDIUM && !GraphicsSettings.WantsCinematicMode;
             skybox.gameObject.SetActive(!isActiveInRegion && isSkyboxActiveInRegion && flag && areConditionsMet && isAlive);
         }
     }

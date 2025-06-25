@@ -147,7 +147,7 @@ public class PlayerDashboardCraftingUI
         }
     }
 
-    internal static void BuildNotCraftableTooltip(StringBuilder craftTooltipBuilder, BlueprintStatus status)
+    internal static void BuildNotCraftableTooltip(StringBuilder craftTooltipBuilder, BlueprintStatus status, EBlueprintPreferences preferences)
     {
         craftTooltipBuilder.AppendLine(localization.format("NotCraftable_Header"));
         Blueprint blueprint = status.blueprint;
@@ -204,6 +204,11 @@ public class PlayerDashboardCraftingUI
         {
             craftTooltipBuilder.Append(localization.format("NotCraftable_LineItemPrefix"));
             craftTooltipBuilder.AppendLine(localization.format("NotCraftable_UnmetConditions"));
+        }
+        if (preferences == EBlueprintPreferences.Ignored)
+        {
+            craftTooltipBuilder.Append(localization.format("NotCraftable_LineItemPrefix"));
+            craftTooltipBuilder.AppendLine(localization.format("NotCraftable_Ignored"));
         }
     }
 
@@ -281,6 +286,15 @@ public class PlayerDashboardCraftingUI
             }
         }
         RefreshCategoryTagButtons(hashSet);
+    }
+
+    /// <summary>
+    /// Accessible for UseableHousingPlanner.
+    /// </summary>
+    internal static List<IBlueprintOwner> GetBlueprintOwners()
+    {
+        RefreshLoadedBlueprintsIfNecessary();
+        return blueprintOwners;
     }
 
     private static void RefreshCraftableBlueprints()
@@ -566,7 +580,7 @@ public class PlayerDashboardCraftingUI
             updateBlueprintStatusParameters.status = blueprintStatus;
             updateBlueprintStatusParameters.shouldExitEarly = false;
             UpdateBlueprintStatusParameters p = updateBlueprintStatusParameters;
-            Player.player.crafting.UpdateBlueprintStaticStatus(in p);
+            Player.player.crafting.UpdateBlueprintStaticStatus(in p, bypassWorkstationRequirements: false);
             Player.player.crafting.UpdateBlueprintDynamicStatus(in p);
             if ((!hideUncraftable || blueprintStatus.IsCraftable) && ((!blueprintStatus.isMissingAnyCriticalInputItem && blueprintStatus.hasAnyInputItem) || (filteredBlueprint.canBeVisibleWhenSearchedWithoutRequiredItems && flag4)) && (!blueprintStatus.isMissingAnyNpcConditions || filteredBlueprint.CanBeVisibleWithUnmetConditions))
             {

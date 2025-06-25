@@ -10,6 +10,18 @@ public struct NPCConditionsList
 
     private static List<INPCCondition> tempConditions = new List<INPCCondition>();
 
+    public bool IsEmpty
+    {
+        get
+        {
+            if (conditions != null)
+            {
+                return conditions.Length < 1;
+            }
+            return true;
+        }
+    }
+
     /// <summary>
     /// Exposed for plugins. Can be null. Please do not modify.
     /// </summary>

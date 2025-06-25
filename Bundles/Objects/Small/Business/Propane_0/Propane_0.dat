@@ -2,3 +2,5 @@
 Type Small
 ID 381
 Has_Clip_Prefab false
+
+Is_Clutter true

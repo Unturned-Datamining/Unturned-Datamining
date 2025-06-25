@@ -4,11 +4,19 @@ using System.Runtime.InteropServices;
 using BattlEye;
 using SDG.NetPak;
 using Steamworks;
+using Unturned.SystemEx;
 
 namespace SDG.Unturned;
 
 internal static class ClientMessageHandler_Accepted
 {
+    /// <summary>
+    /// Nelson 2025-06-19: using server-provided connection details is useful because
+    /// it can find its public IP (e.g., joining by LAN and sharing WAN IP), and/or
+    /// its fake IP (again when joining by LAN).
+    /// </summary>
+    internal static string RichPresenceConnectionTarget { get; private set; }
+
     internal static event System.Action OnGameplayConfigReceived;
 
     internal static void ReadMessage(NetPakReader reader)
@@ -16,6 +24,7 @@ internal static class ClientMessageHandler_Accepted
         Provider.isWaitingForAuthenticationResponse = false;
         reader.ReadUInt32(out var value);
         reader.ReadUInt16(out var value2);
+        bool flag = SteamNetworkingUtils.IsFakeIPv4(value);
         UnturnedLog.info("Accepted by server");
         if (Provider.IsBattlEyeActiveOnCurrentServer)
         {
@@ -56,7 +65,7 @@ internal static class ClientMessageHandler_Accepted
                 }
                 uint ulAddress;
                 ushort usPort;
-                if (SteamNetworkingUtils.IsFakeIPv4(value))
+                if (flag)
                 {
                     ulAddress = 0u;
                     usPort = 0;
@@ -134,6 +143,17 @@ internal static class ClientMessageHandler_Accepted
         reader.ReadFloat(out Provider._modeConfigData.Gameplay.AirStrafing_Deceleration_Multiplier);
         reader.ReadFloat(out Provider._modeConfigData.Gameplay.ThirdPerson_RecoilMultiplier);
         reader.ReadFloat(out Provider._modeConfigData.Gameplay.ThirdPerson_SpreadMultiplier);
+        RichPresenceConnectionTarget = Provider.server.ToString();
+        if (flag)
+        {
+            IPv4Address pv4Address = new IPv4Address(value);
+            RichPresenceConnectionTarget = $"{pv4Address}:{value2}";
+            UnturnedLog.info("Rich presence advertisement using Fake IP address (" + RichPresenceConnectionTarget + ")");
+        }
+        else
+        {
+            UnturnedLog.info("Rich presence advertisement using server code (" + RichPresenceConnectionTarget + ")");
+        }
         if (OptionsSettings.ShouldHideRichPresence)
         {
             SteamFriends.SetRichPresence("connect", "");
@@ -141,7 +161,7 @@ internal static class ClientMessageHandler_Accepted
         else
         {
             SteamUser.AdvertiseGame(Provider.server, 0u, 0);
-            SteamFriends.SetRichPresence("connect", "+connect " + value + ":" + value2);
+            SteamFriends.SetRichPresence("connect", "+connect " + RichPresenceConnectionTarget);
         }
         Lobbies.leaveLobby();
         SteamMatchmaking.AddFavoriteGame(Provider.APP_ID, value, (ushort)(value2 + 1), value2, Provider.STEAM_FAVORITE_FLAG_HISTORY, SteamUtils.GetServerRealTime());

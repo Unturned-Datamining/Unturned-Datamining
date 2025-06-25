@@ -266,6 +266,7 @@ public class MenuWorkshopSpawnsUI
                     sleekBox2.SizeOffset_X = -260f;
                     sleekBox2.SizeScale_X = 1f;
                     sleekBox2.SizeOffset_Y = 30f;
+                    sleekBox2.TextContrastContext = ETextContrastContext.ColorfulBackdrop;
                     tablesBox.AddChild(sleekBox2);
                     sleekElement = sleekBox2;
                     num += 40;

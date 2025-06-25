@@ -1,4 +1,3 @@
-using SDG.Framework.Devkit;
 using UnityEngine;
 
 namespace SDG.Unturned;
@@ -49,8 +48,7 @@ public class EditorArea : MonoBehaviour
             _bound = b;
             onBoundUpdated?.Invoke(oldBound, b);
         }
-        effectNode = VolumeManager<AmbianceVolume, AmbianceVolumeManager>.Get().GetFirstOverlappingVolume(base.transform.position);
-        LevelLighting.updateLocal(MainCamera.instance.transform.position, 0f, effectNode);
+        LevelLighting.UpdateForViewer(MainCamera.instance.transform.position, 0f, Time.deltaTime);
     }
 
     private void Start()

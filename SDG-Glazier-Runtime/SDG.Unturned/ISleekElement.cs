@@ -68,6 +68,8 @@ public interface ISleekElement
 
     ISleekElement GetChildAtIndex(int index);
 
+    int GetChildCount();
+
     void Update();
 
     void RemoveChild(ISleekElement child);

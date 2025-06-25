@@ -9,17 +9,7 @@ public class Bumper : MonoBehaviour
 
     public bool instakill;
 
-    private static readonly float DAMAGE_PLAYER = 10f;
-
-    private static readonly float DAMAGE_ZOMBIE = 15f;
-
-    private static readonly float DAMAGE_ANIMAL = 15f;
-
-    private static readonly float DAMAGE_OBJECT = 30f;
-
     private static readonly float DAMAGE_VEHICLE = 8f;
-
-    private static readonly float DAMAGE_RESOURCE = 85f;
 
     private InteractableVehicle vehicle;
 
@@ -49,7 +39,8 @@ public class Bumper : MonoBehaviour
     {
         if (!(vehicle == null) && vehicle.asset != null && vehicle.asset.isVulnerableToBumper)
         {
-            DamageTool.damage(vehicle, damageTires: false, base.transform.position, isRepairing: false, damage, 1f, canRepair, out var _, getInstigatorSteamID(), EDamageOrigin.Vehicle_Collision_Self_Damage);
+            float bumperSelfDamageMultiplier = vehicle.asset.BumperSelfDamageMultiplier;
+            DamageTool.damage(vehicle, damageTires: false, base.transform.position, isRepairing: false, damage, bumperSelfDamageMultiplier, canRepair, out var _, getInstigatorSteamID(), EDamageOrigin.Vehicle_Collision_Self_Damage);
         }
     }
 
@@ -64,7 +55,7 @@ public class Bumper : MonoBehaviour
         {
             num = 0f - num;
         }
-        if (num < 3f)
+        if (num < vehicle.asset.BumperSpeedDamageThreshold)
         {
             return;
         }
@@ -76,7 +67,7 @@ public class Bumper : MonoBehaviour
                 Player player2 = DamageTool.getPlayer(other.transform);
                 if (player != null && player2 != null && player2.movement.getVehicle() == null && DamageTool.isPlayerAllowedToDamagePlayer(player, player2))
                 {
-                    DamageTool.damage(player2, EDeathCause.ROADKILL, ELimb.SPINE, vehicle.passengers[0].player.playerID.steamID, base.transform.forward, instakill ? 101f : DAMAGE_PLAYER, num, out var _, applyGlobalArmorMultiplier: true, trackKill: true);
+                    DamageTool.damage(player2, EDeathCause.ROADKILL, ELimb.SPINE, vehicle.passengers[0].player.playerID.steamID, base.transform.forward, instakill ? 101f : vehicle.asset.BumperPlayerDamage, num, out var _, applyGlobalArmorMultiplier: true, trackKill: true);
                     DamageTool.ServerSpawnLegacyImpact(other.transform.position + other.transform.up, -base.transform.forward, "Flesh", null, Provider.GatherClientConnectionsWithinSphere(other.transform.position, EffectManager.SMALL));
                     takeCrashDamage(2f);
                 }
@@ -88,7 +79,7 @@ public class Bumper : MonoBehaviour
             Zombie zombie = DamageTool.getZombie(other.transform);
             if (zombie != null)
             {
-                DamageZombieParameters parameters = new DamageZombieParameters(zombie, base.transform.forward, instakill ? 65000f : DAMAGE_ZOMBIE);
+                DamageZombieParameters parameters = new DamageZombieParameters(zombie, base.transform.forward, instakill ? 65000f : vehicle.asset.BumperZombieDamage);
                 parameters.times = num;
                 parameters.instigator = this;
                 DamageTool.damageZombie(parameters, out var _, out var _);
@@ -99,7 +90,7 @@ public class Bumper : MonoBehaviour
             Animal animal = DamageTool.getAnimal(other.transform);
             if (animal != null)
             {
-                DamageAnimalParameters parameters2 = new DamageAnimalParameters(animal, base.transform.forward, instakill ? 65000f : DAMAGE_ANIMAL);
+                DamageAnimalParameters parameters2 = new DamageAnimalParameters(animal, base.transform.forward, instakill ? 65000f : vehicle.asset.BumperAnimalDamage);
                 parameters2.times = num;
                 parameters2.instigator = this;
                 DamageTool.damageAnimal(parameters2, out var _, out var _);
@@ -135,7 +126,7 @@ public class Bumper : MonoBehaviour
         {
             Transform resourceRootTransform = DamageTool.getResourceRootTransform(other.transform);
             flag = true;
-            ResourceManager.damage(resourceRootTransform, base.transform.forward, instakill ? 65000f : DAMAGE_RESOURCE, num, 1f, out var _, out var _, getInstigatorSteamID(), EDamageOrigin.Vehicle_Bumper);
+            ResourceManager.damage(resourceRootTransform, base.transform.forward, instakill ? 65000f : vehicle.asset.BumperResourceDamage, num, 1f, out var _, out var _, getInstigatorSteamID(), EDamageOrigin.Vehicle_Bumper);
             takeCrashDamage(DAMAGE_VEHICLE * num);
         }
         else
@@ -143,7 +134,7 @@ public class Bumper : MonoBehaviour
             InteractableObjectRubble componentInParent = other.transform.GetComponentInParent<InteractableObjectRubble>();
             if (componentInParent != null)
             {
-                DamageTool.damage(componentInParent.transform, base.transform.forward, componentInParent.getSection(other.transform), instakill ? 65000f : DAMAGE_OBJECT, num, out var _, out var _, getInstigatorSteamID(), EDamageOrigin.Vehicle_Bumper);
+                DamageTool.damage(componentInParent.transform, base.transform.forward, componentInParent.getSection(other.transform), instakill ? 65000f : vehicle.asset.BumperObjectDamage, num, out var _, out var _, getInstigatorSteamID(), EDamageOrigin.Vehicle_Bumper);
                 if (Time.realtimeSinceStartup - lastDamageImpact > 0.2f)
                 {
                     lastDamageImpact = Time.realtimeSinceStartup;

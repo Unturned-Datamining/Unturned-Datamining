@@ -1,0 +1,10 @@
+GUID 2010b9ceb86f468b89912defe7fd392f
+Type Road
+
+Width 8
+Depth 0.8
+OffsetAlongNormal -0.1
+
+TexturePath Roads/Trail.png
+
+VanillaPhysicsMaterial Gravel_Static

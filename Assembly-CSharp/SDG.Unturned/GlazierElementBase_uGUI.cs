@@ -244,6 +244,11 @@ internal abstract class GlazierElementBase_uGUI : GlazierElementBase
         return _children[index];
     }
 
+    public override int GetChildCount()
+    {
+        return _children.Count;
+    }
+
     public override void RemoveChild(ISleekElement child)
     {
         if (child == null)

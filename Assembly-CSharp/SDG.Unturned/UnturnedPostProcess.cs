@@ -35,6 +35,8 @@ public class UnturnedPostProcess : MonoBehaviour
 
         public DepthOfField dof;
 
+        public SrScope singleRenderScope;
+
         public PostProcessProfileWrapper(PostProcessProfile profile, EPostProcessLayer layer)
         {
             this.profile = profile;
@@ -66,6 +68,11 @@ public class UnturnedPostProcess : MonoBehaviour
             if (layer != EPostProcessLayer.Viewmodel)
             {
                 profile.AddSettings<SkyFog>();
+            }
+            if (layer == EPostProcessLayer.Base)
+            {
+                singleRenderScope = profile.AddSettings<SrScope>();
+                singleRenderScope.active = false;
             }
         }
     }
@@ -148,6 +155,17 @@ public class UnturnedPostProcess : MonoBehaviour
         scopePostProcessLayer = scopeCamera.GetComponent<PostProcessLayer>();
         scopePostProcessLayer.fog.enabled = true;
         scopePostProcessLayer.fog.excludeSkybox = true;
+    }
+
+    public void SetSingleRenderScopeIsActive(bool isActive, float zoomFactor)
+    {
+        baseProfile.singleRenderScope.active = isActive;
+        baseProfile.singleRenderScope.standardDeviation.Override(Mathf.Min(zoomFactor * 2f, 32f));
+    }
+
+    public void SetSingleRenderScopeTarget(RenderTexture target)
+    {
+        baseProfile.singleRenderScope.renderTarget.Override(target);
     }
 
     public void setIsHallucinating(bool isHallucinating)

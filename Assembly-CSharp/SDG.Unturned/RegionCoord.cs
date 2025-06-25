@@ -4,6 +4,9 @@ using UnityEngine;
 
 namespace SDG.Unturned;
 
+/// <summary>
+/// Nelson 2025-06-10: new code should favor Vector2Int. We don't want to introduce further uint8 region usage.
+/// </summary>
 public struct RegionCoord : IFormattedFileReadable, IFormattedFileWritable, IEquatable<RegionCoord>
 {
     public static RegionCoord ZERO = new RegionCoord(0, 0);

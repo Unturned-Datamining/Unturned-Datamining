@@ -349,63 +349,68 @@ internal class FoliageEditor : IDevkitTool
                         }
                     }
                 }
-                RegionBounds regionBounds = new RegionBounds(worldBounds);
-                for (byte b = regionBounds.min.x; b <= regionBounds.max.x; b++)
                 {
-                    for (byte b2 = regionBounds.min.y; b2 <= regionBounds.max.y; b2++)
+                    foreach (Vector2Int item in Regions.GetCoordinateBoundsInt(worldBounds))
                     {
-                        List<ResourceSpawnpoint> list = LevelGround.trees[b, b2];
-                        for (int num4 = list.Count - 1; num4 >= 0; num4--)
+                        List<ResourceSpawnpoint> treesOrNullInRegion = LevelGround.GetTreesOrNullInRegion(item);
+                        if (treesOrNullInRegion != null)
                         {
-                            ResourceSpawnpoint resourceSpawnpoint = list[num4];
-                            if (resourceSpawnpoint.isGenerated && !flag)
+                            for (int num4 = treesOrNullInRegion.Count - 1; num4 >= 0; num4--)
                             {
-                                continue;
-                            }
-                            if (key)
-                            {
-                                if (selectedInstanceAsset != null)
+                                ResourceSpawnpoint resourceSpawnpoint = treesOrNullInRegion[num4];
+                                if (resourceSpawnpoint.isGenerated && !flag)
                                 {
-                                    if (!(selectedInstanceAsset is FoliageResourceInfoAsset foliageResourceInfoAsset) || !foliageResourceInfoAsset.resource.isReferenceTo(resourceSpawnpoint.asset))
-                                    {
-                                        continue;
-                                    }
+                                    continue;
                                 }
-                                else if (selectedCollectionAsset != null)
+                                if (key)
                                 {
-                                    bool flag2 = false;
-                                    foreach (FoliageInfoCollectionAsset.FoliageInfoCollectionElement element2 in selectedCollectionAsset.elements)
+                                    if (selectedInstanceAsset != null)
                                     {
-                                        if (Assets.find(element2.asset) is FoliageResourceInfoAsset foliageResourceInfoAsset2 && foliageResourceInfoAsset2.resource.isReferenceTo(resourceSpawnpoint.asset))
+                                        if (!(selectedInstanceAsset is FoliageResourceInfoAsset foliageResourceInfoAsset) || !foliageResourceInfoAsset.resource.isReferenceTo(resourceSpawnpoint.asset))
                                         {
-                                            flag2 = true;
-                                            break;
+                                            continue;
                                         }
                                     }
-                                    if (!flag2)
+                                    else if (selectedCollectionAsset != null)
                                     {
-                                        continue;
+                                        bool flag2 = false;
+                                        foreach (FoliageInfoCollectionAsset.FoliageInfoCollectionElement element2 in selectedCollectionAsset.elements)
+                                        {
+                                            if (Assets.find(element2.asset) is FoliageResourceInfoAsset foliageResourceInfoAsset2 && foliageResourceInfoAsset2.resource.isReferenceTo(resourceSpawnpoint.asset))
+                                            {
+                                                flag2 = true;
+                                                break;
+                                            }
+                                        }
+                                        if (!flag2)
+                                        {
+                                            continue;
+                                        }
                                     }
                                 }
-                            }
-                            float sqrMagnitude = (resourceSpawnpoint.point - brushWorldPosition).sqrMagnitude;
-                            if (sqrMagnitude < num)
-                            {
-                                bool flag3 = sqrMagnitude < num2;
-                                previewSamples.Add(new FoliagePreviewSample(resourceSpawnpoint.point, flag3 ? Color.red : (Color.red / 2f)));
-                                if (InputEx.GetKey(KeyCode.Mouse0) && flag3 && sampleCount > 0)
+                                float sqrMagnitude = (resourceSpawnpoint.point - brushWorldPosition).sqrMagnitude;
+                                if (sqrMagnitude < num)
                                 {
-                                    resourceSpawnpoint.destroy();
-                                    list.RemoveAt(num4);
-                                    sampleCount--;
+                                    bool flag3 = sqrMagnitude < num2;
+                                    previewSamples.Add(new FoliagePreviewSample(resourceSpawnpoint.point, flag3 ? Color.red : (Color.red / 2f)));
+                                    if (InputEx.GetKey(KeyCode.Mouse0) && flag3 && sampleCount > 0)
+                                    {
+                                        resourceSpawnpoint.destroy();
+                                        treesOrNullInRegion.RemoveAt(num4);
+                                        sampleCount--;
+                                    }
                                 }
                             }
                         }
-                        bool flag4 = false;
-                        List<LevelObject> list2 = LevelObjects.objects[b, b2];
-                        for (int num5 = list2.Count - 1; num5 >= 0; num5--)
+                        if (!Regions.TryConvertVector2IntCoord(item, out var x, out var y))
                         {
-                            LevelObject levelObject = list2[num5];
+                            continue;
+                        }
+                        bool flag4 = false;
+                        List<LevelObject> list = LevelObjects.objects[x, y];
+                        for (int num5 = list.Count - 1; num5 >= 0; num5--)
+                        {
+                            LevelObject levelObject = list[num5];
                             if (levelObject.placementOrigin != ELevelObjectPlacementOrigin.PAINTED)
                             {
                                 continue;
@@ -454,28 +459,26 @@ internal class FoliageEditor : IDevkitTool
                             LevelHierarchy.MarkDirty();
                         }
                     }
+                    return;
                 }
+            }
+            if (!InputEx.GetKey(KeyCode.Mouse0))
+            {
+                return;
+            }
+            if (selectedInstanceAsset != null)
+            {
+                addFoliage(selectedInstanceAsset, 1f);
             }
             else
             {
-                if (!InputEx.GetKey(KeyCode.Mouse0))
+                if (selectedCollectionAsset == null)
                 {
                     return;
                 }
-                if (selectedInstanceAsset != null)
+                foreach (FoliageInfoCollectionAsset.FoliageInfoCollectionElement element4 in selectedCollectionAsset.elements)
                 {
-                    addFoliage(selectedInstanceAsset, 1f);
-                }
-                else
-                {
-                    if (selectedCollectionAsset == null)
-                    {
-                        return;
-                    }
-                    foreach (FoliageInfoCollectionAsset.FoliageInfoCollectionElement element4 in selectedCollectionAsset.elements)
-                    {
-                        addFoliage(Assets.find(element4.asset), element4.weight);
-                    }
+                    addFoliage(Assets.find(element4.asset), element4.weight);
                 }
             }
         }

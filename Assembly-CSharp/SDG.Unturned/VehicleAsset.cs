@@ -433,6 +433,44 @@ public class VehicleAsset : Asset, ISkinableAsset
 
     public float bumperMultiplier => _bumperMultiplier;
 
+    /// <summary>
+    /// Base damage to players when traveling at 1 m/s. Defaults to 10.
+    /// </summary>
+    public float BumperPlayerDamage { get; set; }
+
+    /// <summary>
+    /// Base damage to zombies when traveling at 1 m/s. Defaults to 15.
+    /// </summary>
+    public float BumperZombieDamage { get; set; }
+
+    /// <summary>
+    /// Base damage to animals when traveling at 1 m/s. Defaults to 15.
+    /// </summary>
+    public float BumperAnimalDamage { get; set; }
+
+    /// <summary>
+    /// Base damage to objects when traveling at 1 m/s. Defaults to 30.
+    /// </summary>
+    public float BumperObjectDamage { get; set; }
+
+    /// <summary>
+    /// Base damage to trees when traveling at 1 m/s. Defaults to 85.
+    /// </summary>
+    public float BumperResourceDamage { get; set; }
+
+    /// <summary>
+    /// If speed multiplied by <see cref="P:SDG.Unturned.VehicleAsset.bumperMultiplier" /> is less than this, no damage is applied.
+    /// Defaults to 3.
+    /// </summary>
+    public float BumperSpeedDamageThreshold { get; set; }
+
+    /// <summary>
+    /// Multiplier for damage from crashing into things.
+    /// Not applicable if <see cref="F:SDG.Unturned.VehicleAsset.isVulnerableToBumper" /> is false.
+    /// Defaults to 1.
+    /// </summary>
+    public float BumperSelfDamageMultiplier { get; set; }
+
     public float passengerExplosionArmor => _passengerExplosionArmor;
 
     public TurretInfo[] turrets => _turrets;
@@ -1339,6 +1377,13 @@ public class VehicleAsset : Asset, ISkinableAsset
         {
             _bumperMultiplier = 1f;
         }
+        BumperSpeedDamageThreshold = p.data.ParseFloat("Bumper_SpeedDamageThreshold", 3f);
+        BumperPlayerDamage = p.data.ParseFloat("Bumper_PlayerDamage", 10f);
+        BumperZombieDamage = p.data.ParseFloat("Bumper_ZombieDamage", 15f);
+        BumperAnimalDamage = p.data.ParseFloat("Bumper_AnimalDamage", 15f);
+        BumperObjectDamage = p.data.ParseFloat("Bumper_ObjectDamage", 30f);
+        BumperResourceDamage = p.data.ParseFloat("Bumper_ResourceDamage", 85f);
+        BumperSelfDamageMultiplier = p.data.ParseFloat("Bumper_SelfDamageMultiplier", 1f);
         if (p.data.ContainsKey("Passenger_Explosion_Armor"))
         {
             _passengerExplosionArmor = p.data.ParseFloat("Passenger_Explosion_Armor");

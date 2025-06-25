@@ -329,7 +329,7 @@ public class PlayerCrafting : PlayerCaller
     /// <summary>
     /// Update anything that will not change as blueprint is invoked repeatedly on server.
     /// </summary>
-    internal void UpdateBlueprintStaticStatus(in UpdateBlueprintStatusParameters p)
+    internal void UpdateBlueprintStaticStatus(in UpdateBlueprintStatusParameters p, bool bypassWorkstationRequirements)
     {
         Blueprint blueprint = p.status.blueprint;
         if (blueprint.RequiresSkill)
@@ -344,6 +344,10 @@ public class PlayerCrafting : PlayerCaller
                     return;
                 }
             }
+        }
+        if (bypassWorkstationRequirements)
+        {
+            return;
         }
         CachingAssetRef[] applicableRequiredNearbyCraftingTags = blueprint.GetApplicableRequiredNearbyCraftingTags();
         if (applicableRequiredNearbyCraftingTags == null)
@@ -513,10 +517,6 @@ public class PlayerCrafting : PlayerCaller
     [SteamCall(ESteamCallValidation.ONLY_FROM_OWNER, ratelimitHz = 10)]
     public void ReceiveCraft(in ServerInvocationContext context, Guid assetGuid, byte index, bool asManyAsPossible)
     {
-        if (!Level.IsCraftingAllowedByLevel || base.player.equipment.isBusy)
-        {
-            return;
-        }
         Asset asset = Assets.find(assetGuid);
         if (asset == null)
         {
@@ -545,15 +545,31 @@ public class PlayerCrafting : PlayerCaller
                 return;
             }
         }
-        if (!(asset is IBlueprintOwner blueprintOwner))
+        if (asset is IBlueprintOwner blueprintOwner)
         {
-            return;
+            Blueprint blueprintByIndex = blueprintOwner.GetBlueprintByIndex(index);
+            if (blueprintByIndex != null)
+            {
+                HandleCraftRequestInternal(in context, blueprintByIndex, asManyAsPossible, playEffect: true, bypassWorkstationRequirements: false);
+            }
         }
-        Blueprint blueprint = blueprintOwner.GetBlueprintByIndex(index);
-        if (blueprint == null)
+    }
+
+    /// <summary>
+    /// Allows housing planner to craft without playing effect, without also allowing
+    /// cheaters to craft without playing effect. (if it were an RPC param)
+    /// </summary>
+    internal bool HandleCraftRequestInternal(in ServerInvocationContext context, Blueprint blueprint, bool asManyAsPossible, bool playEffect, bool bypassWorkstationRequirements)
+    {
+        if (!Level.IsCraftingAllowedByLevel)
         {
-            return;
+            return false;
         }
+        if (base.player.equipment.isBusy)
+        {
+            return false;
+        }
+        bool shouldAllow = true;
         if (OnCraftBlueprintRequestedV2 != null)
         {
             try
@@ -562,14 +578,18 @@ public class PlayerCrafting : PlayerCaller
             }
             catch (Exception e)
             {
-                UnturnedLog.exception(e, $"Caught plugin exception during OnCraftBlueprintRequestedV2 for {asset}[{index}]:");
+                UnturnedLog.exception(e, $"Caught plugin exception during OnCraftBlueprintRequestedV2 for {blueprint}:");
             }
         }
-        if (!shouldAllow || blueprint == null || IsBlueprintPermanentlyDisabled(blueprint))
+        if (!shouldAllow || blueprint == null)
         {
-            return;
+            return false;
         }
-        if (blueprint.GetApplicableRequiredNearbyCraftingTags() != null)
+        if (IsBlueprintPermanentlyDisabled(blueprint))
+        {
+            return false;
+        }
+        if (!bypassWorkstationRequirements && blueprint.GetApplicableRequiredNearbyCraftingTags() != null)
         {
             UpdateAvailableCraftingTags();
         }
@@ -578,10 +598,10 @@ public class PlayerCrafting : PlayerCaller
         UpdateBlueprintStatusParameters p = default(UpdateBlueprintStatusParameters);
         p.status = activeBlueprintStatus;
         p.shouldExitEarly = true;
-        UpdateBlueprintStaticStatus(in p);
+        UpdateBlueprintStaticStatus(in p, bypassWorkstationRequirements);
         if (!activeBlueprintStatus.IsCraftable)
         {
-            return;
+            return false;
         }
         bool flag = false;
         for (int i = 0; i < 64; i++)
@@ -650,7 +670,7 @@ public class PlayerCrafting : PlayerCaller
                         }
                         else
                         {
-                            uint num2 = item3.DeleteAmount(base.player, (uint)num);
+                            uint num2 = item3.DeleteAmount(base.player, (uint)num, alwaysDeleteAtZeroAmount: false);
                             num -= (int)num2;
                         }
                         if (num == 0)
@@ -665,8 +685,8 @@ public class PlayerCrafting : PlayerCaller
             {
                 PlayerInventorySearchResultV2 value2 = playerInventorySearchResultV.Value;
                 base.player.inventory.sendUpdateQuality(value2.Page, value2.Jar.x, value2.Jar.y, 100);
-                ItemAsset asset2 = value2.GetAsset();
-                if (asset2 != null && asset2.type == EItemType.REFILL && value2.Jar.item.state.Length == 1 && value2.Jar.item.state[0] == 3)
+                ItemAsset asset = value2.GetAsset();
+                if (asset != null && asset.type == EItemType.REFILL && value2.Jar.item.state.Length == 1 && value2.Jar.item.state[0] == 3)
                 {
                     value2.Jar.item.state[0] = 1;
                     base.player.inventory.sendUpdateInvState(value2.Page, value2.Jar.x, value2.Jar.y, value2.Jar.item.state);
@@ -685,9 +705,9 @@ public class PlayerCrafting : PlayerCaller
                     if (blueprint.transferState)
                     {
                         PlayerInventorySearchResultV2 playerInventorySearchResultV2 = p.status.inputItems[0].searchResults[0];
-                        ItemAsset asset3 = playerInventorySearchResultV2.GetAsset();
+                        ItemAsset asset2 = playerInventorySearchResultV2.GetAsset();
                         Item item = new Item(itemAsset.id, playerInventorySearchResultV2.Jar.item.amount, playerInventorySearchResultV2.Jar.item.quality, playerInventorySearchResultV2.Jar.item.state);
-                        if (asset3 != null && asset3.type == EItemType.GUN && itemAsset != null && itemAsset.type == EItemType.GUN && item.state.Length >= 12)
+                        if (asset2 != null && asset2.type == EItemType.GUN && itemAsset != null && itemAsset.type == EItemType.GUN && item.state.Length >= 12)
                         {
                             if (blueprint.withoutAttachments)
                             {
@@ -717,24 +737,27 @@ public class PlayerCrafting : PlayerCaller
                 break;
             }
         }
-        if (!flag)
+        if (flag)
         {
-            return;
-        }
-        SendRefreshCrafting.Invoke(GetNetId(), ENetReliability.Reliable, base.channel.GetOwnerTransportConnection());
-        base.player.sendStat(EPlayerStat.FOUND_CRAFTS);
-        EffectAsset effectAsset = blueprint.FindBuildEffectAsset();
-        if (effectAsset != null)
-        {
-            TriggerEffectParameters parameters = new TriggerEffectParameters(effectAsset);
-            parameters.position = base.transform.position;
-            parameters.relevantDistance = EffectManager.SMALL;
-            EffectManager.triggerEffect(parameters);
-            if (Provider.isServer)
+            SendRefreshCrafting.Invoke(GetNetId(), ENetReliability.Reliable, base.channel.GetOwnerTransportConnection());
+            base.player.sendStat(EPlayerStat.FOUND_CRAFTS);
+            if (playEffect)
             {
-                AlertTool.alert(base.transform.position, 8f);
+                EffectAsset effectAsset = blueprint.FindBuildEffectAsset();
+                if (effectAsset != null)
+                {
+                    TriggerEffectParameters parameters = new TriggerEffectParameters(effectAsset);
+                    parameters.position = base.transform.position;
+                    parameters.relevantDistance = EffectManager.SMALL;
+                    EffectManager.triggerEffect(parameters);
+                    if (Provider.isServer)
+                    {
+                        AlertTool.alert(base.transform.position, 8f);
+                    }
+                }
             }
         }
+        return flag;
     }
 
     [Obsolete("Please use SendRequestToCraft which takes a blueprint parameter")]
@@ -914,6 +937,7 @@ public class PlayerCrafting : PlayerCaller
     private void LoadBlueprintPreferences()
     {
         isLoadingBlueprintPreferences = true;
+        localPlayerBlueprintPreferences.Clear();
         ignoredBlueprintsCount = 0;
         favoritedBlueprintsCount = 0;
         try
@@ -928,7 +952,7 @@ public class PlayerCrafting : PlayerCaller
                 {
                     for (int i = 0; i < a; i++)
                     {
-                        IBlueprintOwner blueprintOwner = Assets.find(block.readGUID()) as IBlueprintOwner;
+                        IBlueprintOwner blueprintOwner = Assets.Find_UseDefaultAssetMapping(block.readGUID()) as IBlueprintOwner;
                         int num = block.readInt32();
                         for (int j = 0; j < num; j++)
                         {

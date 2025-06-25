@@ -2,3 +2,5 @@
 Type Small
 ID 994
 Has_Clip_Prefab false
+
+// Not clutter because it's a relatively big hint to what's going on.

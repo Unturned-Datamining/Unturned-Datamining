@@ -11,5 +11,6 @@
 	{
 		"GUID": "9334e9cd34334029800e655f57a08f54"
 	},
-	"Batching_Version": 2
+	"Batching_Version": 2,
+	"Enable_Clutter_Option": true
 }

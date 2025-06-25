@@ -48,7 +48,7 @@ public class SpawnTableTool
                     Asset asset = Assets.find(legacyTargetAssetType, spawnTable.legacyAssetId);
                     if (asset == null)
                     {
-                        UnturnedLog.warn(string.Format("Spawn table \"{0}\" from {1} resolved by {2} unable to find asset matching legacy ID {3}", spawnAsset.name, spawnAsset.GetOriginName(), errorContextCallback?.Invoke() ?? "Unknown", spawnTable.legacyAssetId));
+                        UnturnedLog.warn(string.Format("Spawn table \"{0}\" from {1} resolved by {2} unable to find asset matching legacy ID {3} in legacy category {4}", spawnAsset.name, spawnAsset.GetOriginName(), errorContextCallback?.Invoke() ?? "Unknown", spawnTable.legacyAssetId, legacyTargetAssetType));
                         return null;
                     }
                     return asset;
@@ -75,6 +75,11 @@ public class SpawnTableTool
         }
         UnturnedLog.warn("Spawn table \"" + spawnAsset.name + "\" from " + spawnAsset.GetOriginName() + " resolved by " + (errorContextCallback?.Invoke() ?? "Unknown") + " may have encountered a recursive loop and has given up");
         return null;
+    }
+
+    public static TAsset Resolve<TAsset>(SpawnAsset spawnAsset, EAssetType legacyTargetAssetType, Func<string> errorContextCallback) where TAsset : Asset
+    {
+        return Resolve(spawnAsset, legacyTargetAssetType, errorContextCallback) as TAsset;
     }
 
     /// <summary>

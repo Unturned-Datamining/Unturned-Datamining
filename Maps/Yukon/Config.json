@@ -18,5 +18,6 @@
 	{
 		"GUID": "537278c5f6eb45198994ff2915d3107b"
 	},
-	"Batching_Version": 2
+	"Batching_Version": 2,
+	"Enable_Clutter_Option": true
 }

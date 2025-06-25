@@ -472,6 +472,7 @@ public class UseableMelee : Useable
                 parameters2.instigator = base.player;
                 parameters2.zombieStunOverride = eZombieStunOverride;
                 parameters2.ragdollEffect = useableRagdollEffect;
+                parameters2.RagdollForceMultiplier = equippedMeleeAsset.ZombieRagdollForceMultiplier;
                 if (base.player.movement.nav != byte.MaxValue)
                 {
                     parameters2.AlertPosition = base.transform.position;
@@ -809,11 +810,11 @@ public class UseableMelee : Useable
         {
             return;
         }
-        if (!Dedicator.IsDedicatedServer && isSwinging)
+        if (isSwinging)
         {
             if (equippedMeleeAsset.isRepeated)
             {
-                if ((double)(Time.realtimeSinceStartup - startedSwing) > 0.1)
+                if (!Dedicator.IsDedicatedServer && (double)(Time.realtimeSinceStartup - startedSwing) > 0.1)
                 {
                     startedSwing = Time.realtimeSinceStartup;
                     if (firstEmitter != null && base.player.look.perspective == EPlayerPerspective.FIRST)
@@ -836,13 +837,16 @@ public class UseableMelee : Useable
             }
             else if (Time.timeAsDouble >= playUseSoundTime)
             {
-                if (swingMode == ESwingMode.WEAK)
+                if (!Dedicator.IsDedicatedServer)
                 {
-                    base.player.playSound(((ItemMeleeAsset)base.player.equipment.asset).use, 0.5f);
-                }
-                else if (swingMode == ESwingMode.STRONG)
-                {
-                    base.player.playSound(((ItemMeleeAsset)base.player.equipment.asset).use, 0.5f, 0.7f, 0.1f);
+                    if (swingMode == ESwingMode.WEAK)
+                    {
+                        base.player.playSound(((ItemMeleeAsset)base.player.equipment.asset).use, 0.5f);
+                    }
+                    else if (swingMode == ESwingMode.STRONG)
+                    {
+                        base.player.playSound(((ItemMeleeAsset)base.player.equipment.asset).use, 0.5f, 0.7f, 0.1f);
+                    }
                 }
                 isSwinging = false;
             }

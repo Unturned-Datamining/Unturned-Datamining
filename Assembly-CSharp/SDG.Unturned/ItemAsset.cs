@@ -123,82 +123,86 @@ public class ItemAsset : Asset, ISkinableAsset, IBlueprintOwner
 
     protected Texture2D _emissionBase;
 
+    private CachingAssetRef _deletedAtZeroQualityEffectRef;
+
+    private NPCRewardsList _deletedAtZeroQualityRewards;
+
     /// sortOrder values for description lines.
     /// Difference in value greater than 100 creates an empty line.
-    protected const int DescSort_RarityAndType = 0;
+    internal const int DescSort_RarityAndType = 0;
 
-    protected const int DescSort_LoreText = 200;
+    internal const int DescSort_LoreText = 200;
 
-    protected const int DescSort_QualityAndAmount = 400;
+    internal const int DescSort_QualityAndAmount = 400;
 
-    protected const int DescSort_Important = 2000;
+    internal const int DescSort_Important = 2000;
 
-    protected const int DescSort_ItemStat = 10000;
+    internal const int DescSort_ItemStat = 10000;
 
-    protected const int DescSort_ClothingStat = 10000;
+    internal const int DescSort_ClothingStat = 10000;
 
-    protected const int DescSort_ConsumeableStat = 10000;
+    internal const int DescSort_ConsumeableStat = 10000;
 
-    protected const int DescSort_GunStat = 10000;
+    internal const int DescSort_GunStat = 10000;
 
-    protected const int DescSort_GunAttachmentStat = 10000;
+    internal const int DescSort_GunAttachmentStat = 10000;
 
-    protected const int DescSort_MeleeStat = 10000;
+    internal const int DescSort_MeleeStat = 10000;
 
-    protected const int DescSort_RefillStat = 10000;
+    internal const int DescSort_RefillStat = 10000;
 
     /// <summary>
     /// Properties common to Gun and Melee.
     /// </summary>
-    protected const int DescSort_Weapon_NonExplosive_Common = 10000;
+    internal const int DescSort_Weapon_NonExplosive_Common = 10000;
 
-    protected const int DescSort_TrapKeyword = 10001;
+    internal const int DescSort_TrapKeyword = 10001;
 
-    protected const int DescSort_TrapStat = 10002;
+    internal const int DescSort_TrapStat = 10002;
 
-    protected const int DescSort_FarmableText = 15000;
+    internal const int DescSort_FarmableText = 15000;
 
     /// <summary>
     /// Properties common to Barricade and Structure.
     /// </summary>
-    protected const int DescSort_BuildableCommon = 20000;
+    internal const int DescSort_BuildableCommon = 20000;
 
-    protected const int DescSort_CraftingTags = 25000;
+    internal const int DescSort_CraftingTags = 25000;
 
-    protected const int DescSort_ExplosiveBulletDamage = 30000;
+    internal const int DescSort_ExplosiveBulletDamage = 30000;
 
-    protected const int DescSort_ExplosiveChargeDamage = 30000;
+    internal const int DescSort_ExplosiveChargeDamage = 30000;
 
-    protected const int DescSort_ExplosiveTrapDamage = 30000;
+    internal const int DescSort_ExplosiveTrapDamage = 30000;
 
     /// <summary>
     /// Properties common to Gun, Consumable, and Throwable.
     /// </summary>
-    protected const int DescSort_Weapon_Explosive_RangeAndDamage = 30000;
+    internal const int DescSort_Weapon_Explosive_RangeAndDamage = 30000;
 
     /// <summary>
     /// Properties common to Gun and Melee.
     /// </summary>
-    protected const int DescSort_Weapon_NonExplosive_PlayerDamage = 30000;
+    internal const int DescSort_Weapon_NonExplosive_PlayerDamage = 30000;
 
     /// <summary>
     /// Properties common to Gun and Melee.
     /// </summary>
-    protected const int DescSort_Weapon_NonExplosive_ZombieDamage = 31000;
+    internal const int DescSort_Weapon_NonExplosive_ZombieDamage = 31000;
 
     /// <summary>
     /// Properties common to Gun and Melee.
     /// </summary>
-    protected const int DescSort_Weapon_NonExplosive_AnimalDamage = 32000;
+    internal const int DescSort_Weapon_NonExplosive_AnimalDamage = 32000;
 
     /// <summary>
     /// Properties common to Gun and Melee.
     /// </summary>
-    protected const int DescSort_Weapon_NonExplosive_OtherDamage = 33000;
+    internal const int DescSort_Weapon_NonExplosive_OtherDamage = 33000;
 
-    protected const int DescSort_Beneficial = -1;
+    internal const int DescSort_Beneficial = -1;
 
-    protected const int DescSort_Detrimental = 1;
+    internal const int DescSort_Detrimental = 1;
 
     private static List<BlueprintSupply> tempBlueprintSupplies = new List<BlueprintSupply>();
 
@@ -401,6 +405,30 @@ public class ItemAsset : Asset, ISkinableAsset, IBlueprintOwner
     /// </summary>
     public bool shouldDeleteAtZeroQuality { get; protected set; }
 
+    public CachingAssetRef DeletedAtZeroQualityEffectRef
+    {
+        get
+        {
+            return _deletedAtZeroQualityEffectRef;
+        }
+        set
+        {
+            _deletedAtZeroQualityEffectRef = value;
+        }
+    }
+
+    public NPCRewardsList DeletedAtZeroQualityRewards
+    {
+        get
+        {
+            return _deletedAtZeroQualityRewards;
+        }
+        set
+        {
+            _deletedAtZeroQualityRewards = value;
+        }
+    }
+
     /// <summary>
     /// Should the game destroy all child colliders on the item when requested?
     /// Physics items in the world and on character preview don't request destroy,
@@ -441,15 +469,25 @@ public class ItemAsset : Asset, ISkinableAsset, IBlueprintOwner
         num = (int)type;
         string arg2 = localization2.format("Type_" + num);
         builder.Append("<color=" + Palette.hex(ItemTool.getRarityColorUI(rarity)) + ">" + PlayerDashboardInventoryUI.localization.format("Rarity_Type_Label", arg, arg2) + "</color>", 0);
-        builder.Append(_itemDescription, 200);
-        if (showQuality)
+        if (!string.IsNullOrEmpty(_itemDescription))
+        {
+            builder.Append(_itemDescription, 200);
+        }
+        if (showQuality && itemInstance != null)
         {
             Color32 color = ItemTool.getQualityColor((float)(int)itemInstance.quality / 100f);
             builder.Append("<color=" + Palette.hex(color) + ">" + PlayerDashboardInventoryUI.localization.format("Quality", itemInstance.quality) + "</color>", 400);
         }
         if (MaxAmount > 1)
         {
-            builder.Append(PlayerDashboardInventoryUI.localization.format("ItemDescription_AmountWithCapacity", itemInstance.amount, MaxAmount), 400);
+            if (itemInstance != null)
+            {
+                builder.Append(PlayerDashboardInventoryUI.localization.format("ItemDescription_AmountWithCapacity", itemInstance.amount, MaxAmount), 400);
+            }
+            else
+            {
+                builder.Append(PlayerDashboardInventoryUI.localization.format("Amount", MaxAmount), 400);
+            }
         }
         if (!builder.shouldRestrictToLegacyContent && equipableMovementSpeedMultiplier != 1f)
         {
@@ -496,6 +534,11 @@ public class ItemAsset : Asset, ISkinableAsset, IBlueprintOwner
             return !shouldFriendlySentryTargetUser;
         }
         return true;
+    }
+
+    public EffectAsset FindDeletedAtZeroQualityEffect()
+    {
+        return _deletedAtZeroQualityEffectRef.Get<EffectAsset>();
     }
 
     /// <summary>
@@ -885,6 +928,11 @@ public class ItemAsset : Asset, ISkinableAsset, IBlueprintOwner
         shouldDropOnDeath = p.data.ParseBool("Should_Drop_On_Death", defaultValue: true);
         allowManualDrop = p.data.ParseBool("Allow_Manual_Drop", defaultValue: true);
         shouldDeleteAtZeroQuality = p.data.ParseBool("Should_Delete_At_Zero_Quality");
+        if (shouldDeleteAtZeroQuality)
+        {
+            _deletedAtZeroQualityEffectRef = p.data.ParseAssetRef("Deleted_At_Zero_Quality_Effect");
+            _deletedAtZeroQualityRewards.Parse(p.data, p.localization, this, "Deleted_At_Zero_Quality_Rewards", "Deleted_At_Zero_Quality_Reward_");
+        }
         shouldDestroyItemColliders = p.data.ParseBool("Destroy_Item_Colliders", defaultValue: true);
         ShouldDeleteAtZeroAmount = p.data.ParseBool("Should_Delete_At_Zero_Amount", type != EItemType.MAGAZINE);
         if (type == EItemType.MAGAZINE && p.data.ContainsKey("Delete_Empty"))

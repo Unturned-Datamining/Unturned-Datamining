@@ -108,6 +108,11 @@ public class LevelInfo
 
     public LevelInfoConfigData configData { get; private set; }
 
+    /// <summary>
+    /// If true, this info is out-of-date and may have been renamed or deleted.
+    /// </summary>
+    public bool WasRemovedFromKnownLevels { get; internal set; }
+
     public Local getLocalization()
     {
         if (cachedLocalization == null)

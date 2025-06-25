@@ -34,6 +34,11 @@ internal class GlazierElementBase_IMGUI : GlazierElementBase
         return _children[index];
     }
 
+    public override int GetChildCount()
+    {
+        return _children.Count;
+    }
+
     public override void RemoveChild(ISleekElement child)
     {
         if (child.AttachmentRoot is GlazierElementBase_IMGUI glazierElementBase_IMGUI)

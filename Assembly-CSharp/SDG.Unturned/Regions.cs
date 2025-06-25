@@ -56,6 +56,56 @@ public class Regions
         return new Vector2Int(x, y);
     }
 
+    public static void GetCoordinateBoundsVector2Int(Vector3 position, float radius, out Vector2Int min, out Vector2Int max)
+    {
+        Vector3 position2 = new Vector3(position.x - radius, 0f, position.z - radius);
+        Vector3 position3 = new Vector3(position.x + radius, 0f, position.z + radius);
+        min = GetCoordinateVector2Int(position2);
+        max = GetCoordinateVector2Int(position3);
+    }
+
+    public static void GetCoordinateBoundsVector2Int(Bounds worldBounds, out Vector2Int min, out Vector2Int max)
+    {
+        Vector3 min2 = worldBounds.min;
+        Vector3 max2 = worldBounds.max;
+        min = GetCoordinateVector2Int(min2);
+        max = GetCoordinateVector2Int(max2);
+    }
+
+    public static RegionBoundsInt GetCoordinateBoundsInt(Bounds worldBounds)
+    {
+        Vector3 min = worldBounds.min;
+        Vector3 max = worldBounds.max;
+        Vector2Int coordinateVector2Int = GetCoordinateVector2Int(min);
+        Vector2Int coordinateVector2Int2 = GetCoordinateVector2Int(max);
+        return new RegionBoundsInt(coordinateVector2Int, coordinateVector2Int2);
+    }
+
+    public static bool IsVector2IntWithinLegacyRange(Vector2Int coord)
+    {
+        if (coord.x >= 0 && coord.y >= 0 && coord.x < WORLD_SIZE)
+        {
+            return coord.y < WORLD_SIZE;
+        }
+        return false;
+    }
+
+    /// <summary>
+    /// Returns true if coord is within legacy range.
+    /// </summary>
+    public static bool TryConvertVector2IntCoord(Vector2Int coord, out byte x, out byte y)
+    {
+        if (coord.x >= 0 && coord.y >= 0 && coord.x < WORLD_SIZE && coord.y < WORLD_SIZE)
+        {
+            x = (byte)coord.x;
+            y = (byte)coord.y;
+            return true;
+        }
+        x = byte.MaxValue;
+        y = byte.MaxValue;
+        return false;
+    }
+
     public static bool tryGetCoordinate(Vector3 point, out byte x, out byte y)
     {
         x = byte.MaxValue;

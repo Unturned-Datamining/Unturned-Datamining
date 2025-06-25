@@ -171,6 +171,7 @@ public class BbCodeWidgetConverter
         richTextStringBuilder.Clear();
         bool flag = false;
         int num = 0;
+        EBbCodeTokenType tokenType;
         do
         {
             switch (currentToken.tokenType)
@@ -250,9 +251,10 @@ public class BbCodeWidgetConverter
                 richTextStringBuilder.Append("</indent>");
                 break;
             }
+            tokenType = currentToken.tokenType;
             AdvanceToken();
         }
-        while (currentToken.tokenType != EBbCodeTokenType.PreviewYouTubeOpen && currentToken.tokenType != EBbCodeTokenType.ImgOpen && currentToken.tokenType != EBbCodeTokenType.UrlOpen && hasToken);
+        while (currentToken.tokenType != EBbCodeTokenType.PreviewYouTubeOpen && currentToken.tokenType != EBbCodeTokenType.ImgOpen && (currentToken.tokenType != EBbCodeTokenType.UrlOpen || tokenType != EBbCodeTokenType.LineBreak) && hasToken);
         PushPendingRichText(outputWidgets);
     }
 

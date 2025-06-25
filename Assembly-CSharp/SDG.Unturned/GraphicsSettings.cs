@@ -9,8 +9,6 @@ namespace SDG.Unturned;
 
 public class GraphicsSettings
 {
-    private static bool _uncapLandmarks = false;
-
     public const float EFFECT_ULTRA = 64f;
 
     public const float EFFECT_HIGH = 48f;
@@ -69,19 +67,7 @@ public class GraphicsSettings
     /// </summary>
     internal static float sqrVehicleCullDistanceWithMargin;
 
-    public static bool uncapLandmarks
-    {
-        get
-        {
-            return _uncapLandmarks;
-        }
-        set
-        {
-            _uncapLandmarks = value;
-            apply("changed uncapLandmarks");
-            UnturnedLog.info("Set uncap_landmarks to: " + uncapLandmarks);
-        }
-    }
+    private static CommandLineFlag clEnableCinematicMode = new CommandLineFlag(defaultValue: false, "-Cinematic");
 
     public static float effect
     {
@@ -312,7 +298,7 @@ public class GraphicsSettings
     /// <summary>
     /// Distance to use terrain shaders before fallback to a baked texture.
     /// </summary>
-    public static float terrainBasemapDistance => blend ? 512 : 256;
+    public static float terrainBasemapDistance => WantsCinematicMode ? 8192 : (blend ? 512 : 256);
 
     /// <summary>
     /// Higher error reduces vertex density as distance increases.
@@ -321,6 +307,10 @@ public class GraphicsSettings
     {
         get
         {
+            if (WantsCinematicMode)
+            {
+                return 1f;
+            }
             switch (terrainQuality)
             {
             case EGraphicQuality.LOW:
@@ -467,6 +457,18 @@ public class GraphicsSettings
         set
         {
             graphicsSettingsData.IsItemIconAntiAliasingEnabled = value;
+        }
+    }
+
+    public static bool IsClutterEnabled
+    {
+        get
+        {
+            return graphicsSettingsData.IsClutterEnabled;
+        }
+        set
+        {
+            graphicsSettingsData.IsClutterEnabled = value;
         }
     }
 
@@ -678,6 +680,36 @@ public class GraphicsSettings
         }
     }
 
+    /// <summary>
+    /// If true, make the game look as nice as possible.
+    /// Note: certain limits are imposed except in singleplayer to prevent this from being exploited.
+    /// </summary>
+    public static bool WantsCinematicMode => clEnableCinematicMode;
+
+    public static bool IsCinematicModeUnlimited
+    {
+        get
+        {
+            if (!Provider.isServer)
+            {
+                return Level.isEditor;
+            }
+            return true;
+        }
+    }
+
+    [Obsolete("Replaced by -Cinematic command-line flag")]
+    public static bool uncapLandmarks
+    {
+        get
+        {
+            return false;
+        }
+        set
+        {
+        }
+    }
+
     public static event GraphicsSettingsApplied graphicsSettingsApplied;
 
     public static void applyResolution()
@@ -686,8 +718,8 @@ public class GraphicsSettings
         {
             return;
         }
-        string commandLine = Environment.CommandLine;
-        if (false | (commandLine.IndexOf("-screen-width", StringComparison.InvariantCultureIgnoreCase) >= 0) | (commandLine.IndexOf("-screen-height", StringComparison.InvariantCultureIgnoreCase) >= 0) | (commandLine.IndexOf("-screen-fullscreen", StringComparison.InvariantCultureIgnoreCase) >= 0) | (commandLine.IndexOf("-window-mode", StringComparison.InvariantCultureIgnoreCase) >= 0))
+        string text = CommandLine.Get();
+        if (false | (text.IndexOf("-screen-width", StringComparison.InvariantCultureIgnoreCase) >= 0) | (text.IndexOf("-screen-height", StringComparison.InvariantCultureIgnoreCase) >= 0) | (text.IndexOf("-screen-fullscreen", StringComparison.InvariantCultureIgnoreCase) >= 0) | (text.IndexOf("-window-mode", StringComparison.InvariantCultureIgnoreCase) >= 0))
         {
             UnturnedLog.info("Ignoring game resolution settings because Unity built-in command-line options were set");
             return;
@@ -830,6 +862,10 @@ public class GraphicsSettings
             }
         }
         QualitySettings.SetQualityLevel((byte)lightingQuality + 1, applyExpensiveChanges: true);
+        if (WantsCinematicMode)
+        {
+            QualitySettings.shadowDistance = 4096f;
+        }
         ApplyVSyncAndTargetFrameRate();
         switch (anisotropicFilteringMode)
         {
@@ -847,6 +883,10 @@ public class GraphicsSettings
         if (clFarClipDistance.hasValue)
         {
             num = Mathf.Clamp(clFarClipDistance.value, 16f, 2048f);
+        }
+        if (WantsCinematicMode && IsCinematicModeUnlimited)
+        {
+            num = 4096f;
         }
         float num2 = num + 725f;
         float a = 256f + normalizedDrawDistance * 256f;
@@ -889,36 +929,15 @@ public class GraphicsSettings
         float num3 = Mathf.Max(0f, num - a) * normalizedLandmarkDrawDistance;
         if (landmarkQuality >= EGraphicQuality.LOW)
         {
-            if (uncapLandmarks)
-            {
-                array[15] = num;
-            }
-            else
-            {
-                array[15] += num3;
-            }
+            array[15] += num3;
         }
         if (landmarkQuality >= EGraphicQuality.MEDIUM)
         {
-            if (uncapLandmarks)
-            {
-                array[14] = num;
-            }
-            else
-            {
-                array[14] += num3;
-            }
+            array[14] += num3;
         }
         if (landmarkQuality >= EGraphicQuality.ULTRA)
         {
-            if (uncapLandmarks)
-            {
-                array[19] = num;
-            }
-            else
-            {
-                array[19] += num3;
-            }
+            array[19] += num3;
         }
         vehicleCullDistanceWithMargin = array[26] + 32f;
         sqrVehicleCullDistanceWithMargin = vehicleCullDistanceWithMargin * vehicleCullDistanceWithMargin;
@@ -927,7 +946,15 @@ public class GraphicsSettings
         LevelObjects.SkyboxObjectMaxDistance = ((landmarkQuality > EGraphicQuality.OFF) ? (LevelObjects.RegularObjectMaxDistance + num3) : 0f);
         LevelGround.SkyboxTreeMaxDistance = ((landmarkQuality >= EGraphicQuality.MEDIUM) ? (LevelGround.RegularTreeMaxDistance + num3) : 0f);
         LevelRoads.RoadMaxDistance = ((landmarkQuality >= EGraphicQuality.ULTRA) ? (a + num3) : a);
-        if (Level.isEditor)
+        if (WantsCinematicMode)
+        {
+            array[14] = num;
+            array[15] = num;
+            array[16] = num;
+            array[17] = num;
+            array[19] = num;
+        }
+        else if (Level.isEditor)
         {
             num *= 2f;
             for (int i = 0; i < 32; i++)
@@ -935,7 +962,7 @@ public class GraphicsSettings
                 array[i] *= 2f;
             }
         }
-        if (!LevelObjects.shouldInstantlyLoad && !LevelGround.shouldInstantlyLoad && LevelObjects.objects != null && LevelGround.trees != null)
+        if (!LevelObjects.shouldInstantlyLoad && !LevelGround.shouldInstantlyLoad && LevelObjects.objects != null)
         {
             for (byte b = 0; b < Regions.WORLD_SIZE; b++)
             {
@@ -946,15 +973,17 @@ public class GraphicsSettings
                     {
                         list[j]?.UpdateSkyboxActive();
                     }
-                    List<ResourceSpawnpoint> list2 = LevelGround.trees[b, b2];
-                    for (int k = 0; k < list2.Count; k++)
-                    {
-                        list2[k]?.UpdateSkyboxActive();
-                    }
                 }
             }
+            LevelGround.ForceUpdateSkyboxActive();
         }
-        QualitySettings.lodBias = 2f + normalizedDrawDistance * 3f + Mathf.Clamp(Provider.preferenceData.Graphics.LOD_Bias, 0f, 5f);
+        float num4 = 2f + normalizedDrawDistance * 3f;
+        num4 += Mathf.Clamp(Provider.preferenceData.Graphics.LOD_Bias, 0f, 5f);
+        if (WantsCinematicMode)
+        {
+            num4 = (IsCinematicModeUnlimited ? 1024f : 10f);
+        }
+        QualitySettings.lodBias = num4;
         LODGroupManager.Get().SynchronizeLODBias();
         QualitySettings.skinWeights = SkinWeights.FourBones;
         if (MainCamera.instance != null)

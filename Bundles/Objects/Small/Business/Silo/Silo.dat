@@ -2,3 +2,5 @@
 Type Small
 ID 734
 Has_Clip_Prefab false
+
+// Not clutter because this is a relatively important signpost.

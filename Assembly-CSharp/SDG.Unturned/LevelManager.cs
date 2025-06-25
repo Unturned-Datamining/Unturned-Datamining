@@ -83,7 +83,9 @@ public class LevelManager : SteamCaller
 
     private static float lastAirdrop;
 
-    private static readonly ClientStaticMethod<ushort, Vector3, Vector3, float, float, float> SendAirdropState = ClientStaticMethod<ushort, Vector3, Vector3, float, float, float>.Get(ReceiveAirdropState);
+    private static readonly ClientStaticMethod<Vector3, Vector3> SendAirdropState = ClientStaticMethod<Vector3, Vector3>.Get(ReceiveAirdropState);
+
+    private static readonly ClientStaticMethod<Vector3, float> SendSpawnCarepackage = ClientStaticMethod<Vector3, float>.Get(ReceiveSpawnCarepackage);
 
     /// <summary>
     /// Exposed for Rocket transition to modules backwards compatibility.
@@ -403,25 +405,13 @@ public class LevelManager : SteamCaller
 
     private void arenaAirdrop()
     {
-        if (!Provider.modeConfigData.Events.Use_Airdrops)
+        if (Provider.modeConfigData.Events.Use_Airdrops)
         {
-            return;
-        }
-        Vector3 vector = arenaTargetCenter;
-        float num = arenaTargetRadius;
-        float num2 = num * num;
-        List<AirdropDevkitNode> list = new List<AirdropDevkitNode>();
-        foreach (AirdropDevkitNode airdropNode in airdropNodes)
-        {
-            if ((airdropNode.transform.position - vector).sqrMagnitude < num2)
+            AirdropDevkitNode randomArenaAirdropNode = GetRandomArenaAirdropNode();
+            if (randomArenaAirdropNode != null)
             {
-                list.Add(airdropNode);
+                SpawnAirdropAtNode(randomArenaAirdropNode);
             }
-        }
-        if (list.Count != 0)
-        {
-            AirdropDevkitNode airdropDevkitNode = list[UnityEngine.Random.Range(0, list.Count)];
-            airdrop(airdropDevkitNode.transform.position, airdropDevkitNode.id, Provider.modeConfigData.Events.Airdrop_Speed);
         }
     }
 
@@ -727,85 +717,148 @@ public class LevelManager : SteamCaller
     {
     }
 
-    public static void airdrop(Vector3 point, ushort id, float speed)
+    public static void SpawnAirdrop(Vector3 dropPosition, SpawnAsset cargoSpawnTable)
     {
-        if (id != 0)
+        float airdrop_Speed = Provider.modeConfigData.Events.Airdrop_Speed;
+        InternalSpawnAirdrop(dropPosition, cargoSpawnTable, airdrop_Speed);
+    }
+
+    private static AirdropDevkitNode GetRandomArenaAirdropNode()
+    {
+        Vector3 vector = arenaTargetCenter;
+        float num = arenaTargetRadius;
+        float num2 = num * num;
+        List<AirdropDevkitNode> list = new List<AirdropDevkitNode>();
+        foreach (AirdropDevkitNode airdropNode in airdropNodes)
         {
-            Vector3 zero = Vector3.zero;
-            if (UnityEngine.Random.value < 0.5f)
+            if ((airdropNode.transform.position - vector).sqrMagnitude < num2)
             {
-                zero.x = (float)(Level.size / 2) * (0f - Mathf.Sign(point.x));
-                zero.z = (float)UnityEngine.Random.Range(0, Level.size / 2) * (0f - Mathf.Sign(point.z));
+                list.Add(airdropNode);
             }
-            else
-            {
-                zero.x = (float)UnityEngine.Random.Range(0, Level.size / 2) * (0f - Mathf.Sign(point.x));
-                zero.z = (float)(Level.size / 2) * (0f - Mathf.Sign(point.z));
-            }
-            float y = point.y + 450f;
-            point.y = 0f;
-            Vector3 normalized = (point - zero).normalized;
-            zero += normalized * -2048f;
-            float arg = (point - zero).magnitude / speed;
-            zero.y = y;
-            float airdrop_Force = Provider.modeConfigData.Events.Airdrop_Force;
-            SendAirdropState.InvokeAndLoopback(ENetReliability.Reliable, Provider.GatherRemoteClientConnections(), id, zero, normalized, speed, airdrop_Force, arg);
+        }
+        if (list.Count == 0)
+        {
+            return null;
+        }
+        return list[UnityEngine.Random.Range(0, list.Count)];
+    }
+
+    /// <summary>
+    /// Pick a random airdrop node appropriate for the game mode.
+    /// </summary>
+    public static AirdropDevkitNode GetRandomAirdropNode()
+    {
+        if (airdropNodes == null || airdropNodes.Count < 1)
+        {
+            return null;
+        }
+        if (_levelType == ELevelType.ARENA)
+        {
+            return GetRandomArenaAirdropNode();
+        }
+        return airdropNodes[UnityEngine.Random.Range(0, airdropNodes.Count)];
+    }
+
+    public static void SpawnAirdropAtNode(AirdropDevkitNode node)
+    {
+        if (node == null)
+        {
+            throw new ArgumentNullException("node");
+        }
+        SpawnAsset cargoSpawnTableOrLogWarning = node.GetCargoSpawnTableOrLogWarning();
+        if (cargoSpawnTableOrLogWarning != null)
+        {
+            SpawnAirdrop(node.transform.position, cargoSpawnTableOrLogWarning);
         }
     }
 
-    private void airdropTick()
+    public static void airdrop(Vector3 point, ushort id, float speed)
     {
+        if (id != 0 && Assets.find(EAssetType.SPAWN, id) is SpawnAsset cargoSpawnTable)
+        {
+            InternalSpawnAirdrop(point, cargoSpawnTable, speed);
+        }
+    }
+
+    private static void InternalSpawnAirdrop(Vector3 dropPosition, SpawnAsset cargoSpawnTable, float speed)
+    {
+        if (cargoSpawnTable == null)
+        {
+            throw new ArgumentNullException("cargoSpawnTable");
+        }
+        Vector3 zero = Vector3.zero;
+        if (UnityEngine.Random.value < 0.5f)
+        {
+            zero.x = (float)(Level.size / 2) * (0f - Mathf.Sign(dropPosition.x));
+            zero.z = (float)UnityEngine.Random.Range(0, Level.size / 2) * (0f - Mathf.Sign(dropPosition.z));
+        }
+        else
+        {
+            zero.x = (float)UnityEngine.Random.Range(0, Level.size / 2) * (0f - Mathf.Sign(dropPosition.x));
+            zero.z = (float)(Level.size / 2) * (0f - Mathf.Sign(dropPosition.z));
+        }
+        float y = dropPosition.y + UnityEngine.Random.Range(450f, 475f);
+        dropPosition.y = 0f;
+        Vector3 normalized = (dropPosition - zero).normalized;
+        zero += normalized * -2048f;
+        float serverTimeUntilDrop = (dropPosition - zero).magnitude / speed;
+        zero.y = y;
+        dropPosition.y = y;
+        Vector3 arg = normalized * speed;
+        SendAirdropState.InvokeAndLoopback(ENetReliability.Reliable, Provider.GatherRemoteClientConnections(), zero, arg);
+        AirdropInfo airdropInfo = ((airdrops.Count > 0) ? airdrops[airdrops.Count - 1] : null);
+        if (airdropInfo == null)
+        {
+            UnturnedLog.error("Adding AirdropInfo failed");
+            return;
+        }
+        airdropInfo.direction = normalized;
+        airdropInfo.speed = speed;
+        airdropInfo.ServerHasDeployedCarepackage = false;
+        airdropInfo.ServerCargoSpawnTableRef = cargoSpawnTable;
+        airdropInfo.ServerConstantForce = Provider.modeConfigData.Events.Airdrop_Force;
+        airdropInfo.ServerDropPosition = dropPosition;
+        airdropInfo.ServerTimeUntilDrop = serverTimeUntilDrop;
+    }
+
+    private void AirdropUpdate()
+    {
+        float deltaTime = Time.deltaTime;
         for (int num = airdrops.Count - 1; num >= 0; num--)
         {
             AirdropInfo airdropInfo = airdrops[num];
-            airdropInfo.state += airdropInfo.direction * airdropInfo.speed * Time.deltaTime;
-            airdropInfo.delay -= Time.deltaTime;
+            airdropInfo.state += airdropInfo.Velocity * deltaTime;
             if (airdropInfo.model != null)
             {
                 airdropInfo.model.position = airdropInfo.state;
             }
-            if (airdropInfo.dropped)
+            if (Provider.isServer && !airdropInfo.ServerHasDeployedCarepackage)
             {
-                if (Mathf.Abs(airdropInfo.state.x) > (float)(Level.size / 2 + 2048) || Mathf.Abs(airdropInfo.state.z) > (float)(Level.size / 2 + 2048))
+                airdropInfo.ServerTimeUntilDrop -= deltaTime;
+                if (airdropInfo.ServerTimeUntilDrop <= 0f)
                 {
-                    if (airdropInfo.model != null)
+                    airdropInfo.ServerHasDeployedCarepackage = true;
+                    Vector3 serverDropPosition = airdropInfo.ServerDropPosition;
+                    SpawnAsset cargoSpawnTable = airdropInfo.ServerCargoSpawnTableRef.Get<SpawnAsset>();
+                    float serverConstantForce = airdropInfo.ServerConstantForce;
+                    SpawnCarepackage(serverDropPosition, cargoSpawnTable, serverConstantForce);
+                    SendSpawnCarepackage.Invoke(ENetReliability.Reliable, Provider.GatherRemoteClientConnections(), serverDropPosition, serverConstantForce);
+                    if (Dedicator.IsDedicatedServer)
                     {
-                        UnityEngine.Object.Destroy(airdropInfo.model.gameObject);
+                        airdrops.RemoveAt(num);
+                        continue;
                     }
-                    airdrops.RemoveAt(num);
                 }
             }
-            else if (airdropInfo.delay <= 0f)
+            float num2 = Mathf.Sign(airdropInfo.Velocity.x);
+            float num3 = Mathf.Sign(airdropInfo.Velocity.z);
+            if (airdropInfo.state.x * num2 > (float)(Level.size / 2 + 2048) || airdropInfo.state.z * num3 > (float)(Level.size / 2 + 2048))
             {
-                airdropInfo.dropped = true;
-                AssetReference<AirdropAsset> assetReference = Level.getAsset()?.airdropRef ?? AssetReference<AirdropAsset>.invalid;
-                if (assetReference.isNull)
+                if (airdropInfo.model != null)
                 {
-                    assetReference = AirdropAsset.defaultAirdrop;
+                    UnityEngine.Object.Destroy(airdropInfo.model.gameObject);
                 }
-                AirdropAsset airdropAsset = assetReference.Find();
-                MasterBundleReference<GameObject> masterBundleReference = airdropAsset?.model ?? MasterBundleReference<GameObject>.invalid;
-                if (masterBundleReference.isNull)
-                {
-                    masterBundleReference = new MasterBundleReference<GameObject>("core.masterbundle", "Level/Carepackage.prefab");
-                }
-                Transform obj = UnityEngine.Object.Instantiate(masterBundleReference.loadAsset(), airdropInfo.dropPosition, Quaternion.identity).transform;
-                obj.name = "Carepackage";
-                Carepackage orAddComponent = obj.GetOrAddComponent<Carepackage>();
-                orAddComponent.id = airdropInfo.id;
-                if (airdropAsset != null)
-                {
-                    orAddComponent.barricadeAsset = airdropAsset.barricadeRef.Find();
-                }
-                ConstantForce component = obj.GetComponent<ConstantForce>();
-                if (component != null)
-                {
-                    component.force = new Vector3(0f, airdropInfo.force, 0f);
-                }
-                if (Dedicator.IsDedicatedServer)
-                {
-                    airdrops.RemoveAt(num);
-                }
+                airdrops.RemoveAt(num);
             }
         }
         if (!Provider.isServer || levelType != 0 || !Provider.modeConfigData.Events.Use_Airdrops || airdropNodes.Count <= 0)
@@ -828,8 +881,7 @@ public class LevelManager : SteamCaller
         }
         else
         {
-            AirdropDevkitNode airdropDevkitNode = airdropNodes[UnityEngine.Random.Range(0, airdropNodes.Count)];
-            airdrop(airdropDevkitNode.transform.position, airdropDevkitNode.id, Provider.modeConfigData.Events.Airdrop_Speed);
+            SpawnAirdropAtNode(airdropNodes[UnityEngine.Random.Range(0, airdropNodes.Count)]);
             _hasAirdrop = false;
         }
     }
@@ -845,7 +897,7 @@ public class LevelManager : SteamCaller
         airdropNodes = new List<AirdropDevkitNode>();
         foreach (AirdropDevkitNode allNode in AirdropDevkitNodeSystem.Get().GetAllNodes())
         {
-            if (allNode.id != 0)
+            if (allNode.CargoSpawnTableRef.IsAssigned)
             {
                 airdropNodes.Add(allNode);
             }
@@ -853,17 +905,11 @@ public class LevelManager : SteamCaller
         load();
     }
 
-    private void airdropSpawn(ushort id, Vector3 state, Vector3 direction, float speed, float force, float delay)
+    private void AddAirdropInfo(Vector3 position, Vector3 velocity)
     {
         AirdropInfo airdropInfo = new AirdropInfo();
-        airdropInfo.id = id;
-        airdropInfo.state = state;
-        airdropInfo.direction = direction;
-        airdropInfo.speed = speed;
-        airdropInfo.force = force;
-        airdropInfo.delay = delay;
-        airdropInfo.dropped = false;
-        airdropInfo.dropPosition = state + direction * speed * delay;
+        airdropInfo.state = position;
+        airdropInfo.Velocity = velocity;
         if (!Dedicator.IsDedicatedServer)
         {
             MasterBundleReference<GameObject> masterBundleReference = Level.getAsset()?.dropshipPrefab ?? default(MasterBundleReference<GameObject>);
@@ -871,18 +917,12 @@ public class LevelManager : SteamCaller
             {
                 masterBundleReference = new MasterBundleReference<GameObject>("core.masterbundle", "Level/Dropship.prefab");
             }
-            Quaternion rotation = Quaternion.LookRotation(direction) * Quaternion.Euler(-90f, 180f, 0f);
-            Transform transform = UnityEngine.Object.Instantiate(masterBundleReference.loadAsset(), state, rotation).transform;
+            Quaternion rotation = Quaternion.LookRotation(velocity) * Quaternion.Euler(-90f, 180f, 0f);
+            Transform transform = UnityEngine.Object.Instantiate(masterBundleReference.loadAsset(), position, rotation).transform;
             transform.name = "Dropship";
             airdropInfo.model = transform;
         }
         airdrops.Add(airdropInfo);
-    }
-
-    [Obsolete]
-    public void tellAirdropState(CSteamID steamID, Vector3 state, Vector3 direction, float speed, float force, float delay)
-    {
-        ReceiveAirdropState(0, state, direction, speed, force, delay);
     }
 
     /// <summary>
@@ -890,10 +930,44 @@ public class LevelManager : SteamCaller
     /// the aircraft starts 2 km outside that range. This causes the care package to spawn at the wrong position.
     /// Bumping intBitCount to 14 enables a range of [-8192, 8192). (public issue #4972)
     /// </summary>
-    [SteamCall(ESteamCallValidation.ONLY_FROM_SERVER, legacyName = "tellAirdropState")]
-    public static void ReceiveAirdropState(ushort id, Vector3 state, Vector3 direction, float speed, float force, float delay)
+    [SteamCall(ESteamCallValidation.ONLY_FROM_SERVER)]
+    public static void ReceiveAirdropState(Vector3 position, Vector3 velocity)
     {
-        manager.airdropSpawn(id, state, direction, speed, force, delay);
+        manager.AddAirdropInfo(position, velocity);
+    }
+
+    [SteamCall(ESteamCallValidation.ONLY_FROM_SERVER)]
+    public static void ReceiveSpawnCarepackage(Vector3 position, float constantForce)
+    {
+        SpawnCarepackage(position, null, constantForce);
+    }
+
+    private static void SpawnCarepackage(Vector3 position, SpawnAsset cargoSpawnTable, float constantForce)
+    {
+        AssetReference<AirdropAsset> assetReference = Level.getAsset()?.airdropRef ?? AssetReference<AirdropAsset>.invalid;
+        if (assetReference.isNull)
+        {
+            assetReference = AirdropAsset.defaultAirdrop;
+        }
+        AirdropAsset airdropAsset = assetReference.Find();
+        MasterBundleReference<GameObject> masterBundleReference = airdropAsset?.model ?? MasterBundleReference<GameObject>.invalid;
+        if (masterBundleReference.isNull)
+        {
+            masterBundleReference = new MasterBundleReference<GameObject>("core.masterbundle", "Level/Carepackage.prefab");
+        }
+        Transform obj = UnityEngine.Object.Instantiate(masterBundleReference.loadAsset(), position, Quaternion.identity).transform;
+        obj.name = "Carepackage";
+        Carepackage orAddComponent = obj.GetOrAddComponent<Carepackage>();
+        orAddComponent.cargoSpawnTable = cargoSpawnTable;
+        if (airdropAsset != null)
+        {
+            orAddComponent.barricadeAsset = airdropAsset.barricadeRef.Find();
+        }
+        ConstantForce component = obj.GetComponent<ConstantForce>();
+        if (component != null)
+        {
+            component.force = new Vector3(0f, constantForce, 0f);
+        }
     }
 
     [Obsolete]
@@ -919,7 +993,7 @@ public class LevelManager : SteamCaller
         for (int i = 0; i < airdrops.Count; i++)
         {
             AirdropInfo airdropInfo = airdrops[i];
-            SendAirdropState.Invoke(ENetReliability.Reliable, client.transportConnection, airdropInfo.id, airdropInfo.state, airdropInfo.direction, airdropInfo.speed, airdropInfo.force, airdropInfo.delay);
+            SendAirdropState.Invoke(ENetReliability.Reliable, client.transportConnection, airdropInfo.state, airdropInfo.Velocity);
         }
     }
 
@@ -951,7 +1025,7 @@ public class LevelManager : SteamCaller
             }
             if (levelType != ELevelType.HORDE)
             {
-                airdropTick();
+                AirdropUpdate();
             }
         }
     }

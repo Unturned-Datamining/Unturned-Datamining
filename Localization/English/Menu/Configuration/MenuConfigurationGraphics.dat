@@ -33,6 +33,8 @@ Skybox_Reflection_Label Skybox Reflection
 Skybox_Reflection_Tooltip Render dynamic skybox into a cubemap for ambient lighting and reflections.
 Item_Icon_Anti_Aliasing_Label Item Icon Anti-Aliasing
 Item_Icon_Anti_Aliasing_Tooltip Prevents jagged pixel edges on inventory item icons.
+Clutter_Label Load Clutter
+Clutter_Tooltip Load small visual details without gameplay impact. Level must be reloaded for changes to apply. Requires map developer to support it.
 
 Far_Clip_Slider_Label Max Draw Distance [{0}%]
 Distance_Slider_Label Nearby Draw Distance [{0}%]
@@ -56,8 +58,8 @@ Planar_Reflection_Button_Label Planar Reflection Quality
 Planar_Reflection_Button_Tooltip Water reflection detail
 Water_Button_Label Water Quality
 Water_Button_Tooltip Water transparency, foam, waves and reflections
-Scope_Button_Label Scope Quality
-Scope_Button_Tooltip Dual-render scope resolution
+Scope_Button_Label Dual-Render Scope Quality
+Scope_Button_Tooltip Enables peripheral vision while using scopes, quality increases resolution
 Outline_Button_Label Outline Quality
 Outline_Button_Tooltip Highlight resolution and blur
 Terrain_Button_Label Terrain Quality

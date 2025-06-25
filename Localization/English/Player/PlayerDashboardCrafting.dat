@@ -82,3 +82,4 @@ NotCraftable_MissingInputItem Missing {0}
 NotCraftable_MissingSkill Requires Skill
 NotCraftable_MissingCraftingTag Requires {0}
 NotCraftable_UnmetConditions Conditions Unmet
+NotCraftable_Ignored You marked this blueprint Ignored

@@ -44,6 +44,26 @@ public class ItemSentryAsset : ItemStorageAsset
     /// </summary>
     public float QualityConsumptionProbability { get; protected set; }
 
+    /// <summary>
+    /// If true, this sentry can attack players. Defaults to true.
+    /// </summary>
+    public bool CanTargetPlayers { get; set; }
+
+    /// <summary>
+    /// If true, this sentry can attack zombies. Defaults to true.
+    /// </summary>
+    public bool CanTargetZombies { get; set; }
+
+    /// <summary>
+    /// If true, this sentry can attack animals. Defaults to true.
+    /// </summary>
+    public bool CanTargetAnimals { get; set; }
+
+    /// <summary>
+    /// If true, this sentry can attack vehicles. Defaults to true.
+    /// </summary>
+    public bool CanTargetVehicles { get; set; }
+
     public override void BuildDescription(ItemDescriptionBuilder builder, Item itemInstance)
     {
         base.BuildDescription(builder, itemInstance);
@@ -78,6 +98,10 @@ public class ItemSentryAsset : ItemStorageAsset
         QualityConsumptionProbability = p.data.ParseFloat("QualityConsumptionProbability", 1f);
         detectionRadius = p.data.ParseFloat("Detection_Radius", 48f);
         targetLossRadius = p.data.ParseFloat("Target_Loss_Radius", detectionRadius * 1.2f);
+        CanTargetPlayers = p.data.ParseBool("Target_Players", defaultValue: true);
+        CanTargetZombies = p.data.ParseBool("Target_Zombies", defaultValue: true);
+        CanTargetAnimals = p.data.ParseBool("Target_Animals", defaultValue: true);
+        CanTargetVehicles = p.data.ParseBool("Target_Vehicles", defaultValue: true);
         targetAcquiredEffect = p.data.readAssetReference("Target_Acquired_Effect", in defaultTargetAcquiredEffect);
         targetLostEffect = p.data.readAssetReference("Target_Lost_Effect", in defaultTargetLostEffect);
     }

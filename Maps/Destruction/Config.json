@@ -28,5 +28,6 @@
 	"PlayerUI_OxygenVisible": false,
 	"PlayerUI_GunVisible": false,
 	"Batching_Version": 2,
+	"Enable_Clutter_Option": true,
 	"Tips": 2
 }

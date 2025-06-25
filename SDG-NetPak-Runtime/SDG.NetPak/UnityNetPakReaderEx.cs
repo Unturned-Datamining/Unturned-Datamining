@@ -167,4 +167,21 @@ public static class UnityNetPakReaderEx
         }
         return flag;
     }
+
+    public static bool ReadNormalVector3AsYaw(this NetPakReader reader, out Vector3 value, int bitCount = 16)
+    {
+        float value2;
+        bool result = reader.ReadRadians(out value2, bitCount);
+        value = new Vector3(Mathf.Cos(value2), 0f, Mathf.Sin(value2));
+        return result;
+    }
+
+    public static bool ReadVector3AsYawMagnitude(this NetPakReader reader, out Vector3 value, int yawBitCount = 16)
+    {
+        float value2;
+        float value3;
+        bool result = reader.ReadRadians(out value2, yawBitCount) & reader.ReadFloat(out value3);
+        value = new Vector3(Mathf.Cos(value2) * value3, 0f, Mathf.Sin(value2) * value3);
+        return result;
+    }
 }

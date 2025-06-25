@@ -4,6 +4,13 @@ namespace SDG.Unturned;
 
 public class SleekProgress : SleekWrapper
 {
+    public enum ERoundingMode
+    {
+        Round,
+        Floor,
+        Ceil
+    }
+
     private ISleekImage background;
 
     private ISleekImage foreground;
@@ -11,6 +18,8 @@ public class SleekProgress : SleekWrapper
     private ISleekLabel label;
 
     public string suffix;
+
+    public ERoundingMode roundingMode;
 
     private float _state;
 
@@ -26,7 +35,13 @@ public class SleekProgress : SleekWrapper
             foreground.SizeScale_X = state;
             if (suffix.Length == 0)
             {
-                label.Text = Mathf.RoundToInt(foreground.SizeScale_X * 100f) + "%";
+                int num = roundingMode switch
+                {
+                    ERoundingMode.Floor => Mathf.FloorToInt(state * 100f), 
+                    ERoundingMode.Ceil => Mathf.CeilToInt(state * 100f), 
+                    _ => Mathf.RoundToInt(state * 100f), 
+                };
+                label.Text = num + "%";
             }
         }
     }

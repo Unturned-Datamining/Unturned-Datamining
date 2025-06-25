@@ -24,6 +24,9 @@ Suicide_Button_Deny No
 Suicide_Button_Deny_Tooltip Live
 Suicide_Disabled DISABLED
 
+InviteFriends_Label Invite Friends
+InviteFriends_Tooltip Open the Steam Overlay and select friends to invite to this server.
+
 Spy_Refresh_Button_Text Spy
 Spy_Refresh_Button_Tooltip Refresh
 Spy_Slay_Button_Text Slay

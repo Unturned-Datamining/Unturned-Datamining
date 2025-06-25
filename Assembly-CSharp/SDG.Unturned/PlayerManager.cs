@@ -9,6 +9,10 @@ namespace SDG.Unturned;
 
 public class PlayerManager : SteamCaller
 {
+    internal const float MAX_VISIBLE_DISTANCE = 576f;
+
+    internal const float SQR_MAX_VISIBLE_DISTANCE = 331776f;
+
     [Obsolete]
     public static ushort updates;
 
@@ -23,6 +27,14 @@ public class PlayerManager : SteamCaller
     private List<SteamPlayer> playersToSend = new List<SteamPlayer>();
 
     private float lastSendOverflowWarning;
+
+    /// <summary>
+    /// Position to place players outside visible range.
+    /// Defaults to as far away as supported by default clamped Vector3 precision.
+    /// Doesn't use world origin because that would potentially increase rendering cost for clients near the origin.
+    /// </summary>
+    public static Vector3 CulledPosition { get; set; } = new Vector3(-4095f, -4095f, -4095f);
+
 
     /// <summary>
     /// Whether local client is currently penalized for potentially using a lag switch. Server has an equivalent check which reduces
@@ -98,21 +110,50 @@ public class PlayerManager : SteamCaller
             {
                 continue;
             }
+            Vector3 position = steamPlayer.model.transform.position;
             ushort num = 0;
             playersToSend.Clear();
             for (int j = 0; j < Provider.clients.Count; j++)
             {
-                if (j != i)
+                if (j == i)
                 {
-                    SteamPlayer steamPlayer2 = Provider.clients[j];
-                    if (steamPlayer2 != null && !(steamPlayer2.player == null) && !(steamPlayer2.player.movement == null) && steamPlayer2.player.movement.updates != null && steamPlayer2.player.movement.updates.Count != 0)
+                    continue;
+                }
+                SteamPlayer steamPlayer2 = Provider.clients[j];
+                if (steamPlayer2 == null || steamPlayer2.player == null || steamPlayer2.player.movement == null || steamPlayer2.player.movement.updates == null)
+                {
+                    continue;
+                }
+                bool flag;
+                if (!steamPlayer2.isMemberOfSameGroupAs(steamPlayer) && !steamPlayer.player.AdminUsageFlags.HasFlag(EPlayerAdminUsageFlags.SpectatorStatsOverlay))
+                {
+                    Vector3 vector = (steamPlayer2.player.movement.hasMostRecentlyAddedUpdate ? steamPlayer2.player.movement.mostRecentlyAddedUpdate.pos : steamPlayer2.model.transform.position);
+                    flag = (position - vector).GetHorizontalSqrMagnitude() > 331776f;
+                }
+                else
+                {
+                    flag = false;
+                }
+                bool flag2 = steamPlayer.culledPlayers.Contains(steamPlayer2.playerID.steamID);
+                bool num2 = flag != flag2;
+                if (num2)
+                {
+                    if (flag)
                     {
-                        playersToSend.Add(steamPlayer2);
-                        num += (ushort)steamPlayer2.player.movement.updates.Count;
+                        steamPlayer.culledPlayers.Add(steamPlayer2.playerID.steamID);
+                    }
+                    else
+                    {
+                        steamPlayer.culledPlayers.Remove(steamPlayer2.playerID.steamID);
                     }
                 }
+                if (num2 || (!flag && steamPlayer2.player.movement.updates.Count > 0))
+                {
+                    playersToSend.Add(steamPlayer2);
+                    num += (ushort)Mathf.Max(steamPlayer2.player.movement.updates.Count, 1);
+                }
             }
-            SendPlayerStates.Invoke(ENetReliability.Unreliable, steamPlayer.transportConnection, SendPlayerStates_Write, num);
+            SendPlayerStates.Invoke(ENetReliability.Unreliable, steamPlayer.transportConnection, SendPlayerStates_Write, num, steamPlayer);
         }
         for (int k = 0; k < Provider.clients.Count; k++)
         {
@@ -124,25 +165,53 @@ public class PlayerManager : SteamCaller
         }
     }
 
-    private void SendPlayerStates_Write(NetPakWriter writer, ushort updateCount)
+    private void SendPlayerStates_Write(NetPakWriter writer, ushort updateCount, SteamPlayer forClient)
     {
+        _ = forClient.model.transform.position;
         writer.WriteUInt32(seq);
         writer.WriteUInt16(updateCount);
         foreach (SteamPlayer item in playersToSend)
         {
-            for (int i = 0; i < item.player.movement.updates.Count; i++)
+            if (forClient.culledPlayers.Contains(item.playerID.steamID))
             {
-                PlayerStateUpdate playerStateUpdate = item.player.movement.updates[i];
                 writer.WriteUInt8((byte)item.channel);
-                writer.WriteClampedVector3(playerStateUpdate.pos);
-                writer.WriteUInt8(playerStateUpdate.angle);
-                writer.WriteUInt8(playerStateUpdate.rot);
+                writer.WriteClampedVector3(CulledPosition);
+                writer.WriteUInt8(90);
+                writer.WriteUInt8(0);
+            }
+            else if (item.player.movement.updates.Count < 1)
+            {
+                writer.WriteUInt8((byte)item.channel);
+                if (item.player.movement.hasMostRecentlyAddedUpdate)
+                {
+                    PlayerStateUpdate mostRecentlyAddedUpdate = item.player.movement.mostRecentlyAddedUpdate;
+                    writer.WriteClampedVector3(mostRecentlyAddedUpdate.pos);
+                    writer.WriteUInt8(mostRecentlyAddedUpdate.angle);
+                    writer.WriteUInt8(mostRecentlyAddedUpdate.rot);
+                }
+                else
+                {
+                    writer.WriteClampedVector3(item.model.transform.position);
+                    writer.WriteUInt8(90);
+                    writer.WriteUInt8(MeasurementTool.angleToByte(item.model.transform.rotation.eulerAngles.y));
+                }
+            }
+            else
+            {
+                for (int i = 0; i < item.player.movement.updates.Count; i++)
+                {
+                    PlayerStateUpdate playerStateUpdate = item.player.movement.updates[i];
+                    writer.WriteUInt8((byte)item.channel);
+                    writer.WriteClampedVector3(playerStateUpdate.pos);
+                    writer.WriteUInt8(playerStateUpdate.angle);
+                    writer.WriteUInt8(playerStateUpdate.rot);
+                }
             }
         }
         if (writer.errors != 0 && Time.realtimeSinceStartup - lastSendOverflowWarning > 1f)
         {
             lastSendOverflowWarning = Time.realtimeSinceStartup;
-            CommandWindow.LogWarningFormat("Error {0} writing player states. The player count ({1}) is probably too high. No this is not a bug introduced in the update, rather a warning of a previously silent bug.", writer.errors, Provider.clients.Count);
+            CommandWindow.LogWarningFormat("Error {0} writing player states. The player count is {1}.", writer.errors, Provider.clients.Count);
         }
     }
 

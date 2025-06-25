@@ -57,15 +57,19 @@ public static class UseableHousingPlanner_NetMethods
             reader.ReadGuid(out var value2);
             reader.ReadClampedVector3(out var value3, 13, 11);
             reader.ReadFloat(out var value4);
-            useableHousingPlanner.ReceivePlaceHousingItem(in context, value2, value3, value4);
+            reader.ReadGuid(out var value5);
+            reader.ReadUInt8(out var value6);
+            useableHousingPlanner.ReceivePlaceHousingItem(in context, value2, value3, value4, value5, value6);
         }
     }
 
     [NetInvokableGeneratedMethod("ReceivePlaceHousingItem", ENetInvokableGeneratedMethodPurpose.Write)]
-    public static void ReceivePlaceHousingItem_Write(NetPakWriter writer, Guid assetGuid, Vector3 position, float yaw)
+    public static void ReceivePlaceHousingItem_Write(NetPakWriter writer, Guid assetGuid, Vector3 position, float yaw, Guid blueprintGuid, byte blueprintIndex)
     {
         writer.WriteGuid(assetGuid);
         writer.WriteClampedVector3(position, 13, 11);
         writer.WriteFloat(yaw);
+        writer.WriteGuid(blueprintGuid);
+        writer.WriteUInt8(blueprintIndex);
     }
 }

@@ -134,7 +134,7 @@ public class EditorLevelVisibilityUI
                 {
                     continue;
                 }
-                int num4 = LevelObjects.objects[num2, num3].Count + LevelGround.trees[num2, num3].Count;
+                int num4 = LevelObjects.objects[num2, num3].Count + LevelGround.GetTreeCountInRegion(new Vector2Int(num2, num3));
                 int num5 = LevelObjects.total + LevelGround.total;
                 double num6 = Math.Round((double)num4 / (double)num5 * 1000.0) / 10.0;
                 int num7 = 0;
@@ -167,32 +167,35 @@ public class EditorLevelVisibilityUI
                         }
                     }
                 }
-                for (int m = 0; m < LevelGround.trees[num2, num3].Count; m++)
+                List<ResourceSpawnpoint> treesOrNullInRegion = LevelGround.GetTreesOrNullInRegion(new Vector2Int(num2, num3));
+                if (treesOrNullInRegion != null)
                 {
-                    ResourceSpawnpoint resourceSpawnpoint = LevelGround.trees[num2, num3][m];
-                    if (!resourceSpawnpoint.model)
+                    foreach (ResourceSpawnpoint item in treesOrNullInRegion)
                     {
-                        continue;
-                    }
-                    resourceSpawnpoint.model.GetComponents(meshes);
-                    if (meshes.Count == 0)
-                    {
-                        Transform transform2 = resourceSpawnpoint.model.Find("Model_0");
-                        if ((bool)transform2)
+                        if (!item.model)
                         {
-                            transform2.GetComponentsInChildren(includeInactive: true, meshes);
+                            continue;
                         }
-                    }
-                    if (meshes.Count == 0)
-                    {
-                        continue;
-                    }
-                    for (int n = 0; n < meshes.Count; n++)
-                    {
-                        Mesh sharedMesh2 = meshes[n].sharedMesh;
-                        if ((bool)sharedMesh2)
+                        item.model.GetComponents(meshes);
+                        if (meshes.Count == 0)
                         {
-                            num7 += sharedMesh2.triangles.Length;
+                            Transform transform2 = item.model.Find("Model_0");
+                            if ((bool)transform2)
+                            {
+                                transform2.GetComponentsInChildren(includeInactive: true, meshes);
+                            }
+                        }
+                        if (meshes.Count == 0)
+                        {
+                            continue;
+                        }
+                        for (int m = 0; m < meshes.Count; m++)
+                        {
+                            Mesh sharedMesh2 = meshes[m].sharedMesh;
+                            if ((bool)sharedMesh2)
+                            {
+                                num7 += sharedMesh2.triangles.Length;
+                            }
                         }
                     }
                 }

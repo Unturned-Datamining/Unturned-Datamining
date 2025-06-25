@@ -1,0 +1,10 @@
+GUID 4dc8d743e8b34862a7e50328d52b73f5
+Type Road
+
+Width 16
+Depth 0.8
+OffsetAlongNormal -0.2
+
+TexturePath Roads/Asphalt.png
+
+VanillaPhysicsMaterial Concrete_Static

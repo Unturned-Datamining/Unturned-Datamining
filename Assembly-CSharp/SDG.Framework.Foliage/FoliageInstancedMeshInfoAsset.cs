@@ -28,6 +28,12 @@ public class FoliageInstancedMeshInfoAsset : FoliageInfoAsset
     public AssetReference<FoliageInstancedMeshInfoAsset>? halloweenRedirect;
 
     /// <summary>
+    /// If true, mesh is not loaded when clutter is turned off in graphics menu.
+    /// Defaults to false.
+    /// </summary>
+    public bool IsClutter { get; set; }
+
+    /// <summary>
     /// Get asset ref to replace this one for holiday, invalid to disable, or null if it should not be redirected.
     /// </summary>
     public AssetReference<FoliageInstancedMeshInfoAsset>? getHolidayRedirect()
@@ -112,6 +118,7 @@ public class FoliageInstancedMeshInfoAsset : FoliageInfoAsset
         {
             tileDither = true;
         }
+        IsClutter = p.data.ParseBool("Is_Clutter");
         if (p.data.ContainsKey("Draw_Distance"))
         {
             drawDistance = p.data.ParseInt32("Draw_Distance");

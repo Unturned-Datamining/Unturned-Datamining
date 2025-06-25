@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Text;
 using UnityEngine;
 
 namespace SDG.Unturned;
@@ -638,25 +637,9 @@ public class PlayerDashboardInventoryUI
         vector /= GraphicsSettings.userInterfaceScale;
         selectionBackdropBox.PositionOffset_X = (int)Mathf.Clamp(vector.x - selectionBackdropBox.SizeOffset_X / 2f, 0f, (float)Screen.width / GraphicsSettings.userInterfaceScale - selectionBackdropBox.SizeOffset_X);
         selectionBackdropBox.PositionOffset_Y = (int)Mathf.Clamp(vector.y - selectionBackdropBox.SizeOffset_Y / 2f, 0f, (float)Screen.height / GraphicsSettings.userInterfaceScale - selectionBackdropBox.SizeOffset_Y);
-        StringBuilder stringBuilder = new StringBuilder(512);
-        ItemDescriptionBuilder builder = default(ItemDescriptionBuilder);
-        builder.stringBuilder = stringBuilder;
-        builder.shouldRestrictToLegacyContent = !Glazier.Get().SupportsAutomaticLayout || !selectedAsset.isEligibleForAutoStatDescriptions;
-        builder.lines = new List<ItemDescriptionLine>();
+        ItemDescriptionBuilder builder = ItemDescriptionBuilderUtils.CreateForUI(selectedAsset);
         selectedAsset.BuildDescription(builder, selectedJar.item);
-        builder.lines.Sort();
-        int num3 = 0;
-        stringBuilder.Clear();
-        foreach (ItemDescriptionLine line in builder.lines)
-        {
-            if (line.sortOrder - num3 > 100)
-            {
-                stringBuilder.AppendLine();
-            }
-            stringBuilder.AppendLine(line.text);
-            num3 = line.sortOrder;
-        }
-        selectionDescriptionLabel.Text = stringBuilder.ToString();
+        selectionDescriptionLabel.Text = ItemDescriptionBuilderUtils.FormatLines();
         if (selectionDescriptionScrollView != null)
         {
             selectionDescriptionScrollView.ScrollToTop();
@@ -729,30 +712,30 @@ public class PlayerDashboardInventoryUI
         selectionEquipButton.IsVisible = selectedAsset.canPlayerEquip && page < PlayerInventory.PAGES - 2;
         selectionDropButton.IsVisible = flag || selectedAsset.allowManualDrop;
         selectionStorageButton.IsVisible = Player.player.inventory.isStoring;
-        int num4 = 0;
+        int num3 = 0;
         if (selectionEquipButton.IsVisible)
         {
-            selectionEquipButton.PositionOffset_Y = num4;
-            num4 += 40;
+            selectionEquipButton.PositionOffset_Y = num3;
+            num3 += 40;
         }
         if (selectionContextButton.IsVisible)
         {
-            selectionContextButton.PositionOffset_Y = num4;
-            num4 += 40;
+            selectionContextButton.PositionOffset_Y = num3;
+            num3 += 40;
         }
         if (selectionDropButton.IsVisible)
         {
-            selectionDropButton.PositionOffset_Y = num4;
-            num4 += 40;
+            selectionDropButton.PositionOffset_Y = num3;
+            num3 += 40;
         }
         if (selectionStorageButton.IsVisible)
         {
-            selectionStorageButton.PositionOffset_Y = num4;
-            num4 += 40;
+            selectionStorageButton.PositionOffset_Y = num3;
+            num3 += 40;
         }
         selectionExtraActionsBox.RemoveAllChildren();
-        selectionExtraActionsBox.PositionOffset_Y = num4;
-        int num5 = 0;
+        selectionExtraActionsBox.PositionOffset_Y = num3;
+        int num4 = 0;
         if (page != PlayerInventory.AREA)
         {
             actions.Clear();
@@ -773,7 +756,7 @@ public class PlayerDashboardInventoryUI
                 }
                 actions.Add(action);
                 ISleekButton sleekButton = Glazier.Get().CreateButton();
-                sleekButton.PositionOffset_Y = num5;
+                sleekButton.PositionOffset_Y = num4;
                 sleekButton.SizeScale_X = 1f;
                 sleekButton.SizeOffset_Y = 30f;
                 string text;
@@ -800,12 +783,12 @@ public class PlayerDashboardInventoryUI
                 sleekButton.TooltipText = text;
                 sleekButton.OnClicked += onClickedAction;
                 selectionExtraActionsBox.AddChild(sleekButton);
-                num5 += 40;
                 num4 += 40;
+                num3 += 40;
             }
         }
-        selectionExtraActionsBox.SizeOffset_Y = num5 - 10;
-        selectionActionsBox.ContentSizeOffset = new Vector2(0f, num4 - 10);
+        selectionExtraActionsBox.SizeOffset_Y = num4 - 10;
+        selectionActionsBox.ContentSizeOffset = new Vector2(0f, num3 - 10);
         selectionNameLabel.TextColor = ItemTool.getRarityColorUI(selectedAsset.rarity);
     }
 

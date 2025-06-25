@@ -1,0 +1,11 @@
+GUID f4bedc4355364ec095903f9a64c41de7
+Type Road
+
+Width 16
+Depth 0.8
+OffsetAlongNormal -0.2
+RepeatDistanceScale 4
+
+TexturePath Roads/FourLane_TwoWay.png
+
+VanillaPhysicsMaterial Concrete_Static

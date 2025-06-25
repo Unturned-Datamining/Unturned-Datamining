@@ -6,3 +6,5 @@ Holiday_Restriction HALLOWEEN
 Bundle_Override_Path /Objects/Small/Furniture/Candle_0
 
 Has_Clip_Prefab false
+
+Is_Clutter true

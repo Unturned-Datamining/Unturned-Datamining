@@ -62,10 +62,10 @@ public class PlanarReflection : MonoBehaviour
 
     private RenderTexture CreateTextureFor(Camera cam)
     {
-        return new RenderTexture(Mathf.RoundToInt((float)cam.pixelWidth * 0.5f), Mathf.RoundToInt((float)cam.pixelHeight * 0.5f), 16)
-        {
-            name = "PlanarReflection_RT"
-        };
+        RenderTexture renderTexture = ((!GraphicsSettings.WantsCinematicMode) ? new RenderTexture(Mathf.RoundToInt((float)cam.pixelWidth * 0.5f), Mathf.RoundToInt((float)cam.pixelHeight * 0.5f), 16) : new RenderTexture(cam.pixelWidth, cam.pixelHeight, 16));
+        renderTexture.filterMode = FilterMode.Bilinear;
+        renderTexture.name = "PlanarReflection_RT";
+        return renderTexture;
     }
 
     public void RenderHelpCameras(Camera currentCam)
@@ -155,12 +155,9 @@ public class PlanarReflection : MonoBehaviour
         reflectCamera.transform.position = position2;
         Vector3 eulerAngles2 = cam.transform.eulerAngles;
         reflectCamera.transform.eulerAngles = new Vector3(0f - eulerAngles2.x, eulerAngles2.y, eulerAngles2.z);
-        float lodBias = QualitySettings.lodBias;
-        QualitySettings.lodBias = 1f;
         PlanarReflection.preRender?.Invoke();
         reflectCamera.Render();
         PlanarReflection.postRender?.Invoke();
-        QualitySettings.lodBias = lodBias;
         GL.invertCulling = false;
     }
 

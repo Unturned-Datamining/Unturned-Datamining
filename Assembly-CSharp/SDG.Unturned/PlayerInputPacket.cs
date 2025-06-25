@@ -101,17 +101,9 @@ public class PlayerInputPacket
                 reader.ReadEnum(out inputInfo.limb);
                 reader.ReadSteamID(out CSteamID value14);
                 Player player = PlayerTool.getPlayer(value14);
-                if (player != null)
+                if (player != null && player.input.serverBoundsHistory != null)
                 {
-                    float num5 = 16f;
-                    if (player.movement.getVehicle() != null)
-                    {
-                        num5 = 64f;
-                        float num6 = player.movement.getVehicle().asset?.ValidHitDistanceMultiplier ?? 1f;
-                        num5 *= num6;
-                    }
-                    float num7 = num5 * num5;
-                    if ((inputInfo.point - player.transform.position).sqrMagnitude < num7)
+                    if (player.input.serverBoundsHistory.ContainsPoint(player.movement.controller, inputInfo.point))
                     {
                         inputInfo.materialName = "Flesh_Dynamic";
                         inputInfo.material = EPhysicsMaterial.FLESH_DYNAMIC;

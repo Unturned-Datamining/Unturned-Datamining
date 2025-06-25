@@ -160,7 +160,7 @@ public class FoliageInstanceList : IPoolable
         isAssetLoaded = true;
         FoliageInstancedMeshInfoAsset foliageInstancedMeshInfoAsset = assetReference.Find();
         ClientAssetIntegrity.QueueRequest(assetReference.GUID, foliageInstancedMeshInfoAsset, "Foliage");
-        if (foliageInstancedMeshInfoAsset == null)
+        if (foliageInstancedMeshInfoAsset == null || (foliageInstancedMeshInfoAsset.IsClutter && Level.ShouldSkipInstantiatingClutter))
         {
             return;
         }

@@ -45,6 +45,11 @@ public struct DamageZombieParameters
     }
 
     /// <summary>
+    /// Defaults to 1.
+    /// </summary>
+    public float RagdollForceMultiplier { get; set; }
+
+    /// <summary>
     /// If not null and damage is applied, <see cref="M:SDG.Unturned.Zombie.alert(SDG.Unturned.Player)" /> is called with this position (startle: true).
     /// </summary>
     public Vector3? AlertPosition { get; set; }
@@ -61,6 +66,7 @@ public struct DamageZombieParameters
         times = 1f;
         zombieStunOverride = EZombieStunOverride.None;
         ragdollEffect = ERagdollEffect.NONE;
+        RagdollForceMultiplier = 1f;
         AlertPosition = null;
         instigator = null;
     }

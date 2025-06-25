@@ -134,6 +134,10 @@ public class ItemRefillAsset : ItemAsset
     public override void BuildDescription(ItemDescriptionBuilder builder, Item itemInstance)
     {
         base.BuildDescription(builder, itemInstance);
+        if (itemInstance == null)
+        {
+            return;
+        }
         ERefillWaterType eRefillWaterType = (ERefillWaterType)itemInstance.state[0];
         builder.Append(PlayerDashboardInventoryUI.localization.format("Refill", PlayerDashboardInventoryUI.localization.format(eRefillWaterType switch
         {

@@ -419,6 +419,8 @@ public abstract class GlazierElementBase : ISleekElement
 
     public abstract ISleekElement GetChildAtIndex(int index);
 
+    public abstract int GetChildCount();
+
     public abstract void RemoveChild(ISleekElement child);
 
     public abstract void RemoveAllChildren();

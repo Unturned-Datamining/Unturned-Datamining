@@ -50,7 +50,7 @@ public class Dedicator : MonoBehaviour
     public void awake()
     {
         _isDedicated = CommandLine.tryGetServer(out serverVisibility, out serverID);
-        _hasBattlEye = Environment.CommandLine.IndexOf("-BattlEye", StringComparison.OrdinalIgnoreCase) != -1;
+        _hasBattlEye = CommandLine.Get().IndexOf("-BattlEye", StringComparison.OrdinalIgnoreCase) != -1;
         UnturnedMasterVolume.mutedByDedicatedServer = IsDedicatedServer;
         if (IsDedicatedServer)
         {

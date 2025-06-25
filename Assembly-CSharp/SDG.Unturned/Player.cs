@@ -632,6 +632,11 @@ public class Player : MonoBehaviour, IDialogueTarget, IExplosionDamageable, IEqu
             if (((EPlayerAdminUsageFlags)newFlagsBitmask).HasFlag(EPlayerAdminUsageFlags.Freecam))
             {
                 UnturnedLog.info($"{channel.owner.playerID} entered freecam admin mode");
+                if (!player.look.canUseFreecam)
+                {
+                    context.Kick("freecam not allowed");
+                    return;
+                }
             }
             else
             {
@@ -643,6 +648,11 @@ public class Player : MonoBehaviour, IDialogueTarget, IExplosionDamageable, IEqu
             if (((EPlayerAdminUsageFlags)newFlagsBitmask).HasFlag(EPlayerAdminUsageFlags.Workzone))
             {
                 UnturnedLog.info($"{channel.owner.playerID} entered workzone admin mode");
+                if (!player.look.canUseWorkzone)
+                {
+                    context.Kick("workzone not allowed");
+                    return;
+                }
             }
             else
             {
@@ -654,6 +664,11 @@ public class Player : MonoBehaviour, IDialogueTarget, IExplosionDamageable, IEqu
             if (((EPlayerAdminUsageFlags)newFlagsBitmask).HasFlag(EPlayerAdminUsageFlags.SpectatorStatsOverlay))
             {
                 UnturnedLog.info($"{channel.owner.playerID} turned on spectator stats overlay admin mode");
+                if (!player.look.canUseSpecStats)
+                {
+                    context.Kick("specstats not allowed");
+                    return;
+                }
             }
             else
             {
@@ -760,6 +775,11 @@ public class Player : MonoBehaviour, IDialogueTarget, IExplosionDamageable, IEqu
         look.updateLook();
         movement.updateMovement();
         PostTeleport();
+        if (Provider.isServer)
+        {
+            input.serverBoundsHistory.Clear();
+            input.serverBoundsHistory.AddCharacterControllerBounds(movement.controller);
+        }
     }
 
     public void sendTeleport(Vector3 position, byte angle)

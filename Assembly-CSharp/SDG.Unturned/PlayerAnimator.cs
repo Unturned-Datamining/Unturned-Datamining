@@ -116,6 +116,12 @@ public class PlayerAnimator : PlayerCaller
     public float viewmodelOffsetPreferenceMultiplier;
 
     /// <summary>
+    /// If true, use the scope aim fov instead of non-scope fov.
+    /// Useful for players with high (e.g. 160) fov to be able to use scopes.
+    /// </summary>
+    public bool viewmodelOffsetPreferenceUseScope;
+
+    /// <summary>
     /// Animated toward viewmodelCameraLocalPositionOffset, recoil, and bayonet offsets.
     /// </summary>
     private Vector3 blendedViewmodelCameraLocalPositionOffset;
@@ -1344,7 +1350,7 @@ public class PlayerAnimator : PlayerCaller
             updateState(thirdAnimator);
             updateHuman((HumanAnimator)thirdAnimator);
         }
-        goto IL_0cdc;
+        goto IL_0cf5;
         IL_0986:
         viewmodelItemInertiaRotation.currentPosition = MathfEx.Clamp(viewmodelItemInertiaRotation.currentPosition, -5f, 5f);
         viewmodelCameraLocalRotation += viewmodelItemInertiaRotation.currentPosition * aimingInertaMultiplier;
@@ -1370,7 +1376,7 @@ public class PlayerAnimator : PlayerCaller
         {
             base.player.first.transform.localRotation = Quaternion.Lerp(base.player.first.transform.localRotation, Quaternion.Euler(0f, 0f, (float)lean * HumanAnimator.LEAN), 4f * Time.deltaTime);
         }
-        viewmodelCamera.fieldOfView = Mathf.Lerp(Provider.preferenceData.Viewmodel.Field_Of_View_Aim, Provider.preferenceData.Viewmodel.Field_Of_View_Hip, blendedViewmodelOffsetPreferenceMultiplier);
+        viewmodelCamera.fieldOfView = Mathf.Lerp(viewmodelOffsetPreferenceUseScope ? Provider.preferenceData.Viewmodel.Field_Of_View_Aim_Scope : Provider.preferenceData.Viewmodel.Field_Of_View_Aim, Provider.preferenceData.Viewmodel.Field_Of_View_Hip, blendedViewmodelOffsetPreferenceMultiplier);
         if (Provider.modeConfigData.Gameplay.Allow_Shoulder_Camera)
         {
             _shoulder = Mathf.Lerp(shoulder, (!side) ? 1 : (-1), 8f * Time.deltaTime);
@@ -1380,8 +1386,8 @@ public class PlayerAnimator : PlayerCaller
             _shoulder = 0f;
         }
         _shoulder2 = Mathf.Lerp(shoulder2, -lean, 8f * Time.deltaTime);
-        goto IL_0cdc;
-        IL_0cdc:
+        goto IL_0cf5;
+        IL_0cf5:
         if (characterAnimator != null)
         {
             updateState(characterAnimator);

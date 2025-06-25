@@ -15,12 +15,20 @@ internal static class LevelNetIdRegistry
     private const uint DEVKIT_OBJECT_FLAG = 3221225472u;
 
     /// <summary>
+    /// Nelson 2025-06-10: this is used by older level file formats, but with placement of trees outside legacy
+    /// bounds now supported we use only the index in that case with GetTreeNetIdV2.
+    ///
     /// Each region can have ushort.MaxValue trees, and we reserve that entire block so that a region can be slightly
     /// modified on the client or server without breaking all netids in the level.
     /// </summary>
     public static NetId GetTreeNetId(byte regionX, byte regionY, ushort index)
     {
         return new NetId(0x80000000u | (uint)(regionX << 22) | (uint)(regionY << 16) | index);
+    }
+
+    public static NetId GetTreeNetIdV2(int index)
+    {
+        return new NetId(0x80000000u | (uint)index);
     }
 
     /// <summary>

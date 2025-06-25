@@ -1,4 +1,4 @@
-"Available_Instance_ID" "186"
+"Available_Instance_ID" "215"
 "Items"
 [
 	{
@@ -461220,6 +461220,7 @@
 				"Z" "80"
 			}
 			"Shape" "Box"
+			"Falloff" "0"
 			"Ambiance_ID" "122"
 			"No_Water" "true"
 			"No_Lighting" "false"
@@ -461234,6 +461235,7 @@
 			}
 			"Fog_Intensity" "0"
 			"Override_Atmospheric_Fog" "false"
+			"Enable_Falloff" "false"
 		}
 	}
 	{
@@ -461261,6 +461263,7 @@
 				"Z" "146.88"
 			}
 			"Shape" "Sphere"
+			"Falloff" "0"
 			"Ambiance_ID" "0"
 			"No_Water" "true"
 			"No_Lighting" "false"
@@ -461275,6 +461278,7 @@
 			}
 			"Fog_Intensity" "0"
 			"Override_Atmospheric_Fog" "false"
+			"Enable_Falloff" "false"
 		}
 	}
 	{
@@ -461302,6 +461306,7 @@
 				"Z" "117.12"
 			}
 			"Shape" "Sphere"
+			"Falloff" "0"
 			"Ambiance_ID" "0"
 			"No_Water" "true"
 			"No_Lighting" "false"
@@ -461316,88 +461321,7 @@
 			}
 			"Fog_Intensity" "0"
 			"Override_Atmospheric_Fog" "false"
-		}
-	}
-	{
-		"Type" "SDG.Framework.Devkit.AmbianceVolume, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null"
-		"Instance_ID" "15"
-		"Item"
-		{
-			"Position"
-			{
-				"X" "-899.1122"
-				"Y" "35.39513"
-				"Z" "79.07465"
-			}
-			"Rotation"
-			{
-				"X" "0"
-				"Y" "0"
-				"Z" "0"
-				"W" "1"
-			}
-			"Scale"
-			{
-				"X" "200"
-				"Y" "34"
-				"Z" "240"
-			}
-			"Shape" "Box"
-			"Ambiance_ID" "122"
-			"No_Water" "false"
-			"No_Lighting" "true"
-			"Weather_Mask" "4294967295"
-			"Override_Fog" "false"
-			"Fog_Color"
-			{
-				"R" "255"
-				"G" "255"
-				"B" "255"
-				"A" "255"
-			}
-			"Fog_Intensity" "0"
-			"Override_Atmospheric_Fog" "false"
-		}
-	}
-	{
-		"Type" "SDG.Framework.Devkit.AmbianceVolume, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null"
-		"Instance_ID" "16"
-		"Item"
-		{
-			"Position"
-			{
-				"X" "-845.3668"
-				"Y" "56.81094"
-				"Z" "135.2972"
-			}
-			"Rotation"
-			{
-				"X" "0"
-				"Y" "0"
-				"Z" "0"
-				"W" "1"
-			}
-			"Scale"
-			{
-				"X" "32"
-				"Y" "12"
-				"Z" "128"
-			}
-			"Shape" "Box"
-			"Ambiance_ID" "122"
-			"No_Water" "false"
-			"No_Lighting" "true"
-			"Weather_Mask" "4294967295"
-			"Override_Fog" "false"
-			"Fog_Color"
-			{
-				"R" "255"
-				"G" "255"
-				"B" "255"
-				"A" "255"
-			}
-			"Fog_Intensity" "0"
-			"Override_Atmospheric_Fog" "false"
+			"Enable_Falloff" "false"
 		}
 	}
 	{
@@ -461407,9 +461331,9 @@
 		{
 			"Position"
 			{
-				"X" "-867.7432"
-				"Y" "50.94229"
-				"Z" "156.2462"
+				"X" "-871.506"
+				"Y" "55.37219"
+				"Z" "131.2215"
 			}
 			"Rotation"
 			{
@@ -461420,11 +461344,12 @@
 			}
 			"Scale"
 			{
-				"X" "16"
-				"Y" "16"
-				"Z" "6"
+				"X" "32.83918"
+				"Y" "24.85979"
+				"Z" "34.82964"
 			}
 			"Shape" "Box"
+			"Falloff" "10"
 			"Ambiance_ID" "122"
 			"No_Water" "false"
 			"No_Lighting" "true"
@@ -461439,47 +461364,7 @@
 			}
 			"Fog_Intensity" "0"
 			"Override_Atmospheric_Fog" "false"
-		}
-	}
-	{
-		"Type" "SDG.Framework.Devkit.AmbianceVolume, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null"
-		"Instance_ID" "18"
-		"Item"
-		{
-			"Position"
-			{
-				"X" "-874.1393"
-				"Y" "52.89513"
-				"Z" "110.0927"
-			}
-			"Rotation"
-			{
-				"X" "0"
-				"Y" "0"
-				"Z" "0"
-				"W" "1"
-			}
-			"Scale"
-			{
-				"X" "32"
-				"Y" "16"
-				"Z" "61"
-			}
-			"Shape" "Box"
-			"Ambiance_ID" "122"
-			"No_Water" "false"
-			"No_Lighting" "true"
-			"Weather_Mask" "4294967295"
-			"Override_Fog" "false"
-			"Fog_Color"
-			{
-				"R" "255"
-				"G" "255"
-				"B" "255"
-				"A" "255"
-			}
-			"Fog_Intensity" "0"
-			"Override_Atmospheric_Fog" "false"
+			"Enable_Falloff" "true"
 		}
 	}
 	{
@@ -461507,6 +461392,7 @@
 				"Z" "64"
 			}
 			"Shape" "Box"
+			"Falloff" "0"
 			"Ambiance_ID" "122"
 			"No_Water" "false"
 			"No_Lighting" "true"
@@ -461521,6 +461407,7 @@
 			}
 			"Fog_Intensity" "0"
 			"Override_Atmospheric_Fog" "false"
+			"Enable_Falloff" "true"
 		}
 	}
 	{
@@ -461577,6 +461464,7 @@
 				"Z" "37.76"
 			}
 			"Shape" "Sphere"
+			"Falloff" "0"
 			"Ambiance_ID" "122"
 			"No_Water" "false"
 			"No_Lighting" "true"
@@ -461591,6 +461479,7 @@
 			}
 			"Fog_Intensity" "0"
 			"Override_Atmospheric_Fog" "false"
+			"Enable_Falloff" "true"
 		}
 	}
 	{
@@ -463578,6 +463467,7 @@
 			}
 			"Shape" "Box"
 			"AssetGuid" "9b519d2df5af46f08830562aeb2f43d7"
+			"ShouldAffectVehiclePassengers" "false"
 		}
 	}
 	{
@@ -464298,7 +464188,7 @@
 			"Rotation"
 			{
 				"X" "0"
-				"Y" "-0.3826835"
+				"Y" "-0.3826834"
 				"Z" "0"
 				"W" "0.9238796"
 			}
@@ -464330,7 +464220,7 @@
 			"Rotation"
 			{
 				"X" "0"
-				"Y" "-0.3826835"
+				"Y" "-0.3826834"
 				"Z" "0"
 				"W" "0.9238796"
 			}
@@ -464339,6 +464229,926 @@
 				"X" "7.816466"
 				"Y" "29.03604"
 				"Z" "9.847171"
+			}
+			"Shape" "Box"
+			"Kill_Players" "true"
+			"Kill_Zombies" "true"
+			"Kill_Animals" "true"
+			"Kill_Vehicles" "false"
+			"Death_Cause" "BURNING"
+		}
+	}
+	{
+		"Type" "SDG.Framework.Devkit.AmbianceVolume, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null"
+		"Instance_ID" "186"
+		"Item"
+		{
+			"Position"
+			{
+				"X" "-923.6703"
+				"Y" "38.03251"
+				"Z" "68.4572"
+			}
+			"Rotation"
+			{
+				"X" "0"
+				"Y" "0"
+				"Z" "0"
+				"W" "1"
+			}
+			"Scale"
+			{
+				"X" "47.69636"
+				"Y" "47.69636"
+				"Z" "47.69636"
+			}
+			"Shape" "Sphere"
+			"Falloff" "18"
+			"Ambiance_ID" "122"
+			"No_Water" "false"
+			"No_Lighting" "true"
+			"Weather_Mask" "4294967295"
+			"Override_Fog" "false"
+			"Fog_Color"
+			{
+				"R" "255"
+				"G" "255"
+				"B" "255"
+				"A" "255"
+			}
+			"Fog_Intensity" "0"
+			"Override_Atmospheric_Fog" "false"
+			"Enable_Falloff" "true"
+		}
+	}
+	{
+		"Type" "SDG.Framework.Devkit.AmbianceVolume, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null"
+		"Instance_ID" "187"
+		"Item"
+		{
+			"Position"
+			{
+				"X" "-867.7526"
+				"Y" "42.75124"
+				"Z" "147.917"
+			}
+			"Rotation"
+			{
+				"X" "0"
+				"Y" "0"
+				"Z" "0"
+				"W" "1"
+			}
+			"Scale"
+			{
+				"X" "47.69636"
+				"Y" "47.69636"
+				"Z" "47.69636"
+			}
+			"Shape" "Sphere"
+			"Falloff" "20"
+			"Ambiance_ID" "122"
+			"No_Water" "false"
+			"No_Lighting" "true"
+			"Weather_Mask" "4294967295"
+			"Override_Fog" "false"
+			"Fog_Color"
+			{
+				"R" "255"
+				"G" "255"
+				"B" "255"
+				"A" "255"
+			}
+			"Fog_Intensity" "0"
+			"Override_Atmospheric_Fog" "false"
+			"Enable_Falloff" "true"
+		}
+	}
+	{
+		"Type" "SDG.Framework.Devkit.AmbianceVolume, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null"
+		"Instance_ID" "190"
+		"Item"
+		{
+			"Position"
+			{
+				"X" "-910.0809"
+				"Y" "37.72694"
+				"Z" "135.0374"
+			}
+			"Rotation"
+			{
+				"X" "0"
+				"Y" "0"
+				"Z" "0"
+				"W" "1"
+			}
+			"Scale"
+			{
+				"X" "194.5807"
+				"Y" "29.09442"
+				"Z" "78.02196"
+			}
+			"Shape" "Box"
+			"Falloff" "0"
+			"Ambiance_ID" "122"
+			"No_Water" "false"
+			"No_Lighting" "true"
+			"Weather_Mask" "4294967295"
+			"Override_Fog" "false"
+			"Fog_Color"
+			{
+				"R" "255"
+				"G" "255"
+				"B" "255"
+				"A" "255"
+			}
+			"Fog_Intensity" "0"
+			"Override_Atmospheric_Fog" "false"
+			"Enable_Falloff" "true"
+		}
+	}
+	{
+		"Type" "SDG.Framework.Devkit.AmbianceVolume, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null"
+		"Instance_ID" "191"
+		"Item"
+		{
+			"Position"
+			{
+				"X" "-858.346"
+				"Y" "37.72694"
+				"Z" "29.45559"
+			}
+			"Rotation"
+			{
+				"X" "0"
+				"Y" "0"
+				"Z" "0"
+				"W" "1"
+			}
+			"Scale"
+			{
+				"X" "95.7541"
+				"Y" "29.09442"
+				"Z" "135.1855"
+			}
+			"Shape" "Box"
+			"Falloff" "0"
+			"Ambiance_ID" "122"
+			"No_Water" "false"
+			"No_Lighting" "true"
+			"Weather_Mask" "4294967295"
+			"Override_Fog" "false"
+			"Fog_Color"
+			{
+				"R" "255"
+				"G" "255"
+				"B" "255"
+				"A" "255"
+			}
+			"Fog_Intensity" "0"
+			"Override_Atmospheric_Fog" "false"
+			"Enable_Falloff" "true"
+		}
+	}
+	{
+		"Type" "SDG.Framework.Devkit.AmbianceVolume, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null"
+		"Instance_ID" "192"
+		"Item"
+		{
+			"Position"
+			{
+				"X" "-922.5301"
+				"Y" "31.87078"
+				"Z" "72.41261"
+			}
+			"Rotation"
+			{
+				"X" "0"
+				"Y" "0"
+				"Z" "0"
+				"W" "1"
+			}
+			"Scale"
+			{
+				"X" "34.90319"
+				"Y" "17.38209"
+				"Z" "49.27148"
+			}
+			"Shape" "Box"
+			"Falloff" "0"
+			"Ambiance_ID" "122"
+			"No_Water" "false"
+			"No_Lighting" "true"
+			"Weather_Mask" "4294967295"
+			"Override_Fog" "false"
+			"Fog_Color"
+			{
+				"R" "255"
+				"G" "255"
+				"B" "255"
+				"A" "255"
+			}
+			"Fog_Intensity" "0"
+			"Override_Atmospheric_Fog" "false"
+			"Enable_Falloff" "true"
+		}
+	}
+	{
+		"Type" "SDG.Framework.Devkit.AmbianceVolume, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null"
+		"Instance_ID" "193"
+		"Item"
+		{
+			"Position"
+			{
+				"X" "-847.1519"
+				"Y" "50.57793"
+				"Z" "106.3193"
+			}
+			"Rotation"
+			{
+				"X" "0"
+				"Y" "0"
+				"Z" "0"
+				"W" "1"
+			}
+			"Scale"
+			{
+				"X" "17.26169"
+				"Y" "18.96016"
+				"Z" "113.0085"
+			}
+			"Shape" "Box"
+			"Falloff" "0"
+			"Ambiance_ID" "122"
+			"No_Water" "false"
+			"No_Lighting" "true"
+			"Weather_Mask" "4294967295"
+			"Override_Fog" "false"
+			"Fog_Color"
+			{
+				"R" "255"
+				"G" "255"
+				"B" "255"
+				"A" "255"
+			}
+			"Fog_Intensity" "0"
+			"Override_Atmospheric_Fog" "false"
+			"Enable_Falloff" "true"
+		}
+	}
+	{
+		"Type" "SDG.Framework.Devkit.AmbianceVolume, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null"
+		"Instance_ID" "194"
+		"Item"
+		{
+			"Position"
+			{
+				"X" "-876.8578"
+				"Y" "50.57793"
+				"Z" "157.7118"
+			}
+			"Rotation"
+			{
+				"X" "0"
+				"Y" "0"
+				"Z" "0"
+				"W" "1"
+			}
+			"Scale"
+			{
+				"X" "43.73106"
+				"Y" "18.96016"
+				"Z" "10.22349"
+			}
+			"Shape" "Box"
+			"Falloff" "0"
+			"Ambiance_ID" "122"
+			"No_Water" "false"
+			"No_Lighting" "true"
+			"Weather_Mask" "4294967295"
+			"Override_Fog" "false"
+			"Fog_Color"
+			{
+				"R" "255"
+				"G" "255"
+				"B" "255"
+				"A" "255"
+			}
+			"Fog_Intensity" "0"
+			"Override_Atmospheric_Fog" "false"
+			"Enable_Falloff" "true"
+		}
+	}
+	{
+		"Type" "SDG.Framework.Devkit.AmbianceVolume, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null"
+		"Instance_ID" "195"
+		"Item"
+		{
+			"Position"
+			{
+				"X" "-876.8578"
+				"Y" "50.57793"
+				"Z" "116.7906"
+			}
+			"Rotation"
+			{
+				"X" "0"
+				"Y" "0"
+				"Z" "0"
+				"W" "1"
+			}
+			"Scale"
+			{
+				"X" "43.73106"
+				"Y" "18.96016"
+				"Z" "22.04061"
+			}
+			"Shape" "Box"
+			"Falloff" "0"
+			"Ambiance_ID" "122"
+			"No_Water" "false"
+			"No_Lighting" "true"
+			"Weather_Mask" "4294967295"
+			"Override_Fog" "false"
+			"Fog_Color"
+			{
+				"R" "255"
+				"G" "255"
+				"B" "255"
+				"A" "255"
+			}
+			"Fog_Intensity" "0"
+			"Override_Atmospheric_Fog" "false"
+			"Enable_Falloff" "true"
+		}
+	}
+	{
+		"Type" "SDG.Framework.Devkit.KillVolume, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null"
+		"Instance_ID" "196"
+		"Item"
+		{
+			"Position"
+			{
+				"X" "-138.5264"
+				"Y" "31.57079"
+				"Z" "1494.687"
+			}
+			"Rotation"
+			{
+				"X" "0"
+				"Y" "0"
+				"Z" "0"
+				"W" "1"
+			}
+			"Scale"
+			{
+				"X" "68.07455"
+				"Y" "11.56088"
+				"Z" "38.10608"
+			}
+			"Shape" "Box"
+			"Kill_Players" "true"
+			"Kill_Zombies" "true"
+			"Kill_Animals" "true"
+			"Kill_Vehicles" "false"
+			"Death_Cause" "BURNING"
+		}
+	}
+	{
+		"Type" "SDG.Framework.Devkit.KillVolume, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null"
+		"Instance_ID" "197"
+		"Item"
+		{
+			"Position"
+			{
+				"X" "-170.858"
+				"Y" "60.64853"
+				"Z" "1486.032"
+			}
+			"Rotation"
+			{
+				"X" "0"
+				"Y" "0"
+				"Z" "0"
+				"W" "1"
+			}
+			"Scale"
+			{
+				"X" "11.4072"
+				"Y" "48.75309"
+				"Z" "87.53899"
+			}
+			"Shape" "Box"
+			"Kill_Players" "true"
+			"Kill_Zombies" "true"
+			"Kill_Animals" "true"
+			"Kill_Vehicles" "false"
+			"Death_Cause" "BURNING"
+		}
+	}
+	{
+		"Type" "SDG.Framework.Devkit.KillVolume, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null"
+		"Instance_ID" "198"
+		"Item"
+		{
+			"Position"
+			{
+				"X" "-101.0955"
+				"Y" "60.64853"
+				"Z" "1484.933"
+			}
+			"Rotation"
+			{
+				"X" "0"
+				"Y" "0"
+				"Z" "0"
+				"W" "1"
+			}
+			"Scale"
+			{
+				"X" "12.99978"
+				"Y" "48.75309"
+				"Z" "89.73669"
+			}
+			"Shape" "Box"
+			"Kill_Players" "true"
+			"Kill_Zombies" "true"
+			"Kill_Animals" "true"
+			"Kill_Vehicles" "false"
+			"Death_Cause" "BURNING"
+		}
+	}
+	{
+		"Type" "SDG.Framework.Devkit.KillVolume, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null"
+		"Instance_ID" "199"
+		"Item"
+		{
+			"Position"
+			{
+				"X" "-136.5606"
+				"Y" "81.92659"
+				"Z" "1450.607"
+			}
+			"Rotation"
+			{
+				"X" "0"
+				"Y" "0"
+				"Z" "0"
+				"W" "1"
+			}
+			"Scale"
+			{
+				"X" "73.42502"
+				"Y" "5.355348"
+				"Z" "32.36255"
+			}
+			"Shape" "Box"
+			"Kill_Players" "true"
+			"Kill_Zombies" "true"
+			"Kill_Animals" "true"
+			"Kill_Vehicles" "false"
+			"Death_Cause" "BURNING"
+		}
+	}
+	{
+		"Type" "SDG.Framework.Devkit.KillVolume, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null"
+		"Instance_ID" "200"
+		"Item"
+		{
+			"Position"
+			{
+				"X" "-136.7679"
+				"Y" "82.79094"
+				"Z" "1517.817"
+			}
+			"Rotation"
+			{
+				"X" "0"
+				"Y" "0"
+				"Z" "0"
+				"W" "1"
+			}
+			"Scale"
+			{
+				"X" "68.29786"
+				"Y" "3.691961"
+				"Z" "24.20105"
+			}
+			"Shape" "Box"
+			"Kill_Players" "true"
+			"Kill_Zombies" "true"
+			"Kill_Animals" "true"
+			"Kill_Vehicles" "false"
+			"Death_Cause" "BURNING"
+		}
+	}
+	{
+		"Type" "SDG.Framework.Devkit.KillVolume, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null"
+		"Instance_ID" "201"
+		"Item"
+		{
+			"Position"
+			{
+				"X" "-136.5081"
+				"Y" "50.87885"
+				"Z" "1451.081"
+			}
+			"Rotation"
+			{
+				"X" "0"
+				"Y" "0"
+				"Z" "0"
+				"W" "1"
+			}
+			"Scale"
+			{
+				"X" "68.66966"
+				"Y" "18.80221"
+				"Z" "23.4143"
+			}
+			"Shape" "Box"
+			"Kill_Players" "true"
+			"Kill_Zombies" "true"
+			"Kill_Animals" "true"
+			"Kill_Vehicles" "false"
+			"Death_Cause" "BURNING"
+		}
+	}
+	{
+		"Type" "SDG.Framework.Devkit.KillVolume, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null"
+		"Instance_ID" "202"
+		"Item"
+		{
+			"Position"
+			{
+				"X" "649.0385"
+				"Y" "105.3225"
+				"Z" "1691.156"
+			}
+			"Rotation"
+			{
+				"X" "0"
+				"Y" "0"
+				"Z" "0"
+				"W" "1"
+			}
+			"Scale"
+			{
+				"X" "53.25826"
+				"Y" "133.5912"
+				"Z" "47.10082"
+			}
+			"Shape" "Box"
+			"Kill_Players" "true"
+			"Kill_Zombies" "true"
+			"Kill_Animals" "true"
+			"Kill_Vehicles" "false"
+			"Death_Cause" "BURNING"
+		}
+	}
+	{
+		"Type" "SDG.Framework.Devkit.KillVolume, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null"
+		"Instance_ID" "204"
+		"Item"
+		{
+			"Position"
+			{
+				"X" "651.05"
+				"Y" "179.1108"
+				"Z" "1678.546"
+			}
+			"Rotation"
+			{
+				"X" "0"
+				"Y" "0"
+				"Z" "0"
+				"W" "1"
+			}
+			"Scale"
+			{
+				"X" "27.19884"
+				"Y" "4.002635"
+				"Z" "13.59259"
+			}
+			"Shape" "Box"
+			"Kill_Players" "true"
+			"Kill_Zombies" "true"
+			"Kill_Animals" "true"
+			"Kill_Vehicles" "false"
+			"Death_Cause" "BURNING"
+		}
+	}
+	{
+		"Type" "SDG.Framework.Devkit.KillVolume, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null"
+		"Instance_ID" "205"
+		"Item"
+		{
+			"Position"
+			{
+				"X" "660.3029"
+				"Y" "179.1108"
+				"Z" "1694.036"
+			}
+			"Rotation"
+			{
+				"X" "0"
+				"Y" "0"
+				"Z" "0"
+				"W" "1"
+			}
+			"Scale"
+			{
+				"X" "8.693117"
+				"Y" "4.002635"
+				"Z" "17.50534"
+			}
+			"Shape" "Box"
+			"Kill_Players" "true"
+			"Kill_Zombies" "true"
+			"Kill_Animals" "true"
+			"Kill_Vehicles" "false"
+			"Death_Cause" "BURNING"
+		}
+	}
+	{
+		"Type" "SDG.Framework.Devkit.KillVolume, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null"
+		"Instance_ID" "206"
+		"Item"
+		{
+			"Position"
+			{
+				"X" "-915.4614"
+				"Y" "19.85152"
+				"Z" "66.08182"
+			}
+			"Rotation"
+			{
+				"X" "0"
+				"Y" "0"
+				"Z" "0"
+				"W" "1"
+			}
+			"Scale"
+			{
+				"X" "174.7009"
+				"Y" "29.72186"
+				"Z" "202.8607"
+			}
+			"Shape" "Box"
+			"Kill_Players" "true"
+			"Kill_Zombies" "true"
+			"Kill_Animals" "true"
+			"Kill_Vehicles" "false"
+			"Death_Cause" "BURNING"
+		}
+	}
+	{
+		"Type" "SDG.Framework.Devkit.KillVolume, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null"
+		"Instance_ID" "207"
+		"Item"
+		{
+			"Position"
+			{
+				"X" "-878.6083"
+				"Y" "40.42376"
+				"Z" "65.75935"
+			}
+			"Rotation"
+			{
+				"X" "0"
+				"Y" "0"
+				"Z" "0"
+				"W" "1"
+			}
+			"Scale"
+			{
+				"X" "34.22075"
+				"Y" "11.05726"
+				"Z" "69.1589"
+			}
+			"Shape" "Box"
+			"Kill_Players" "true"
+			"Kill_Zombies" "true"
+			"Kill_Animals" "true"
+			"Kill_Vehicles" "false"
+			"Death_Cause" "BURNING"
+		}
+	}
+	{
+		"Type" "SDG.Framework.Devkit.KillVolume, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null"
+		"Instance_ID" "208"
+		"Item"
+		{
+			"Position"
+			{
+				"X" "-877.2101"
+				"Y" "57.18737"
+				"Z" "9.870426"
+			}
+			"Rotation"
+			{
+				"X" "0"
+				"Y" "0"
+				"Z" "0"
+				"W" "1"
+			}
+			"Scale"
+			{
+				"X" "105.1689"
+				"Y" "22.46479"
+				"Z" "99.87231"
+			}
+			"Shape" "Box"
+			"Kill_Players" "true"
+			"Kill_Zombies" "true"
+			"Kill_Animals" "true"
+			"Kill_Vehicles" "false"
+			"Death_Cause" "BURNING"
+		}
+	}
+	{
+		"Type" "SDG.Framework.Devkit.KillVolume, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null"
+		"Instance_ID" "209"
+		"Item"
+		{
+			"Position"
+			{
+				"X" "-970.0911"
+				"Y" "57.18737"
+				"Z" "119.5823"
+			}
+			"Rotation"
+			{
+				"X" "0"
+				"Y" "0"
+				"Z" "0"
+				"W" "1"
+			}
+			"Scale"
+			{
+				"X" "85.94292"
+				"Y" "22.46479"
+				"Z" "120.3583"
+			}
+			"Shape" "Box"
+			"Kill_Players" "true"
+			"Kill_Zombies" "true"
+			"Kill_Animals" "true"
+			"Kill_Vehicles" "false"
+			"Death_Cause" "BURNING"
+		}
+	}
+	{
+		"Type" "SDG.Framework.Devkit.KillVolume, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null"
+		"Instance_ID" "210"
+		"Item"
+		{
+			"Position"
+			{
+				"X" "197.4045"
+				"Y" "37.38953"
+				"Z" "-130.594"
+			}
+			"Rotation"
+			{
+				"X" "0"
+				"Y" "0"
+				"Z" "0"
+				"W" "1"
+			}
+			"Scale"
+			{
+				"X" "66.57027"
+				"Y" "2.569778"
+				"Z" "69.36223"
+			}
+			"Shape" "Box"
+			"Kill_Players" "true"
+			"Kill_Zombies" "true"
+			"Kill_Animals" "true"
+			"Kill_Vehicles" "false"
+			"Death_Cause" "BURNING"
+		}
+	}
+	{
+		"Type" "SDG.Framework.Devkit.KillVolume, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null"
+		"Instance_ID" "211"
+		"Item"
+		{
+			"Position"
+			{
+				"X" "221.7543"
+				"Y" "41.30744"
+				"Z" "-139.2544"
+			}
+			"Rotation"
+			{
+				"X" "0"
+				"Y" "0"
+				"Z" "0"
+				"W" "1"
+			}
+			"Scale"
+			{
+				"X" "18.34564"
+				"Y" "6.101943"
+				"Z" "52.63831"
+			}
+			"Shape" "Box"
+			"Kill_Players" "true"
+			"Kill_Zombies" "true"
+			"Kill_Animals" "true"
+			"Kill_Vehicles" "false"
+			"Death_Cause" "BURNING"
+		}
+	}
+	{
+		"Type" "SDG.Framework.Devkit.KillVolume, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null"
+		"Instance_ID" "212"
+		"Item"
+		{
+			"Position"
+			{
+				"X" "198.3628"
+				"Y" "42.71972"
+				"Z" "-151.299"
+			}
+			"Rotation"
+			{
+				"X" "0"
+				"Y" "0"
+				"Z" "0"
+				"W" "1"
+			}
+			"Scale"
+			{
+				"X" "69.34185"
+				"Y" "11.31982"
+				"Z" "19.99278"
+			}
+			"Shape" "Box"
+			"Kill_Players" "true"
+			"Kill_Zombies" "true"
+			"Kill_Animals" "true"
+			"Kill_Vehicles" "false"
+			"Death_Cause" "BURNING"
+		}
+	}
+	{
+		"Type" "SDG.Framework.Devkit.KillVolume, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null"
+		"Instance_ID" "213"
+		"Item"
+		{
+			"Position"
+			{
+				"X" "198.3628"
+				"Y" "42.71972"
+				"Z" "-116.3195"
+			}
+			"Rotation"
+			{
+				"X" "0"
+				"Y" "0"
+				"Z" "0"
+				"W" "1"
+			}
+			"Scale"
+			{
+				"X" "69.34185"
+				"Y" "11.31982"
+				"Z" "32.04893"
+			}
+			"Shape" "Box"
+			"Kill_Players" "true"
+			"Kill_Zombies" "true"
+			"Kill_Animals" "true"
+			"Kill_Vehicles" "false"
+			"Death_Cause" "BURNING"
+		}
+	}
+	{
+		"Type" "SDG.Framework.Devkit.KillVolume, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null"
+		"Instance_ID" "214"
+		"Item"
+		{
+			"Position"
+			{
+				"X" "176.8175"
+				"Y" "42.71972"
+				"Z" "-136.7161"
+			}
+			"Rotation"
+			{
+				"X" "0"
+				"Y" "0"
+				"Z" "0"
+				"W" "1"
+			}
+			"Scale"
+			{
+				"X" "26.25124"
+				"Y" "11.31982"
+				"Z" "10.1582"
 			}
 			"Shape" "Box"
 			"Kill_Players" "true"

@@ -1,0 +1,10 @@
+GUID 33e6695817ca4687b418143e050b8ca6
+Type Road
+
+Width 4.5
+Depth 0.8
+RepeatDistanceScale 1.7778
+
+TexturePath Roads/TrainTracks.png
+
+VanillaPhysicsMaterial Gravel_Static

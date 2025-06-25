@@ -578,7 +578,7 @@ public class Wheel
                 Wheel wheelAtIndex = vehicle.GetWheelAtIndex(config.copyColliderRpmIndex);
                 if (wheelAtIndex != null && wheelAtIndex.wheel != null && wheelAtIndex.colliderRadius > float.Epsilon)
                 {
-                    float num9 = colliderRadius * wheelAtIndex.wheel.rpm / config.modelRadius / 60f * 360f * deltaTime;
+                    float num9 = wheelAtIndex.colliderRadius * wheelAtIndex.wheel.rpm / config.modelRadius / 60f * 360f * deltaTime;
                     rollAngleDegrees += num9;
                     rollAngleDegrees = (rollAngleDegrees % 360f + 360f) % 360f;
                 }

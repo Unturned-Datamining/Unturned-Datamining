@@ -197,13 +197,6 @@ public class PlayerUI : MonoBehaviour
         PlayerLifeUI.crosshair.SetGameWantsCenterDotVisible(isVisible: false);
     }
 
-    public static void updateScope(bool isScoped)
-    {
-        PlayerLifeUI.scopeOverlay.IsVisible = isScoped;
-        container.IsVisible = !isScoped;
-        UpdateWindowEnabled();
-    }
-
     public static void updateBinoculars(bool isBinoculars)
     {
         PlayerLifeUI.binocularsOverlay.IsVisible = isBinoculars;
@@ -213,7 +206,7 @@ public class PlayerUI : MonoBehaviour
 
     private static void UpdateWindowEnabled()
     {
-        window.isEnabled = wantsWindowEnabled || PlayerLifeUI.scopeOverlay.IsVisible || PlayerLifeUI.binocularsOverlay.IsVisible || isBlindfolded || isWindowEnabledByColorOverlay;
+        window.isEnabled = wantsWindowEnabled || PlayerLifeUI.binocularsOverlay.IsVisible || isBlindfolded || isWindowEnabledByColorOverlay;
     }
 
     public static void enableCrosshair()
@@ -298,6 +291,7 @@ public class PlayerUI : MonoBehaviour
         }
         messageIcon_0.PositionOffset_Y = 45f;
         messageProgress_0.PositionOffset_Y = 50f;
+        messageProgress_0.roundingMode = SleekProgress.ERoundingMode.Round;
         messageIcon_1.PositionOffset_Y = 75f;
         messageProgress_1.PositionOffset_Y = 80f;
         messageIcon_2.PositionOffset_Y = 105f;
@@ -387,6 +381,7 @@ public class PlayerUI : MonoBehaviour
                 {
                     num = Provider.time - interactableFarm.planted;
                 }
+                messageProgress_0.roundingMode = SleekProgress.ERoundingMode.Floor;
                 messageProgress_0.state = num / (float)interactableFarm.growth;
                 messageIcon_0.Texture = PlayerLifeUI.icons.load<Texture2D>("Grow");
                 break;
@@ -2063,6 +2058,7 @@ public class PlayerUI : MonoBehaviour
             window = null;
             setIsHallucinating(isHallucinating: false);
             UnturnedPostProcess.instance.SetIsMainBlurEnabled(enabled: false);
+            UnturnedPostProcess.instance.SetSingleRenderScopeIsActive(isActive: false, 0f);
         }
     }
 

@@ -28,6 +28,8 @@ public class SleekSelectedBlueprint : SleekWrapper
 
     private ISleekLabel descriptionLabel;
 
+    private ISleekBox extendedDescriptionBox;
+
     private ISleekElement inputItemsContainer;
 
     private ISleekLabel inputItemsLabel;
@@ -117,8 +119,7 @@ public class SleekSelectedBlueprint : SleekWrapper
                 num += rewardsContainer.SizeOffset_Y;
             }
             detailScrollView.ContentSizeOffset = new Vector2(0f, num);
-            RefreshCraftButtonTooltip();
-            RefreshPreferences(PlayerCrafting.GetBlueprintPreferences(status.blueprint));
+            RefreshPreferencesAndCraftButtonTooltip(PlayerCrafting.GetBlueprintPreferences(status.blueprint));
         }
     }
 
@@ -147,6 +148,10 @@ public class SleekSelectedBlueprint : SleekWrapper
     /// </summary>
     private void PopulateSummary()
     {
+        if (extendedDescriptionBox != null)
+        {
+            extendedDescriptionBox.IsVisible = false;
+        }
         Local localization = PlayerDashboardCraftingUI.localization;
         if (SelectedBlueprint.TargetItem != null)
         {
@@ -163,6 +168,7 @@ public class SleekSelectedBlueprint : SleekWrapper
                 array = itemAsset.getState();
             }
             SetPrimaryItem(itemAsset, array);
+            descriptionLabel.IsVisible = true;
             if (SelectedBlueprint.Operation == EBlueprintOperation.RepairTargetItem)
             {
                 titleLabel.Text = localization.format("Details_RepairTitle", itemAsset.RarityRichTextName);
@@ -203,19 +209,31 @@ public class SleekSelectedBlueprint : SleekWrapper
                 return;
             }
             titleLabel.Text = localization.format("Details_SalvageTitle", itemAsset2.RarityRichTextName);
-            byte[] array2 = status.inputItems[0].FirstItemOrNull?.state;
+            Item firstItemOrNull2 = status.inputItems[0].FirstItemOrNull;
+            byte[] array2 = firstItemOrNull2?.state;
             if (array2 == null)
             {
                 array2 = itemAsset2.getState();
             }
             SetPrimaryItem(itemAsset2, array2);
-            Local localization2 = PlayerDashboardInventoryUI.localization;
-            int rarity = (int)itemAsset2.rarity;
-            string arg4 = localization2.format("Rarity_" + rarity);
-            Local localization3 = PlayerDashboardInventoryUI.localization;
-            rarity = (int)itemAsset2.type;
-            string arg5 = localization3.format("Type_" + rarity);
-            descriptionLabel.Text = RichTextUtil.wrapWithColor(PlayerDashboardInventoryUI.localization.format("Rarity_Type_Label", arg4, arg5), ItemTool.getRarityColorUI(itemAsset2.rarity));
+            if (extendedDescriptionBox != null)
+            {
+                descriptionLabel.IsVisible = false;
+                ItemDescriptionBuilder builder = ItemDescriptionBuilderUtils.CreateForUI(itemAsset2);
+                itemAsset2.BuildDescription(builder, firstItemOrNull2);
+                extendedDescriptionBox.Text = ItemDescriptionBuilderUtils.FormatLines();
+                extendedDescriptionBox.IsVisible = true;
+            }
+            else
+            {
+                Local localization2 = PlayerDashboardInventoryUI.localization;
+                int rarity = (int)itemAsset2.rarity;
+                string arg4 = localization2.format("Rarity_" + rarity);
+                Local localization3 = PlayerDashboardInventoryUI.localization;
+                rarity = (int)itemAsset2.type;
+                string arg5 = localization3.format("Type_" + rarity);
+                descriptionLabel.Text = RichTextUtil.wrapWithColor(PlayerDashboardInventoryUI.localization.format("Rarity_Type_Label", arg4, arg5), ItemTool.getRarityColorUI(itemAsset2.rarity));
+            }
         }
         else if (SelectedBlueprint.outputs.Length == 1)
         {
@@ -236,21 +254,39 @@ public class SleekSelectedBlueprint : SleekWrapper
                 state = itemAsset3.getState();
             }
             SetPrimaryItem(itemAsset3, state);
-            Local localization4 = PlayerDashboardInventoryUI.localization;
-            int rarity = (int)itemAsset3.rarity;
-            string arg6 = localization4.format("Rarity_" + rarity);
-            Local localization5 = PlayerDashboardInventoryUI.localization;
-            rarity = (int)itemAsset3.type;
-            string arg7 = localization5.format("Type_" + rarity);
-            descriptionLabel.Text = RichTextUtil.wrapWithColor(PlayerDashboardInventoryUI.localization.format("Rarity_Type_Label", arg6, arg7), ItemTool.getRarityColorUI(itemAsset3.rarity));
+            if (extendedDescriptionBox != null)
+            {
+                descriptionLabel.IsVisible = false;
+                ItemDescriptionBuilder builder2 = ItemDescriptionBuilderUtils.CreateForUI(itemAsset3);
+                itemAsset3.BuildDescription(builder2, null);
+                extendedDescriptionBox.Text = ItemDescriptionBuilderUtils.FormatLines();
+                extendedDescriptionBox.IsVisible = true;
+            }
+            else
+            {
+                Local localization4 = PlayerDashboardInventoryUI.localization;
+                int rarity = (int)itemAsset3.rarity;
+                string arg6 = localization4.format("Rarity_" + rarity);
+                Local localization5 = PlayerDashboardInventoryUI.localization;
+                rarity = (int)itemAsset3.type;
+                string arg7 = localization5.format("Type_" + rarity);
+                descriptionLabel.Text = RichTextUtil.wrapWithColor(PlayerDashboardInventoryUI.localization.format("Rarity_Type_Label", arg6, arg7), ItemTool.getRarityColorUI(itemAsset3.rarity));
+            }
         }
         else
         {
             summaryContainer.IsVisible = false;
         }
         summaryContainer.IsVisible = true;
-        descriptionLabel.PositionOffset_Y = primaryItemIcon.PositionOffset_Y + primaryItemIcon.SizeOffset_Y;
-        summaryContainer.SizeOffset_Y = descriptionLabel.PositionOffset_Y + descriptionLabel.SizeOffset_Y;
+        if (descriptionLabel.IsVisible)
+        {
+            descriptionLabel.PositionOffset_Y = primaryItemIcon.PositionOffset_Y + primaryItemIcon.SizeOffset_Y;
+            summaryContainer.SizeOffset_Y = descriptionLabel.PositionOffset_Y + descriptionLabel.SizeOffset_Y;
+        }
+        else
+        {
+            summaryContainer.SizeOffset_Y = primaryItemIcon.PositionOffset_Y + primaryItemIcon.SizeOffset_Y;
+        }
     }
 
     private void PopulateInputItems()
@@ -498,36 +534,34 @@ public class SleekSelectedBlueprint : SleekWrapper
     private void OnSwappedPreferencesState(SleekButtonState button, int state)
     {
         PlayerCrafting.SetBlueprintPreferences(status.blueprint, (EBlueprintPreferences)state);
-        RefreshPreferences((EBlueprintPreferences)state);
+        RefreshPreferencesAndCraftButtonTooltip((EBlueprintPreferences)state);
     }
 
-    private void RefreshCraftButtonTooltip()
+    private void RefreshPreferencesAndCraftButtonTooltip(EBlueprintPreferences preferences)
     {
-        if (status.IsCraftable)
+        craftButton.isClickable = preferences != EBlueprintPreferences.Ignored && status.IsCraftable;
+        preferencesButton.state = (int)preferences;
+        if (preferences != EBlueprintPreferences.Ignored && status.IsCraftable)
         {
             craftButton.tooltip = PlayerDashboardInventoryUI.localization.format("ActionBlueprint_CraftAllTooltip", MenuConfigurationControlsUI.getKeyCodeText(ControlsSettings.other));
             return;
         }
         tooltipSb.Clear();
-        PlayerDashboardCraftingUI.BuildNotCraftableTooltip(tooltipSb, status);
+        PlayerDashboardCraftingUI.BuildNotCraftableTooltip(tooltipSb, status, preferences);
         craftButton.tooltip = tooltipSb.ToString();
-    }
-
-    private void RefreshPreferences(EBlueprintPreferences preferences)
-    {
-        craftButton.isClickable = preferences != EBlueprintPreferences.Ignored && status.IsCraftable;
-        preferencesButton.state = (int)preferences;
     }
 
     public SleekSelectedBlueprint()
     {
         Local localization = PlayerDashboardCraftingUI.localization;
         Bundle icons = PlayerDashboardCraftingUI.icons;
+        bool flag = !Glazier.Get().SupportsAutomaticLayout;
         detailScrollView = Glazier.Get().CreateScrollView();
         detailScrollView.SizeScale_X = 1f;
         detailScrollView.SizeScale_Y = 1f;
         detailScrollView.SizeOffset_Y = -90f;
         detailScrollView.ScaleContentToWidth = true;
+        detailScrollView.ContentUseManualLayout = flag;
         AddChild(detailScrollView);
         craftButton = new SleekButtonIcon(icons.load<Texture2D>("CraftIcon"), 40);
         craftButton.PositionOffset_Y = -80f;
@@ -553,6 +587,8 @@ public class SleekSelectedBlueprint : SleekWrapper
         summaryContainer.SizeScale_X = 1f;
         summaryContainer.AllowRichText = true;
         summaryContainer.TextColor = ESleekTint.RICH_TEXT_DEFAULT;
+        summaryContainer.UseManualLayout = flag;
+        summaryContainer.UseHeightLayoutOverride = true;
         detailScrollView.AddChild(summaryContainer);
         titleLabel = Glazier.Get().CreateLabel();
         titleLabel.SizeScale_X = 1f;
@@ -575,8 +611,22 @@ public class SleekSelectedBlueprint : SleekWrapper
         descriptionLabel.AllowRichText = true;
         descriptionLabel.TextColor = ESleekTint.FONT;
         summaryContainer.AddChild(descriptionLabel);
+        if (!flag)
+        {
+            extendedDescriptionBox = Glazier.Get().CreateBox();
+            extendedDescriptionBox.UseManualLayout = flag;
+            extendedDescriptionBox.UseChildAutoLayout = ESleekChildLayout.Vertical;
+            extendedDescriptionBox.ChildAutoLayoutPadding = 5f;
+            extendedDescriptionBox.AllowRichText = true;
+            extendedDescriptionBox.TextAlignment = TextAnchor.UpperLeft;
+            extendedDescriptionBox.TextColor = ESleekTint.RICH_TEXT_DEFAULT;
+            extendedDescriptionBox.TextContrastContext = ETextContrastContext.InconspicuousBackdrop;
+            detailScrollView.AddChild(extendedDescriptionBox);
+        }
         inputItemsContainer = Glazier.Get().CreateFrame();
         inputItemsContainer.SizeScale_X = 1f;
+        inputItemsContainer.UseManualLayout = flag;
+        inputItemsContainer.UseHeightLayoutOverride = true;
         detailScrollView.AddChild(inputItemsContainer);
         inputItemsLabel = Glazier.Get().CreateLabel();
         inputItemsLabel.SizeScale_X = 1f;
@@ -594,6 +644,8 @@ public class SleekSelectedBlueprint : SleekWrapper
         inputItemsContainer.AddChild(toolItemsLabel);
         outputItemsContainer = Glazier.Get().CreateFrame();
         outputItemsContainer.SizeScale_X = 1f;
+        outputItemsContainer.UseManualLayout = flag;
+        outputItemsContainer.UseHeightLayoutOverride = true;
         detailScrollView.AddChild(outputItemsContainer);
         ISleekLabel sleekLabel = Glazier.Get().CreateLabel();
         sleekLabel.SizeScale_X = 1f;
@@ -605,6 +657,8 @@ public class SleekSelectedBlueprint : SleekWrapper
         skillContainer = Glazier.Get().CreateFrame();
         skillContainer.SizeScale_X = 1f;
         skillContainer.SizeOffset_Y = 70f;
+        skillContainer.UseManualLayout = flag;
+        skillContainer.UseHeightLayoutOverride = true;
         detailScrollView.AddChild(skillContainer);
         ISleekLabel sleekLabel2 = Glazier.Get().CreateLabel();
         sleekLabel2.SizeScale_X = 1f;
@@ -622,6 +676,8 @@ public class SleekSelectedBlueprint : SleekWrapper
         skillContainer.AddChild(skillBox);
         requiredTagsContainer = Glazier.Get().CreateFrame();
         requiredTagsContainer.SizeScale_X = 1f;
+        requiredTagsContainer.UseManualLayout = flag;
+        requiredTagsContainer.UseHeightLayoutOverride = true;
         detailScrollView.AddChild(requiredTagsContainer);
         ISleekLabel sleekLabel3 = Glazier.Get().CreateLabel();
         sleekLabel3.SizeScale_X = 1f;
@@ -632,6 +688,8 @@ public class SleekSelectedBlueprint : SleekWrapper
         requiredTagsContainer.AddChild(sleekLabel3);
         conditionsContainer = Glazier.Get().CreateFrame();
         conditionsContainer.SizeScale_X = 1f;
+        conditionsContainer.UseManualLayout = flag;
+        conditionsContainer.UseHeightLayoutOverride = true;
         detailScrollView.AddChild(conditionsContainer);
         ISleekLabel sleekLabel4 = Glazier.Get().CreateLabel();
         sleekLabel4.SizeScale_X = 1f;
@@ -646,6 +704,8 @@ public class SleekSelectedBlueprint : SleekWrapper
         conditionsContainer.AddChild(conditionsElementsContainer);
         rewardsContainer = Glazier.Get().CreateFrame();
         rewardsContainer.SizeScale_X = 1f;
+        rewardsContainer.UseManualLayout = flag;
+        rewardsContainer.UseHeightLayoutOverride = true;
         detailScrollView.AddChild(rewardsContainer);
         ISleekLabel sleekLabel5 = Glazier.Get().CreateLabel();
         sleekLabel5.SizeScale_X = 1f;

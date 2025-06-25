@@ -572,13 +572,13 @@ public class Attachments : MonoBehaviour
         if (sightModel != null)
         {
             Transform transform4 = sightModel.Find("Model_0");
-            _aimHook = transform4?.Find("Aim");
-            if (aimHook != null)
+            Transform transform5 = transform4?.Find("Aim");
+            if (transform5 != null)
             {
-                Transform transform5 = aimHook.parent.Find("Reticule");
-                if (transform5 != null)
+                Transform transform6 = transform5.parent.Find("Reticule");
+                if (transform6 != null)
                 {
-                    Renderer component = transform5.GetComponent<Renderer>();
+                    Renderer component = transform6.GetComponent<Renderer>();
                     if (component != null)
                     {
                         reticuleMaterial = component.material;
@@ -591,6 +591,19 @@ public class Attachments : MonoBehaviour
                         }
                     }
                 }
+            }
+            if (string.IsNullOrEmpty(sightAsset.AimAlignmentTransformPath))
+            {
+                _aimHook = transform5;
+            }
+            else
+            {
+                Transform transform7 = sightModel;
+                if (sightAsset.AimAlignmentTransformOwner == EAimAlignmentTransformOwner.Gun)
+                {
+                    transform7 = base.transform;
+                }
+                _aimHook = transform7.Find(sightAsset.AimAlignmentTransformPath);
             }
             _reticuleHook = transform4?.Find("Reticule");
         }

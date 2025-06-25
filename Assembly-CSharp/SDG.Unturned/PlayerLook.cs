@@ -55,9 +55,11 @@ public class PlayerLook : PlayerCaller
 
     private Camera _scopeCamera;
 
-    private bool _isScopeActive;
+    internal bool isSingleRenderScopeVisionAppliedToLighting;
 
-    private bool isOverlayActive;
+    private bool _isScopeFullyAimedIn;
+
+    private bool _isScopeActive;
 
     private ELightingVision scopeVision;
 
@@ -151,6 +153,10 @@ public class PlayerLook : PlayerCaller
 
     public float explosionSmoothingSpeed;
 
+    private float mainCameraTargetFieldOfView;
+
+    private bool mainCameraZoomFactorRequiresAimIn;
+
     internal float mainCameraZoomFactor;
 
     private float scopeCameraZoomFactor;
@@ -167,8 +173,6 @@ public class PlayerLook : PlayerCaller
     private EPlayerPerspective _perspective;
 
     private RenderTexture scopeRenderTexture;
-
-    protected bool isZoomed;
 
     /// <summary>
     /// Can spectating be used without admin powers?
@@ -361,8 +365,8 @@ public class PlayerLook : PlayerCaller
 
     public void updateScope(EGraphicQuality quality)
     {
-        bool flag = false;
-        int num = 0;
+        bool flag;
+        int num;
         switch (quality)
         {
         case EGraphicQuality.LOW:
@@ -381,42 +385,48 @@ public class PlayerLook : PlayerCaller
             flag = true;
             num = 2048;
             break;
+        default:
+            flag = false;
+            num = Mathf.Min(Screen.width, Screen.height);
+            break;
         }
-        if (flag)
+        if (scopeRenderTexture != null && scopeRenderTexture.width != num)
         {
-            if (scopeRenderTexture != null && scopeRenderTexture.width != num)
+            if (scopeCamera.targetTexture == scopeRenderTexture)
             {
-                UnityEngine.Object.Destroy(scopeRenderTexture);
-                scopeRenderTexture = null;
+                scopeCamera.targetTexture = null;
             }
-            if (scopeRenderTexture == null)
-            {
-                GraphicsFormat colorFormat = GraphicsFormat.R8G8B8A8_SRGB;
-                GraphicsFormat depthStencilFormat = GraphicsFormat.D24_UNorm_S8_UInt;
-                scopeRenderTexture = new RenderTexture(num, num, colorFormat, depthStencilFormat);
-                scopeRenderTexture.name = "Dual-Render Scope";
-                scopeRenderTexture.hideFlags = HideFlags.HideAndDontSave;
-            }
-        }
-        else if (scopeRenderTexture != null)
-        {
             UnityEngine.Object.Destroy(scopeRenderTexture);
             scopeRenderTexture = null;
         }
-        scopeCamera.targetTexture = scopeRenderTexture;
-        if (quality != 0)
+        if (scopeRenderTexture == null)
         {
-            if (scopeMaterial == null)
-            {
-                scopeMaterial = UnityEngine.Object.Instantiate(Resources.Load<Material>("Materials/Scope"));
-            }
-            scopeMaterial.SetTexture("_MainTex", scopeCamera.targetTexture);
-            scopeMaterial.SetTexture("_EmissionMap", scopeCamera.targetTexture);
+            GraphicsFormat colorFormat = GraphicsFormat.R8G8B8A8_SRGB;
+            GraphicsFormat depthStencilFormat = (flag ? GraphicsFormat.D24_UNorm_S8_UInt : GraphicsFormat.None);
+            scopeRenderTexture = new RenderTexture(num, num, colorFormat, depthStencilFormat);
+            scopeRenderTexture.name = (flag ? "Dual-Render Scope" : "Single-Render Scope");
+            scopeRenderTexture.hideFlags = HideFlags.HideAndDontSave;
         }
-        scopeCamera.enabled = isScopeActive && scopeCamera.targetTexture != null && scopeVision == ELightingVision.NONE;
-        if (base.player.equipment.asset != null && base.player.equipment.asset.type == EItemType.GUN)
+        if (flag)
         {
-            base.player.equipment.useable.updateState(base.player.equipment.state);
+            scopeCamera.targetTexture = scopeRenderTexture;
+            UnturnedPostProcess.instance.SetSingleRenderScopeTarget(null);
+        }
+        else
+        {
+            UnturnedPostProcess.instance.SetSingleRenderScopeTarget(scopeRenderTexture);
+        }
+        if (scopeMaterial == null)
+        {
+            scopeMaterial = UnityEngine.Object.Instantiate(Resources.Load<Material>("Materials/Scope"));
+        }
+        scopeMaterial.SetTexture("_MainTex", scopeRenderTexture);
+        scopeMaterial.SetTexture("_EmissionMap", scopeRenderTexture);
+        scopeCamera.enabled = isScopeActive && scopeCamera.targetTexture != null && scopeVision == ELightingVision.NONE;
+        UpdateSingleRenderScope();
+        if (base.player.equipment.asset != null && base.player.equipment.asset.type == EItemType.GUN && base.player.equipment.useable is UseableGun useableGun)
+        {
+            useableGun.UpdateScopeRenderer();
         }
     }
 
@@ -435,16 +445,31 @@ public class PlayerLook : PlayerCaller
     {
         scopeCamera.enabled = false;
         _isScopeActive = false;
+        _isScopeFullyAimedIn = false;
         scopeVision = ELightingVision.NONE;
+        UpdateSingleRenderScope();
     }
 
-    public void enableOverlay()
+    private void UpdateSingleRenderScope()
     {
-        if (scopeVision != 0 && !(scopeCamera.targetTexture != null))
+        bool flag = perspective == EPlayerPerspective.FIRST && isScopeActive && _isScopeFullyAimedIn && GraphicsSettings.scopeQuality == EGraphicQuality.OFF;
+        if (flag && scopeVision != 0)
         {
+            isSingleRenderScopeVisionAppliedToLighting = true;
             ApplyScopeVisionToLighting();
-            isOverlayActive = true;
         }
+        else if (isSingleRenderScopeVisionAppliedToLighting)
+        {
+            isSingleRenderScopeVisionAppliedToLighting = false;
+            base.player.equipment.updateVision();
+        }
+        UnturnedPostProcess.instance.SetSingleRenderScopeIsActive(flag, scopeCameraZoomFactor);
+    }
+
+    internal void OnGunFullyAimedInChanged(bool isFullyAimedIn)
+    {
+        _isScopeFullyAimedIn = isFullyAimedIn;
+        UpdateSingleRenderScope();
     }
 
     [Obsolete("this was never supported server-side")]
@@ -475,6 +500,7 @@ public class PlayerLook : PlayerCaller
         {
             MainCamera.instance.transform.parent = base.player.transform;
         }
+        UpdateSingleRenderScope();
         onPerspectiveUpdated?.Invoke(perspective);
         UnturnedPostProcess.instance.notifyPerspectiveChanged();
     }
@@ -488,17 +514,8 @@ public class PlayerLook : PlayerCaller
         LevelLighting.nightvisionColor = scopeNightvisionColor;
         LevelLighting.nightvisionFogIntensity = scopeNightvisionFogIntensity;
         LevelLighting.updateLighting();
-        LevelLighting.updateLocal();
+        LevelLighting.ForceRefreshForLatestViewer();
         PlayerLifeUI.updateGrayscale();
-    }
-
-    public void disableOverlay()
-    {
-        if (isOverlayActive)
-        {
-            isOverlayActive = false;
-            base.player.equipment.updateVision();
-        }
     }
 
     /// <summary>
@@ -511,21 +528,21 @@ public class PlayerLook : PlayerCaller
         LevelLighting.nightvisionColor = tempNightvisionColor;
         LevelLighting.nightvisionFogIntensity = tempNightvisionFogIntensity;
         LevelLighting.updateLighting();
-        LevelLighting.updateLocal();
+        LevelLighting.ForceRefreshForLatestViewer();
         PlayerLifeUI.updateGrayscale();
         tempVision = ELightingVision.NONE;
     }
 
-    public void enableZoom(float zoom)
+    public void enableZoom(float zoom, bool requiresFullyAimingIn)
     {
         mainCameraZoomFactor = zoom;
-        isZoomed = true;
+        mainCameraZoomFactorRequiresAimIn = requiresFullyAimingIn;
     }
 
     public void disableZoom()
     {
         mainCameraZoomFactor = 0f;
-        isZoomed = false;
+        mainCameraZoomFactorRequiresAimIn = false;
     }
 
     public void updateRot()
@@ -1073,6 +1090,7 @@ public class PlayerLook : PlayerCaller
                 }
             }
             float zoomBaseFieldOfView = OptionsSettings.GetZoomBaseFieldOfView();
+            bool flag = false;
             if (IsLocallyUsingFreecam)
             {
                 if (freecamVerticalFieldOfView < 0.1f)
@@ -1088,10 +1106,32 @@ public class PlayerLook : PlayerCaller
                     instance.fieldOfView = freecamVerticalFieldOfView;
                 }
             }
+            else if (mainCameraZoomFactor > 0f && mainCameraZoomFactorRequiresAimIn && _isScopeFullyAimedIn)
+            {
+                instance.fieldOfView = zoomBaseFieldOfView / mainCameraZoomFactor;
+                flag = true;
+            }
             else
             {
-                float num4 = ((base.player.stance.stance == EPlayerStance.SPRINT) ? (OptionsSettings.sprintFovBoostIntensity * 10f) : 0f);
-                instance.fieldOfView = Mathf.Lerp(instance.fieldOfView, (mainCameraZoomFactor > 0f) ? (zoomBaseFieldOfView / mainCameraZoomFactor) : (OptionsSettings.DesiredVerticalFieldOfView + num4), 8f * Time.deltaTime);
+                float b;
+                if (mainCameraZoomFactor > 0f && !mainCameraZoomFactorRequiresAimIn)
+                {
+                    b = zoomBaseFieldOfView / mainCameraZoomFactor;
+                }
+                else
+                {
+                    float num4 = ((base.player.stance.stance == EPlayerStance.SPRINT) ? (OptionsSettings.sprintFovBoostIntensity * 10f) : 0f);
+                    b = OptionsSettings.DesiredVerticalFieldOfView + num4;
+                }
+                if (mainCameraTargetFieldOfView < 0.001f)
+                {
+                    mainCameraTargetFieldOfView = b;
+                }
+                else
+                {
+                    mainCameraTargetFieldOfView = Mathf.Lerp(mainCameraTargetFieldOfView, b, 8f * Time.deltaTime);
+                }
+                instance.fieldOfView = mainCameraTargetFieldOfView;
             }
             if (isScopeActive && scopeCamera != null && scopeCameraZoomFactor > 0f)
             {
@@ -1185,7 +1225,7 @@ public class PlayerLook : PlayerCaller
                             {
                                 num7 = 1f / scopeCameraZoomFactor;
                             }
-                            else if (mainCameraZoomFactor > 0f)
+                            else if (flag)
                             {
                                 num7 = 1f / mainCameraZoomFactor;
                             }
@@ -1401,8 +1441,8 @@ public class PlayerLook : PlayerCaller
                         float maxDistance = PlayerMovement.HEIGHT_STAND - HEIGHT_LOOK_PRONE - 0.25f;
                         if (Physics.SphereCast(origin3, 0.25f, up, out var hitInfo, maxDistance, RayMasks.BLOCK_PLAYERCAM_1P, QueryTriggerInteraction.Ignore))
                         {
-                            float b = hitInfo.point.y - base.player.first.position.y - 0.25f;
-                            eyes = Mathf.Min(eyes, b);
+                            float b2 = hitInfo.point.y - base.player.first.position.y - 0.25f;
+                            eyes = Mathf.Min(eyes, b2);
                         }
                     }
                     instance.transform.localPosition = new Vector3(0f, eyes + num15, 0f);
@@ -1419,15 +1459,15 @@ public class PlayerLook : PlayerCaller
             }
             if (base.player.movement.getVehicle() != null && base.player.movement.getVehicle().asset.engine == EEngine.PLANE && base.player.movement.getVehicle().AnimatedForwardVelocity > 16f)
             {
-                LevelLighting.updateLocal(instance.transform.position, Mathf.Lerp(0f, 1f, (base.player.movement.getVehicle().AnimatedForwardVelocity - 16f) / 8f), base.player.movement.effectNode);
+                LevelLighting.UpdateForViewer(instance.transform.position, Mathf.Lerp(0f, 1f, (base.player.movement.getVehicle().AnimatedForwardVelocity - 16f) / 8f), Time.deltaTime);
             }
             else if (base.player.movement.getVehicle() != null && (base.player.movement.getVehicle().asset.engine == EEngine.HELICOPTER || base.player.movement.getVehicle().asset.engine == EEngine.BLIMP) && base.player.movement.getVehicle().AnimatedForwardVelocity > 4f)
             {
-                LevelLighting.updateLocal(instance.transform.position, Mathf.Lerp(0f, 1f, (base.player.movement.getVehicle().AnimatedForwardVelocity - 8f) / 8f), base.player.movement.effectNode);
+                LevelLighting.UpdateForViewer(instance.transform.position, Mathf.Lerp(0f, 1f, (base.player.movement.getVehicle().AnimatedForwardVelocity - 8f) / 8f), Time.deltaTime);
             }
             else
             {
-                LevelLighting.updateLocal(instance.transform.position, 0f, base.player.movement.effectNode);
+                LevelLighting.UpdateForViewer(instance.transform.position, 0f, Time.deltaTime);
             }
             base.player.animator.viewmodelParentTransform.rotation = instance.transform.rotation;
             if (isScopeActive && scopeCamera.targetTexture != null && scopeVision != 0)
@@ -1455,7 +1495,7 @@ public class PlayerLook : PlayerCaller
             }
             if (FoliageSettings.drawFocus)
             {
-                if (isZoomed || (isScopeActive && scopeCamera.targetTexture != null))
+                if (flag || (isScopeActive && scopeCamera.targetTexture != null))
                 {
                     FoliageSystem.isFocused = true;
                     if (Physics.Raycast(MainCamera.instance.transform.position, MainCamera.instance.transform.forward, out var hitInfo2, FoliageSettings.focusDistance, RayMasks.FOLIAGE_FOCUS))

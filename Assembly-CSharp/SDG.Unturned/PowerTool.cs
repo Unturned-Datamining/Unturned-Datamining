@@ -21,6 +21,20 @@ public class PowerTool
     public static CachingAssetRef VanillaCraftingHeatTag { get; private set; } = CachingAssetRef.Parse("20f30322bbcc4b01a4f116d22b24c21a");
 
 
+    /// <summary>
+    /// Gets barricades both attached to vehicles and not attached to vehicles.
+    /// </summary>
+    internal static List<Transform> GetBarricadeTransformsInSphere(Vector3 center, float radius, List<Transform> results)
+    {
+        regionsInRadius.Clear();
+        Regions.getRegionsInRadius(center, radius, regionsInRadius);
+        float sqrRadius = radius * radius;
+        results.Clear();
+        BarricadeManager.getBarricadesInRadius(center, sqrRadius, regionsInRadius, results);
+        BarricadeManager.getBarricadesInRadius(center, sqrRadius, results);
+        return barricadesInRadius;
+    }
+
     public static void checkInteractables<T>(Vector3 point, float radius, ushort plant, List<T> interactablesInRadius) where T : Interactable
     {
         float sqrRadius = radius * radius;

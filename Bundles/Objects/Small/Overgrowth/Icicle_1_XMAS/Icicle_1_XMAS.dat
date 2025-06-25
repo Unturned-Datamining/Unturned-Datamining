@@ -11,3 +11,5 @@ Holiday_Restriction CHRISTMAS
 Bundle_Override_Path /Objects/Small/Overgrowth/Icicle_1
 
 Has_Clip_Prefab false
+
+Is_Clutter true

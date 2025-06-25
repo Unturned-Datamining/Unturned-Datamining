@@ -302,6 +302,11 @@ public class ItemGunAsset : ItemWeaponAsset
     public bool MustAimToShoot { get; protected set; }
 
     /// <summary>
+    /// If true, the gun will stop aiming regardless of player input.
+    /// </summary>
+    public bool ShouldForceStopAimingAfterShooting { get; set; }
+
+    /// <summary>
     /// Seconds from pressing "aim" to fully aiming down sights.
     /// </summary>
     public float aimInDuration { get; protected set; }
@@ -363,9 +368,44 @@ public class ItemGunAsset : ItemWeaponAsset
         }
     }
 
+    /// <summary>
+    /// How long in seconds after firing to rechamber the gun by playing the Hammer animation.
+    /// Only applicable if RechamberAfterShotCount is &gt;0.
+    /// Defaults to 0.25 seconds.
+    /// </summary>
+    public float RechamberAfterShotDelay { get; set; } = 0.25f;
+
+
+    /// <summary>
+    /// How long in seconds after hammering to eject a bullet casing.
+    /// Defaults to 0.45 seconds.
+    /// </summary>
+    public float EjectAfterHammerDelay { get; set; } = 0.45f;
+
+
+    /// <summary>
+    /// How long in seconds after reloading to eject bullet casings.
+    /// Only applicable if CasingEjectCountAfterReload is greater than zero.
+    /// Defaults to 0.5 seconds.
+    /// </summary>
+    public float EjectAfterReloadDelay { get; set; } = 0.5f;
+
+
     public ushort[] attachmentCalibers { get; private set; }
 
     public ushort[] magazineCalibers { get; private set; }
+
+    /// <summary>
+    /// Determines whether "Hammer" animation plays after attaching a magazine.
+    /// Note: this happens when a magazine replaces another OR fills previously empty slot.
+    /// </summary>
+    public ERechamberGunAfterReloadMode RechamberAfterMagazineAttached { get; set; }
+
+    /// <summary>
+    /// Determines whether "Hammer" animation plays after detached a magazine.
+    /// Note: this happens when a magazine is removed from the gun without a replacement.
+    /// </summary>
+    public ERechamberGunAfterReloadMode RechamberAfterMagazineDetached { get; set; }
 
     public float baseSpreadAngleRadians { get; private set; }
 
@@ -396,82 +436,107 @@ public class ItemGunAsset : ItemWeaponAsset
     /// </summary>
     public string unjamChamberAnimName { get; protected set; }
 
+    /// <summary>
+    /// If &gt;0, hammer animation plays after shooting this many shots after RechamberAfterShotDelay seconds pass.
+    /// Defaults to one for EAction.Pump and EAction.Bolt, zero otherwise.
+    /// </summary>
+    public int RechamberAfterShotCount { get; set; }
+
+    /// <summary>
+    /// If &gt;0, emit particles after hammer after EjectAfterHammerDelay seconds pass.
+    /// Only applicable if RechamberAfterShotCount is &gt;0.
+    /// Defaults to 1.
+    /// </summary>
+    public int CasingEjectCountAfterRechamberingAfterShooting { get; set; }
+
+    /// <summary>
+    /// If &gt;0, emit particles after reloading after EjectAfterReloadDelay seconds pass.
+    /// Defaults to ammoMax for EAction.Break.
+    /// </summary>
+    public int CasingEjectCountAfterReload { get; set; }
+
     protected override bool doesItemTypeHaveSkins => true;
 
     public override void BuildDescription(ItemDescriptionBuilder builder, Item itemInstance)
     {
         base.BuildDescription(builder, itemInstance);
-        ushort num = BitConverter.ToUInt16(itemInstance.state, 8);
-        if (Assets.find(EAssetType.ITEM, num) is ItemMagazineAsset itemMagazineAsset)
+        if (itemInstance != null)
         {
-            if (!string.IsNullOrEmpty(itemMagazineAsset.itemName))
+            ushort num = BitConverter.ToUInt16(itemInstance.state, 8);
+            if (Assets.find(EAssetType.ITEM, num) is ItemMagazineAsset itemMagazineAsset)
             {
-                builder.Append(PlayerDashboardInventoryUI.localization.format("Ammo", "<color=" + Palette.hex(ItemTool.getRarityColorUI(itemMagazineAsset.rarity)) + ">" + itemMagazineAsset.itemName + "</color>", itemInstance.state[10], itemMagazineAsset.MaxAmount), 2000);
+                if (!string.IsNullOrEmpty(itemMagazineAsset.itemName))
+                {
+                    builder.Append(PlayerDashboardInventoryUI.localization.format("Ammo", "<color=" + Palette.hex(ItemTool.getRarityColorUI(itemMagazineAsset.rarity)) + ">" + itemMagazineAsset.itemName + "</color>", itemInstance.state[10], itemMagazineAsset.MaxAmount), 2000);
+                }
+                else
+                {
+                    builder.Append(PlayerDashboardInventoryUI.localization.format("Ammo", "<color=" + Palette.hex(ItemTool.getRarityColorUI(rarity)) + ">" + base.itemName + "</color>", itemInstance.state[10], itemMagazineAsset.MaxAmount), 2000);
+                }
             }
             else
             {
-                builder.Append(PlayerDashboardInventoryUI.localization.format("Ammo", "<color=" + Palette.hex(ItemTool.getRarityColorUI(rarity)) + ">" + base.itemName + "</color>", itemInstance.state[10], itemMagazineAsset.MaxAmount), 2000);
+                builder.Append(PlayerDashboardInventoryUI.localization.format("Ammo", PlayerDashboardInventoryUI.localization.format("None"), 0, 0), 2000);
             }
-        }
-        else
-        {
-            builder.Append(PlayerDashboardInventoryUI.localization.format("Ammo", PlayerDashboardInventoryUI.localization.format("None"), 0, 0), 2000);
         }
         if (builder.shouldRestrictToLegacyContent)
         {
             return;
         }
-        ushort num2 = BitConverter.ToUInt16(itemInstance.state, 0);
-        ushort num3 = BitConverter.ToUInt16(itemInstance.state, 2);
-        ushort num4 = BitConverter.ToUInt16(itemInstance.state, 4);
-        ushort num5 = BitConverter.ToUInt16(itemInstance.state, 6);
-        ItemSightAsset itemSightAsset = Assets.find(EAssetType.ITEM, num2) as ItemSightAsset;
-        ItemTacticalAsset itemTacticalAsset = Assets.find(EAssetType.ITEM, num3) as ItemTacticalAsset;
-        ItemGripAsset itemGripAsset = Assets.find(EAssetType.ITEM, num4) as ItemGripAsset;
-        ItemBarrelAsset itemBarrelAsset = Assets.find(EAssetType.ITEM, num5) as ItemBarrelAsset;
-        if (itemSightAsset != null && (hasSight || num2 != sightID))
+        if (itemInstance != null)
         {
-            if (!string.IsNullOrEmpty(itemSightAsset.itemName))
+            ushort num2 = BitConverter.ToUInt16(itemInstance.state, 0);
+            ushort num3 = BitConverter.ToUInt16(itemInstance.state, 2);
+            ushort num4 = BitConverter.ToUInt16(itemInstance.state, 4);
+            ushort num5 = BitConverter.ToUInt16(itemInstance.state, 6);
+            ItemSightAsset itemSightAsset = Assets.find(EAssetType.ITEM, num2) as ItemSightAsset;
+            ItemTacticalAsset itemTacticalAsset = Assets.find(EAssetType.ITEM, num3) as ItemTacticalAsset;
+            ItemGripAsset itemGripAsset = Assets.find(EAssetType.ITEM, num4) as ItemGripAsset;
+            ItemBarrelAsset itemBarrelAsset = Assets.find(EAssetType.ITEM, num5) as ItemBarrelAsset;
+            if (itemSightAsset != null && (hasSight || num2 != sightID))
             {
-                builder.Append(PlayerDashboardInventoryUI.localization.format("ItemDescription_SightAttachment", "<color=" + Palette.hex(ItemTool.getRarityColorUI(itemSightAsset.rarity)) + ">" + itemSightAsset.itemName + "</color>"), 2000);
+                if (!string.IsNullOrEmpty(itemSightAsset.itemName))
+                {
+                    builder.Append(PlayerDashboardInventoryUI.localization.format("ItemDescription_SightAttachment", "<color=" + Palette.hex(ItemTool.getRarityColorUI(itemSightAsset.rarity)) + ">" + itemSightAsset.itemName + "</color>"), 2000);
+                }
             }
-        }
-        else if (hasSight)
-        {
-            builder.Append(PlayerDashboardInventoryUI.localization.format("ItemDescription_SightAttachment", PlayerDashboardInventoryUI.localization.format("None")), 2000);
-        }
-        if (itemTacticalAsset != null && (hasTactical || num3 != tacticalID))
-        {
-            if (!string.IsNullOrEmpty(itemTacticalAsset.itemName))
+            else if (hasSight)
             {
-                builder.Append(PlayerDashboardInventoryUI.localization.format("ItemDescription_TacticalAttachment", "<color=" + Palette.hex(ItemTool.getRarityColorUI(itemTacticalAsset.rarity)) + ">" + itemTacticalAsset.itemName + "</color>"), 2000);
+                builder.Append(PlayerDashboardInventoryUI.localization.format("ItemDescription_SightAttachment", PlayerDashboardInventoryUI.localization.format("None")), 2000);
             }
-        }
-        else if (hasTactical)
-        {
-            builder.Append(PlayerDashboardInventoryUI.localization.format("ItemDescription_TacticalAttachment", PlayerDashboardInventoryUI.localization.format("None")), 2000);
-        }
-        if (itemGripAsset != null && (hasGrip || num4 != gripID))
-        {
-            if (!string.IsNullOrEmpty(itemGripAsset.itemName))
+            if (itemTacticalAsset != null && (hasTactical || num3 != tacticalID))
             {
-                builder.Append(PlayerDashboardInventoryUI.localization.format("ItemDescription_GripAttachment", "<color=" + Palette.hex(ItemTool.getRarityColorUI(itemGripAsset.rarity)) + ">" + itemGripAsset.itemName + "</color>"), 2000);
+                if (!string.IsNullOrEmpty(itemTacticalAsset.itemName))
+                {
+                    builder.Append(PlayerDashboardInventoryUI.localization.format("ItemDescription_TacticalAttachment", "<color=" + Palette.hex(ItemTool.getRarityColorUI(itemTacticalAsset.rarity)) + ">" + itemTacticalAsset.itemName + "</color>"), 2000);
+                }
             }
-        }
-        else if (hasGrip)
-        {
-            builder.Append(PlayerDashboardInventoryUI.localization.format("ItemDescription_GripAttachment", PlayerDashboardInventoryUI.localization.format("None")), 2000);
-        }
-        if (itemBarrelAsset != null && (hasBarrel || num5 != barrelID))
-        {
-            if (!string.IsNullOrEmpty(itemBarrelAsset.itemName))
+            else if (hasTactical)
             {
-                builder.Append(PlayerDashboardInventoryUI.localization.format("ItemDescription_BarrelAttachment", "<color=" + Palette.hex(ItemTool.getRarityColorUI(itemBarrelAsset.rarity)) + ">" + itemBarrelAsset.itemName + "</color>"), 2000);
+                builder.Append(PlayerDashboardInventoryUI.localization.format("ItemDescription_TacticalAttachment", PlayerDashboardInventoryUI.localization.format("None")), 2000);
             }
-        }
-        else if (hasBarrel)
-        {
-            builder.Append(PlayerDashboardInventoryUI.localization.format("ItemDescription_BarrelAttachment", PlayerDashboardInventoryUI.localization.format("None")), 2000);
+            if (itemGripAsset != null && (hasGrip || num4 != gripID))
+            {
+                if (!string.IsNullOrEmpty(itemGripAsset.itemName))
+                {
+                    builder.Append(PlayerDashboardInventoryUI.localization.format("ItemDescription_GripAttachment", "<color=" + Palette.hex(ItemTool.getRarityColorUI(itemGripAsset.rarity)) + ">" + itemGripAsset.itemName + "</color>"), 2000);
+                }
+            }
+            else if (hasGrip)
+            {
+                builder.Append(PlayerDashboardInventoryUI.localization.format("ItemDescription_GripAttachment", PlayerDashboardInventoryUI.localization.format("None")), 2000);
+            }
+            if (itemBarrelAsset != null && (hasBarrel || num5 != barrelID))
+            {
+                if (!string.IsNullOrEmpty(itemBarrelAsset.itemName))
+                {
+                    builder.Append(PlayerDashboardInventoryUI.localization.format("ItemDescription_BarrelAttachment", "<color=" + Palette.hex(ItemTool.getRarityColorUI(itemBarrelAsset.rarity)) + ">" + itemBarrelAsset.itemName + "</color>"), 2000);
+                }
+            }
+            else if (hasBarrel)
+            {
+                builder.Append(PlayerDashboardInventoryUI.localization.format("ItemDescription_BarrelAttachment", PlayerDashboardInventoryUI.localization.format("None")), 2000);
+            }
         }
         float f = CalculateRoundsPerSecond() * 60f;
         builder.Append(PlayerDashboardInventoryUI.localization.format("ItemDescription_Firerate", Mathf.RoundToInt(f)), 10000);
@@ -653,6 +718,9 @@ public class ItemGunAsset : ItemWeaponAsset
         }
         unplace = p.data.ParseFloat("Unplace");
         replace = p.data.ParseFloat("Replace", 1f);
+        RechamberAfterShotDelay = p.data.ParseFloat("RechamberAfterShotDelay", 0.25f);
+        EjectAfterHammerDelay = p.data.ParseFloat("EjectAfterHammerDelay", 0.45f);
+        EjectAfterReloadDelay = p.data.ParseFloat("EjectAfterReloadDelay", 0.5f);
         hasSight = p.data.ContainsKey("Hook_Sight");
         hasTactical = p.data.ContainsKey("Hook_Tactical");
         hasGrip = p.data.ContainsKey("Hook_Grip");
@@ -867,6 +935,7 @@ public class ItemGunAsset : ItemWeaponAsset
         canAimDuringSprint = p.data.ParseBool("Can_Aim_During_Sprint");
         aimingMovementSpeedMultiplier = p.data.ParseFloat("Aiming_Movement_Speed_Multiplier", canAimDuringSprint ? 1f : 0.75f);
         MustAimToShoot = p.data.ParseBool("Must_Aim_To_Shoot", action == EAction.Minigun);
+        ShouldForceStopAimingAfterShooting = p.data.ParseBool("Stop_Aiming_After_Shooting");
         canEverJam = p.data.ContainsKey("Can_Ever_Jam");
         if (canEverJam)
         {
@@ -878,6 +947,13 @@ public class ItemGunAsset : ItemWeaponAsset
         shootQuestRewards.Parse(p.data, p.localization, this, "Shoot_Quest_Rewards", "Shoot_Quest_Reward_");
         aimInDuration = p.data.ParseFloat("Aim_In_Duration", 0.2f);
         shouldScaleAimAnimations = p.data.ParseBool("Scale_Aim_Animation_Speed", defaultValue: true);
+        int defaultValue3 = ((action == EAction.Bolt || action == EAction.Pump) ? 1 : 0);
+        RechamberAfterShotCount = p.data.ParseInt32("RechamberAfterShotCount", defaultValue3);
+        CasingEjectCountAfterRechamberingAfterShooting = p.data.ParseInt32("CasingEjectCountAfterRechamberingAfterShooting", 1);
+        int defaultValue4 = ((action == EAction.Break) ? ammoMax : 0);
+        CasingEjectCountAfterReload = p.data.ParseInt32("CasingEjectCountAfterReload", defaultValue4);
+        RechamberAfterMagazineAttached = p.data.ParseEnum("RechamberAfterMagazineAttached", ERechamberGunAfterReloadMode.IfAmmoWasEmpty);
+        RechamberAfterMagazineDetached = p.data.ParseEnum("RechamberAfterMagazineDetached", ERechamberGunAfterReloadMode.Always);
     }
 
     internal override void BuildCargoData(CargoBuilder builder)

@@ -95,7 +95,13 @@ public class UseableConsumeable : Useable
         }
         if (!Dedicator.IsDedicatedServer)
         {
-            base.player.playSound(((ItemConsumeableAsset)base.player.equipment.asset).use, 0.5f);
+            ItemConsumeableAsset itemConsumeableAsset = (ItemConsumeableAsset)base.player.equipment.asset;
+            float deviation = 0.1f;
+            if (!itemConsumeableAsset.ShouldRandomizeUseAudioPitch)
+            {
+                deviation = 0f;
+            }
+            base.player.playSound(itemConsumeableAsset.use, 0.5f, 1f, deviation);
         }
         if (Provider.isServer)
         {

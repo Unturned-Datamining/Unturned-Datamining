@@ -503,6 +503,10 @@ public class ChatManager : SteamCaller
         {
             ToggleFreezeCameraTransform();
         }
+        else if (string.Equals(text, "/drawaudioreverbzones", StringComparison.InvariantCultureIgnoreCase))
+        {
+            DrawAudioReverbZones();
+        }
         else
         {
             SendChatRequest.Invoke(ENetReliability.Reliable, (byte)mode, text);
@@ -705,6 +709,41 @@ public class ChatManager : SteamCaller
         else
         {
             MainCamera.IsPositionFrozen = !MainCamera.IsPositionFrozen;
+        }
+    }
+
+    internal static void DrawAudioReverbZones()
+    {
+        if (!Player.player.channel.owner.isAdmin)
+        {
+            UnturnedLog.warn("Unable to draw audio reverb zones without admin permissions");
+            return;
+        }
+        bool flag = false;
+        List<ReverbGizmoComponent> list = new List<ReverbGizmoComponent>();
+        AudioReverbZone[] array = UnityEngine.Object.FindObjectsByType<AudioReverbZone>(FindObjectsInactive.Exclude, FindObjectsSortMode.None);
+        if (!array.IsNullOrEmpty())
+        {
+            AudioReverbZone[] array2 = array;
+            foreach (AudioReverbZone audioReverbZone in array2)
+            {
+                ReverbGizmoComponent reverbGizmoComponent = audioReverbZone.GetComponent<ReverbGizmoComponent>();
+                if (reverbGizmoComponent == null)
+                {
+                    reverbGizmoComponent = audioReverbZone.gameObject.AddComponent<ReverbGizmoComponent>();
+                    reverbGizmoComponent.zone = audioReverbZone;
+                    flag = true;
+                }
+                list.Add(reverbGizmoComponent);
+            }
+        }
+        if (flag)
+        {
+            return;
+        }
+        foreach (ReverbGizmoComponent item in list)
+        {
+            UnityEngine.Object.Destroy(item);
         }
     }
 

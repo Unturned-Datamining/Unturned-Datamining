@@ -1045,6 +1045,10 @@ public class Provider : MonoBehaviour
         Directory.CreateDirectory(path);
         bool flag = ((Level.isEditor && EditorUI.window != null) ? EditorUI.window.isEnabled : (!(Player.player != null) || PlayerUI.window == null || PlayerUI.window.isEnabled));
         string text = DateTime.Now.ToString("yyyy-MM-dd_HH-mm-ss");
+        if (GraphicsSettings.WantsCinematicMode)
+        {
+            text += "_Cinematic";
+        }
         if (!flag)
         {
             text += "_NoUI";
@@ -1953,6 +1957,7 @@ public class Provider : MonoBehaviour
         ClientAssetIntegrity.Clear();
         PhysicsMaterialNetTable.Clear();
         ItemManager.ClearNetworkStuff();
+        PlaceableInstantiationManager.ClearNetworkStuff();
         BarricadeManager.ClearNetworkStuff();
         StructureManager.ClearNetworkStuff();
     }
@@ -4024,32 +4029,39 @@ public class Provider : MonoBehaviour
     /// </summary>
     private static void WriteConnectedMessage(NetPakWriter writer, SteamPlayer aboutPlayer, SteamPlayer forPlayer)
     {
+        bool num = aboutPlayer == forPlayer;
         writer.WriteNetId(aboutPlayer.GetNetId());
         writer.WriteSteamID(aboutPlayer.playerID.steamID);
         writer.WriteUInt8(aboutPlayer.playerID.characterID);
         writer.WriteString(aboutPlayer.playerID.playerName);
         writer.WriteString(aboutPlayer.playerID.characterName);
-        Vector3 value;
-        byte value2;
-        if (aboutPlayer.player.movement.canAddSimulationResultsToUpdates || !aboutPlayer.player.movement.hasMostRecentlyAddedUpdate)
+        Vector3 vector;
+        byte value;
+        if (!aboutPlayer.player.movement.hasMostRecentlyAddedUpdate)
         {
-            value = aboutPlayer.model.transform.position;
-            value2 = MeasurementTool.angleToByte(aboutPlayer.model.transform.rotation.eulerAngles.y);
+            vector = aboutPlayer.model.transform.position;
+            value = MeasurementTool.angleToByte(aboutPlayer.model.transform.rotation.eulerAngles.y);
         }
         else
         {
-            value = aboutPlayer.player.movement.mostRecentlyAddedUpdate.pos;
-            value2 = aboutPlayer.player.movement.mostRecentlyAddedUpdate.rot;
+            vector = aboutPlayer.player.movement.mostRecentlyAddedUpdate.pos;
+            value = aboutPlayer.player.movement.mostRecentlyAddedUpdate.rot;
         }
-        writer.WriteClampedVector3(value);
-        writer.WriteUInt8(value2);
-        writer.WriteBit(aboutPlayer.isPro);
-        bool value3 = aboutPlayer.isAdmin;
-        if (forPlayer != aboutPlayer && hideAdmins)
+        if (!num && !aboutPlayer.isMemberOfSameGroupAs(forPlayer) && !forPlayer.player.AdminUsageFlags.HasFlag(EPlayerAdminUsageFlags.SpectatorStatsOverlay) && (forPlayer.model.transform.position - vector).GetHorizontalSqrMagnitude() > 331776f)
         {
-            value3 = false;
+            vector = PlayerManager.CulledPosition;
+            value = 0;
+            forPlayer.culledPlayers.Add(aboutPlayer.playerID.steamID);
         }
-        writer.WriteBit(value3);
+        writer.WriteClampedVector3(vector);
+        writer.WriteUInt8(value);
+        writer.WriteBit(aboutPlayer.isPro);
+        bool value2 = aboutPlayer.isAdmin;
+        if (!num && hideAdmins)
+        {
+            value2 = false;
+        }
+        writer.WriteBit(value2);
         writer.WriteUInt8((byte)aboutPlayer.channel);
         writer.WriteSteamID(aboutPlayer.playerID.group);
         writer.WriteString(aboutPlayer.playerID.nickName);
@@ -4070,23 +4082,23 @@ public class Provider : MonoBehaviour
         int[] skinItems = aboutPlayer.skinItems;
         writer.WriteUInt8((byte)skinItems.Length);
         int[] array = skinItems;
-        foreach (int value4 in array)
+        foreach (int value3 in array)
         {
-            writer.WriteInt32(value4);
+            writer.WriteInt32(value3);
         }
         string[] skinTags = aboutPlayer.skinTags;
         writer.WriteUInt8((byte)skinTags.Length);
         string[] array2 = skinTags;
-        foreach (string value5 in array2)
+        foreach (string value4 in array2)
         {
-            writer.WriteString(value5);
+            writer.WriteString(value4);
         }
         string[] skinDynamicProps = aboutPlayer.skinDynamicProps;
         writer.WriteUInt8((byte)skinDynamicProps.Length);
         array2 = skinDynamicProps;
-        foreach (string value6 in array2)
+        foreach (string value5 in array2)
         {
-            writer.WriteString(value6);
+            writer.WriteString(value5);
         }
         writer.WriteEnum(aboutPlayer.skillset);
         writer.WriteString(aboutPlayer.language);
@@ -4225,17 +4237,24 @@ public class Provider : MonoBehaviour
             battlEyeServerRunData.pfnReceivedPlayerGUID(newClient.battlEyeId, pvGUID, 8);
             gCHandle.Free();
         }
-        try
+        foreach (SteamPlayer forClient in clients)
         {
-            NetMessages.SendMessageToClients(EClientMessage.PlayerConnected, ENetReliability.Reliable, GatherRemoteClientConnectionsMatchingPredicate((SteamPlayer potentialRecipient) => potentialRecipient != newClient), delegate(NetPakWriter writer)
+            if (forClient == newClient)
             {
-                WriteConnectedMessage(writer, newClient, null);
-            });
-        }
-        catch (Exception e2)
-        {
-            UnturnedLog.exception(e2, $"Caught exception sending PlayerConnected message for new client {newClient} to existing clients:");
-            UnturnedLog.error("This is likely a fatal error!");
+                continue;
+            }
+            try
+            {
+                NetMessages.SendMessageToClient(EClientMessage.PlayerConnected, ENetReliability.Reliable, forClient.transportConnection, delegate(NetPakWriter writer)
+                {
+                    WriteConnectedMessage(writer, newClient, forClient);
+                });
+            }
+            catch (Exception e2)
+            {
+                UnturnedLog.exception(e2, $"Caught exception sending PlayerConnected message for new client {newClient} to existing clients:");
+                UnturnedLog.error("This is likely a fatal error!");
+            }
         }
         SendInitialGlobalState(newClient);
         newClient.player.InitializePlayer();
@@ -4791,15 +4810,32 @@ public class Provider : MonoBehaviour
 
     private static void onGameRichPresenceJoinRequested(GameRichPresenceJoinRequested_t callback)
     {
-        if (!isConnected)
+        if (isConnected)
         {
-            UnturnedLog.info("onGameRichPresenceJoinRequested {0}", callback.m_rgchConnect);
-            if (CommandLine.TryGetSteamConnect(callback.m_rgchConnect, out var newIP, out var queryPort, out var pass))
+            return;
+        }
+        UnturnedLog.info("onGameRichPresenceJoinRequested {0}", callback.m_rgchConnect);
+        if (!CommandLine.TryGetSteamConnect(callback.m_rgchConnect, out var newIP, out var queryPort, out var pass, out var serverCode))
+        {
+            return;
+        }
+        if (serverCode.IsValid())
+        {
+            UnturnedLog.info("Rich presence connect code: {0} Password: '{1}'", serverCode, pass);
+            if (serverCode.BGameServerAccount())
             {
-                SteamConnectionInfo steamConnectionInfo = new SteamConnectionInfo(newIP, queryPort, pass);
-                UnturnedLog.info("Rich presence connect IP: {0} Port: {1} Password: '{2}'", Parser.getIPFromUInt32(steamConnectionInfo.ip), steamConnectionInfo.port, steamConnectionInfo.password);
-                MenuPlayConnectUI.connect(steamConnectionInfo, shouldAutoJoin: false, MenuPlayServerInfoUI.EServerInfoOpenContext.CONNECT);
+                connect(new ServerConnectParameters(serverCode, pass), null, null);
             }
+            else
+            {
+                UnturnedLog.warn($"Rich presence connect non-gameserver code ({serverCode.GetEAccountType()})");
+            }
+        }
+        else
+        {
+            SteamConnectionInfo steamConnectionInfo = new SteamConnectionInfo(newIP, queryPort, pass);
+            UnturnedLog.info("Rich presence connect IP: {0} Port: {1} Password: '{2}'", Parser.getIPFromUInt32(steamConnectionInfo.ip), steamConnectionInfo.port, steamConnectionInfo.password);
+            MenuPlayConnectUI.connect(steamConnectionInfo, shouldAutoJoin: false, MenuPlayServerInfoUI.EServerInfoOpenContext.CONNECT);
         }
     }
 
@@ -5296,7 +5332,7 @@ public class Provider : MonoBehaviour
                     string text;
                     while ((text = streamReader.ReadLine()) != null)
                     {
-                        if (!string.IsNullOrWhiteSpace(text) && !Commander.execute(CSteamID.Nil, text))
+                        if (!string.IsNullOrWhiteSpace(text) && !text.StartsWith("//") && !Commander.execute(CSteamID.Nil, text))
                         {
                             UnturnedLog.error("Unknown entry in Commands.dat: '{0}'", text);
                         }
@@ -5369,6 +5405,7 @@ public class Provider : MonoBehaviour
             QuitGame("Steam init exception (" + ex2.Message + ")");
             return;
         }
+        SteamLaunchArguments.Init();
         backendRealtimeSeconds = SteamUtils.GetServerRealTime();
         authorityHoliday = HolidayUtil.GetScheduledHoliday();
         apiWarningMessageHook = onAPIWarningMessage;

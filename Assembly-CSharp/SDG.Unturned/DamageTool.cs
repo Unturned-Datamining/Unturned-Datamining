@@ -516,7 +516,8 @@ public class DamageTool
             return;
         }
         ushort num2 = (ushort)Mathf.Min(65535, num);
-        parameters.zombie.askDamage(num2, parameters.direction * (int)num2, out kill, out xp, trackKill: true, dropLoot: true, parameters.zombieStunOverride, parameters.ragdollEffect);
+        Vector3 newRagdoll = parameters.direction * (int)num2 * parameters.RagdollForceMultiplier;
+        parameters.zombie.askDamage(num2, newRagdoll, out kill, out xp, trackKill: true, dropLoot: true, parameters.zombieStunOverride, parameters.ragdollEffect);
         if (parameters.AlertPosition.HasValue)
         {
             parameters.zombie.alert(parameters.AlertPosition.Value, isStartling: true);

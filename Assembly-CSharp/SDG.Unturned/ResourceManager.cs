@@ -42,12 +42,18 @@ public class ResourceManager : SteamCaller
     [SteamCall(ESteamCallValidation.ONLY_FROM_SERVER, legacyName = "tellClearRegionResources")]
     public static void ReceiveClearRegionResources(byte x, byte y)
     {
-        if (Provider.isServer || regions[x, y].isNetworked)
+        if (!Provider.isServer && !regions[x, y].isNetworked)
         {
-            for (int i = 0; i < LevelGround.trees[x, y].Count; i++)
-            {
-                LevelGround.trees[x, y][i].revive();
-            }
+            return;
+        }
+        List<ResourceSpawnpoint> treesOrNullInRegion = LevelGround.GetTreesOrNullInRegion(x, y);
+        if (treesOrNullInRegion == null)
+        {
+            return;
+        }
+        foreach (ResourceSpawnpoint item in treesOrNullInRegion)
+        {
+            item.revive();
         }
     }
 
@@ -56,9 +62,13 @@ public class ResourceManager : SteamCaller
     /// </summary>
     public static void askClearRegionResources(byte x, byte y)
     {
-        if (Provider.isServer && Regions.checkSafe(x, y) && LevelGround.trees[x, y].Count > 0)
+        if (Provider.isServer && Regions.checkSafe(x, y))
         {
-            SendClearRegionResources.InvokeAndLoopback(ENetReliability.Reliable, Provider.GatherRemoteClientConnections(), x, y);
+            List<ResourceSpawnpoint> treesOrNullInRegion = LevelGround.GetTreesOrNullInRegion(x, y);
+            if (treesOrNullInRegion != null && treesOrNullInRegion.Count > 0)
+            {
+                SendClearRegionResources.InvokeAndLoopback(ENetReliability.Reliable, Provider.GatherRemoteClientConnections(), x, y);
+            }
         }
     }
 
@@ -93,12 +103,16 @@ public class ResourceManager : SteamCaller
             {
                 continue;
             }
-            for (int j = 0; j < LevelGround.trees[regionCoordinate.x, regionCoordinate.y].Count; j++)
+            List<ResourceSpawnpoint> treesOrNullInRegion = LevelGround.GetTreesOrNullInRegion(regionCoordinate.x, regionCoordinate.y);
+            if (treesOrNullInRegion == null)
             {
-                ResourceSpawnpoint resourceSpawnpoint = LevelGround.trees[regionCoordinate.x, regionCoordinate.y][j];
-                if (!(resourceSpawnpoint.model == null) && !resourceSpawnpoint.isDead && (resourceSpawnpoint.point - center).sqrMagnitude < sqrRadius)
+                continue;
+            }
+            foreach (ResourceSpawnpoint item in treesOrNullInRegion)
+            {
+                if (!(item.model == null) && !item.isDead && (item.point - center).sqrMagnitude < sqrRadius)
                 {
-                    result.Add(resourceSpawnpoint.model);
+                    result.Add(item.model);
                 }
             }
         }
@@ -115,29 +129,33 @@ public class ResourceManager : SteamCaller
         {
             return;
         }
-        List<ResourceSpawnpoint> list = LevelGround.trees[x, y];
-        for (ushort num = 0; num < list.Count; num++)
+        List<ResourceSpawnpoint> treesOrNullInRegion = LevelGround.GetTreesOrNullInRegion(x, y);
+        if (treesOrNullInRegion == null)
         {
-            if (resource == list[num].model)
+            return;
+        }
+        for (ushort num = 0; num < treesOrNullInRegion.Count; num++)
+        {
+            if (resource == treesOrNullInRegion[num].model)
             {
-                if (list[num].isDead || !list[num].canBeDamaged)
+                if (treesOrNullInRegion[num].isDead || !treesOrNullInRegion[num].canBeDamaged)
                 {
                     break;
                 }
-                list[num].askDamage(pendingTotalDamage);
-                if (!list[num].isDead)
+                treesOrNullInRegion[num].askDamage(pendingTotalDamage);
+                if (!treesOrNullInRegion[num].isDead)
                 {
                     break;
                 }
                 kill = EPlayerKill.RESOURCE;
-                ResourceAsset asset = list[num].asset;
-                if (list[num].asset != null)
+                ResourceAsset asset = treesOrNullInRegion[num].asset;
+                if (treesOrNullInRegion[num].asset != null)
                 {
                     EffectAsset effectAsset = asset.FindExplosionEffectAsset();
                     if (effectAsset != null)
                     {
                         TriggerEffectParameters parameters = new TriggerEffectParameters(effectAsset);
-                        parameters.position = list[num].GetEffectSpawnPosition();
+                        parameters.position = treesOrNullInRegion[num].GetEffectSpawnPosition();
                         parameters.relevantDistance = EffectManager.MEDIUM;
                         parameters.reliable = true;
                         EffectManager.triggerEffect(parameters);
@@ -191,7 +209,7 @@ public class ResourceManager : SteamCaller
                             }
                         }
                         xp = asset.rewardXP;
-                        Vector3 point = list[num].point;
+                        Vector3 point = treesOrNullInRegion[num].point;
                         Guid gUID = asset.GUID;
                         for (int l = 0; l < Provider.clients.Count; l++)
                         {
@@ -215,10 +233,14 @@ public class ResourceManager : SteamCaller
         {
             return;
         }
-        List<ResourceSpawnpoint> list = LevelGround.trees[x, y];
-        for (ushort num = 0; num < list.Count; num++)
+        List<ResourceSpawnpoint> treesOrNullInRegion = LevelGround.GetTreesOrNullInRegion(x, y);
+        if (treesOrNullInRegion == null)
         {
-            if (resource == list[num].model)
+            return;
+        }
+        for (ushort num = 0; num < treesOrNullInRegion.Count; num++)
+        {
+            if (resource == treesOrNullInRegion[num].model)
             {
                 SendForageRequest.Invoke(ENetReliability.Unreliable, x, y, num);
                 break;
@@ -245,22 +267,22 @@ public class ResourceManager : SteamCaller
         {
             return;
         }
-        List<ResourceSpawnpoint> list = LevelGround.trees[x, y];
-        if (index >= list.Count || list[index].isDead || (list[index].point - player.transform.position).sqrMagnitude > 400f)
+        List<ResourceSpawnpoint> treesOrNullInRegion = LevelGround.GetTreesOrNullInRegion(x, y);
+        if (treesOrNullInRegion == null || index >= treesOrNullInRegion.Count || treesOrNullInRegion[index].isDead || (treesOrNullInRegion[index].point - player.transform.position).sqrMagnitude > 400f)
         {
             return;
         }
-        ResourceAsset asset = list[index].asset;
+        ResourceAsset asset = treesOrNullInRegion[index].asset;
         if (asset == null || !asset.isForage)
         {
             return;
         }
-        list[index].askDamage(1);
+        treesOrNullInRegion[index].askDamage(1);
         EffectAsset effectAsset = asset.FindExplosionEffectAsset();
         if (effectAsset != null)
         {
             TriggerEffectParameters parameters = new TriggerEffectParameters(effectAsset);
-            parameters.position = list[index].GetEffectSpawnPosition();
+            parameters.position = treesOrNullInRegion[index].GetEffectSpawnPosition();
             parameters.relevantDistance = EffectManager.MEDIUM;
             parameters.reliable = true;
             EffectManager.triggerEffect(parameters);
@@ -288,9 +310,10 @@ public class ResourceManager : SteamCaller
     [SteamCall(ESteamCallValidation.ONLY_FROM_SERVER, legacyName = "tellResourceDead")]
     public static void ReceiveResourceDead(byte x, byte y, ushort index, Vector3 ragdoll)
     {
-        if (index < LevelGround.trees[x, y].Count && (Provider.isServer || regions[x, y].isNetworked))
+        List<ResourceSpawnpoint> treesOrNullInRegion = LevelGround.GetTreesOrNullInRegion(x, y);
+        if (treesOrNullInRegion != null && index < treesOrNullInRegion.Count && (Provider.isServer || regions[x, y].isNetworked))
         {
-            LevelGround.trees[x, y][index].kill(ragdoll);
+            treesOrNullInRegion[index].kill(ragdoll);
         }
     }
 
@@ -303,9 +326,10 @@ public class ResourceManager : SteamCaller
     [SteamCall(ESteamCallValidation.ONLY_FROM_SERVER, legacyName = "tellResourceAlive")]
     public static void ReceiveResourceAlive(byte x, byte y, ushort index)
     {
-        if (index < LevelGround.trees[x, y].Count && (Provider.isServer || regions[x, y].isNetworked))
+        List<ResourceSpawnpoint> treesOrNullInRegion = LevelGround.GetTreesOrNullInRegion(x, y);
+        if (treesOrNullInRegion != null && index < treesOrNullInRegion.Count && (Provider.isServer || regions[x, y].isNetworked))
         {
-            LevelGround.trees[x, y][index].revive();
+            treesOrNullInRegion[index].revive();
         }
     }
 
@@ -325,40 +349,39 @@ public class ResourceManager : SteamCaller
             return;
         }
         regions[value, value2].isNetworked = true;
-        List<ResourceSpawnpoint> list = LevelGround.trees[value, value2];
+        List<ResourceSpawnpoint> treesOrNullInRegion = LevelGround.GetTreesOrNullInRegion(value, value2);
+        if (treesOrNullInRegion == null)
+        {
+            return;
+        }
         reader.ReadUInt16(out var value3);
-        value3 = MathfEx.Min(value3, (ushort)list.Count);
+        value3 = MathfEx.Min(value3, (ushort)treesOrNullInRegion.Count);
         ushort num = 0;
         bool value4;
         while (num < value3 && reader.ReadBit(out value4))
         {
             if (value4)
             {
-                list[num].wipe();
+                treesOrNullInRegion[num].wipe();
             }
             else
             {
-                list[num].revive();
+                treesOrNullInRegion[num].revive();
             }
             num++;
         }
     }
 
-    internal void SendRegion(SteamPlayer client, byte x, byte y)
-    {
-        SendResources.Invoke(ENetReliability.Reliable, client.transportConnection, SendResources_Write, x, y);
-    }
-
     private static void SendResources_Write(NetPakWriter writer, byte x, byte y)
     {
-        List<ResourceSpawnpoint> list = LevelGround.trees[x, y];
+        List<ResourceSpawnpoint> treesOrNullInRegion = LevelGround.GetTreesOrNullInRegion(x, y);
         writer.WriteUInt8(x);
         writer.WriteUInt8(y);
-        ushort num = (ushort)list.Count;
+        ushort num = (ushort)treesOrNullInRegion.Count;
         writer.WriteUInt16(num);
         for (ushort num2 = 0; num2 < num; num2++)
         {
-            writer.WriteBit(list[num2].isDead);
+            writer.WriteBit(treesOrNullInRegion[num2].isDead);
         }
     }
 
@@ -368,12 +391,16 @@ public class ResourceManager : SteamCaller
         {
             return null;
         }
-        List<ResourceSpawnpoint> list = LevelGround.trees[x, y];
-        if (index >= list.Count)
+        List<ResourceSpawnpoint> treesOrNullInRegion = LevelGround.GetTreesOrNullInRegion(x, y);
+        if (treesOrNullInRegion == null)
         {
             return null;
         }
-        return list[index];
+        if (index >= treesOrNullInRegion.Count)
+        {
+            return null;
+        }
+        return treesOrNullInRegion[index];
     }
 
     public static Transform getResource(byte x, byte y, ushort index)
@@ -397,10 +424,10 @@ public class ResourceManager : SteamCaller
         index = 0;
         if (Regions.tryGetCoordinate(resource.position, out x, out y))
         {
-            List<ResourceSpawnpoint> list = LevelGround.trees[x, y];
-            for (index = 0; index < list.Count; index++)
+            List<ResourceSpawnpoint> treesOrNullInRegion = LevelGround.GetTreesOrNullInRegion(x, y);
+            for (index = 0; index < treesOrNullInRegion.Count; index++)
             {
-                if (resource == list[index].model || resource == list[index].stump)
+                if (resource == treesOrNullInRegion[index].model || resource == treesOrNullInRegion[index].stump)
                 {
                     return true;
                 }
@@ -453,13 +480,14 @@ public class ResourceManager : SteamCaller
 
     private bool respawnResources()
     {
-        if (LevelGround.trees[respawnResources_X, respawnResources_Y].Count > 0)
+        List<ResourceSpawnpoint> treesOrNullInRegion = LevelGround.GetTreesOrNullInRegion(respawnResources_X, respawnResources_Y);
+        if (treesOrNullInRegion != null && treesOrNullInRegion.Count > 0)
         {
-            if (regions[respawnResources_X, respawnResources_Y].respawnResourceIndex >= LevelGround.trees[respawnResources_X, respawnResources_Y].Count)
+            if (regions[respawnResources_X, respawnResources_Y].respawnResourceIndex >= treesOrNullInRegion.Count)
             {
-                regions[respawnResources_X, respawnResources_Y].respawnResourceIndex = (ushort)(LevelGround.trees[respawnResources_X, respawnResources_Y].Count - 1);
+                regions[respawnResources_X, respawnResources_Y].respawnResourceIndex = (ushort)(treesOrNullInRegion.Count - 1);
             }
-            ResourceSpawnpoint resourceSpawnpoint = LevelGround.trees[respawnResources_X, respawnResources_Y][regions[respawnResources_X, respawnResources_Y].respawnResourceIndex];
+            ResourceSpawnpoint resourceSpawnpoint = treesOrNullInRegion[regions[respawnResources_X, respawnResources_Y].respawnResourceIndex];
             if (resourceSpawnpoint.checkCanReset(Provider.modeConfigData.Objects.Resource_Reset_Multiplier))
             {
                 int num = 1536;
@@ -525,10 +553,10 @@ public class ResourceManager : SteamCaller
         {
             for (int j = new_y - RESOURCE_REGIONS; j <= new_y + RESOURCE_REGIONS; j++)
             {
-                if (Regions.checkSafe((byte)i, (byte)j) && !player.movement.loadedRegions[i, j].isResourcesLoaded)
+                if (Regions.checkSafe((byte)i, (byte)j) && !player.movement.loadedRegions[i, j].isResourcesLoaded && LevelGround.GetTreesOrNullInRegion(new Vector2Int(i, j)) != null)
                 {
                     player.movement.loadedRegions[i, j].isResourcesLoaded = true;
-                    SendRegion(player.channel.owner, (byte)i, (byte)j);
+                    SendResources.Invoke(ENetReliability.Reliable, player.channel.owner.transportConnection, SendResources_Write, (byte)i, (byte)j);
                 }
             }
         }
@@ -550,8 +578,9 @@ public class ResourceManager : SteamCaller
         while (flag)
         {
             flag = respawnResources();
+            List<ResourceSpawnpoint> treesOrNullInRegion = LevelGround.GetTreesOrNullInRegion(respawnResources_X, respawnResources_Y);
             regions[respawnResources_X, respawnResources_Y].respawnResourceIndex++;
-            if (regions[respawnResources_X, respawnResources_Y].respawnResourceIndex >= LevelGround.trees[respawnResources_X, respawnResources_Y].Count)
+            if (regions[respawnResources_X, respawnResources_Y].respawnResourceIndex >= treesOrNullInRegion?.Count)
             {
                 regions[respawnResources_X, respawnResources_Y].respawnResourceIndex = 0;
             }

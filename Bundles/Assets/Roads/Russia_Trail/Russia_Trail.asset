@@ -1,0 +1,10 @@
+GUID 096ed8871afe454993ec686745aeadb2
+Type Road
+
+Width 8
+Depth 0.8
+OffsetAlongNormal -0.1
+
+TexturePath Roads/Russia_Trail.png
+
+VanillaPhysicsMaterial Gravel_Static

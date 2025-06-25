@@ -413,11 +413,18 @@ public class Assets : MonoBehaviour
     /// <returns>Asset with matching GUID if it exists, null otherwise.</returns>
     public static T Find_UseDefaultAssetMapping<T>(AssetReference<T> reference) where T : Asset
     {
-        if (reference.isNull)
-        {
-            return null;
-        }
-        defaultAssetMapping.assetDictionary.TryGetValue(reference.GUID, out var value);
+        return Find_UseDefaultAssetMapping(reference.GUID) as T;
+    }
+
+    /// <summary>
+    /// Find an asset by GUID reference.
+    /// This method supports <see cref="T:SDG.Unturned.RedirectorAsset" />.
+    /// Maybe considered a hack? Ignores the current per-server asset mapping.
+    /// </summary>
+    /// <returns>Asset with matching GUID if it exists, null otherwise.</returns>
+    public static Asset Find_UseDefaultAssetMapping(Guid assetGuid)
+    {
+        defaultAssetMapping.assetDictionary.TryGetValue(assetGuid, out var value);
         int num = 0;
         while (value is RedirectorAsset redirectorAsset)
         {
@@ -426,11 +433,11 @@ public class Assets : MonoBehaviour
             if (num > 32)
             {
                 value = null;
-                UnturnedLog.warn($"Infinite asset director loop encountered when resolving: {reference}");
+                UnturnedLog.warn($"Infinite asset director loop encountered when resolving: {assetGuid:N}");
                 break;
             }
         }
-        return value as T;
+        return value;
     }
 
     /// <summary>

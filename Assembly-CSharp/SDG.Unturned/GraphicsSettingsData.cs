@@ -38,6 +38,8 @@ public class GraphicsSettingsData
 
     public bool IsItemIconAntiAliasingEnabled;
 
+    public bool IsClutterEnabled;
+
     public bool IsWindEnabled;
 
     /// <summary>
@@ -120,6 +122,7 @@ public class GraphicsSettingsData
         IsTriplanarMappingEnabled = true;
         IsSkyboxReflectionEnabled = false;
         IsItemIconAntiAliasingEnabled = false;
+        IsClutterEnabled = true;
         FarClipDistance = 0.333333f;
         EditorFarClipDistance = 1f;
         DrawDistance = 1f;

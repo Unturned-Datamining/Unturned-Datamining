@@ -144,6 +144,8 @@ public class MenuPlayServerInfoUI
 
     private static ISleekButton refreshButton;
 
+    private static SleekButtonIcon copyServerCodeButton;
+
     private static ISleekButton cancelButton;
 
     private static SteamServerAdvertisement serverInfo;
@@ -446,6 +448,11 @@ public class MenuPlayServerInfoUI
     {
         updatePlayers();
         Provider.provider.matchmakingService.refreshPlayers(serverInfo.ip, serverInfo.queryPort);
+    }
+
+    private static void OnCopyServerCodeClicked(ISleekElement button)
+    {
+        GUIUtility.systemCopyBuffer = serverInfo.steamID.ToString();
     }
 
     private static void onClickedCancelButton(ISleekElement button)
@@ -1029,7 +1036,7 @@ public class MenuPlayServerInfoUI
     /// </summary>
     private static void UpdateVisibleButtons()
     {
-        int num = 3;
+        int num = 4;
         if (favoriteButton.IsVisible)
         {
             num++;
@@ -1056,6 +1063,9 @@ public class MenuPlayServerInfoUI
         }
         refreshButton.PositionScale_X = num3;
         refreshButton.SizeScale_X = num2;
+        num3 += num2;
+        copyServerCodeButton.PositionScale_X = num3;
+        copyServerCodeButton.SizeScale_X = num2;
         cancelButton.PositionScale_X = 1f - num2;
         cancelButton.SizeScale_X = num2;
     }
@@ -1387,6 +1397,15 @@ public class MenuPlayServerInfoUI
         refreshButton.OnClicked += onClickedRefreshButton;
         refreshButton.FontSize = ESleekFontSize.Medium;
         buttonsContainer.AddChild(refreshButton);
+        copyServerCodeButton = new SleekButtonIcon(MenuDashboardUI.icons.load<Texture2D>("Clipboard"), 40);
+        copyServerCodeButton.PositionOffset_X = 5f;
+        copyServerCodeButton.SizeOffset_X = -10f;
+        copyServerCodeButton.SizeScale_Y = 1f;
+        copyServerCodeButton.text = localization.format("CopyServerCode_Label");
+        copyServerCodeButton.tooltip = localization.format("CopyServerCode_Tooltip");
+        copyServerCodeButton.onClickedButton += OnCopyServerCodeClicked;
+        copyServerCodeButton.fontSize = ESleekFontSize.Medium;
+        buttonsContainer.AddChild(copyServerCodeButton);
         cancelButton = Glazier.Get().CreateButton();
         cancelButton.PositionOffset_X = 5f;
         cancelButton.PositionScale_X = 0.8f;

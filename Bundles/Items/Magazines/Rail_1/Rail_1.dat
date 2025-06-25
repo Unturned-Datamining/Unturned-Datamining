@@ -24,6 +24,8 @@ Object_Damage 75
 Explosion 54
 Explosive
 
+Should_Delete_At_Zero_Amount true
+
 Blueprints
 [
 	{

@@ -16,7 +16,13 @@ public class Carepackage : MonoBehaviour
     /// </summary>
     public ItemBarricadeAsset barricadeAsset;
 
+    /// <summary>
+    /// Cargo spawn table legacy ID.
+    /// </summary>
+    [Obsolete]
     public ushort id;
+
+    public SpawnAsset cargoSpawnTable;
 
     public string landedEffectGuid = "2c17fbd0f0ce49aeb3bc4637b68809a2";
 
@@ -67,17 +73,24 @@ public class Carepackage : MonoBehaviour
                 component.despawnWhenDestroyed = true;
                 if (component != null && component.items != null)
                 {
-                    int num = 0;
-                    while (num < 8)
+                    if (cargoSpawnTable == null && id != 0)
                     {
-                        ushort num2 = SpawnTableTool.ResolveLegacyId(id, EAssetType.ITEM, OnGetSpawnTableErrorContext);
-                        if (num2 == 0)
+                        cargoSpawnTable = Assets.find(EAssetType.SPAWN, id) as SpawnAsset;
+                    }
+                    if (cargoSpawnTable != null)
+                    {
+                        int num = 0;
+                        while (num < 8)
                         {
-                            break;
-                        }
-                        if (!component.items.tryAddItem(new Item(num2, EItemOrigin.ADMIN), isStateUpdatable: false))
-                        {
-                            num++;
+                            ushort num2 = SpawnTableTool.ResolveLegacyId(cargoSpawnTable, EAssetType.ITEM, OnGetSpawnTableErrorContext);
+                            if (num2 == 0)
+                            {
+                                break;
+                            }
+                            if (!component.items.tryAddItem(new Item(num2, EItemOrigin.ADMIN), isStateUpdatable: false))
+                            {
+                                num++;
+                            }
                         }
                     }
                     component.items.onStateUpdated();

@@ -2,3 +2,6 @@
 Type Small
 ID 487
 Has_Clip_Prefab false
+
+// Not clutter because this is the non-auto-holiday variant.
+// I.e., potentially important to level themeing.

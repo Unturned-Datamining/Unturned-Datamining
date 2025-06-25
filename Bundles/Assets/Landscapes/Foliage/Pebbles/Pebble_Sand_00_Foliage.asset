@@ -52,4 +52,5 @@ Asset
 		Y 3
 		Z 6
 	}
+	Is_Clutter true
 }

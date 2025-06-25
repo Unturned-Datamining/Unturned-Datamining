@@ -629,11 +629,21 @@ public class PlayerMovement : PlayerCaller
 
     public void tellState(Vector3 newPosition, byte newPitch, byte newYaw)
     {
-        if (!base.channel.IsLocalPlayer)
+        if (base.channel.IsLocalPlayer)
         {
-            checkGround(newPosition);
-            lastUpdatePos = newPosition;
-            if (nsb != null)
+            return;
+        }
+        checkGround(newPosition);
+        bool flag = (newPosition - lastUpdatePos).sqrMagnitude > 256f;
+        lastUpdatePos = newPosition;
+        PitchYawSnapshotInfo info = new PitchYawSnapshotInfo(newPosition, (int)newPitch, (float)(int)newYaw * 2f);
+        if (nsb != null)
+        {
+            if (flag)
+            {
+                nsb.updateLastSnapshot(info);
+            }
+            else
             {
                 nsb.addNewSnapshot(new PitchYawSnapshotInfo(newPosition, (int)newPitch, (float)(int)newYaw * 2f));
             }

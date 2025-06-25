@@ -53,6 +53,8 @@ public class ItemConsumeableAsset : ItemWeaponAsset
 
     public AudioClip use => _use;
 
+    public bool ShouldRandomizeUseAudioPitch { get; set; }
+
     public byte health => _health;
 
     public byte food => _food;
@@ -197,7 +199,7 @@ public class ItemConsumeableAsset : ItemWeaponAsset
                 string arg9 = PlayerDashboardInventoryUI.FormatStatColor($"{num} s", isBeneficial: true);
                 builder.Append(PlayerDashboardInventoryUI.localization.format("ItemDescription_Consumeable_WarmthPositive", arg9), 9999);
             }
-            if (itemInstance.quality < 50 && _food + _water > 0)
+            if (itemInstance != null && itemInstance.quality < 50 && _food + _water > 0)
             {
                 builder.Append(PlayerDashboardInventoryUI.FormatStatColor(PlayerDashboardInventoryUI.localization.format("ItemDescription_ConsumeableMoldy"), isBeneficial: false), 10001);
             }
@@ -231,6 +233,7 @@ public class ItemConsumeableAsset : ItemWeaponAsset
     {
         base.PopulateAsset(in p);
         _use = LoadRedirectableAsset<AudioClip>(p.bundle, "Use", p.data, "ConsumeAudioClip");
+        ShouldRandomizeUseAudioPitch = p.data.ParseBool("Randomize_Consume_Audio_Pitch", defaultValue: true);
         _health = p.data.ParseUInt8("Health", 0);
         _food = p.data.ParseUInt8("Food", 0);
         _water = p.data.ParseUInt8("Water", 0);

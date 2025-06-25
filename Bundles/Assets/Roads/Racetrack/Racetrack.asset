@@ -1,0 +1,11 @@
+GUID fa8e8d97388845429ca75da242152d4b
+Type Road
+
+Width 24
+Depth 0.8
+OffsetAlongNormal -0.2
+RepeatDistanceScale 1.3333
+
+TexturePath Roads/Racetrack.png
+
+VanillaPhysicsMaterial Concrete_Static

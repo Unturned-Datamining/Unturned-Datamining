@@ -56,6 +56,43 @@ internal class BlueprintStatus
         }
     }
 
+    /// <summary>
+    /// Currently only used by housing planner.
+    /// Doesn't work with NPC conditions / rewards.
+    /// </summary>
+    public int EstimateMaxCraftingRepeatCount()
+    {
+        if (!IsCraftable)
+        {
+            return 0;
+        }
+        int num = -1;
+        for (int i = 0; i < blueprint.supplies.Length; i++)
+        {
+            BlueprintSupply blueprintSupply = blueprint.supplies[i];
+            BlueprintInputItemStatus blueprintInputItemStatus = inputItems[i];
+            if (blueprintSupply.ShouldConsume)
+            {
+                int num2 = blueprintInputItemStatus.totalAmount / blueprintSupply.amount;
+                num = ((num != -1) ? Mathf.Min(num, num2) : num2);
+            }
+        }
+        return Mathf.Max(0, num);
+    }
+
+    /// <summary>
+    /// Currently only used by housing planner.
+    /// Doesn't work with NPC conditions / rewards.
+    /// </summary>
+    public int EstimateFirstOutputMaxAmount()
+    {
+        if (blueprint.outputs == null || blueprint.outputs.Length != 1)
+        {
+            return 0;
+        }
+        return blueprint.outputs[0].amount * EstimateMaxCraftingRepeatCount();
+    }
+
     internal void UpdateCraftabilityScore()
     {
         normalizedCraftability = 1f;

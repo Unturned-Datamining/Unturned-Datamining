@@ -186,4 +186,17 @@ public static class UnityNetPakWriterEx
         flag = writer.WriteBit(value: false);
         return flag & writer.WriteQuaternion(value, quaternionBitsPerComponent);
     }
+
+    public static bool WriteNormalVector3AsYaw(this NetPakWriter writer, Vector3 value, int bitCount = 16)
+    {
+        float value2 = Mathf.Atan2(value.z, value.x);
+        return writer.WriteRadians(value2, bitCount);
+    }
+
+    public static bool WriteVector3AsYawMagnitude(this NetPakWriter writer, Vector3 value, int yawBitCount = 16)
+    {
+        float value2 = Mathf.Atan2(value.z, value.x);
+        float magnitude = value.magnitude;
+        return writer.WriteRadians(value2, yawBitCount) & writer.WriteFloat(magnitude);
+    }
 }

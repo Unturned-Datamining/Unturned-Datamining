@@ -7,3 +7,5 @@ Rubble_Reset 60
 Rubble_Health 25
 Rubble_Effect 36
 Has_Clip_Prefab false
+
+Is_Clutter true

@@ -48,6 +48,8 @@ public class MenuConfigurationGraphicsUI
 
     private static ISleekToggle itemIconAntiAliasingToggle;
 
+    private static ISleekToggle clutterToggle;
+
     private static ISleekSlider farClipDistanceSlider;
 
     private static ISleekSlider distanceSlider;
@@ -211,6 +213,12 @@ public class MenuConfigurationGraphicsUI
         GraphicsSettings.apply("changed item icon anti-aliasing");
     }
 
+    private static void OnToggledClutter(ISleekToggle toggle, bool state)
+    {
+        GraphicsSettings.IsClutterEnabled = state;
+        GraphicsSettings.apply("changed clutter");
+    }
+
     private static void OnDraggedFarClipDistanceSlider(ISleekSlider slider, float state)
     {
         GraphicsSettings.NormalizedFarClipDistance = state;
@@ -356,6 +364,7 @@ public class MenuConfigurationGraphicsUI
         triplanarToggle.Value = GraphicsSettings.triplanar;
         skyboxReflectionToggle.Value = GraphicsSettings.skyboxReflection;
         itemIconAntiAliasingToggle.Value = GraphicsSettings.IsItemIconAntiAliasingEnabled;
+        clutterToggle.Value = GraphicsSettings.IsClutterEnabled;
         farClipDistanceSlider.Value = GraphicsSettings.NormalizedFarClipDistance;
         farClipDistanceSlider.UpdateLabel(localization.format("Far_Clip_Slider_Label", 50 + Mathf.RoundToInt(GraphicsSettings.NormalizedFarClipDistance * 150f)));
         distanceSlider.Value = GraphicsSettings.normalizedDrawDistance;
@@ -471,6 +480,16 @@ public class MenuConfigurationGraphicsUI
         graphicsBox.AddChild(landmarkSlider);
         num += 30;
         landmarkSlider.SideLabel.SizeOffset_X += 100f;
+        clutterToggle = Glazier.Get().CreateToggle();
+        clutterToggle.PositionOffset_X = 205f;
+        clutterToggle.PositionOffset_Y = num;
+        clutterToggle.SizeOffset_X = 40f;
+        clutterToggle.SizeOffset_Y = 40f;
+        clutterToggle.AddLabel(localization.format("Clutter_Label"), ESleekSide.RIGHT);
+        clutterToggle.TooltipText = localization.format("Clutter_Tooltip");
+        clutterToggle.OnValueChanged += OnToggledClutter;
+        graphicsBox.AddChild(clutterToggle);
+        num += 50;
         ragdollsToggle = Glazier.Get().CreateToggle();
         ragdollsToggle.PositionOffset_X = 205f;
         ragdollsToggle.PositionOffset_Y = num;

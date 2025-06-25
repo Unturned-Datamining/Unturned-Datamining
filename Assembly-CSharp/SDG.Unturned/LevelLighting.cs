@@ -70,9 +70,60 @@ public class LevelLighting
 
     public delegate void IsSeaChangedHandler(bool isSea);
 
+    private class AmbianceAudioInstance
+    {
+        /// <summary>
+        /// Source effect to group multiple volumes.
+        /// </summary>
+        public EffectAsset effect;
+
+        /// <summary>
+        /// Audio source added to AmbianceAudioGameObject.
+        /// </summary>
+        public AudioSource audioSource;
+
+        /// <summary>
+        /// Reset to false before updating volumes.
+        /// </summary>
+        public bool isAnyVolumeOverlapping;
+
+        /// <summary>
+        /// Reset to false before updating volumes.
+        /// </summary>
+        public bool isAnyNonDistanceVolumeOverlapping;
+
+        /// <summary>
+        /// Reset to zero before updating volumes. If any volume uses distance fadeout, this is the maximum alpha.
+        /// </summary>
+        public float maxDistanceAlpha;
+
+        /// <summary>
+        /// If any volume doesn't use distance fadeout, this is the alpha based on time spent inside..
+        /// </summary>
+        public float timeAlpha;
+
+        /// <summary>
+        /// Highest priority of overlapping volumes.
+        /// </summary>
+        public int maxPriority;
+
+        /// <summary>
+        /// If any volume doesn't use distance fadeout, this is the minimum of their audio fade-in time.
+        /// </summary>
+        public float? minFadeInDuration;
+
+        /// <summary>
+        /// If any volume doesn't use distance fadeout, this is the minimum of their audio fade-out time.
+        /// Only reset when created so that value is available after leaving all volumes.
+        /// </summary>
+        public float? minFadeOutDuration;
+    }
+
     private static bool _editorWantsUnderwaterEffects;
 
     private static bool _editorWantsWaterSurface;
+
+    private static bool _editorWantsNoLightingPreview;
 
     public static readonly byte SAVEDATA_VERSION;
 
@@ -214,7 +265,11 @@ public class LevelLighting
 
     private static Transform sunFlare;
 
-    private static AudioSource _effectAudio;
+    private static GameObject ambianceAudioGameObject;
+
+    private static List<AmbianceAudioInstance> activeAmbianceAudioInstances;
+
+    private static Stack<AmbianceAudioInstance> ambianceAudioPool;
 
     private static AudioSource _dayAudio;
 
@@ -270,17 +325,21 @@ public class LevelLighting
 
     private static float localWindOverride;
 
-    private static IAmbianceNode localEffectNode;
-
-    private static EffectAsset currentEffectAsset;
-
-    private static bool localPlayingEffect;
+    private static List<VolumeAlphaPair<AmbianceVolume>> activeAmbianceVolumes;
 
     private static bool localBlendingLight;
 
     private static float localLightingBlend;
 
+    private static float localLightingBlendTimeAlpha;
+
+    private static float? localLightingBlendFadeOutDuration;
+
     private static bool localBlendingFog;
+
+    private static float localBlendingFogTimeAlpha;
+
+    private static float? localBlendingFogFadeOutDuration;
 
     private static float localFogBlend;
 
@@ -303,6 +362,10 @@ public class LevelLighting
     internal static Color cachedGroundColor;
 
     private static bool skyboxNeedsColorUpdate;
+
+    private static Comparison<VolumeAlphaPair<AmbianceVolume>> ambianceVolumeComparison;
+
+    private static Comparison<AmbianceAudioInstance> ambianceAudioComparison;
 
     public static bool enableUnderwaterEffects
     {
@@ -346,6 +409,19 @@ public class LevelLighting
                     VolumeManager<WaterVolume, WaterVolumeManager>.Get().ForceUpdateEditorVisibility();
                 }
             }
+        }
+    }
+
+    public static bool EditorWantsNoLightingPreview
+    {
+        get
+        {
+            return _editorWantsNoLightingPreview;
+        }
+        set
+        {
+            _editorWantsNoLightingPreview = value;
+            ConvenientSavedata.get().write("EditorWantsNoLightingPreview", value);
         }
     }
 
@@ -515,8 +591,6 @@ public class LevelLighting
     public static Color skyboxSky { get; private set; }
 
     public static Color skyboxEquator { get; private set; }
-
-    public static AudioSource effectAudio => _effectAudio;
 
     public static AudioSource dayAudio => _dayAudio;
 
@@ -1095,13 +1169,15 @@ public class LevelLighting
     {
         vision = ELightingVision.NONE;
         isSea = false;
-        localEffectNode = null;
-        currentEffectAsset = null;
-        localPlayingEffect = false;
+        activeAmbianceVolumes.Clear();
         localBlendingLight = false;
         localLightingBlend = 1f;
+        localLightingBlendTimeAlpha = 0f;
+        localLightingBlendFadeOutDuration = null;
         localBlendingFog = false;
-        localFogBlend = 1f;
+        localBlendingFogTimeAlpha = 0f;
+        localBlendingFogFadeOutDuration = null;
+        localFogBlend = 0f;
         auroraBorealisCurrentIntensity = 0f;
         auroraBorealisTargetIntensity = 0f;
         currentAudioVolume = 0f;
@@ -1131,6 +1207,10 @@ public class LevelLighting
             lighting.parent = Level.level;
             sun = lighting.Find("Sun");
             sunLight = sun.GetComponent<Light>();
+            if (GraphicsSettings.WantsCinematicMode)
+            {
+                sunLight.shadowCustomResolution = SystemInfo.maxTextureSize;
+            }
             sunFlare = sun.Find("Flare_Sun");
             _bubbles = lighting.Find("Bubbles");
             UpdateBubblesActive();
@@ -1157,7 +1237,9 @@ public class LevelLighting
             {
                 moons[i] = sun.Find("MoonLightDirection_" + i);
             }
-            _effectAudio = lighting.Find("Effect").GetComponent<AudioSource>();
+            ambianceAudioGameObject = lighting.Find("Effect").gameObject;
+            activeAmbianceAudioInstances = new List<AmbianceAudioInstance>();
+            ambianceAudioPool = new Stack<AmbianceAudioInstance>();
             _dayAudio = lighting.Find("Day").GetComponent<AudioSource>();
             _nightAudio = lighting.Find("Night").GetComponent<AudioSource>();
             _waterAudio = lighting.Find("Water").GetComponent<AudioSource>();
@@ -1568,113 +1650,86 @@ public class LevelLighting
         }
     }
 
-    public static void updateLocal()
+    public static void ForceRefreshForLatestViewer()
     {
-        updateLocal(localPoint, localWindOverride, localEffectNode);
+        UpdateForViewer(localPoint, localWindOverride, Time.deltaTime);
     }
 
-    public static void updateLocal(Vector3 point, float windOverride, IAmbianceNode effectNode)
+    public static void UpdateForViewer(Vector3 point, float windOverride, float deltaTime)
     {
         localPoint = point;
         localWindOverride = windOverride;
-        if (effectNode != localEffectNode)
+        VolumeManager<AmbianceVolume, AmbianceVolumeManager>.Get().GetOverlappingVolumesWithAlpha(point, activeAmbianceVolumes);
+        if (activeAmbianceVolumes.Count > 1)
         {
-            if (effectNode != null)
+            activeAmbianceVolumes.Sort(ambianceVolumeComparison);
+        }
+        UpdateAmbianceAudio(deltaTime, out var maxAmbianceAudioVolume);
+        if (!Level.isEditor || _editorWantsNoLightingPreview)
+        {
+            bool flag = false;
+            float? num = null;
+            float num2 = 0f;
+            foreach (VolumeAlphaPair<AmbianceVolume> activeAmbianceVolume in activeAmbianceVolumes)
             {
-                EffectAsset effectAsset = effectNode.GetEffectAsset();
-                if (localEffectNode == null || effectAsset != currentEffectAsset)
+                if (!activeAmbianceVolume.volume.noLighting)
                 {
-                    currentEffectAsset = effectAsset;
-                    if (effectAsset != null && effectAsset.effect != null)
-                    {
-                        AudioSource component = effectAsset.effect.GetComponent<AudioSource>();
-                        if (component != null)
-                        {
-                            if (!effectAsset.isMusic || OptionsSettings.ambientMusicVolume > 0f)
-                            {
-                                if (effectAsset.isMusic)
-                                {
-                                    effectAudio.outputAudioMixerGroup = UnturnedAudioMixer.GetMusicGroup();
-                                }
-                                else
-                                {
-                                    effectAudio.outputAudioMixerGroup = UnturnedAudioMixer.GetAtmosphereGroup();
-                                }
-                                effectAudio.clip = component.clip;
-                                effectAudio.Play();
-                                localPlayingEffect = true;
-                            }
-                            else
-                            {
-                                localPlayingEffect = false;
-                            }
-                        }
-                        else
-                        {
-                            localPlayingEffect = false;
-                        }
-                    }
-                    else
-                    {
-                        localPlayingEffect = false;
-                    }
+                    continue;
+                }
+                if (activeAmbianceVolume.volume.enableFalloff)
+                {
+                    num2 = Mathf.Max(num2, activeAmbianceVolume.alpha);
+                    continue;
+                }
+                flag = true;
+                num = ((!num.HasValue) ? new float?(Mathf.Max(0.0001f, activeAmbianceVolume.volume.lightingFadeInDuration)) : new float?(Mathf.Max(0.0001f, Mathf.Min(num.Value, activeAmbianceVolume.volume.lightingFadeInDuration))));
+                if (localLightingBlendFadeOutDuration.HasValue)
+                {
+                    localLightingBlendFadeOutDuration = Mathf.Max(0.0001f, Mathf.Min(localLightingBlendFadeOutDuration.Value, activeAmbianceVolume.volume.lightingFadeOutDuration));
+                }
+                else
+                {
+                    localLightingBlendFadeOutDuration = Mathf.Max(0.0001f, activeAmbianceVolume.volume.lightingFadeOutDuration);
                 }
             }
-            else
+            float num3 = ((!flag) ? (localLightingBlendFadeOutDuration ?? 4f) : (num ?? 4f));
+            float maxDelta = deltaTime / num3;
+            float target = (flag ? 1f : 0f);
+            localLightingBlendTimeAlpha = Mathf.MoveTowards(localLightingBlendTimeAlpha, target, maxDelta);
+            localLightingBlend = Mathf.Max(localLightingBlendTimeAlpha, num2);
+            localBlendingLight = localLightingBlend > 0.001f;
+            if (!localBlendingLight)
             {
-                localPlayingEffect = false;
+                localLightingBlendFadeOutDuration = null;
             }
-        }
-        localEffectNode = effectNode;
-        if (localEffectNode != null && localEffectNode.noLighting && !Level.isEditor)
-        {
-            localLightingBlend = Mathf.Lerp(localLightingBlend, 1f, 0.25f * Time.deltaTime);
-            localBlendingLight = true;
         }
         else
         {
-            localLightingBlend = Mathf.Lerp(localLightingBlend, 0f, 0.25f * Time.deltaTime);
-            if (localLightingBlend < 0.01f)
-            {
-                localLightingBlend = 0f;
-                localBlendingLight = false;
-            }
+            localBlendingLight = false;
         }
-        AmbianceVolume ambianceVolume = localEffectNode as AmbianceVolume;
-        if (ambianceVolume != null && ambianceVolume.overrideFog)
+        UpdateFogBlend(deltaTime);
+        AmbianceVolume ambianceVolume = null;
+        if (activeAmbianceVolumes.Count > 0)
         {
-            localFogBlend = Mathf.Lerp(localFogBlend, 1f, 0.05f * Time.deltaTime);
-            localBlendingFog = true;
-            localFogColor = ambianceVolume.fogColor;
-            localFogIntensity = ambianceVolume.fogIntensity;
-            localAtmosphericFog = (ambianceVolume.overrideAtmosphericFog ? ambianceVolume.fogIntensity : 0f);
+            ambianceVolume = activeAmbianceVolumes[0].volume;
         }
-        else
-        {
-            localFogBlend = Mathf.Lerp(localFogBlend, 0f, 0.125f * Time.deltaTime);
-            if (localFogBlend < 0.01f)
-            {
-                localFogBlend = 0f;
-                localBlendingFog = false;
-            }
-        }
-        uint num = ((!(ambianceVolume != null)) ? ((uint)(((int?)Level.getAsset()?.globalWeatherMask) ?? (-1))) : ambianceVolume.weatherMask);
+        uint num4 = ((!(ambianceVolume != null)) ? ((uint)(((int?)Level.getAsset()?.globalWeatherMask) ?? (-1))) : ambianceVolume.weatherMask);
         if (Level.info != null && Level.info.configData != null)
         {
             if (!Level.info.configData.Use_Rain_Volumes)
             {
-                num |= 1u;
+                num4 |= 1u;
             }
             if (!Level.info.configData.Use_Snow_Volumes)
             {
-                num |= 2u;
+                num4 |= 2u;
             }
             if (Level.info.configData.Use_Legacy_Snow_Height)
             {
-                num = ((!isPositionSnowy(point)) ? (num & 0xFFFFFFFDu) : (num | 2u));
+                num4 = ((!isPositionSnowy(point)) ? (num4 & 0xFFFFFFFDu) : (num4 | 2u));
             }
         }
-        tickCustomWeatherBlending(num);
+        tickCustomWeatherBlending(num4);
         if (!init)
         {
             init = true;
@@ -1706,10 +1761,10 @@ public class LevelLighting
         setSkyColor(skyboxSky);
         setEquatorColor(skyboxEquator);
         setGroundColor(skyboxGround);
-        float num2 = WaterUtility.getWaterSurfaceElevation(point);
+        float num5 = WaterUtility.getWaterSurfaceElevation(point);
         if (!enableUnderwaterEffects)
         {
-            num2 = -1024f;
+            num5 = -1024f;
         }
         if (enableUnderwaterEffects && WaterUtility.isPointUnderwater(point))
         {
@@ -1719,9 +1774,14 @@ public class LevelLighting
         }
         else
         {
-            if (point.y < num2 + 8f && (localEffectNode == null || !localEffectNode.noWater))
+            bool flag2 = false;
+            foreach (VolumeAlphaPair<AmbianceVolume> activeAmbianceVolume2 in activeAmbianceVolumes)
             {
-                waterAudio.volume = Mathf.Lerp(0f, 0.25f, 1f - (point.y - num2) / 8f);
+                flag2 |= activeAmbianceVolume2.volume.noWater;
+            }
+            if (point.y < num5 + 8f && !flag2)
+            {
+                waterAudio.volume = Mathf.Lerp(0f, 0.25f, 1f - (point.y - num5) / 8f);
                 belowAudio.volume = 0f;
             }
             else
@@ -1743,7 +1803,7 @@ public class LevelLighting
             RenderSettings.fogDensity = Mathf.Pow(levelFogIntensity, 3f) * 0.025f;
             setAtmosphericFog(levelAtmosphericFog);
         }
-        auroraBorealisCurrentIntensity = Mathf.Clamp01(Mathf.Lerp(auroraBorealisCurrentIntensity, auroraBorealisTargetIntensity, 0.1f * Time.deltaTime));
+        auroraBorealisCurrentIntensity = Mathf.Clamp01(Mathf.Lerp(auroraBorealisCurrentIntensity, auroraBorealisTargetIntensity, 0.1f * deltaTime));
         skybox.SetFloat("_AuroraBorealisIntensity", auroraBorealisCurrentIntensity);
         setAlphaParticleLightingColor(particleLightingColor);
         if (isSea)
@@ -1755,53 +1815,51 @@ public class LevelLighting
         }
         if (puddles != null)
         {
-            float num3 = 0f;
-            float num4 = 0f;
+            float num6 = 0f;
+            float num7 = 0f;
             foreach (CustomWeatherInstance customWeatherInstance in customWeatherInstances)
             {
-                num3 = Mathf.Max(num3, customWeatherInstance.component.puddleWaterLevel * customWeatherInstance.component.EffectBlendAlpha);
-                num4 = Mathf.Max(num4, customWeatherInstance.component.puddleIntensity * customWeatherInstance.component.EffectBlendAlpha);
+                num6 = Mathf.Max(num6, customWeatherInstance.component.puddleWaterLevel * customWeatherInstance.component.EffectBlendAlpha);
+                num7 = Mathf.Max(num7, customWeatherInstance.component.puddleIntensity * customWeatherInstance.component.EffectBlendAlpha);
             }
-            if (num3 > puddles.Water_Level)
+            if (num6 > puddles.Water_Level)
             {
-                puddles.Water_Level = Mathf.Lerp(puddles.Water_Level, num3, 0.2f * Time.deltaTime);
+                puddles.Water_Level = Mathf.Lerp(puddles.Water_Level, num6, 0.2f * deltaTime);
             }
             else
             {
-                puddles.Water_Level = Mathf.Lerp(puddles.Water_Level, num3, 0.025f * Time.deltaTime);
+                puddles.Water_Level = Mathf.Lerp(puddles.Water_Level, num6, 0.025f * deltaTime);
             }
-            puddles.Intensity = num4;
+            puddles.Intensity = num7;
         }
         if (Time.time > nextAudioVolumeChangeTime)
         {
             nextAudioVolumeChangeTime = Time.time + (float)UnityEngine.Random.Range(15, 60);
             targetAudioVolume = UnityEngine.Random.Range(AUDIO_MIN, AUDIO_MAX);
         }
-        currentAudioVolume = Mathf.Lerp(currentAudioVolume, targetAudioVolume, 0.1f * Time.deltaTime);
-        float b = ((!localPlayingEffect) ? 0f : ((currentEffectAsset == null || !currentEffectAsset.isMusic) ? 1f : OptionsSettings.ambientMusicVolume));
-        effectAudio.volume = Mathf.Lerp(effectAudio.volume, b, Level.isEditor ? 1f : (0.5f * Time.deltaTime));
-        float num5 = 1f - effectAudio.volume;
-        float num6 = 0f;
-        float num7 = 0.15f;
+        currentAudioVolume = Mathf.Lerp(currentAudioVolume, targetAudioVolume, 0.1f * deltaTime);
+        float num8 = 1f - maxAmbianceAudioVolume;
+        float num9 = 0f;
+        float num10 = 0.15f;
         foreach (CustomWeatherInstance customWeatherInstance2 in customWeatherInstances)
         {
             if (customWeatherInstance2.component.ambientAudioSource != null)
             {
-                float b2 = num5 * customWeatherInstance2.component.EffectBlendAlpha;
-                customWeatherInstance2.component.ambientAudioSource.volume = Mathf.Lerp(customWeatherInstance2.component.ambientAudioSource.volume, b2, 0.5f * Time.deltaTime);
-                num6 = Mathf.Max(num6, customWeatherInstance2.component.ambientAudioSource.volume);
+                float b = num8 * customWeatherInstance2.component.EffectBlendAlpha;
+                customWeatherInstance2.component.ambientAudioSource.volume = Mathf.Lerp(customWeatherInstance2.component.ambientAudioSource.volume, b, 0.5f * deltaTime);
+                num9 = Mathf.Max(num9, customWeatherInstance2.component.ambientAudioSource.volume);
             }
-            float b3 = customWeatherInstance2.component.windMain * customWeatherInstance2.component.EffectBlendAlpha;
-            num7 = Mathf.Max(num7, b3);
+            float b2 = customWeatherInstance2.component.windMain * customWeatherInstance2.component.EffectBlendAlpha;
+            num10 = Mathf.Max(num10, b2);
             customWeatherInstance2.component.UpdateWeather();
         }
-        float num8 = 1f - num6;
+        float num11 = 1f - num9;
         windAudio.volume = windOverride;
-        dayAudio.volume = Mathf.Lerp(dayAudio.volume, dayVolume * currentAudioVolume * (1f - waterAudio.volume * 4f) * (1f - belowAudio.volume) * (1f - windAudio.volume) * (1f - effectAudio.volume) * num8, 0.5f * Time.deltaTime);
-        nightAudio.volume = Mathf.Lerp(nightAudio.volume, nightVolume * currentAudioVolume * (1f - waterAudio.volume * 4f) * (1f - belowAudio.volume) * (1f - windAudio.volume) * (1f - effectAudio.volume) * num8, 0.5f * Time.deltaTime);
-        windZone.transform.rotation = Quaternion.Slerp(windZone.transform.rotation, Quaternion.Euler(0f, wind, 0f), 0.5f * Time.deltaTime);
-        windZone.windMain = Mathf.Lerp(windZone.windMain, num7, 0.5f * Time.deltaTime);
-        point.y = Mathf.Min(point.y - 16f, num2 - 32f);
+        dayAudio.volume = Mathf.Lerp(dayAudio.volume, dayVolume * currentAudioVolume * (1f - waterAudio.volume * 4f) * (1f - belowAudio.volume) * (1f - windAudio.volume) * (1f - maxAmbianceAudioVolume) * num11, 0.5f * Time.deltaTime);
+        nightAudio.volume = Mathf.Lerp(nightAudio.volume, nightVolume * currentAudioVolume * (1f - waterAudio.volume * 4f) * (1f - belowAudio.volume) * (1f - windAudio.volume) * (1f - maxAmbianceAudioVolume) * num11, 0.5f * Time.deltaTime);
+        windZone.transform.rotation = Quaternion.Slerp(windZone.transform.rotation, Quaternion.Euler(0f, wind, 0f), 0.5f * deltaTime);
+        windZone.windMain = Mathf.Lerp(windZone.windMain, num10, 0.5f * deltaTime);
+        point.y = Mathf.Min(point.y - 16f, num5 - 32f);
         bubbles.position = point;
         if (skyboxNeedsColorUpdate)
         {
@@ -1947,6 +2005,7 @@ public class LevelLighting
     {
         _editorWantsUnderwaterEffects = true;
         _editorWantsWaterSurface = true;
+        _editorWantsNoLightingPreview = false;
         SAVEDATA_VERSION = 12;
         MOON_CYCLES = 5;
         CLOUDS = 2f;
@@ -1969,7 +2028,10 @@ public class LevelLighting
         NIGHTVISION_CIVILIAN = new Color(0.4f, 0.4f, 0.4f, 0f);
         customWeatherInstances = new List<CustomWeatherInstance>();
         activeCustomWeather = null;
+        activeAmbianceVolumes = new List<VolumeAlphaPair<AmbianceVolume>>();
         skyboxNeedsColorUpdate = false;
+        ambianceVolumeComparison = CompareAmbianceVolumes;
+        ambianceAudioComparison = CompareAmbianceAudioInstances;
         if (ConvenientSavedata.get().read("EditorWantsUnderwaterEffects", out bool value))
         {
             _editorWantsUnderwaterEffects = value;
@@ -1978,5 +2040,238 @@ public class LevelLighting
         {
             _editorWantsWaterSurface = value2;
         }
+        if (ConvenientSavedata.get().read("EditorWantsNoLightingPreview", out bool value3))
+        {
+            _editorWantsNoLightingPreview = value3;
+        }
+    }
+
+    private static AmbianceAudioInstance FindAudioInstanceForEffect(EffectAsset asset)
+    {
+        foreach (AmbianceAudioInstance activeAmbianceAudioInstance in activeAmbianceAudioInstances)
+        {
+            if (activeAmbianceAudioInstance.effect == asset)
+            {
+                return activeAmbianceAudioInstance;
+            }
+        }
+        return null;
+    }
+
+    private static AmbianceAudioInstance CreateAudioInstance(EffectAsset asset)
+    {
+        if (!ambianceAudioPool.TryPop(out var result))
+        {
+            result = new AmbianceAudioInstance();
+            result.audioSource = ambianceAudioGameObject.AddComponent<AudioSource>();
+            result.audioSource.playOnAwake = false;
+            result.audioSource.loop = true;
+            result.audioSource.spatialBlend = 0f;
+        }
+        result.effect = asset;
+        result.audioSource.volume = 0f;
+        result.isAnyVolumeOverlapping = false;
+        result.isAnyNonDistanceVolumeOverlapping = false;
+        result.maxDistanceAlpha = 0f;
+        result.timeAlpha = 0f;
+        result.maxPriority = 0;
+        result.minFadeInDuration = null;
+        result.minFadeOutDuration = null;
+        if (asset.isMusic)
+        {
+            result.audioSource.outputAudioMixerGroup = UnturnedAudioMixer.GetMusicGroup();
+        }
+        else
+        {
+            result.audioSource.outputAudioMixerGroup = UnturnedAudioMixer.GetAtmosphereGroup();
+        }
+        activeAmbianceAudioInstances.Add(result);
+        return result;
+    }
+
+    private static void RemoveAudioInstance(int index)
+    {
+        AmbianceAudioInstance ambianceAudioInstance = activeAmbianceAudioInstances[index];
+        activeAmbianceAudioInstances.RemoveAt(index);
+        ambianceAudioInstance.effect = null;
+        ambianceAudioInstance.audioSource.Stop();
+        ambianceAudioPool.Push(ambianceAudioInstance);
+    }
+
+    private static void UpdateFogBlend(float deltaTime)
+    {
+        if (localFogBlend < 0.0001f)
+        {
+            localFogColor = levelFogColor;
+            localFogIntensity = levelFogIntensity;
+            localAtmosphericFog = levelAtmosphericFog;
+            localBlendingFogFadeOutDuration = null;
+        }
+        bool flag = false;
+        float? num = null;
+        float a = 0f;
+        for (int num2 = activeAmbianceVolumes.Count - 1; num2 >= 0; num2--)
+        {
+            VolumeAlphaPair<AmbianceVolume> volumeAlphaPair = activeAmbianceVolumes[num2];
+            if (volumeAlphaPair.volume.overrideFog)
+            {
+                float b = (volumeAlphaPair.volume.overrideAtmosphericFog ? volumeAlphaPair.volume.fogIntensity : 0f);
+                if (volumeAlphaPair.volume.enableFalloff)
+                {
+                    a = Mathf.Max(a, volumeAlphaPair.alpha);
+                    localFogColor = Color.Lerp(localFogColor, volumeAlphaPair.volume.fogColor, volumeAlphaPair.alpha);
+                    localFogIntensity = Mathf.Lerp(localFogIntensity, volumeAlphaPair.volume.fogIntensity, volumeAlphaPair.alpha);
+                    localAtmosphericFog = Mathf.Lerp(localAtmosphericFog, b, volumeAlphaPair.alpha);
+                }
+                else
+                {
+                    flag = true;
+                    localFogColor = volumeAlphaPair.volume.fogColor;
+                    localFogIntensity = volumeAlphaPair.volume.fogIntensity;
+                    localAtmosphericFog = b;
+                    num = ((!num.HasValue) ? new float?(Mathf.Max(0.0001f, volumeAlphaPair.volume.fogFadeInDuration)) : new float?(Mathf.Max(0.0001f, Mathf.Min(num.Value, volumeAlphaPair.volume.fogFadeInDuration))));
+                    if (localBlendingFogFadeOutDuration.HasValue)
+                    {
+                        localBlendingFogFadeOutDuration = Mathf.Max(0.0001f, Mathf.Min(localBlendingFogFadeOutDuration.Value, volumeAlphaPair.volume.fogFadeOutDuration));
+                    }
+                    else
+                    {
+                        localBlendingFogFadeOutDuration = Mathf.Max(0.0001f, volumeAlphaPair.volume.fogFadeOutDuration);
+                    }
+                }
+            }
+        }
+        float num3 = ((!flag) ? (localBlendingFogFadeOutDuration ?? 8f) : (num ?? 20f));
+        float maxDelta = deltaTime / num3;
+        float target = (flag ? 1f : 0f);
+        localBlendingFogTimeAlpha = Mathf.MoveTowards(localBlendingFogTimeAlpha, target, maxDelta);
+        localFogBlend = Mathf.Max(a, localBlendingFogTimeAlpha);
+        localBlendingFog = localFogBlend > 0.001f;
+    }
+
+    private static int CompareAmbianceVolumes(VolumeAlphaPair<AmbianceVolume> lhs, VolumeAlphaPair<AmbianceVolume> rhs)
+    {
+        return -lhs.volume.priority.CompareTo(rhs.volume.priority);
+    }
+
+    private static int CompareAmbianceAudioInstances(AmbianceAudioInstance lhs, AmbianceAudioInstance rhs)
+    {
+        return lhs.maxPriority.CompareTo(rhs.maxPriority);
+    }
+
+    private static void UpdateAmbianceAudio(float deltaTime, out float maxAmbianceAudioVolume)
+    {
+        maxAmbianceAudioVolume = 0f;
+        if (activeAmbianceAudioInstances == null)
+        {
+            return;
+        }
+        foreach (AmbianceAudioInstance activeAmbianceAudioInstance in activeAmbianceAudioInstances)
+        {
+            activeAmbianceAudioInstance.isAnyVolumeOverlapping = false;
+            activeAmbianceAudioInstance.isAnyNonDistanceVolumeOverlapping = false;
+            activeAmbianceAudioInstance.maxDistanceAlpha = 0f;
+            activeAmbianceAudioInstance.minFadeInDuration = null;
+        }
+        foreach (VolumeAlphaPair<AmbianceVolume> activeAmbianceVolume in activeAmbianceVolumes)
+        {
+            EffectAsset effectAsset = activeAmbianceVolume.volume.GetEffectAsset();
+            AudioSource audioSource = effectAsset?.effect?.GetComponent<AudioSource>();
+            if (audioSource == null || audioSource.clip == null || (effectAsset.isMusic && OptionsSettings.ambientMusicVolume <= 0.001f))
+            {
+                continue;
+            }
+            AmbianceAudioInstance ambianceAudioInstance = FindAudioInstanceForEffect(effectAsset);
+            if (ambianceAudioInstance == null)
+            {
+                ambianceAudioInstance = CreateAudioInstance(effectAsset);
+                ambianceAudioInstance.audioSource.clip = audioSource.clip;
+                ambianceAudioInstance.audioSource.Play();
+            }
+            ambianceAudioInstance.isAnyVolumeOverlapping = true;
+            if (activeAmbianceVolume.volume.enableFalloff)
+            {
+                ambianceAudioInstance.maxDistanceAlpha = Mathf.Max(ambianceAudioInstance.maxDistanceAlpha, activeAmbianceVolume.alpha);
+            }
+            else
+            {
+                ambianceAudioInstance.isAnyNonDistanceVolumeOverlapping = true;
+                if (ambianceAudioInstance.minFadeInDuration.HasValue)
+                {
+                    ambianceAudioInstance.minFadeInDuration = Mathf.Max(0.0001f, Mathf.Min(ambianceAudioInstance.minFadeInDuration.Value, activeAmbianceVolume.volume.audioFadeInDuration));
+                }
+                else
+                {
+                    ambianceAudioInstance.minFadeInDuration = Mathf.Max(0.0001f, activeAmbianceVolume.volume.audioFadeInDuration);
+                }
+                if (ambianceAudioInstance.minFadeOutDuration.HasValue)
+                {
+                    ambianceAudioInstance.minFadeOutDuration = Mathf.Max(0.0001f, Mathf.Min(ambianceAudioInstance.minFadeOutDuration.Value, activeAmbianceVolume.volume.audioFadeOutDuration));
+                }
+                else
+                {
+                    ambianceAudioInstance.minFadeOutDuration = Mathf.Max(0.0001f, activeAmbianceVolume.volume.audioFadeOutDuration);
+                }
+            }
+            ambianceAudioInstance.maxPriority = Mathf.Max(ambianceAudioInstance.maxPriority, activeAmbianceVolume.volume.priority);
+        }
+        if (activeAmbianceAudioInstances.Count < 1)
+        {
+            return;
+        }
+        if (activeAmbianceAudioInstances.Count > 1)
+        {
+            activeAmbianceAudioInstances.Sort(CompareAmbianceAudioInstances);
+        }
+        int maxPriority = activeAmbianceAudioInstances[activeAmbianceAudioInstances.Count - 1].maxPriority;
+        float num = 0f;
+        float num2 = 0f;
+        for (int num3 = activeAmbianceAudioInstances.Count - 1; num3 >= 0; num3--)
+        {
+            AmbianceAudioInstance ambianceAudioInstance2 = activeAmbianceAudioInstances[num3];
+            float num4;
+            if (ambianceAudioInstance2.isAnyVolumeOverlapping)
+            {
+                float maxDelta = deltaTime / (ambianceAudioInstance2.minFadeInDuration ?? 2f);
+                float target = (ambianceAudioInstance2.isAnyNonDistanceVolumeOverlapping ? 1f : 0f);
+                ambianceAudioInstance2.timeAlpha = Mathf.MoveTowards(ambianceAudioInstance2.timeAlpha, target, maxDelta);
+                num4 = Mathf.Max(ambianceAudioInstance2.timeAlpha, ambianceAudioInstance2.maxDistanceAlpha);
+            }
+            else
+            {
+                float maxDelta2 = deltaTime / (ambianceAudioInstance2.minFadeOutDuration ?? 2f);
+                ambianceAudioInstance2.timeAlpha = Mathf.MoveTowards(ambianceAudioInstance2.timeAlpha, 0f, maxDelta2);
+                num4 = ambianceAudioInstance2.timeAlpha;
+            }
+            if (num4 <= 0.001f)
+            {
+                RemoveAudioInstance(num3);
+            }
+            else
+            {
+                float num5 = (ambianceAudioInstance2.effect.isMusic ? OptionsSettings.ambientMusicVolume : 1f) * num4;
+                if (ambianceAudioInstance2.maxPriority < maxPriority)
+                {
+                    maxPriority = ambianceAudioInstance2.maxPriority;
+                    num2 = num;
+                }
+                num = Mathf.Max(num, num5);
+                num5 = Mathf.Max(0f, num5 - num2);
+                maxAmbianceAudioVolume = Mathf.Max(num5, maxAmbianceAudioVolume);
+                ambianceAudioInstance2.audioSource.volume = num5;
+            }
+        }
+    }
+
+    [Obsolete("Renamed to UpdateForViewer and added deltaTime parameter")]
+    public static void updateLocal(Vector3 point, float windOverride, IAmbianceNode effectNode)
+    {
+        UpdateForViewer(localPoint, localWindOverride, Time.deltaTime);
+    }
+
+    [Obsolete("Renamed to ForceRefreshForLatestViewer")]
+    public static void updateLocal()
+    {
+        ForceRefreshForLatestViewer();
     }
 }

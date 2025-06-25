@@ -57,4 +57,5 @@ Asset
 	Cast_Shadows false
 	Tile_Dither true
 	Draw_Distance 2
+	Is_Clutter true
 }

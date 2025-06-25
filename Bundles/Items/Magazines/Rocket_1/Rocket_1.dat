@@ -12,6 +12,8 @@ Amount 1
 Calibers 1
 Caliber_0 20
 
+Should_Delete_At_Zero_Amount true
+
 Blueprints
 [
 	{

@@ -122,6 +122,8 @@ public class SteamPlayer : SteamConnectedClientBase
 
     internal HashSet<Guid> validatedGuids = new HashSet<Guid>();
 
+    internal HashSet<CSteamID> culledPlayers = new HashSet<CSteamID>();
+
     private HashSet<string> requestedSteamAuthTicketIdentities = new HashSet<string>();
 
     private HashSet<string> receivedSteamAuthTicketIdentities = new HashSet<string>();

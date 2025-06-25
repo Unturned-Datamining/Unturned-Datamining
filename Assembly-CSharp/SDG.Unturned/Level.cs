@@ -265,6 +265,8 @@ public class Level : MonoBehaviour
 
     public static bool shouldUseLevelBatching { get; private set; }
 
+    public static bool ShouldSkipInstantiatingClutter { get; private set; }
+
     public static Transform level => _level;
 
     public static Transform roots => _roots;
@@ -482,6 +484,7 @@ public class Level : MonoBehaviour
     private static void UpdateShouldUseLevelBatching()
     {
         shouldUseLevelBatching = (!clUseLevelBatching.hasValue || clUseLevelBatching.value) && !isEditor && !Dedicator.IsDedicatedServer && info != null && info.configData != null && info.configData.Batching_Version > 1;
+        ShouldSkipInstantiatingClutter = !isEditor && !Dedicator.IsDedicatedServer && !GraphicsSettings.IsClutterEnabled && info != null && info.configData != null && info.configData.Enable_Clutter_Option;
     }
 
     public static void includeHash(string id, byte[] pendingHash)
@@ -575,18 +578,21 @@ public class Level : MonoBehaviour
 
     public static void edit(LevelInfo newInfo)
     {
-        _isEditor = true;
-        isExiting = false;
-        _info = newInfo;
-        ResetCachedLevelAsset();
-        LoadingUI.updateScene();
-        SceneManager.LoadScene("Game");
-        PlayLevelLoadingScreenMusic();
-        Provider.resetChannels();
-        Provider.updateRichPresence();
-        DevkitTransactionManager.resetTransactions();
-        updateCachedHolidayRedirects();
-        UpdateShouldUseLevelBatching();
+        if (newInfo != null)
+        {
+            _isEditor = true;
+            isExiting = false;
+            _info = newInfo;
+            ResetCachedLevelAsset();
+            LoadingUI.updateScene();
+            SceneManager.LoadScene("Game");
+            PlayLevelLoadingScreenMusic();
+            Provider.resetChannels();
+            Provider.updateRichPresence();
+            DevkitTransactionManager.resetTransactions();
+            updateCachedHolidayRedirects();
+            UpdateShouldUseLevelBatching();
+        }
     }
 
     public static void load(LevelInfo newInfo, bool hasAuthority)
@@ -696,6 +702,34 @@ public class Level : MonoBehaviour
             LoadingUI.SetLoadingText("Loading_MainMenu");
             instance.StartCoroutine(instance.ReturnToMainMenu());
         }
+    }
+
+    /// <summary>
+    /// Refreshes known levels and attempts to redirect level reference if it no longer exists.
+    /// </summary>
+    public static void UpdateLevelReference(ref LevelInfo levelInfo)
+    {
+        if (levelInfo == null)
+        {
+            return;
+        }
+        if (!levelInfo.WasRemovedFromKnownLevels)
+        {
+            ScanKnownLevels();
+        }
+        if (!levelInfo.WasRemovedFromKnownLevels)
+        {
+            return;
+        }
+        foreach (LevelInfo knownLevel in knownLevels)
+        {
+            if (knownLevel.publishedFileId == levelInfo.publishedFileId && string.Equals(levelInfo.name, knownLevel.name, StringComparison.OrdinalIgnoreCase))
+            {
+                levelInfo = knownLevel;
+                return;
+            }
+        }
+        levelInfo = null;
     }
 
     public static LevelInfo getLevel(string name)
@@ -933,6 +967,7 @@ public class Level : MonoBehaviour
                 LevelInfo levelInfo = knownLevels[num];
                 if (!Directory.Exists(levelInfo.path))
                 {
+                    levelInfo.WasRemovedFromKnownLevels = true;
                     knownLevels.RemoveAt(num);
                     UnturnedLog.info("Removed previously discovered level \"" + levelInfo.name + "\" at \"" + levelInfo.path + "\" (no longer exists)");
                 }
@@ -1113,13 +1148,15 @@ public class Level : MonoBehaviour
                     bool isActiveOverrideForSatelliteCapture = !(item.asset?.ShouldExcludeFromSatelliteCapture ?? true);
                     item.SetIsActiveOverrideForSatelliteCapture(isActiveOverrideForSatelliteCapture);
                 }
-                foreach (ResourceSpawnpoint item2 in LevelGround.trees[b, b2])
-                {
-                    ResourceAsset asset = item2.asset;
-                    bool isActiveOverrideForSatelliteCapture2 = asset != null && asset.holidayRestriction == ENPCHoliday.NONE;
-                    item2.SetIsActiveOverrideForSatelliteCapture(isActiveOverrideForSatelliteCapture2);
-                }
             }
+        }
+        List<ResourceSpawnpoint> list = new List<ResourceSpawnpoint>();
+        LevelGround.GatherAllTrees(list);
+        foreach (ResourceSpawnpoint item2 in list)
+        {
+            ResourceAsset asset = item2.asset;
+            bool isActiveOverrideForSatelliteCapture2 = asset != null && asset.holidayRestriction == ENPCHoliday.NONE;
+            item2.SetIsActiveOverrideForSatelliteCapture(isActiveOverrideForSatelliteCapture2);
         }
     }
 
@@ -1133,12 +1170,13 @@ public class Level : MonoBehaviour
                 {
                     item.UpdateActiveAndRenderersEnabled();
                 }
-                foreach (ResourceSpawnpoint item2 in LevelGround.trees[b, b2])
-                {
-                    _ = item2.asset?.holidayRestriction;
-                    item2.UpdateActive();
-                }
             }
+        }
+        List<ResourceSpawnpoint> list = new List<ResourceSpawnpoint>();
+        LevelGround.GatherAllTrees(list);
+        foreach (ResourceSpawnpoint item2 in list)
+        {
+            item2.UpdateActive();
         }
     }
 
@@ -1246,6 +1284,14 @@ public class Level : MonoBehaviour
             if (resourceAsset != null)
             {
                 chart = resourceAsset.chart;
+            }
+            else if (hit.transform != null && hit.transform.gameObject.layer == 19)
+            {
+                Road road = LevelRoads.FindRoadByRootTransform(hit.transform.root);
+                if (road != null)
+                {
+                    chart = road.GetChartMode();
+                }
             }
         }
         if (chart == EObjectChart.IGNORE)
@@ -1363,14 +1409,6 @@ public class Level : MonoBehaviour
             case EObjectChart.CLIFF:
                 num3 = 4;
                 break;
-            }
-            if (num3 == 19)
-            {
-                RoadMaterial roadMaterial = LevelRoads.getRoadMaterial(transform);
-                if (roadMaterial != null)
-                {
-                    num3 = ((!roadMaterial.isConcrete) ? 3 : ((!(roadMaterial.width > 8f)) ? 1 : 0));
-                }
             }
             if (chart == EObjectChart.WATER)
             {

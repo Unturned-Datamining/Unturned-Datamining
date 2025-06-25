@@ -9,3 +9,5 @@ Rubble_Effect 58
 
 Material_Palette 3ae4d6d0b5884ba8867c05dcbb02d3df
 Has_Clip_Prefab false
+
+Is_Clutter true

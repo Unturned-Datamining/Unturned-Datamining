@@ -70,6 +70,12 @@ public static class UnturnedDatEx
         return false;
     }
 
+    public static CachingAssetRef ParseAssetRef(this IDatDictionary dictionary, string key)
+    {
+        dictionary.TryParseAssetRef(key, out var assetRef);
+        return assetRef;
+    }
+
     public static AssetReference<T> readAssetReference<T>(this IDatDictionary dictionary, string key) where T : Asset
     {
         if (dictionary.ContainsKey(key))

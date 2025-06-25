@@ -1,0 +1,10 @@
+GUID 5a49751686854d61ba0e6140b838409f
+Type Road
+
+Width 8
+Depth 0.8
+OffsetAlongNormal -0.1
+
+TexturePath Roads/Peaks_Trail.png
+
+VanillaPhysicsMaterial Gravel_Static

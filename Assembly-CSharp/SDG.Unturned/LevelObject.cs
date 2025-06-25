@@ -138,6 +138,18 @@ public class LevelObject
     internal bool isVisibleInCullingVolume { get; private set; } = true;
 
 
+    private static bool WantsCullingVolumesOff
+    {
+        get
+        {
+            if (!disableCullingVolumes)
+            {
+                return GraphicsSettings.WantsCinematicMode;
+            }
+            return true;
+        }
+    }
+
     [Obsolete]
     public string name => null;
 
@@ -213,6 +225,10 @@ public class LevelObject
             {
                 renderer.sharedMaterial = materialOverride;
             }
+        }
+        if (!(transform != null))
+        {
+            return;
         }
         renderers.Clear();
         transform.GetComponentsInChildren(includeInactive: true, renderers);
@@ -507,314 +523,320 @@ public class LevelObject
                 placeholderTransform.rotation = newRotation;
                 placeholderTransform.localScale = newScale;
             }
-            return;
         }
-        state = asset.getState();
-        areConditionsMet = true;
-        haveConditionsBeenChecked = false;
-        GameObject orLoadModel = asset.GetOrLoadModel();
-        if (Dedicator.IsDedicatedServer)
+        else
         {
-            if (orLoadModel != null)
+            if (asset.IsClutter && Level.ShouldSkipInstantiatingClutter)
             {
-                GameObject gameObject = UnityEngine.Object.Instantiate(orLoadModel, newPoint, newRotation);
-                _transform = gameObject.transform;
-                gameObject.name = asset.name;
-                gameObject.GetOrAddComponent<LevelObjectRefComponent>().levelObjectOwner = this;
-                NetIdRegistry.AssignTransform(netId, _transform);
+                return;
+            }
+            state = asset.getState();
+            areConditionsMet = true;
+            haveConditionsBeenChecked = false;
+            GameObject orLoadModel = asset.GetOrLoadModel(Level.isEditor);
+            if (Dedicator.IsDedicatedServer)
+            {
+                if (orLoadModel != null)
+                {
+                    GameObject gameObject = UnityEngine.Object.Instantiate(orLoadModel, newPoint, newRotation);
+                    _transform = gameObject.transform;
+                    gameObject.name = asset.name;
+                    gameObject.GetOrAddComponent<LevelObjectRefComponent>().levelObjectOwner = this;
+                    NetIdRegistry.AssignTransform(netId, _transform);
+                    isDecal = this.transform.Find("Decal");
+                    if (isDecal)
+                    {
+                        gameObject.hideFlags = HideFlags.None;
+                    }
+                    if (asset.useScale)
+                    {
+                        this.transform.localScale = newScale;
+                    }
+                }
+                renderers = null;
+            }
+            else if (orLoadModel != null)
+            {
+                GameObject gameObject2 = UnityEngine.Object.Instantiate(orLoadModel, newPoint, newRotation);
+                _transform = gameObject2.transform;
+                gameObject2.name = asset.name;
+                gameObject2.GetOrAddComponent<LevelObjectRefComponent>().levelObjectOwner = this;
+                if (!netId.IsNull())
+                {
+                    NetIdRegistry.AssignTransform(netId, _transform);
+                }
                 isDecal = this.transform.Find("Decal");
                 if (isDecal)
                 {
-                    gameObject.hideFlags = HideFlags.None;
+                    gameObject2.hideFlags = HideFlags.None;
                 }
                 if (asset.useScale)
                 {
                     this.transform.localScale = newScale;
                 }
-            }
-            renderers = null;
-        }
-        else if (orLoadModel != null)
-        {
-            GameObject gameObject2 = UnityEngine.Object.Instantiate(orLoadModel, newPoint, newRotation);
-            _transform = gameObject2.transform;
-            gameObject2.name = asset.name;
-            gameObject2.GetOrAddComponent<LevelObjectRefComponent>().levelObjectOwner = this;
-            if (!netId.IsNull())
-            {
-                NetIdRegistry.AssignTransform(netId, _transform);
-            }
-            isDecal = this.transform.Find("Decal");
-            if (isDecal)
-            {
-                gameObject2.hideFlags = HideFlags.None;
-            }
-            if (asset.useScale)
-            {
-                this.transform.localScale = newScale;
-            }
-            if (asset.useWaterHeightTransparentSort)
-            {
-                this.transform.gameObject.AddComponent<WaterHeightTransparentSort>();
-            }
-            if (asset.shouldAddNightLightScript)
-            {
-                NightLight nightLight = this.transform.gameObject.AddComponent<NightLight>();
-                Transform transform = this.transform.Find("Light");
-                if ((bool)transform)
+                if (asset.useWaterHeightTransparentSort)
                 {
-                    nightLight.target = transform.GetComponent<Light>();
+                    this.transform.gameObject.AddComponent<WaterHeightTransparentSort>();
                 }
-            }
-            renderers = new List<Renderer>();
-            Material materialOverride = GetMaterialOverride();
-            GameObject gameObject3 = asset.skyboxGameObject?.getOrLoad();
-            if (gameObject3 != null)
-            {
-                GameObject gameObject4 = UnityEngine.Object.Instantiate(gameObject3, newPoint, newRotation);
-                _skybox = gameObject4.transform;
-                gameObject4.name = asset.name + "_Skybox";
-                if (asset.useScale)
+                if (asset.shouldAddNightLightScript)
                 {
-                    skybox.localScale = newScale;
-                }
-                skybox.GetComponentsInChildren(includeInactive: true, renderers);
-                for (int i = 0; i < renderers.Count; i++)
-                {
-                    renderers[i].shadowCastingMode = ShadowCastingMode.Off;
-                    if (materialOverride != null)
+                    NightLight nightLight = this.transform.gameObject.AddComponent<NightLight>();
+                    Transform transform = this.transform.Find("Light");
+                    if ((bool)transform)
                     {
-                        renderers[i].sharedMaterial = materialOverride;
+                        nightLight.target = transform.GetComponent<Light>();
                     }
                 }
-                renderers.Clear();
-            }
-            this.transform.GetComponentsInChildren(includeInactive: true, renderers);
-            if (materialOverride != null)
-            {
-                for (int j = 0; j < renderers.Count; j++)
+                renderers = new List<Renderer>();
+                Material materialOverride = GetMaterialOverride();
+                GameObject gameObject3 = asset.skyboxGameObject?.getOrLoad();
+                if (gameObject3 != null)
                 {
-                    renderers[j].sharedMaterial = materialOverride;
-                }
-            }
-            UpdateActiveAndRenderersEnabled();
-        }
-        if (!(this.transform != null))
-        {
-            return;
-        }
-        if (isDecal && !Level.isEditor && asset.interactability == EObjectInteractability.NONE && asset.rubble == EObjectRubble.NONE)
-        {
-            Collider component = this.transform.GetComponent<Collider>();
-            if (component != null)
-            {
-                UnityEngine.Object.Destroy(component);
-            }
-        }
-        if (Level.isEditor)
-        {
-            Rigidbody orAddComponent = this.transform.GetOrAddComponent<Rigidbody>();
-            orAddComponent.useGravity = false;
-            orAddComponent.isKinematic = true;
-        }
-        else
-        {
-            Rigidbody component2 = this.transform.GetComponent<Rigidbody>();
-            if (component2 != null)
-            {
-                UnityEngine.Object.Destroy(component2);
-            }
-            if (asset.type == EObjectType.SMALL && asset.interactability == EObjectInteractability.NONE && asset.rubble == EObjectRubble.NONE)
-            {
-                Collider component3 = this.transform.GetComponent<Collider>();
-                if (component3 != null)
-                {
-                    UnityEngine.Object.Destroy(component3);
-                }
-            }
-        }
-        bool flag = false;
-        if (Provider.isServer)
-        {
-            flag = asset.ShouldLoadNavOnServer;
-        }
-        else if (Level.isEditor)
-        {
-            flag = asset.ShouldLoadNavInEditor;
-        }
-        if (flag)
-        {
-            GameObject gameObject5 = asset.navGameObject?.getOrLoad();
-            if (gameObject5 != null)
-            {
-                navGameObject = UnityEngine.Object.Instantiate(gameObject5);
-                Transform transform2 = navGameObject.transform;
-                transform2.name = "Nav";
-                transform2.parent = this.transform;
-                transform2.localPosition = Vector3.zero;
-                transform2.localRotation = Quaternion.identity;
-                transform2.localScale = Vector3.one;
-                if (Level.isEditor)
-                {
-                    Rigidbody orAddComponent2 = transform2.GetOrAddComponent<Rigidbody>();
-                    orAddComponent2.useGravity = false;
-                    orAddComponent2.isKinematic = true;
-                }
-                else
-                {
-                    reuseableRigidbodyList.Clear();
-                    transform2.GetComponentsInChildren(reuseableRigidbodyList);
-                    foreach (Rigidbody reuseableRigidbody in reuseableRigidbodyList)
+                    GameObject gameObject4 = UnityEngine.Object.Instantiate(gameObject3, newPoint, newRotation);
+                    _skybox = gameObject4.transform;
+                    gameObject4.name = asset.name + "_Skybox";
+                    if (asset.useScale)
                     {
-                        UnityEngine.Object.Destroy(reuseableRigidbody);
+                        skybox.localScale = newScale;
+                    }
+                    skybox.GetComponentsInChildren(includeInactive: true, renderers);
+                    for (int i = 0; i < renderers.Count; i++)
+                    {
+                        renderers[i].shadowCastingMode = ShadowCastingMode.Off;
+                        if (materialOverride != null)
+                        {
+                            renderers[i].sharedMaterial = materialOverride;
+                        }
+                    }
+                    renderers.Clear();
+                }
+                this.transform.GetComponentsInChildren(includeInactive: true, renderers);
+                if (materialOverride != null)
+                {
+                    for (int j = 0; j < renderers.Count; j++)
+                    {
+                        renderers[j].sharedMaterial = materialOverride;
                     }
                 }
+                UpdateActiveAndRenderersEnabled();
             }
-        }
-        if (Provider.isServer)
-        {
-            GameObject gameObject6 = asset.triggersGameObject?.getOrLoad();
-            Transform transform3;
-            if (gameObject6 != null)
+            if (!(this.transform != null))
             {
-                Transform obj = UnityEngine.Object.Instantiate(gameObject6).transform;
-                obj.name = "Triggers";
-                obj.parent = this.transform;
-                obj.localPosition = Vector3.zero;
-                obj.localRotation = Quaternion.identity;
-                obj.localScale = Vector3.one;
-                transform3 = obj;
+                return;
+            }
+            if (isDecal && !Level.isEditor && asset.interactability == EObjectInteractability.NONE && asset.rubble == EObjectRubble.NONE)
+            {
+                Collider component = this.transform.GetComponent<Collider>();
+                if (component != null)
+                {
+                    UnityEngine.Object.Destroy(component);
+                }
+            }
+            if (Level.isEditor)
+            {
+                Rigidbody orAddComponent = this.transform.GetOrAddComponent<Rigidbody>();
+                orAddComponent.useGravity = false;
+                orAddComponent.isKinematic = true;
             }
             else
             {
-                transform3 = this.transform;
-            }
-            if (asset.shouldAddKillTriggers)
-            {
-                foreach (Transform item in transform3)
+                Rigidbody component2 = this.transform.GetComponent<Rigidbody>();
+                if (component2 != null)
                 {
-                    if (item.name.Equals("Kill", StringComparison.OrdinalIgnoreCase))
+                    UnityEngine.Object.Destroy(component2);
+                }
+                if (asset.type == EObjectType.SMALL && asset.interactability == EObjectInteractability.NONE && asset.rubble == EObjectRubble.NONE)
+                {
+                    Collider component3 = this.transform.GetComponent<Collider>();
+                    if (component3 != null)
                     {
-                        item.tag = "Trap";
-                        item.gameObject.layer = 30;
-                        item.gameObject.AddComponent<Barrier>();
+                        UnityEngine.Object.Destroy(component3);
                     }
                 }
             }
-        }
-        if (asset.type != EObjectType.SMALL)
-        {
-            if (Level.isEditor)
+            bool flag = false;
+            if (Provider.isServer)
             {
-                Transform transform5 = this.transform.Find("Block");
-                if (transform5 != null && this.transform.GetComponent<Collider>() == null)
+                flag = asset.ShouldLoadNavOnServer;
+            }
+            else if (Level.isEditor)
+            {
+                flag = asset.ShouldLoadNavInEditor;
+            }
+            if (flag)
+            {
+                GameObject gameObject5 = asset.navGameObject?.getOrLoad();
+                if (gameObject5 != null)
                 {
-                    BoxCollider component4 = transform5.GetComponent<BoxCollider>();
-                    if (component4 != null)
+                    navGameObject = UnityEngine.Object.Instantiate(gameObject5);
+                    Transform transform2 = navGameObject.transform;
+                    transform2.name = "Nav";
+                    transform2.parent = this.transform;
+                    transform2.localPosition = Vector3.zero;
+                    transform2.localRotation = Quaternion.identity;
+                    transform2.localScale = Vector3.one;
+                    if (Level.isEditor)
                     {
-                        BoxCollider boxCollider = this.transform.gameObject.AddComponent<BoxCollider>();
-                        boxCollider.center = component4.center;
-                        boxCollider.size = component4.size;
+                        Rigidbody orAddComponent2 = transform2.GetOrAddComponent<Rigidbody>();
+                        orAddComponent2.useGravity = false;
+                        orAddComponent2.isKinematic = true;
+                    }
+                    else
+                    {
+                        reuseableRigidbodyList.Clear();
+                        transform2.GetComponentsInChildren(reuseableRigidbodyList);
+                        foreach (Rigidbody reuseableRigidbody in reuseableRigidbodyList)
+                        {
+                            UnityEngine.Object.Destroy(reuseableRigidbody);
+                        }
                     }
                 }
             }
-            else if (Provider.isClient)
+            if (Provider.isServer)
             {
-                GameObject gameObject7 = asset.slotsGameObject?.getOrLoad();
-                if (gameObject7 != null)
+                GameObject gameObject6 = asset.triggersGameObject?.getOrLoad();
+                Transform transform3;
+                if (gameObject6 != null)
                 {
-                    Transform obj2 = UnityEngine.Object.Instantiate(gameObject7).transform;
-                    obj2.name = "Slots";
-                    obj2.parent = this.transform;
-                    obj2.localPosition = Vector3.zero;
-                    obj2.localRotation = Quaternion.identity;
-                    obj2.localScale = Vector3.one;
-                    reuseableRigidbodyList.Clear();
-                    obj2.GetComponentsInChildren(reuseableRigidbodyList);
-                    foreach (Rigidbody reuseableRigidbody2 in reuseableRigidbodyList)
+                    Transform obj = UnityEngine.Object.Instantiate(gameObject6).transform;
+                    obj.name = "Triggers";
+                    obj.parent = this.transform;
+                    obj.localPosition = Vector3.zero;
+                    obj.localRotation = Quaternion.identity;
+                    obj.localScale = Vector3.one;
+                    transform3 = obj;
+                }
+                else
+                {
+                    transform3 = this.transform;
+                }
+                if (asset.shouldAddKillTriggers)
+                {
+                    foreach (Transform item in transform3)
                     {
-                        UnityEngine.Object.Destroy(reuseableRigidbody2);
+                        if (item.name.Equals("Kill", StringComparison.OrdinalIgnoreCase))
+                        {
+                            item.tag = "Trap";
+                            item.gameObject.layer = 30;
+                            item.gameObject.AddComponent<Barrier>();
+                        }
                     }
                 }
             }
-        }
-        if (asset.interactability != 0)
-        {
-            if (asset.interactability == EObjectInteractability.BINARY_STATE)
+            if (asset.type != EObjectType.SMALL)
             {
-                _interactableObj = this.transform.gameObject.AddComponent<InteractableObjectBinaryState>();
-            }
-            else if (asset.interactability == EObjectInteractability.DROPPER)
-            {
-                _interactableObj = this.transform.gameObject.AddComponent<InteractableObjectDropper>();
-            }
-            else if (asset.interactability == EObjectInteractability.NOTE)
-            {
-                _interactableObj = this.transform.gameObject.AddComponent<InteractableObjectNote>();
-            }
-            else if (asset.interactability == EObjectInteractability.WATER || asset.interactability == EObjectInteractability.FUEL)
-            {
-                _interactableObj = this.transform.gameObject.AddComponent<InteractableObjectResource>();
-            }
-            else if (asset.interactability == EObjectInteractability.NPC)
-            {
-                _interactableObj = this.transform.gameObject.AddComponent<InteractableObjectNPC>();
-            }
-            else if (asset.interactability == EObjectInteractability.QUEST)
-            {
-                _interactableObj = this.transform.gameObject.AddComponent<InteractableObjectQuest>();
-            }
-            else if (asset.interactability == EObjectInteractability.DIALOGUE)
-            {
-                _interactableObj = this.transform.gameObject.AddComponent<InteractableObjectDialogue>();
-            }
-            if (interactable != null)
-            {
-                interactable.owningLevelObject = this;
-                interactable.updateState(asset, state);
-            }
-        }
-        if (asset.rubble != 0)
-        {
-            if (asset.rubble == EObjectRubble.DESTROY)
-            {
-                _rubble = this.transform.gameObject.AddComponent<InteractableObjectRubble>();
-                _rubble.owningLevelObject = this;
-            }
-            if (rubble != null)
-            {
-                rubble.updateState(asset, state);
-            }
-            if (asset.rubbleEditor == EObjectRubbleEditor.DEAD && Level.isEditor)
-            {
-                Transform transform6 = this.transform.Find("Editor");
-                if (transform6 != null)
+                if (Level.isEditor)
                 {
-                    transform6.gameObject.SetActive(value: true);
+                    Transform transform5 = this.transform.Find("Block");
+                    if (transform5 != null && this.transform.GetComponent<Collider>() == null)
+                    {
+                        BoxCollider component4 = transform5.GetComponent<BoxCollider>();
+                        if (component4 != null)
+                        {
+                            BoxCollider boxCollider = this.transform.gameObject.AddComponent<BoxCollider>();
+                            boxCollider.center = component4.center;
+                            boxCollider.size = component4.size;
+                        }
+                    }
+                }
+                else if (Provider.isClient)
+                {
+                    GameObject gameObject7 = asset.slotsGameObject?.getOrLoad();
+                    if (gameObject7 != null)
+                    {
+                        Transform obj2 = UnityEngine.Object.Instantiate(gameObject7).transform;
+                        obj2.name = "Slots";
+                        obj2.parent = this.transform;
+                        obj2.localPosition = Vector3.zero;
+                        obj2.localRotation = Quaternion.identity;
+                        obj2.localScale = Vector3.one;
+                        reuseableRigidbodyList.Clear();
+                        obj2.GetComponentsInChildren(reuseableRigidbodyList);
+                        foreach (Rigidbody reuseableRigidbody2 in reuseableRigidbodyList)
+                        {
+                            UnityEngine.Object.Destroy(reuseableRigidbody2);
+                        }
+                    }
                 }
             }
-        }
-        bool flag2 = false;
-        if (asset.conditions != null && asset.conditions.Length != 0 && !Level.isEditor && !Dedicator.IsDedicatedServer)
-        {
-            areConditionsMet = false;
-            flag2 = true;
-            Player.onPlayerCreated = (PlayerCreated)Delegate.Combine(Player.onPlayerCreated, new PlayerCreated(onPlayerCreated));
-        }
-        if (!flag2 && (asset.holidayRestriction != 0 || asset.isGore) && !Level.isEditor)
-        {
-            areConditionsMet = false;
-            updateConditions();
-        }
-        if (asset.foliage.isValid)
-        {
-            FoliageSurfaceComponent foliageSurfaceComponent = this.transform.gameObject.AddComponent<FoliageSurfaceComponent>();
-            foliageSurfaceComponent.foliage = asset.foliage;
-            foliageSurfaceComponent.surfaceCollider = this.transform.gameObject.GetComponent<Collider>();
-        }
-        if (asset.lod != EObjectLOD.NONE && isOwnedCullingVolumeAllowed)
-        {
-            ReapplyOwnedCullingVolumeAllowed();
+            if (asset.interactability != 0)
+            {
+                if (asset.interactability == EObjectInteractability.BINARY_STATE)
+                {
+                    _interactableObj = this.transform.gameObject.AddComponent<InteractableObjectBinaryState>();
+                }
+                else if (asset.interactability == EObjectInteractability.DROPPER)
+                {
+                    _interactableObj = this.transform.gameObject.AddComponent<InteractableObjectDropper>();
+                }
+                else if (asset.interactability == EObjectInteractability.NOTE)
+                {
+                    _interactableObj = this.transform.gameObject.AddComponent<InteractableObjectNote>();
+                }
+                else if (asset.interactability == EObjectInteractability.WATER || asset.interactability == EObjectInteractability.FUEL)
+                {
+                    _interactableObj = this.transform.gameObject.AddComponent<InteractableObjectResource>();
+                }
+                else if (asset.interactability == EObjectInteractability.NPC)
+                {
+                    _interactableObj = this.transform.gameObject.AddComponent<InteractableObjectNPC>();
+                }
+                else if (asset.interactability == EObjectInteractability.QUEST)
+                {
+                    _interactableObj = this.transform.gameObject.AddComponent<InteractableObjectQuest>();
+                }
+                else if (asset.interactability == EObjectInteractability.DIALOGUE)
+                {
+                    _interactableObj = this.transform.gameObject.AddComponent<InteractableObjectDialogue>();
+                }
+                if (interactable != null)
+                {
+                    interactable.owningLevelObject = this;
+                    interactable.updateState(asset, state);
+                }
+            }
+            if (asset.rubble != 0)
+            {
+                if (asset.rubble == EObjectRubble.DESTROY)
+                {
+                    _rubble = this.transform.gameObject.AddComponent<InteractableObjectRubble>();
+                    _rubble.owningLevelObject = this;
+                }
+                if (rubble != null)
+                {
+                    rubble.updateState(asset, state);
+                }
+                if (asset.rubbleEditor == EObjectRubbleEditor.DEAD && Level.isEditor)
+                {
+                    Transform transform6 = this.transform.Find("Editor");
+                    if (transform6 != null)
+                    {
+                        transform6.gameObject.SetActive(value: true);
+                    }
+                }
+            }
+            bool flag2 = false;
+            if (asset.conditions != null && asset.conditions.Length != 0 && !Level.isEditor && !Dedicator.IsDedicatedServer)
+            {
+                areConditionsMet = false;
+                flag2 = true;
+                Player.onPlayerCreated = (PlayerCreated)Delegate.Combine(Player.onPlayerCreated, new PlayerCreated(onPlayerCreated));
+            }
+            if (!flag2 && (asset.holidayRestriction != 0 || asset.isGore) && !Level.isEditor)
+            {
+                areConditionsMet = false;
+                updateConditions();
+            }
+            if (asset.foliage.isValid)
+            {
+                FoliageSurfaceComponent foliageSurfaceComponent = this.transform.gameObject.AddComponent<FoliageSurfaceComponent>();
+                foliageSurfaceComponent.foliage = asset.foliage;
+                foliageSurfaceComponent.surfaceCollider = this.transform.gameObject.GetComponent<Collider>();
+            }
+            if (asset.lod != EObjectLOD.NONE && isOwnedCullingVolumeAllowed)
+            {
+                ReapplyOwnedCullingVolumeAllowed();
+            }
         }
     }
 
@@ -822,18 +844,19 @@ public class LevelObject
     {
         isCollisionEnabled = isActiveInRegion;
         isVisualEnabled = isActiveInRegion;
+        bool flag = isActiveInRegion || GraphicsSettings.WantsCinematicMode;
         bool active;
         bool renderersEnabled;
         if (isDecal || (asset != null && asset.type == EObjectType.NPC))
         {
-            active = ((isActiveInRegion && isVisibleInCullingVolume) || Dedicator.IsDedicatedServer) && areConditionsMet;
+            active = ((flag && (isVisibleInCullingVolume || WantsCullingVolumesOff)) || Dedicator.IsDedicatedServer) && areConditionsMet;
             renderersEnabled = true;
         }
         else
         {
-            bool flag = (asset != null && asset.isCollisionImportant && Provider.isServer) || Dedicator.IsDedicatedServer;
-            active = (isActiveInRegion || flag) && areConditionsMet;
-            renderersEnabled = isActiveInRegion && (isVisibleInCullingVolume || (bool)disableCullingVolumes) && areConditionsMet;
+            bool flag2 = (asset != null && asset.isCollisionImportant && Provider.isServer) || Dedicator.IsDedicatedServer;
+            active = (flag || flag2) && areConditionsMet;
+            renderersEnabled = flag && (isVisibleInCullingVolume || WantsCullingVolumesOff) && areConditionsMet;
         }
         if (transform != null)
         {
@@ -851,7 +874,7 @@ public class LevelObject
         isSkyboxEnabled = !isActiveInRegion && isSkyboxActiveInRegion;
         if (skybox != null)
         {
-            skybox.gameObject.SetActive(!isActiveInRegion && isSkyboxActiveInRegion && isLandmarkQualityMet && areConditionsMet);
+            skybox.gameObject.SetActive(!isActiveInRegion && isSkyboxActiveInRegion && isLandmarkQualityMet && areConditionsMet && !GraphicsSettings.WantsCinematicMode);
         }
     }
 

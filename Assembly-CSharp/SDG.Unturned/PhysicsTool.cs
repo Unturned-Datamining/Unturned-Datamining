@@ -12,6 +12,40 @@ public class PhysicsTool
 
     internal const int NAME_LENGTH_BITS = 6;
 
+    /// <summary>
+    /// Ehh kind of a stretch to mark this obsolete or for backwards compatibility. Introducing it for road assets
+    /// which specify the PhysicMaterial to assign to the colliders. Specifying an asset path is available, but
+    /// for the common case we will use the built-in vanilla resources.
+    /// </summary>
+    public static PhysicMaterial LoadResourceForLegacyMaterial(EPhysicsMaterial material)
+    {
+        return material switch
+        {
+            EPhysicsMaterial.CLOTH_DYNAMIC => Resources.Load<PhysicMaterial>("Physics/Cloth_Dynamic"), 
+            EPhysicsMaterial.CLOTH_STATIC => Resources.Load<PhysicMaterial>("Physics/Cloth_Static"), 
+            EPhysicsMaterial.TILE_DYNAMIC => Resources.Load<PhysicMaterial>("Physics/Tile_Dynamic"), 
+            EPhysicsMaterial.TILE_STATIC => Resources.Load<PhysicMaterial>("Physics/Tile_Static"), 
+            EPhysicsMaterial.CONCRETE_DYNAMIC => Resources.Load<PhysicMaterial>("Physics/Concrete_Dynamic"), 
+            EPhysicsMaterial.CONCRETE_STATIC => Resources.Load<PhysicMaterial>("Physics/Concrete_Static"), 
+            EPhysicsMaterial.FLESH_DYNAMIC => Resources.Load<PhysicMaterial>("Physics/Flesh_Dynamic"), 
+            EPhysicsMaterial.GRAVEL_DYNAMIC => Resources.Load<PhysicMaterial>("Physics/Gravel_Dynamic"), 
+            EPhysicsMaterial.GRAVEL_STATIC => Resources.Load<PhysicMaterial>("Physics/Gravel_Static"), 
+            EPhysicsMaterial.METAL_DYNAMIC => Resources.Load<PhysicMaterial>("Physics/Metal_Dynamic"), 
+            EPhysicsMaterial.METAL_STATIC => Resources.Load<PhysicMaterial>("Physics/Metal_Static"), 
+            EPhysicsMaterial.METAL_SLIP => Resources.Load<PhysicMaterial>("Physics/Metal_Slip"), 
+            EPhysicsMaterial.WOOD_DYNAMIC => Resources.Load<PhysicMaterial>("Physics/Wood_Dynamic"), 
+            EPhysicsMaterial.WOOD_STATIC => Resources.Load<PhysicMaterial>("Physics/Wood_Static"), 
+            EPhysicsMaterial.FOLIAGE_STATIC => Resources.Load<PhysicMaterial>("Physics/Foliage_Static"), 
+            EPhysicsMaterial.FOLIAGE_DYNAMIC => Resources.Load<PhysicMaterial>("Physics/Foliage_Dynamic"), 
+            EPhysicsMaterial.SNOW_STATIC => Resources.Load<PhysicMaterial>("Physics/Snow_Static"), 
+            EPhysicsMaterial.ICE_STATIC => Resources.Load<PhysicMaterial>("Physics/Ice_Static"), 
+            EPhysicsMaterial.WATER_STATIC => Resources.Load<PhysicMaterial>("Physics/Water"), 
+            EPhysicsMaterial.ALIEN_DYNAMIC => Resources.Load<PhysicMaterial>("Physics/Alien_Dynamic"), 
+            EPhysicsMaterial.SAND_STATIC => Resources.Load<PhysicMaterial>("Physics/Sand_Static"), 
+            _ => null, 
+        };
+    }
+
     [Obsolete("Intended for backwards compatibility")]
     public static string GetNameOfLegacyMaterial(EPhysicsMaterial material)
     {

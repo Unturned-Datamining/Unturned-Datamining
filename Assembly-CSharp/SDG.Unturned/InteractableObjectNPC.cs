@@ -549,7 +549,7 @@ public class InteractableObjectNPC : InteractableObject, IDialogueTarget
 
     private void OnEnable()
     {
-        if (!Dedicator.IsDedicatedServer)
+        if (!Dedicator.IsDedicatedServer && isInit)
         {
             updateAnimation();
         }

@@ -9,6 +9,10 @@ public class Road
 {
     public byte material;
 
+    private RoadAsset _roadAsset;
+
+    private CachingAssetRef _roadAssetRef;
+
     private Transform _road;
 
     private Transform line;
@@ -32,6 +36,22 @@ public class Road
     /// </summary>
     public ushort roadIndex { get; protected set; }
 
+    /// <summary>
+    /// If set, road properties are taken from this asset instead of the older road properties editor.
+    /// </summary>
+    public CachingAssetRef RoadAssetRef
+    {
+        get
+        {
+            return _roadAssetRef;
+        }
+        set
+        {
+            _roadAssetRef = value;
+            _roadAsset = _roadAssetRef.Get<RoadAsset>();
+        }
+    }
+
     public Transform road => _road;
 
     public bool isLoop
@@ -52,6 +72,16 @@ public class Road
     public float trackSampledLength { get; protected set; }
 
     public List<RoadPath> paths => _paths;
+
+    public RoadAsset GetRoadAsset()
+    {
+        return _roadAsset;
+    }
+
+    public RoadMaterial GetLegacyRoadConfig()
+    {
+        return LevelRoads.GetLegacyRoadConfig(material);
+    }
 
     public void setEnabled(bool isEnabled)
     {
@@ -98,6 +128,24 @@ public class Road
         direction = Vector3.forward;
     }
 
+    private float GetTrackHalfDepthAndOffset()
+    {
+        if (_roadAsset != null)
+        {
+            float num = _roadAsset.Depth * 0.5f;
+            float offsetAlongNormal = _roadAsset.OffsetAlongNormal;
+            return num + offsetAlongNormal;
+        }
+        RoadMaterial legacyRoadConfig = GetLegacyRoadConfig();
+        if (legacyRoadConfig != null)
+        {
+            float depth = legacyRoadConfig.depth;
+            float offset = legacyRoadConfig.offset;
+            return depth + offset;
+        }
+        return 0f;
+    }
+
     public void getTrackPosition(int index, float t, out Vector3 position, out Vector3 normal)
     {
         position = getPosition(index, t);
@@ -107,7 +155,7 @@ public class Road
             position.y = LevelGround.getHeight(position);
             normal = LevelGround.getNormal(position);
         }
-        position += normal * (LevelRoads.materials[material].depth + LevelRoads.materials[material].offset);
+        position += normal * GetTrackHalfDepthAndOffset();
     }
 
     public void getTrackPosition(float t, out int index, out Vector3 position, out Vector3 normal)
@@ -119,7 +167,7 @@ public class Road
             position.y = LevelGround.getHeight(position);
             normal = LevelGround.getNormal(position);
         }
-        position += normal * (LevelRoads.materials[material].depth + LevelRoads.materials[material].offset);
+        position += normal * GetTrackHalfDepthAndOffset();
     }
 
     public Vector3 getPosition(float t)
@@ -374,6 +422,32 @@ public class Road
         updatePoints();
     }
 
+    public EObjectChart GetChartMode()
+    {
+        if (_roadAsset != null)
+        {
+            if (_roadAsset.ChartOverride != 0)
+            {
+                return _roadAsset.ChartOverride;
+            }
+            if (_roadAsset.Width > 16f)
+            {
+                return EObjectChart.HIGHWAY;
+            }
+            return EObjectChart.ROAD;
+        }
+        RoadMaterial legacyRoadConfig = GetLegacyRoadConfig();
+        if (legacyRoadConfig == null || !legacyRoadConfig.isConcrete)
+        {
+            return EObjectChart.PATH;
+        }
+        if (legacyRoadConfig.width > 8f)
+        {
+            return EObjectChart.HIGHWAY;
+        }
+        return EObjectChart.ROAD;
+    }
+
     public void buildMesh()
     {
         segmentRenderers.Clear();
@@ -411,7 +485,67 @@ public class Road
         Vector3 vector3 = Vector3.zero;
         Vector3 vector4 = Vector3.zero;
         Vector3 vector5 = Vector3.zero;
-        _ = Vector2.zero;
+        RoadMaterial legacyRoadConfig = GetLegacyRoadConfig();
+        PhysicMaterial sharedMaterial;
+        float num2;
+        float num3;
+        float num4;
+        float num5;
+        if (_roadAsset != null)
+        {
+            sharedMaterial = _roadAsset.UnityPhysicsMaterial;
+            num2 = _roadAsset.Width * 0.5f;
+            num3 = _roadAsset.Depth;
+            num4 = num3 * 0.5f;
+            num5 = _roadAsset.OffsetAlongNormal;
+        }
+        else if (legacyRoadConfig != null)
+        {
+            sharedMaterial = ((!legacyRoadConfig.isConcrete) ? Resources.Load<PhysicMaterial>("Physics/Gravel_Static") : Resources.Load<PhysicMaterial>("Physics/Concrete_Static"));
+            num2 = legacyRoadConfig.HalfWidth;
+            num4 = legacyRoadConfig.HalfVerticalSize;
+            num3 = num4 * 2f;
+            num5 = legacyRoadConfig.VerticalOffset;
+        }
+        else
+        {
+            sharedMaterial = null;
+            num2 = 0f;
+            num4 = 0f;
+            num3 = 0f;
+            num5 = 0f;
+        }
+        Material material;
+        float num6;
+        if (Dedicator.IsDedicatedServer)
+        {
+            material = null;
+            num6 = 1f;
+        }
+        else if (_roadAsset != null)
+        {
+            material = _roadAsset.RenderMaterial;
+            if (_roadAsset.RoadTexture != null)
+            {
+                float num7 = _roadAsset.Width * ((float)_roadAsset.RoadTexture.height / (float)_roadAsset.RoadTexture.width) * _roadAsset.RepeatDistanceScale;
+                num6 = 1f / num7;
+            }
+            else
+            {
+                num6 = 1f;
+            }
+        }
+        else if (legacyRoadConfig != null)
+        {
+            material = legacyRoadConfig.material;
+            float num8 = ((legacyRoadConfig.height == 0f) ? ((float)material.mainTexture.height) : ((float)material.mainTexture.height / legacyRoadConfig.height));
+            num6 = 1f / num8;
+        }
+        else
+        {
+            material = null;
+            num6 = 1f;
+        }
         int j;
         for (j = 0; j < samples.Count; j++)
         {
@@ -427,17 +561,17 @@ public class Road
             vector5 = Vector3.Cross(vector3, vector4).normalized;
             if (!roadJoint.ignoreTerrain)
             {
-                Vector3 point = vector2 + vector5 * LevelRoads.materials[material].width;
-                float num2 = LevelGround.getHeight(point) - point.y;
-                if (num2 > 0f)
+                Vector3 point = vector2 + vector5 * num2;
+                float num9 = LevelGround.getHeight(point) - point.y;
+                if (num9 > 0f)
                 {
-                    vector2.y += num2;
+                    vector2.y += num9;
                 }
-                Vector3 point2 = vector2 - vector5 * LevelRoads.materials[material].width;
-                float num3 = LevelGround.getHeight(point2) - point2.y;
-                if (num3 > 0f)
+                Vector3 point2 = vector2 - vector5 * num2;
+                float num10 = LevelGround.getHeight(point2) - point2.y;
+                if (num10 > 0f)
                 {
-                    vector2.y += num3;
+                    vector2.y += num10;
                 }
             }
             if (roadSample.index < joints.Count - 1)
@@ -452,10 +586,10 @@ public class Road
             {
                 vector2.y += roadJoint.offset;
             }
-            array[((!isLoop) ? 4 : 0) + j * 4] = vector2 + vector5 * (LevelRoads.materials[material].width + LevelRoads.materials[material].depth * 2f) - vector4 * LevelRoads.materials[material].depth + vector4 * LevelRoads.materials[material].offset;
-            array[((!isLoop) ? 4 : 0) + j * 4 + 1] = vector2 + vector5 * LevelRoads.materials[material].width + vector4 * LevelRoads.materials[material].depth + vector4 * LevelRoads.materials[material].offset;
-            array[((!isLoop) ? 4 : 0) + j * 4 + 2] = vector2 - vector5 * LevelRoads.materials[material].width + vector4 * LevelRoads.materials[material].depth + vector4 * LevelRoads.materials[material].offset;
-            array[((!isLoop) ? 4 : 0) + j * 4 + 3] = vector2 - vector5 * (LevelRoads.materials[material].width + LevelRoads.materials[material].depth * 2f) - vector4 * LevelRoads.materials[material].depth + vector4 * LevelRoads.materials[material].offset;
+            array[((!isLoop) ? 4 : 0) + j * 4] = vector2 + vector5 * (num2 + num3) - vector4 * num4 + vector4 * num5;
+            array[((!isLoop) ? 4 : 0) + j * 4 + 1] = vector2 + vector5 * num2 + vector4 * num4 + vector4 * num5;
+            array[((!isLoop) ? 4 : 0) + j * 4 + 2] = vector2 - vector5 * num2 + vector4 * num4 + vector4 * num5;
+            array[((!isLoop) ? 4 : 0) + j * 4 + 3] = vector2 - vector5 * (num2 + num3) - vector4 * num4 + vector4 * num5;
             array2[((!isLoop) ? 4 : 0) + j * 4] = vector4;
             array2[((!isLoop) ? 4 : 0) + j * 4 + 1] = vector4;
             array2[((!isLoop) ? 4 : 0) + j * 4 + 2] = vector4;
@@ -464,10 +598,10 @@ public class Road
             {
                 if (!isLoop)
                 {
-                    array[j * 4] = vector2 + vector5 * (LevelRoads.materials[material].width + LevelRoads.materials[material].depth * 2f) - vector4 * LevelRoads.materials[material].depth + vector4 * LevelRoads.materials[material].offset - vector3 * LevelRoads.materials[material].depth * 4f;
-                    array[j * 4 + 1] = vector2 + vector5 * LevelRoads.materials[material].width - vector4 * LevelRoads.materials[material].depth + vector4 * LevelRoads.materials[material].offset - vector3 * LevelRoads.materials[material].depth * 4f;
-                    array[j * 4 + 2] = vector2 - vector5 * LevelRoads.materials[material].width - vector4 * LevelRoads.materials[material].depth + vector4 * LevelRoads.materials[material].offset - vector3 * LevelRoads.materials[material].depth * 4f;
-                    array[j * 4 + 3] = vector2 - vector5 * (LevelRoads.materials[material].width + LevelRoads.materials[material].depth * 2f) - vector4 * LevelRoads.materials[material].depth + vector4 * LevelRoads.materials[material].offset - vector3 * LevelRoads.materials[material].depth * 4f;
+                    array[j * 4] = vector2 + vector5 * (num2 + num3) - vector4 * num4 + vector4 * num5 - vector3 * num3 * 2f;
+                    array[j * 4 + 1] = vector2 + vector5 * num2 - vector4 * num4 + vector4 * num5 - vector3 * num3 * 2f;
+                    array[j * 4 + 2] = vector2 - vector5 * num2 - vector4 * num4 + vector4 * num5 - vector3 * num3 * 2f;
+                    array[j * 4 + 3] = vector2 - vector5 * (num2 + num3) - vector4 * num4 + vector4 * num5 - vector3 * num3 * 2f;
                     array2[j * 4] = vector4;
                     array2[j * 4 + 1] = vector4;
                     array2[j * 4 + 2] = vector4;
@@ -495,65 +629,65 @@ public class Road
                 vector = vector2;
                 if (!Dedicator.IsDedicatedServer)
                 {
-                    Vector2 vector6 = Vector2.up * num / LevelRoads.materials[material].material.mainTexture.height * LevelRoads.materials[material].height;
-                    array3[((!isLoop) ? 4 : 0) + j * 4] = Vector2.zero + vector6;
-                    array3[((!isLoop) ? 4 : 0) + j * 4 + 1] = Vector2.zero + vector6;
-                    array3[((!isLoop) ? 4 : 0) + j * 4 + 2] = Vector2.right + vector6;
-                    array3[((!isLoop) ? 4 : 0) + j * 4 + 3] = Vector2.right + vector6;
+                    float y = num * num6;
+                    array3[((!isLoop) ? 4 : 0) + j * 4] = new Vector2(0f, y);
+                    array3[((!isLoop) ? 4 : 0) + j * 4 + 1] = new Vector2(0f, y);
+                    array3[((!isLoop) ? 4 : 0) + j * 4 + 2] = new Vector2(1f, y);
+                    array3[((!isLoop) ? 4 : 0) + j * 4 + 3] = new Vector2(1f, y);
                 }
             }
         }
         if (!isLoop)
         {
-            array[4 + j * 4] = vector2 + vector5 * (LevelRoads.materials[material].width + LevelRoads.materials[material].depth * 2f) - vector4 * LevelRoads.materials[material].depth + vector4 * LevelRoads.materials[material].offset + vector3 * LevelRoads.materials[material].depth * 4f;
-            array[4 + j * 4 + 1] = vector2 + vector5 * LevelRoads.materials[material].width - vector4 * LevelRoads.materials[material].depth + vector4 * LevelRoads.materials[material].offset + vector3 * LevelRoads.materials[material].depth * 4f;
-            array[4 + j * 4 + 2] = vector2 - vector5 * LevelRoads.materials[material].width - vector4 * LevelRoads.materials[material].depth + vector4 * LevelRoads.materials[material].offset + vector3 * LevelRoads.materials[material].depth * 4f;
-            array[4 + j * 4 + 3] = vector2 - vector5 * (LevelRoads.materials[material].width + LevelRoads.materials[material].depth * 2f) - vector4 * LevelRoads.materials[material].depth + vector4 * LevelRoads.materials[material].offset + vector3 * LevelRoads.materials[material].depth * 4f;
+            array[4 + j * 4] = vector2 + vector5 * (num2 + num3) - vector4 * num4 + vector4 * num5 + vector3 * num3 * 2f;
+            array[4 + j * 4 + 1] = vector2 + vector5 * num2 - vector4 * num4 + vector4 * num5 + vector3 * num3 * 2f;
+            array[4 + j * 4 + 2] = vector2 - vector5 * num2 - vector4 * num4 + vector4 * num5 + vector3 * num3 * 2f;
+            array[4 + j * 4 + 3] = vector2 - vector5 * (num2 + num3) - vector4 * num4 + vector4 * num5 + vector3 * num3 * 2f;
             array2[4 + j * 4] = vector4;
             array2[4 + j * 4 + 1] = vector4;
             array2[4 + j * 4 + 2] = vector4;
             array2[4 + j * 4 + 3] = vector4;
             if (!Dedicator.IsDedicatedServer)
             {
-                Vector2 vector6 = Vector2.up * num / LevelRoads.materials[material].material.mainTexture.height * LevelRoads.materials[material].height;
-                array3[4 + j * 4] = Vector2.zero + vector6;
-                array3[4 + j * 4 + 1] = Vector2.zero + vector6;
-                array3[4 + j * 4 + 2] = Vector2.right + vector6;
-                array3[4 + j * 4 + 3] = Vector2.right + vector6;
+                float y2 = num * num6;
+                array3[4 + j * 4] = new Vector2(0f, y2);
+                array3[4 + j * 4 + 1] = new Vector2(0f, y2);
+                array3[4 + j * 4 + 2] = new Vector2(1f, y2);
+                array3[4 + j * 4 + 3] = new Vector2(1f, y2);
             }
         }
-        int num4 = 0;
+        int num11 = 0;
         for (int k = 0; k < samples.Count; k += 20)
         {
-            int num5 = Mathf.Min(k + 20, samples.Count - 1);
-            int num6 = num5 - k + 1;
+            int num12 = Mathf.Min(k + 20, samples.Count - 1);
+            int num13 = num12 - k + 1;
             if (!isLoop)
             {
                 if (k == 0)
                 {
-                    num6++;
+                    num13++;
                 }
-                if (num5 == samples.Count - 1)
+                if (num12 == samples.Count - 1)
                 {
-                    num6++;
+                    num13++;
                 }
             }
-            Vector3[] array4 = new Vector3[num6 * 4];
-            Vector3[] array5 = new Vector3[num6 * 4];
-            Vector2[] array6 = (Dedicator.IsDedicatedServer ? null : new Vector2[num6 * 4]);
-            int[] array7 = new int[num6 * 18];
-            int num7 = k;
+            Vector3[] array4 = new Vector3[num13 * 4];
+            Vector3[] array5 = new Vector3[num13 * 4];
+            Vector2[] array6 = (Dedicator.IsDedicatedServer ? null : new Vector2[num13 * 4]);
+            int[] array7 = new int[num13 * 18];
+            int num14 = k;
             if (!isLoop && k > 0)
             {
-                num7++;
+                num14++;
             }
-            Array.Copy(array, num7 * 4, array4, 0, array4.Length);
-            Array.Copy(array2, num7 * 4, array5, 0, array4.Length);
+            Array.Copy(array, num14 * 4, array4, 0, array4.Length);
+            Array.Copy(array2, num14 * 4, array5, 0, array4.Length);
             if (!Dedicator.IsDedicatedServer)
             {
-                Array.Copy(array3, num7 * 4, array6, 0, array4.Length);
+                Array.Copy(array3, num14 * 4, array6, 0, array4.Length);
             }
-            for (int l = 0; l < num6 - 1; l++)
+            for (int l = 0; l < num13 - 1; l++)
             {
                 array7[l * 18] = l * 4 + 5;
                 array7[l * 18 + 1] = l * 4 + 1;
@@ -575,40 +709,29 @@ public class Road
                 array7[l * 18 + 17] = l * 4 + 3;
             }
             Transform transform = new GameObject().transform;
-            transform.name = "Segment_" + num4;
+            transform.name = "Segment_" + num11;
             transform.parent = road;
             transform.tag = "Environment";
             transform.gameObject.layer = 19;
-            transform.gameObject.AddComponent<MeshCollider>();
-            if (!Dedicator.IsDedicatedServer)
-            {
-                transform.gameObject.AddComponent<MeshFilter>();
-                MeshRenderer meshRenderer = transform.gameObject.AddComponent<MeshRenderer>();
-                meshRenderer.reflectionProbeUsage = ReflectionProbeUsage.Simple;
-                meshRenderer.shadowCastingMode = ShadowCastingMode.Off;
-                segmentRenderers.Add(meshRenderer);
-            }
-            if (LevelRoads.materials[material].isConcrete)
-            {
-                transform.GetComponent<Collider>().sharedMaterial = (PhysicMaterial)Resources.Load("Physics/Concrete_Static");
-            }
-            else
-            {
-                transform.GetComponent<Collider>().sharedMaterial = (PhysicMaterial)Resources.Load("Physics/Gravel_Static");
-            }
             Mesh mesh = new Mesh();
-            mesh.name = "Road_Segment_" + num4;
+            mesh.name = "Road_Segment_" + num11;
             mesh.vertices = array4;
             mesh.normals = array5;
             mesh.uv = array6;
             mesh.triangles = array7;
-            transform.GetComponent<MeshCollider>().sharedMesh = mesh;
+            MeshCollider meshCollider = transform.gameObject.AddComponent<MeshCollider>();
+            meshCollider.sharedMaterial = sharedMaterial;
+            meshCollider.sharedMesh = mesh;
             if (!Dedicator.IsDedicatedServer)
             {
-                transform.GetComponent<MeshFilter>().sharedMesh = mesh;
-                transform.GetComponent<Renderer>().sharedMaterial = LevelRoads.materials[material].material;
+                transform.gameObject.AddComponent<MeshFilter>().sharedMesh = mesh;
+                MeshRenderer meshRenderer = transform.gameObject.AddComponent<MeshRenderer>();
+                meshRenderer.sharedMaterial = material;
+                meshRenderer.reflectionProbeUsage = ReflectionProbeUsage.Simple;
+                meshRenderer.shadowCastingMode = ShadowCastingMode.Off;
+                segmentRenderers.Add(meshRenderer);
             }
-            num4++;
+            num11++;
         }
     }
 
@@ -745,15 +868,27 @@ public class Road
         }
     }
 
+    [Obsolete]
     public Road(byte newMaterial, ushort newRoadIndex)
-        : this(newMaterial, newRoadIndex, newLoop: false, new List<RoadJoint>())
+        : this(newMaterial, CachingAssetRef.Empty, newRoadIndex)
+    {
+    }
+
+    public Road(byte newMaterial, CachingAssetRef newRoadAssetRef, ushort newRoadIndex)
+        : this(newMaterial, newRoadAssetRef, newRoadIndex, newLoop: false, new List<RoadJoint>())
     {
     }
 
     public Road(byte newMaterial, ushort newRoadIndex, bool newLoop, List<RoadJoint> newJoints)
+        : this(newMaterial, CachingAssetRef.Empty, newRoadIndex, newLoop, newJoints)
+    {
+    }
+
+    public Road(byte newMaterial, CachingAssetRef newRoadAssetRef, ushort newRoadIndex, bool newLoop, List<RoadJoint> newJoints)
     {
         material = newMaterial;
         roadIndex = newRoadIndex;
+        RoadAssetRef = newRoadAssetRef;
         _road = new GameObject().transform;
         road.name = "Road";
         road.tag = "Environment";

@@ -627,6 +627,7 @@ public class PlayerEquipment : PlayerCaller
     public void uninspect()
     {
         inspectAudioHandle.Stop();
+        lastInspect = 0f;
         base.player.animator.setAnimationSpeed("Inspect", float.MaxValue);
     }
 
@@ -1226,6 +1227,7 @@ public class PlayerEquipment : PlayerCaller
             }
         }
         isBusy = false;
+        lastInspect = 0f;
         inspectAudioHandle.Stop();
         equipAudioHandle.Stop();
         if (newAssetGuid.IsEmpty())
@@ -1716,6 +1718,10 @@ public class PlayerEquipment : PlayerCaller
                 base.player.inventory.ReceiveDragItem(result.Page, result.Jar.x, result.Jar.y, b, b2, b3, rot);
                 ServerEquip(b, b2, b3);
             }
+            else
+            {
+                sendSlot(equippedPage);
+            }
         }
     }
 
@@ -1751,6 +1757,10 @@ public class PlayerEquipment : PlayerCaller
             {
                 base.player.inventory.ReceiveDragItem(result.Page, result.Jar.x, result.Jar.y, page_A, x_A, y_A, rot_A);
                 ServerEquip(page_A, x_A, y_A);
+            }
+            else
+            {
+                sendSlot(page_A);
             }
         }
     }
@@ -2155,7 +2165,19 @@ public class PlayerEquipment : PlayerCaller
         }
         if (Provider.isServer && HasValidUseable && IsEquipAnimationFinished && asset != null && asset.shouldDeleteAtZeroQuality && quality == 0)
         {
+            ItemAsset itemAsset = asset;
             use();
+            EffectAsset effectAsset = itemAsset.FindDeletedAtZeroQualityEffect();
+            if (effectAsset != null)
+            {
+                EffectManager.triggerEffect(new TriggerEffectParameters(effectAsset)
+                {
+                    relevantDistance = EffectManager.SMALL,
+                    position = base.transform.position + Vector3.up,
+                    reliable = true
+                });
+            }
+            itemAsset.DeletedAtZeroQualityRewards.Grant(base.player);
         }
     }
 
@@ -2256,18 +2278,18 @@ public class PlayerEquipment : PlayerCaller
             if (base.player.clothing.glassesAsset.vision == ELightingVision.HEADLAMP)
             {
                 base.player.enableHeadlamp(base.player.clothing.glassesAsset.lightConfig);
-                if (base.channel.IsLocalPlayer)
+                if (base.channel.IsLocalPlayer && !base.player.look.isSingleRenderScopeVisionAppliedToLighting)
                 {
                     LevelLighting.vision = ELightingVision.NONE;
                     LevelLighting.updateLighting();
-                    LevelLighting.updateLocal();
+                    LevelLighting.ForceRefreshForLatestViewer();
                     PlayerLifeUI.updateGrayscale();
                 }
             }
             else
             {
                 base.player.disableHeadlamp();
-                if (base.channel.IsLocalPlayer)
+                if (base.channel.IsLocalPlayer && !base.player.look.isSingleRenderScopeVisionAppliedToLighting)
                 {
                     ELightingVision vision = base.player.clothing.glassesAsset.vision;
                     if (base.player.look.perspective != 0 && !base.player.clothing.glassesAsset.isNightvisionAllowedInThirdPerson)
@@ -2278,7 +2300,7 @@ public class PlayerEquipment : PlayerCaller
                     LevelLighting.nightvisionColor = base.player.clothing.glassesAsset.nightvisionColor;
                     LevelLighting.nightvisionFogIntensity = base.player.clothing.glassesAsset.nightvisionFogIntensity;
                     LevelLighting.updateLighting();
-                    LevelLighting.updateLocal();
+                    LevelLighting.ForceRefreshForLatestViewer();
                     PlayerLifeUI.updateGrayscale();
                 }
             }
@@ -2287,11 +2309,11 @@ public class PlayerEquipment : PlayerCaller
         else
         {
             base.player.disableHeadlamp();
-            if (base.channel.IsLocalPlayer)
+            if (base.channel.IsLocalPlayer && !base.player.look.isSingleRenderScopeVisionAppliedToLighting)
             {
                 LevelLighting.vision = ELightingVision.NONE;
                 LevelLighting.updateLighting();
-                LevelLighting.updateLocal();
+                LevelLighting.ForceRefreshForLatestViewer();
                 PlayerLifeUI.updateGrayscale();
             }
             base.player.updateGlassesLights(on: false);
@@ -2432,6 +2454,30 @@ public class PlayerEquipment : PlayerCaller
         }
     }
 
+    /// <summary>
+    /// If equipped item is bound to a hotkey, return the button [0, 9] associated.
+    /// Otherwise, return -1.
+    /// </summary>
+    internal int FindEquippedHotkeyButton()
+    {
+        if (asset != null)
+        {
+            if (equippedPage < 2)
+            {
+                return equippedPage;
+            }
+            for (int i = 0; i < _hotkeys.Length; i++)
+            {
+                HotkeyInfo hotkeyInfo = _hotkeys[i];
+                if (hotkeyInfo.id != 0 && hotkeyInfo.id == asset.id && hotkeyInfo.page == equippedPage && hotkeyInfo.x == equipped_x && hotkeyInfo.y == equipped_y)
+                {
+                    return i + 2;
+                }
+            }
+        }
+        return -1;
+    }
+
     private void Update()
     {
         if (base.channel.IsLocalPlayer)
@@ -2510,7 +2556,7 @@ public class PlayerEquipment : PlayerCaller
         {
             if (!PlayerUI.window.showCursor && !base.player.workzone.isBuilding)
             {
-                if (InputEx.GetKeyDown(ControlsSettings.vision) && hasVision && !PlayerLifeUI.scopeOverlay.IsVisible)
+                if (InputEx.GetKeyDown(ControlsSettings.vision) && hasVision)
                 {
                     SendToggleVisionRequest.Invoke(GetNetId(), ENetReliability.Unreliable);
                 }

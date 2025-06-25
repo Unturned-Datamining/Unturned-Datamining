@@ -2062,7 +2062,7 @@ public class VehicleManager : SteamCaller
         foreach (InteractableVehicle item in vehiclesToSend)
         {
             Vector3 position = item.transform.position;
-            bool flag = (position - recipientPosition).sqrMagnitude < 90000f;
+            bool flag = (position - recipientPosition).GetHorizontalSqrMagnitude() < 90000f;
             Vector3 value = ((item.asset.engine != EEngine.TRAIN) ? position : InteractableVehicle.PackRoadPosition(item.roadPosition));
             writer.WriteUInt32(item.instanceID);
             writer.WriteClampedVector3(value, 13, 8);

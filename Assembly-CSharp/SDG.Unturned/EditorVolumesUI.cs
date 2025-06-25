@@ -47,6 +47,8 @@ internal class EditorVolumesUI : SleekFullscreenBox
 
     private ISleekToggle previewCullingToggle;
 
+    private ISleekToggle enableNoLightingPreviewToggle;
+
     internal static bool EditorWantsToPreviewCulling;
 
     public void Open()
@@ -217,6 +219,17 @@ internal class EditorVolumesUI : SleekFullscreenBox
         previewCullingToggle.IsVisible = false;
         previewCullingToggle.OnValueChanged += OnPreviewCullingToggled;
         AddChild(previewCullingToggle);
+        enableNoLightingPreviewToggle = Glazier.Get().CreateToggle();
+        enableNoLightingPreviewToggle.PositionOffset_X = 400f;
+        enableNoLightingPreviewToggle.PositionOffset_Y = -40f;
+        enableNoLightingPreviewToggle.PositionScale_Y = 1f;
+        enableNoLightingPreviewToggle.SizeOffset_X = 40f;
+        enableNoLightingPreviewToggle.SizeOffset_Y = 40f;
+        enableNoLightingPreviewToggle.AddLabel(localization.format("WantsNoLightingPreview"), ESleekSide.RIGHT);
+        enableNoLightingPreviewToggle.Value = LevelLighting.EditorWantsNoLightingPreview;
+        enableNoLightingPreviewToggle.IsVisible = false;
+        enableNoLightingPreviewToggle.OnValueChanged += OnNoLightingPreviewToggled;
+        AddChild(enableNoLightingPreviewToggle);
         float num2 = 0f;
         selectedTypeBox = Glazier.Get().CreateBox();
         selectedTypeBox.PositionScale_X = 1f;
@@ -277,6 +290,7 @@ internal class EditorVolumesUI : SleekFullscreenBox
         enableWaterSurfaceToggle.IsVisible = enableUnderwaterEffectsToggle.IsVisible;
         refreshCullingVolumesButton.IsVisible = type is CullingVolumeManager;
         previewCullingToggle.IsVisible = refreshCullingVolumesButton.IsVisible;
+        enableNoLightingPreviewToggle.IsVisible = type is AmbianceVolumeManager;
     }
 
     internal void RefreshSelectedVisibility()
@@ -349,6 +363,11 @@ internal class EditorVolumesUI : SleekFullscreenBox
     private void OnPreviewCullingToggled(ISleekToggle toggle, bool state)
     {
         EditorWantsToPreviewCulling = state;
+    }
+
+    private void OnNoLightingPreviewToggled(ISleekToggle toggle, bool state)
+    {
+        LevelLighting.EditorWantsNoLightingPreview = state;
     }
 
     private void OnSurfaceMaskTyped(ISleekUInt32Field field, uint state)

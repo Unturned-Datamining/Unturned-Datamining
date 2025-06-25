@@ -33,6 +33,11 @@ public class BlueprintOutput
         return _itemRef.Get<ItemAsset>();
     }
 
+    public T FindItemAsset<T>() where T : ItemAsset
+    {
+        return _itemRef.Get<T>();
+    }
+
     /// <summary>
     /// Does this blueprint output create the specified item?
     /// </summary>

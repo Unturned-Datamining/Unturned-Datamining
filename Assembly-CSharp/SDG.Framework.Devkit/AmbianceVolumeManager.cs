@@ -9,5 +9,6 @@ public class AmbianceVolumeManager : VolumeManager<AmbianceVolume, AmbianceVolum
     {
         base.FriendlyName = "Ambiance";
         SetDebugColor(new Color32(0, 127, 127, byte.MaxValue));
+        supportsFalloff = true;
     }
 }

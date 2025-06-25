@@ -77,23 +77,31 @@ public static class LevelManager_NetMethods
     public static void ReceiveAirdropState_Read(in ClientInvocationContext context)
     {
         NetPakReader reader = context.reader;
-        reader.ReadUInt16(out var value);
-        reader.ReadClampedVector3(out var value2, 14, 9);
-        reader.ReadNormalVector3(out var value3);
-        reader.ReadFloat(out var value4);
-        reader.ReadFloat(out var value5);
-        reader.ReadFloat(out var value6);
-        LevelManager.ReceiveAirdropState(value, value2, value3, value4, value5, value6);
+        reader.ReadClampedVector3(out var value, 14, 9);
+        reader.ReadVector3AsYawMagnitude(out var value2, 24);
+        LevelManager.ReceiveAirdropState(value, value2);
     }
 
     [NetInvokableGeneratedMethod("ReceiveAirdropState", ENetInvokableGeneratedMethodPurpose.Write)]
-    public static void ReceiveAirdropState_Write(NetPakWriter writer, ushort id, Vector3 state, Vector3 direction, float speed, float force, float delay)
+    public static void ReceiveAirdropState_Write(NetPakWriter writer, Vector3 position, Vector3 velocity)
     {
-        writer.WriteUInt16(id);
-        writer.WriteClampedVector3(state, 14, 9);
-        writer.WriteNormalVector3(direction);
-        writer.WriteFloat(speed);
-        writer.WriteFloat(force);
-        writer.WriteFloat(delay);
+        writer.WriteClampedVector3(position, 14, 9);
+        writer.WriteVector3AsYawMagnitude(velocity, 24);
+    }
+
+    [NetInvokableGeneratedMethod("ReceiveSpawnCarepackage", ENetInvokableGeneratedMethodPurpose.Read)]
+    public static void ReceiveSpawnCarepackage_Read(in ClientInvocationContext context)
+    {
+        NetPakReader reader = context.reader;
+        reader.ReadClampedVector3(out var value);
+        reader.ReadFloat(out var value2);
+        LevelManager.ReceiveSpawnCarepackage(value, value2);
+    }
+
+    [NetInvokableGeneratedMethod("ReceiveSpawnCarepackage", ENetInvokableGeneratedMethodPurpose.Write)]
+    public static void ReceiveSpawnCarepackage_Write(NetPakWriter writer, Vector3 position, float constantForce)
+    {
+        writer.WriteClampedVector3(position);
+        writer.WriteFloat(constantForce);
     }
 }

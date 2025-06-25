@@ -10,6 +10,18 @@ public class LightLOD : MonoBehaviour
     private static class HelperClass
     {
         public static CommandLineFlag disableLightLods = new CommandLineFlag(defaultValue: false, "-DisableLightLODs");
+
+        public static bool WantsLightLodsOff
+        {
+            get
+            {
+                if (!disableLightLods)
+                {
+                    return GraphicsSettings.WantsCinematicMode;
+                }
+                return true;
+            }
+        }
     }
 
     public Light targetLight;
@@ -67,9 +79,15 @@ public class LightLOD : MonoBehaviour
 
     private void Start()
     {
-        if (targetLight == null || targetLight.type == LightType.Area || targetLight.type == LightType.Directional || (bool)HelperClass.disableLightLods)
+        if (targetLight == null || targetLight.type == LightType.Area || targetLight.type == LightType.Directional)
         {
             base.enabled = false;
+            return;
+        }
+        if (HelperClass.WantsLightLodsOff)
+        {
+            base.enabled = false;
+            targetLight.enabled = true;
             return;
         }
         intensityStart = targetLight.intensity;
