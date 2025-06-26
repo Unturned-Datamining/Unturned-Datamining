@@ -57,9 +57,9 @@ public class PlayerLook : PlayerCaller
 
     internal bool isSingleRenderScopeVisionAppliedToLighting;
 
-    private bool _isScopeFullyAimedIn;
-
     private bool _isScopeActive;
+
+    internal float scopeAlpha;
 
     private ELightingVision scopeVision;
 
@@ -155,11 +155,9 @@ public class PlayerLook : PlayerCaller
 
     private float mainCameraTargetFieldOfView;
 
-    private bool mainCameraZoomFactorRequiresAimIn;
-
     internal float mainCameraZoomFactor;
 
-    private float scopeCameraZoomFactor;
+    internal float scopeCameraZoomFactor;
 
     private float eyes;
 
@@ -421,12 +419,11 @@ public class PlayerLook : PlayerCaller
             scopeMaterial = UnityEngine.Object.Instantiate(Resources.Load<Material>("Materials/Scope"));
         }
         scopeMaterial.SetTexture("_MainTex", scopeRenderTexture);
-        scopeMaterial.SetTexture("_EmissionMap", scopeRenderTexture);
         scopeCamera.enabled = isScopeActive && scopeCamera.targetTexture != null && scopeVision == ELightingVision.NONE;
         UpdateSingleRenderScope();
-        if (base.player.equipment.asset != null && base.player.equipment.asset.type == EItemType.GUN && base.player.equipment.useable is UseableGun useableGun)
+        if (base.player.equipment.useable is UseableGun useableGun)
         {
-            useableGun.UpdateScopeRenderer();
+            useableGun.UpdateScopeAlpha();
         }
     }
 
@@ -439,20 +436,21 @@ public class PlayerLook : PlayerCaller
         scopeNightvisionFogIntensity = sightAsset.nightvisionFogIntensity;
         scopeCamera.enabled = scopeCamera.targetTexture != null && scopeVision == ELightingVision.NONE;
         scopeCamera.GetComponent<GrayscaleEffect>().blend = ((scopeVision == ELightingVision.CIVILIAN) ? 1f : 0f);
+        UpdateSingleRenderScope();
     }
 
     public void disableScope()
     {
         scopeCamera.enabled = false;
         _isScopeActive = false;
-        _isScopeFullyAimedIn = false;
         scopeVision = ELightingVision.NONE;
+        scopeAlpha = 0f;
         UpdateSingleRenderScope();
     }
 
     private void UpdateSingleRenderScope()
     {
-        bool flag = perspective == EPlayerPerspective.FIRST && isScopeActive && _isScopeFullyAimedIn && GraphicsSettings.scopeQuality == EGraphicQuality.OFF;
+        bool flag = perspective == EPlayerPerspective.FIRST && isScopeActive && GraphicsSettings.scopeQuality == EGraphicQuality.OFF;
         if (flag && scopeVision != 0)
         {
             isSingleRenderScopeVisionAppliedToLighting = true;
@@ -463,13 +461,7 @@ public class PlayerLook : PlayerCaller
             isSingleRenderScopeVisionAppliedToLighting = false;
             base.player.equipment.updateVision();
         }
-        UnturnedPostProcess.instance.SetSingleRenderScopeIsActive(flag, scopeCameraZoomFactor);
-    }
-
-    internal void OnGunFullyAimedInChanged(bool isFullyAimedIn)
-    {
-        _isScopeFullyAimedIn = isFullyAimedIn;
-        UpdateSingleRenderScope();
+        UnturnedPostProcess.instance.SetSingleRenderScopeIsActive(flag);
     }
 
     [Obsolete("this was never supported server-side")]
@@ -533,16 +525,14 @@ public class PlayerLook : PlayerCaller
         tempVision = ELightingVision.NONE;
     }
 
-    public void enableZoom(float zoom, bool requiresFullyAimingIn)
+    public void enableZoom(float zoom)
     {
         mainCameraZoomFactor = zoom;
-        mainCameraZoomFactorRequiresAimIn = requiresFullyAimingIn;
     }
 
     public void disableZoom()
     {
         mainCameraZoomFactor = 0f;
-        mainCameraZoomFactorRequiresAimIn = false;
     }
 
     public void updateRot()
@@ -1106,17 +1096,13 @@ public class PlayerLook : PlayerCaller
                     instance.fieldOfView = freecamVerticalFieldOfView;
                 }
             }
-            else if (mainCameraZoomFactor > 0f && mainCameraZoomFactorRequiresAimIn && _isScopeFullyAimedIn)
-            {
-                instance.fieldOfView = zoomBaseFieldOfView / mainCameraZoomFactor;
-                flag = true;
-            }
             else
             {
                 float b;
-                if (mainCameraZoomFactor > 0f && !mainCameraZoomFactorRequiresAimIn)
+                if (mainCameraZoomFactor > float.Epsilon)
                 {
                     b = zoomBaseFieldOfView / mainCameraZoomFactor;
+                    flag = true;
                 }
                 else
                 {
@@ -1131,7 +1117,14 @@ public class PlayerLook : PlayerCaller
                 {
                     mainCameraTargetFieldOfView = Mathf.Lerp(mainCameraTargetFieldOfView, b, 8f * Time.deltaTime);
                 }
-                instance.fieldOfView = mainCameraTargetFieldOfView;
+                if (isScopeActive && scopeCameraZoomFactor > float.Epsilon && GraphicsSettings.scopeQuality == EGraphicQuality.OFF)
+                {
+                    instance.fieldOfView = Mathf.Lerp(mainCameraTargetFieldOfView, zoomBaseFieldOfView / scopeCameraZoomFactor, scopeAlpha);
+                }
+                else
+                {
+                    instance.fieldOfView = mainCameraTargetFieldOfView;
+                }
             }
             if (isScopeActive && scopeCamera != null && scopeCameraZoomFactor > 0f)
             {

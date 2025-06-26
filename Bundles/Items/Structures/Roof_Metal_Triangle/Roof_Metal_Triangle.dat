@@ -28,6 +28,19 @@ Blueprints
 		]
 		Effect "84347b13028340b8976033c08675d458" // Wrench
 	}
+	{
+		CategoryTag "71d9e182c18b4aad8e87778e4f621995" // Structures
+		InputItems "21ede8ebffb14c5580e8c7ad149e335e x 6" // Metal Scrap
+		InputItems_Critical true
+		OutputItems this
+		Skill Craft
+		Skill_Level 2
+		RequiresNearbyCraftingTags
+		[
+			"7b82c125a5a54984b8bb26576b59e977" // Workbench
+		]
+		Effect "84347b13028340b8976033c08675d458" // Wrench
+	}
 ]
 
 PlacementAudioClip Sounds/MetalPlacement.mp3

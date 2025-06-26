@@ -975,6 +975,7 @@ public class ItemAsset : Asset, ISkinableAsset, IBlueprintOwner
                     break;
                 }
             }
+            bool defaultIsCritical = datDictionary.ParseBool("InputItems_Critical");
             BlueprintSupply[] newSupplies;
             if (datDictionary.TryGetNode("InputItems", out var node))
             {
@@ -983,7 +984,7 @@ public class ItemAsset : Asset, ISkinableAsset, IBlueprintOwner
                     List<BlueprintSupply> list2 = new List<BlueprintSupply>(datList.Count);
                     foreach (IDatNode item in datList)
                     {
-                        BlueprintSupply blueprintSupply = ParseBlueprintInputItem(value2, item, assetContext);
+                        BlueprintSupply blueprintSupply = ParseBlueprintInputItem(value2, item, defaultIsCritical, assetContext);
                         string path;
                         if (blueprintSupply != null)
                         {
@@ -1003,7 +1004,7 @@ public class ItemAsset : Asset, ISkinableAsset, IBlueprintOwner
                 }
                 else
                 {
-                    BlueprintSupply blueprintSupply2 = ParseBlueprintInputItem(value2, node, assetContext);
+                    BlueprintSupply blueprintSupply2 = ParseBlueprintInputItem(value2, node, defaultIsCritical, assetContext);
                     if (blueprintSupply2 != null)
                     {
                         newSupplies = new BlueprintSupply[1] { blueprintSupply2 };
@@ -1152,7 +1153,7 @@ public class ItemAsset : Asset, ISkinableAsset, IBlueprintOwner
         return list;
     }
 
-    private static BlueprintSupply ParseBlueprintInputItem(EBlueprintOperation operation, IDatNode inputItemNode, Asset assetContext)
+    private static BlueprintSupply ParseBlueprintInputItem(EBlueprintOperation operation, IDatNode inputItemNode, bool defaultIsCritical, Asset assetContext)
     {
         ECraftingInputPrioritization eCraftingInputPrioritization = ((operation != EBlueprintOperation.FillTargetItem) ? ECraftingInputPrioritization.LowestQuality : ECraftingInputPrioritization.LowestAmount);
         ECraftingInputCountingMethod eCraftingInputCountingMethod = ((operation == EBlueprintOperation.FillTargetItem) ? ECraftingInputCountingMethod.TotalAmount : ECraftingInputCountingMethod.TotalItems);
@@ -1167,7 +1168,7 @@ public class ItemAsset : Asset, ISkinableAsset, IBlueprintOwner
                 }
                 assetRef = assetContext;
             }
-            bool newCritical = dictionary.ParseBool("Critical");
+            bool newCritical = dictionary.ParseBool("Critical", defaultIsCritical);
             bool flag = dictionary.ParseBool("CountEmptyAsOne");
             bool shouldIncludeEmptyAmount = dictionary.ParseBool("AllowEmpty", flag);
             bool flag2 = dictionary.ParseBool("Delete", defaultValue: true);
@@ -1198,7 +1199,7 @@ public class ItemAsset : Asset, ISkinableAsset, IBlueprintOwner
             {
                 return null;
             }
-            return new BlueprintSupply(0, newCritical: false, newAmount, newTreatEmptyAsOne: false, eCraftingInputPrioritization)
+            return new BlueprintSupply(0, defaultIsCritical, newAmount, newTreatEmptyAsOne: false, eCraftingInputPrioritization)
             {
                 ShouldConsume = true,
                 ItemRef = assetRef2,

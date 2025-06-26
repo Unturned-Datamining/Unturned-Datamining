@@ -6,7 +6,7 @@ namespace SDG.Unturned;
 /// Allow Unity events to forcefully remove any barricades inside a sphere.
 /// </summary>
 [AddComponentMenu("Unturned/Barricade Destroyer")]
-public class BarricadeDestroyer : MonoBehaviour
+public class BarricadeDestroyerComponent : MonoBehaviour
 {
     [Tooltip("Barricades whose pivot points are within this radius will be removed.")]
     public float Radius;

@@ -2058,7 +2058,7 @@ public class PlayerUI : MonoBehaviour
             window = null;
             setIsHallucinating(isHallucinating: false);
             UnturnedPostProcess.instance.SetIsMainBlurEnabled(enabled: false);
-            UnturnedPostProcess.instance.SetSingleRenderScopeIsActive(isActive: false, 0f);
+            UnturnedPostProcess.instance.SetSingleRenderScopeIsActive(isActive: false);
         }
     }
 

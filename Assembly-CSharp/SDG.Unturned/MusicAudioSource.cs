@@ -1,5 +1,6 @@
-using SDG.Unturned;
 using UnityEngine;
+
+namespace SDG.Unturned;
 
 [RequireComponent(typeof(AudioSource))]
 [Tooltip("Reassigns AudioSource's outputAudioMixerGroup to the vanilla Music group")]

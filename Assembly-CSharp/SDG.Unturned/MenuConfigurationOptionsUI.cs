@@ -90,6 +90,8 @@ public class MenuConfigurationOptionsUI
 
     private static ISleekSlider sprintFovBoostIntensitySlider;
 
+    private static ISleekSlider viewmodelBobScaleSlider;
+
     private static ISleekBox crosshairBox;
 
     private static SleekColorPicker crosshairColorPicker;
@@ -176,6 +178,11 @@ public class MenuConfigurationOptionsUI
     private static string FormatSprintFovBoostIntensityLabel()
     {
         return localization.format("SprintFovBoostIntensity_Label", OptionsSettings.sprintFovBoostIntensity.ToString("P0"));
+    }
+
+    private static string FormatViewmodelBobScaleLabel()
+    {
+        return localization.format("ViewmodelBobScale_Label", OptionsSettings.viewmodelBobScale.ToString("P0"));
     }
 
     private static void onDraggedFOVSlider(ISleekSlider slider, float state)
@@ -372,6 +379,12 @@ public class MenuConfigurationOptionsUI
         sprintFovBoostIntensitySlider.UpdateLabel(FormatSprintFovBoostIntensityLabel());
     }
 
+    private static void OnViewmodelBobScaleChanged(ISleekSlider slider, float state)
+    {
+        OptionsSettings.viewmodelBobScale = state;
+        viewmodelBobScaleSlider.UpdateLabel(FormatViewmodelBobScaleLabel());
+    }
+
     private static void onCrosshairColorPicked(SleekColorPicker picker, Color color)
     {
         OptionsSettings.crosshairColor = color;
@@ -494,6 +507,8 @@ public class MenuConfigurationOptionsUI
         damageFlinchIntensitySlider.UpdateLabel(FormatDamageFlinchIntensityLabel());
         sprintFovBoostIntensitySlider.Value = OptionsSettings.sprintFovBoostIntensity;
         sprintFovBoostIntensitySlider.UpdateLabel(FormatSprintFovBoostIntensityLabel());
+        viewmodelBobScaleSlider.Value = OptionsSettings.viewmodelBobScale;
+        viewmodelBobScaleSlider.UpdateLabel(FormatViewmodelBobScaleLabel());
         crosshairColorPicker.state = OptionsSettings.crosshairColor;
         hitmarkerColorPicker.state = OptionsSettings.hitmarkerColor;
         criticalHitmarkerColorPicker.state = OptionsSettings.criticalHitmarkerColor;
@@ -844,6 +859,15 @@ public class MenuConfigurationOptionsUI
         sprintFovBoostIntensitySlider.AddLabel(FormatSprintFovBoostIntensityLabel(), ESleekSide.RIGHT);
         sprintFovBoostIntensitySlider.OnValueChanged += OnSprintFovBoostIntensityChanged;
         optionsBox.AddChild(sprintFovBoostIntensitySlider);
+        num += 30f;
+        viewmodelBobScaleSlider = Glazier.Get().CreateSlider();
+        viewmodelBobScaleSlider.PositionOffset_Y = num;
+        viewmodelBobScaleSlider.SizeOffset_X = 200f;
+        viewmodelBobScaleSlider.SizeOffset_Y = 20f;
+        viewmodelBobScaleSlider.Orientation = ESleekOrientation.HORIZONTAL;
+        viewmodelBobScaleSlider.AddLabel(FormatViewmodelBobScaleLabel(), ESleekSide.RIGHT);
+        viewmodelBobScaleSlider.OnValueChanged += OnViewmodelBobScaleChanged;
+        optionsBox.AddChild(viewmodelBobScaleSlider);
         num += 30f;
         damageFlinchModeButton = new SleekButtonState(new GUIContent(localization.format("DamageFlinchMode_RollOnly")), new GUIContent(localization.format("DamageFlinchMode_Directional")));
         damageFlinchModeButton.PositionOffset_Y = num;

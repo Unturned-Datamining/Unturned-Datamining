@@ -69,9 +69,11 @@ public class OptionsSettings
 
     private const byte SAVEDATA_VERSION_ADDED_CLICK_BLUEPRINT_TO_CRAFT = 64;
 
-    private const byte SAVEDATA_VERSION_NEWEST = 64;
+    private const byte SAVEDATA_VERSION_ADDED_VIEWMODEL_BOB_SCALE = 65;
 
-    public static readonly byte SAVEDATA_VERSION = 64;
+    private const byte SAVEDATA_VERSION_NEWEST = 65;
+
+    public static readonly byte SAVEDATA_VERSION = 65;
 
     public static readonly byte MIN_FOV = 60;
 
@@ -218,6 +220,11 @@ public class OptionsSettings
     /// [0, 1] Intensity of FOV boost while sprinting.
     /// </summary>
     public static float sprintFovBoostIntensity;
+
+    /// <summary>
+    /// [0, 1] Intensity of first-person motion caused by walking.
+    /// </summary>
+    public static float viewmodelBobScale;
 
     public static Color crosshairColor;
 
@@ -663,6 +670,7 @@ public class OptionsSettings
         damageFlinchMode = EDamageFlinchMode.RollOnly;
         damageFlinchIntensity = 1f;
         sprintFovBoostIntensity = 1f;
+        viewmodelBobScale = 1f;
         crosshairColor = new Color(1f, 1f, 1f, 0.5f);
         hitmarkerColor = new Color(1f, 1f, 1f, 0.5f);
         criticalHitmarkerColor = new Color(1f, 0f, 0f, 0.5f);
@@ -1114,6 +1122,14 @@ public class OptionsSettings
         {
             ShouldClickBlueprintToCraft = false;
         }
+        if (b >= 65)
+        {
+            viewmodelBobScale = block.readSingle();
+        }
+        else
+        {
+            viewmodelBobScale = 1f;
+        }
         if (!Provider.isPro)
         {
             backgroundColor = new Color(0.9f, 0.9f, 0.9f);
@@ -1127,7 +1143,7 @@ public class OptionsSettings
     public static void save()
     {
         Block block = new Block();
-        block.writeByte(64);
+        block.writeByte(65);
         block.writeBoolean(value: false);
         block.writeBoolean(splashscreen);
         block.writeBoolean(timer);
@@ -1191,6 +1207,7 @@ public class OptionsSettings
         block.writeSingle(sprintFovBoostIntensity);
         block.writeBoolean(ShouldHideRichPresence);
         block.writeBoolean(ShouldClickBlueprintToCraft);
+        block.writeSingle(viewmodelBobScale);
         ReadWrite.writeBlock("/Options.dat", useCloud: true, block);
     }
 }

@@ -44,7 +44,7 @@ public class UseableOptic : Useable
     {
         base.player.animator.viewmodelCameraLocalPositionOffset = Vector3.up;
         base.player.animator.viewmodelSwayMultiplier = 0f;
-        base.player.look.enableZoom(((ItemOpticAsset)base.player.equipment.asset).zoom, requiresFullyAimingIn: false);
+        base.player.look.enableZoom(((ItemOpticAsset)base.player.equipment.asset).zoom);
         base.player.look.shouldUseZoomFactorForSensitivity = true;
         PlayerUI.updateBinoculars(isBinoculars: true);
     }

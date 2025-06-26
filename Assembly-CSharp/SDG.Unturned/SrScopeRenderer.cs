@@ -33,12 +33,18 @@ public sealed class SrScopeRenderer : PostProcessEffectRenderer<SrScope>
         Vector2 offset = new Vector2(0f, 0f);
         offset[index] = (scale[index] - 1f) * -0.5f;
         context.command.Blit(context.source, renderTexture, scale, offset);
-        context.GetScreenSpaceTemporaryRT(context.command, scopeBlurTexId);
-        PropertySheet propertySheet = context.propertySheets.Get(gaussianBlurShader);
-        propertySheet.properties.SetFloat(standardDeviationId, (float)base.settings.standardDeviation * (float)base.settings.standardDeviation);
-        propertySheet.properties.SetInt(halfKernelSizeId, Mathf.CeilToInt((float)base.settings.standardDeviation * 3f));
-        context.command.BlitFullscreenTriangle(context.source, scopeBlurTexId, propertySheet, 0);
-        context.command.BlitFullscreenTriangle(scopeBlurTexId, context.destination, propertySheet, 1);
-        context.command.ReleaseTemporaryRT(scopeBlurTexId);
+        if ((float)base.settings.standardDeviation > 0f)
+        {
+            float num2 = vector[num] / 1080f;
+            float num3 = (float)base.settings.standardDeviation * num2;
+            float value = num3 * num3;
+            context.GetScreenSpaceTemporaryRT(context.command, scopeBlurTexId);
+            PropertySheet propertySheet = context.propertySheets.Get(gaussianBlurShader);
+            propertySheet.properties.SetFloat(standardDeviationId, value);
+            propertySheet.properties.SetInt(halfKernelSizeId, Mathf.CeilToInt(num3 * 3f));
+            context.command.BlitFullscreenTriangle(context.source, scopeBlurTexId, propertySheet, 0);
+            context.command.BlitFullscreenTriangle(scopeBlurTexId, context.destination, propertySheet, 1);
+            context.command.ReleaseTemporaryRT(scopeBlurTexId);
+        }
     }
 }

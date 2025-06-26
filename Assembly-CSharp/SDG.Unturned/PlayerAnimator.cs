@@ -179,6 +179,13 @@ public class PlayerAnimator : PlayerCaller
     /// </summary>
     public Rk4Spring2 viewmodelCameraMovementLocalRotation;
 
+    /// <summary>
+    /// Offset when player lands.
+    /// </summary>
+    public Rk4Spring landedSpring;
+
+    public float landedSpringRecoverySpeed;
+
     private Vector3 viewmodelCameraLocalRotation;
 
     /// <summary>
@@ -968,7 +975,7 @@ public class PlayerAnimator : PlayerCaller
         if (velocity < 0f)
         {
             velocity = ((!(base.player.movement.totalGravityMultiplier < 0.67f)) ? Mathf.Max(velocity, -30f) : Mathf.Max(velocity, -5f));
-            viewmodelCameraMovementLocalRotation.currentPosition.x = velocity * -0.5f;
+            landedSpring.targetPosition = velocity * -0.5f;
         }
     }
 
@@ -1262,7 +1269,7 @@ public class PlayerAnimator : PlayerCaller
             blendedViewmodelOffsetPreferenceMultiplier = Mathf.Lerp(blendedViewmodelOffsetPreferenceMultiplier, viewmodelOffsetPreferenceMultiplier, 16f * Time.deltaTime);
             if (base.player.movement.isMoving)
             {
-                viewmodelMovementOffset.targetPosition.x = Mathf.Sin(speed * Time.time) * bob;
+                viewmodelMovementOffset.targetPosition.x = Mathf.Sin(speed * Time.time) * bob * OptionsSettings.viewmodelBobScale;
                 viewmodelMovementOffset.targetPosition.y = Mathf.Abs(viewmodelMovementOffset.targetPosition.x);
             }
             else
@@ -1296,8 +1303,8 @@ public class PlayerAnimator : PlayerCaller
             viewmodelCameraTransform.localPosition = viewmodelCameraLocalPosition + aimingAlignmentOffset;
             if (base.player.movement.isMoving)
             {
-                viewmodelCameraMovementLocalRotation.targetPosition.x = base.player.movement.move.z * tilt * viewmodelSwayMultiplier + roll * viewmodelSwayMultiplier;
-                viewmodelCameraMovementLocalRotation.targetPosition.y = base.player.movement.move.x * tilt + roll * viewmodelSwayMultiplier;
+                viewmodelCameraMovementLocalRotation.targetPosition.x = base.player.movement.move.z * tilt * viewmodelSwayMultiplier * OptionsSettings.viewmodelBobScale + roll * viewmodelSwayMultiplier * OptionsSettings.viewmodelBobScale;
+                viewmodelCameraMovementLocalRotation.targetPosition.y = base.player.movement.move.x * tilt * OptionsSettings.viewmodelBobScale + roll * viewmodelSwayMultiplier * OptionsSettings.viewmodelBobScale;
             }
             else
             {
@@ -1308,7 +1315,9 @@ public class PlayerAnimator : PlayerCaller
                 viewmodelCameraMovementLocalRotation.targetPosition.x -= 5f;
             }
             viewmodelCameraMovementLocalRotation.Update(Time.deltaTime);
-            viewmodelCameraLocalRotation.x = viewmodelCameraMovementLocalRotation.currentPosition.x;
+            landedSpring.Update(Time.deltaTime);
+            landedSpring.targetPosition = Mathf.Lerp(landedSpring.targetPosition, 0f, landedSpringRecoverySpeed * Time.deltaTime);
+            viewmodelCameraLocalRotation.x = viewmodelCameraMovementLocalRotation.currentPosition.x + landedSpring.currentPosition;
             viewmodelCameraLocalRotation.y = 0f;
             viewmodelCameraLocalRotation.z = viewmodelCameraMovementLocalRotation.currentPosition.y;
             viewmodelCameraLocalRotation += recoilViewmodelCameraRotation.currentPosition;
@@ -1318,9 +1327,9 @@ public class PlayerAnimator : PlayerCaller
             float num2 = Mathf.DeltaAngle(base.player.look.yaw, lastFrameYawInput);
             lastFrameYawInput = base.player.look.yaw;
             rotationInputViewmodelRoll.Update(Time.deltaTime);
-            rotationInputViewmodelRoll.currentPosition.x += num * -0.03f * viewmodelSwayMultiplier;
-            rotationInputViewmodelRoll.currentPosition.y += num2 * -0.015f * viewmodelSwayMultiplier;
-            rotationInputViewmodelRoll.currentPosition.z += num2 * -0.05f;
+            rotationInputViewmodelRoll.currentPosition.x += num * -0.03f * viewmodelSwayMultiplier * OptionsSettings.viewmodelBobScale;
+            rotationInputViewmodelRoll.currentPosition.y += num2 * -0.015f * viewmodelSwayMultiplier * OptionsSettings.viewmodelBobScale;
+            rotationInputViewmodelRoll.currentPosition.z += num2 * -0.05f * OptionsSettings.viewmodelBobScale;
             rotationInputViewmodelRoll.currentPosition = MathfEx.Clamp(rotationInputViewmodelRoll.currentPosition, -10f, 10f);
             viewmodelCameraLocalRotation += rotationInputViewmodelRoll.currentPosition;
             viewmodelItemInertiaRotation.Update(Time.deltaTime);
@@ -1339,19 +1348,19 @@ public class PlayerAnimator : PlayerCaller
                     }
                     lastFrameItemPosition = vector;
                     lastFrameHadItemPosition = true;
-                    goto IL_0986;
+                    goto IL_0a01;
                 }
             }
             lastFrameHadItemPosition = false;
-            goto IL_0986;
+            goto IL_0a01;
         }
         if (thirdAnimator != null)
         {
             updateState(thirdAnimator);
             updateHuman((HumanAnimator)thirdAnimator);
         }
-        goto IL_0cf5;
-        IL_0986:
+        goto IL_0d70;
+        IL_0a01:
         viewmodelItemInertiaRotation.currentPosition = MathfEx.Clamp(viewmodelItemInertiaRotation.currentPosition, -5f, 5f);
         viewmodelCameraLocalRotation += viewmodelItemInertiaRotation.currentPosition * aimingInertaMultiplier;
         viewmodelSmoothedExplosionLocalRotation = Quaternion.Lerp(viewmodelSmoothedExplosionLocalRotation, viewmodelTargetExplosionLocalRotation.currentRotation, viewmodelExplosionSmoothingSpeed * Time.deltaTime);
@@ -1386,8 +1395,8 @@ public class PlayerAnimator : PlayerCaller
             _shoulder = 0f;
         }
         _shoulder2 = Mathf.Lerp(shoulder2, -lean, 8f * Time.deltaTime);
-        goto IL_0cf5;
-        IL_0cf5:
+        goto IL_0d70;
+        IL_0d70:
         if (characterAnimator != null)
         {
             updateState(characterAnimator);

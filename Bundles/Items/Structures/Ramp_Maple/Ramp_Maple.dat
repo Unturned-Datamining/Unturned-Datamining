@@ -22,6 +22,13 @@ Blueprints
 		OutputItems this
 		Effect "84347b13028340b8976033c08675d458" // Wrench
 	}
+	{
+		CategoryTag "71d9e182c18b4aad8e87778e4f621995" // Structures
+		InputItems "1f943f37293a41b1ada84cb18c4bd706" // Stacked Maple Logs
+		InputItems_Critical true
+		OutputItems this x 4
+		Effect "84347b13028340b8976033c08675d458" // Wrench
+	}
 ]
 
 PlacementAudioClip Sounds/WoodenPlacement.mp3

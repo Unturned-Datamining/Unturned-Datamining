@@ -73,6 +73,7 @@ AircraftThirdPersonCameraMode_Label Aircraft Third-Person Camera Style
 FlashbangBrightness_Label Flashbang Intensity [{0}]
 CameraShakeIntensity_Label Explosion Camera Shake Intensity [{0}]
 SprintFovBoostIntensity_Label Sprint FoV Boost [{0}]
+ViewmodelBobScale_Label First-Person Arms Bobbing [{0}]
 
 DamageFlinchMode_RollOnly Roll-Only
 DamageFlinchMode_Directional Directional

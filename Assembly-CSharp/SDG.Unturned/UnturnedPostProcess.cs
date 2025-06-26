@@ -157,10 +157,21 @@ public class UnturnedPostProcess : MonoBehaviour
         scopePostProcessLayer.fog.excludeSkybox = true;
     }
 
-    public void SetSingleRenderScopeIsActive(bool isActive, float zoomFactor)
+    public void SetSingleRenderScopeIsActive(bool isActive)
     {
         baseProfile.singleRenderScope.active = isActive;
-        baseProfile.singleRenderScope.standardDeviation.Override(Mathf.Min(zoomFactor * 2f, 32f));
+    }
+
+    public void SetSingleRenderScopeZoomFactor(float zoomFactor)
+    {
+        if (zoomFactor > 1.0001f)
+        {
+            baseProfile.singleRenderScope.standardDeviation.Override(Mathf.Min(zoomFactor, 32f));
+        }
+        else
+        {
+            baseProfile.singleRenderScope.standardDeviation.Override(-1f);
+        }
     }
 
     public void SetSingleRenderScopeTarget(RenderTexture target)

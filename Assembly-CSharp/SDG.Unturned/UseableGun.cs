@@ -168,8 +168,6 @@ public class UseableGun : Useable
     /// </summary>
     private int fireDelayCounter;
 
-    private bool _isFullyAimedIn;
-
     private int aimAccuracy;
 
     private uint steadyAccuracy;
@@ -315,27 +313,9 @@ public class UseableGun : Useable
 
     internal const float DEFAULT_THIRD_PERSON_ZOOM_FACTOR = 1.25f;
 
-    public bool isAiming { get; protected set; }
+    private static int ScopeMaterialAlphaId = Shader.PropertyToID("_Alpha");
 
-    private bool IsFullyAimedIn
-    {
-        get
-        {
-            return _isFullyAimedIn;
-        }
-        set
-        {
-            if (_isFullyAimedIn != value)
-            {
-                _isFullyAimedIn = value;
-                if (base.channel.IsLocalPlayer)
-                {
-                    base.player.look.OnGunFullyAimedInChanged(_isFullyAimedIn);
-                    UpdateScopeRenderer();
-                }
-            }
-        }
-    }
+    public bool isAiming { get; protected set; }
 
     /// <summary>
     /// Should stat modifiers from the current tactical attachment be used?
@@ -2839,7 +2819,6 @@ public class UseableGun : Useable
         steadyAccuracy = 0u;
         canSteady = true;
         swayTime = Time.time;
-        IsFullyAimedIn = false;
     }
 
     public override void dequip()
@@ -3506,16 +3485,11 @@ public class UseableGun : Useable
             if (aimAccuracy < maxAimingAccuracy)
             {
                 aimAccuracy++;
-                IsFullyAimedIn = aimAccuracy == maxAimingAccuracy;
             }
         }
-        else
+        else if (aimAccuracy > 0)
         {
-            if (aimAccuracy > 0)
-            {
-                aimAccuracy--;
-            }
-            IsFullyAimedIn = false;
+            aimAccuracy--;
         }
     }
 
@@ -3841,7 +3815,13 @@ public class UseableGun : Useable
                 {
                     base.player.look.enableScope(firstPersonZoomFactor, firstAttachments.sightAsset);
                     base.player.animator.viewmodelOffsetPreferenceUseScope = true;
-                    UpdateScopeRenderer();
+                    Renderer renderer = firstAttachments?.scopeHook?.GetComponent<Renderer>();
+                    if (renderer != null)
+                    {
+                        renderer.sharedMaterial = base.player.look.scopeMaterial;
+                        renderer.enabled = true;
+                        UpdateScopeAlpha();
+                    }
                     firstAttachments.scopeHook.gameObject.SetActive(value: true);
                     if (base.channel.owner.IsLeftHanded)
                     {
@@ -3868,16 +3848,6 @@ public class UseableGun : Useable
         }
         UpdateMovementSpeedMultiplier();
         UpdateAimInDuration();
-    }
-
-    internal void UpdateScopeRenderer()
-    {
-        Renderer renderer = firstAttachments?.scopeHook?.GetComponent<Renderer>();
-        if (renderer != null)
-        {
-            renderer.sharedMaterial = ((GraphicsSettings.scopeQuality != 0 || IsFullyAimedIn) ? base.player.look.scopeMaterial : ((Material)unzoomedScopeMaterial));
-            renderer.enabled = true;
-        }
     }
 
     private void applyRecoilMagnitudeModifiers(ref float value)
@@ -4210,7 +4180,7 @@ public class UseableGun : Useable
         {
             if (isAiming)
             {
-                base.player.look.enableZoom(thirdPersonZoomFactor, requiresFullyAimingIn: false);
+                base.player.look.enableZoom(thirdPersonZoomFactor);
             }
             else
             {
@@ -4221,11 +4191,7 @@ public class UseableGun : Useable
         {
             if (shouldZoomUsingEyes)
             {
-                base.player.look.enableZoom(firstPersonZoomFactor, requiresFullyAimingIn: false);
-            }
-            else if (GraphicsSettings.scopeQuality == EGraphicQuality.OFF && base.player.look.isScopeActive)
-            {
-                base.player.look.enableZoom(firstPersonZoomFactor, requiresFullyAimingIn: true);
+                base.player.look.enableZoom(firstPersonZoomFactor);
             }
             else
             {
@@ -4346,23 +4312,16 @@ public class UseableGun : Useable
             {
                 if (base.player.look.perspective == EPlayerPerspective.FIRST)
                 {
-                    base.player.look.enableZoom(firstPersonZoomFactor, requiresFullyAimingIn: false);
+                    base.player.look.enableZoom(firstPersonZoomFactor);
                 }
                 else if (base.player.look.perspective == EPlayerPerspective.THIRD)
                 {
-                    base.player.look.enableZoom(thirdPersonZoomFactor, requiresFullyAimingIn: false);
-                }
-            }
-            else if (base.player.look.perspective == EPlayerPerspective.FIRST)
-            {
-                if (GraphicsSettings.scopeQuality == EGraphicQuality.OFF && base.player.look.isScopeActive)
-                {
-                    base.player.look.enableZoom(firstPersonZoomFactor, requiresFullyAimingIn: true);
+                    base.player.look.enableZoom(thirdPersonZoomFactor);
                 }
             }
             else if (base.player.look.perspective == EPlayerPerspective.THIRD)
             {
-                base.player.look.enableZoom(thirdPersonZoomFactor, requiresFullyAimingIn: false);
+                base.player.look.enableZoom(thirdPersonZoomFactor);
             }
             UpdateCrosshairEnabled();
             PlayerUI.instance.groupUI.IsVisible = false;
@@ -4691,6 +4650,7 @@ public class UseableGun : Useable
         {
             UpdateScopeDistanceMarkers();
         }
+        UpdateScopeAlpha();
     }
 
     internal void GetAimingViewmodelAlignment(out Transform alignmentTransform, out Vector3 alignmentOffset, out float alpha)
@@ -5001,7 +4961,6 @@ public class UseableGun : Useable
         {
             aimAccuracy = maxAimingAccuracy;
         }
-        IsFullyAimedIn = isAiming && aimAccuracy >= maxAimingAccuracy;
         if (equippedGunAsset.shouldScaleAimAnimations)
         {
             float num2 = (float)maxAimingAccuracy / 50f;
@@ -5104,6 +5063,24 @@ public class UseableGun : Useable
             {
                 shotCountForRechamber = 0;
                 needsRechamber = true;
+            }
+        }
+    }
+
+    internal void UpdateScopeAlpha()
+    {
+        if (base.player.look.scopeMaterial != null)
+        {
+            float interpolatedAimAlpha = GetInterpolatedAimAlpha();
+            base.player.look.scopeAlpha = interpolatedAimAlpha;
+            if (GraphicsSettings.scopeQuality == EGraphicQuality.OFF)
+            {
+                base.player.look.scopeMaterial.SetFloat(ScopeMaterialAlphaId, interpolatedAimAlpha);
+                UnturnedPostProcess.instance.SetSingleRenderScopeZoomFactor(Mathf.Lerp(1f, base.player.look.scopeCameraZoomFactor, interpolatedAimAlpha));
+            }
+            else
+            {
+                base.player.look.scopeMaterial.SetFloat(ScopeMaterialAlphaId, 1f);
             }
         }
     }
