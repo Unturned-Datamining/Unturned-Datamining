@@ -55,6 +55,8 @@ jobs:
         git config --global user.name "DiFFoZ"
 
         git add -A
+        # Reset readme, because Steam Linux Runtime override it
+        git reset README.md
         git status
         git commit -m "${{ steps.generate_commit_message.outputs.message }}"
         git push
