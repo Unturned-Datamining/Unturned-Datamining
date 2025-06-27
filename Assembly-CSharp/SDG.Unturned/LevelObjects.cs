@@ -843,9 +843,9 @@ public class LevelObjects : MonoBehaviour
                 }
             }
         }
-        if (Level.isLoadingArea && Player.player != null && Provider.isServer)
+        if (Level.isLoadingArea && Player.LocalPlayer != null && Provider.isServer)
         {
-            Player.player.adjustStanceOrTeleportIfStuck();
+            Player.LocalPlayer.adjustStanceOrTeleportIfStuck();
         }
         Level.isLoadingArea = false;
     }
@@ -854,9 +854,9 @@ public class LevelObjects : MonoBehaviour
     {
         if (player.channel.IsLocalPlayer)
         {
-            Player player2 = Player.player;
-            player2.onPlayerTeleported = (PlayerTeleported)Delegate.Combine(player2.onPlayerTeleported, new PlayerTeleported(onPlayerTeleported));
-            PlayerMovement movement = Player.player.movement;
+            Player localPlayer = Player.LocalPlayer;
+            localPlayer.onPlayerTeleported = (PlayerTeleported)Delegate.Combine(localPlayer.onPlayerTeleported, new PlayerTeleported(onPlayerTeleported));
+            PlayerMovement movement = Player.LocalPlayer.movement;
             movement.onRegionUpdated = (PlayerRegionUpdated)Delegate.Combine(movement.onRegionUpdated, new PlayerRegionUpdated(onRegionUpdated));
         }
     }

@@ -51,7 +51,7 @@ public class PlayerDeathUI
                 }
             }
         }
-        if (Player.player.isPluginWidgetFlagActive(EPluginWidgetFlags.ShowDeathMenu) && !containerOnScreen)
+        if (Player.LocalPlayer.isPluginWidgetFlagActive(EPluginWidgetFlags.ShowDeathMenu) && !containerOnScreen)
         {
             containerOnScreen = true;
             container.AnimateIntoView();
@@ -237,23 +237,23 @@ public class PlayerDeathUI
     {
         if (!Provider.isServer && Provider.isPvP)
         {
-            if (Time.realtimeSinceStartup - Player.player.life.lastDeath < (float)Provider.modeConfigData.Gameplay.Timer_Home)
+            if (Time.realtimeSinceStartup - Player.LocalPlayer.life.lastDeath < (float)Provider.modeConfigData.Gameplay.Timer_Home)
             {
                 return;
             }
         }
-        else if (Time.realtimeSinceStartup - Player.player.life.lastRespawn < (float)Provider.modeConfigData.Gameplay.Timer_Respawn)
+        else if (Time.realtimeSinceStartup - Player.LocalPlayer.life.lastRespawn < (float)Provider.modeConfigData.Gameplay.Timer_Respawn)
         {
             return;
         }
-        Player.player.life.sendRespawn(atHome: true);
+        Player.LocalPlayer.life.sendRespawn(atHome: true);
     }
 
     private static void onClickedRespawnButton(ISleekElement button)
     {
-        if (!(Time.realtimeSinceStartup - Player.player.life.lastRespawn < (float)Provider.modeConfigData.Gameplay.Timer_Respawn))
+        if (!(Time.realtimeSinceStartup - Player.LocalPlayer.life.lastRespawn < (float)Provider.modeConfigData.Gameplay.Timer_Respawn))
         {
-            Player.player.life.sendRespawn(atHome: false);
+            Player.LocalPlayer.life.sendRespawn(atHome: false);
         }
     }
 

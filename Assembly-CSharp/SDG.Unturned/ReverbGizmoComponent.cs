@@ -16,8 +16,8 @@ internal class ReverbGizmoComponent : MonoBehaviour
             Object.Destroy(this);
             return;
         }
-        Player player = Player.player;
-        if (player == null || !player.channel.owner.isAdmin)
+        Player localPlayer = Player.LocalPlayer;
+        if (localPlayer == null || !localPlayer.channel.owner.isAdmin)
         {
             Object.Destroy(this);
             return;

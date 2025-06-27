@@ -100,7 +100,7 @@ public class Crosshair : SleekWrapper
             isInterpolatedSpreadValid = false;
             return;
         }
-        UseableGun useableGun = Player.player.equipment.useable as UseableGun;
+        UseableGun useableGun = Player.LocalPlayer.equipment.useable as UseableGun;
         if (useableGun == null)
         {
             isInterpolatedSpreadValid = false;
@@ -120,10 +120,10 @@ public class Crosshair : SleekWrapper
             return;
         }
         Vector2 vector2;
-        if (Player.player.look.perspective == EPlayerPerspective.FIRST)
+        if (Player.LocalPlayer.look.perspective == EPlayerPerspective.FIRST)
         {
-            Quaternion rotation = Player.player.look.aim.rotation;
-            Quaternion quaternion = Quaternion.Euler(Player.player.animator.recoilViewmodelCameraRotation.currentPosition);
+            Quaternion rotation = Player.LocalPlayer.look.aim.rotation;
+            Quaternion quaternion = Quaternion.Euler(Player.LocalPlayer.animator.recoilViewmodelCameraRotation.currentPosition);
             Vector3 vector = rotation * quaternion * Vector3.forward;
             Vector2 viewportPosition = instance.WorldToViewportPoint(instance.transform.position + vector);
             vector2 = ViewportToNormalizedPosition(viewportPosition);

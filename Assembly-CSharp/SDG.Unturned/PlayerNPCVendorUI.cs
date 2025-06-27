@@ -92,8 +92,8 @@ public class PlayerNPCVendorUI
         {
             return;
         }
-        Player player = Player.player;
-        if (player == null || player.inventory == null)
+        Player localPlayer = Player.LocalPlayer;
+        if (localPlayer == null || localPlayer.inventory == null)
         {
             return;
         }
@@ -112,11 +112,11 @@ public class PlayerNPCVendorUI
 
     private static void RefreshButtonVisibility()
     {
-        Player player = Player.player;
+        Player localPlayer = Player.LocalPlayer;
         float num = 0f;
         for (int i = 0; i < buying.Count; i++)
         {
-            bool flag = buying[i].areConditionsMet(player);
+            bool flag = buying[i].areConditionsMet(localPlayer);
             buyingButtons[i].IsVisible = flag;
             if (flag)
             {
@@ -129,7 +129,7 @@ public class PlayerNPCVendorUI
         float num2 = 0f;
         for (int j = 0; j < selling.Count; j++)
         {
-            bool flag2 = selling[j].areConditionsMet(player);
+            bool flag2 = selling[j].areConditionsMet(localPlayer);
             sellingButtons[j].IsVisible = flag2;
             if (flag2)
             {
@@ -145,7 +145,7 @@ public class PlayerNPCVendorUI
     {
         if (experienceBox.IsVisible)
         {
-            experienceBox.Text = localization.format("Experience", Player.player.skills.experience.ToString());
+            experienceBox.Text = localization.format("Experience", Player.LocalPlayer.skills.experience.ToString());
         }
         else
         {
@@ -156,7 +156,7 @@ public class PlayerNPCVendorUI
             ItemCurrencyAsset itemCurrencyAsset = vendor.currency.Find();
             if (itemCurrencyAsset != null)
             {
-                uint inventoryValue = itemCurrencyAsset.getInventoryValue(Player.player);
+                uint inventoryValue = itemCurrencyAsset.getInventoryValue(Player.LocalPlayer);
                 if (string.IsNullOrEmpty(itemCurrencyAsset.valueFormat))
                 {
                     currencyLabel.Text = inventoryValue.ToString("N");
@@ -307,9 +307,9 @@ public class PlayerNPCVendorUI
     {
         byte index = (byte)buyingBox.FindIndexOfChild(button);
         VendorBuying vendorBuying = buying[index];
-        if (vendorBuying.canSell(Player.player))
+        if (vendorBuying.canSell(Player.LocalPlayer))
         {
-            Player.player.quests.sendSellToVendor(vendor.GUID, vendorBuying.index, InputEx.GetKey(ControlsSettings.other));
+            Player.LocalPlayer.quests.sendSellToVendor(vendor.GUID, vendorBuying.index, InputEx.GetKey(ControlsSettings.other));
         }
     }
 
@@ -317,9 +317,9 @@ public class PlayerNPCVendorUI
     {
         byte index = (byte)sellingBox.FindIndexOfChild(button);
         VendorSellingBase vendorSellingBase = selling[index];
-        if (vendorSellingBase.canBuy(Player.player))
+        if (vendorSellingBase.canBuy(Player.LocalPlayer))
         {
-            Player.player.quests.sendBuyFromVendor(vendor.GUID, vendorSellingBase.index, InputEx.GetKey(ControlsSettings.other));
+            Player.LocalPlayer.quests.sendBuyFromVendor(vendor.GUID, vendorSellingBase.index, InputEx.GetKey(ControlsSettings.other));
         }
     }
 
@@ -453,15 +453,15 @@ public class PlayerNPCVendorUI
         returnButton.TooltipText = localization.format("Return_Tooltip");
         returnButton.OnClicked += onClickedReturnButton;
         vendorBox.AddChild(returnButton);
-        PlayerInventory inventory = Player.player.inventory;
+        PlayerInventory inventory = Player.LocalPlayer.inventory;
         inventory.onInventoryStateUpdated = (InventoryStateUpdated)Delegate.Combine(inventory.onInventoryStateUpdated, new InventoryStateUpdated(onInventoryStateUpdated));
-        PlayerSkills skills = Player.player.skills;
+        PlayerSkills skills = Player.LocalPlayer.skills;
         skills.onExperienceUpdated = (ExperienceUpdated)Delegate.Combine(skills.onExperienceUpdated, new ExperienceUpdated(onExperienceUpdated));
-        PlayerSkills skills2 = Player.player.skills;
+        PlayerSkills skills2 = Player.LocalPlayer.skills;
         skills2.onReputationUpdated = (ReputationUpdated)Delegate.Combine(skills2.onReputationUpdated, new ReputationUpdated(onReputationUpdated));
-        PlayerQuests quests = Player.player.quests;
+        PlayerQuests quests = Player.LocalPlayer.quests;
         quests.onFlagsUpdated = (FlagsUpdated)Delegate.Combine(quests.onFlagsUpdated, new FlagsUpdated(onFlagsUpdated));
-        PlayerQuests quests2 = Player.player.quests;
+        PlayerQuests quests2 = Player.LocalPlayer.quests;
         quests2.onFlagUpdated = (FlagUpdated)Delegate.Combine(quests2.onFlagUpdated, new FlagUpdated(onFlagUpdated));
         needsRefresh = true;
     }

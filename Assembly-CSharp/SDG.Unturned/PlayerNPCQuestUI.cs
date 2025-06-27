@@ -129,7 +129,7 @@ public class PlayerNPCQuestUI
         SetButtonsAreClickable(isClickable: true);
         if (mode == EQuestViewMode.DETAILS)
         {
-            if (Player.player.quests.GetTrackedQuest() == quest)
+            if (Player.LocalPlayer.quests.GetTrackedQuest() == quest)
             {
                 trackButton.Text = localization.format("Track_Off");
             }
@@ -151,7 +151,7 @@ public class PlayerNPCQuestUI
             INPCCondition[] conditions = quest.conditions;
             foreach (INPCCondition iNPCCondition in conditions)
             {
-                areConditionsMet.Add(iNPCCondition.isConditionMet(Player.player));
+                areConditionsMet.Add(iNPCCondition.isConditionMet(Player.LocalPlayer));
             }
             for (int j = 0; j < quest.conditions.Length; j++)
             {
@@ -164,7 +164,7 @@ public class PlayerNPCQuestUI
                     {
                         icon = ((!flag) ? icons.load<Texture2D>("Incomplete") : icons.load<Texture2D>("Complete"));
                     }
-                    ISleekElement sleekElement = iNPCCondition2.createUI(Player.player, icon);
+                    ISleekElement sleekElement = iNPCCondition2.createUI(Player.LocalPlayer, icon);
                     if (sleekElement != null)
                     {
                         sleekElement.PositionOffset_Y = num2;
@@ -190,7 +190,7 @@ public class PlayerNPCQuestUI
             float num3 = 0f;
             for (int k = 0; k < quest.rewards.Length; k++)
             {
-                ISleekElement sleekElement2 = quest.rewards[k].createUI(Player.player);
+                ISleekElement sleekElement2 = quest.rewards[k].createUI(Player.LocalPlayer);
                 if (sleekElement2 != null)
                 {
                     sleekElement2.PositionOffset_Y = num3;
@@ -235,7 +235,7 @@ public class PlayerNPCQuestUI
     private static void onClickedAcceptButton(ISleekElement button)
     {
         SetButtonsAreClickable(isClickable: false);
-        Player.player.quests.ClientChooseDialogueResponse(dialogueContext.GUID, pendingResponse.index);
+        Player.LocalPlayer.quests.ClientChooseDialogueResponse(dialogueContext.GUID, pendingResponse.index);
     }
 
     private static void onClickedDeclineButton(ISleekElement button)
@@ -248,22 +248,22 @@ public class PlayerNPCQuestUI
     private static void onClickedContinueButton(ISleekElement button)
     {
         SetButtonsAreClickable(isClickable: false);
-        Player.player.quests.ClientChooseDialogueResponse(dialogueContext.GUID, pendingResponse.index);
+        Player.LocalPlayer.quests.ClientChooseDialogueResponse(dialogueContext.GUID, pendingResponse.index);
     }
 
     private static void onClickedTrackButton(ISleekElement button)
     {
-        Player.player.quests.ClientTrackQuest(quest);
+        Player.LocalPlayer.quests.ClientTrackQuest(quest);
         if (!Provider.isServer)
         {
-            Player.player.quests.TrackQuest(quest);
+            Player.LocalPlayer.quests.TrackQuest(quest);
         }
         closeNicely();
     }
 
     private static void onClickedAbandonButton(ISleekElement button)
     {
-        Player.player.quests.ClientAbandonQuest(quest);
+        Player.LocalPlayer.quests.ClientAbandonQuest(quest);
         closeNicely();
     }
 

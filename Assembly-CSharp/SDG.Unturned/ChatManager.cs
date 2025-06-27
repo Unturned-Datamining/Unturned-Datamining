@@ -702,7 +702,7 @@ public class ChatManager : SteamCaller
         {
             UnturnedLog.warn("Unable to freeze camera transform because there is no active main camera");
         }
-        else if (!Player.player.channel.owner.isAdmin)
+        else if (!Player.LocalPlayer.channel.owner.isAdmin)
         {
             UnturnedLog.warn("Unable to freeze camera transform without admin permissions");
         }
@@ -714,7 +714,7 @@ public class ChatManager : SteamCaller
 
     internal static void DrawAudioReverbZones()
     {
-        if (!Player.player.channel.owner.isAdmin)
+        if (!Player.LocalPlayer.channel.owner.isAdmin)
         {
             UnturnedLog.warn("Unable to draw audio reverb zones without admin permissions");
             return;

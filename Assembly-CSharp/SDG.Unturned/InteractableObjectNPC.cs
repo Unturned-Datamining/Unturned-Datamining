@@ -520,11 +520,11 @@ public class InteractableObjectNPC : InteractableObject, IDialogueTarget
 
     private void LateUpdate()
     {
-        if (Dedicator.IsDedicatedServer || skull == null || Player.player == null || npcAsset.pose == ENPCPose.ASLEEP)
+        if (Dedicator.IsDedicatedServer || skull == null || Player.LocalPlayer == null || npcAsset.pose == ENPCPose.ASLEEP)
         {
             return;
         }
-        Vector3 vector = Player.player.look.aim.position + new Vector3(0f, -0.45f, 0f) - skull.position;
+        Vector3 vector = Player.LocalPlayer.look.aim.position + new Vector3(0f, -0.45f, 0f) - skull.position;
         if ((isLookingAtPlayer || vector.sqrMagnitude < 4f) && Vector3.Dot(vector, -base.transform.up) > 0.15f)
         {
             headBlend = Mathf.Lerp(headBlend, 1f, 4f * Time.deltaTime);

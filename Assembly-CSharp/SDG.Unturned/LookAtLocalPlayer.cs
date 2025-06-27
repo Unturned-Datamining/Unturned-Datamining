@@ -6,9 +6,9 @@ public class LookAtLocalPlayer : MonoBehaviour
 {
     private void LateUpdate()
     {
-        if (Player.player != null)
+        if (Player.LocalPlayer != null)
         {
-            base.transform.LookAt(Player.player.look.aim);
+            base.transform.LookAt(Player.LocalPlayer.look.aim);
         }
     }
 }

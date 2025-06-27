@@ -1366,7 +1366,7 @@ public class EffectManager : SteamCaller
         }
         if (asset.splatter > 0 && (!asset.gore || OptionsSettings.gore))
         {
-            for (int i = 0; i < asset.splatter * ((asset.splatterLiquid || !(Player.player != null) || Player.player.skills.boost != EPlayerBoost.SPLATTERIFIC) ? 1 : 8); i++)
+            for (int i = 0; i < asset.splatter * ((asset.splatterLiquid || !(Player.LocalPlayer != null) || Player.LocalPlayer.skills.boost != EPlayerBoost.SPLATTERIFIC) ? 1 : 8); i++)
             {
                 RaycastHit hitInfo;
                 if (asset.splatterLiquid)
@@ -1447,9 +1447,9 @@ public class EffectManager : SteamCaller
                 effect(effectAsset, point, new Vector3(UnityEngine.Random.Range(-0.1f, 0.1f), 1f, UnityEngine.Random.Range(-0.1f, 0.1f)));
             }
         }
-        if (!Dedicator.IsDedicatedServer && asset.cameraShakeRadius > 0.001f && asset.cameraShakeMagnitudeDegrees > 0.1f && Player.player != null)
+        if (!Dedicator.IsDedicatedServer && asset.cameraShakeRadius > 0.001f && asset.cameraShakeMagnitudeDegrees > 0.1f && Player.LocalPlayer != null)
         {
-            Player.player.look.FlinchFromExplosion(point, asset.cameraShakeRadius, asset.cameraShakeMagnitudeDegrees);
+            Player.LocalPlayer.look.FlinchFromExplosion(point, asset.cameraShakeRadius, asset.cameraShakeMagnitudeDegrees);
         }
         return transform;
     }

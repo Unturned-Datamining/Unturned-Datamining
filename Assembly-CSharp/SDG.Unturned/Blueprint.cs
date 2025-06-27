@@ -358,6 +358,26 @@ public class Blueprint
         return false;
     }
 
+    /// <summary>
+    /// Search output items (excluding target item) for specific item.
+    /// </summary>
+    public bool DoesOutputCreateItem(ItemAsset itemAsset)
+    {
+        if (itemAsset == null || _outputs == null || _outputs.Length < 1)
+        {
+            return false;
+        }
+        BlueprintOutput[] array = _outputs;
+        for (int i = 0; i < array.Length; i++)
+        {
+            if (array[i].FindItemAsset() == itemAsset)
+            {
+                return true;
+            }
+        }
+        return false;
+    }
+
     public EBlueprintSkill GetLegacyBlueprintSkill()
     {
         if (SkillSpecialityIndex == 2)

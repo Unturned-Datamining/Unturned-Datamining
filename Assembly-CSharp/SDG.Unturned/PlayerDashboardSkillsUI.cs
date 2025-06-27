@@ -46,7 +46,7 @@ public class PlayerDashboardSkillsUI
 
     private static void updateSelection(byte specialityIndex)
     {
-        skills = Player.player.skills.skills[specialityIndex];
+        skills = Player.LocalPlayer.skills.skills[specialityIndex];
         skillsScrollBox.RemoveAllChildren();
         skillsScrollBox.ContentSizeOffset = new Vector2(0f, skills.Length * 90 - 10);
         for (byte b = 0; b < skills.Length; b++)
@@ -63,7 +63,7 @@ public class PlayerDashboardSkillsUI
         {
             backdropBox.RemoveChild(boostButton);
         }
-        boostButton = new SleekBoost((byte)Player.player.skills.boost);
+        boostButton = new SleekBoost((byte)Player.LocalPlayer.skills.boost);
         boostButton.PositionOffset_X = 5f;
         boostButton.PositionOffset_Y = -90f;
         boostButton.PositionScale_X = 0.5f;
@@ -83,18 +83,18 @@ public class PlayerDashboardSkillsUI
 
     private static void onClickedBoostButton(ISleekElement button)
     {
-        if (Player.player.skills.experience >= PlayerSkills.BOOST_COST)
+        if (Player.LocalPlayer.skills.experience >= PlayerSkills.BOOST_COST)
         {
-            Player.player.skills.sendBoost();
+            Player.LocalPlayer.skills.sendBoost();
         }
     }
 
     private static void onClickedSkillButton(ISleekElement button)
     {
         byte b = (byte)(button.PositionOffset_Y / 90f);
-        if (skills[b].level < skills[b].GetClampedMaxUnlockableLevel() && Player.player.skills.experience >= Player.player.skills.cost(selectedSpeciality, b))
+        if (skills[b].level < skills[b].GetClampedMaxUnlockableLevel() && Player.LocalPlayer.skills.experience >= Player.LocalPlayer.skills.cost(selectedSpeciality, b))
         {
-            Player.player.skills.sendUpgrade(selectedSpeciality, b, InputEx.GetKey(ControlsSettings.other));
+            Player.LocalPlayer.skills.sendUpgrade(selectedSpeciality, b, InputEx.GetKey(ControlsSettings.other));
         }
     }
 
@@ -178,12 +178,12 @@ public class PlayerDashboardSkillsUI
         backdropBox.AddChild(skillsScrollBox);
         boostButton = null;
         updateSelection(0);
-        PlayerSkills playerSkills = Player.player.skills;
+        PlayerSkills playerSkills = Player.LocalPlayer.skills;
         playerSkills.onExperienceUpdated = (ExperienceUpdated)Delegate.Combine(playerSkills.onExperienceUpdated, new ExperienceUpdated(onExperienceUpdated));
-        onExperienceUpdated(Player.player.skills.experience);
-        PlayerSkills playerSkills2 = Player.player.skills;
+        onExperienceUpdated(Player.LocalPlayer.skills.experience);
+        PlayerSkills playerSkills2 = Player.LocalPlayer.skills;
         playerSkills2.onBoostUpdated = (BoostUpdated)Delegate.Combine(playerSkills2.onBoostUpdated, new BoostUpdated(onBoostUpdated));
-        PlayerSkills playerSkills3 = Player.player.skills;
+        PlayerSkills playerSkills3 = Player.LocalPlayer.skills;
         playerSkills3.onSkillsUpdated = (SkillsUpdated)Delegate.Combine(playerSkills3.onSkillsUpdated, new SkillsUpdated(onSkillsUpdated));
     }
 }

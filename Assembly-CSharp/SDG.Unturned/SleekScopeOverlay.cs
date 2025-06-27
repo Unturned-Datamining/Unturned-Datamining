@@ -72,18 +72,18 @@ public class SleekScopeOverlay : SleekWrapper
     public override void OnUpdate()
     {
         base.OnUpdate();
-        UseableGun useableGun = Player.player.equipment.useable as UseableGun;
+        UseableGun useableGun = Player.LocalPlayer.equipment.useable as UseableGun;
         if (useableGun == null || useableGun.equippedGunAsset.projectile != null || useableGun.firstAttachments == null || useableGun.firstAttachments.sightAsset == null || useableGun.firstAttachments.sightAsset.distanceMarkers == null || useableGun.firstAttachments.sightAsset.distanceMarkers.Count < 1)
         {
             DisableDistanceMarkers();
             return;
         }
-        if (Player.player == null || Player.player.look == null || Player.player.look.mainCameraZoomFactor <= 0f)
+        if (Player.LocalPlayer == null || Player.LocalPlayer.look == null || Player.LocalPlayer.look.mainCameraZoomFactor <= 0f)
         {
             DisableDistanceMarkers();
             return;
         }
-        float num = OptionsSettings.GetZoomBaseFieldOfView() / Player.player.look.mainCameraZoomFactor;
+        float num = OptionsSettings.GetZoomBaseFieldOfView() / Player.LocalPlayer.look.mainCameraZoomFactor;
         float num2 = MathF.PI / 180f * num;
         if (num2 < 0.001f)
         {

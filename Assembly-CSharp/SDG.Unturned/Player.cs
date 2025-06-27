@@ -32,7 +32,7 @@ public class Player : MonoBehaviour, IDialogueTarget, IExplosionDamageable, IEqu
 
     public int agro;
 
-    private static Player _player;
+    private static Player _localPlayer;
 
     protected SteamChannel _channel;
 
@@ -149,12 +149,15 @@ public class Player : MonoBehaviour, IDialogueTarget, IExplosionDamageable, IEqu
         }
     }
 
-    public static Player player => _player;
+    public static Player LocalPlayer => _localPlayer;
+
+    [Obsolete("Renamed to LocalPlayer to avoid confusion with PlayerCaller.player")]
+    public static Player player => LocalPlayer;
 
     /// <summary>
     /// Exposed for Rocket transition to modules backwards compatibility.
     /// </summary>
-    public static Player instance => player;
+    public static Player instance => LocalPlayer;
 
     public SteamChannel channel => _channel;
 
@@ -632,7 +635,7 @@ public class Player : MonoBehaviour, IDialogueTarget, IExplosionDamageable, IEqu
             if (((EPlayerAdminUsageFlags)newFlagsBitmask).HasFlag(EPlayerAdminUsageFlags.Freecam))
             {
                 UnturnedLog.info($"{channel.owner.playerID} entered freecam admin mode");
-                if (!player.look.canUseFreecam)
+                if (!look.canUseFreecam)
                 {
                     context.Kick("freecam not allowed");
                     return;
@@ -648,7 +651,7 @@ public class Player : MonoBehaviour, IDialogueTarget, IExplosionDamageable, IEqu
             if (((EPlayerAdminUsageFlags)newFlagsBitmask).HasFlag(EPlayerAdminUsageFlags.Workzone))
             {
                 UnturnedLog.info($"{channel.owner.playerID} entered workzone admin mode");
-                if (!player.look.canUseWorkzone)
+                if (!look.canUseWorkzone)
                 {
                     context.Kick("workzone not allowed");
                     return;
@@ -664,7 +667,7 @@ public class Player : MonoBehaviour, IDialogueTarget, IExplosionDamageable, IEqu
             if (((EPlayerAdminUsageFlags)newFlagsBitmask).HasFlag(EPlayerAdminUsageFlags.SpectatorStatsOverlay))
             {
                 UnturnedLog.info($"{channel.owner.playerID} turned on spectator stats overlay admin mode");
-                if (!player.look.canUseSpecStats)
+                if (!look.canUseSpecStats)
                 {
                     context.Kick("specstats not allowed");
                     return;
@@ -1205,7 +1208,7 @@ public class Player : MonoBehaviour, IDialogueTarget, IExplosionDamageable, IEqu
     {
         if (channel.IsLocalPlayer)
         {
-            _player = this;
+            _localPlayer = this;
             _first = base.transform.Find("First");
             _third = base.transform.Find("Third");
             first.gameObject.SetActive(value: true);

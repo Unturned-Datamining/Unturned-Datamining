@@ -863,6 +863,7 @@
 - [InventoryStateUpdated.cs](InventoryStateUpdated.cs)
 - [InventoryStored.cs](InventoryStored.cs)
 - [InventoryUpdated.cs](InventoryUpdated.cs)
+- [IOwnershipInfo.cs](IOwnershipInfo.cs)
 - [IPluginAdvertising.cs](IPluginAdvertising.cs)
 - [IReun.cs](IReun.cs)
 - [IsBlindfoldedChangedHandler.cs](IsBlindfoldedChangedHandler.cs)

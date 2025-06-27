@@ -42,7 +42,7 @@ public class PlayerBarricadeLibraryUI
             if (library != null)
             {
                 capacityBox.Text = localization.format("Capacity_Text", library.amount, library.capacity);
-                walletBox.Text = Player.player.skills.experience.ToString();
+                walletBox.Text = Player.LocalPlayer.skills.experience.ToString();
                 amountField.Value = 0u;
                 updateTax();
             }
@@ -68,7 +68,7 @@ public class PlayerBarricadeLibraryUI
             {
                 tax = (uint)Math.Ceiling((double)amountField.Value * ((double)(int)library.tax / 100.0));
                 net = amountField.Value - tax;
-                yesButton.IsClickable = amountField.Value <= Player.player.skills.experience && net + library.amount <= library.capacity;
+                yesButton.IsClickable = amountField.Value <= Player.LocalPlayer.skills.experience && net + library.amount <= library.capacity;
             }
             else
             {
@@ -101,7 +101,7 @@ public class PlayerBarricadeLibraryUI
         {
             if (transactionButton.state == 0)
             {
-                if (amountField.Value > Player.player.skills.experience || net + library.amount > library.capacity)
+                if (amountField.Value > Player.LocalPlayer.skills.experience || net + library.amount > library.capacity)
                 {
                     return;
                 }

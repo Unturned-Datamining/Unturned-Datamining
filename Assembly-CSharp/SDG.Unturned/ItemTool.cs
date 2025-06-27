@@ -479,18 +479,18 @@ public class ItemTool : MonoBehaviour
         SkinAsset skinAsset = null;
         string tags = string.Empty;
         string dynamic_props = string.Empty;
-        if (Player.player != null)
+        if (Player.LocalPlayer != null)
         {
             bool flag = itemAsset != null && itemAsset.sharedSkinLookupID != itemAsset.id;
             ushort itemID = (flag ? itemAsset.sharedSkinLookupID : id);
-            if (Player.player.channel.owner.getItemSkinItemDefID(itemID, out var itemdefid) && itemdefid != 0)
+            if (Player.LocalPlayer.channel.owner.getItemSkinItemDefID(itemID, out var itemdefid) && itemdefid != 0)
             {
                 if (!flag || itemAsset.SharedSkinShouldApplyVisuals)
                 {
                     num = Provider.provider.economyService.getInventorySkinID(itemdefid);
                     skinAsset = Assets.find(EAssetType.SKIN, num) as SkinAsset;
                 }
-                Player.player.channel.owner.getTagsAndDynamicPropsForItem(itemdefid, out tags, out dynamic_props);
+                Player.LocalPlayer.channel.owner.getTagsAndDynamicPropsForItem(itemdefid, out tags, out dynamic_props);
             }
         }
         return getIcon(id, num, quality, state, itemAsset, skinAsset, tags, dynamic_props, x, y, scale: false, readableOnCPU: false, callback);

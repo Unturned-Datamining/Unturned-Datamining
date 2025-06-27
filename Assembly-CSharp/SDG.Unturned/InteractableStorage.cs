@@ -404,7 +404,7 @@ public class InteractableStorage : Interactable, IManualOnDestroy
 
     public override bool checkUseable()
     {
-        if (checkStore(Provider.client, Player.player.quests.groupID))
+        if (checkStore(Provider.client, Player.LocalPlayer.quests.groupID))
         {
             return !PlayerUI.window.showCursor;
         }

@@ -92,18 +92,18 @@ public class InteractableObjectDropper : InteractableObjectTriggerableBase
     {
         if (base.objectAsset.interactabilityPower == EObjectInteractabilityPower.NONE || base.isWired)
         {
-            return base.objectAsset.areInteractabilityConditionsMet(Player.player);
+            return base.objectAsset.areInteractabilityConditionsMet(Player.LocalPlayer);
         }
         return false;
     }
 
     public override bool checkHint(out EPlayerMessage message, out string text, out Color color)
     {
-        INPCCondition firstUnmetCondition = base.objectAsset.interactabilityConditionsList.GetFirstUnmetCondition(Player.player);
+        INPCCondition firstUnmetCondition = base.objectAsset.interactabilityConditionsList.GetFirstUnmetCondition(Player.LocalPlayer);
         if (firstUnmetCondition != null)
         {
             message = EPlayerMessage.CONDITION;
-            text = firstUnmetCondition.formatCondition(Player.player);
+            text = firstUnmetCondition.formatCondition(Player.LocalPlayer);
             color = Color.white;
             return true;
         }

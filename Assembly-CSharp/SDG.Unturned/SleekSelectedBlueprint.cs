@@ -421,7 +421,7 @@ public class SleekSelectedBlueprint : SleekWrapper
         {
             int skillSpecialityIndex = SelectedBlueprint.SkillSpecialityIndex;
             int skillIndex = SelectedBlueprint.SkillIndex;
-            bool flag = Player.player.skills.skills[skillSpecialityIndex][skillIndex].level >= SelectedBlueprint.level;
+            bool flag = Player.LocalPlayer.skills.skills[skillSpecialityIndex][skillIndex].level >= SelectedBlueprint.level;
             Local localization = PlayerDashboardSkillsUI.localization;
             string arg = localization.format("Speciality_" + skillSpecialityIndex + "_Skill_" + skillIndex);
             string arg2 = localization.format("Level_" + SelectedBlueprint.level);
@@ -458,7 +458,7 @@ public class SleekSelectedBlueprint : SleekWrapper
                     requiredTagsContainer.AddChild(sleekSelectedBlueprintRequiredTag);
                     requiredTags.Add(sleekSelectedBlueprintRequiredTag);
                 }
-                sleekSelectedBlueprintRequiredTag.SetTag(tagAsset, !Player.player.crafting.IsCraftingTagAvailable(tagAsset));
+                sleekSelectedBlueprintRequiredTag.SetTag(tagAsset, !Player.LocalPlayer.crafting.IsCraftingTagAvailable(tagAsset));
                 sleekSelectedBlueprintRequiredTag.PositionOffset_Y = 40 + i * 50;
                 i++;
             }
@@ -482,7 +482,7 @@ public class SleekSelectedBlueprint : SleekWrapper
         float num = 0f;
         for (int i = 0; i < SelectedBlueprint.questConditions.Length; i++)
         {
-            ISleekElement sleekElement = SelectedBlueprint.questConditions[i].createUI(Player.player, null);
+            ISleekElement sleekElement = SelectedBlueprint.questConditions[i].createUI(Player.LocalPlayer, null);
             if (sleekElement != null)
             {
                 sleekElement.PositionOffset_Y = num;
@@ -508,7 +508,7 @@ public class SleekSelectedBlueprint : SleekWrapper
         float num = 0f;
         for (int i = 0; i < SelectedBlueprint.questRewards.Length; i++)
         {
-            ISleekElement sleekElement = SelectedBlueprint.questRewards[i].createUI(Player.player);
+            ISleekElement sleekElement = SelectedBlueprint.questRewards[i].createUI(Player.LocalPlayer);
             if (sleekElement != null)
             {
                 sleekElement.PositionOffset_Y = num;
@@ -524,10 +524,10 @@ public class SleekSelectedBlueprint : SleekWrapper
 
     private void OnClickedCraftButton(ISleekElement button)
     {
-        if (!Player.player.equipment.isBusy)
+        if (!Player.LocalPlayer.equipment.isBusy)
         {
             bool key = InputEx.GetKey(ControlsSettings.other);
-            Player.player.crafting.SendRequestToCraft(SelectedBlueprint, key);
+            Player.LocalPlayer.crafting.SendRequestToCraft(SelectedBlueprint, key);
         }
     }
 

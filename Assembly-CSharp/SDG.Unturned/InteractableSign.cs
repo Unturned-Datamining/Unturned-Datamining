@@ -187,7 +187,7 @@ public class InteractableSign : Interactable
 
     public override bool checkUseable()
     {
-        if (checkUpdate(Provider.client, Player.player.quests.groupID))
+        if (checkUpdate(Provider.client, Player.LocalPlayer.quests.groupID))
         {
             return !PlayerUI.window.showCursor;
         }

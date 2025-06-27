@@ -126,7 +126,7 @@ public class PlayerUI : MonoBehaviour
     {
         get
         {
-            if (Player.player != null && Player.player.equipment.isUseableShowingMenu)
+            if (Player.LocalPlayer != null && Player.LocalPlayer.equipment.isUseableShowingMenu)
             {
                 return false;
             }
@@ -780,7 +780,7 @@ public class PlayerUI : MonoBehaviour
         case EPlayerMessage.TALK:
         {
             InteractableObjectNPC interactableObjectNPC = PlayerInteract.interactable as InteractableObjectNPC;
-            string arg = ((interactableObjectNPC != null && interactableObjectNPC.npcAsset != null) ? interactableObjectNPC.npcAsset.GetNameShownToPlayer(Player.player) : "null");
+            string arg = ((interactableObjectNPC != null && interactableObjectNPC.npcAsset != null) ? interactableObjectNPC.npcAsset.GetNameShownToPlayer(Player.LocalPlayer) : "null");
             messageLabel.Text = PlayerLifeUI.localization.format("Talk", MenuConfigurationControlsUI.getKeyCodeText(ControlsSettings.interact), arg);
             break;
         }
@@ -899,7 +899,7 @@ public class PlayerUI : MonoBehaviour
                 messageLabel2.Text = PlayerLifeUI.localization.format("Vehicle_Exit", MenuConfigurationControlsUI.getKeyCodeText(ControlsSettings.interact));
                 break;
             case EPlayerMessage.VEHICLE_SWAP:
-                messageLabel2.Text = PlayerLifeUI.localization.format("Vehicle_Swap", Player.player.movement.getVehicle().passengers.Length);
+                messageLabel2.Text = PlayerLifeUI.localization.format("Vehicle_Swap", Player.LocalPlayer.movement.getVehicle().passengers.Length);
                 break;
             case EPlayerMessage.LIGHT:
                 messageLabel2.Text = PlayerLifeUI.localization.format("Light", MenuConfigurationControlsUI.getKeyCodeText(ControlsSettings.tactical));
@@ -1066,7 +1066,7 @@ public class PlayerUI : MonoBehaviour
 
     private void onGlassesUpdated(ushort newGlasses, byte newGlassesQuality, byte[] newGlassesState)
     {
-        isBlindfolded = Player.player.clothing.glassesAsset != null && Player.player.clothing.glassesAsset.isBlindfold;
+        isBlindfolded = Player.LocalPlayer.clothing.glassesAsset != null && Player.LocalPlayer.clothing.glassesAsset.isBlindfold;
     }
 
     private void onMoonUpdated(bool isFullMoon)
@@ -1246,7 +1246,7 @@ public class PlayerUI : MonoBehaviour
         }
         if (flag)
         {
-            if (Player.player.life.isDead)
+            if (Player.LocalPlayer.life.isDead)
             {
                 PlayerDeathUI.open(fromDeath: false);
             }
@@ -1263,7 +1263,7 @@ public class PlayerUI : MonoBehaviour
         {
             PlayerNPCVendorUI.closeNicely();
         }
-        else if (!Player.player.equipment.isUseableShowingMenu)
+        else if (!Player.LocalPlayer.equipment.isUseableShowingMenu)
         {
             PlayerDeathUI.close();
             PlayerLifeUI.close();
@@ -1276,12 +1276,12 @@ public class PlayerUI : MonoBehaviour
     /// </summary>
     private void updateGroupLabels()
     {
-        if (Player.player == null || MainCamera.instance == null || groupUI.groups == null || groupUI.groups.Count != Provider.clients.Count)
+        if (Player.LocalPlayer == null || MainCamera.instance == null || groupUI.groups == null || groupUI.groups.Count != Provider.clients.Count)
         {
             return;
         }
         Camera camera = MainCamera.instance;
-        bool areSpecStatsVisible = Player.player.look.areSpecStatsVisible;
+        bool areSpecStatsVisible = Player.LocalPlayer.look.areSpecStatsVisible;
         for (int i = 0; i < groupUI.groups.Count; i++)
         {
             ISleekLabel sleekLabel = groupUI.groups[i];
@@ -1298,7 +1298,7 @@ public class PlayerUI : MonoBehaviour
             else if (Provider.modeConfigData.Gameplay.Group_HUD)
             {
                 bool num = steamPlayer.playerID.steamID != Provider.client;
-                bool flag2 = steamPlayer.player.quests.isMemberOfSameGroupAs(Player.player);
+                bool flag2 = steamPlayer.player.quests.isMemberOfSameGroupAs(Player.LocalPlayer);
                 flag = num && flag2;
             }
             else
@@ -1342,7 +1342,7 @@ public class PlayerUI : MonoBehaviour
             sleekLabel.TextColor = new SleekColor(ESleekTint.FONT, alpha);
             if (!sleekLabel.IsVisible)
             {
-                if (steamPlayer.isMemberOfSameGroupAs(Player.player) && !string.IsNullOrEmpty(steamPlayer.playerID.nickName))
+                if (steamPlayer.isMemberOfSameGroupAs(Player.LocalPlayer) && !string.IsNullOrEmpty(steamPlayer.playerID.nickName))
                 {
                     sleekLabel.Text = steamPlayer.playerID.nickName;
                 }
@@ -1489,18 +1489,18 @@ public class PlayerUI : MonoBehaviour
         {
             if (!Provider.isServer && Provider.isPvP)
             {
-                if (Time.realtimeSinceStartup - Player.player.life.lastDeath < (float)Provider.modeConfigData.Gameplay.Timer_Home)
+                if (Time.realtimeSinceStartup - Player.LocalPlayer.life.lastDeath < (float)Provider.modeConfigData.Gameplay.Timer_Home)
                 {
-                    PlayerDeathUI.homeButton.text = PlayerDeathUI.localization.format("Home_Button_Timer", Mathf.Ceil((float)Provider.modeConfigData.Gameplay.Timer_Home - (Time.realtimeSinceStartup - Player.player.life.lastDeath)));
+                    PlayerDeathUI.homeButton.text = PlayerDeathUI.localization.format("Home_Button_Timer", Mathf.Ceil((float)Provider.modeConfigData.Gameplay.Timer_Home - (Time.realtimeSinceStartup - Player.LocalPlayer.life.lastDeath)));
                 }
                 else
                 {
                     PlayerDeathUI.homeButton.text = PlayerDeathUI.localization.format("Home_Button");
                 }
             }
-            else if (Time.realtimeSinceStartup - Player.player.life.lastRespawn < (float)Provider.modeConfigData.Gameplay.Timer_Respawn)
+            else if (Time.realtimeSinceStartup - Player.LocalPlayer.life.lastRespawn < (float)Provider.modeConfigData.Gameplay.Timer_Respawn)
             {
-                PlayerDeathUI.homeButton.text = PlayerDeathUI.localization.format("Home_Button_Timer", Mathf.Ceil((float)Provider.modeConfigData.Gameplay.Timer_Respawn - (Time.realtimeSinceStartup - Player.player.life.lastRespawn)));
+                PlayerDeathUI.homeButton.text = PlayerDeathUI.localization.format("Home_Button_Timer", Mathf.Ceil((float)Provider.modeConfigData.Gameplay.Timer_Respawn - (Time.realtimeSinceStartup - Player.LocalPlayer.life.lastRespawn)));
             }
             else
             {
@@ -1509,9 +1509,9 @@ public class PlayerUI : MonoBehaviour
         }
         if (PlayerDeathUI.respawnButton != null)
         {
-            if (Time.realtimeSinceStartup - Player.player.life.lastRespawn < (float)Provider.modeConfigData.Gameplay.Timer_Respawn)
+            if (Time.realtimeSinceStartup - Player.LocalPlayer.life.lastRespawn < (float)Provider.modeConfigData.Gameplay.Timer_Respawn)
             {
-                PlayerDeathUI.respawnButton.text = PlayerDeathUI.localization.format("Respawn_Button_Timer", Mathf.Ceil((float)Provider.modeConfigData.Gameplay.Timer_Respawn - (Time.realtimeSinceStartup - Player.player.life.lastRespawn)));
+                PlayerDeathUI.respawnButton.text = PlayerDeathUI.localization.format("Respawn_Button_Timer", Mathf.Ceil((float)Provider.modeConfigData.Gameplay.Timer_Respawn - (Time.realtimeSinceStartup - Player.LocalPlayer.life.lastRespawn)));
             }
             else
             {
@@ -1556,7 +1556,7 @@ public class PlayerUI : MonoBehaviour
         if ((InputEx.GetKeyDown(ControlsSettings.left) || InputEx.GetKeyDown(ControlsSettings.up) || InputEx.GetKeyDown(ControlsSettings.right) || InputEx.GetKeyDown(ControlsSettings.down)) && PlayerDashboardUI.active)
         {
             PlayerDashboardUI.close();
-            if (Player.player.life.IsAlive)
+            if (Player.LocalPlayer.life.IsAlive)
             {
                 PlayerLifeUI.open();
             }
@@ -1569,7 +1569,7 @@ public class PlayerUI : MonoBehaviour
         {
             escapeMenu();
         }
-        if (Player.player.life.IsAlive)
+        if (Player.LocalPlayer.life.IsAlive)
         {
             if (InputEx.ConsumeKeyDown(ControlsSettings.dashboard))
             {
@@ -1762,13 +1762,13 @@ public class PlayerUI : MonoBehaviour
         if (InputEx.GetKeyDown(ControlsSettings.clipboardDebug))
         {
             string text = string.Empty;
-            for (int i = 0; i < Player.player.quests.flagsList.Count; i++)
+            for (int i = 0; i < Player.LocalPlayer.quests.flagsList.Count; i++)
             {
                 if (i > 0)
                 {
                     text += "\n";
                 }
-                text += $"{Player.player.quests.flagsList[i].id,5} {Player.player.quests.flagsList[i].value,5}";
+                text += $"{Player.LocalPlayer.quests.flagsList[i].id,5} {Player.LocalPlayer.quests.flagsList[i].value,5}";
             }
             GUIUtility.systemCopyBuffer = text;
         }
@@ -1777,8 +1777,8 @@ public class PlayerUI : MonoBehaviour
 
     private void tickMenuBlur()
     {
-        EPluginWidgetFlags pluginWidgetFlags = Player.player.pluginWidgetFlags;
-        bool isMainBlurEnabled = (pluginWidgetFlags & EPluginWidgetFlags.ForceBlur) == EPluginWidgetFlags.ForceBlur || ((pluginWidgetFlags & EPluginWidgetFlags.NoBlur) != EPluginWidgetFlags.NoBlur && ((window.showCursor && !usingCustomModal && !MenuConfigurationGraphicsUI.active && !PlayerNPCDialogueUI.active && !PlayerNPCQuestUI.active && !PlayerNPCVendorUI.active && !PlayerWorkzoneUI.active) || (WaterUtility.isPointUnderwater(MainCamera.instance.transform.position) && (Player.player.clothing.glassesAsset == null || !Player.player.clothing.glassesAsset.proofWater)) || (Player.player.look.isScopeActive && GraphicsSettings.scopeQuality != 0 && Player.player.look.perspective == EPlayerPerspective.FIRST && Player.player.equipment.useable != null && ((UseableGun)Player.player.equipment.useable).isAiming)));
+        EPluginWidgetFlags pluginWidgetFlags = Player.LocalPlayer.pluginWidgetFlags;
+        bool isMainBlurEnabled = (pluginWidgetFlags & EPluginWidgetFlags.ForceBlur) == EPluginWidgetFlags.ForceBlur || ((pluginWidgetFlags & EPluginWidgetFlags.NoBlur) != EPluginWidgetFlags.NoBlur && ((window.showCursor && !usingCustomModal && !MenuConfigurationGraphicsUI.active && !PlayerNPCDialogueUI.active && !PlayerNPCQuestUI.active && !PlayerNPCVendorUI.active && !PlayerWorkzoneUI.active) || (WaterUtility.isPointUnderwater(MainCamera.instance.transform.position) && (Player.LocalPlayer.clothing.glassesAsset == null || !Player.LocalPlayer.clothing.glassesAsset.proofWater)) || (Player.LocalPlayer.look.isScopeActive && GraphicsSettings.scopeQuality != 0 && Player.LocalPlayer.look.perspective == EPlayerPerspective.FIRST && Player.LocalPlayer.equipment.useable != null && ((UseableGun)Player.LocalPlayer.equipment.useable).isAiming)));
         UnturnedPostProcess.instance.SetIsMainBlurEnabled(isMainBlurEnabled);
     }
 
@@ -1836,12 +1836,12 @@ public class PlayerUI : MonoBehaviour
                 PlayerDashboardInformationUI.updateDynamicMap();
             }
             tickInput();
-            bool flag = Player.player.inPluginModal || PlayerPauseUI.active || MenuConfigurationOptionsUI.active || MenuConfigurationDisplayUI.active || MenuConfigurationGraphicsUI.active || MenuConfigurationControlsUI.active || PlayerPauseUI.audioMenu.active || PlayerDashboardUI.active || PlayerDeathUI.active || PlayerLifeUI.chatting || PlayerLifeUI.gesturing || PlayerBarricadeSignUI.active || boomboxUI.active || PlayerBarricadeLibraryUI.active || mannequinUI.active || browserRequestUI.isActive || PlayerNPCDialogueUI.active || PlayerNPCQuestUI.active || PlayerNPCVendorUI.active || (PlayerWorkzoneUI.active && !InputEx.GetKey(ControlsSettings.secondary)) || isLocked;
+            bool flag = Player.LocalPlayer.inPluginModal || PlayerPauseUI.active || MenuConfigurationOptionsUI.active || MenuConfigurationDisplayUI.active || MenuConfigurationGraphicsUI.active || MenuConfigurationControlsUI.active || PlayerPauseUI.audioMenu.active || PlayerDashboardUI.active || PlayerDeathUI.active || PlayerLifeUI.chatting || PlayerLifeUI.gesturing || PlayerBarricadeSignUI.active || boomboxUI.active || PlayerBarricadeLibraryUI.active || mannequinUI.active || browserRequestUI.isActive || PlayerNPCDialogueUI.active || PlayerNPCQuestUI.active || PlayerNPCVendorUI.active || (PlayerWorkzoneUI.active && !InputEx.GetKey(ControlsSettings.secondary)) || isLocked;
             usingCustomModal = !flag & inputWantsCustomModal;
             flag |= inputWantsCustomModal;
             window.showCursor = flag;
             tickMenuBlur();
-            if (Player.player.life.vision > 0)
+            if (Player.LocalPlayer.life.vision > 0)
             {
                 tickIsHallucinating(Time.deltaTime);
             }
@@ -1855,7 +1855,7 @@ public class PlayerUI : MonoBehaviour
         usingCustomModal = false;
         chat = EChatMode.GLOBAL;
         window = new SleekWindow();
-        if (Player.player.channel.owner.playerID.BypassIntegrityChecks)
+        if (Player.LocalPlayer.channel.owner.playerID.BypassIntegrityChecks)
         {
             ISleekLabel sleekLabel = Glazier.Get().CreateLabel();
             sleekLabel.SizeOffset_X = 200f;
@@ -2024,12 +2024,12 @@ public class PlayerUI : MonoBehaviour
         painAlpha = 0f;
         stunAlpha = 0f;
         isBlindfolded = false;
-        PlayerLife life = Player.player.life;
+        PlayerLife life = Player.LocalPlayer.life;
         life.onVisionUpdated = (VisionUpdated)Delegate.Combine(life.onVisionUpdated, new VisionUpdated(onVisionUpdated));
-        PlayerLife life2 = Player.player.life;
+        PlayerLife life2 = Player.LocalPlayer.life;
         life2.onLifeUpdated = (LifeUpdated)Delegate.Combine(life2.onLifeUpdated, new LifeUpdated(onLifeUpdated));
-        onLifeUpdated(Player.player.life.isDead);
-        PlayerClothing clothing = Player.player.clothing;
+        onLifeUpdated(Player.LocalPlayer.life.isDead);
+        PlayerClothing clothing = Player.LocalPlayer.clothing;
         clothing.onGlassesUpdated = (GlassesUpdated)Delegate.Combine(clothing.onGlassesUpdated, new GlassesUpdated(onGlassesUpdated));
         LightingManager.onMoonUpdated = (MoonUpdated)Delegate.Combine(LightingManager.onMoonUpdated, new MoonUpdated(onMoonUpdated));
         hallucinationReverbZone = GetComponent<AudioReverbZone>();

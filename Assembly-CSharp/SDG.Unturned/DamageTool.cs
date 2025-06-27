@@ -192,6 +192,21 @@ public class DamageTool
         return resourceTransform.root;
     }
 
+    /// <summary>
+    /// Somewhat hacked-together to find owner of a vehicle, barricade, or structure descendant.
+    /// </summary>
+    public static bool TryFindOwnership(Transform transform, out ulong ownerUser, out ulong ownerGroup)
+    {
+        IOwnershipInfo ownershipInfo = transform?.GetComponentInParent<IOwnershipInfo>();
+        if (ownershipInfo != null)
+        {
+            return ownershipInfo.TryGetOwnership(out ownerUser, out ownerGroup);
+        }
+        ownerUser = 0uL;
+        ownerGroup = 0uL;
+        return false;
+    }
+
     public static void damagePlayer(DamagePlayerParameters parameters, out EPlayerKill kill)
     {
         if (parameters.player == null || parameters.player.life.isDead)
@@ -1040,7 +1055,7 @@ public class DamageTool
     [SteamCall(ESteamCallValidation.ONLY_FROM_SERVER)]
     public static void ReceiveSpawnBulletImpact(Vector3 position, Vector3 normal, string materialName, Transform colliderTransform, NetId instigatorNetId)
     {
-        bool wasInstigatedByLocalPlayer = Player.player != null && instigatorNetId == Player.player.channel.owner.GetNetId();
+        bool wasInstigatedByLocalPlayer = Player.LocalPlayer != null && instigatorNetId == Player.LocalPlayer.channel.owner.GetNetId();
         LocalSpawnBulletImpactEffect(position, normal, materialName, colliderTransform);
         PlayBulletImpactAudio(position, materialName, wasInstigatedByLocalPlayer);
     }

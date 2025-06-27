@@ -4,7 +4,7 @@ using Unturned.SystemEx;
 
 namespace SDG.Unturned;
 
-internal class BarricadeRefComponent : MonoBehaviour, IExplosionDamageable, IEquatable<IExplosionDamageable>, ICraftingTagProvider
+internal class BarricadeRefComponent : MonoBehaviour, IExplosionDamageable, IEquatable<IExplosionDamageable>, ICraftingTagProvider, IOwnershipInfo
 {
     internal BarricadeDrop tempNotSureIfBarricadeShouldBeAComponentYet;
 
@@ -92,6 +92,20 @@ internal class BarricadeRefComponent : MonoBehaviour, IExplosionDamageable, IEqu
     public bool Equals(ICraftingTagProvider obj)
     {
         return this == obj;
+    }
+
+    public bool TryGetOwnership(out ulong ownerUser, out ulong ownerGroup)
+    {
+        BarricadeData barricadeData = tempNotSureIfBarricadeShouldBeAComponentYet?.GetServersideData();
+        if (barricadeData != null)
+        {
+            ownerUser = barricadeData.owner;
+            ownerGroup = barricadeData.group;
+            return true;
+        }
+        ownerUser = 0uL;
+        ownerGroup = 0uL;
+        return false;
     }
 
     private void Start()

@@ -191,7 +191,7 @@ public class PlayerDashboardCraftingUI
                 for (int j = 0; j < applicableRequiredNearbyCraftingTags.Length; j++)
                 {
                     TagAsset tagAsset = applicableRequiredNearbyCraftingTags[j].Get<TagAsset>();
-                    if (tagAsset != null && !Player.player.crafting.IsCraftingTagAvailable(tagAsset))
+                    if (tagAsset != null && !Player.LocalPlayer.crafting.IsCraftingTagAvailable(tagAsset))
                     {
                         craftTooltipBuilder.Append(localization.format("NotCraftable_LineItemPrefix"));
                         craftTooltipBuilder.AppendFormat(localization.format("NotCraftable_MissingCraftingTag"), tagAsset.PlainTextName);
@@ -269,7 +269,7 @@ public class PlayerDashboardCraftingUI
         HashSet<TagAsset> hashSet = new HashSet<TagAsset>();
         blueprintOwners.Clear();
         Assets.find(blueprintOwners);
-        PlayerCrafting crafting = Player.player.crafting;
+        PlayerCrafting crafting = Player.LocalPlayer.crafting;
         foreach (IBlueprintOwner blueprintOwner in blueprintOwners)
         {
             foreach (Blueprint blueprint in blueprintOwner.GetBlueprints())
@@ -300,7 +300,7 @@ public class PlayerDashboardCraftingUI
     private static void RefreshCraftableBlueprints()
     {
         availableItemAssets.Clear();
-        Player.player.crafting.GatherUniqueInputItems(availableItemAssets);
+        Player.LocalPlayer.crafting.GatherUniqueInputItems(availableItemAssets);
         foreach (Blueprint loadedBlueprint in loadedBlueprints)
         {
             if (loadedBlueprint.ContainsAnyOfItems(availableItemAssets))
@@ -417,7 +417,7 @@ public class PlayerDashboardCraftingUI
 
     private static void RefreshBlueprintList()
     {
-        Player.player.crafting.UpdateAvailableCraftingTags();
+        Player.LocalPlayer.crafting.UpdateAvailableCraftingTags();
         RefreshTagProviderButtons();
         bool flag = !string.IsNullOrEmpty(itemNameFilter);
         bool flag2 = false;
@@ -580,8 +580,8 @@ public class PlayerDashboardCraftingUI
             updateBlueprintStatusParameters.status = blueprintStatus;
             updateBlueprintStatusParameters.shouldExitEarly = false;
             UpdateBlueprintStatusParameters p = updateBlueprintStatusParameters;
-            Player.player.crafting.UpdateBlueprintStaticStatus(in p, bypassWorkstationRequirements: false);
-            Player.player.crafting.UpdateBlueprintDynamicStatus(in p);
+            Player.LocalPlayer.crafting.UpdateBlueprintStaticStatus(in p, bypassWorkstationRequirements: false);
+            Player.LocalPlayer.crafting.UpdateBlueprintDynamicStatus(in p);
             if ((!hideUncraftable || blueprintStatus.IsCraftable) && ((!blueprintStatus.isMissingAnyCriticalInputItem && blueprintStatus.hasAnyInputItem) || (filteredBlueprint.canBeVisibleWhenSearchedWithoutRequiredItems && flag4)) && (!blueprintStatus.isMissingAnyNpcConditions || filteredBlueprint.CanBeVisibleWithUnmetConditions))
             {
                 blueprintStatus.UpdateCraftabilityScore();
@@ -751,9 +751,9 @@ public class PlayerDashboardCraftingUI
         bool key2 = InputEx.GetKey(ControlsSettings.other);
         if ((key2 || key != OptionsSettings.ShouldClickBlueprintToCraft) && blueprintStatus.IsCraftable)
         {
-            if (!Player.player.equipment.isBusy)
+            if (!Player.LocalPlayer.equipment.isBusy)
             {
-                Player.player.crafting.SendRequestToCraft(blueprintStatus.blueprint, key2);
+                Player.LocalPlayer.crafting.SendRequestToCraft(blueprintStatus.blueprint, key2);
             }
         }
         else if (selectedBlueprintMenu.SelectedBlueprint == blueprintStatus.blueprint)
@@ -999,9 +999,9 @@ public class PlayerDashboardCraftingUI
         selectedBlueprintMenu.SizeOffset_Y = -20f;
         selectedBlueprintMenu.IsVisible = false;
         backdropBox.AddChild(selectedBlueprintMenu);
-        PlayerInventory inventory = Player.player.inventory;
+        PlayerInventory inventory = Player.LocalPlayer.inventory;
         inventory.onInventoryResized = (InventoryResized)Delegate.Combine(inventory.onInventoryResized, new InventoryResized(onInventoryResized));
-        PlayerCrafting crafting = Player.player.crafting;
+        PlayerCrafting crafting = Player.LocalPlayer.crafting;
         crafting.onCraftingUpdated = (CraftingUpdated)Delegate.Combine(crafting.onCraftingUpdated, new CraftingUpdated(onCraftingUpdated));
         PlayerCrafting.OnLocalPlayerBlueprintPreferencesChanged = (System.Action)Delegate.Combine(PlayerCrafting.OnLocalPlayerBlueprintPreferencesChanged, new System.Action(RefreshShowIgnoredToggleAndFavoritesButtonVisible));
     }

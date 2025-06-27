@@ -25,7 +25,7 @@ public class PlayerWorkzoneUI
         if (!active)
         {
             active = true;
-            Player.player.workzone.isBuilding = true;
+            Player.LocalPlayer.workzone.isBuilding = true;
             container.AnimateIntoView();
         }
     }
@@ -35,7 +35,7 @@ public class PlayerWorkzoneUI
         if (active)
         {
             active = false;
-            Player.player.workzone.isBuilding = false;
+            Player.LocalPlayer.workzone.isBuilding = false;
             container.AnimateOutOfView(0f, 1f);
         }
     }
@@ -64,27 +64,27 @@ public class PlayerWorkzoneUI
 
     private static void onTypedSnapTransformField(ISleekFloat32Field field, float value)
     {
-        Player.player.workzone.snapTransform = value;
+        Player.LocalPlayer.workzone.snapTransform = value;
     }
 
     private static void onTypedSnapRotationField(ISleekFloat32Field field, float value)
     {
-        Player.player.workzone.snapRotation = value;
+        Player.LocalPlayer.workzone.snapRotation = value;
     }
 
     private static void onClickedTransformButton(ISleekElement button)
     {
-        Player.player.workzone.dragMode = EDragMode.TRANSFORM;
+        Player.LocalPlayer.workzone.dragMode = EDragMode.TRANSFORM;
     }
 
     private static void onClickedRotateButton(ISleekElement button)
     {
-        Player.player.workzone.dragMode = EDragMode.ROTATE;
+        Player.LocalPlayer.workzone.dragMode = EDragMode.ROTATE;
     }
 
     private static void onSwappedStateCoordinate(SleekButtonState button, int index)
     {
-        Player.player.workzone.dragCoordinate = (EDragCoordinate)index;
+        Player.LocalPlayer.workzone.dragCoordinate = (EDragCoordinate)index;
     }
 
     public PlayerWorkzoneUI()
@@ -101,8 +101,8 @@ public class PlayerWorkzoneUI
         container.SizeScale_Y = 1f;
         PlayerUI.window.AddChild(container);
         active = false;
-        Player.player.workzone.onDragStarted = onDragStarted;
-        Player.player.workzone.onDragStopped = onDragStopped;
+        Player.LocalPlayer.workzone.onDragStarted = onDragStarted;
+        Player.LocalPlayer.workzone.onDragStopped = onDragStopped;
         dragBox = Glazier.Get().CreateImage((Texture2D)GlazierResources.PixelTexture);
         dragBox.TintColor = new Color(1f, 1f, 0f, 0.2f);
         PlayerUI.window.AddChild(dragBox);
@@ -112,7 +112,7 @@ public class PlayerWorkzoneUI
         snapTransformField.PositionScale_Y = 1f;
         snapTransformField.SizeOffset_X = 200f;
         snapTransformField.SizeOffset_Y = 30f;
-        snapTransformField.Value = Player.player.workzone.snapTransform;
+        snapTransformField.Value = Player.LocalPlayer.workzone.snapTransform;
         snapTransformField.AddLabel(local.format("SnapTransformLabelText"), ESleekSide.RIGHT);
         snapTransformField.OnValueChanged += onTypedSnapTransformField;
         container.AddChild(snapTransformField);
@@ -121,7 +121,7 @@ public class PlayerWorkzoneUI
         snapRotationField.PositionScale_Y = 1f;
         snapRotationField.SizeOffset_X = 200f;
         snapRotationField.SizeOffset_Y = 30f;
-        snapRotationField.Value = Player.player.workzone.snapRotation;
+        snapRotationField.Value = Player.LocalPlayer.workzone.snapRotation;
         snapRotationField.AddLabel(local.format("SnapRotationLabelText"), ESleekSide.RIGHT);
         snapRotationField.OnValueChanged += onTypedSnapRotationField;
         container.AddChild(snapRotationField);

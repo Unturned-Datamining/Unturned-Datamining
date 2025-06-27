@@ -183,8 +183,8 @@ public class PlayerDashboardInventoryUI
         if (!active)
         {
             active = true;
-            Player.player.animator.sendGesture(EPlayerGesture.INVENTORY_START, all: false);
-            Player.player.character.Find("Camera").gameObject.SetActive(value: true);
+            Player.LocalPlayer.animator.sendGesture(EPlayerGesture.INVENTORY_START, all: false);
+            Player.LocalPlayer.character.Find("Camera").gameObject.SetActive(value: true);
             if (isSplitClothingArea)
             {
                 clothingBox.SizeOffset_X = -5f;
@@ -205,9 +205,9 @@ public class PlayerDashboardInventoryUI
                 backdropBox.RemoveChild(characterPlayer);
                 characterPlayer = null;
             }
-            if (Player.player != null)
+            if (Player.LocalPlayer != null)
             {
-                characterPlayer = new SleekPlayer(Player.player.channel.owner, isButton: true, SleekPlayer.ESleekPlayerDisplayContext.NONE);
+                characterPlayer = new SleekPlayer(Player.LocalPlayer.channel.owner, isButton: true, SleekPlayer.ESleekPlayerDisplayContext.NONE);
                 characterPlayer.PositionOffset_X = 10f;
                 characterPlayer.PositionOffset_Y = 10f;
                 characterPlayer.SizeOffset_X = 410f;
@@ -223,8 +223,8 @@ public class PlayerDashboardInventoryUI
         if (active)
         {
             active = false;
-            Player.player.animator.sendGesture(EPlayerGesture.INVENTORY_STOP, all: false);
-            Player.player.character.Find("Camera").gameObject.SetActive(value: false);
+            Player.LocalPlayer.animator.sendGesture(EPlayerGesture.INVENTORY_STOP, all: false);
+            Player.LocalPlayer.character.Find("Camera").gameObject.SetActive(value: false);
             stopDrag();
             closeSelection();
             container.AnimateOutOfView(0f, 1f);
@@ -310,17 +310,17 @@ public class PlayerDashboardInventoryUI
 
     private static void onClickedSwapCosmeticsButton(ISleekElement button)
     {
-        Player.player.clothing.sendVisualToggle(EVisualToggleType.COSMETIC);
+        Player.LocalPlayer.clothing.sendVisualToggle(EVisualToggleType.COSMETIC);
     }
 
     private static void onClickedSwapSkinsButton(ISleekElement button)
     {
-        Player.player.clothing.sendVisualToggle(EVisualToggleType.SKIN);
+        Player.LocalPlayer.clothing.sendVisualToggle(EVisualToggleType.SKIN);
     }
 
     private static void onClickedSwapMythicsButton(ISleekElement button)
     {
-        Player.player.clothing.sendVisualToggle(EVisualToggleType.MYTHIC);
+        Player.LocalPlayer.clothing.sendVisualToggle(EVisualToggleType.MYTHIC);
     }
 
     private static void onClickedVehicleLockButton(ISleekElement button)
@@ -381,7 +381,7 @@ public class PlayerDashboardInventoryUI
     {
         if (selectedPage != byte.MaxValue)
         {
-            checkEquip(selectedPage, selected_x, selected_y, Player.player.inventory.getItem(selectedPage, Player.player.inventory.getIndex(selectedPage, selected_x, selected_y)), byte.MaxValue);
+            checkEquip(selectedPage, selected_x, selected_y, Player.LocalPlayer.inventory.getItem(selectedPage, Player.LocalPlayer.inventory.getIndex(selectedPage, selected_x, selected_y)), byte.MaxValue);
             ConsumeEvent();
         }
     }
@@ -392,7 +392,7 @@ public class PlayerDashboardInventoryUI
         {
             if (selectedAsset.type == EItemType.GUN)
             {
-                Player.player.crafting.sendStripAttachments(selectedPage, selected_x, selected_y);
+                Player.LocalPlayer.crafting.sendStripAttachments(selectedPage, selected_x, selected_y);
             }
             ConsumeEvent();
             closeSelection();
@@ -415,7 +415,7 @@ public class PlayerDashboardInventoryUI
         }
         else
         {
-            Player.player.inventory.sendDropItem(selectedPage, selected_x, selected_y);
+            Player.LocalPlayer.inventory.sendDropItem(selectedPage, selected_x, selected_y);
         }
         ConsumeEvent();
     }
@@ -439,14 +439,14 @@ public class PlayerDashboardInventoryUI
         }
         else if (selectedPage == PlayerInventory.STORAGE)
         {
-            if (Player.player.inventory.tryFindSpace(selectedJar.size_x, selectedJar.size_y, out var page, out var x, out var y, out var rot))
+            if (Player.LocalPlayer.inventory.tryFindSpace(selectedJar.size_x, selectedJar.size_y, out var page, out var x, out var y, out var rot))
             {
-                Player.player.inventory.sendDragItem(selectedPage, selected_x, selected_y, page, x, y, rot);
+                Player.LocalPlayer.inventory.sendDragItem(selectedPage, selected_x, selected_y, page, x, y, rot);
             }
         }
-        else if (Player.player.inventory.tryFindSpace(PlayerInventory.STORAGE, selectedJar.size_x, selectedJar.size_y, out x2, out y2, out rot2))
+        else if (Player.LocalPlayer.inventory.tryFindSpace(PlayerInventory.STORAGE, selectedJar.size_x, selectedJar.size_y, out x2, out y2, out rot2))
         {
-            Player.player.inventory.sendDragItem(selectedPage, selected_x, selected_y, PlayerInventory.STORAGE, x2, y2, rot2);
+            Player.LocalPlayer.inventory.sendDragItem(selectedPage, selected_x, selected_y, PlayerInventory.STORAGE, x2, y2, rot2);
         }
         ConsumeEvent();
     }
@@ -479,7 +479,7 @@ public class PlayerDashboardInventoryUI
         PlayerDashboardCraftingUI.filteredBlueprintsOverride = array;
         if (!flag)
         {
-            flag = Player.player.equipment.isBusy || !PlayerDashboardCraftingUI.UpdateFilteredBlueprintsAndGetAreAllCraftable();
+            flag = Player.LocalPlayer.equipment.isBusy || !PlayerDashboardCraftingUI.UpdateFilteredBlueprintsAndGetAreAllCraftable();
         }
         if (flag)
         {
@@ -490,7 +490,7 @@ public class PlayerDashboardInventoryUI
         bool key = InputEx.GetKey(ControlsSettings.other);
         foreach (Blueprint blueprint2 in array)
         {
-            Player.player.crafting.SendRequestToCraft(blueprint2, key);
+            Player.LocalPlayer.crafting.SendRequestToCraft(blueprint2, key);
         }
         PlayerDashboardCraftingUI.filteredBlueprintsOverride = null;
         closeSelection();
@@ -554,7 +554,7 @@ public class PlayerDashboardInventoryUI
             setMiscButtonsEnabled(enabled: false);
         }
         selectionFrame.IsVisible = true;
-        _selectedJar = Player.player.inventory.getItem(page, Player.player.inventory.getIndex(page, x, y));
+        _selectedJar = Player.LocalPlayer.inventory.getItem(page, Player.LocalPlayer.inventory.getIndex(page, x, y));
         if (selectedJar == null)
         {
             return;
@@ -654,9 +654,9 @@ public class PlayerDashboardInventoryUI
         {
             selectionHotkeyLabel.Text = localization.format("Hotkey_Unset");
             selectionHotkeyLabel.IsVisible = true;
-            for (byte b = 0; b < Player.player.equipment.hotkeys.Length; b++)
+            for (byte b = 0; b < Player.LocalPlayer.equipment.hotkeys.Length; b++)
             {
-                HotkeyInfo hotkeyInfo = Player.player.equipment.hotkeys[b];
+                HotkeyInfo hotkeyInfo = Player.LocalPlayer.equipment.hotkeys[b];
                 if (hotkeyInfo.page == selectedPage && hotkeyInfo.x == selected_x && hotkeyInfo.y == selected_y)
                 {
                     selectionHotkeyLabel.Text = localization.format("Hotkey_Set", ControlsSettings.getEquipmentHotkeyText(b + 2));
@@ -668,7 +668,7 @@ public class PlayerDashboardInventoryUI
         {
             selectionHotkeyLabel.IsVisible = false;
         }
-        if (Player.player.equipment.checkSelection(page, x, y))
+        if (Player.LocalPlayer.equipment.checkSelection(page, x, y))
         {
             selectionEquipButton.Text = localization.format("Dequip_Button");
             selectionEquipButton.TooltipText = localization.format("Dequip_Button_Tooltip");
@@ -711,7 +711,7 @@ public class PlayerDashboardInventoryUI
         }
         selectionEquipButton.IsVisible = selectedAsset.canPlayerEquip && page < PlayerInventory.PAGES - 2;
         selectionDropButton.IsVisible = flag || selectedAsset.allowManualDrop;
-        selectionStorageButton.IsVisible = Player.player.inventory.isStoring;
+        selectionStorageButton.IsVisible = Player.LocalPlayer.inventory.isStoring;
         int num3 = 0;
         if (selectionEquipButton.IsVisible)
         {
@@ -749,7 +749,7 @@ public class PlayerDashboardInventoryUI
                         continue;
                     }
                     Blueprint blueprint = action.blueprints[0].FindBlueprint(blueprintOwner);
-                    if ((blueprint.GetLegacyBlueprintSkill() == EBlueprintSkill.REPAIR && blueprint.level > Provider.modeConfigData.Gameplay.Repair_Level_Max) || (blueprint.Operation == EBlueprintOperation.RepairTargetItem && selectedJar.item.quality >= 100) || !blueprint.areConditionsMet(Player.player) || Player.player.crafting.isBlueprintBlacklisted(blueprint))
+                    if ((blueprint.GetLegacyBlueprintSkill() == EBlueprintSkill.REPAIR && blueprint.level > Provider.modeConfigData.Gameplay.Repair_Level_Max) || (blueprint.Operation == EBlueprintOperation.RepairTargetItem && selectedJar.item.quality >= 100) || !blueprint.areConditionsMet(Player.LocalPlayer) || Player.LocalPlayer.crafting.isBlueprintBlacklisted(blueprint))
                     {
                         continue;
                     }
@@ -816,12 +816,12 @@ public class PlayerDashboardInventoryUI
         }
         else if (InputEx.GetKey(ControlsSettings.other))
         {
-            ItemJar item = Player.player.inventory.getItem(page, Player.player.inventory.getIndex(page, x, y));
+            ItemJar item = Player.LocalPlayer.inventory.getItem(page, Player.LocalPlayer.inventory.getIndex(page, x, y));
             if (item == null)
             {
                 return;
             }
-            if (Player.player.inventory.isStoring)
+            if (Player.LocalPlayer.inventory.isStoring)
             {
                 byte x3;
                 byte y3;
@@ -835,14 +835,14 @@ public class PlayerDashboardInventoryUI
                 }
                 else if (page == PlayerInventory.STORAGE)
                 {
-                    if (Player.player.inventory.tryFindSpace(item.size_x, item.size_y, out var page2, out var x2, out var y2, out var rot))
+                    if (Player.LocalPlayer.inventory.tryFindSpace(item.size_x, item.size_y, out var page2, out var x2, out var y2, out var rot))
                     {
-                        Player.player.inventory.sendDragItem(page, x, y, page2, x2, y2, rot);
+                        Player.LocalPlayer.inventory.sendDragItem(page, x, y, page2, x2, y2, rot);
                     }
                 }
-                else if (Player.player.inventory.tryFindSpace(PlayerInventory.STORAGE, item.size_x, item.size_y, out x3, out y3, out rot2))
+                else if (Player.LocalPlayer.inventory.tryFindSpace(PlayerInventory.STORAGE, item.size_x, item.size_y, out x3, out y3, out rot2))
                 {
-                    Player.player.inventory.sendDragItem(page, x, y, PlayerInventory.STORAGE, x3, y3, rot2);
+                    Player.LocalPlayer.inventory.sendDragItem(page, x, y, PlayerInventory.STORAGE, x3, y3, rot2);
                 }
             }
             else
@@ -858,26 +858,26 @@ public class PlayerDashboardInventoryUI
 
     private static bool checkSlot(byte page, byte x, byte y, ItemJar jar, byte slot)
     {
-        if (Player.player.inventory.checkSpaceEmpty(slot, byte.MaxValue, byte.MaxValue, 0, 0, 0))
+        if (Player.LocalPlayer.inventory.checkSpaceEmpty(slot, byte.MaxValue, byte.MaxValue, 0, 0, 0))
         {
-            Player.player.inventory.sendDragItem(page, x, y, slot, 0, 0, 0);
-            Player.player.equipment.ClientEquipAfterItemDrag(slot, 0, 0);
+            Player.LocalPlayer.inventory.sendDragItem(page, x, y, slot, 0, 0, 0);
+            Player.LocalPlayer.equipment.ClientEquipAfterItemDrag(slot, 0, 0);
             PlayerDashboardUI.close();
             PlayerLifeUI.open();
             return true;
         }
-        ItemJar item = Player.player.inventory.getItem(slot, 0);
+        ItemJar item = Player.LocalPlayer.inventory.getItem(slot, 0);
         byte b = item.rot;
-        if (!Player.player.inventory.checkSpaceSwap(page, x, y, jar.size_x, jar.size_y, jar.rot, item.size_x, item.size_y, b))
+        if (!Player.LocalPlayer.inventory.checkSpaceSwap(page, x, y, jar.size_x, jar.size_y, jar.rot, item.size_x, item.size_y, b))
         {
             b = (byte)((b + 1) % 4);
-            if (!Player.player.inventory.checkSpaceSwap(page, x, y, jar.size_x, jar.size_y, jar.rot, item.size_x, item.size_y, b))
+            if (!Player.LocalPlayer.inventory.checkSpaceSwap(page, x, y, jar.size_x, jar.size_y, jar.rot, item.size_x, item.size_y, b))
             {
                 return false;
             }
         }
-        Player.player.inventory.sendSwapItem(page, x, y, b, slot, 0, 0, jar.rot);
-        Player.player.equipment.ClientEquipAfterItemDrag(slot, 0, 0);
+        Player.LocalPlayer.inventory.sendSwapItem(page, x, y, b, slot, 0, 0, jar.rot);
+        Player.LocalPlayer.equipment.ClientEquipAfterItemDrag(slot, 0, 0);
         PlayerDashboardUI.close();
         PlayerLifeUI.open();
         return true;
@@ -896,7 +896,7 @@ public class PlayerDashboardInventoryUI
                 ItemManager.takeItem(jar.interactableItem.transform.parent, byte.MaxValue, byte.MaxValue, 0, byte.MaxValue);
             }
         }
-        else if (!Player.player.equipment.checkSelection(page, x, y))
+        else if (!Player.LocalPlayer.equipment.checkSelection(page, x, y))
         {
             ItemAsset asset = jar.GetAsset();
             if (asset == null)
@@ -905,7 +905,7 @@ public class PlayerDashboardInventoryUI
             }
             if (asset.canPlayerEquip && asset.slot.canEquipInPage(page))
             {
-                Player.player.equipment.equip(page, x, y);
+                Player.LocalPlayer.equipment.equip(page, x, y);
                 PlayerDashboardUI.close();
                 PlayerLifeUI.open();
             }
@@ -932,9 +932,9 @@ public class PlayerDashboardInventoryUI
                 }
             }
         }
-        else if (Player.player.equipment.HasValidUseable && !Player.player.equipment.isBusy && Player.player.equipment.IsEquipAnimationFinished)
+        else if (Player.LocalPlayer.equipment.HasValidUseable && !Player.LocalPlayer.equipment.isBusy && Player.LocalPlayer.equipment.IsEquipAnimationFinished)
         {
-            Player.player.equipment.dequip();
+            Player.LocalPlayer.equipment.dequip();
             if (page == selectedPage && x == selected_x && y == selected_y)
             {
                 closeSelection();
@@ -957,31 +957,31 @@ public class PlayerDashboardInventoryUI
         {
             if (asset.type == EItemType.HAT)
             {
-                Player.player.clothing.sendSwapHat(page, x, y);
+                Player.LocalPlayer.clothing.sendSwapHat(page, x, y);
             }
             else if (asset.type == EItemType.SHIRT)
             {
-                Player.player.clothing.sendSwapShirt(page, x, y);
+                Player.LocalPlayer.clothing.sendSwapShirt(page, x, y);
             }
             else if (asset.type == EItemType.PANTS)
             {
-                Player.player.clothing.sendSwapPants(page, x, y);
+                Player.LocalPlayer.clothing.sendSwapPants(page, x, y);
             }
             else if (asset.type == EItemType.BACKPACK)
             {
-                Player.player.clothing.sendSwapBackpack(page, x, y);
+                Player.LocalPlayer.clothing.sendSwapBackpack(page, x, y);
             }
             else if (asset.type == EItemType.VEST)
             {
-                Player.player.clothing.sendSwapVest(page, x, y);
+                Player.LocalPlayer.clothing.sendSwapVest(page, x, y);
             }
             else if (asset.type == EItemType.MASK)
             {
-                Player.player.clothing.sendSwapMask(page, x, y);
+                Player.LocalPlayer.clothing.sendSwapMask(page, x, y);
             }
             else if (asset.type == EItemType.GLASSES)
             {
-                Player.player.clothing.sendSwapGlasses(page, x, y);
+                Player.LocalPlayer.clothing.sendSwapGlasses(page, x, y);
             }
             else if (asset.canPlayerEquip)
             {
@@ -1007,11 +1007,11 @@ public class PlayerDashboardInventoryUI
             }
             else
             {
-                Player.player.inventory.sendDropItem(page, x, y);
+                Player.LocalPlayer.inventory.sendDropItem(page, x, y);
             }
             return;
         }
-        dragJar = Player.player.inventory.getItem(page, Player.player.inventory.getIndex(page, x, y));
+        dragJar = Player.LocalPlayer.inventory.getItem(page, Player.LocalPlayer.inventory.getIndex(page, x, y));
         if (dragJar != null)
         {
             dragSource = item;
@@ -1072,13 +1072,13 @@ public class PlayerDashboardInventoryUI
                 b = dragJar.size_y;
                 b2 = dragJar.size_x;
             }
-            if (num >= Player.player.inventory.getWidth(page) - b)
+            if (num >= Player.LocalPlayer.inventory.getWidth(page) - b)
             {
-                num = (byte)(Player.player.inventory.getWidth(page) - b);
+                num = (byte)(Player.LocalPlayer.inventory.getWidth(page) - b);
             }
-            if (num2 >= Player.player.inventory.getHeight(page) - b2)
+            if (num2 >= Player.LocalPlayer.inventory.getHeight(page) - b2)
             {
-                num2 = (byte)(Player.player.inventory.getHeight(page) - b2);
+                num2 = (byte)(Player.LocalPlayer.inventory.getHeight(page) - b2);
             }
             x = (byte)num;
             y = (byte)num2;
@@ -1098,7 +1098,7 @@ public class PlayerDashboardInventoryUI
             stopDrag();
             if (page != dragFromPage)
             {
-                Player.player.inventory.sendDropItem(dragFromPage, dragFrom_x, dragFrom_y);
+                Player.LocalPlayer.inventory.sendDropItem(dragFromPage, dragFrom_x, dragFrom_y);
             }
             return;
         }
@@ -1106,20 +1106,20 @@ public class PlayerDashboardInventoryUI
         {
             byte rot = dragJar.rot;
             stopDrag();
-            if (page != dragFromPage && Player.player.inventory.checkSpaceEmpty(page, x, y, dragJar.size_x, dragJar.size_y, rot) && dragItem.jar != null && dragItem.jar.interactableItem != null)
+            if (page != dragFromPage && Player.LocalPlayer.inventory.checkSpaceEmpty(page, x, y, dragJar.size_x, dragJar.size_y, rot) && dragItem.jar != null && dragItem.jar.interactableItem != null)
             {
                 ItemManager.takeItem(dragItem.jar.interactableItem.transform.parent, x, y, rot, page);
             }
             return;
         }
-        if (Player.player.inventory.checkSpaceDrag(page, dragFrom_x, dragFrom_y, dragFromRot, x, y, dragJar.rot, dragJar.size_x, dragJar.size_y, page == dragFromPage))
+        if (Player.LocalPlayer.inventory.checkSpaceDrag(page, dragFrom_x, dragFrom_y, dragFromRot, x, y, dragJar.rot, dragJar.size_x, dragJar.size_y, page == dragFromPage))
         {
             byte rot2 = dragJar.rot;
             stopDrag();
-            Player.player.inventory.sendDragItem(dragFromPage, dragFrom_x, dragFrom_y, page, x, y, rot2);
+            Player.LocalPlayer.inventory.sendDragItem(dragFromPage, dragFrom_x, dragFrom_y, page, x, y, rot2);
             if (page < PlayerInventory.SLOTS)
             {
-                Player.player.equipment.equip(page, 0, 0);
+                Player.LocalPlayer.equipment.equip(page, 0, 0);
                 PlayerDashboardUI.close();
                 PlayerLifeUI.open();
             }
@@ -1133,7 +1133,7 @@ public class PlayerDashboardInventoryUI
         }
         byte find_x;
         byte find_y;
-        byte b3 = Player.player.inventory.findIndex(page, x, y, out find_x, out find_y);
+        byte b3 = Player.LocalPlayer.inventory.findIndex(page, x, y, out find_x, out find_y);
         if (b3 == byte.MaxValue)
         {
             return;
@@ -1143,16 +1143,16 @@ public class PlayerDashboardInventoryUI
             stopDrag();
             return;
         }
-        ItemJar item = Player.player.inventory.getItem(page, b3);
-        if (!Player.player.inventory.checkSpaceSwap(page, find_x, find_y, item.size_x, item.size_y, item.rot, dragJar.size_x, dragJar.size_y, dragJar.rot))
+        ItemJar item = Player.LocalPlayer.inventory.getItem(page, b3);
+        if (!Player.LocalPlayer.inventory.checkSpaceSwap(page, find_x, find_y, item.size_x, item.size_y, item.rot, dragJar.size_x, dragJar.size_y, dragJar.rot))
         {
             return;
         }
         byte b4 = item.rot;
-        if (!Player.player.inventory.checkSpaceSwap(dragFromPage, dragFrom_x, dragFrom_y, dragJar.size_x, dragJar.size_y, dragFromRot, item.size_x, item.size_y, b4))
+        if (!Player.LocalPlayer.inventory.checkSpaceSwap(dragFromPage, dragFrom_x, dragFrom_y, dragJar.size_x, dragJar.size_y, dragFromRot, item.size_x, item.size_y, b4))
         {
             b4 = (byte)((b4 + 1) % 4);
-            if (!Player.player.inventory.checkSpaceSwap(dragFromPage, dragFrom_x, dragFrom_y, dragJar.size_x, dragJar.size_y, dragFromRot, item.size_x, item.size_y, b4))
+            if (!Player.LocalPlayer.inventory.checkSpaceSwap(dragFromPage, dragFrom_x, dragFrom_y, dragJar.size_x, dragJar.size_y, dragFromRot, item.size_x, item.size_y, b4))
             {
                 return;
             }
@@ -1162,7 +1162,7 @@ public class PlayerDashboardInventoryUI
         {
             byte rot3 = dragJar.rot;
             stopDrag();
-            Player.player.inventory.sendSwapItem(page, find_x, find_y, rot3, dragFromPage, dragFrom_x, dragFrom_y, b4);
+            Player.LocalPlayer.inventory.sendSwapItem(page, find_x, find_y, rot3, dragFromPage, dragFrom_x, dragFrom_y, b4);
             if (dragFromPage < PlayerInventory.SLOTS)
             {
                 checkEquip(dragFromPage, dragFrom_x, dragFrom_y, dragJar, page);
@@ -1185,7 +1185,7 @@ public class PlayerDashboardInventoryUI
         {
             Vector2 normalizedCursorPosition = characterImage.GetNormalizedCursorPosition();
             Vector3 pos = new Vector3(normalizedCursorPosition.x, 1f - normalizedCursorPosition.y, 0f);
-            Physics.Raycast(Player.player.look.characterCamera.ViewportPointToRay(pos), out var hitInfo, 8f, RayMasks.CLOTHING_INTERACT);
+            Physics.Raycast(Player.LocalPlayer.look.characterCamera.ViewportPointToRay(pos), out var hitInfo, 8f, RayMasks.CLOTHING_INTERACT);
             if (hitInfo.collider != null)
             {
                 Transform transform = hitInfo.collider.transform;
@@ -1197,14 +1197,14 @@ public class PlayerDashboardInventoryUI
                     case ELimb.LEFT_LEG:
                     case ELimb.RIGHT_FOOT:
                     case ELimb.RIGHT_LEG:
-                        Player.player.clothing.sendSwapPants(byte.MaxValue, byte.MaxValue, byte.MaxValue);
+                        Player.LocalPlayer.clothing.sendSwapPants(byte.MaxValue, byte.MaxValue, byte.MaxValue);
                         break;
                     case ELimb.LEFT_HAND:
                     case ELimb.LEFT_ARM:
                     case ELimb.RIGHT_HAND:
                     case ELimb.RIGHT_ARM:
                     case ELimb.SPINE:
-                        Player.player.clothing.sendSwapShirt(byte.MaxValue, byte.MaxValue, byte.MaxValue);
+                        Player.LocalPlayer.clothing.sendSwapShirt(byte.MaxValue, byte.MaxValue, byte.MaxValue);
                         break;
                     }
                 }
@@ -1212,28 +1212,28 @@ public class PlayerDashboardInventoryUI
                 {
                     if (transform.name == "Hat")
                     {
-                        Player.player.clothing.sendSwapHat(byte.MaxValue, byte.MaxValue, byte.MaxValue);
+                        Player.LocalPlayer.clothing.sendSwapHat(byte.MaxValue, byte.MaxValue, byte.MaxValue);
                     }
                     else if (transform.name == "Glasses")
                     {
-                        Player.player.clothing.sendSwapGlasses(byte.MaxValue, byte.MaxValue, byte.MaxValue);
+                        Player.LocalPlayer.clothing.sendSwapGlasses(byte.MaxValue, byte.MaxValue, byte.MaxValue);
                     }
                     else if (transform.name == "Mask")
                     {
-                        Player.player.clothing.sendSwapMask(byte.MaxValue, byte.MaxValue, byte.MaxValue);
+                        Player.LocalPlayer.clothing.sendSwapMask(byte.MaxValue, byte.MaxValue, byte.MaxValue);
                     }
                     else if (transform.name == "Vest")
                     {
-                        Player.player.clothing.sendSwapVest(byte.MaxValue, byte.MaxValue, byte.MaxValue);
+                        Player.LocalPlayer.clothing.sendSwapVest(byte.MaxValue, byte.MaxValue, byte.MaxValue);
                     }
                     else if (transform.name == "Backpack")
                     {
-                        Player.player.clothing.sendSwapBackpack(byte.MaxValue, byte.MaxValue, byte.MaxValue);
+                        Player.LocalPlayer.clothing.sendSwapBackpack(byte.MaxValue, byte.MaxValue, byte.MaxValue);
                     }
                 }
                 else if (transform.CompareTag("Item"))
                 {
-                    Player.player.equipment.dequip();
+                    Player.LocalPlayer.equipment.dequip();
                 }
             }
         }
@@ -1255,7 +1255,7 @@ public class PlayerDashboardInventoryUI
             stopDrag();
             if (b != PlayerInventory.AREA)
             {
-                Player.player.inventory.sendDropItem(b, x, y);
+                Player.LocalPlayer.inventory.sendDropItem(b, x, y);
             }
             ConsumeEvent();
         }
@@ -1271,9 +1271,9 @@ public class PlayerDashboardInventoryUI
 
     private static void onItemDropAdded(Transform model, InteractableItem interactableItem)
     {
-        if (active && PlayerDashboardUI.active && !(Player.player == null) && areaItems.getItemCount() < 200)
+        if (active && PlayerDashboardUI.active && !(Player.LocalPlayer == null) && areaItems.getItemCount() < 200)
         {
-            Vector3 eyesPositionWithoutLeaning = Player.player.look.GetEyesPositionWithoutLeaning();
+            Vector3 eyesPositionWithoutLeaning = Player.LocalPlayer.look.GetEyesPositionWithoutLeaning();
             if (!((model.position - eyesPositionWithoutLeaning).sqrMagnitude > 16f))
             {
                 pendingItemsInRadius.Add(interactableItem);
@@ -1329,7 +1329,7 @@ public class PlayerDashboardInventoryUI
     private static void onVehicleLockUpdated()
     {
         updateVehicle();
-        InteractableVehicle vehicle = Player.player.movement.getVehicle();
+        InteractableVehicle vehicle = Player.LocalPlayer.movement.getVehicle();
         if (!(vehicle == null))
         {
             PlayerUI.message(vehicle.isLocked ? EPlayerMessage.VEHICLE_LOCKED : EPlayerMessage.VEHICLE_UNLOCKED, string.Empty);
@@ -1342,7 +1342,7 @@ public class PlayerDashboardInventoryUI
         {
             return;
         }
-        InteractableVehicle vehicle = Player.player.movement.getVehicle();
+        InteractableVehicle vehicle = Player.LocalPlayer.movement.getVehicle();
         if (vehicle != null && vehicle.asset != null)
         {
             VehicleAsset asset = vehicle.asset;
@@ -1437,7 +1437,7 @@ public class PlayerDashboardInventoryUI
             int itemdefid = 0;
             ushort num3 = 0;
             ushort num4 = 0;
-            if (Player.player.channel.owner.skinItems != null && Player.player.channel.owner.GetVehicleSkinItemDefId(vehicle, out itemdefid))
+            if (Player.LocalPlayer.channel.owner.skinItems != null && Player.LocalPlayer.channel.owner.GetVehicleSkinItemDefId(vehicle, out itemdefid))
             {
                 num3 = Provider.provider.economyService.getInventorySkinID(itemdefid);
                 num4 = Provider.provider.economyService.getInventoryMythicID(itemdefid);
@@ -1479,7 +1479,7 @@ public class PlayerDashboardInventoryUI
             {
                 vehicleSkinButton.IsVisible = false;
             }
-            if (Player.player.stance.stance == EPlayerStance.DRIVING)
+            if (Player.LocalPlayer.stance.stance == EPlayerStance.DRIVING)
             {
                 vehiclePassengersBox.PositionOffset_X = 270f;
                 vehiclePassengersBox.SizeOffset_X = -280f;
@@ -1542,12 +1542,12 @@ public class PlayerDashboardInventoryUI
 
     private static void resetNearbyDrops()
     {
-        Vector3 eyesPositionWithoutLeaning = Player.player.look.GetEyesPositionWithoutLeaning();
+        Vector3 eyesPositionWithoutLeaning = Player.LocalPlayer.look.GetEyesPositionWithoutLeaning();
         pendingItemsInRadius.Clear();
         ItemManager.findSimulatedItemsInRadius(eyesPositionWithoutLeaning, 16f, pendingItemsInRadius);
         areaItems.clear();
         areaItems.resize(8, 3);
-        Player.player.inventory.replaceItems(PlayerInventory.AREA, areaItems);
+        Player.LocalPlayer.inventory.replaceItems(PlayerInventory.AREA, areaItems);
         SleekItems obj = items[PlayerInventory.AREA - PlayerInventory.SLOTS];
         obj.clear();
         obj.resize(areaItems.width, areaItems.height);
@@ -1633,19 +1633,19 @@ public class PlayerDashboardInventoryUI
                 }
             }
         }
-        headers[7].IsVisible = Player.player.clothing.hatAsset != null;
+        headers[7].IsVisible = Player.LocalPlayer.clothing.hatAsset != null;
         if (headers[7].IsVisible)
         {
             headers[7].PositionOffset_Y = num;
             num += 70f;
         }
-        headers[8].IsVisible = Player.player.clothing.maskAsset != null;
+        headers[8].IsVisible = Player.LocalPlayer.clothing.maskAsset != null;
         if (headers[8].IsVisible)
         {
             headers[8].PositionOffset_Y = num;
             num += 70f;
         }
-        headers[9].IsVisible = Player.player.clothing.glassesAsset != null;
+        headers[9].IsVisible = Player.LocalPlayer.clothing.glassesAsset != null;
         if (headers[9].IsVisible)
         {
             headers[9].PositionOffset_Y = num;
@@ -1676,15 +1676,15 @@ public class PlayerDashboardInventoryUI
         {
             items[b].resetHotkeyDisplay();
         }
-        for (byte b2 = 0; b2 < Player.player.equipment.hotkeys.Length; b2++)
+        for (byte b2 = 0; b2 < Player.LocalPlayer.equipment.hotkeys.Length; b2++)
         {
-            HotkeyInfo hotkeyInfo = Player.player.equipment.hotkeys[b2];
+            HotkeyInfo hotkeyInfo = Player.LocalPlayer.equipment.hotkeys[b2];
             byte button = (byte)(b2 + 2);
             byte b3 = (byte)(hotkeyInfo.page - 2);
             if (hotkeyInfo.id != 0)
             {
-                byte index = Player.player.inventory.getIndex(hotkeyInfo.page, hotkeyInfo.x, hotkeyInfo.y);
-                ItemJar item = Player.player.inventory.getItem(hotkeyInfo.page, index);
+                byte index = Player.LocalPlayer.inventory.getIndex(hotkeyInfo.page, hotkeyInfo.x, hotkeyInfo.y);
+                ItemJar item = Player.LocalPlayer.inventory.getItem(hotkeyInfo.page, index);
                 if (item == null || item.item.id != hotkeyInfo.id)
                 {
                     hotkeyInfo.id = 0;
@@ -1744,7 +1744,7 @@ public class PlayerDashboardInventoryUI
 
     private static void onInventoryStored()
     {
-        if (Player.player.inventory.shouldStorageOpenDashboard)
+        if (Player.LocalPlayer.inventory.shouldStorageOpenDashboard)
         {
             PlayerLifeUI.close();
             PlayerPauseUI.close();
@@ -1792,7 +1792,7 @@ public class PlayerDashboardInventoryUI
 
     private static void onShirtUpdated(ushort newShirtObsolete, byte newShirtQuality, byte[] newShirtState)
     {
-        ItemAsset shirtAsset = Player.player.clothing.shirtAsset;
+        ItemAsset shirtAsset = Player.LocalPlayer.clothing.shirtAsset;
         if (shirtAsset != null)
         {
             headers[3].Text = shirtAsset.itemName;
@@ -1811,7 +1811,7 @@ public class PlayerDashboardInventoryUI
     {
         if (headers != null)
         {
-            ItemAsset pantsAsset = Player.player.clothing.pantsAsset;
+            ItemAsset pantsAsset = Player.LocalPlayer.clothing.pantsAsset;
             if (pantsAsset != null)
             {
                 headers[4].Text = pantsAsset.itemName;
@@ -1831,7 +1831,7 @@ public class PlayerDashboardInventoryUI
     {
         if (headers != null)
         {
-            ItemAsset hatAsset = Player.player.clothing.hatAsset;
+            ItemAsset hatAsset = Player.LocalPlayer.clothing.hatAsset;
             if (hatAsset != null)
             {
                 headers[7].Text = hatAsset.itemName;
@@ -1851,7 +1851,7 @@ public class PlayerDashboardInventoryUI
 
     private static void onBackpackUpdated(ushort newBackpackObsolete, byte newBackpackQuality, byte[] newBackpackState)
     {
-        ItemAsset backpackAsset = Player.player.clothing.backpackAsset;
+        ItemAsset backpackAsset = Player.LocalPlayer.clothing.backpackAsset;
         if (backpackAsset != null)
         {
             headers[1].Text = backpackAsset.itemName;
@@ -1868,7 +1868,7 @@ public class PlayerDashboardInventoryUI
 
     private static void onVestUpdated(ushort newVestObsolete, byte newVestQuality, byte[] newVestState)
     {
-        ItemAsset vestAsset = Player.player.clothing.vestAsset;
+        ItemAsset vestAsset = Player.LocalPlayer.clothing.vestAsset;
         if (vestAsset != null)
         {
             headers[2].Text = vestAsset.itemName;
@@ -1887,7 +1887,7 @@ public class PlayerDashboardInventoryUI
     {
         if (headers != null)
         {
-            ItemAsset maskAsset = Player.player.clothing.maskAsset;
+            ItemAsset maskAsset = Player.LocalPlayer.clothing.maskAsset;
             if (maskAsset != null)
             {
                 headers[8].Text = maskAsset.itemName;
@@ -1909,7 +1909,7 @@ public class PlayerDashboardInventoryUI
     {
         if (headers != null)
         {
-            ItemAsset glassesAsset = Player.player.clothing.glassesAsset;
+            ItemAsset glassesAsset = Player.LocalPlayer.clothing.glassesAsset;
             if (glassesAsset != null)
             {
                 headers[9].Text = glassesAsset.itemName;
@@ -1936,22 +1936,22 @@ public class PlayerDashboardInventoryUI
         switch (i)
         {
         case 0:
-            if (Player.player.equipment.HasValidUseable && !Player.player.equipment.isBusy && Player.player.equipment.IsEquipAnimationFinished)
+            if (Player.LocalPlayer.equipment.HasValidUseable && !Player.LocalPlayer.equipment.isBusy && Player.LocalPlayer.equipment.IsEquipAnimationFinished)
             {
-                Player.player.equipment.dequip();
+                Player.LocalPlayer.equipment.dequip();
             }
             break;
         case 1:
-            Player.player.clothing.sendSwapBackpack(byte.MaxValue, byte.MaxValue, byte.MaxValue);
+            Player.LocalPlayer.clothing.sendSwapBackpack(byte.MaxValue, byte.MaxValue, byte.MaxValue);
             break;
         case 2:
-            Player.player.clothing.sendSwapVest(byte.MaxValue, byte.MaxValue, byte.MaxValue);
+            Player.LocalPlayer.clothing.sendSwapVest(byte.MaxValue, byte.MaxValue, byte.MaxValue);
             break;
         case 3:
-            Player.player.clothing.sendSwapShirt(byte.MaxValue, byte.MaxValue, byte.MaxValue);
+            Player.LocalPlayer.clothing.sendSwapShirt(byte.MaxValue, byte.MaxValue, byte.MaxValue);
             break;
         case 4:
-            Player.player.clothing.sendSwapPants(byte.MaxValue, byte.MaxValue, byte.MaxValue);
+            Player.LocalPlayer.clothing.sendSwapPants(byte.MaxValue, byte.MaxValue, byte.MaxValue);
             break;
         case 5:
             PlayerDashboardUI.close();
@@ -1962,13 +1962,13 @@ public class PlayerDashboardInventoryUI
             PlayerLifeUI.open();
             break;
         case 7:
-            Player.player.clothing.sendSwapHat(byte.MaxValue, byte.MaxValue, byte.MaxValue);
+            Player.LocalPlayer.clothing.sendSwapHat(byte.MaxValue, byte.MaxValue, byte.MaxValue);
             break;
         case 8:
-            Player.player.clothing.sendSwapMask(byte.MaxValue, byte.MaxValue, byte.MaxValue);
+            Player.LocalPlayer.clothing.sendSwapMask(byte.MaxValue, byte.MaxValue, byte.MaxValue);
             break;
         case 9:
-            Player.player.clothing.sendSwapGlasses(byte.MaxValue, byte.MaxValue, byte.MaxValue);
+            Player.LocalPlayer.clothing.sendSwapGlasses(byte.MaxValue, byte.MaxValue, byte.MaxValue);
             break;
         }
     }
@@ -2056,7 +2056,7 @@ public class PlayerDashboardInventoryUI
             return;
         }
         int height = areaItems.height;
-        Vector3 eyesPositionWithoutLeaning = Player.player.look.GetEyesPositionWithoutLeaning();
+        Vector3 eyesPositionWithoutLeaning = Player.LocalPlayer.look.GetEyesPositionWithoutLeaning();
         int num = Mathf.Max(0, pendingItemsInRadius.Count - 20);
         for (int num2 = pendingItemsInRadius.Count - 1; num2 >= num; num2--)
         {
@@ -2170,7 +2170,7 @@ public class PlayerDashboardInventoryUI
         characterImage.SizeScale_X = 1f;
         characterImage.SizeScale_Y = 1f;
         characterImage.internalImage.OnClicked += onClickedCharacter;
-        characterImage.SetCamera(Player.player.look.characterCamera);
+        characterImage.SetCamera(Player.LocalPlayer.look.characterCamera);
         sleekConstraintFrame.AddChild(characterImage);
         slots = new SleekSlot[PlayerInventory.SLOTS];
         for (byte b = 0; b < slots.Length; b++)
@@ -2321,10 +2321,10 @@ public class PlayerDashboardInventoryUI
         }
         headers[0].Text = localization.format("Hands");
         headers[PlayerInventory.AREA - PlayerInventory.SLOTS].Text = localization.format("Area");
-        onShirtUpdated(0, Player.player.clothing.shirtQuality, Player.player.clothing.shirtState);
-        onPantsUpdated(0, Player.player.clothing.pantsQuality, Player.player.clothing.pantsState);
-        onBackpackUpdated(0, Player.player.clothing.backpackQuality, Player.player.clothing.backpackState);
-        onVestUpdated(0, Player.player.clothing.vestQuality, Player.player.clothing.vestState);
+        onShirtUpdated(0, Player.LocalPlayer.clothing.shirtQuality, Player.LocalPlayer.clothing.shirtState);
+        onPantsUpdated(0, Player.LocalPlayer.clothing.pantsQuality, Player.LocalPlayer.clothing.pantsState);
+        onBackpackUpdated(0, Player.LocalPlayer.clothing.backpackQuality, Player.LocalPlayer.clothing.backpackState);
+        onVestUpdated(0, Player.LocalPlayer.clothing.vestQuality, Player.LocalPlayer.clothing.vestState);
         items = new SleekItems[PlayerInventory.PAGES - PlayerInventory.SLOTS];
         for (byte b4 = 0; b4 < items.Length; b4++)
         {
@@ -2558,35 +2558,35 @@ public class PlayerDashboardInventoryUI
         dragFrom_x = byte.MaxValue;
         dragFrom_y = byte.MaxValue;
         dragFromRot = 0;
-        PlayerInventory inventory = Player.player.inventory;
+        PlayerInventory inventory = Player.LocalPlayer.inventory;
         inventory.onInventoryResized = (InventoryResized)Delegate.Combine(inventory.onInventoryResized, new InventoryResized(onInventoryResized));
-        PlayerInventory inventory2 = Player.player.inventory;
+        PlayerInventory inventory2 = Player.LocalPlayer.inventory;
         inventory2.onInventoryUpdated = (InventoryUpdated)Delegate.Combine(inventory2.onInventoryUpdated, new InventoryUpdated(onInventoryUpdated));
-        PlayerInventory inventory3 = Player.player.inventory;
+        PlayerInventory inventory3 = Player.LocalPlayer.inventory;
         inventory3.onInventoryAdded = (InventoryAdded)Delegate.Combine(inventory3.onInventoryAdded, new InventoryAdded(onInventoryAdded));
-        PlayerInventory inventory4 = Player.player.inventory;
+        PlayerInventory inventory4 = Player.LocalPlayer.inventory;
         inventory4.onInventoryRemoved = (InventoryRemoved)Delegate.Combine(inventory4.onInventoryRemoved, new InventoryRemoved(onInventoryRemoved));
-        PlayerInventory inventory5 = Player.player.inventory;
+        PlayerInventory inventory5 = Player.LocalPlayer.inventory;
         inventory5.onInventoryStored = (InventoryStored)Delegate.Combine(inventory5.onInventoryStored, new InventoryStored(onInventoryStored));
-        PlayerEquipment equipment = Player.player.equipment;
+        PlayerEquipment equipment = Player.LocalPlayer.equipment;
         equipment.onHotkeysUpdated = (HotkeysUpdated)Delegate.Combine(equipment.onHotkeysUpdated, new HotkeysUpdated(onHotkeysUpdated));
         ItemManager.onItemDropAdded = onItemDropAdded;
         ItemManager.onItemDropRemoved = onItemDropRemoved;
-        PlayerMovement movement = Player.player.movement;
+        PlayerMovement movement = Player.LocalPlayer.movement;
         movement.onSeated = (Seated)Delegate.Combine(movement.onSeated, new Seated(onSeated));
-        PlayerClothing clothing = Player.player.clothing;
+        PlayerClothing clothing = Player.LocalPlayer.clothing;
         clothing.onShirtUpdated = (ShirtUpdated)Delegate.Combine(clothing.onShirtUpdated, new ShirtUpdated(onShirtUpdated));
-        PlayerClothing clothing2 = Player.player.clothing;
+        PlayerClothing clothing2 = Player.LocalPlayer.clothing;
         clothing2.onPantsUpdated = (PantsUpdated)Delegate.Combine(clothing2.onPantsUpdated, new PantsUpdated(onPantsUpdated));
-        PlayerClothing clothing3 = Player.player.clothing;
+        PlayerClothing clothing3 = Player.LocalPlayer.clothing;
         clothing3.onHatUpdated = (HatUpdated)Delegate.Combine(clothing3.onHatUpdated, new HatUpdated(onHatUpdated));
-        PlayerClothing clothing4 = Player.player.clothing;
+        PlayerClothing clothing4 = Player.LocalPlayer.clothing;
         clothing4.onBackpackUpdated = (BackpackUpdated)Delegate.Combine(clothing4.onBackpackUpdated, new BackpackUpdated(onBackpackUpdated));
-        PlayerClothing clothing5 = Player.player.clothing;
+        PlayerClothing clothing5 = Player.LocalPlayer.clothing;
         clothing5.onVestUpdated = (VestUpdated)Delegate.Combine(clothing5.onVestUpdated, new VestUpdated(onVestUpdated));
-        PlayerClothing clothing6 = Player.player.clothing;
+        PlayerClothing clothing6 = Player.LocalPlayer.clothing;
         clothing6.onMaskUpdated = (MaskUpdated)Delegate.Combine(clothing6.onMaskUpdated, new MaskUpdated(onMaskUpdated));
-        PlayerClothing clothing7 = Player.player.clothing;
+        PlayerClothing clothing7 = Player.LocalPlayer.clothing;
         clothing7.onGlassesUpdated = (GlassesUpdated)Delegate.Combine(clothing7.onGlassesUpdated, new GlassesUpdated(onGlassesUpdated));
     }
 

@@ -419,8 +419,8 @@ public class PlayerWorkzone : PlayerCaller
                         {
                             isDragging = true;
                             dragable.Clear();
-                            byte region_x = Player.player.movement.region_x;
-                            byte region_y = Player.player.movement.region_y;
+                            byte region_x = Player.LocalPlayer.movement.region_x;
+                            byte region_y = Player.LocalPlayer.movement.region_y;
                             if (Regions.checkSafe(region_x, region_y))
                             {
                                 foreach (VehicleBarricadeRegion vehicleRegion in BarricadeManager.vehicleRegions)

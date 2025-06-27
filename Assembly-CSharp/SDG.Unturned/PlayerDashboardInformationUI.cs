@@ -13,12 +13,12 @@ public class PlayerDashboardInformationUI
 
         private void handleJoinButtonClicked(ISleekElement button)
         {
-            Player.player.quests.SendAcceptGroupInvitation(groupID);
+            Player.LocalPlayer.quests.SendAcceptGroupInvitation(groupID);
         }
 
         private void handleIgnoreButtonClicked(ISleekElement button)
         {
-            Player.player.quests.SendDeclineGroupInvitation(groupID);
+            Player.LocalPlayer.quests.SendDeclineGroupInvitation(groupID);
         }
 
         public SleekInviteButton(CSteamID newGroupID)
@@ -219,7 +219,7 @@ public class PlayerDashboardInformationUI
                 continue;
             }
             PlayerQuests quests = client.player.quests;
-            if ((!(client.playerID.steamID != Provider.client) || quests.isMemberOfSameGroupAs(Player.player)) && quests.isMarkerPlaced)
+            if ((!(client.playerID.steamID != Provider.client) || quests.isMemberOfSameGroupAs(Player.LocalPlayer)) && quests.isMarkerPlaced)
             {
                 ISleekImage sleekImage;
                 if (num < markerImages.Count)
@@ -321,14 +321,14 @@ public class PlayerDashboardInformationUI
     private static void updateRemotePlayerAvatars()
     {
         int num = 0;
-        bool areSpecStatsVisible = Player.player.look.areSpecStatsVisible;
+        bool areSpecStatsVisible = Player.LocalPlayer.look.areSpecStatsVisible;
         foreach (SteamPlayer client in Provider.clients)
         {
             if (client.model == null || client.playerID.steamID == Provider.client)
             {
                 continue;
             }
-            bool flag = client.player.quests.isMemberOfSameGroupAs(Player.player);
+            bool flag = client.player.quests.isMemberOfSameGroupAs(Player.LocalPlayer);
             if (!(areSpecStatsVisible || flag))
             {
                 continue;
@@ -406,12 +406,12 @@ public class PlayerDashboardInformationUI
         {
             updateRemotePlayerAvatars();
         }
-        if (localPlayerImage.IsVisible && Player.player != null)
+        if (localPlayerImage.IsVisible && Player.LocalPlayer != null)
         {
-            Vector2 vector = ProjectWorldPositionToMap(Player.player.transform.position);
+            Vector2 vector = ProjectWorldPositionToMap(Player.LocalPlayer.transform.position);
             localPlayerImage.PositionScale_X = vector.x;
             localPlayerImage.PositionScale_Y = vector.y;
-            localPlayerImage.RotationAngle = ProjectWorldRotationToMap(Player.player.transform.rotation.eulerAngles.y);
+            localPlayerImage.RotationAngle = ProjectWorldRotationToMap(Player.LocalPlayer.transform.rotation.eulerAngles.y);
         }
     }
 
@@ -423,7 +423,7 @@ public class PlayerDashboardInformationUI
         }
         for (byte b = 0; b < PlayerInventory.PAGES - 2; b++)
         {
-            Items items = Player.player.inventory.items[b];
+            Items items = Player.LocalPlayer.inventory.items[b];
             if (items != null)
             {
                 foreach (ItemJar item in items.items)
@@ -500,7 +500,7 @@ public class PlayerDashboardInformationUI
 
     private static void RefreshQuestsButtonLabel()
     {
-        questsButton.text = localization.format("Quests", Player.player.quests.countValidQuests());
+        questsButton.text = localization.format("Quests", Player.LocalPlayer.quests.countValidQuests());
     }
 
     private static void RefreshQuests()
@@ -508,12 +508,12 @@ public class PlayerDashboardInformationUI
         questsBox.RemoveAllChildren();
         displayedQuests.Clear();
         float num = 0f;
-        foreach (PlayerQuest quests in Player.player.quests.questsList)
+        foreach (PlayerQuest quests in Player.LocalPlayer.quests.questsList)
         {
             if (quests != null && quests.asset != null)
             {
                 displayedQuests.Add(quests);
-                bool flag = quests.asset.areConditionsMet(Player.player);
+                bool flag = quests.asset.areConditionsMet(Player.LocalPlayer);
                 ISleekButton sleekButton = Glazier.Get().CreateButton();
                 sleekButton.PositionOffset_Y = num;
                 sleekButton.SizeOffset_Y = 50f;
@@ -563,7 +563,7 @@ public class PlayerDashboardInformationUI
             num = 900000u;
         }
         radioFrequencyField.Value = (double)num / 1000.0;
-        Player.player.quests.sendSetRadioFrequency(num);
+        Player.LocalPlayer.quests.sendSetRadioFrequency(num);
     }
 
     private static void onClickedResetButton(ISleekElement button)
@@ -574,27 +574,27 @@ public class PlayerDashboardInformationUI
 
     private static void onClickedRenameButton(ISleekElement button)
     {
-        Player.player.quests.sendRenameGroup(groupNameField.Text);
+        Player.LocalPlayer.quests.sendRenameGroup(groupNameField.Text);
     }
 
     private static void onClickedMainGroupButton(ISleekElement button)
     {
-        Player.player.quests.SendAcceptGroupInvitation(Characters.active.group);
+        Player.LocalPlayer.quests.SendAcceptGroupInvitation(Characters.active.group);
     }
 
     private static void onClickedLeaveGroupButton(ISleekElement button)
     {
-        Player.player.quests.sendLeaveGroup();
+        Player.LocalPlayer.quests.sendLeaveGroup();
     }
 
     private static void onClickedDeleteGroupButton(SleekButtonIconConfirm button)
     {
-        Player.player.quests.sendDeleteGroup();
+        Player.LocalPlayer.quests.sendDeleteGroup();
     }
 
     private static void onClickedCreateGroupButton(ISleekElement button)
     {
-        Player.player.quests.sendCreateGroup();
+        Player.LocalPlayer.quests.sendCreateGroup();
     }
 
     private static void refreshGroups()
@@ -617,7 +617,7 @@ public class PlayerDashboardInformationUI
         radioFrequencyField.PositionOffset_Y = num;
         radioFrequencyField.SizeOffset_Y = 30f;
         radioFrequencyField.SizeScale_X = 1f;
-        radioFrequencyField.Value = (double)Player.player.quests.radioFrequency / 1000.0;
+        radioFrequencyField.Value = (double)Player.LocalPlayer.quests.radioFrequency / 1000.0;
         groupsBox.AddChild(radioFrequencyField);
         ISleekButton sleekButton = Glazier.Get().CreateButton();
         sleekButton.PositionOffset_X = -100f;
@@ -638,7 +638,7 @@ public class PlayerDashboardInformationUI
         sleekButton2.OnClicked += onClickedResetButton;
         groupsBox.AddChild(sleekButton2);
         num += 30;
-        PlayerQuests quests = Player.player.quests;
+        PlayerQuests quests = Player.LocalPlayer.quests;
         if (quests.isMemberOfAGroup)
         {
             if (Characters.active.group == quests.groupID)
@@ -727,7 +727,7 @@ public class PlayerDashboardInformationUI
             }
             foreach (SteamPlayer client in Provider.clients)
             {
-                if (!(client.player == null) && client.player.quests.isMemberOfSameGroupAs(Player.player))
+                if (!(client.player == null) && client.player.quests.isMemberOfSameGroupAs(Player.LocalPlayer))
                 {
                     SleekPlayer sleekPlayer = new SleekPlayer(client, isButton: true, SleekPlayer.ESleekPlayerDisplayContext.GROUP_ROSTER);
                     sleekPlayer.PositionOffset_Y = num;
@@ -764,7 +764,7 @@ public class PlayerDashboardInformationUI
                 groupsBox.AddChild(sleekInviteButton);
                 num += 30;
             }
-            if (Player.player.quests.hasPermissionToCreateGroup)
+            if (Player.LocalPlayer.quests.hasPermissionToCreateGroup)
             {
                 SleekButtonIcon sleekButtonIcon3 = new SleekButtonIcon(MenuWorkshopEditorUI.icons.load<Texture2D>("Add"));
                 sleekButtonIcon3.PositionOffset_Y = num;
@@ -899,7 +899,7 @@ public class PlayerDashboardInformationUI
     {
         Vector2 normalizedCursorPosition = mapImage.GetNormalizedCursorPosition();
         Vector3 newMarkerPosition = DeprojectMapToWorld(normalizedCursorPosition);
-        PlayerQuests quests = Player.player.quests;
+        PlayerQuests quests = Player.LocalPlayer.quests;
         bool newIsMarkerPlaced = !quests.isMarkerPlaced || Vector2.Distance(ProjectWorldPositionToMap(quests.markerPosition), normalizedCursorPosition) * mapBox.ContentSizeOffset.x > 15f;
         quests.sendSetMarker(newIsMarkerPlaced, newMarkerPosition);
     }
@@ -934,7 +934,7 @@ public class PlayerDashboardInformationUI
 
     private static void onClickedCenterButton(ISleekElement button)
     {
-        focusPoint(Player.player.transform.position);
+        focusPoint(Player.LocalPlayer.transform.position);
     }
 
     private static void onSwappedMapState(SleekButtonState button, int index)
@@ -1065,11 +1065,11 @@ public class PlayerDashboardInformationUI
     public void OnDestroy()
     {
         PlayerUI.isBlindfoldedChanged -= handleIsBlindfoldedChanged;
-        if (Player.player != null)
+        if (Player.LocalPlayer != null)
         {
-            Player player = Player.player;
-            player.onPlayerTeleported = (PlayerTeleported)Delegate.Remove(player.onPlayerTeleported, new PlayerTeleported(onPlayerTeleported));
-            Player.player.quests.OnLocalPlayerQuestsChanged -= OnLocalPlayerQuestsChanged;
+            Player localPlayer = Player.LocalPlayer;
+            localPlayer.onPlayerTeleported = (PlayerTeleported)Delegate.Remove(localPlayer.onPlayerTeleported, new PlayerTeleported(onPlayerTeleported));
+            Player.LocalPlayer.quests.OnLocalPlayerQuestsChanged -= OnLocalPlayerQuestsChanged;
         }
         PlayerQuests.groupUpdated = (GroupUpdatedHandler)Delegate.Remove(PlayerQuests.groupUpdated, new GroupUpdatedHandler(handleGroupUpdated));
         GroupManager.groupInfoReady -= handleGroupInfoReady;
@@ -1365,14 +1365,14 @@ public class PlayerDashboardInformationUI
         sortedClients.Clear();
         playersList.SetData(sortedClients);
         PlayerUI.isBlindfoldedChanged += handleIsBlindfoldedChanged;
-        Player player = Player.player;
-        player.onPlayerTeleported = (PlayerTeleported)Delegate.Combine(player.onPlayerTeleported, new PlayerTeleported(onPlayerTeleported));
-        Player.player.quests.OnLocalPlayerQuestsChanged += OnLocalPlayerQuestsChanged;
+        Player localPlayer = Player.LocalPlayer;
+        localPlayer.onPlayerTeleported = (PlayerTeleported)Delegate.Combine(localPlayer.onPlayerTeleported, new PlayerTeleported(onPlayerTeleported));
+        Player.LocalPlayer.quests.OnLocalPlayerQuestsChanged += OnLocalPlayerQuestsChanged;
         PlayerQuests.groupUpdated = (GroupUpdatedHandler)Delegate.Combine(PlayerQuests.groupUpdated, new GroupUpdatedHandler(handleGroupUpdated));
         GroupManager.groupInfoReady += handleGroupInfoReady;
         ClientMessageHandler_Accepted.OnGameplayConfigReceived += OnGameplayConfigReceived;
         SyncPlayerSortButtonVisible();
-        onPlayerTeleported(Player.player, Player.player.transform.position);
+        onPlayerTeleported(Player.LocalPlayer, Player.LocalPlayer.transform.position);
         string text = ((Level.info != null) ? (Level.info.path + "/Chart.png") : null);
         if (text != null && ReadWrite.fileExists(text, useCloud: false, usePath: false))
         {

@@ -161,7 +161,7 @@ public class ResourceSpawnpoint
                 ragdoll.y += 8f;
                 ragdoll.x += UnityEngine.Random.Range(-16f, 16f);
                 ragdoll.z += UnityEngine.Random.Range(-16f, 16f);
-                ragdoll *= (float)((Player.player != null && Player.player.skills.boost == EPlayerBoost.FLIGHT) ? 4 : 2);
+                ragdoll *= (float)((Player.LocalPlayer != null && Player.LocalPlayer.skills.boost == EPlayerBoost.FLIGHT) ? 4 : 2);
                 if (model != null && asset.modelGameObject != null)
                 {
                     Vector3 position = model.position + model.up * asset.DebrisVerticalOffset;

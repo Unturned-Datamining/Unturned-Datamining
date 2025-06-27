@@ -67,7 +67,7 @@ public class InteractableLibrary : Interactable
 
     public override bool checkUseable()
     {
-        if (checkTransfer(Provider.client, Player.player.quests.groupID))
+        if (checkTransfer(Provider.client, Player.LocalPlayer.quests.groupID))
         {
             return !PlayerUI.window.showCursor;
         }

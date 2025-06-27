@@ -169,7 +169,7 @@ public class SleekBlueprint : SleekWrapper
             {
                 int skillSpecialityIndex = blueprint.SkillSpecialityIndex;
                 int skillIndex = blueprint.SkillIndex;
-                bool num = Player.player.skills.skills[skillSpecialityIndex][skillIndex].level >= blueprint.level;
+                bool num = Player.LocalPlayer.skills.skills[skillSpecialityIndex][skillIndex].level >= blueprint.level;
                 Local localization2 = PlayerDashboardSkillsUI.localization;
                 string arg = localization2.format("Speciality_" + skillSpecialityIndex + "_Skill_" + skillIndex);
                 string arg2 = localization2.format("Level_" + blueprint.level);
@@ -192,7 +192,7 @@ public class SleekBlueprint : SleekWrapper
                         {
                             descSb.Append(PlayerDashboardCraftingUI.localization.format("Requirements_Separator"));
                         }
-                        if (Player.player.crafting.IsCraftingTagAvailable(tagAsset))
+                        if (Player.LocalPlayer.crafting.IsCraftingTagAvailable(tagAsset))
                         {
                             descSb.Append(tagAsset.RichTextOrPreferredFontColor);
                             continue;

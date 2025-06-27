@@ -362,7 +362,7 @@ public class PlayerLifeUI
             {
                 faceButtons[i].IsVisible = true;
             }
-            bool isVisible = !Player.player.equipment.HasValidUseable && Player.player.stance.stance != EPlayerStance.PRONE && Player.player.stance.stance != EPlayerStance.DRIVING && Player.player.stance.stance != EPlayerStance.SITTING;
+            bool isVisible = !Player.LocalPlayer.equipment.HasValidUseable && Player.LocalPlayer.stance.stance != EPlayerStance.PRONE && Player.LocalPlayer.stance.stance != EPlayerStance.DRIVING && Player.LocalPlayer.stance.stance != EPlayerStance.SITTING;
             surrenderButton.IsVisible = isVisible;
             pointButton.IsVisible = isVisible;
             waveButton.IsVisible = isVisible;
@@ -443,7 +443,7 @@ public class PlayerLifeUI
     /// </summary>
     public static void updateHotbar()
     {
-        if (hotbarContainer == null || Player.player == null)
+        if (hotbarContainer == null || Player.LocalPlayer == null)
         {
             return;
         }
@@ -452,7 +452,7 @@ public class PlayerLifeUI
         {
             return;
         }
-        int num = Player.player.equipment.FindEquippedHotkeyButton();
+        int num = Player.LocalPlayer.equipment.FindEquippedHotkeyButton();
         if (previousEquippedHotbarIndex != num)
         {
             if (previousEquippedHotbarIndex >= 0)
@@ -465,7 +465,7 @@ public class PlayerLifeUI
                 hotbarItems[num].IsEquipped = true;
             }
         }
-        if (!Player.player.inventory.doesSearchNeedRefresh(ref cachedHotbarSearch))
+        if (!Player.LocalPlayer.inventory.doesSearchNeedRefresh(ref cachedHotbarSearch))
         {
             if (num >= 0)
             {
@@ -475,16 +475,16 @@ public class PlayerLifeUI
         }
         float offset = 0f;
         float maxHeight = 0f;
-        updateHotbarItem(ref offset, ref maxHeight, Player.player.inventory.getItem(0, 0), 0);
-        updateHotbarItem(ref offset, ref maxHeight, Player.player.inventory.getItem(1, 0), 1);
-        for (byte b = 0; b < Player.player.equipment.hotkeys.Length; b++)
+        updateHotbarItem(ref offset, ref maxHeight, Player.LocalPlayer.inventory.getItem(0, 0), 0);
+        updateHotbarItem(ref offset, ref maxHeight, Player.LocalPlayer.inventory.getItem(1, 0), 1);
+        for (byte b = 0; b < Player.LocalPlayer.equipment.hotkeys.Length; b++)
         {
-            HotkeyInfo hotkeyInfo = Player.player.equipment.hotkeys[b];
+            HotkeyInfo hotkeyInfo = Player.LocalPlayer.equipment.hotkeys[b];
             ItemJar itemJar = null;
             if (hotkeyInfo.id != 0)
             {
-                byte index = Player.player.inventory.getIndex(hotkeyInfo.page, hotkeyInfo.x, hotkeyInfo.y);
-                itemJar = Player.player.inventory.getItem(hotkeyInfo.page, index);
+                byte index = Player.LocalPlayer.inventory.getIndex(hotkeyInfo.page, hotkeyInfo.x, hotkeyInfo.y);
+                itemJar = Player.LocalPlayer.inventory.getItem(hotkeyInfo.page, index);
                 if (itemJar != null && itemJar.item.id != hotkeyInfo.id)
                 {
                     itemJar = null;
@@ -500,7 +500,7 @@ public class PlayerLifeUI
 
     public static void updateStatTracker()
     {
-        statTrackerLabel.IsVisible = Player.player.equipment.getUseableStatTrackerValue(out var type, out var kills);
+        statTrackerLabel.IsVisible = Player.LocalPlayer.equipment.getUseableStatTrackerValue(out var type, out var kills);
         if (statTrackerLabel.IsVisible)
         {
             statTrackerLabel.TextColor = Provider.provider.economyService.getStatTrackerColor(type);
@@ -515,10 +515,10 @@ public class PlayerLifeUI
 
     public static void updateGrayscale()
     {
-        GrayscaleEffect component = Player.player.animator.viewmodelCameraTransform.GetComponent<GrayscaleEffect>();
+        GrayscaleEffect component = Player.LocalPlayer.animator.viewmodelCameraTransform.GetComponent<GrayscaleEffect>();
         GrayscaleEffect component2 = MainCamera.instance.GetComponent<GrayscaleEffect>();
-        GrayscaleEffect component3 = Player.player.look.characterCamera.GetComponent<GrayscaleEffect>();
-        if (Player.player.look.perspective == EPlayerPerspective.FIRST)
+        GrayscaleEffect component3 = Player.LocalPlayer.look.characterCamera.GetComponent<GrayscaleEffect>();
+        if (Player.LocalPlayer.look.perspective == EPlayerPerspective.FIRST)
         {
             component.enabled = true;
             component2.enabled = false;
@@ -532,9 +532,9 @@ public class PlayerLifeUI
         {
             component.blend = 1f;
         }
-        else if (Player.player.life.health < 50)
+        else if (Player.LocalPlayer.life.health < 50)
         {
-            component.blend = (1f - (float)(int)Player.player.life.health / 50f) * (1f - Player.player.skills.mastery(1, 3) * 0.75f);
+            component.blend = (1f - (float)(int)Player.LocalPlayer.life.health / 50f) * (1f - Player.LocalPlayer.skills.mastery(1, 3) * 0.75f);
         }
         else
         {
@@ -552,7 +552,7 @@ public class PlayerLifeUI
     private static void onHealthUpdated(byte newHealth)
     {
         healthProgress.state = (float)(int)newHealth / 100f;
-        onPerspectiveUpdated(Player.player.look.perspective);
+        onPerspectiveUpdated(Player.LocalPlayer.look.perspective);
     }
 
     private static void onFoodUpdated(byte newFood)
@@ -599,14 +599,14 @@ public class PlayerLifeUI
 
     protected static bool hasCompassInInventory()
     {
-        if (!Player.player.inventory.doesSearchNeedRefresh(ref cachedCompassSearch))
+        if (!Player.LocalPlayer.inventory.doesSearchNeedRefresh(ref cachedCompassSearch))
         {
             return cachedHasCompass;
         }
         cachedHasCompass = false;
         for (byte b = 0; b < PlayerInventory.PAGES - 2; b++)
         {
-            Items items = Player.player.inventory.items[b];
+            Items items = Player.LocalPlayer.inventory.items[b];
             if (items != null)
             {
                 foreach (ItemJar item in items.items)
@@ -659,7 +659,7 @@ public class PlayerLifeUI
                 continue;
             }
             PlayerQuests quests = client.player.quests;
-            if ((!(client.playerID.steamID != Provider.client) || quests.isMemberOfSameGroupAs(Player.player)) && quests.isMarkerPlaced)
+            if ((!(client.playerID.steamID != Provider.client) || quests.isMemberOfSameGroupAs(Player.LocalPlayer)) && quests.isMarkerPlaced)
             {
                 ISleekImage sleekImage;
                 if (num < compassMarkers.Count)
@@ -693,52 +693,52 @@ public class PlayerLifeUI
 
     private static void updateIcons()
     {
-        Player player = Player.player;
-        bool flag = player.isPluginWidgetFlagActive(EPluginWidgetFlags.ShowStatusIcons);
+        Player localPlayer = Player.LocalPlayer;
+        bool flag = localPlayer.isPluginWidgetFlagActive(EPluginWidgetFlags.ShowStatusIcons);
         int num = 0;
-        bleedingBox.IsVisible = player.life.isBleeding && flag;
+        bleedingBox.IsVisible = localPlayer.life.isBleeding && flag;
         if (bleedingBox.IsVisible)
         {
             num += 60;
         }
         brokenBox.PositionOffset_X = num;
-        brokenBox.IsVisible = player.life.isBroken && flag;
+        brokenBox.IsVisible = localPlayer.life.isBroken && flag;
         if (brokenBox.IsVisible)
         {
             num += 60;
         }
         temperatureBox.PositionOffset_X = num;
-        temperatureBox.IsVisible = player.life.temperature != EPlayerTemperature.NONE && flag;
+        temperatureBox.IsVisible = localPlayer.life.temperature != EPlayerTemperature.NONE && flag;
         if (temperatureBox.IsVisible)
         {
             num += 60;
         }
         starvedBox.PositionOffset_X = num;
-        starvedBox.IsVisible = player.life.food == 0 && flag;
+        starvedBox.IsVisible = localPlayer.life.food == 0 && flag;
         if (starvedBox.IsVisible)
         {
             num += 60;
         }
         dehydratedBox.PositionOffset_X = num;
-        dehydratedBox.IsVisible = player.life.water == 0 && flag;
+        dehydratedBox.IsVisible = localPlayer.life.water == 0 && flag;
         if (dehydratedBox.IsVisible)
         {
             num += 60;
         }
         infectedBox.PositionOffset_X = num;
-        infectedBox.IsVisible = player.life.virus == 0 && flag;
+        infectedBox.IsVisible = localPlayer.life.virus == 0 && flag;
         if (infectedBox.IsVisible)
         {
             num += 60;
         }
         drownedBox.PositionOffset_X = num;
-        drownedBox.IsVisible = player.life.oxygen == 0 && flag;
+        drownedBox.IsVisible = localPlayer.life.oxygen == 0 && flag;
         if (drownedBox.IsVisible)
         {
             num += 60;
         }
         asphyxiatingBox.PositionOffset_X = num;
-        asphyxiatingBox.IsVisible = !drownedBox.IsVisible && player.life.isAsphyxiating && flag;
+        asphyxiatingBox.IsVisible = !drownedBox.IsVisible && localPlayer.life.isAsphyxiating && flag;
         if (asphyxiatingBox.IsVisible)
         {
             num += 60;
@@ -750,19 +750,19 @@ public class PlayerLifeUI
             num += 60;
         }
         radiationBox.PositionOffset_X = num;
-        radiationBox.IsVisible = player.movement.isRadiated && flag;
+        radiationBox.IsVisible = localPlayer.movement.isRadiated && flag;
         if (radiationBox.IsVisible)
         {
             num += 60;
         }
         safeBox.PositionOffset_X = num;
-        safeBox.IsVisible = player.movement.isSafe && flag;
+        safeBox.IsVisible = localPlayer.movement.isSafe && flag;
         if (safeBox.IsVisible)
         {
             num += 60;
         }
         arrestBox.PositionOffset_X = num;
-        arrestBox.IsVisible = player.animator.gesture == EPlayerGesture.ARREST_START && flag;
+        arrestBox.IsVisible = localPlayer.animator.gesture == EPlayerGesture.ARREST_START && flag;
         if (arrestBox.IsVisible)
         {
             num += 60;
@@ -773,13 +773,13 @@ public class PlayerLifeUI
 
     private static void updateLifeBoxVisibility()
     {
-        Player player = Player.player;
-        bool flag = player.isPluginWidgetFlagActive(EPluginWidgetFlags.ShowHealth);
-        bool flag2 = player.isPluginWidgetFlagActive(EPluginWidgetFlags.ShowFood);
-        bool flag3 = player.isPluginWidgetFlagActive(EPluginWidgetFlags.ShowWater);
-        bool flag4 = player.isPluginWidgetFlagActive(EPluginWidgetFlags.ShowVirus);
-        bool flag5 = player.isPluginWidgetFlagActive(EPluginWidgetFlags.ShowStamina);
-        bool flag6 = player.isPluginWidgetFlagActive(EPluginWidgetFlags.ShowOxygen);
+        Player localPlayer = Player.LocalPlayer;
+        bool flag = localPlayer.isPluginWidgetFlagActive(EPluginWidgetFlags.ShowHealth);
+        bool flag2 = localPlayer.isPluginWidgetFlagActive(EPluginWidgetFlags.ShowFood);
+        bool flag3 = localPlayer.isPluginWidgetFlagActive(EPluginWidgetFlags.ShowWater);
+        bool flag4 = localPlayer.isPluginWidgetFlagActive(EPluginWidgetFlags.ShowVirus);
+        bool flag5 = localPlayer.isPluginWidgetFlagActive(EPluginWidgetFlags.ShowStamina);
+        bool flag6 = localPlayer.isPluginWidgetFlagActive(EPluginWidgetFlags.ShowOxygen);
         bool flag7 = false;
         if (Level.info != null)
         {
@@ -876,7 +876,7 @@ public class PlayerLifeUI
     private static void UpdateVehicleBoxVisibility()
     {
         bool flag = vehicleVisibleByDefault;
-        flag &= Player.player.isPluginWidgetFlagActive(EPluginWidgetFlags.ShowVehicleStatus);
+        flag &= Player.LocalPlayer.isPluginWidgetFlagActive(EPluginWidgetFlags.ShowVehicleStatus);
         vehicleBox.IsVisible = flag;
     }
 
@@ -983,7 +983,7 @@ public class PlayerLifeUI
             }
             vehicleBox.SizeOffset_Y = num - 5;
             vehicleBox.PositionOffset_Y = 0f - vehicleBox.SizeOffset_Y;
-            if (newVehicle.passengers[Player.player.movement.getSeat()].turret != null)
+            if (newVehicle.passengers[Player.LocalPlayer.movement.getSeat()].turret != null)
             {
                 vehicleBox.PositionOffset_Y -= 80f;
             }
@@ -1014,7 +1014,7 @@ public class PlayerLifeUI
             }
             batteryChargeProgress.state = (float)(int)newBatteryCharge / 10000f;
             hpProgress.state = (float)(int)newHealth / (float)(int)maxHealth;
-            InteractableVehicle vehicle = Player.player.movement.getVehicle();
+            InteractableVehicle vehicle = Player.LocalPlayer.movement.getVehicle();
             if (vehicle.asset != null && vehicle.asset.canBeLocked)
             {
                 vehicleLockedLabel.Text = localization.format(vehicle.isLocked ? "Vehicle_Locked" : "Vehicle_Unlocked", MenuConfigurationControlsUI.getKeyCodeText(ControlsSettings.locker));
@@ -1036,14 +1036,14 @@ public class PlayerLifeUI
 
     private static void updateGasmask()
     {
-        if (Player.player.movement.isRadiated)
+        if (Player.LocalPlayer.movement.isRadiated)
         {
-            ItemMaskAsset maskAsset = Player.player.clothing.maskAsset;
+            ItemMaskAsset maskAsset = Player.LocalPlayer.clothing.maskAsset;
             if (maskAsset != null && maskAsset.proofRadiation)
             {
-                gasmaskIcon.Refresh(maskAsset.id, Player.player.clothing.maskQuality, Player.player.clothing.maskState, maskAsset);
-                gasmaskProgress.state = (float)(int)Player.player.clothing.maskQuality / 100f;
-                gasmaskProgress.color = ItemTool.getQualityColor((float)(int)Player.player.clothing.maskQuality / 100f);
+                gasmaskIcon.Refresh(maskAsset.id, Player.LocalPlayer.clothing.maskQuality, Player.LocalPlayer.clothing.maskState, maskAsset);
+                gasmaskProgress.state = (float)(int)Player.LocalPlayer.clothing.maskQuality / 100f;
+                gasmaskProgress.color = ItemTool.getQualityColor((float)(int)Player.LocalPlayer.clothing.maskQuality / 100f);
                 gasmaskBox.IsVisible = true;
             }
             else
@@ -1106,7 +1106,7 @@ public class PlayerLifeUI
 
     internal static void UpdateTrackedQuest()
     {
-        QuestAsset trackedQuest = Player.player.quests.GetTrackedQuest();
+        QuestAsset trackedQuest = Player.LocalPlayer.quests.GetTrackedQuest();
         if (trackedQuest == null)
         {
             trackedQuestTitle.IsVisible = false;
@@ -1122,7 +1122,7 @@ public class PlayerLifeUI
             INPCCondition[] conditions = trackedQuest.conditions;
             foreach (INPCCondition iNPCCondition in conditions)
             {
-                areConditionsMet.Add(iNPCCondition.isConditionMet(Player.player));
+                areConditionsMet.Add(iNPCCondition.isConditionMet(Player.LocalPlayer));
             }
             int num = 5;
             for (int j = 0; j < trackedQuest.conditions.Length; j++)
@@ -1130,7 +1130,7 @@ public class PlayerLifeUI
                 INPCCondition iNPCCondition2 = trackedQuest.conditions[j];
                 if (!areConditionsMet[j] && iNPCCondition2.AreUIRequirementsMet(areConditionsMet))
                 {
-                    string text = iNPCCondition2.formatCondition(Player.player);
+                    string text = iNPCCondition2.formatCondition(Player.LocalPlayer);
                     if (!string.IsNullOrEmpty(text))
                     {
                         ISleekLabel sleekLabel = Glazier.Get().CreateLabel();
@@ -1343,69 +1343,69 @@ public class PlayerLifeUI
         {
             b++;
         }
-        Player.player.clothing.sendSwapFace(b);
+        Player.LocalPlayer.clothing.sendSwapFace(b);
         closeGestures();
     }
 
     private static void onClickedSurrenderButton(ISleekElement button)
     {
-        if (Player.player.animator.gesture == EPlayerGesture.SURRENDER_START)
+        if (Player.LocalPlayer.animator.gesture == EPlayerGesture.SURRENDER_START)
         {
-            Player.player.animator.sendGesture(EPlayerGesture.SURRENDER_STOP, all: true);
+            Player.LocalPlayer.animator.sendGesture(EPlayerGesture.SURRENDER_STOP, all: true);
         }
         else
         {
-            Player.player.animator.sendGesture(EPlayerGesture.SURRENDER_START, all: true);
+            Player.LocalPlayer.animator.sendGesture(EPlayerGesture.SURRENDER_START, all: true);
         }
         closeGestures();
     }
 
     private static void onClickedPointButton(ISleekElement button)
     {
-        Player.player.animator.sendGesture(EPlayerGesture.POINT, all: true);
+        Player.LocalPlayer.animator.sendGesture(EPlayerGesture.POINT, all: true);
         closeGestures();
     }
 
     private static void onClickedWaveButton(ISleekElement button)
     {
-        Player.player.animator.sendGesture(EPlayerGesture.WAVE, all: true);
+        Player.LocalPlayer.animator.sendGesture(EPlayerGesture.WAVE, all: true);
         closeGestures();
     }
 
     private static void onClickedSaluteButton(ISleekElement button)
     {
-        Player.player.animator.sendGesture(EPlayerGesture.SALUTE, all: true);
+        Player.LocalPlayer.animator.sendGesture(EPlayerGesture.SALUTE, all: true);
         closeGestures();
     }
 
     private static void onClickedRestButton(ISleekElement button)
     {
-        if (Player.player.animator.gesture == EPlayerGesture.REST_START)
+        if (Player.LocalPlayer.animator.gesture == EPlayerGesture.REST_START)
         {
-            Player.player.animator.sendGesture(EPlayerGesture.REST_STOP, all: true);
+            Player.LocalPlayer.animator.sendGesture(EPlayerGesture.REST_STOP, all: true);
         }
         else
         {
-            Player.player.animator.sendGesture(EPlayerGesture.REST_START, all: true);
+            Player.LocalPlayer.animator.sendGesture(EPlayerGesture.REST_START, all: true);
         }
         closeGestures();
     }
 
     private static void onClickedFacepalmButton(ISleekElement button)
     {
-        Player.player.animator.sendGesture(EPlayerGesture.FACEPALM, all: true);
+        Player.LocalPlayer.animator.sendGesture(EPlayerGesture.FACEPALM, all: true);
         closeGestures();
     }
 
     private static void onClickedTPoseButton(ISleekElement button)
     {
-        if (Player.player.animator.gesture == EPlayerGesture.T_POSE_START)
+        if (Player.LocalPlayer.animator.gesture == EPlayerGesture.T_POSE_START)
         {
-            Player.player.animator.sendGesture(EPlayerGesture.T_POSE_STOP, all: true);
+            Player.LocalPlayer.animator.sendGesture(EPlayerGesture.T_POSE_STOP, all: true);
         }
         else
         {
-            Player.player.animator.sendGesture(EPlayerGesture.T_POSE_START, all: true);
+            Player.LocalPlayer.animator.sendGesture(EPlayerGesture.T_POSE_START, all: true);
         }
         closeGestures();
     }
@@ -1416,7 +1416,7 @@ public class PlayerLifeUI
         if (!Provider.isServer)
         {
             flag |= !OptionsSettings.EnableOutboundVoiceChat && OptionsSettings.ShowOutboundVoiceChatOffHint;
-            flag |= !Player.player.voice.GetCustomAllowTalking();
+            flag |= !Player.LocalPlayer.voice.GetCustomAllowTalking();
         }
         voiceOutboundOffIcon.IsVisible = flag;
     }
@@ -1439,7 +1439,7 @@ public class PlayerLifeUI
         OptionsSettings.OnShowOutboundVoiceChatOffHintChanged -= SynchronizeOutboundVoiceChatVisible;
         OptionsSettings.OnEnableOutboundVoiceChatChanged -= SynchronizeOutboundVoiceChatVisible;
         OptionsSettings.OnUnitSystemChanged -= OnUnitSystemChanged;
-        Player.player.life.OnIsAsphyxiatingChanged -= OnIsAsphyxiatingChanged;
+        Player.LocalPlayer.life.OnIsAsphyxiatingChanged -= OnIsAsphyxiatingChanged;
     }
 
     public PlayerLifeUI()
@@ -1866,7 +1866,7 @@ public class PlayerLifeUI
         crosshair.SizeScale_X = 1f;
         crosshair.SizeScale_Y = 1f;
         container.AddChild(crosshair);
-        crosshair.SetPluginAllowsCenterDotVisible(Player.player.isPluginWidgetFlagActive(EPluginWidgetFlags.ShowCenterDot));
+        crosshair.SetPluginAllowsCenterDotVisible(Player.LocalPlayer.isPluginWidgetFlagActive(EPluginWidgetFlags.ShowCenterDot));
         lifeBox = Glazier.Get().CreateBox();
         lifeBox.PositionScale_Y = 1f;
         lifeBox.SizeScale_X = 0.2f;
@@ -2130,41 +2130,41 @@ public class PlayerLifeUI
         OptionsSettings.OnEnableOutboundVoiceChatChanged += SynchronizeOutboundVoiceChatVisible;
         OptionsSettings.OnShowOutboundVoiceChatOffHintChanged += SynchronizeOutboundVoiceChatVisible;
         OptionsSettings.OnUnitSystemChanged += OnUnitSystemChanged;
-        Player.player.onLocalPluginWidgetFlagsChanged += OnLocalPluginWidgetFlagsChanged;
-        PlayerLife life = Player.player.life;
+        Player.LocalPlayer.onLocalPluginWidgetFlagsChanged += OnLocalPluginWidgetFlagsChanged;
+        PlayerLife life = Player.LocalPlayer.life;
         life.onDamaged = (Damaged)Delegate.Combine(life.onDamaged, new Damaged(onDamaged));
-        Player.player.life.onHealthUpdated = onHealthUpdated;
-        Player.player.life.onFoodUpdated = onFoodUpdated;
-        Player.player.life.onWaterUpdated = onWaterUpdated;
-        Player.player.life.onVirusUpdated = onVirusUpdated;
-        Player.player.life.onStaminaUpdated = onStaminaUpdated;
-        Player.player.life.onOxygenUpdated = onOxygenUpdated;
-        Player.player.life.OnIsAsphyxiatingChanged += OnIsAsphyxiatingChanged;
-        Player.player.life.onBleedingUpdated = onBleedingUpdated;
-        Player.player.life.onBrokenUpdated = onBrokenUpdated;
-        Player.player.life.onTemperatureUpdated = onTemperatureUpdated;
-        PlayerLook look = Player.player.look;
+        Player.LocalPlayer.life.onHealthUpdated = onHealthUpdated;
+        Player.LocalPlayer.life.onFoodUpdated = onFoodUpdated;
+        Player.LocalPlayer.life.onWaterUpdated = onWaterUpdated;
+        Player.LocalPlayer.life.onVirusUpdated = onVirusUpdated;
+        Player.LocalPlayer.life.onStaminaUpdated = onStaminaUpdated;
+        Player.LocalPlayer.life.onOxygenUpdated = onOxygenUpdated;
+        Player.LocalPlayer.life.OnIsAsphyxiatingChanged += OnIsAsphyxiatingChanged;
+        Player.LocalPlayer.life.onBleedingUpdated = onBleedingUpdated;
+        Player.LocalPlayer.life.onBrokenUpdated = onBrokenUpdated;
+        Player.LocalPlayer.life.onTemperatureUpdated = onTemperatureUpdated;
+        PlayerLook look = Player.LocalPlayer.look;
         look.onPerspectiveUpdated = (PerspectiveUpdated)Delegate.Combine(look.onPerspectiveUpdated, new PerspectiveUpdated(onPerspectiveUpdated));
-        PlayerMovement movement = Player.player.movement;
+        PlayerMovement movement = Player.LocalPlayer.movement;
         movement.onSeated = (Seated)Delegate.Combine(movement.onSeated, new Seated(onSeated));
-        PlayerMovement movement2 = Player.player.movement;
+        PlayerMovement movement2 = Player.LocalPlayer.movement;
         movement2.onVehicleUpdated = (VehicleUpdated)Delegate.Combine(movement2.onVehicleUpdated, new VehicleUpdated(onVehicleUpdated));
-        PlayerMovement movement3 = Player.player.movement;
+        PlayerMovement movement3 = Player.LocalPlayer.movement;
         movement3.onSafetyUpdated = (SafetyUpdated)Delegate.Combine(movement3.onSafetyUpdated, new SafetyUpdated(onSafetyUpdated));
-        PlayerMovement movement4 = Player.player.movement;
+        PlayerMovement movement4 = Player.LocalPlayer.movement;
         movement4.onRadiationUpdated = (RadiationUpdated)Delegate.Combine(movement4.onRadiationUpdated, new RadiationUpdated(onRadiationUpdated));
-        PlayerAnimator animator = Player.player.animator;
+        PlayerAnimator animator = Player.LocalPlayer.animator;
         animator.onGestureUpdated = (GestureUpdated)Delegate.Combine(animator.onGestureUpdated, new GestureUpdated(onGestureUpdated));
-        PlayerEquipment equipment = Player.player.equipment;
+        PlayerEquipment equipment = Player.LocalPlayer.equipment;
         equipment.onHotkeysUpdated = (HotkeysUpdated)Delegate.Combine(equipment.onHotkeysUpdated, new HotkeysUpdated(onHotkeysUpdated));
-        Player.player.voice.OnCustomAllowTalkingChanged += OnCustomAllowTalkingChanged;
-        Player.player.voice.onTalkingChanged += onTalked;
-        Player.player.quests.TrackedQuestUpdated += OnTrackedQuestUpdated;
-        PlayerSkills skills = Player.player.skills;
+        Player.LocalPlayer.voice.OnCustomAllowTalkingChanged += OnCustomAllowTalkingChanged;
+        Player.LocalPlayer.voice.onTalkingChanged += onTalked;
+        Player.LocalPlayer.quests.TrackedQuestUpdated += OnTrackedQuestUpdated;
+        PlayerSkills skills = Player.LocalPlayer.skills;
         skills.onExperienceUpdated = (ExperienceUpdated)Delegate.Combine(skills.onExperienceUpdated, new ExperienceUpdated(onExperienceUpdated));
         LightingManager.onMoonUpdated = (MoonUpdated)Delegate.Combine(LightingManager.onMoonUpdated, new MoonUpdated(onMoonUpdated));
         ZombieManager.onWaveUpdated = (WaveUpdated)Delegate.Combine(ZombieManager.onWaveUpdated, new WaveUpdated(onWaveUpdated));
-        PlayerClothing clothing = Player.player.clothing;
+        PlayerClothing clothing = Player.LocalPlayer.clothing;
         clothing.onMaskUpdated = (MaskUpdated)Delegate.Combine(clothing.onMaskUpdated, new MaskUpdated(onMaskUpdated));
         OnChatMessageReceived();
         ChatManager.onChatMessageReceived = (ChatMessageReceivedHandler)Delegate.Combine(ChatManager.onChatMessageReceived, new ChatMessageReceivedHandler(OnChatMessageReceived));

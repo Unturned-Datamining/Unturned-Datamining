@@ -424,7 +424,7 @@ public class VehicleManager : SteamCaller
     /// unless preferredColor.a is byte.MaxValue.
     /// </summary>
     /// <param name="owner">Owner to lock vehicle for by default. Used to lock vehicles to the player who purchased them.</param>
-    private static InteractableVehicle spawnVehicleInternal(Asset asset, Vector3 point, Quaternion angle, CSteamID owner, CSteamID groupId, Color32? preferredColor)
+    internal static InteractableVehicle spawnVehicleInternal(Asset asset, Vector3 point, Quaternion angle, CSteamID owner, CSteamID groupId, Color32? preferredColor)
     {
         if (asset == null)
         {
@@ -469,15 +469,15 @@ public class VehicleManager : SteamCaller
 
     public static void exitVehicle()
     {
-        if (Player.player.movement.getVehicle() != null)
+        if (Player.LocalPlayer.movement.getVehicle() != null)
         {
-            SendExitVehicleRequest.Invoke(ENetReliability.Unreliable, Player.player.movement.getVehicle().GetComponent<Rigidbody>().velocity);
+            SendExitVehicleRequest.Invoke(ENetReliability.Unreliable, Player.LocalPlayer.movement.getVehicle().GetComponent<Rigidbody>().velocity);
         }
     }
 
     public static void swapVehicle(byte toSeat)
     {
-        if (Player.player.movement.getVehicle() != null)
+        if (Player.LocalPlayer.movement.getVehicle() != null)
         {
             SendSwapVehicleRequest.Invoke(ENetReliability.Unreliable, toSeat);
         }
@@ -485,7 +485,7 @@ public class VehicleManager : SteamCaller
 
     public static void sendVehicleLock()
     {
-        if (Player.player.movement.getVehicle() != null)
+        if (Player.LocalPlayer.movement.getVehicle() != null)
         {
             SendVehicleLockRequest.Invoke(ENetReliability.Unreliable);
         }
@@ -493,7 +493,7 @@ public class VehicleManager : SteamCaller
 
     public static void sendVehicleSkin()
     {
-        if (Player.player.movement.getVehicle() != null)
+        if (Player.LocalPlayer.movement.getVehicle() != null)
         {
             SendVehicleSkinRequest.Invoke(ENetReliability.Unreliable);
         }
@@ -504,7 +504,7 @@ public class VehicleManager : SteamCaller
     /// </summary>
     public static void sendVehicleHeadlights()
     {
-        InteractableVehicle vehicle = Player.player.movement.getVehicle();
+        InteractableVehicle vehicle = Player.LocalPlayer.movement.getVehicle();
         if (!(vehicle == null) && vehicle.asset != null)
         {
             bool flag = !vehicle.headlightsOn;
@@ -520,7 +520,7 @@ public class VehicleManager : SteamCaller
     /// </summary>
     public static void sendVehicleBonus()
     {
-        InteractableVehicle vehicle = Player.player.movement.getVehicle();
+        InteractableVehicle vehicle = Player.LocalPlayer.movement.getVehicle();
         if (vehicle == null)
         {
             return;
@@ -547,7 +547,7 @@ public class VehicleManager : SteamCaller
 
     public static void sendVehicleStealBattery()
     {
-        if (Player.player.movement.getVehicle() != null)
+        if (Player.LocalPlayer.movement.getVehicle() != null)
         {
             SendStealVehicleBattery.Invoke(ENetReliability.Unreliable);
         }
@@ -555,7 +555,7 @@ public class VehicleManager : SteamCaller
 
     public static void sendVehicleHorn()
     {
-        InteractableVehicle vehicle = Player.player.movement.getVehicle();
+        InteractableVehicle vehicle = Player.LocalPlayer.movement.getVehicle();
         if (vehicle != null && vehicle.asset.hasHorn)
         {
             SendVehicleHornRequest.Invoke(ENetReliability.Unreliable);

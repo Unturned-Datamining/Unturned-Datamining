@@ -116,7 +116,7 @@ public class MenuConfigurationAudioUI : SleekFullscreenBox
 
     private void onClickedBackButton(ISleekElement button)
     {
-        if (Player.player != null)
+        if (Player.LocalPlayer != null)
         {
             PlayerPauseUI.open();
         }

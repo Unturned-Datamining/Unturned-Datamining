@@ -329,7 +329,7 @@ public class LevelObject
             bool flag = true;
             if (!Dedicator.IsDedicatedServer)
             {
-                flag = asset.areConditionsMet(Player.player);
+                flag = asset.areConditionsMet(Player.LocalPlayer);
                 flag &= OptionsSettings.gore || !asset.isGore;
             }
             if (flag && asset.holidayRestriction != 0)
@@ -426,20 +426,20 @@ public class LevelObject
         }
         if (flag)
         {
-            PlayerQuests quests = Player.player.quests;
+            PlayerQuests quests = Player.LocalPlayer.quests;
             quests.onExternalConditionsUpdated = (ExternalConditionsUpdated)Delegate.Combine(quests.onExternalConditionsUpdated, new ExternalConditionsUpdated(onExternalConditionsUpdated));
         }
-        PlayerQuests quests2 = Player.player.quests;
+        PlayerQuests quests2 = Player.LocalPlayer.quests;
         quests2.onFlagsUpdated = (FlagsUpdated)Delegate.Combine(quests2.onFlagsUpdated, new FlagsUpdated(onFlagsUpdated));
         associatedFlags = asset.GetConditionAssociatedFlags();
         if (associatedFlags != null)
         {
-            PlayerQuests quests3 = Player.player.quests;
+            PlayerQuests quests3 = Player.LocalPlayer.quests;
             quests3.onFlagUpdated = (FlagUpdated)Delegate.Combine(quests3.onFlagUpdated, new FlagUpdated(onFlagUpdated));
         }
         if (flag2)
         {
-            Player.player.quests.OnLocalPlayerQuestsChanged += OnLocalPlayerQuestsChanged;
+            Player.LocalPlayer.quests.OnLocalPlayerQuestsChanged += OnLocalPlayerQuestsChanged;
         }
         updateConditions();
     }

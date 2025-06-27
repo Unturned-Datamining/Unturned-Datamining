@@ -21,7 +21,7 @@ public class SleekBoost : SleekWrapper
         button.SizeScale_Y = 1f;
         button.TooltipText = PlayerDashboardSkillsUI.localization.format("Boost_" + boost + "_Tooltip");
         button.OnClicked += onClickedInternalButton;
-        button.IsClickable = Player.player.skills.experience >= PlayerSkills.BOOST_COST;
+        button.IsClickable = Player.LocalPlayer.skills.experience >= PlayerSkills.BOOST_COST;
         AddChild(button);
         infoLabel = Glazier.Get().CreateLabel();
         infoLabel.PositionOffset_X = 5f;

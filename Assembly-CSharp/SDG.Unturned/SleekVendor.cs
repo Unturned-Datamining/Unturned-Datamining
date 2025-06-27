@@ -31,14 +31,14 @@ public class SleekVendor : SleekWrapper
         {
             if (element is VendorBuying vendorBuying)
             {
-                vendorBuying.format(Player.player, out var total, out var amount);
+                vendorBuying.format(Player.LocalPlayer, out var total, out var amount);
                 button.IsClickable = total >= amount;
                 amountLabel.Text = PlayerNPCVendorUI.localization.format("Amount_Buy", total, amount);
             }
             else if (element is VendorSellingBase vendorSellingBase)
             {
-                vendorSellingBase.format(Player.player, out var total2);
-                button.IsClickable = vendorSellingBase.canBuy(Player.player);
+                vendorSellingBase.format(Player.LocalPlayer, out var total2);
+                button.IsClickable = vendorSellingBase.canBuy(Player.LocalPlayer);
                 amountLabel.Text = PlayerNPCVendorUI.localization.format("Amount_Sell", total2);
             }
             amountLabel.TextColor = (button.IsClickable ? ESleekTint.FONT : ESleekTint.BAD);

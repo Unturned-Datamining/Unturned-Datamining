@@ -2885,6 +2885,7 @@ public class UseableGun : Useable
             }
             PlayerUI.disableCrosshair();
             base.player.look.disableScope();
+            base.player.look.disableZoom();
             PlayerStance stance = base.player.stance;
             stance.onStanceUpdated = (StanceUpdated)Delegate.Remove(stance.onStanceUpdated, new StanceUpdated(UpdateCrosshairEnabled));
             PlayerLook look = base.player.look;
@@ -4180,27 +4181,19 @@ public class UseableGun : Useable
         {
             if (isAiming)
             {
-                base.player.look.enableZoom(thirdPersonZoomFactor);
-            }
-            else
-            {
-                base.player.look.disableZoom();
+                base.player.look.enableZoom(thirdPersonZoomFactor, useAlpha: true);
             }
         }
         else if (isAiming)
         {
-            if (shouldZoomUsingEyes)
+            if (equippedGunAsset.isTurret || equippedGunAsset.action == EAction.Minigun || shouldZoomUsingEyes)
             {
-                base.player.look.enableZoom(firstPersonZoomFactor);
+                base.player.look.enableZoom(firstPersonZoomFactor, useAlpha: true);
             }
             else
             {
-                base.player.look.disableZoom();
+                base.player.look.enableZoom(1f, useAlpha: true);
             }
-        }
-        else
-        {
-            base.player.look.disableZoom();
         }
         if (thirdShellRenderer != null)
         {
@@ -4312,16 +4305,20 @@ public class UseableGun : Useable
             {
                 if (base.player.look.perspective == EPlayerPerspective.FIRST)
                 {
-                    base.player.look.enableZoom(firstPersonZoomFactor);
+                    base.player.look.enableZoom(firstPersonZoomFactor, useAlpha: true);
                 }
                 else if (base.player.look.perspective == EPlayerPerspective.THIRD)
                 {
-                    base.player.look.enableZoom(thirdPersonZoomFactor);
+                    base.player.look.enableZoom(thirdPersonZoomFactor, useAlpha: true);
                 }
             }
             else if (base.player.look.perspective == EPlayerPerspective.THIRD)
             {
-                base.player.look.enableZoom(thirdPersonZoomFactor);
+                base.player.look.enableZoom(thirdPersonZoomFactor, useAlpha: true);
+            }
+            else
+            {
+                base.player.look.enableZoom(1f, useAlpha: true);
             }
             UpdateCrosshairEnabled();
             PlayerUI.instance.groupUI.IsVisible = false;
@@ -4358,7 +4355,6 @@ public class UseableGun : Useable
             base.player.animator.viewmodelSwayMultiplier = 1f;
             base.player.animator.viewmodelOffsetPreferenceMultiplier = 1f;
             base.player.look.shouldUseZoomFactorForSensitivity = false;
-            base.player.look.disableZoom();
             UpdateCrosshairEnabled();
             PlayerUI.instance.groupUI.IsVisible = true;
         }

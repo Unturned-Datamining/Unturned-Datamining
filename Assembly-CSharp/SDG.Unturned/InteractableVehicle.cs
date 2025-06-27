@@ -10,7 +10,7 @@ using Unturned.UnityEx;
 
 namespace SDG.Unturned;
 
-public class InteractableVehicle : Interactable, IExplosionDamageable, IEquatable<IExplosionDamageable>, ICraftingTagProvider
+public class InteractableVehicle : Interactable, IExplosionDamageable, IEquatable<IExplosionDamageable>, ICraftingTagProvider, IOwnershipInfo
 {
     /// <summary>
     /// Temporary array for use with physics queries.
@@ -1007,6 +1007,13 @@ public class InteractableVehicle : Interactable, IExplosionDamageable, IEquatabl
         return this == obj;
     }
 
+    public bool TryGetOwnership(out ulong ownerUser, out ulong ownerGroup)
+    {
+        ownerUser = (isLocked ? lockedOwner.m_SteamID : 0);
+        ownerGroup = (isLocked ? lockedGroup.m_SteamID : 0);
+        return true;
+    }
+
     /// <summary>
     /// Primarily for backwards compatibility with plugins. Previously, multiple "updates" could be queued per
     /// vehicle and sent to clients. This list was public, unfortunately, so plugins may rely on submitting vehicle
@@ -1166,9 +1173,9 @@ public class InteractableVehicle : Interactable, IExplosionDamageable, IEquatabl
         {
             currentFuel = passengers[0].player.player.life.stamina;
         }
-        else if (Player.player != null)
+        else if (Player.LocalPlayer != null)
         {
-            currentFuel = Player.player.life.stamina;
+            currentFuel = Player.LocalPlayer.life.stamina;
         }
         else
         {
@@ -1427,13 +1434,13 @@ public class InteractableVehicle : Interactable, IExplosionDamageable, IEquatabl
 
     public override bool checkUseable()
     {
-        if (Player.player == null || (base.transform.position - Player.player.transform.position).sqrMagnitude > 100f)
+        if (Player.LocalPlayer == null || (base.transform.position - Player.LocalPlayer.transform.position).sqrMagnitude > 100f)
         {
             return false;
         }
         if (!isExploded)
         {
-            return checkEnter(Provider.client, Player.player.quests.groupID);
+            return checkEnter(Provider.client, Player.LocalPlayer.quests.groupID);
         }
         return false;
     }
@@ -1459,7 +1466,7 @@ public class InteractableVehicle : Interactable, IExplosionDamageable, IEquatabl
         }
         else
         {
-            if (Player.player == null || (base.transform.position - Player.player.transform.position).sqrMagnitude > 100f)
+            if (Player.LocalPlayer == null || (base.transform.position - Player.LocalPlayer.transform.position).sqrMagnitude > 100f)
             {
                 message = EPlayerMessage.BLOCKED;
             }
@@ -2151,7 +2158,7 @@ public class InteractableVehicle : Interactable, IExplosionDamageable, IEquatabl
             PlayIgnitionSound();
         }
         this.onPassengersUpdated?.Invoke();
-        bool flag = !Dedicator.IsDedicatedServer && steamPlayer != null && Player.player != null && Player.player == steamPlayer.player;
+        bool flag = !Dedicator.IsDedicatedServer && steamPlayer != null && Player.LocalPlayer != null && Player.LocalPlayer == steamPlayer.player;
         if (eventHook != null)
         {
             if (seat == 0)
@@ -2237,7 +2244,7 @@ public class InteractableVehicle : Interactable, IExplosionDamageable, IEquatabl
             }
         }
         this.onPassengersUpdated?.Invoke();
-        bool flag = !Dedicator.IsDedicatedServer && steamPlayer != null && Player.player != null && Player.player == steamPlayer.player;
+        bool flag = !Dedicator.IsDedicatedServer && steamPlayer != null && Player.LocalPlayer != null && Player.LocalPlayer == steamPlayer.player;
         if (passengers[seatIndex].turretEventHook != null)
         {
             if (flag)
@@ -2349,7 +2356,7 @@ public class InteractableVehicle : Interactable, IExplosionDamageable, IEquatabl
             }
         }
         this.onPassengersUpdated?.Invoke();
-        bool flag = !Dedicator.IsDedicatedServer && steamPlayer != null && Player.player != null && Player.player == steamPlayer.player;
+        bool flag = !Dedicator.IsDedicatedServer && steamPlayer != null && Player.LocalPlayer != null && Player.LocalPlayer == steamPlayer.player;
         if (passengers[fromSeatIndex].turretEventHook != null)
         {
             if (flag)

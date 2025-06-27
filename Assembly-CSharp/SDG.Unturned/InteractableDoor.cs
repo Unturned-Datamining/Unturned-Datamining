@@ -127,7 +127,7 @@ public class InteractableDoor : Interactable
 
     public override bool checkUseable()
     {
-        return checkToggle(Provider.client, Player.player.quests.groupID);
+        return checkToggle(Provider.client, Player.LocalPlayer.quests.groupID);
     }
 
     public override void use()

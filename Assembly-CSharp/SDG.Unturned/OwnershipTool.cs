@@ -10,7 +10,7 @@ internal class OwnershipTool
         {
             return false;
         }
-        return checkToggle(Provider.client, player, Player.player.quests.groupID, group);
+        return checkToggle(Provider.client, player, Player.LocalPlayer.quests.groupID, group);
     }
 
     public static bool checkToggle(CSteamID player_0, ulong player_1, CSteamID group_0, ulong group_1)

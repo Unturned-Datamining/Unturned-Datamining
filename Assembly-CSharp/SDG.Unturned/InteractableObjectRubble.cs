@@ -254,7 +254,7 @@ public class InteractableObjectRubble : MonoBehaviour, IExplosionDamageable, IEq
                             force.x += UnityEngine.Random.Range(-16f, 16f);
                             force.z += UnityEngine.Random.Range(-16f, 16f);
                         }
-                        force *= (float)((Player.player != null && Player.player.skills.boost == EPlayerBoost.FLIGHT) ? 4 : 2);
+                        force *= (float)((Player.LocalPlayer != null && Player.LocalPlayer.skills.boost == EPlayerBoost.FLIGHT) ? 4 : 2);
                         GameObject obj = UnityEngine.Object.Instantiate(rubbleRagdollInfo.ragdollGameObject, rubbleRagdollInfo.ragdollGameObject.transform.position, rubbleRagdollInfo.ragdollGameObject.transform.rotation);
                         obj.name = "Ragdoll";
                         EffectManager.RegisterDebris(obj);

@@ -4,7 +4,7 @@ using Unturned.SystemEx;
 
 namespace SDG.Unturned;
 
-internal class StructureRefComponent : MonoBehaviour, IExplosionDamageable, IEquatable<IExplosionDamageable>, ICraftingTagProvider
+internal class StructureRefComponent : MonoBehaviour, IExplosionDamageable, IEquatable<IExplosionDamageable>, ICraftingTagProvider, IOwnershipInfo
 {
     internal StructureDrop tempNotSureIfStructureShouldBeAComponentYet;
 
@@ -92,6 +92,20 @@ internal class StructureRefComponent : MonoBehaviour, IExplosionDamageable, IEqu
     public bool Equals(ICraftingTagProvider obj)
     {
         return this == obj;
+    }
+
+    public bool TryGetOwnership(out ulong ownerUser, out ulong ownerGroup)
+    {
+        StructureData structureData = tempNotSureIfStructureShouldBeAComponentYet?.GetServersideData();
+        if (structureData != null)
+        {
+            ownerUser = structureData.owner;
+            ownerGroup = structureData.group;
+            return true;
+        }
+        ownerUser = 0uL;
+        ownerGroup = 0uL;
+        return false;
     }
 
     private void Start()

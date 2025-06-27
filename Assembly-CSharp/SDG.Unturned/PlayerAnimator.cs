@@ -294,23 +294,23 @@ public class PlayerAnimator : PlayerCaller
     {
         get
         {
-            if (Player.player.stance.stance == EPlayerStance.SPRINT)
+            if (Player.LocalPlayer.stance.stance == EPlayerStance.SPRINT)
             {
                 return BOB_SPRINT * blendedViewmodelSwayMultiplier;
             }
-            if (Player.player.stance.stance == EPlayerStance.STAND)
+            if (Player.LocalPlayer.stance.stance == EPlayerStance.STAND)
             {
                 return BOB_STAND * blendedViewmodelSwayMultiplier;
             }
-            if (Player.player.stance.stance == EPlayerStance.CROUCH)
+            if (Player.LocalPlayer.stance.stance == EPlayerStance.CROUCH)
             {
                 return BOB_CROUCH * blendedViewmodelSwayMultiplier;
             }
-            if (Player.player.stance.stance == EPlayerStance.PRONE)
+            if (Player.LocalPlayer.stance.stance == EPlayerStance.PRONE)
             {
                 return BOB_PRONE * blendedViewmodelSwayMultiplier;
             }
-            if (Player.player.stance.stance == EPlayerStance.SWIM)
+            if (Player.LocalPlayer.stance.stance == EPlayerStance.SWIM)
             {
                 return BOB_SWIM * blendedViewmodelSwayMultiplier;
             }
@@ -322,23 +322,23 @@ public class PlayerAnimator : PlayerCaller
     {
         get
         {
-            if (Player.player.stance.stance == EPlayerStance.SPRINT)
+            if (Player.LocalPlayer.stance.stance == EPlayerStance.SPRINT)
             {
                 return TILT_SPRINT * (1f - blendedViewmodelSwayMultiplier / 2f);
             }
-            if (Player.player.stance.stance == EPlayerStance.STAND)
+            if (Player.LocalPlayer.stance.stance == EPlayerStance.STAND)
             {
                 return TILT_STAND * (1f - blendedViewmodelSwayMultiplier / 2f);
             }
-            if (Player.player.stance.stance == EPlayerStance.CROUCH)
+            if (Player.LocalPlayer.stance.stance == EPlayerStance.CROUCH)
             {
                 return TILT_CROUCH * (1f - blendedViewmodelSwayMultiplier / 2f);
             }
-            if (Player.player.stance.stance == EPlayerStance.PRONE)
+            if (Player.LocalPlayer.stance.stance == EPlayerStance.PRONE)
             {
                 return TILT_PRONE * (1f - blendedViewmodelSwayMultiplier / 2f);
             }
-            if (Player.player.stance.stance == EPlayerStance.SWIM)
+            if (Player.LocalPlayer.stance.stance == EPlayerStance.SWIM)
             {
                 return TILT_SWIM * (1f - blendedViewmodelSwayMultiplier / 2f);
             }
@@ -350,15 +350,15 @@ public class PlayerAnimator : PlayerCaller
     {
         get
         {
-            if (Player.player.stance.stance == EPlayerStance.SPRINT)
+            if (Player.LocalPlayer.stance.stance == EPlayerStance.SPRINT)
             {
                 return Mathf.Sin(TILT_SPRINT * Time.time * 0.25f) * TILT_SPRINT;
             }
-            if (Player.player.stance.stance == EPlayerStance.STAND)
+            if (Player.LocalPlayer.stance.stance == EPlayerStance.STAND)
             {
                 return Mathf.Sin(TILT_STAND * Time.time * 0.5f) * TILT_STAND * 0.5f;
             }
-            if (Player.player.stance.stance == EPlayerStance.SWIM)
+            if (Player.LocalPlayer.stance.stance == EPlayerStance.SWIM)
             {
                 return Mathf.Sin(TILT_SWIM * Time.time * 0.25f) * TILT_SWIM * 0.25f;
             }
@@ -370,23 +370,23 @@ public class PlayerAnimator : PlayerCaller
     {
         get
         {
-            if (Player.player.stance.stance == EPlayerStance.SPRINT)
+            if (Player.LocalPlayer.stance.stance == EPlayerStance.SPRINT)
             {
                 return SPEED_SPRINT;
             }
-            if (Player.player.stance.stance == EPlayerStance.STAND)
+            if (Player.LocalPlayer.stance.stance == EPlayerStance.STAND)
             {
                 return SPEED_STAND;
             }
-            if (Player.player.stance.stance == EPlayerStance.CROUCH)
+            if (Player.LocalPlayer.stance.stance == EPlayerStance.CROUCH)
             {
                 return SPEED_CROUCH;
             }
-            if (Player.player.stance.stance == EPlayerStance.PRONE)
+            if (Player.LocalPlayer.stance.stance == EPlayerStance.PRONE)
             {
                 return SPEED_PRONE;
             }
-            if (Player.player.stance.stance == EPlayerStance.SWIM)
+            if (Player.LocalPlayer.stance.stance == EPlayerStance.SWIM)
             {
                 return SPEED_SWIM;
             }
@@ -1267,9 +1267,10 @@ public class PlayerAnimator : PlayerCaller
             }
             blendedViewmodelSwayMultiplier = Mathf.Lerp(blendedViewmodelSwayMultiplier, viewmodelSwayMultiplier, 16f * Time.deltaTime);
             blendedViewmodelOffsetPreferenceMultiplier = Mathf.Lerp(blendedViewmodelOffsetPreferenceMultiplier, viewmodelOffsetPreferenceMultiplier, 16f * Time.deltaTime);
+            float num = ((Provider.modeConfigData?.Gameplay?.Disable_Motion_Sickness_Options).GetValueOrDefault() ? 1f : OptionsSettings.viewmodelBobScale);
             if (base.player.movement.isMoving)
             {
-                viewmodelMovementOffset.targetPosition.x = Mathf.Sin(speed * Time.time) * bob * OptionsSettings.viewmodelBobScale;
+                viewmodelMovementOffset.targetPosition.x = Mathf.Sin(speed * Time.time) * bob * num;
                 viewmodelMovementOffset.targetPosition.y = Mathf.Abs(viewmodelMovementOffset.targetPosition.x);
             }
             else
@@ -1303,8 +1304,8 @@ public class PlayerAnimator : PlayerCaller
             viewmodelCameraTransform.localPosition = viewmodelCameraLocalPosition + aimingAlignmentOffset;
             if (base.player.movement.isMoving)
             {
-                viewmodelCameraMovementLocalRotation.targetPosition.x = base.player.movement.move.z * tilt * viewmodelSwayMultiplier * OptionsSettings.viewmodelBobScale + roll * viewmodelSwayMultiplier * OptionsSettings.viewmodelBobScale;
-                viewmodelCameraMovementLocalRotation.targetPosition.y = base.player.movement.move.x * tilt * OptionsSettings.viewmodelBobScale + roll * viewmodelSwayMultiplier * OptionsSettings.viewmodelBobScale;
+                viewmodelCameraMovementLocalRotation.targetPosition.x = base.player.movement.move.z * tilt * viewmodelSwayMultiplier * num + roll * viewmodelSwayMultiplier * num;
+                viewmodelCameraMovementLocalRotation.targetPosition.y = base.player.movement.move.x * tilt * num + roll * viewmodelSwayMultiplier * num;
             }
             else
             {
@@ -1322,14 +1323,14 @@ public class PlayerAnimator : PlayerCaller
             viewmodelCameraLocalRotation.z = viewmodelCameraMovementLocalRotation.currentPosition.y;
             viewmodelCameraLocalRotation += recoilViewmodelCameraRotation.currentPosition;
             recoilViewmodelCameraRotation.Update(Time.deltaTime);
-            float num = Mathf.DeltaAngle(base.player.look.pitch, lastFramePitchInput);
+            float num2 = Mathf.DeltaAngle(base.player.look.pitch, lastFramePitchInput);
             lastFramePitchInput = base.player.look.pitch;
-            float num2 = Mathf.DeltaAngle(base.player.look.yaw, lastFrameYawInput);
+            float num3 = Mathf.DeltaAngle(base.player.look.yaw, lastFrameYawInput);
             lastFrameYawInput = base.player.look.yaw;
             rotationInputViewmodelRoll.Update(Time.deltaTime);
-            rotationInputViewmodelRoll.currentPosition.x += num * -0.03f * viewmodelSwayMultiplier * OptionsSettings.viewmodelBobScale;
-            rotationInputViewmodelRoll.currentPosition.y += num2 * -0.015f * viewmodelSwayMultiplier * OptionsSettings.viewmodelBobScale;
-            rotationInputViewmodelRoll.currentPosition.z += num2 * -0.05f * OptionsSettings.viewmodelBobScale;
+            rotationInputViewmodelRoll.currentPosition.x += num2 * -0.03f * viewmodelSwayMultiplier * num;
+            rotationInputViewmodelRoll.currentPosition.y += num3 * -0.015f * viewmodelSwayMultiplier * num;
+            rotationInputViewmodelRoll.currentPosition.z += num3 * -0.05f * num;
             rotationInputViewmodelRoll.currentPosition = MathfEx.Clamp(rotationInputViewmodelRoll.currentPosition, -10f, 10f);
             viewmodelCameraLocalRotation += rotationInputViewmodelRoll.currentPosition;
             viewmodelItemInertiaRotation.Update(Time.deltaTime);
@@ -1348,19 +1349,19 @@ public class PlayerAnimator : PlayerCaller
                     }
                     lastFrameItemPosition = vector;
                     lastFrameHadItemPosition = true;
-                    goto IL_0a01;
+                    goto IL_0a30;
                 }
             }
             lastFrameHadItemPosition = false;
-            goto IL_0a01;
+            goto IL_0a30;
         }
         if (thirdAnimator != null)
         {
             updateState(thirdAnimator);
             updateHuman((HumanAnimator)thirdAnimator);
         }
-        goto IL_0d70;
-        IL_0a01:
+        goto IL_0d9f;
+        IL_0a30:
         viewmodelItemInertiaRotation.currentPosition = MathfEx.Clamp(viewmodelItemInertiaRotation.currentPosition, -5f, 5f);
         viewmodelCameraLocalRotation += viewmodelItemInertiaRotation.currentPosition * aimingInertaMultiplier;
         viewmodelSmoothedExplosionLocalRotation = Quaternion.Lerp(viewmodelSmoothedExplosionLocalRotation, viewmodelTargetExplosionLocalRotation.currentRotation, viewmodelExplosionSmoothingSpeed * Time.deltaTime);
@@ -1395,8 +1396,8 @@ public class PlayerAnimator : PlayerCaller
             _shoulder = 0f;
         }
         _shoulder2 = Mathf.Lerp(shoulder2, -lean, 8f * Time.deltaTime);
-        goto IL_0d70;
-        IL_0d70:
+        goto IL_0d9f;
+        IL_0d9f:
         if (characterAnimator != null)
         {
             updateState(characterAnimator);
@@ -1532,7 +1533,7 @@ public class PlayerAnimator : PlayerCaller
         if (base.player.life.health < 25)
         {
             Vector3 vector = new Vector3(UnityEngine.Random.Range(-0.005f, 0.005f), UnityEngine.Random.Range(-0.005f, 0.005f), UnityEngine.Random.Range(-0.005f, 0.005f));
-            float num = 1f - (float)(int)Player.player.life.health / 25f;
+            float num = 1f - (float)(int)Player.LocalPlayer.life.health / 25f;
             float num2 = 1f - base.player.skills.mastery(1, 3) * 0.75f;
             position += vector * num * num2;
         }

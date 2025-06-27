@@ -12,10 +12,10 @@ public class InteractableLadder : Interactable
 
     public override void use()
     {
-        if (CanClimb(Player.player))
+        if (CanClimb(Player.LocalPlayer))
         {
-            Vector3 normalized = (PlayerInteract.hit.point - Player.player.look.aim.position).normalized;
-            PlayerStance.SendClimbRequest.Invoke(Player.player.stance.GetNetId(), ENetReliability.Reliable, normalized);
+            Vector3 normalized = (PlayerInteract.hit.point - Player.LocalPlayer.look.aim.position).normalized;
+            PlayerStance.SendClimbRequest.Invoke(Player.LocalPlayer.stance.GetNetId(), ENetReliability.Reliable, normalized);
         }
     }
 
@@ -23,7 +23,7 @@ public class InteractableLadder : Interactable
     {
         text = "";
         color = Color.white;
-        if (CanClimb(Player.player))
+        if (CanClimb(Player.LocalPlayer))
         {
             message = EPlayerMessage.CLIMB;
             return true;

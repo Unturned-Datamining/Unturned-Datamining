@@ -1,3 +1,4 @@
+using Steamworks;
 using UnityEngine;
 
 namespace SDG.Unturned;
@@ -16,6 +17,9 @@ public class VehicleSpawner : MonoBehaviour
 
     [Tooltip("If UsePaintColorOverride is true, this paint color is used instead of the vehicle's default.")]
     public Color32 PaintColorOverride;
+
+    [Tooltip("Finds ownership of VehicleSpawner (e.g., parent barricade) and assigns to spawned vehicle.")]
+    public bool InheritOwnership;
 
     public void SpawnDefault()
     {
@@ -50,13 +54,17 @@ public class VehicleSpawner : MonoBehaviour
         if (!(asset is VehicleAsset) && !(asset is VehicleRedirectorAsset))
         {
             UnturnedLog.warn(base.transform.GetSceneHierarchyPath() + " tried to spawn vehicle but asset (" + asset.FriendlyName + ") is " + asset.GetTypeFriendlyName());
+            return;
         }
-        else
+        ulong ownerUser = 0uL;
+        ulong ownerGroup = 0uL;
+        if (InheritOwnership)
         {
-            Color32? paintColor = (UsePaintColorOverride ? new Color32?(PaintColorOverride) : null);
-            base.transform.GetPositionAndRotation(out var position, out var rotation);
-            VehicleManager.spawnVehicleV2(asset, position, rotation, paintColor);
+            DamageTool.TryFindOwnership(base.transform, out ownerUser, out ownerGroup);
         }
+        Color32? preferredColor = (UsePaintColorOverride ? new Color32?(PaintColorOverride) : null);
+        base.transform.GetPositionAndRotation(out var position, out var rotation);
+        VehicleManager.spawnVehicleInternal(asset, position, rotation, new CSteamID(ownerUser), new CSteamID(ownerGroup), preferredColor);
     }
 
     private string OnGetSpawnErrorContext()

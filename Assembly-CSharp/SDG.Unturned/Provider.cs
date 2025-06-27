@@ -1043,7 +1043,7 @@ public class Provider : MonoBehaviour
         }
         string path = PathEx.Join(UnturnedPaths.RootDirectory, "Screenshots");
         Directory.CreateDirectory(path);
-        bool flag = ((Level.isEditor && EditorUI.window != null) ? EditorUI.window.isEnabled : (!(Player.player != null) || PlayerUI.window == null || PlayerUI.window.isEnabled));
+        bool flag = ((Level.isEditor && EditorUI.window != null) ? EditorUI.window.isEnabled : (!(Player.LocalPlayer != null) || PlayerUI.window == null || PlayerUI.window.isEnabled));
         string text = DateTime.Now.ToString("yyyy-MM-dd_HH-mm-ss");
         if (GraphicsSettings.WantsCinematicMode)
         {
@@ -2549,9 +2549,9 @@ public class Provider : MonoBehaviour
     /// </summary>
     public static void disconnect()
     {
-        if (!Dedicator.IsDedicatedServer && Player.player != null && Player.player.channel != null && Player.player.channel.owner != null)
+        if (!Dedicator.IsDedicatedServer && Player.LocalPlayer != null && Player.LocalPlayer.channel != null && Player.LocalPlayer.channel.owner != null)
         {
-            Player.player.channel.owner.commitModifiedDynamicProps();
+            Player.LocalPlayer.channel.owner.commitModifiedDynamicProps();
         }
         if (isServer)
         {
@@ -3981,6 +3981,11 @@ public class Provider : MonoBehaviour
                 CommandWindow.LogError("Level mode config overrides contains a null value");
                 break;
             }
+            if (mode_Config_Override.Key == "Gameplay.Disable_Motion_Sickness_Options")
+            {
+                CommandWindow.LogWarning("Level cannot override " + mode_Config_Override.Key);
+                continue;
+            }
             Type type = typeof(ModeConfigData);
             object value = modeConfigData;
             object obj = modeConfig;
@@ -4212,6 +4217,7 @@ public class Provider : MonoBehaviour
             writer.WriteBit(modeConfigData.Gameplay.Enable_Damage_Flinch);
             writer.WriteBit(modeConfigData.Gameplay.Enable_Explosion_Camera_Shake);
             writer.WriteBit(modeConfigData.Gameplay.Enable_Workstation_Requirements);
+            writer.WriteBit(modeConfigData.Gameplay.Disable_Motion_Sickness_Options);
             writer.WriteUInt16((ushort)modeConfigData.Gameplay.Timer_Exit);
             writer.WriteUInt16((ushort)modeConfigData.Gameplay.Timer_Respawn);
             writer.WriteUInt16((ushort)modeConfigData.Gameplay.Timer_Home);

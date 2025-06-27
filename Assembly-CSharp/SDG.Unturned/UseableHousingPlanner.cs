@@ -620,7 +620,7 @@ public class UseableHousingPlanner : Useable
         }
         if (base.player.inventory.doesSearchNeedRefresh(ref cachedSearchIndex))
         {
-            RefreshAvailableItems();
+            RefreshAvailableItemsAndSelectedBlueprint();
         }
         if (Assets.HasCurrentAssetMappingChanged(ref cachedAssetListChangeCounter))
         {
@@ -828,6 +828,7 @@ public class UseableHousingPlanner : Useable
     /// </summary>
     private void RefreshAllCraftableBlueprints()
     {
+        Blueprint blueprint = selectedOption.blueprintStatus?.blueprint;
         foreach (BlueprintStatus value in craftableBlueprints.Values)
         {
             blueprintStatusPool.Push(value);
@@ -863,6 +864,11 @@ public class UseableHousingPlanner : Useable
                 craftableBlueprints.Add(itemStructureAsset, blueprintStatus);
             }
         }
+        if (HasSelection && blueprint != null && !craftableBlueprints.TryGetValue(selectedOption.asset, out selectedOption.blueprintStatus))
+        {
+            UnturnedLog.error("Housing planner blueprint no longer craftable after refreshing all craftable blueprints! (Bug!)\nItem: " + selectedOption.asset.FriendlyName);
+            ClearSelectedOption();
+        }
     }
 
     /// <summary>
@@ -882,7 +888,7 @@ public class UseableHousingPlanner : Useable
     /// Search inventory for housing items, count the quantity of each, and remove
     /// duplicate entries from the list because it is used for the UI.
     /// </summary>
-    private void RefreshAvailableItems()
+    private void RefreshAvailableItemsAndSelectedBlueprint()
     {
         itemSearchResults.Clear();
         itemAmounts.Clear();

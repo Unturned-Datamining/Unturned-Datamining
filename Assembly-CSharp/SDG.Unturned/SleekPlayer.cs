@@ -54,19 +54,19 @@ public class SleekPlayer : SleekWrapper
 
     private void onClickedPromoteButton(ISleekElement button)
     {
-        Player.player.quests.sendPromote(player.playerID.steamID);
+        Player.LocalPlayer.quests.sendPromote(player.playerID.steamID);
     }
 
     private void onClickedDemoteButton(ISleekElement button)
     {
-        Player.player.quests.sendDemote(player.playerID.steamID);
+        Player.LocalPlayer.quests.sendDemote(player.playerID.steamID);
     }
 
     private void onClickedKickButton(ISleekElement button)
     {
         if (context == ESleekPlayerDisplayContext.GROUP_ROSTER)
         {
-            Player.player.quests.sendKickFromGroup(player.playerID.steamID);
+            Player.LocalPlayer.quests.sendKickFromGroup(player.playerID.steamID);
         }
         else if (context == ESleekPlayerDisplayContext.PLAYER_LIST)
         {
@@ -78,7 +78,7 @@ public class SleekPlayer : SleekWrapper
 
     private void onClickedInviteButton(ISleekElement button)
     {
-        Player.player.quests.sendAskAddGroupInvite(player.playerID.steamID);
+        Player.LocalPlayer.quests.sendAskAddGroupInvite(player.playerID.steamID);
     }
 
     private void onClickedSpyButton(ISleekElement button)
@@ -266,7 +266,7 @@ public class SleekPlayer : SleekWrapper
             int num2 = 0;
             if (!player.player.channel.IsLocalPlayer)
             {
-                if (Player.player.quests.hasPermissionToChangeRank)
+                if (Player.LocalPlayer.quests.hasPermissionToChangeRank)
                 {
                     if (player.player.quests.groupRank < EPlayerGroupRank.OWNER)
                     {
@@ -295,7 +295,7 @@ public class SleekPlayer : SleekWrapper
                         num2 += 80;
                     }
                 }
-                if (Player.player.quests.hasPermissionToKickMembers && player.player.quests.canBeKickedFromGroup)
+                if (Player.LocalPlayer.quests.hasPermissionToKickMembers && player.player.quests.canBeKickedFromGroup)
                 {
                     ISleekButton sleekButton7 = Glazier.Get().CreateButton();
                     sleekButton7.PositionOffset_X = num2;
@@ -349,9 +349,9 @@ public class SleekPlayer : SleekWrapper
                 box.AddChild(sleekButton2);
                 num += 50;
             }
-            if (Player.player != null)
+            if (Player.LocalPlayer != null)
             {
-                if (!player.player.channel.IsLocalPlayer && Player.player.quests.isMemberOfAGroup && Player.player.quests.hasPermissionToInviteMembers && Player.player.quests.hasSpaceForMoreMembersInGroup && !player.player.quests.isMemberOfAGroup)
+                if (!player.player.channel.IsLocalPlayer && Player.LocalPlayer.quests.isMemberOfAGroup && Player.LocalPlayer.quests.hasPermissionToInviteMembers && Player.LocalPlayer.quests.hasSpaceForMoreMembersInGroup && !player.player.quests.isMemberOfAGroup)
                 {
                     ISleekButton sleekButton3 = Glazier.Get().CreateButton();
                     sleekButton3.PositionOffset_X = num;
@@ -364,7 +364,7 @@ public class SleekPlayer : SleekWrapper
                     box.AddChild(sleekButton3);
                     num += 60;
                 }
-                if (Player.player.channel.owner.isAdmin)
+                if (Player.LocalPlayer.channel.owner.isAdmin)
                 {
                     ISleekButton sleekButton4 = Glazier.Get().CreateButton();
                     sleekButton4.PositionOffset_X = num;

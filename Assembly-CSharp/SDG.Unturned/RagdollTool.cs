@@ -175,7 +175,7 @@ public class RagdollTool
             ragdoll.y += 8f;
             ragdoll.x += Random.Range(-16f, 16f);
             ragdoll.z += Random.Range(-16f, 16f);
-            ragdoll *= (float)((Player.player != null && Player.player.skills.boost == EPlayerBoost.FLIGHT) ? 256 : 32);
+            ragdoll *= (float)((Player.LocalPlayer != null && Player.LocalPlayer.skills.boost == EPlayerBoost.FLIGHT) ? 256 : 32);
             Transform transform = ((GameObject)Object.Instantiate(Resources.Load("Characters/Ragdoll_Player"), point + Vector3.up * 0.1f, rotation * Quaternion.Euler(90f, 0f, 0f))).transform;
             transform.name = "Ragdoll";
             EffectManager.RegisterDebris(transform.gameObject);
@@ -224,7 +224,7 @@ public class RagdollTool
         ragdoll.y += 8f;
         ragdoll.x += Random.Range(-16f, 16f);
         ragdoll.z += Random.Range(-16f, 16f);
-        ragdoll *= (float)((Player.player != null && Player.player.skills.boost == EPlayerBoost.FLIGHT) ? 256 : 32);
+        ragdoll *= (float)((Player.LocalPlayer != null && Player.LocalPlayer.skills.boost == EPlayerBoost.FLIGHT) ? 256 : 32);
         Transform transform = ((GameObject)Object.Instantiate(Resources.Load("Characters/Ragdoll_Zombie"), point + Vector3.up * 0.1f, rotation * Quaternion.Euler(90f, 0f, 0f))).transform;
         transform.name = "Ragdoll";
         EffectManager.RegisterDebris(transform.gameObject);
@@ -261,7 +261,7 @@ public class RagdollTool
         ragdoll.y += 8f;
         ragdoll.x += Random.Range(-16f, 16f);
         ragdoll.z += Random.Range(-16f, 16f);
-        ragdoll *= (float)((Player.player != null && Player.player.skills.boost == EPlayerBoost.FLIGHT) ? 256 : 32);
+        ragdoll *= (float)((Player.LocalPlayer != null && Player.LocalPlayer.skills.boost == EPlayerBoost.FLIGHT) ? 256 : 32);
         if (Assets.find(EAssetType.ANIMAL, id) is AnimalAsset animalAsset)
         {
             Transform transform = Object.Instantiate(animalAsset.ragdoll, point + Vector3.up * 0.1f, rotation * Quaternion.Euler(0f, 90f, 0f)).transform;

@@ -325,7 +325,7 @@ public class MenuConfigurationGraphicsUI
 
     private static void onClickedBackButton(ISleekElement button)
     {
-        if (Player.player != null)
+        if (Player.LocalPlayer != null)
         {
             PlayerPauseUI.open();
         }

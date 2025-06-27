@@ -85,6 +85,12 @@ public class GameplayConfigData
     /// </summary>
     public bool Enable_Workstation_Requirements;
 
+    /// <summary>
+    /// If true, client-side options like damage flinch, explosion camera shake, viewmodel bob are ignored.
+    /// Defaults to false.
+    /// </summary>
+    public bool Disable_Motion_Sickness_Options;
+
     internal const uint MAX_TIMER_EXIT = 60u;
 
     public uint Timer_Exit;

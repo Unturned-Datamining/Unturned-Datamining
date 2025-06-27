@@ -10,13 +10,13 @@ public class SleekSkill : SleekWrapper
 
     public SleekSkill(byte speciality, byte index, Skill skill)
     {
-        uint num = Player.player.skills.cost(speciality, index);
+        uint num = Player.LocalPlayer.skills.cost(speciality, index);
         button = Glazier.Get().CreateButton();
         button.SizeScale_X = 1f;
         button.SizeScale_Y = 1f;
         button.TooltipText = PlayerDashboardSkillsUI.localization.format("Speciality_" + speciality + "_Skill_" + index + "_Tooltip");
         button.OnClicked += onClickedInternalButton;
-        button.IsClickable = Player.player.skills.experience >= num && skill.level < skill.GetClampedMaxUnlockableLevel();
+        button.IsClickable = Player.LocalPlayer.skills.experience >= num && skill.level < skill.GetClampedMaxUnlockableLevel();
         AddChild(button);
         for (byte b = 0; b < skill.GetClampedMaxUnlockableLevel(); b++)
         {
@@ -130,7 +130,7 @@ public class SleekSkill : SleekWrapper
     {
         if (speciality == 0 && index == 1)
         {
-            float num = 1f - Player.player.skills.GetSharpshooterRecoilMultiplierForLevel(level);
+            float num = 1f - Player.LocalPlayer.skills.GetSharpshooterRecoilMultiplierForLevel(level);
             string text = $"{Mathf.RoundToInt(num * 100f)}%";
             return PlayerDashboardSkillsUI.localization.format("Speciality_0_Skill_1_Levels_V2", text, text);
         }

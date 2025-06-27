@@ -32,7 +32,7 @@ public class VolumeTeleporter : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (!Dedicator.IsDedicatedServer && !string.IsNullOrEmpty(achievement) && other.transform.CompareTag("Player") && other.transform == Player.player.transform && Provider.provider.achievementsService.getAchievement(achievement, out var has) && !has)
+        if (!Dedicator.IsDedicatedServer && !string.IsNullOrEmpty(achievement) && other.transform.CompareTag("Player") && other.transform == Player.LocalPlayer.transform && Provider.provider.achievementsService.getAchievement(achievement, out var has) && !has)
         {
             Provider.provider.achievementsService.setAchievement(achievement);
         }

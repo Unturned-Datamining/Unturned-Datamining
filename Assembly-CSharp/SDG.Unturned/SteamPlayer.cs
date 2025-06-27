@@ -535,7 +535,7 @@ public class SteamPlayer : SteamConnectedClientBase
     /// </summary>
     internal string GetLocalDisplayName()
     {
-        if (!string.IsNullOrEmpty(playerID.nickName) && playerID.steamID != Provider.client && player != null && player.quests != null && Player.player != null && player.quests.isMemberOfSameGroupAs(Player.player))
+        if (!string.IsNullOrEmpty(playerID.nickName) && playerID.steamID != Provider.client && player != null && player.quests != null && Player.LocalPlayer != null && player.quests.isMemberOfSameGroupAs(Player.LocalPlayer))
         {
             return playerID.nickName;
         }

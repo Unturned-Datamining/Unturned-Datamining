@@ -79,15 +79,15 @@ public class PlayerPauseUI
             {
                 return false;
             }
-            if (Player.player == null)
+            if (Player.LocalPlayer == null)
             {
                 return false;
             }
-            if (Player.player.life.isDead)
+            if (Player.LocalPlayer.life.isDead)
             {
                 return false;
             }
-            if (Player.player.movement.isSafe && Player.player.movement.isSafeInfo.noWeapons)
+            if (Player.LocalPlayer.movement.isSafe && Player.LocalPlayer.movement.isSafeInfo.noWeapons)
             {
                 return false;
             }
@@ -136,7 +136,7 @@ public class PlayerPauseUI
     public static void closeAndGotoAppropriateHUD()
     {
         close();
-        if (Player.player.life.isDead)
+        if (Player.LocalPlayer.life.isDead)
         {
             PlayerDeathUI.open(fromDeath: false);
         }
@@ -222,10 +222,10 @@ public class PlayerPauseUI
 
     private static void onClickedSuicideButton(SleekButtonIconConfirm button)
     {
-        if (((Level.info != null && Level.info.type == ELevelType.SURVIVAL) || !Player.player.movement.isSafe || !Player.player.movement.isSafeInfo.noWeapons) && Provider.modeConfigData.Gameplay.Can_Suicide)
+        if (((Level.info != null && Level.info.type == ELevelType.SURVIVAL) || !Player.LocalPlayer.movement.isSafe || !Player.LocalPlayer.movement.isSafeInfo.noWeapons) && Provider.modeConfigData.Gameplay.Can_Suicide)
         {
             closeAndGotoAppropriateHUD();
-            Player.player.life.sendSuicide();
+            Player.LocalPlayer.life.sendSuicide();
         }
     }
 

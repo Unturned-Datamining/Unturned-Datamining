@@ -27,15 +27,15 @@ public class InteractableObjectQuest : InteractableObjectTriggerableBase
 
     public override bool checkUseable()
     {
-        return base.objectAsset.areInteractabilityConditionsMet(Player.player);
+        return base.objectAsset.areInteractabilityConditionsMet(Player.LocalPlayer);
     }
 
     public override bool checkHint(out EPlayerMessage message, out string text, out Color color)
     {
-        INPCCondition firstUnmetCondition = base.objectAsset.interactabilityConditionsList.GetFirstUnmetCondition(Player.player);
+        INPCCondition firstUnmetCondition = base.objectAsset.interactabilityConditionsList.GetFirstUnmetCondition(Player.LocalPlayer);
         if (firstUnmetCondition != null)
         {
-            text = firstUnmetCondition.formatCondition(Player.player);
+            text = firstUnmetCondition.formatCondition(Player.LocalPlayer);
             color = Color.white;
             if (string.IsNullOrEmpty(text))
             {

@@ -11,6 +11,9 @@ public class BarricadeSpawner : MonoBehaviour
     [Tooltip("ID or GUID of barricade asset (or spawn table) to spawn when SpawnDefault is invoked.")]
     public string DefaultAsset;
 
+    [Tooltip("Finds ownership of BarricadeSpawner (e.g., parent barricade) and assigns to spawned barricade.")]
+    public bool InheritOwnership;
+
     public void SpawnDefault()
     {
         Spawn(DefaultAsset);
@@ -44,12 +47,16 @@ public class BarricadeSpawner : MonoBehaviour
         if (!(asset is ItemBarricadeAsset newAsset))
         {
             UnturnedLog.warn(base.transform.GetSceneHierarchyPath() + " tried to spawn barricade but asset (" + asset.FriendlyName + ") is " + asset.GetTypeFriendlyName());
+            return;
         }
-        else
+        ulong ownerUser = 0uL;
+        ulong ownerGroup = 0uL;
+        if (InheritOwnership)
         {
-            base.transform.GetPositionAndRotation(out var position, out var rotation);
-            BarricadeManager.dropNonPlantedBarricade(new Barricade(newAsset), position, rotation, 0uL, 0uL);
+            DamageTool.TryFindOwnership(base.transform, out ownerUser, out ownerGroup);
         }
+        base.transform.GetPositionAndRotation(out var position, out var rotation);
+        BarricadeManager.dropNonPlantedBarricade(new Barricade(newAsset), position, rotation, ownerUser, ownerGroup);
     }
 
     private string OnGetSpawnErrorContext()

@@ -159,6 +159,8 @@ public class PlayerLook : PlayerCaller
 
     internal float scopeCameraZoomFactor;
 
+    private bool mainCameraZoomFactorUsesScopeAlpha;
+
     private float eyes;
 
     /// <summary>
@@ -412,6 +414,7 @@ public class PlayerLook : PlayerCaller
         }
         else
         {
+            scopeCamera.targetTexture = null;
             UnturnedPostProcess.instance.SetSingleRenderScopeTarget(scopeRenderTexture);
         }
         if (scopeMaterial == null)
@@ -525,14 +528,16 @@ public class PlayerLook : PlayerCaller
         tempVision = ELightingVision.NONE;
     }
 
-    public void enableZoom(float zoom)
+    public void enableZoom(float zoom, bool useAlpha)
     {
         mainCameraZoomFactor = zoom;
+        mainCameraZoomFactorUsesScopeAlpha = useAlpha;
     }
 
     public void disableZoom()
     {
         mainCameraZoomFactor = 0f;
+        mainCameraZoomFactorUsesScopeAlpha = false;
     }
 
     public void updateRot()
@@ -717,17 +722,30 @@ public class PlayerLook : PlayerCaller
     internal void FlinchFromDamage(byte damageAmount, Vector3 worldDirection)
     {
         Camera instance = MainCamera.instance;
-        if (instance == null || (Provider.modeConfigData != null && !Provider.modeConfigData.Gameplay.Enable_Damage_Flinch))
+        if (instance == null)
+        {
+            return;
+        }
+        GameplayConfigData gameplayConfigData = Provider.modeConfigData?.Gameplay;
+        if (gameplayConfigData != null && !gameplayConfigData.Enable_Damage_Flinch)
         {
             return;
         }
         float num = (float)Mathf.Min(damageAmount, 25) * 0.5f;
         float num2 = 1f - base.player.skills.mastery(1, 3) * 0.75f;
         num *= num2;
-        num *= OptionsSettings.damageFlinchIntensity;
+        EDamageFlinchMode eDamageFlinchMode = OptionsSettings.damageFlinchMode;
+        if (gameplayConfigData != null && gameplayConfigData.Disable_Motion_Sickness_Options)
+        {
+            eDamageFlinchMode = EDamageFlinchMode.Directional;
+        }
+        else
+        {
+            num *= OptionsSettings.damageFlinchIntensity;
+        }
         Vector3 normalized = Vector3.Cross(Vector3.up, worldDirection).normalized;
         Vector3 axis = instance.transform.InverseTransformDirection(normalized);
-        if (OptionsSettings.damageFlinchMode == EDamageFlinchMode.RollOnly)
+        if (eDamageFlinchMode == EDamageFlinchMode.RollOnly)
         {
             if (Mathf.Abs(axis.z) < 0.001f)
             {
@@ -743,7 +761,12 @@ public class PlayerLook : PlayerCaller
     internal void FlinchFromExplosion(Vector3 position, float radius, float magnitudeDegrees)
     {
         Camera instance = MainCamera.instance;
-        if (instance == null || (Provider.modeConfigData != null && !Provider.modeConfigData.Gameplay.Enable_Explosion_Camera_Shake))
+        if (instance == null)
+        {
+            return;
+        }
+        GameplayConfigData gameplayConfigData = Provider.modeConfigData?.Gameplay;
+        if (gameplayConfigData != null && !gameplayConfigData.Enable_Explosion_Camera_Shake)
         {
             return;
         }
@@ -756,7 +779,11 @@ public class PlayerLook : PlayerCaller
             Vector3 axis = instance.transform.InverseTransformDirection(normalized);
             float num = 1f - base.player.skills.mastery(1, 3) * 0.5f;
             float num2 = 1f - MathfEx.Square(magnitude / radius);
-            magnitudeDegrees *= num * num2 * OptionsSettings.cameraShakeIntensity;
+            magnitudeDegrees *= num * num2;
+            if (gameplayConfigData == null || !gameplayConfigData.Disable_Motion_Sickness_Options)
+            {
+                magnitudeDegrees *= OptionsSettings.cameraShakeIntensity;
+            }
             if (!MathfEx.IsNearlyZero(magnitudeDegrees))
             {
                 targetExplosionLocalRotation.currentRotation *= Quaternion.AngleAxis(magnitudeDegrees, axis);
@@ -1081,6 +1108,7 @@ public class PlayerLook : PlayerCaller
             }
             float zoomBaseFieldOfView = OptionsSettings.GetZoomBaseFieldOfView();
             bool flag = false;
+            bool flag2 = false;
             if (IsLocallyUsingFreecam)
             {
                 if (freecamVerticalFieldOfView < 0.1f)
@@ -1099,7 +1127,7 @@ public class PlayerLook : PlayerCaller
             else
             {
                 float b;
-                if (mainCameraZoomFactor > float.Epsilon)
+                if (mainCameraZoomFactor > float.Epsilon && !mainCameraZoomFactorUsesScopeAlpha)
                 {
                     b = zoomBaseFieldOfView / mainCameraZoomFactor;
                     flag = true;
@@ -1117,9 +1145,15 @@ public class PlayerLook : PlayerCaller
                 {
                     mainCameraTargetFieldOfView = Mathf.Lerp(mainCameraTargetFieldOfView, b, 8f * Time.deltaTime);
                 }
-                if (isScopeActive && scopeCameraZoomFactor > float.Epsilon && GraphicsSettings.scopeQuality == EGraphicQuality.OFF)
+                if (isScopeActive && scopeCameraZoomFactor > float.Epsilon && GraphicsSettings.scopeQuality == EGraphicQuality.OFF && perspective == EPlayerPerspective.FIRST)
                 {
+                    flag2 = scopeAlpha > 0.001f;
                     instance.fieldOfView = Mathf.Lerp(mainCameraTargetFieldOfView, zoomBaseFieldOfView / scopeCameraZoomFactor, scopeAlpha);
+                }
+                else if (mainCameraZoomFactor > float.Epsilon && mainCameraZoomFactorUsesScopeAlpha && scopeAlpha > 0.0001f)
+                {
+                    flag = true;
+                    instance.fieldOfView = Mathf.Lerp(mainCameraTargetFieldOfView, zoomBaseFieldOfView / mainCameraZoomFactor, scopeAlpha);
                 }
                 else
                 {
@@ -1488,7 +1522,7 @@ public class PlayerLook : PlayerCaller
             }
             if (FoliageSettings.drawFocus)
             {
-                if (flag || (isScopeActive && scopeCamera.targetTexture != null))
+                if (flag || (isScopeActive && scopeCamera.targetTexture != null) || flag2)
                 {
                     FoliageSystem.isFocused = true;
                     if (Physics.Raycast(MainCamera.instance.transform.position, MainCamera.instance.transform.forward, out var hitInfo2, FoliageSettings.focusDistance, RayMasks.FOLIAGE_FOCUS))

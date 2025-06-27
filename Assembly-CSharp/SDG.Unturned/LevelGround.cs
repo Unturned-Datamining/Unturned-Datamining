@@ -1145,8 +1145,8 @@ public class LevelGround : MonoBehaviour
     {
         if (player.channel.IsLocalPlayer)
         {
-            Player player2 = Player.player;
-            player2.onPlayerTeleported = (PlayerTeleported)Delegate.Combine(player2.onPlayerTeleported, new PlayerTeleported(onPlayerTeleported));
+            Player localPlayer = Player.LocalPlayer;
+            localPlayer.onPlayerTeleported = (PlayerTeleported)Delegate.Combine(localPlayer.onPlayerTeleported, new PlayerTeleported(onPlayerTeleported));
         }
     }
 

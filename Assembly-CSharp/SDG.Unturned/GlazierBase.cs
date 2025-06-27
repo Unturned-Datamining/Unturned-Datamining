@@ -107,22 +107,22 @@ internal abstract class GlazierBase : MonoBehaviour
                 debugBuilder.AppendFormat(localization.format("HUD_Ping"), Provider.ClientPingMs);
                 debugBuilder.Append(' ');
                 debugBuilder.Append(Provider.APP_VERSION);
-                if (Player.player != null && Player.player.look.canUseFreecam)
+                if (Player.LocalPlayer != null && Player.LocalPlayer.look.canUseFreecam)
                 {
                     debugBuilder.Append(' ');
-                    debugBuilder.Append(Player.player.look.IsControllingFreecam ? localization.format("HUD_Freecam_Orbiting") : "F1");
+                    debugBuilder.Append(Player.LocalPlayer.look.IsControllingFreecam ? localization.format("HUD_Freecam_Orbiting") : "F1");
                     debugBuilder.Append(' ');
-                    debugBuilder.Append(Player.player.look.isTracking ? localization.format("HUD_Freecam_Tracking") : "F2");
+                    debugBuilder.Append(Player.LocalPlayer.look.isTracking ? localization.format("HUD_Freecam_Tracking") : "F2");
                     debugBuilder.Append(' ');
-                    debugBuilder.Append(Player.player.look.isLocking ? localization.format("HUD_Freecam_Locking") : "F3");
+                    debugBuilder.Append(Player.LocalPlayer.look.isLocking ? localization.format("HUD_Freecam_Locking") : "F3");
                     debugBuilder.Append(' ');
-                    debugBuilder.Append(Player.player.look.isFocusing ? localization.format("HUD_Freecam_Focusing") : "F4");
+                    debugBuilder.Append(Player.LocalPlayer.look.isFocusing ? localization.format("HUD_Freecam_Focusing") : "F4");
                     debugBuilder.Append(' ');
-                    debugBuilder.Append(Player.player.look.isSmoothing ? localization.format("HUD_Freecam_Smoothing") : "F5");
+                    debugBuilder.Append(Player.LocalPlayer.look.isSmoothing ? localization.format("HUD_Freecam_Smoothing") : "F5");
                     debugBuilder.Append(' ');
-                    debugBuilder.Append(Player.player.workzone.isBuilding ? localization.format("HUD_Freecam_Building") : "F6");
+                    debugBuilder.Append(Player.LocalPlayer.workzone.isBuilding ? localization.format("HUD_Freecam_Building") : "F6");
                     debugBuilder.Append(' ');
-                    debugBuilder.Append(Player.player.look.areSpecStatsVisible ? localization.format("HUD_Freecam_Spectating") : "F7");
+                    debugBuilder.Append(Player.LocalPlayer.look.areSpecStatsVisible ? localization.format("HUD_Freecam_Spectating") : "F7");
                 }
                 if (Assets.isLoading)
                 {

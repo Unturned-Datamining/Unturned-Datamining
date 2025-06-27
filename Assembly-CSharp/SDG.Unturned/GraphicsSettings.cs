@@ -1047,19 +1047,19 @@ public class GraphicsSettings
             MainCamera.instance.farClipPlane = num;
             MainCamera.instance.layerCullDistances = array;
             MainCamera.instance.layerCullSpherical = true;
-            if (Player.player != null)
+            if (Player.LocalPlayer != null)
             {
-                Player.player.look.scopeCamera.farClipPlane = num;
-                Player.player.look.scopeCamera.layerCullDistances = array;
-                Player.player.look.scopeCamera.layerCullSpherical = true;
-                Player.player.look.scopeCamera.depthTextureMode = DepthTextureMode.Depth;
-                Player.player.look.updateScope(scopeQuality);
-                Player.player.look.scopeCamera.renderingPath = ((renderMode != 0) ? RenderingPath.Forward : RenderingPath.DeferredShading);
-                Player.player.look.scopeCamera.allowHDR = true;
-                Player.player.look.scopeCamera.allowMSAA = false;
-                Player.player.animator.viewmodelCamera.renderingPath = ((renderMode != 0) ? RenderingPath.Forward : RenderingPath.DeferredShading);
-                Player.player.animator.viewmodelCamera.allowHDR = true;
-                Player.player.animator.viewmodelCamera.allowMSAA = false;
+                Player.LocalPlayer.look.scopeCamera.farClipPlane = num;
+                Player.LocalPlayer.look.scopeCamera.layerCullDistances = array;
+                Player.LocalPlayer.look.scopeCamera.layerCullSpherical = true;
+                Player.LocalPlayer.look.scopeCamera.depthTextureMode = DepthTextureMode.Depth;
+                Player.LocalPlayer.look.updateScope(scopeQuality);
+                Player.LocalPlayer.look.scopeCamera.renderingPath = ((renderMode != 0) ? RenderingPath.Forward : RenderingPath.DeferredShading);
+                Player.LocalPlayer.look.scopeCamera.allowHDR = true;
+                Player.LocalPlayer.look.scopeCamera.allowMSAA = false;
+                Player.LocalPlayer.animator.viewmodelCamera.renderingPath = ((renderMode != 0) ? RenderingPath.Forward : RenderingPath.DeferredShading);
+                Player.LocalPlayer.animator.viewmodelCamera.allowHDR = true;
+                Player.LocalPlayer.animator.viewmodelCamera.allowMSAA = false;
             }
         }
         switch (foliageQuality)

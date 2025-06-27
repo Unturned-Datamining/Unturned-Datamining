@@ -123,7 +123,7 @@ public class PlayerNPCDialogueUI
         active = true;
         if (PlayerLifeUI.npc != null)
         {
-            characterLabel.Text = PlayerLifeUI.npc.GetDialogueTargetNameShownToPlayer(Player.player);
+            characterLabel.Text = PlayerLifeUI.npc.GetDialogueTargetNameShownToPlayer(Player.LocalPlayer);
         }
         else
         {
@@ -164,7 +164,7 @@ public class PlayerNPCDialogueUI
         responseBox.IsVisible = false;
         responseBox.ContentSizeOffset = Vector2.zero;
         responses.Clear();
-        dialogue.getAvailableResponses(Player.player, newMessage.index, responses);
+        dialogue.getAvailableResponses(Player.LocalPlayer, newMessage.index, responses);
         if (PlayerLifeUI.npc != null)
         {
             PlayerLifeUI.npc.SetFaceOverride(message.faceOverride);
@@ -179,13 +179,13 @@ public class PlayerNPCDialogueUI
         {
             DialogueResponse dialogueResponse = responses[i];
             string text = dialogueResponse.text;
-            text = text.Replace("<name_npc>", (PlayerLifeUI.npc != null) ? PlayerLifeUI.npc.GetDialogueTargetNameShownToPlayer(Player.player) : "null");
-            text = text.Replace("<name_char>", Player.player.channel.owner.playerID.characterName);
+            text = text.Replace("<name_npc>", (PlayerLifeUI.npc != null) ? PlayerLifeUI.npc.GetDialogueTargetNameShownToPlayer(Player.LocalPlayer) : "null");
+            text = text.Replace("<name_char>", Player.LocalPlayer.channel.owner.playerID.characterName);
             QuestAsset questAsset = dialogueResponse.FindQuestAsset();
             Texture2D newIcon = null;
             if (questAsset != null)
             {
-                newIcon = ((Player.player.quests.GetQuestStatus(questAsset) != ENPCQuestStatus.READY) ? icons.load<Texture2D>("Quest_Begin") : icons.load<Texture2D>("Quest_End"));
+                newIcon = ((Player.LocalPlayer.quests.GetQuestStatus(questAsset) != ENPCQuestStatus.READY) ? icons.load<Texture2D>("Quest_Begin") : icons.load<Texture2D>("Quest_End"));
             }
             else if (!dialogueResponse.IsVendorRefNull())
             {
@@ -228,8 +228,8 @@ public class PlayerNPCDialogueUI
         if (message != null && message.pages != null && dialoguePageIndex < message.pages.Length)
         {
             pageFormattedText = message.pages[dialoguePageIndex].text;
-            pageFormattedText = pageFormattedText.Replace("<name_npc>", (PlayerLifeUI.npc != null) ? PlayerLifeUI.npc.GetDialogueTargetNameShownToPlayer(Player.player) : "null");
-            pageFormattedText = pageFormattedText.Replace("<name_char>", Player.player.channel.owner.playerID.characterName);
+            pageFormattedText = pageFormattedText.Replace("<name_npc>", (PlayerLifeUI.npc != null) ? PlayerLifeUI.npc.GetDialogueTargetNameShownToPlayer(Player.LocalPlayer) : "null");
+            pageFormattedText = pageFormattedText.Replace("<name_char>", Player.LocalPlayer.channel.owner.playerID.characterName);
         }
         else
         {
@@ -287,7 +287,7 @@ public class PlayerNPCDialogueUI
     {
         if (dialoguePageIndex == message.pages.Length - 1)
         {
-            Player.player.quests.ClientChooseNextDialogue(dialogue.GUID, message.index);
+            Player.LocalPlayer.quests.ClientChooseNextDialogue(dialogue.GUID, message.index);
             return;
         }
         dialoguePageIndex++;
@@ -435,7 +435,7 @@ public class PlayerNPCDialogueUI
         if (questAsset != null)
         {
             close();
-            PlayerNPCQuestUI.open(questAsset, dialogue, dialogueResponse, (Player.player.quests.GetQuestStatus(questAsset) == ENPCQuestStatus.READY) ? EQuestViewMode.END : EQuestViewMode.BEGIN);
+            PlayerNPCQuestUI.open(questAsset, dialogue, dialogueResponse, (Player.LocalPlayer.quests.GetQuestStatus(questAsset) == ENPCQuestStatus.READY) ? EQuestViewMode.END : EQuestViewMode.BEGIN);
             return;
         }
         DialogueAsset dialogueAsset = dialogueResponse.FindDialogueAsset();
@@ -445,7 +445,7 @@ public class PlayerNPCDialogueUI
             close();
             PlayerLifeUI.open();
         }
-        Player.player.quests.ClientChooseDialogueResponse(dialogue.GUID, dialogueResponse.index);
+        Player.LocalPlayer.quests.ClientChooseDialogueResponse(dialogue.GUID, dialogueResponse.index);
     }
 
     private static void SetResponseButtonsAreClickable(bool clickable)
