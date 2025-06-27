@@ -1,69 +1,26 @@
-Steam Linux Runtime 1.0 (scout)
-===============================
+# Unturned Datamining (Code)
 
-This container-based release of the Steam Runtime is enabled on a
-per-title basis by forcing its use in the title's Properties dialog,
-and is used by default for native Linux games on Steam Deck.
+Datamining the game code on every **preview** update.
 
-For general information please see
-<https://gitlab.steamos.cloud/steamrt/steam-runtime-tools/-/blob/main/docs/container-runtime.md>
+## Discord
 
-Release notes
--------------
+Join us to our discussion discord server:
+https://discord.gg/E4Wzj4gvTN
 
-Please see
-<https://gitlab.steamos.cloud/steamrt/steamrt/-/wikis/Steam-Linux-Runtime-1.0-(scout)-release-notes>
+## Unturned Datamining (Website)
 
-Known issues
-------------
+Branch [websites](https://github.com/Unturned-Datamining/Unturned-Datamining/tree/websites) track all changes on internal SDG sites (e.g. news, server bans).
 
-Please see
-<https://github.com/ValveSoftware/steam-runtime/blob/master/doc/steamlinuxruntime-known-issues.md>
+## Disclaimer
 
-Reporting bugs
---------------
+I am not affiliated, associated, authorized, endorsed by, or in any way officially connected with Smartly Dressed Games, or any of its subsidiaries or its affiliates. Some code found within this repository may be owned by Smartly Dressed Games.
 
-Please see
-<https://github.com/ValveSoftware/steam-runtime/blob/master/doc/reporting-steamlinuxruntime-bugs.md>
+The contents of this repository exist purely for educational purposes and I do not condone sharing the content found here on any social media platform as my own.
 
-Development and debugging
--------------------------
+Users are advised to review the Unturned End User License Agreement (EULA) here https://store.steampowered.com/eula/304930_eula_1.
 
-See `SteamLinuxRuntime_soldier/README.md` for details of the container
-runtime.
+Unturned-Datamining project have permission to decompile the Unturned code and share changes within this repository. For details see https://github.com/Unturned-Datamining/datamining-tool/issues/1.
 
-This additional layer uses a `LD_LIBRARY_PATH`-based Steam Runtime to
-provide the required libraries for the Steam Runtime version 1 ABI.
+## Special Thanks
+- [CyberAndrii](https://github.com/CyberAndrii) for providing [setup-steamcmd](https://github.com/CyberAndrii/setup-steamcmd) action.
 
-By default, it will use the version in the Steam installation directory,
-`~/.steam/root/ubuntu12_32/steam-runtime` (normally this is the same as
-`~/.local/share/Steam/ubuntu12_32/steam-runtime`). You can use a different
-version of Steam Runtime 1 'scout' by unpacking a `steam-runtime.tar.xz`
-into the `SteamLinuxRuntime/steam-runtime/` directory, so that you have
-files like `SteamLinuxRuntime/steam-runtime/run.sh`.
-
-If you have `SteamLinuxRuntime` and `SteamLinuxRuntime_soldier` installed
-in the same Steam library, you can use `run-in-scout-on-soldier` to test
-commands in the scout-on-soldier environment, for example:
-
-    .../steamapps/common/SteamLinuxRuntime/run-in-scout-on-soldier -- xterm
-
-Please see
-<https://gitlab.steamos.cloud/steamrt/steam-runtime-tools/-/blob/main/docs/distro-assumptions.md>
-for details of assumptions made about the host operating system, and some
-advice on debugging the container runtime on new Linux distributions.
-
-Game developers who are interested in targeting this environment should
-check the SDK documentation <https://gitlab.steamos.cloud/steamrt/scout/sdk>
-and general information for game developers
-<https://gitlab.steamos.cloud/steamrt/steam-runtime-tools/-/blob/main/docs/slr-for-game-developers.md>.
-
-Licensing and copyright
------------------------
-
-The Steam Runtime contains many third-party software packages under
-various open-source licenses.
-
-For full source code, please see the version-numbered subdirectories of
-<https://repo.steampowered.com/steamrt-images-scout/snapshots/>
-corresponding to the version numbers listed in VERSIONS.txt.
