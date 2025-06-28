@@ -119,6 +119,21 @@ public class GameplayConfigData
     public float AirStrafing_Deceleration_Multiplier = 1f;
 
     /// <summary>
+    /// Scales magnitude of recoil while using first-person perspective.
+    /// </summary>
+    public float FirstPerson_RecoilMultiplier = 1f;
+
+    /// <summary>
+    /// Scales magnitude of recoil while aiming in first-person perspective.
+    /// </summary>
+    public float FirstPerson_AimingRecoilMultiplier = 1f;
+
+    /// <summary>
+    /// Scales magnitude of recoil inversely with zoom level while aiming in first-person perspective.
+    /// </summary>
+    public float FirstPerson_AimingZoomRecoilReduction;
+
+    /// <summary>
     /// Scales magnitude of recoil while using third-person perspective.
     /// </summary>
     public float ThirdPerson_RecoilMultiplier = 2f;
@@ -127,6 +142,16 @@ public class GameplayConfigData
     /// Scales magnitude of bullet inaccuracy while using third-person perspective.
     /// </summary>
     public float ThirdPerson_SpreadMultiplier = 2f;
+
+    /// <summary>
+    /// [0, 1] Scales how much the first-person move up and down while jumping/landing.
+    /// </summary>
+    public float Viewmodel_AimingJumpLandMultiplier = 1f;
+
+    /// <summary>
+    /// [0, 1] Scales how much the first-person arms move while ADS.
+    /// </summary>
+    public float Viewmodel_AimingMisalignmentMultiplier = 1f;
 
     internal static CommandLineFlag _forceTrustClient = new CommandLineFlag(defaultValue: false, "-ForceTrustClient");
 

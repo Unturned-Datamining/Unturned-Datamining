@@ -1268,9 +1268,14 @@ public class PlayerAnimator : PlayerCaller
             blendedViewmodelSwayMultiplier = Mathf.Lerp(blendedViewmodelSwayMultiplier, viewmodelSwayMultiplier, 16f * Time.deltaTime);
             blendedViewmodelOffsetPreferenceMultiplier = Mathf.Lerp(blendedViewmodelOffsetPreferenceMultiplier, viewmodelOffsetPreferenceMultiplier, 16f * Time.deltaTime);
             float num = ((Provider.modeConfigData?.Gameplay?.Disable_Motion_Sickness_Options).GetValueOrDefault() ? 1f : OptionsSettings.viewmodelBobScale);
+            GetAimingViewmodelAlignment(out var aimingAlignmentOffset, out aimingInertaMultiplier, out var aimingAlpha);
+            float b = Provider.modeConfigData?.Gameplay?.Viewmodel_AimingMisalignmentMultiplier ?? 1f;
+            float num2 = Mathf.Lerp(1f, b, aimingAlpha);
+            float b2 = Provider.modeConfigData?.Gameplay?.Viewmodel_AimingJumpLandMultiplier ?? 1f;
+            float num3 = Mathf.Lerp(1f, b2, aimingAlpha);
             if (base.player.movement.isMoving)
             {
-                viewmodelMovementOffset.targetPosition.x = Mathf.Sin(speed * Time.time) * bob * num;
+                viewmodelMovementOffset.targetPosition.x = Mathf.Sin(speed * Time.time) * bob * num * num2;
                 viewmodelMovementOffset.targetPosition.y = Mathf.Abs(viewmodelMovementOffset.targetPosition.x);
             }
             else
@@ -1278,8 +1283,7 @@ public class PlayerAnimator : PlayerCaller
                 viewmodelMovementOffset.targetPosition = Vector2.zero;
             }
             viewmodelMovementOffset.Update(Time.deltaTime);
-            GetAimingViewmodelAlignment(out var aimingAlignmentOffset, out aimingInertaMultiplier);
-            blendedViewmodelCameraLocalPositionOffset = Vector3.Lerp(blendedViewmodelCameraLocalPositionOffset, viewmodelCameraLocalPositionOffset - recoilViewmodelCameraOffset.currentPosition - bayonetViewmodelCameraOffset, 16f * Time.deltaTime);
+            blendedViewmodelCameraLocalPositionOffset = Vector3.Lerp(blendedViewmodelCameraLocalPositionOffset, viewmodelCameraLocalPositionOffset - recoilViewmodelCameraOffset.currentPosition * num2 - bayonetViewmodelCameraOffset, 16f * Time.deltaTime);
             recoilViewmodelCameraOffset.Update(Time.deltaTime);
             bayonetViewmodelCameraOffset = Vector3.Lerp(bayonetViewmodelCameraOffset, Vector3.zero, 16f * Time.deltaTime);
             desiredViewmodelCameraLocalPosition.x = 0f - viewmodelMovementOffset.currentPosition.y - blendedViewmodelCameraLocalPositionOffset.y;
@@ -1300,12 +1304,12 @@ public class PlayerAnimator : PlayerCaller
                 viewmodelCameraLocalPosition.y = desiredViewmodelCameraLocalPosition.y;
                 viewmodelCameraLocalPosition.z = desiredViewmodelCameraLocalPosition.z;
             }
-            AddNearDeathViewmodelShake(ref viewmodelCameraLocalPosition);
+            AddNearDeathViewmodelShake(ref viewmodelCameraLocalPosition, num2);
             viewmodelCameraTransform.localPosition = viewmodelCameraLocalPosition + aimingAlignmentOffset;
             if (base.player.movement.isMoving)
             {
-                viewmodelCameraMovementLocalRotation.targetPosition.x = base.player.movement.move.z * tilt * viewmodelSwayMultiplier * num + roll * viewmodelSwayMultiplier * num;
-                viewmodelCameraMovementLocalRotation.targetPosition.y = base.player.movement.move.x * tilt * num + roll * viewmodelSwayMultiplier * num;
+                viewmodelCameraMovementLocalRotation.targetPosition.x = base.player.movement.move.z * tilt * viewmodelSwayMultiplier * num * num2 + roll * viewmodelSwayMultiplier * num * num2;
+                viewmodelCameraMovementLocalRotation.targetPosition.y = base.player.movement.move.x * tilt * num * num2 + roll * viewmodelSwayMultiplier * num * num2;
             }
             else
             {
@@ -1313,24 +1317,24 @@ public class PlayerAnimator : PlayerCaller
             }
             if (!base.player.movement.isGrounded)
             {
-                viewmodelCameraMovementLocalRotation.targetPosition.x -= 5f;
+                viewmodelCameraMovementLocalRotation.targetPosition.x -= 5f * num2 * num3;
             }
             viewmodelCameraMovementLocalRotation.Update(Time.deltaTime);
             landedSpring.Update(Time.deltaTime);
             landedSpring.targetPosition = Mathf.Lerp(landedSpring.targetPosition, 0f, landedSpringRecoverySpeed * Time.deltaTime);
-            viewmodelCameraLocalRotation.x = viewmodelCameraMovementLocalRotation.currentPosition.x + landedSpring.currentPosition;
+            viewmodelCameraLocalRotation.x = viewmodelCameraMovementLocalRotation.currentPosition.x + landedSpring.currentPosition * num2 * num3;
             viewmodelCameraLocalRotation.y = 0f;
             viewmodelCameraLocalRotation.z = viewmodelCameraMovementLocalRotation.currentPosition.y;
-            viewmodelCameraLocalRotation += recoilViewmodelCameraRotation.currentPosition;
+            viewmodelCameraLocalRotation += recoilViewmodelCameraRotation.currentPosition * num2;
             recoilViewmodelCameraRotation.Update(Time.deltaTime);
-            float num2 = Mathf.DeltaAngle(base.player.look.pitch, lastFramePitchInput);
+            float num4 = Mathf.DeltaAngle(base.player.look.pitch, lastFramePitchInput);
             lastFramePitchInput = base.player.look.pitch;
-            float num3 = Mathf.DeltaAngle(base.player.look.yaw, lastFrameYawInput);
+            float num5 = Mathf.DeltaAngle(base.player.look.yaw, lastFrameYawInput);
             lastFrameYawInput = base.player.look.yaw;
             rotationInputViewmodelRoll.Update(Time.deltaTime);
-            rotationInputViewmodelRoll.currentPosition.x += num2 * -0.03f * viewmodelSwayMultiplier * num;
-            rotationInputViewmodelRoll.currentPosition.y += num3 * -0.015f * viewmodelSwayMultiplier * num;
-            rotationInputViewmodelRoll.currentPosition.z += num3 * -0.05f * num;
+            rotationInputViewmodelRoll.currentPosition.x += num4 * -0.03f * viewmodelSwayMultiplier * num * num2;
+            rotationInputViewmodelRoll.currentPosition.y += num5 * -0.015f * viewmodelSwayMultiplier * num * num2;
+            rotationInputViewmodelRoll.currentPosition.z += num5 * -0.05f * num * num2;
             rotationInputViewmodelRoll.currentPosition = MathfEx.Clamp(rotationInputViewmodelRoll.currentPosition, -10f, 10f);
             viewmodelCameraLocalRotation += rotationInputViewmodelRoll.currentPosition;
             viewmodelItemInertiaRotation.Update(Time.deltaTime);
@@ -1349,19 +1353,19 @@ public class PlayerAnimator : PlayerCaller
                     }
                     lastFrameItemPosition = vector;
                     lastFrameHadItemPosition = true;
-                    goto IL_0a30;
+                    goto IL_0b24;
                 }
             }
             lastFrameHadItemPosition = false;
-            goto IL_0a30;
+            goto IL_0b24;
         }
         if (thirdAnimator != null)
         {
             updateState(thirdAnimator);
             updateHuman((HumanAnimator)thirdAnimator);
         }
-        goto IL_0d9f;
-        IL_0a30:
+        goto IL_0e93;
+        IL_0b24:
         viewmodelItemInertiaRotation.currentPosition = MathfEx.Clamp(viewmodelItemInertiaRotation.currentPosition, -5f, 5f);
         viewmodelCameraLocalRotation += viewmodelItemInertiaRotation.currentPosition * aimingInertaMultiplier;
         viewmodelSmoothedExplosionLocalRotation = Quaternion.Lerp(viewmodelSmoothedExplosionLocalRotation, viewmodelTargetExplosionLocalRotation.currentRotation, viewmodelExplosionSmoothingSpeed * Time.deltaTime);
@@ -1396,8 +1400,8 @@ public class PlayerAnimator : PlayerCaller
             _shoulder = 0f;
         }
         _shoulder2 = Mathf.Lerp(shoulder2, -lean, 8f * Time.deltaTime);
-        goto IL_0d9f;
-        IL_0d9f:
+        goto IL_0e93;
+        IL_0e93:
         if (characterAnimator != null)
         {
             updateState(characterAnimator);
@@ -1414,7 +1418,7 @@ public class PlayerAnimator : PlayerCaller
     {
         if (base.channel.IsLocalPlayer)
         {
-            GetAimingViewmodelAlignment(out var aimingAlignmentOffset, out var _);
+            GetAimingViewmodelAlignment(out var aimingAlignmentOffset, out var _, out var _);
             viewmodelCameraTransform.localPosition = viewmodelCameraLocalPosition + aimingAlignmentOffset;
         }
     }
@@ -1528,31 +1532,32 @@ public class PlayerAnimator : PlayerCaller
         }
     }
 
-    private void AddNearDeathViewmodelShake(ref Vector3 position)
+    private void AddNearDeathViewmodelShake(ref Vector3 position, float misalignmentScale)
     {
         if (base.player.life.health < 25)
         {
             Vector3 vector = new Vector3(UnityEngine.Random.Range(-0.005f, 0.005f), UnityEngine.Random.Range(-0.005f, 0.005f), UnityEngine.Random.Range(-0.005f, 0.005f));
             float num = 1f - (float)(int)Player.LocalPlayer.life.health / 25f;
             float num2 = 1f - base.player.skills.mastery(1, 3) * 0.75f;
-            position += vector * num * num2;
+            position += vector * num * num2 * misalignmentScale;
         }
     }
 
-    private void GetAimingViewmodelAlignment(out Vector3 aimingAlignmentOffset, out float aimingInertaMultiplier)
+    private void GetAimingViewmodelAlignment(out Vector3 aimingAlignmentOffset, out float aimingInertaMultiplier, out float aimingAlpha)
     {
         aimingAlignmentOffset = Vector3.zero;
         aimingInertaMultiplier = 1f;
+        aimingAlpha = 0f;
         if (base.player.equipment.useable is UseableGun useableGun)
         {
-            useableGun.GetAimingViewmodelAlignment(out var alignmentTransform, out var alignmentOffset, out var alpha);
-            if (alignmentTransform != null && alpha > 0f)
+            useableGun.GetAimingViewmodelAlignment(out var alignmentTransform, out var alignmentOffset, out aimingAlpha);
+            if (alignmentTransform != null && aimingAlpha > 0f)
             {
                 Vector3 position = alignmentTransform.TransformPoint(alignmentOffset);
                 aimingAlignmentOffset = viewmodelCameraTransform.parent.InverseTransformPoint(position);
                 aimingAlignmentOffset.x += 0.45f;
-                aimingAlignmentOffset *= alpha;
-                aimingInertaMultiplier -= alpha;
+                aimingAlignmentOffset *= aimingAlpha;
+                aimingInertaMultiplier -= aimingAlpha;
             }
         }
     }

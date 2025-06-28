@@ -19,9 +19,9 @@ public class FoliageSystem : DevkitHierarchyItemBase
 
     public static int SPLATMAP_RESOLUTION_PER_TILE;
 
-    protected static Dictionary<FoliageCoord, FoliageTile> prevTiles;
+    protected static Dictionary<FoliageCoord, FoliageTile> previousFrameRelevantTiles;
 
-    protected static Dictionary<FoliageCoord, FoliageTile> activeTiles;
+    protected static Dictionary<FoliageCoord, FoliageTile> relevantTiles;
 
     protected static Dictionary<FoliageCoord, FoliageTile> tiles;
 
@@ -365,18 +365,23 @@ public class FoliageSystem : DevkitHierarchyItemBase
         {
             FoliageCoord foliageCoord2 = array[i];
             FoliageCoord foliageCoord3 = new FoliageCoord(foliageCoord.x + foliageCoord2.x, foliageCoord.y + foliageCoord2.y);
-            if (activeTiles.ContainsKey(foliageCoord3))
+            if (relevantTiles.ContainsKey(foliageCoord3))
             {
                 continue;
             }
             FoliageTile tile = getTile(foliageCoord3);
             if (tile != null)
             {
-                int sqrDistance = foliageCoord2.x * foliageCoord2.x + foliageCoord2.y * foliageCoord2.y;
+                relevantTiles.Add(foliageCoord3, tile);
+                if (!tile.isRelevantToViewer)
+                {
+                    tile.isRelevantToViewer = true;
+                    storage?.TileBecameRelevantToViewer(tile);
+                }
                 if (GeometryUtility.TestPlanesAABB(frustumPlanes, tile.worldBounds))
                 {
+                    int sqrDistance = foliageCoord2.x * foliageCoord2.x + foliageCoord2.y * foliageCoord2.y;
                     drawTile(tile, sqrDistance, camera);
-                    activeTiles.Add(foliageCoord3, tile);
                 }
             }
         }
@@ -394,11 +399,6 @@ public class FoliageSystem : DevkitHierarchyItemBase
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     private static void drawTile(FoliageTile tile, int sqrDistance, Camera camera)
     {
-        if (!tile.isRelevantToViewer)
-        {
-            tile.isRelevantToViewer = true;
-            storage?.TileBecameRelevantToViewer(tile);
-        }
         foreach (FoliageInstanceList value2 in tile.instances.Values)
         {
             int count = value2.matrices.Count;
@@ -603,7 +603,7 @@ public class FoliageSystem : DevkitHierarchyItemBase
         {
             return;
         }
-        activeTiles.Clear();
+        relevantTiles.Clear();
         if (FoliageSettings.enabled && !(hiddenByHeightEditor | hiddenByMaterialEditor))
         {
             shouldDrawWithoutInstancing = FoliageSettings.forceInstancingOff || !SystemInfo.supportsInstancing;
@@ -624,19 +624,17 @@ public class FoliageSystem : DevkitHierarchyItemBase
                 drawTiles(focusPosition, FoliageSettings.drawFocusDistance, focusCamera, frustumPlanes);
             }
         }
-        foreach (KeyValuePair<FoliageCoord, FoliageTile> prevTile in prevTiles)
+        foreach (KeyValuePair<FoliageCoord, FoliageTile> previousFrameRelevantTile in previousFrameRelevantTiles)
         {
-            if (!activeTiles.ContainsKey(prevTile.Key) && prevTile.Value != null && prevTile.Value.isRelevantToViewer)
+            if (!relevantTiles.ContainsKey(previousFrameRelevantTile.Key) && previousFrameRelevantTile.Value != null && previousFrameRelevantTile.Value.isRelevantToViewer)
             {
-                prevTile.Value.isRelevantToViewer = false;
-                storage?.TileNoLongerRelevantToViewer(prevTile.Value);
+                previousFrameRelevantTile.Value.isRelevantToViewer = false;
+                storage?.TileNoLongerRelevantToViewer(previousFrameRelevantTile.Value);
             }
         }
-        prevTiles.Clear();
-        foreach (KeyValuePair<FoliageCoord, FoliageTile> activeTile in activeTiles)
-        {
-            prevTiles.Add(activeTile.Key, activeTile.Value);
-        }
+        Dictionary<FoliageCoord, FoliageTile> dictionary = previousFrameRelevantTiles;
+        previousFrameRelevantTiles = relevantTiles;
+        relevantTiles = dictionary;
         if (Level.isEditor && bakeQueue.Count > 0)
         {
             tickBakeQueue();
@@ -664,8 +662,8 @@ public class FoliageSystem : DevkitHierarchyItemBase
         if (instance == null)
         {
             instance = this;
-            prevTiles.Clear();
-            activeTiles.Clear();
+            previousFrameRelevantTiles.Clear();
+            relevantTiles.Clear();
             bakeQueue.Clear();
             batches.Clear();
             activeMatrixLists.Clear();
@@ -680,8 +678,8 @@ public class FoliageSystem : DevkitHierarchyItemBase
         if (instance == this)
         {
             instance = null;
-            prevTiles.Clear();
-            activeTiles.Clear();
+            previousFrameRelevantTiles.Clear();
+            relevantTiles.Clear();
             bakeQueue.Clear();
             batches.Clear();
             activeMatrixLists.Clear();
@@ -696,8 +694,8 @@ public class FoliageSystem : DevkitHierarchyItemBase
         TILE_SIZE = 32f;
         TILE_SIZE_INT = 32;
         SPLATMAP_RESOLUTION_PER_TILE = 8;
-        prevTiles = new Dictionary<FoliageCoord, FoliageTile>();
-        activeTiles = new Dictionary<FoliageCoord, FoliageTile>();
+        previousFrameRelevantTiles = new Dictionary<FoliageCoord, FoliageTile>();
+        relevantTiles = new Dictionary<FoliageCoord, FoliageTile>();
         tiles = new Dictionary<FoliageCoord, FoliageTile>();
         storage = null;
         bakeQueue = new Queue<KeyValuePair<FoliageTile, List<IFoliageSurface>>>();

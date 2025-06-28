@@ -211,5 +211,12 @@ Allow_Trap_Placement_On_Vehicle Allow Trap Placement On Vehicle
 Max_Item_Distance_From_Hull Max Item Distance From Hull
 Max_Trap_Distance_From_Hull Max Trap Distance From Hull
 
+FirstPerson_RecoilMultiplier First-Person Recoil Multiplier
+FirstPerson_AimingRecoilMultiplier First-Person Aiming Recoil Multiplier
+FirstPerson_AimingZoomRecoilReduction First-Person Aiming Zoom Recoil Reduction
+
 ThirdPerson_RecoilMultiplier Third-Person Recoil Multiplier
 ThirdPerson_SpreadMultiplier Third-Person Spread Multiplier
+
+Viewmodel_AimingJumpLandMultiplier Viewmodel Aiming Jump/Land Shake Multiplier
+Viewmodel_AimingMisalignmentMultiplier Viewmodel Aiming Misalignment Multiplier

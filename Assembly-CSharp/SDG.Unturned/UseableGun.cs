@@ -1011,7 +1011,26 @@ public class UseableGun : Useable
                 num6 *= SHAKE_PRONE;
                 num7 *= SHAKE_PRONE;
             }
-            if (base.player.look.perspective == EPlayerPerspective.THIRD)
+            if (base.player.look.perspective == EPlayerPerspective.FIRST)
+            {
+                float num8 = Provider.modeConfigData.Gameplay.FirstPerson_RecoilMultiplier;
+                if (isAiming)
+                {
+                    num8 *= Provider.modeConfigData.Gameplay.FirstPerson_AimingRecoilMultiplier;
+                    if (base.player.look.isScopeActive && base.player.look.scopeCameraZoomFactor > 1.0001f)
+                    {
+                        float firstPerson_AimingZoomRecoilReduction = Provider.modeConfigData.Gameplay.FirstPerson_AimingZoomRecoilReduction;
+                        float b3 = 1f / base.player.look.scopeCameraZoomFactor;
+                        num8 *= Mathf.Lerp(1f, b3, firstPerson_AimingZoomRecoilReduction);
+                    }
+                }
+                num3 *= num8;
+                num4 *= num8;
+                num5 *= num8;
+                num6 *= num8;
+                num7 *= num8;
+            }
+            else if (base.player.look.perspective == EPlayerPerspective.THIRD)
             {
                 num3 *= Provider.modeConfigData.Gameplay.ThirdPerson_RecoilMultiplier;
                 num4 *= Provider.modeConfigData.Gameplay.ThirdPerson_RecoilMultiplier;
@@ -1042,14 +1061,14 @@ public class UseableGun : Useable
             equippedGunAsset.GrantShootQuestRewards(base.player);
             if (equippedGunAsset.projectile == null)
             {
-                byte b3 = (byte)((thirdAttachments.magazineAsset == null) ? 1 : thirdAttachments.magazineAsset.pellets);
+                byte b4 = (byte)((thirdAttachments.magazineAsset == null) ? 1 : thirdAttachments.magazineAsset.pellets);
                 float gravityMultiplier2 = CalculateBulletGravityMultiplier();
-                for (byte b4 = 0; b4 < b3; b4++)
+                for (byte b5 = 0; b5 < b4; b5++)
                 {
                     BulletInfo bulletInfo2;
                     if (base.channel.IsLocalPlayer)
                     {
-                        bulletInfo2 = bullets[bullets.Count - b3 + b4];
+                        bulletInfo2 = bullets[bullets.Count - b4 + b5];
                     }
                     else
                     {
@@ -1057,7 +1076,7 @@ public class UseableGun : Useable
                         bulletInfo2.origin = base.player.look.aim.position;
                         bulletInfo2.ApproximatePlayerAimDirection = base.player.look.aim.forward;
                         bulletInfo2.position = bulletInfo2.origin;
-                        bulletInfo2.pellet = b4;
+                        bulletInfo2.pellet = b5;
                         bulletInfo2.quality = num;
                         bulletInfo2.barrelAsset = thirdAttachments.barrelAsset;
                         bulletInfo2.magazineAsset = thirdAttachments.magazineAsset;
@@ -1080,10 +1099,10 @@ public class UseableGun : Useable
                     {
                         if (base.player.equipment.state[17] > 0)
                         {
-                            byte b5 = (byte)((thirdAttachments.magazineAsset == null) ? 1 : thirdAttachments.magazineAsset.stuck);
-                            if (base.player.equipment.state[17] > b5)
+                            byte b6 = (byte)((thirdAttachments.magazineAsset == null) ? 1 : thirdAttachments.magazineAsset.stuck);
+                            if (base.player.equipment.state[17] > b6)
                             {
-                                base.player.equipment.state[17] -= b5;
+                                base.player.equipment.state[17] -= b6;
                             }
                             else
                             {
@@ -1141,8 +1160,8 @@ public class UseableGun : Useable
         if (equippedGunAsset.canEverJam && Provider.isServer && num < equippedGunAsset.jamQualityThreshold)
         {
             float t = 1f - num / equippedGunAsset.jamQualityThreshold;
-            float num8 = Mathf.Lerp(0f, equippedGunAsset.jamMaxChance, t);
-            if (UnityEngine.Random.value < num8)
+            float num9 = Mathf.Lerp(0f, equippedGunAsset.jamMaxChance, t);
+            if (UnityEngine.Random.value < num9)
             {
                 SendPlayChamberJammed.InvokeAndLoopback(GetNetId(), ENetReliability.Reliable, Provider.GatherRemoteClientConnections(), ammo);
             }
@@ -4351,7 +4370,7 @@ public class UseableGun : Useable
             {
                 base.player.animator.drivingViewmodelCameraLocalPositionOffset = Vector3.zero;
             }
-            base.player.animator.scopeSway = Vector3.zero;
+            base.player.look.ConvertScopeSwayToInputRotation();
             base.player.animator.viewmodelSwayMultiplier = 1f;
             base.player.animator.viewmodelOffsetPreferenceMultiplier = 1f;
             base.player.look.shouldUseZoomFactorForSensitivity = false;
@@ -4633,10 +4652,6 @@ public class UseableGun : Useable
                 num *= SWAY_PRONE;
             }
             base.player.animator.scopeSway = Vector3.Lerp(base.player.animator.scopeSway, new Vector3(Mathf.Sin(0.75f * swayTime) * num, Mathf.Sin(1f * swayTime) * num, 0f), Time.deltaTime * 4f);
-        }
-        else
-        {
-            base.player.animator.scopeSway = Vector3.Lerp(base.player.animator.scopeSway, Vector3.zero, Time.deltaTime * 4f);
         }
         if (firstAttachments.reticuleHook != null && firstAttachments.sightAsset != null && firstAttachments.sightAsset.isHolographic)
         {

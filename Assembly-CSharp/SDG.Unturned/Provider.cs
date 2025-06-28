@@ -4228,8 +4228,13 @@ public class Provider : MonoBehaviour
             writer.WriteFloat(modeConfigData.Barricades.Max_Trap_Distance_From_Hull);
             writer.WriteFloat(modeConfigData.Gameplay.AirStrafing_Acceleration_Multiplier);
             writer.WriteFloat(modeConfigData.Gameplay.AirStrafing_Deceleration_Multiplier);
+            writer.WriteFloat(modeConfigData.Gameplay.FirstPerson_RecoilMultiplier);
+            writer.WriteFloat(modeConfigData.Gameplay.FirstPerson_AimingRecoilMultiplier);
+            writer.WriteFloat(modeConfigData.Gameplay.FirstPerson_AimingZoomRecoilReduction);
             writer.WriteFloat(modeConfigData.Gameplay.ThirdPerson_RecoilMultiplier);
             writer.WriteFloat(modeConfigData.Gameplay.ThirdPerson_SpreadMultiplier);
+            writer.WriteFloat(modeConfigData.Gameplay.Viewmodel_AimingJumpLandMultiplier);
+            writer.WriteFloat(modeConfigData.Gameplay.Viewmodel_AimingMisalignmentMultiplier);
         });
         if (battlEyeServerHandle != IntPtr.Zero && battlEyeServerRunData != null && battlEyeServerRunData.pfnAddPlayer != null && battlEyeServerRunData.pfnReceivedPlayerGUID != null)
         {

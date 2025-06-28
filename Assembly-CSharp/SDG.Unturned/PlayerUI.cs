@@ -1778,7 +1778,7 @@ public class PlayerUI : MonoBehaviour
     private void tickMenuBlur()
     {
         EPluginWidgetFlags pluginWidgetFlags = Player.LocalPlayer.pluginWidgetFlags;
-        bool isMainBlurEnabled = (pluginWidgetFlags & EPluginWidgetFlags.ForceBlur) == EPluginWidgetFlags.ForceBlur || ((pluginWidgetFlags & EPluginWidgetFlags.NoBlur) != EPluginWidgetFlags.NoBlur && ((window.showCursor && !usingCustomModal && !MenuConfigurationGraphicsUI.active && !PlayerNPCDialogueUI.active && !PlayerNPCQuestUI.active && !PlayerNPCVendorUI.active && !PlayerWorkzoneUI.active) || (WaterUtility.isPointUnderwater(MainCamera.instance.transform.position) && (Player.LocalPlayer.clothing.glassesAsset == null || !Player.LocalPlayer.clothing.glassesAsset.proofWater)) || (Player.LocalPlayer.look.isScopeActive && GraphicsSettings.scopeQuality != 0 && Player.LocalPlayer.look.perspective == EPlayerPerspective.FIRST && Player.LocalPlayer.equipment.useable != null && ((UseableGun)Player.LocalPlayer.equipment.useable).isAiming)));
+        bool isMainBlurEnabled = (pluginWidgetFlags & EPluginWidgetFlags.ForceBlur) == EPluginWidgetFlags.ForceBlur || ((pluginWidgetFlags & EPluginWidgetFlags.NoBlur) != EPluginWidgetFlags.NoBlur && ((window.showCursor && !usingCustomModal && !MenuConfigurationGraphicsUI.active && !PlayerNPCDialogueUI.active && !PlayerNPCQuestUI.active && !PlayerNPCVendorUI.active && !PlayerWorkzoneUI.active) || (WaterUtility.isPointUnderwater(MainCamera.instance.transform.position) && (Player.LocalPlayer.clothing.glassesAsset == null || !Player.LocalPlayer.clothing.glassesAsset.proofWater))));
         UnturnedPostProcess.instance.SetIsMainBlurEnabled(isMainBlurEnabled);
     }
 

@@ -348,6 +348,17 @@ public class PlayerLook : PlayerCaller
     }
 
     /// <summary>
+    /// Nelson 2025-06-27: previously, stopping aim cancelled the sway offset immediately. When
+    /// experimenting with removing the dual-render scope blur this felt jarring.
+    /// </summary>
+    internal void ConvertScopeSwayToInputRotation()
+    {
+        _pitch += base.player.animator.scopeSway.x;
+        _yaw += base.player.animator.scopeSway.y;
+        base.player.animator.scopeSway = Vector3.zero;
+    }
+
+    /// <summary>
     /// Get point-of-view in world-space.
     /// </summary>
     public Vector3 getEyesPosition()
@@ -404,6 +415,7 @@ public class PlayerLook : PlayerCaller
             GraphicsFormat colorFormat = GraphicsFormat.R8G8B8A8_SRGB;
             GraphicsFormat depthStencilFormat = (flag ? GraphicsFormat.D24_UNorm_S8_UInt : GraphicsFormat.None);
             scopeRenderTexture = new RenderTexture(num, num, colorFormat, depthStencilFormat);
+            scopeRenderTexture.useMipMap = true;
             scopeRenderTexture.name = (flag ? "Dual-Render Scope" : "Single-Render Scope");
             scopeRenderTexture.hideFlags = HideFlags.HideAndDontSave;
         }

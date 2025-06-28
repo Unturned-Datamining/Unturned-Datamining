@@ -33,7 +33,7 @@ public sealed class SrScopeRenderer : PostProcessEffectRenderer<SrScope>
         Vector2 offset = new Vector2(0f, 0f);
         offset[index] = (scale[index] - 1f) * -0.5f;
         context.command.Blit(context.source, renderTexture, scale, offset);
-        if ((float)base.settings.standardDeviation > 0f)
+        if ((float)base.settings.standardDeviation > 0.001f)
         {
             float num2 = vector[num] / 1080f;
             float num3 = (float)base.settings.standardDeviation * num2;
@@ -45,6 +45,10 @@ public sealed class SrScopeRenderer : PostProcessEffectRenderer<SrScope>
             context.command.BlitFullscreenTriangle(context.source, scopeBlurTexId, propertySheet, 0);
             context.command.BlitFullscreenTriangle(scopeBlurTexId, context.destination, propertySheet, 1);
             context.command.ReleaseTemporaryRT(scopeBlurTexId);
+        }
+        else
+        {
+            context.command.Blit(context.source, context.destination);
         }
     }
 }
