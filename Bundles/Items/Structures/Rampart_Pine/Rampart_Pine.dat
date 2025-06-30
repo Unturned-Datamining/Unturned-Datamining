@@ -26,7 +26,11 @@ Blueprints
 		CategoryTag "71d9e182c18b4aad8e87778e4f621995" // Structures
 		InputItems "1d9fa8ad36504d9ab63ad574c6675cf3" // Stacked Pine Logs
 		InputItems_Critical true
-		OutputItems this x 8
+		OutputItems
+		[
+			this x 2
+			"86bf08032a5147f9871e362e40812771 x 9" // Pine Log
+		]
 		Effect "84347b13028340b8976033c08675d458" // Wrench
 	}
 ]

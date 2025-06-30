@@ -243,7 +243,7 @@ internal class Glazier_IMGUI : GlazierBase, IGlazier
         }
         if (Event.current.type == EventType.Repaint)
         {
-            if (OptionsSettings.debug)
+            if (OptionsSettings.debug && _root != null && (_root.isEnabled || _root.drawCursorWhileDisabled))
             {
                 GlazierUtils_IMGUI.drawLabel(new Rect(0f, 0f, 800f, 30f), FontStyle.Normal, TextAnchor.UpperLeft, 12, isRich: false, base.debugStringColor, base.debugString, ETextContrastContext.ColorfulBackdrop);
             }

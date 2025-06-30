@@ -7,16 +7,42 @@ namespace SDG.Unturned;
 
 public class UseableHousingPlanner : Useable
 {
+    private struct RelevantBlueprint
+    {
+        public Blueprint blueprint;
+
+        public int structureOutputIndex;
+
+        public RelevantBlueprint(Blueprint blueprint, int structureOutputIndex)
+        {
+            this.blueprint = blueprint;
+            this.structureOutputIndex = structureOutputIndex;
+        }
+    }
+
+    private struct CraftableBlueprint
+    {
+        public BlueprintStatus status;
+
+        public int structureOutputIndex;
+
+        public CraftableBlueprint(BlueprintStatus status, int structureOutputIndex)
+        {
+            this.status = status;
+            this.structureOutputIndex = structureOutputIndex;
+        }
+    }
+
     private struct ItemOption
     {
         public ItemStructureAsset asset;
 
-        public BlueprintStatus blueprintStatus;
+        public CraftableBlueprint craftable;
 
-        public ItemOption(ItemStructureAsset asset, BlueprintStatus blueprintStatus)
+        public ItemOption(ItemStructureAsset asset, CraftableBlueprint craftable)
         {
             this.asset = asset;
-            this.blueprintStatus = blueprintStatus;
+            this.craftable = craftable;
         }
     }
 
@@ -72,7 +98,7 @@ public class UseableHousingPlanner : Useable
                 amountLabel.FontSize = ESleekFontSize.Default;
             }
             useable.itemAmounts.TryGetValue(asset.id, out var value);
-            int num = option.blueprintStatus?.EstimateFirstOutputMaxAmount() ?? 0;
+            int num = option.craftable.status?.EstimateOutputMaxAmount(option.craftable.structureOutputIndex) ?? 0;
             amountLabel.Text = $"{value}+{num}";
             amountLabel.TextAlignment = TextAnchor.LowerLeft;
             amountLabel.TextContrastContext = ETextContrastContext.InconspicuousBackdrop;
@@ -172,12 +198,12 @@ public class UseableHousingPlanner : Useable
     /// <summary>
     /// Blueprints which create a structure item.
     /// </summary>
-    private List<Blueprint> relevantBlueprints;
+    private List<RelevantBlueprint> relevantBlueprints;
 
     /// <summary>
     /// One craftable blueprint per potential structure item.
     /// </summary>
-    private Dictionary<ItemStructureAsset, BlueprintStatus> craftableBlueprints;
+    private Dictionary<ItemStructureAsset, CraftableBlueprint> craftableBlueprints;
 
     /// <summary>
     /// Recycled blueprint statuses.
@@ -185,8 +211,6 @@ public class UseableHousingPlanner : Useable
     private Stack<BlueprintStatus> blueprintStatusPool;
 
     private List<PlayerInventorySearchResultV2> itemSearchResults;
-
-    private List<ItemOption> allOptions;
 
     private List<ItemOption> floors;
 
@@ -277,11 +301,7 @@ public class UseableHousingPlanner : Useable
             {
                 return false;
             }
-            if (blueprintByIndex.outputs == null || blueprintByIndex.outputs.Length != 1)
-            {
-                return false;
-            }
-            if (blueprintByIndex.outputs[0].FindItemAsset() != itemStructureAsset)
+            if (!blueprintByIndex.DoesOutputCreateItem(itemStructureAsset))
             {
                 return false;
             }
@@ -326,13 +346,13 @@ public class UseableHousingPlanner : Useable
             itemAmounts.TryGetValue(selectedOption.asset.id, out var value);
             Guid arg = default(Guid);
             byte arg2 = 0;
-            if (value < 1 && selectedOption.blueprintStatus?.blueprint != null)
+            if (value < 1 && selectedOption.craftable.status?.blueprint != null)
             {
-                Asset ownerAsset = selectedOption.blueprintStatus.blueprint.GetOwnerAsset();
+                Asset ownerAsset = selectedOption.craftable.status.blueprint.GetOwnerAsset();
                 if (ownerAsset != null)
                 {
                     arg = ownerAsset.GUID;
-                    arg2 = selectedOption.blueprintStatus.blueprint.Index;
+                    arg2 = selectedOption.craftable.status.blueprint.Index;
                 }
             }
             SendPlaceHousingItem.Invoke(GetNetId(), ENetReliability.Reliable, selectedOption.asset.GUID, pendingPlacementPosition, pendingPlacementYaw + customRotationOffset, arg, arg2);
@@ -378,11 +398,10 @@ public class UseableHousingPlanner : Useable
         base.player.animator.play("Equip", smooth: true);
         if (base.channel.IsLocalPlayer)
         {
-            relevantBlueprints = new List<Blueprint>();
-            craftableBlueprints = new Dictionary<ItemStructureAsset, BlueprintStatus>();
+            relevantBlueprints = new List<RelevantBlueprint>();
+            craftableBlueprints = new Dictionary<ItemStructureAsset, CraftableBlueprint>();
             blueprintStatusPool = new Stack<BlueprintStatus>();
             itemSearchResults = new List<PlayerInventorySearchResultV2>();
-            allOptions = new List<ItemOption>();
             floors = new List<ItemOption>();
             roofs = new List<ItemOption>();
             walls = new List<ItemOption>();
@@ -700,7 +719,7 @@ public class UseableHousingPlanner : Useable
                 break;
             }
         }
-        foreach (KeyValuePair<ItemStructureAsset, BlueprintStatus> craftableBlueprint in craftableBlueprints)
+        foreach (KeyValuePair<ItemStructureAsset, CraftableBlueprint> craftableBlueprint in craftableBlueprints)
         {
             ItemStructureAsset key = craftableBlueprint.Key;
             if (!itemAmounts.ContainsKey(key.id))
@@ -779,7 +798,7 @@ public class UseableHousingPlanner : Useable
             selectedItemNameLabel.Text = selectedOption.asset.itemName;
             selectedItemNameLabel.TextColor = ItemTool.getRarityColorUI(selectedOption.asset.rarity);
             itemAmounts.TryGetValue(selectedOption.asset.id, out var value);
-            int num = selectedOption.blueprintStatus?.EstimateFirstOutputMaxAmount() ?? 0;
+            int num = selectedOption.craftable.status?.EstimateOutputMaxAmount(selectedOption.craftable.structureOutputIndex) ?? 0;
             selectedItemAvailableAmountLabel.Text = localization.format("AvailableAmount", value);
             selectedItemCraftableAmountLabel.Text = localization.format("CraftableAmount", num);
         }
@@ -815,9 +834,22 @@ public class UseableHousingPlanner : Useable
         {
             foreach (Blueprint blueprint in blueprintOwner.GetBlueprints())
             {
-                if (blueprint.outputs != null && blueprint.outputs.Length == 1 && blueprint.outputs[0].FindItemAsset<ItemStructureAsset>() != null && !crafting.IsBlueprintPermanentlyDisabled(blueprint))
+                if (blueprint.outputs == null || blueprint.outputs.Length < 1)
                 {
-                    relevantBlueprints.Add(blueprint);
+                    continue;
+                }
+                int num = -1;
+                for (int i = 0; i < blueprint.outputs.Length; i++)
+                {
+                    if (blueprint.outputs[i].FindItemAsset<ItemStructureAsset>() != null)
+                    {
+                        num = i;
+                        break;
+                    }
+                }
+                if (num >= 0 && !crafting.IsBlueprintPermanentlyDisabled(blueprint))
+                {
+                    relevantBlueprints.Add(new RelevantBlueprint(blueprint, num));
                 }
             }
         }
@@ -828,22 +860,22 @@ public class UseableHousingPlanner : Useable
     /// </summary>
     private void RefreshAllCraftableBlueprints()
     {
-        Blueprint blueprint = selectedOption.blueprintStatus?.blueprint;
-        foreach (BlueprintStatus value in craftableBlueprints.Values)
+        foreach (CraftableBlueprint value in craftableBlueprints.Values)
         {
-            blueprintStatusPool.Push(value);
+            blueprintStatusPool.Push(value.status);
         }
         craftableBlueprints.Clear();
         PlayerCrafting crafting = base.player.crafting;
-        foreach (Blueprint relevantBlueprint in relevantBlueprints)
+        foreach (RelevantBlueprint relevantBlueprint in relevantBlueprints)
         {
-            ItemStructureAsset itemStructureAsset = relevantBlueprint.outputs[0].FindItemAsset<ItemStructureAsset>();
+            Blueprint blueprint = relevantBlueprint.blueprint;
+            ItemStructureAsset itemStructureAsset = blueprint.outputs[relevantBlueprint.structureOutputIndex].FindItemAsset<ItemStructureAsset>();
             if (itemStructureAsset == null || craftableBlueprints.ContainsKey(itemStructureAsset))
             {
                 continue;
             }
             BlueprintStatus blueprintStatus = CreateBlueprintStatus();
-            blueprintStatus.blueprint = relevantBlueprint;
+            blueprintStatus.blueprint = blueprint;
             UpdateBlueprintStatusParameters updateBlueprintStatusParameters = default(UpdateBlueprintStatusParameters);
             updateBlueprintStatusParameters.status = blueprintStatus;
             updateBlueprintStatusParameters.shouldExitEarly = true;
@@ -861,13 +893,56 @@ public class UseableHousingPlanner : Useable
             }
             else
             {
-                craftableBlueprints.Add(itemStructureAsset, blueprintStatus);
+                craftableBlueprints.Add(itemStructureAsset, new CraftableBlueprint(blueprintStatus, relevantBlueprint.structureOutputIndex));
             }
         }
-        if (HasSelection && blueprint != null && !craftableBlueprints.TryGetValue(selectedOption.asset, out selectedOption.blueprintStatus))
+        if (HasSelection)
         {
-            UnturnedLog.error("Housing planner blueprint no longer craftable after refreshing all craftable blueprints! (Bug!)\nItem: " + selectedOption.asset.FriendlyName);
-            ClearSelectedOption();
+            craftableBlueprints.TryGetValue(selectedOption.asset, out selectedOption.craftable);
+            int num = selectedOption.craftable.status?.EstimateOutputMaxAmount(selectedOption.craftable.structureOutputIndex) ?? 0;
+            selectedItemCraftableAmountLabel.Text = localization.format("CraftableAmount", num);
+        }
+    }
+
+    /// <summary>
+    /// Currently saved craftableBlueprint for asset may have become uncraftable,
+    /// in which case we try finding a craftable replacement.
+    /// </summary>
+    private void RefreshCraftableBlueprint(ItemStructureAsset forAsset)
+    {
+        if (craftableBlueprints.TryGetValue(forAsset, out var value))
+        {
+            blueprintStatusPool.Push(value.status);
+            craftableBlueprints.Remove(forAsset);
+        }
+        PlayerCrafting crafting = base.player.crafting;
+        foreach (RelevantBlueprint relevantBlueprint in relevantBlueprints)
+        {
+            Blueprint blueprint = relevantBlueprint.blueprint;
+            if (blueprint.outputs[relevantBlueprint.structureOutputIndex].FindItemAsset<ItemStructureAsset>() != forAsset)
+            {
+                continue;
+            }
+            BlueprintStatus blueprintStatus = CreateBlueprintStatus();
+            blueprintStatus.blueprint = blueprint;
+            UpdateBlueprintStatusParameters updateBlueprintStatusParameters = default(UpdateBlueprintStatusParameters);
+            updateBlueprintStatusParameters.status = blueprintStatus;
+            updateBlueprintStatusParameters.shouldExitEarly = true;
+            UpdateBlueprintStatusParameters p = updateBlueprintStatusParameters;
+            crafting.UpdateBlueprintStaticStatus(in p, bypassWorkstationRequirements: true);
+            if (!blueprintStatus.IsCraftable)
+            {
+                blueprintStatusPool.Push(blueprintStatus);
+                continue;
+            }
+            crafting.UpdateBlueprintDynamicStatus(in p);
+            if (!blueprintStatus.IsCraftable)
+            {
+                blueprintStatusPool.Push(blueprintStatus);
+                continue;
+            }
+            craftableBlueprints.Add(forAsset, new CraftableBlueprint(blueprintStatus, relevantBlueprint.structureOutputIndex));
+            break;
         }
     }
 
@@ -902,29 +977,36 @@ public class UseableHousingPlanner : Useable
             }
             itemAmounts[playerInventorySearchResultV.Jar.item.id] = value + playerInventorySearchResultV.Jar.item.amount;
         }
-        if (HasSelection)
+        if (!HasSelection)
         {
-            itemAmounts.TryGetValue(selectedOption.asset.id, out var value2);
-            int num2 = 0;
-            if (selectedOption.blueprintStatus != null)
+            return;
+        }
+        itemAmounts.TryGetValue(selectedOption.asset.id, out var value2);
+        int num2 = 0;
+        if (selectedOption.craftable.status != null)
+        {
+            selectedOption.craftable.status.Reset();
+            UpdateBlueprintStatusParameters updateBlueprintStatusParameters = default(UpdateBlueprintStatusParameters);
+            updateBlueprintStatusParameters.status = selectedOption.craftable.status;
+            updateBlueprintStatusParameters.shouldExitEarly = true;
+            UpdateBlueprintStatusParameters p = updateBlueprintStatusParameters;
+            base.player.crafting.UpdateBlueprintStaticStatus(in p, bypassWorkstationRequirements: true);
+            base.player.crafting.UpdateBlueprintDynamicStatus(in p);
+            if (!selectedOption.craftable.status.IsCraftable)
             {
-                selectedOption.blueprintStatus.ResetDynamicStatus();
-                UpdateBlueprintStatusParameters updateBlueprintStatusParameters = default(UpdateBlueprintStatusParameters);
-                updateBlueprintStatusParameters.status = selectedOption.blueprintStatus;
-                updateBlueprintStatusParameters.shouldExitEarly = true;
-                UpdateBlueprintStatusParameters p = updateBlueprintStatusParameters;
-                base.player.crafting.UpdateBlueprintDynamicStatus(in p);
-                num2 = selectedOption.blueprintStatus.EstimateFirstOutputMaxAmount();
+                RefreshCraftableBlueprint(selectedOption.asset);
+                craftableBlueprints.TryGetValue(selectedOption.asset, out selectedOption.craftable);
             }
-            if (value2 > 0 || num2 > 0)
-            {
-                selectedItemAvailableAmountLabel.Text = localization.format("AvailableAmount", value2);
-                selectedItemCraftableAmountLabel.Text = localization.format("CraftableAmount", num2);
-            }
-            else
-            {
-                ClearSelectedOption();
-            }
+            num2 = selectedOption.craftable.status?.EstimateOutputMaxAmount(selectedOption.craftable.structureOutputIndex) ?? 0;
+        }
+        if (value2 > 0 || num2 > 0)
+        {
+            selectedItemAvailableAmountLabel.Text = localization.format("AvailableAmount", value2);
+            selectedItemCraftableAmountLabel.Text = localization.format("CraftableAmount", num2);
+        }
+        else
+        {
+            ClearSelectedOption();
         }
     }
 

@@ -168,7 +168,7 @@ public class UseableGun : Useable
     /// </summary>
     private int fireDelayCounter;
 
-    private int aimAccuracy;
+    private int _aimAccuracy;
 
     private uint steadyAccuracy;
 
@@ -316,6 +316,21 @@ public class UseableGun : Useable
     private static int ScopeMaterialAlphaId = Shader.PropertyToID("_Alpha");
 
     public bool isAiming { get; protected set; }
+
+    private int AimAccuracy
+    {
+        set
+        {
+            if (_aimAccuracy != value)
+            {
+                _aimAccuracy = value;
+                if (base.channel.IsLocalPlayer)
+                {
+                    base.player.look.IsScopeHalfwayAimedIn = _aimAccuracy >= 5;
+                }
+            }
+        }
+    }
 
     /// <summary>
     /// Should stat modifiers from the current tactical attachment be used?
@@ -2834,7 +2849,7 @@ public class UseableGun : Useable
         {
             bullets = new List<BulletInfo>();
         }
-        aimAccuracy = 0;
+        AimAccuracy = 0;
         steadyAccuracy = 0u;
         canSteady = true;
         swayTime = Time.time;
@@ -2905,6 +2920,7 @@ public class UseableGun : Useable
             PlayerUI.disableCrosshair();
             base.player.look.disableScope();
             base.player.look.disableZoom();
+            base.player.look.IsScopeHalfwayAimedIn = false;
             PlayerStance stance = base.player.stance;
             stance.onStanceUpdated = (StanceUpdated)Delegate.Remove(stance.onStanceUpdated, new StanceUpdated(UpdateCrosshairEnabled));
             PlayerLook look = base.player.look;
@@ -3502,14 +3518,14 @@ public class UseableGun : Useable
         ballistics();
         if (isAiming)
         {
-            if (aimAccuracy < maxAimingAccuracy)
+            if (_aimAccuracy < maxAimingAccuracy)
             {
-                aimAccuracy++;
+                AimAccuracy = _aimAccuracy + 1;
             }
         }
-        else if (aimAccuracy > 0)
+        else if (_aimAccuracy > 0)
         {
-            aimAccuracy--;
+            AimAccuracy = _aimAccuracy - 1;
         }
     }
 
@@ -4702,22 +4718,22 @@ public class UseableGun : Useable
         float num = (float)((Time.timeAsDouble - Time.fixedTimeAsDouble) / (double)Time.fixedDeltaTime);
         if (isAiming)
         {
-            if (aimAccuracy < maxAimingAccuracy)
+            if (_aimAccuracy < maxAimingAccuracy)
             {
-                return MathfEx.SmootherStep01((float)aimAccuracy * maxAimingAccuracyReciprocal + num * maxAimingAccuracyReciprocal);
+                return MathfEx.SmootherStep01((float)_aimAccuracy * maxAimingAccuracyReciprocal + num * maxAimingAccuracyReciprocal);
             }
             return 1f;
         }
-        if (aimAccuracy > 0)
+        if (_aimAccuracy > 0)
         {
-            return MathfEx.SmootherStep01((float)aimAccuracy * maxAimingAccuracyReciprocal - num * maxAimingAccuracyReciprocal);
+            return MathfEx.SmootherStep01((float)_aimAccuracy * maxAimingAccuracyReciprocal - num * maxAimingAccuracyReciprocal);
         }
         return 0f;
     }
 
     private float GetSimulationAimAlpha()
     {
-        return (float)aimAccuracy * maxAimingAccuracyReciprocal;
+        return (float)_aimAccuracy * maxAimingAccuracyReciprocal;
     }
 
     private void UpdateInfoBoxVisibility()
@@ -4968,9 +4984,9 @@ public class UseableGun : Useable
         }
         maxAimingAccuracy = Mathf.Clamp(Mathf.RoundToInt(num * 50f), 1, 200);
         maxAimingAccuracyReciprocal = 1f / (float)maxAimingAccuracy;
-        if (aimAccuracy > maxAimingAccuracy)
+        if (_aimAccuracy > maxAimingAccuracy)
         {
-            aimAccuracy = maxAimingAccuracy;
+            AimAccuracy = maxAimingAccuracy;
         }
         if (equippedGunAsset.shouldScaleAimAnimations)
         {

@@ -28,6 +28,23 @@ Blueprints
 		]
 		Effect "84347b13028340b8976033c08675d458" // Wrench
 	}
+	{
+		CategoryTag "71d9e182c18b4aad8e87778e4f621995" // Structures
+		InputItems "a621d1ed11fc414bbb94c6b4469349a7" // Stacked Bricks
+		InputItems_Critical true
+		OutputItems
+		[
+			this
+			"cc444c3f2f354ff5a81f18cf9b980fff x 7" // Bricks
+		]
+		Skill Craft
+		Skill_Level 2
+		RequiresNearbyCraftingTags
+		[
+			"7b82c125a5a54984b8bb26576b59e977" // Workbench
+		]
+		Effect "84347b13028340b8976033c08675d458" // Wrench
+	}
 ]
 
 PlacementAudioClip Sounds/WoodenPlacement.mp3

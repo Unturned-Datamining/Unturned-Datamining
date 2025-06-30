@@ -30,9 +30,43 @@ Blueprints
 	}
 	{
 		CategoryTag "71d9e182c18b4aad8e87778e4f621995" // Structures
+		InputItems "eb3dcd948171403e9d9c55f7e2d30a03" // Stacked Metal Sheets
+		InputItems_Critical true
+		OutputItems
+		[
+			this
+			"7f06b16642724683bd61584a52fde981 x 2" // Metal Sheet
+		]
+		Skill Craft
+		Skill_Level 2
+		RequiresNearbyCraftingTags
+		[
+			"7b82c125a5a54984b8bb26576b59e977" // Workbench
+		]
+		Effect "84347b13028340b8976033c08675d458" // Wrench
+	}
+	{
+		CategoryTag "71d9e182c18b4aad8e87778e4f621995" // Structures
 		InputItems "21ede8ebffb14c5580e8c7ad149e335e x 6" // Metal Scrap
 		InputItems_Critical true
 		OutputItems this
+		Skill Craft
+		Skill_Level 2
+		RequiresNearbyCraftingTags
+		[
+			"7b82c125a5a54984b8bb26576b59e977" // Workbench
+		]
+		Effect "84347b13028340b8976033c08675d458" // Wrench
+	}
+	{
+		CategoryTag "71d9e182c18b4aad8e87778e4f621995" // Structures
+		InputItems "43025c40631542f7a344fcb72c62399f" // Stacked Metal Scraps
+		InputItems_Critical true
+		OutputItems
+		[
+			this
+			"21ede8ebffb14c5580e8c7ad149e335e x 4" // Metal Scrap
+		]
 		Skill Craft
 		Skill_Level 2
 		RequiresNearbyCraftingTags

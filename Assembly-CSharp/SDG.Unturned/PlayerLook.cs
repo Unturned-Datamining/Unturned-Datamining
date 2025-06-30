@@ -59,6 +59,8 @@ public class PlayerLook : PlayerCaller
 
     private bool _isScopeActive;
 
+    private bool _isScopeHalfwayAimedIn;
+
     internal float scopeAlpha;
 
     private ELightingVision scopeVision;
@@ -265,6 +267,22 @@ public class PlayerLook : PlayerCaller
 
     public bool isScopeActive => _isScopeActive;
 
+    internal bool IsScopeHalfwayAimedIn
+    {
+        get
+        {
+            return _isScopeHalfwayAimedIn;
+        }
+        set
+        {
+            if (_isScopeHalfwayAimedIn != value)
+            {
+                _isScopeHalfwayAimedIn = value;
+                UpdateSingleRenderScope();
+            }
+        }
+    }
+
     public Transform aim => _aim;
 
     /// <summary>
@@ -466,7 +484,7 @@ public class PlayerLook : PlayerCaller
     private void UpdateSingleRenderScope()
     {
         bool flag = perspective == EPlayerPerspective.FIRST && isScopeActive && GraphicsSettings.scopeQuality == EGraphicQuality.OFF;
-        if (flag && scopeVision != 0)
+        if (flag && scopeVision != 0 && IsScopeHalfwayAimedIn)
         {
             isSingleRenderScopeVisionAppliedToLighting = true;
             ApplyScopeVisionToLighting();

@@ -235,8 +235,13 @@ public class SleekSelectedBlueprint : SleekWrapper
                 descriptionLabel.Text = RichTextUtil.wrapWithColor(PlayerDashboardInventoryUI.localization.format("Rarity_Type_Label", arg4, arg5), ItemTool.getRarityColorUI(itemAsset2.rarity));
             }
         }
-        else if (SelectedBlueprint.outputs.Length == 1)
+        else
         {
+            if (SelectedBlueprint.outputs.Length != 1)
+            {
+                summaryContainer.IsVisible = false;
+                return;
+            }
             ItemAsset itemAsset3 = SelectedBlueprint.outputs[0].FindItemAsset();
             if (itemAsset3 == null)
             {
@@ -272,10 +277,6 @@ public class SleekSelectedBlueprint : SleekWrapper
                 string arg7 = localization5.format("Type_" + rarity);
                 descriptionLabel.Text = RichTextUtil.wrapWithColor(PlayerDashboardInventoryUI.localization.format("Rarity_Type_Label", arg6, arg7), ItemTool.getRarityColorUI(itemAsset3.rarity));
             }
-        }
-        else
-        {
-            summaryContainer.IsVisible = false;
         }
         summaryContainer.IsVisible = true;
         if (descriptionLabel.IsVisible)

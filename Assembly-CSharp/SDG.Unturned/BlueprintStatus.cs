@@ -84,13 +84,13 @@ internal class BlueprintStatus
     /// Currently only used by housing planner.
     /// Doesn't work with NPC conditions / rewards.
     /// </summary>
-    public int EstimateFirstOutputMaxAmount()
+    public int EstimateOutputMaxAmount(int outputIndex)
     {
-        if (blueprint.outputs == null || blueprint.outputs.Length != 1)
+        if (outputIndex < 0 || blueprint.outputs == null || outputIndex >= blueprint.outputs.Length)
         {
             return 0;
         }
-        return blueprint.outputs[0].amount * EstimateMaxCraftingRepeatCount();
+        return blueprint.outputs[outputIndex].amount * EstimateMaxCraftingRepeatCount();
     }
 
     internal void UpdateCraftabilityScore()
