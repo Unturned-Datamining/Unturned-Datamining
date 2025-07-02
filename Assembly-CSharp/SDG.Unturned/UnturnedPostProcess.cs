@@ -166,8 +166,8 @@ public class UnturnedPostProcess : MonoBehaviour
     {
         if (zoomFactor > 1.0001f)
         {
-            float a = (zoomFactor - 1f) * 2f;
-            baseProfile.singleRenderScope.standardDeviation.Override(Mathf.Min(a, 32f));
+            float a = (zoomFactor - 1f) * 0.5f;
+            baseProfile.singleRenderScope.standardDeviation.Override(Mathf.Min(a, 8f));
         }
         else
         {

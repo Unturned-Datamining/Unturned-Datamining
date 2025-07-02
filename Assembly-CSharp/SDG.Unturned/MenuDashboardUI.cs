@@ -190,13 +190,14 @@ public class MenuDashboardUI
         }
     }
 
-    private static void InsertSteamBbCode(ISleekElement parent, string contents, bool useLinkFiltering)
+    private static void InsertSteamBbCode(ISleekElement parent, string contents, bool useLinkFiltering, bool inferLineBreaks)
     {
         if (string.IsNullOrEmpty(contents))
         {
             return;
         }
         BbCodeTokenizer bbCodeTokenizer = new BbCodeTokenizer();
+        bbCodeTokenizer.ParseLineBreaks = !inferLineBreaks;
         List<BbCodeToken> tokens = bbCodeTokenizer.Tokenize(contents);
         if (bbCodeTokenizer.HasError)
         {
@@ -209,6 +210,7 @@ public class MenuDashboardUI
             return;
         }
         BbCodeWidgetConverter bbCodeWidgetConverter = new BbCodeWidgetConverter();
+        bbCodeWidgetConverter.InferLineBreaks = inferLineBreaks;
         List<BbCodeWidget> list = bbCodeWidgetConverter.Convert(tokens);
         if (bbCodeWidgetConverter.HasError)
         {
@@ -356,7 +358,7 @@ public class MenuDashboardUI
                 sleekBox.AddChild(sleekLabel2);
                 try
                 {
-                    InsertSteamBbCode(sleekBox, newsItem.Contents, useLinkFiltering: false);
+                    InsertSteamBbCode(sleekBox, newsItem.Contents, useLinkFiltering: false, inferLineBreaks: true);
                 }
                 catch (Exception e)
                 {
@@ -556,7 +558,7 @@ public class MenuDashboardUI
             {
                 contents = featured.overrideDescription;
             }
-            InsertSteamBbCode(sleekElement2, contents, useLinkFiltering: true);
+            InsertSteamBbCode(sleekElement2, contents, useLinkFiltering: true, inferLineBreaks: false);
         }
         catch (Exception e)
         {

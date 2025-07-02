@@ -9,6 +9,8 @@ namespace SDG.Unturned;
 /// </summary>
 public class BbCodeTokenizer
 {
+    private bool _parseLineBreaks = true;
+
     private TextReader inputReader;
 
     private int currentLineNumber;
@@ -26,6 +28,24 @@ public class BbCodeTokenizer
     private StringBuilder tagStringBuilder;
 
     private StringBuilder stringBuilder;
+
+    /// <summary>
+    /// If true, parse newlines in the input as LineBreak tokens. (default true)
+    /// If false, exclude LineBreak tokens from output.
+    /// Steam's new visual editor doesn't emit newlines, instead inferring line breaks from paragraph blocks. To
+    /// make life easier we will do the same for the main menu announcement feed.
+    /// </summary>
+    public bool ParseLineBreaks
+    {
+        get
+        {
+            return _parseLineBreaks;
+        }
+        set
+        {
+            _parseLineBreaks = value;
+        }
+    }
 
     public bool HasError => hasError;
 
@@ -118,12 +138,18 @@ public class BbCodeTokenizer
             {
                 ReadChar();
             }
-            outputTokens.Add(new BbCodeToken(EBbCodeTokenType.LineBreak));
+            if (_parseLineBreaks)
+            {
+                outputTokens.Add(new BbCodeToken(EBbCodeTokenType.LineBreak));
+            }
         }
         else if (currentChar == '\n')
         {
             ReadChar();
-            outputTokens.Add(new BbCodeToken(EBbCodeTokenType.LineBreak));
+            if (_parseLineBreaks)
+            {
+                outputTokens.Add(new BbCodeToken(EBbCodeTokenType.LineBreak));
+            }
         }
         else
         {
@@ -162,7 +188,7 @@ public class BbCodeTokenizer
                 ReadChar();
                 break;
             }
-            if (currentChar == '=')
+            if (currentChar == ' ' || currentChar == '=')
             {
                 flag = true;
                 ReadChar();
@@ -192,13 +218,21 @@ public class BbCodeTokenizer
         bool flag2 = false;
         if (text.StartsWith('/'))
         {
-            if (string.Equals(text, "/b"))
+            if (string.Equals(text, "/p"))
+            {
+                outputTokens.Add(new BbCodeToken(EBbCodeTokenType.ParagraphClose));
+            }
+            else if (string.Equals(text, "/b"))
             {
                 outputTokens.Add(new BbCodeToken(EBbCodeTokenType.BoldClose));
             }
             else if (string.Equals(text, "/i"))
             {
                 outputTokens.Add(new BbCodeToken(EBbCodeTokenType.ItalicClose));
+            }
+            else if (string.Equals(text, "/*"))
+            {
+                outputTokens.Add(new BbCodeToken(EBbCodeTokenType.ListItemClose));
             }
             else if (string.Equals(text, "/list"))
             {
@@ -241,6 +275,10 @@ public class BbCodeTokenizer
                 flag2 = true;
             }
         }
+        else if (string.Equals(text, "p"))
+        {
+            outputTokens.Add(new BbCodeToken(EBbCodeTokenType.ParagraphOpen));
+        }
         else if (string.Equals(text, "b"))
         {
             outputTokens.Add(new BbCodeToken(EBbCodeTokenType.BoldOpen));
@@ -251,7 +289,7 @@ public class BbCodeTokenizer
         }
         else if (string.Equals(text, "*"))
         {
-            outputTokens.Add(new BbCodeToken(EBbCodeTokenType.ListItem));
+            outputTokens.Add(new BbCodeToken(EBbCodeTokenType.ListItemOpen));
         }
         else if (string.Equals(text, "list"))
         {
@@ -279,7 +317,7 @@ public class BbCodeTokenizer
         }
         else if (string.Equals(text, "img"))
         {
-            outputTokens.Add(new BbCodeToken(EBbCodeTokenType.ImgOpen));
+            outputTokens.Add(new BbCodeToken(EBbCodeTokenType.ImgOpen, tokenValue));
         }
         else if (string.Equals(text, "previewyoutube"))
         {

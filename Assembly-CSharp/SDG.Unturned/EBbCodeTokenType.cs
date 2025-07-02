@@ -3,6 +3,10 @@ namespace SDG.Unturned;
 public enum EBbCodeTokenType
 {
     /// <summary>
+    /// Null token.
+    /// </summary>
+    Invalid,
+    /// <summary>
     /// Text between tags.
     /// </summary>
     String,
@@ -40,8 +44,15 @@ public enum EBbCodeTokenType
     OrderedListClose,
     /// <summary>
     /// [*] value
+    /// Nelson 2025-07-02: manually written lists typically don't have a ListItemClose token.
     /// </summary>
-    ListItem,
+    ListItemOpen,
+    /// <summary>
+    /// [/*]
+    /// Nelson 2025-07-02: Steam's new visual editor adds closing tokens to list items, but
+    /// manually-written list items typically don't have them.
+    /// </summary>
+    ListItemClose,
     /// <summary>
     /// [h1]
     /// </summary>
@@ -101,5 +112,13 @@ public enum EBbCodeTokenType
     /// <summary>
     /// [/quote]
     /// </summary>
-    QuoteClose
+    QuoteClose,
+    /// <summary>
+    /// [p]
+    /// </summary>
+    ParagraphOpen,
+    /// <summary>
+    /// [/p]
+    /// </summary>
+    ParagraphClose
 }

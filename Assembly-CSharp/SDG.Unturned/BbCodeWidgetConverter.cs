@@ -8,6 +8,8 @@ namespace SDG.Unturned;
 /// </summary>
 public class BbCodeWidgetConverter
 {
+    private bool _inferLineBreaks;
+
     private List<BbCodeToken> inputTokens;
 
     private int inputIndex;
@@ -21,6 +23,24 @@ public class BbCodeWidgetConverter
     private string errorMessage;
 
     private StringBuilder richTextStringBuilder;
+
+    /// <summary>
+    /// If false, expect LineBreak tokens in input. (default false)
+    /// If true, insert line breaks where appropriate.
+    /// Steam's new visual editor doesn't emit newlines, instead inferring line breaks from paragraph blocks. To
+    /// make life easier we will do the same for the main menu announcement feed.
+    /// </summary>
+    public bool InferLineBreaks
+    {
+        get
+        {
+            return _inferLineBreaks;
+        }
+        set
+        {
+            _inferLineBreaks = value;
+        }
+    }
 
     public bool HasError => hasError;
 
@@ -74,6 +94,15 @@ public class BbCodeWidgetConverter
         }
     }
 
+    private EBbCodeTokenType PeekNextTokenType()
+    {
+        if (inputIndex + 1 < inputTokens.Count)
+        {
+            return inputTokens[inputIndex + 1].tokenType;
+        }
+        return EBbCodeTokenType.Invalid;
+    }
+
     private void ConvertToken(List<BbCodeWidget> outputWidgets)
     {
         if (currentToken.tokenType == EBbCodeTokenType.PreviewYouTubeOpen)
@@ -96,10 +125,11 @@ public class BbCodeWidgetConverter
 
     private void ConvertPreviewYouTube(List<BbCodeWidget> outputWidgets)
     {
-        if (!string.IsNullOrEmpty(currentToken.tokenValue))
+        string unquotedValue = currentToken.GetUnquotedValue();
+        if (!string.IsNullOrEmpty(unquotedValue))
         {
-            int num = currentToken.tokenValue.IndexOf(';');
-            string widgetData = ((num <= 0) ? currentToken.tokenValue : currentToken.tokenValue.Substring(0, num));
+            int num = unquotedValue.IndexOf(';');
+            string widgetData = ((num <= 0) ? unquotedValue : unquotedValue.Substring(0, num));
             outputWidgets.Add(new BbCodeWidget(EBbCodeWidgetType.YouTubeButton, widgetData));
         }
         AdvanceToken();
@@ -115,14 +145,28 @@ public class BbCodeWidgetConverter
 
     private void ConvertImage(List<BbCodeWidget> outputWidgets)
     {
+        string value;
+        bool flag = currentToken.TryParseValue("src", out value);
         AdvanceToken();
         if (hasToken && currentToken.tokenType == EBbCodeTokenType.String)
         {
-            outputWidgets.Add(new BbCodeWidget(EBbCodeWidgetType.Image, currentToken.tokenValue));
+            if (!flag)
+            {
+                value = currentToken.tokenValue;
+            }
+            outputWidgets.Add(new BbCodeWidget(EBbCodeWidgetType.Image, value));
             AdvanceToken();
+            if (hasToken && currentToken.tokenType == EBbCodeTokenType.ImgClose)
+            {
+                AdvanceToken();
+            }
         }
-        if (hasToken && currentToken.tokenType == EBbCodeTokenType.ImgClose)
+        else if (hasToken && currentToken.tokenType == EBbCodeTokenType.ImgClose)
         {
+            if (flag)
+            {
+                outputWidgets.Add(new BbCodeWidget(EBbCodeWidgetType.Image, value));
+            }
             AdvanceToken();
         }
         if (hasToken && currentToken.tokenType == EBbCodeTokenType.LineBreak)
@@ -133,18 +177,18 @@ public class BbCodeWidgetConverter
 
     private void ConvertLinkButton(List<BbCodeWidget> outputWidgets)
     {
-        string tokenValue = currentToken.tokenValue;
-        string text = null;
+        string text = currentToken.GetUnquotedValue();
+        string text2 = null;
         AdvanceToken();
         if (hasToken && currentToken.tokenType == EBbCodeTokenType.String)
         {
-            if (string.IsNullOrEmpty(tokenValue))
+            if (string.IsNullOrEmpty(text))
             {
-                tokenValue = currentToken.tokenValue;
+                text = currentToken.tokenValue;
             }
             else
             {
-                text = currentToken.tokenValue;
+                text2 = currentToken.tokenValue;
             }
             AdvanceToken();
         }
@@ -156,13 +200,13 @@ public class BbCodeWidgetConverter
         {
             AdvanceToken();
         }
-        if (string.IsNullOrEmpty(text))
+        if (string.IsNullOrEmpty(text2))
         {
-            outputWidgets.Add(new BbCodeWidget(EBbCodeWidgetType.LinkButton, tokenValue));
+            outputWidgets.Add(new BbCodeWidget(EBbCodeWidgetType.LinkButton, text));
         }
         else
         {
-            outputWidgets.Add(new BbCodeWidget(EBbCodeWidgetType.LinkButton, tokenValue + "," + text));
+            outputWidgets.Add(new BbCodeWidget(EBbCodeWidgetType.LinkButton, text + "," + text2));
         }
     }
 
@@ -171,9 +215,10 @@ public class BbCodeWidgetConverter
         richTextStringBuilder.Clear();
         bool flag = false;
         int num = 0;
-        EBbCodeTokenType tokenType;
+        bool flag2 = true;
         do
         {
+            bool flag3 = false;
             switch (currentToken.tokenType)
             {
             case EBbCodeTokenType.String:
@@ -185,6 +230,26 @@ public class BbCodeWidgetConverter
             case EBbCodeTokenType.BoldClose:
                 richTextStringBuilder.Append("</b>");
                 break;
+            case EBbCodeTokenType.ListItemClose:
+            case EBbCodeTokenType.ParagraphClose:
+                if (_inferLineBreaks)
+                {
+                    if (!flag2)
+                    {
+                        richTextStringBuilder.Append('\n');
+                    }
+                    switch (PeekNextTokenType())
+                    {
+                    case EBbCodeTokenType.H1Open:
+                    case EBbCodeTokenType.H2Open:
+                    case EBbCodeTokenType.H3Open:
+                    case EBbCodeTokenType.ParagraphOpen:
+                        richTextStringBuilder.Append('\n');
+                        break;
+                    }
+                }
+                flag3 = true;
+                break;
             case EBbCodeTokenType.ItalicOpen:
                 richTextStringBuilder.Append("<i>");
                 break;
@@ -192,37 +257,75 @@ public class BbCodeWidgetConverter
                 richTextStringBuilder.Append("</i>");
                 break;
             case EBbCodeTokenType.H1Open:
+                if (!flag2 && _inferLineBreaks)
+                {
+                    richTextStringBuilder.Append("\n\n");
+                }
+                flag3 = true;
                 richTextStringBuilder.Append("<size=20>");
                 break;
             case EBbCodeTokenType.H1Close:
                 richTextStringBuilder.Append("</size>");
+                if (_inferLineBreaks)
+                {
+                    richTextStringBuilder.Append("\n\n");
+                }
+                flag3 = true;
                 break;
             case EBbCodeTokenType.H2Open:
+                if (!flag2 && _inferLineBreaks)
+                {
+                    richTextStringBuilder.Append("\n\n");
+                }
+                flag3 = true;
                 richTextStringBuilder.Append("<size=17>");
                 break;
             case EBbCodeTokenType.H2Close:
                 richTextStringBuilder.Append("</size>");
+                if (_inferLineBreaks)
+                {
+                    richTextStringBuilder.Append("\n\n");
+                }
+                flag3 = true;
                 break;
             case EBbCodeTokenType.H3Open:
+                if (!flag2 && _inferLineBreaks)
+                {
+                    richTextStringBuilder.Append("\n\n");
+                }
+                flag3 = true;
                 richTextStringBuilder.Append("<size=14>");
                 break;
             case EBbCodeTokenType.H3Close:
                 richTextStringBuilder.Append("</size>");
+                if (_inferLineBreaks)
+                {
+                    richTextStringBuilder.Append("\n\n");
+                }
+                flag3 = true;
                 break;
             case EBbCodeTokenType.BulletListOpen:
             case EBbCodeTokenType.BulletListClose:
                 PushPendingRichText(outputWidgets);
+                flag3 = true;
                 break;
             case EBbCodeTokenType.OrderedListOpen:
                 flag = true;
                 num = 0;
                 PushPendingRichText(outputWidgets);
+                flag3 = true;
                 break;
             case EBbCodeTokenType.OrderedListClose:
                 flag = false;
                 PushPendingRichText(outputWidgets);
+                flag3 = true;
                 break;
-            case EBbCodeTokenType.ListItem:
+            case EBbCodeTokenType.ListItemOpen:
+                if (!flag2 && _inferLineBreaks)
+                {
+                    richTextStringBuilder.Append('\n');
+                }
+                flag3 = true;
                 if (flag)
                 {
                     richTextStringBuilder.Append(num + 1);
@@ -231,11 +334,12 @@ public class BbCodeWidgetConverter
                 }
                 else
                 {
-                    richTextStringBuilder.Append("- ");
+                    richTextStringBuilder.Append("• ");
                 }
                 break;
             case EBbCodeTokenType.LineBreak:
                 richTextStringBuilder.Append('\n');
+                flag3 = true;
                 break;
             case EBbCodeTokenType.QuoteOpen:
                 if (string.IsNullOrEmpty(currentToken.tokenValue))
@@ -249,12 +353,22 @@ public class BbCodeWidgetConverter
                 break;
             case EBbCodeTokenType.QuoteClose:
                 richTextStringBuilder.Append("</indent>");
+                if (_inferLineBreaks)
+                {
+                    richTextStringBuilder.Append('\n');
+                }
+                flag3 = true;
                 break;
             }
-            tokenType = currentToken.tokenType;
+            EBbCodeTokenType tokenType = currentToken.tokenType;
             AdvanceToken();
+            if (currentToken.tokenType == EBbCodeTokenType.PreviewYouTubeOpen || currentToken.tokenType == EBbCodeTokenType.ImgOpen || (currentToken.tokenType == EBbCodeTokenType.UrlOpen && (tokenType == EBbCodeTokenType.LineBreak || tokenType == EBbCodeTokenType.ParagraphOpen)))
+            {
+                break;
+            }
+            flag2 = flag3;
         }
-        while (currentToken.tokenType != EBbCodeTokenType.PreviewYouTubeOpen && currentToken.tokenType != EBbCodeTokenType.ImgOpen && (currentToken.tokenType != EBbCodeTokenType.UrlOpen || tokenType != EBbCodeTokenType.LineBreak) && hasToken);
+        while (hasToken);
         PushPendingRichText(outputWidgets);
     }
 
