@@ -178,6 +178,6 @@ public static class CharacterControllerExtension
 
     private static void OnLogMemoryUsage(List<string> results)
     {
-        results.Add($"Character controller pending changes: {pendingChanges.Count}");
+        results.Add($"Character controller pending changes: {pendingChanges?.Count}");
     }
 }

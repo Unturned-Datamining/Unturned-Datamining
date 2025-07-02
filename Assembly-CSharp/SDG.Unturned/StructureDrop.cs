@@ -151,7 +151,7 @@ public class StructureDrop
     public void ReceiveTransformRequest(in ServerInvocationContext context, Vector3 point, Quaternion rotation)
     {
         Player player = context.GetPlayer();
-        if (player == null || player.life.isDead || !player.look.canUseWorkzone || !StructureManager.tryGetRegion(_model, out var x, out var y, out var _))
+        if (player == null || player.life.isDead || !player.look.canUseWorkzone || !Regions.tryGetCoordinate(serversideData.point, out var x, out var y))
         {
             return;
         }

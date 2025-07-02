@@ -119,6 +119,10 @@ public class SleekSelectedBlueprint : SleekWrapper
                 num += rewardsContainer.SizeOffset_Y;
             }
             detailScrollView.ContentSizeOffset = new Vector2(0f, num);
+            if (extendedDescriptionBox != null)
+            {
+                detailScrollView.ForceLayoutUpdate();
+            }
             RefreshPreferencesAndCraftButtonTooltip(PlayerCrafting.GetBlueprintPreferences(status.blueprint));
         }
     }

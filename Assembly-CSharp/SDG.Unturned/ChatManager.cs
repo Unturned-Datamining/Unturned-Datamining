@@ -498,19 +498,23 @@ public class ChatManager : SteamCaller
         if (string.Equals(text, "/copycameratransform", StringComparison.InvariantCultureIgnoreCase))
         {
             CopyCameraTransform();
+            return;
         }
-        else if (string.Equals(text, "/freezecameratransform", StringComparison.InvariantCultureIgnoreCase))
+        if (string.Equals(text, "/freezecameratransform", StringComparison.InvariantCultureIgnoreCase))
         {
             ToggleFreezeCameraTransform();
+            return;
+        }
+        if (string.Equals(text, "/logmemoryusage"))
+        {
+            CommandLogMemoryUsage.ExecuteAndCopyToClipboard();
         }
         else if (string.Equals(text, "/drawaudioreverbzones", StringComparison.InvariantCultureIgnoreCase))
         {
             DrawAudioReverbZones();
+            return;
         }
-        else
-        {
-            SendChatRequest.Invoke(ENetReliability.Reliable, (byte)mode, text);
-        }
+        SendChatRequest.Invoke(ENetReliability.Reliable, (byte)mode, text);
     }
 
     /// <summary>

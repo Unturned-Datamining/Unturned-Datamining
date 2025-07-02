@@ -977,8 +977,7 @@ public class StructureManager : SteamCaller
                 {
                     for (byte b3 = 0; b3 < Regions.WORLD_SIZE; b3++)
                     {
-                        StructureRegion region = regions[b2, b3];
-                        loadRegion(b, river, region);
+                        loadRegion(b, river);
                     }
                 }
             }
@@ -1048,7 +1047,7 @@ public class StructureManager : SteamCaller
         river.closeRiver();
     }
 
-    private static void loadRegion(byte version, River river, StructureRegion region)
+    private static void loadRegion(byte version, River river)
     {
         ushort num = river.readUInt16();
         for (ushort num2 = 0; num2 < num; num2++)
@@ -1108,11 +1107,19 @@ public class StructureManager : SteamCaller
             }
             if (itemStructureAsset != null)
             {
-                NetId netId = NetIdRegistry.ClaimBlock(2u);
-                if (manager.spawnStructure(region, itemStructureAsset.GUID, vector, quaternion, (byte)Mathf.RoundToInt((float)(int)num3 / (float)(int)itemStructureAsset.health * 100f), num4, num5, netId) != null)
+                if (!Regions.tryGetCoordinate(vector, out var x, out var y))
                 {
-                    StructureData item = (region.drops.GetTail().serversideData = new StructureData(new Structure(itemStructureAsset, num3), vector, quaternion, num4, num5, newObjActiveDate, newInstanceID));
-                    region.structures.Add(item);
+                    UnturnedLog.warn($"Discarding loaded structure {itemStructureAsset.FriendlyName} because it is outside the maximum level size at {vector}");
+                }
+                else
+                {
+                    NetId netId = NetIdRegistry.ClaimBlock(2u);
+                    StructureRegion structureRegion = regions[x, y];
+                    if (manager.spawnStructure(structureRegion, itemStructureAsset.GUID, vector, quaternion, (byte)Mathf.RoundToInt((float)(int)num3 / (float)(int)itemStructureAsset.health * 100f), num4, num5, netId) != null)
+                    {
+                        StructureData item = (structureRegion.drops.GetTail().serversideData = new StructureData(new Structure(itemStructureAsset, num3), vector, quaternion, num4, num5, newObjActiveDate, newInstanceID));
+                        structureRegion.structures.Add(item);
+                    }
                 }
             }
         }

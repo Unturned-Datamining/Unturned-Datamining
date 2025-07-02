@@ -124,6 +124,6 @@ internal class AudioSourcePool : MonoBehaviour
 
     private void OnLogMemoryUsage(List<string> results)
     {
-        results.Add($"Audio source pool size: {availableComponents.Count}");
+        results.Add($"Audio source pool size: {availableComponents?.Count}");
     }
 }

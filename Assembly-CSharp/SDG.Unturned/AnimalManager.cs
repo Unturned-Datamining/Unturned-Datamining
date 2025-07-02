@@ -775,9 +775,9 @@ public class AnimalManager : SteamCaller
 
     private void OnLogMemoryUsage(List<string> results)
     {
-        results.Add($"Animals: {animals.Count}");
-        results.Add($"Animal packs: {packs.Count}");
-        results.Add($"Ticking animals: {tickingAnimals.Count}");
+        results.Add($"Animals: {animals?.Count}");
+        results.Add($"Animal packs: {packs?.Count}");
+        results.Add($"Ticking animals: {tickingAnimals?.Count}");
     }
 
     [Obsolete]

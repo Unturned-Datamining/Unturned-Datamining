@@ -2200,7 +2200,7 @@ public class VehicleManager : SteamCaller
 
     private void OnLogMemoryUsage(List<string> results)
     {
-        results.Add($"Vehicles: {vehicles.Count}");
+        results.Add($"Vehicles: {vehicles?.Count}");
     }
 
     public static void load()

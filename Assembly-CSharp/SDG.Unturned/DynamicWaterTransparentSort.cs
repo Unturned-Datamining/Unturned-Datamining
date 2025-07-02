@@ -146,7 +146,7 @@ public class DynamicWaterTransparentSort : MonoBehaviour
 
     private void OnLogMemoryUsage(List<string> results)
     {
-        results.Add($"Water transparent sort managed objects: {managedObjects.Count}");
+        results.Add($"Water transparent sort managed objects: {managedObjects?.Count}");
     }
 
     private void Update()

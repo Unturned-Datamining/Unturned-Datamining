@@ -160,6 +160,11 @@ internal class GlazierElementBase_IMGUI : GlazierElementBase
         }
     }
 
+    public override void ForceLayoutUpdate()
+    {
+        isTransformDirty = true;
+    }
+
     protected virtual void TransformChildDrawPositionIntoParentSpace(ref Vector2 position)
     {
     }

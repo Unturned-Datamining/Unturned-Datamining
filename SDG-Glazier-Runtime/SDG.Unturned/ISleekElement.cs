@@ -83,4 +83,6 @@ public interface ISleekElement
     Vector2 GetAbsoluteSize();
 
     void SetAsFirstSibling();
+
+    void ForceLayoutUpdate();
 }

@@ -357,6 +357,11 @@ internal abstract class GlazierElementBase_uGUI : GlazierElementBase
         }
     }
 
+    public override void ForceLayoutUpdate()
+    {
+        LayoutRebuilder.MarkLayoutForRebuild(transform);
+    }
+
     protected override void UpdateDirtyTransform()
     {
         isTransformDirty = false;

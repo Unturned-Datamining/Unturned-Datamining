@@ -881,68 +881,74 @@ public class MenuPlayServerInfoUI
                 }
                 int num3 = value13.IndexOf('.');
                 int num4 = value13.IndexOf('=', num3 + 1);
-                if (num3 >= 0 && num4 >= 0)
+                if (num3 < 0 || num4 < 0)
                 {
-                    string fieldName = value13.Substring(0, num3);
-                    string fieldName2 = value13.Substring(num3 + 1, num4 - num3 - 1);
-                    string text3 = value13.Substring(num4 + 1);
-                    string text4 = null;
-                    float result7;
-                    int result8;
-                    if (text3 == "T")
-                    {
-                        text4 = localization.format("Yes");
-                    }
-                    else if (text3 == "F")
-                    {
-                        text4 = localization.format("No");
-                    }
-                    else if (float.TryParse(text3, NumberStyles.Any, CultureInfo.InvariantCulture, out result7))
-                    {
-                        text4 = result7.ToString();
-                    }
-                    else if (int.TryParse(text3, NumberStyles.Any, CultureInfo.InvariantCulture, out result8))
-                    {
-                        text4 = result8.ToString();
-                    }
-                    if (string.IsNullOrEmpty(text4))
-                    {
-                        ISleekLabel sleekLabel2 = Glazier.Get().CreateLabel();
-                        sleekLabel2.PositionOffset_X = 5f;
-                        sleekLabel2.PositionOffset_Y = num2;
-                        sleekLabel2.SizeOffset_X = -10f;
-                        sleekLabel2.SizeOffset_Y = 30f;
-                        sleekLabel2.SizeScale_X = 1f;
-                        sleekLabel2.TextAlignment = TextAnchor.MiddleLeft;
-                        sleekLabel2.TextColor = Color.red;
-                        sleekLabel2.Text = value13;
-                        configBox.AddChild(sleekLabel2);
-                    }
-                    else
-                    {
-                        ISleekLabel sleekLabel3 = Glazier.Get().CreateLabel();
-                        sleekLabel3.PositionOffset_X = 5f;
-                        sleekLabel3.PositionOffset_Y = num2;
-                        sleekLabel3.SizeOffset_X = -5f;
-                        sleekLabel3.SizeOffset_Y = 30f;
-                        sleekLabel3.SizeScale_X = 0.25f;
-                        sleekLabel3.TextAlignment = TextAnchor.MiddleRight;
-                        sleekLabel3.Text = MenuPlayConfigUI.sanitizeName(fieldName);
-                        sleekLabel3.TextColor = new SleekColor(ESleekTint.FONT, 0.5f);
-                        configBox.AddChild(sleekLabel3);
-                        ISleekLabel sleekLabel4 = Glazier.Get().CreateLabel();
-                        sleekLabel4.PositionOffset_X = 5f;
-                        sleekLabel4.PositionOffset_Y = num2;
-                        sleekLabel4.PositionScale_X = 0.25f;
-                        sleekLabel4.SizeOffset_X = -5f;
-                        sleekLabel4.SizeOffset_Y = 30f;
-                        sleekLabel4.SizeScale_X = 0.75f;
-                        sleekLabel4.TextAlignment = TextAnchor.MiddleLeft;
-                        sleekLabel4.Text = localization.format("Rule", MenuPlayConfigUI.sanitizeName(fieldName2), text4);
-                        configBox.AddChild(sleekLabel4);
-                    }
-                    num2 += 20;
+                    continue;
                 }
+                bool flag = string.Equals(value13, "Gameplay.Disable_Motion_Sickness_Options");
+                string fieldName = value13.Substring(0, num3);
+                string fieldName2 = value13.Substring(num3 + 1, num4 - num3 - 1);
+                string text3 = value13.Substring(num4 + 1);
+                string text4 = null;
+                float result7;
+                int result8;
+                if (text3 == "T")
+                {
+                    text4 = localization.format("Yes");
+                }
+                else if (text3 == "F")
+                {
+                    text4 = localization.format("No");
+                }
+                else if (float.TryParse(text3, NumberStyles.Any, CultureInfo.InvariantCulture, out result7))
+                {
+                    text4 = result7.ToString();
+                }
+                else if (int.TryParse(text3, NumberStyles.Any, CultureInfo.InvariantCulture, out result8))
+                {
+                    text4 = result8.ToString();
+                }
+                if (string.IsNullOrEmpty(text4))
+                {
+                    ISleekLabel sleekLabel2 = Glazier.Get().CreateLabel();
+                    sleekLabel2.PositionOffset_X = 5f;
+                    sleekLabel2.PositionOffset_Y = num2;
+                    sleekLabel2.SizeOffset_X = -10f;
+                    sleekLabel2.SizeOffset_Y = 30f;
+                    sleekLabel2.SizeScale_X = 1f;
+                    sleekLabel2.TextAlignment = TextAnchor.MiddleLeft;
+                    sleekLabel2.TextColor = ESleekTint.BAD;
+                    sleekLabel2.Text = value13;
+                    configBox.AddChild(sleekLabel2);
+                }
+                else
+                {
+                    ISleekLabel sleekLabel3 = Glazier.Get().CreateLabel();
+                    sleekLabel3.PositionOffset_X = 5f;
+                    sleekLabel3.PositionOffset_Y = num2;
+                    sleekLabel3.SizeOffset_X = -5f;
+                    sleekLabel3.SizeOffset_Y = 30f;
+                    sleekLabel3.SizeScale_X = 0.25f;
+                    sleekLabel3.TextAlignment = TextAnchor.MiddleRight;
+                    sleekLabel3.Text = MenuPlayConfigUI.sanitizeName(fieldName);
+                    sleekLabel3.TextColor = new SleekColor(ESleekTint.FONT, 0.5f);
+                    configBox.AddChild(sleekLabel3);
+                    ISleekLabel sleekLabel4 = Glazier.Get().CreateLabel();
+                    sleekLabel4.PositionOffset_X = 5f;
+                    sleekLabel4.PositionOffset_Y = num2;
+                    sleekLabel4.PositionScale_X = 0.25f;
+                    sleekLabel4.SizeOffset_X = -5f;
+                    sleekLabel4.SizeOffset_Y = 30f;
+                    sleekLabel4.SizeScale_X = 0.75f;
+                    sleekLabel4.TextAlignment = TextAnchor.MiddleLeft;
+                    sleekLabel4.Text = localization.format("Rule", MenuPlayConfigUI.sanitizeName(fieldName2), text4);
+                    if (flag)
+                    {
+                        sleekLabel4.TextColor = ESleekTint.BAD;
+                    }
+                    configBox.AddChild(sleekLabel4);
+                }
+                num2 += 20;
             }
             configBox.SizeOffset_Y = num2 + 10;
             if (num2 > 0)

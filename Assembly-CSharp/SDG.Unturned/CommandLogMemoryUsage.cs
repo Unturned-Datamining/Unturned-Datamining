@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Text;
 using Steamworks;
 using UnityEngine;
 
@@ -9,10 +10,9 @@ public class CommandLogMemoryUsage : Command
 {
     internal static Action<List<string>> OnExecuted;
 
-    protected override void execute(CSteamID executorID, string parameter)
+    private static void GatherInfo(List<string> results)
     {
-        List<string> list = new List<string>();
-        OnExecuted?.Invoke(list);
+        OnExecuted?.Invoke(results);
         Type[] array = new Type[13]
         {
             typeof(GameObject),
@@ -32,7 +32,7 @@ public class CommandLogMemoryUsage : Command
         foreach (Type type in array)
         {
             UnityEngine.Object[] array2 = UnityEngine.Object.FindObjectsOfType(type, includeInactive: true);
-            list.Add($"{type.Name}(s) in scene: {array2.Length}");
+            results.Add($"{type.Name}(s) in scene: {array2.Length}");
         }
         array = new Type[6]
         {
@@ -46,12 +46,31 @@ public class CommandLogMemoryUsage : Command
         foreach (Type type2 in array)
         {
             UnityEngine.Object[] array3 = Resources.FindObjectsOfTypeAll(type2);
-            list.Add($"{type2.Name}(s) in resources: {array3.Length}");
+            results.Add($"{type2.Name}(s) in resources: {array3.Length}");
         }
-        CommandWindow.Log($"{list.Count} memory usage result(s):");
-        for (int j = 0; j < list.Count; j++)
+    }
+
+    internal static void ExecuteAndCopyToClipboard()
+    {
+        List<string> list = new List<string>();
+        GatherInfo(list);
+        StringBuilder stringBuilder = new StringBuilder();
+        stringBuilder.AppendLine($"{list.Count} memory usage result(s):");
+        for (int i = 0; i < list.Count; i++)
         {
-            CommandWindow.Log($"[{j}] {list[j]}");
+            stringBuilder.AppendLine($"[{i}] {list[i]}");
+        }
+        GUIUtility.systemCopyBuffer = stringBuilder.ToString();
+    }
+
+    protected override void execute(CSteamID executorID, string parameter)
+    {
+        List<string> list = new List<string>();
+        GatherInfo(list);
+        CommandWindow.Log($"{list.Count} memory usage result(s):");
+        for (int i = 0; i < list.Count; i++)
+        {
+            CommandWindow.Log($"[{i}] {list[i]}");
         }
     }
 

@@ -314,6 +314,11 @@ public class SleekWrapper : ISleekElement
         implementation.SetAsFirstSibling();
     }
 
+    public void ForceLayoutUpdate()
+    {
+        implementation.ForceLayoutUpdate();
+    }
+
     public virtual void OnUpdate()
     {
     }

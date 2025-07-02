@@ -523,6 +523,8 @@ public abstract class GlazierElementBase : ISleekElement
 
     public abstract void SetAsFirstSibling();
 
+    public abstract void ForceLayoutUpdate();
+
     protected abstract void UpdateDirtyTransform();
 
     [Conditional("VALIDATE_GLAZIER_USE_AFTER_DESTROY")]

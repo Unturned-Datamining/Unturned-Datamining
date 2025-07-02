@@ -2506,8 +2506,7 @@ public class BarricadeManager : SteamCaller
                 {
                     for (byte b2 = 0; b2 < Regions.WORLD_SIZE; b2++)
                     {
-                        BarricadeRegion region = regions[b, b2];
-                        loadRegion(version, river, region);
+                        loadRegion(version, river, null);
                     }
                 }
                 if (version > 1)
@@ -2534,8 +2533,8 @@ public class BarricadeManager : SteamCaller
                         a = (ushort)Mathf.Min(a, vehicleRegions.Count);
                         for (int i = 0; i < a; i++)
                         {
-                            BarricadeRegion region2 = vehicleRegions[i];
-                            loadRegion(version, river, region2);
+                            BarricadeRegion regionOverride = vehicleRegions[i];
+                            loadRegion(version, river, regionOverride);
                         }
                     }
                 }
@@ -2632,7 +2631,7 @@ public class BarricadeManager : SteamCaller
         UnturnedLog.info(message);
     }
 
-    private static void loadRegion(byte version, River river, BarricadeRegion region)
+    private static void loadRegion(byte version, River river, BarricadeRegion regionOverride)
     {
         ushort num = river.readUInt16();
         for (ushort num2 = 0; num2 < num; num2++)
@@ -2692,29 +2691,38 @@ public class BarricadeManager : SteamCaller
                 newObjActiveDate = Provider.time;
             }
             byte b4 = ((version < 18) ? byte.MaxValue : river.readByte());
-            if (itemBarricadeAsset != null)
+            if (itemBarricadeAsset == null)
             {
-                if (version >= 18 && b4 != (byte)itemBarricadeAsset.build)
+                continue;
+            }
+            if (version >= 18 && b4 != (byte)itemBarricadeAsset.build)
+            {
+                UnturnedLog.info("Discarding barricade \"" + itemBarricadeAsset.FriendlyName + "\" because asset Build property changed which might cause bigger problems (public issue #3725)");
+                continue;
+            }
+            if (itemBarricadeAsset.type == EItemType.TANK && array.Length < 2)
+            {
+                array = itemBarricadeAsset.getState(EItemOrigin.ADMIN);
+            }
+            if (itemBarricadeAsset.build == EBuild.OIL && array.Length < 2)
+            {
+                array = itemBarricadeAsset.getState(EItemOrigin.ADMIN);
+            }
+            BarricadeRegion barricadeRegion = regionOverride;
+            if (barricadeRegion == null)
+            {
+                if (!Regions.tryGetCoordinate(vector, out var x, out var y))
                 {
-                    UnturnedLog.info("Discarding barricade \"" + itemBarricadeAsset.FriendlyName + "\" because asset Build property changed which might cause bigger problems (public issue #3725)");
+                    UnturnedLog.warn($"Discarding loaded barricade {itemBarricadeAsset.FriendlyName} because it is outside the maximum level size at {vector}");
+                    continue;
                 }
-                else
-                {
-                    if (itemBarricadeAsset.type == EItemType.TANK && array.Length < 2)
-                    {
-                        array = itemBarricadeAsset.getState(EItemOrigin.ADMIN);
-                    }
-                    if (itemBarricadeAsset.build == EBuild.OIL && array.Length < 2)
-                    {
-                        array = itemBarricadeAsset.getState(EItemOrigin.ADMIN);
-                    }
-                    NetId netId = NetIdRegistry.ClaimBlock(3u);
-                    if (manager.spawnBarricade(region, itemBarricadeAsset.GUID, array, vector, quaternion, (byte)Mathf.RoundToInt((float)(int)num3 / (float)(int)itemBarricadeAsset.health * 100f), num4, num5, netId) != null)
-                    {
-                        BarricadeData item = (region.drops.GetTail().serversideData = new BarricadeData(new Barricade(itemBarricadeAsset, num3, array), vector, quaternion, num4, num5, newObjActiveDate, newInstanceID));
-                        region.barricades.Add(item);
-                    }
-                }
+                barricadeRegion = regions[x, y];
+            }
+            NetId netId = NetIdRegistry.ClaimBlock(3u);
+            if (manager.spawnBarricade(barricadeRegion, itemBarricadeAsset.GUID, array, vector, quaternion, (byte)Mathf.RoundToInt((float)(int)num3 / (float)(int)itemBarricadeAsset.health * 100f), num4, num5, netId) != null)
+            {
+                BarricadeData item = (barricadeRegion.drops.GetTail().serversideData = new BarricadeData(new Barricade(itemBarricadeAsset, num3, array), vector, quaternion, num4, num5, newObjActiveDate, newInstanceID));
+                barricadeRegion.barricades.Add(item);
             }
         }
     }

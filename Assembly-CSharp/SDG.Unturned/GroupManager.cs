@@ -157,8 +157,8 @@ public class GroupManager : SteamCaller
 
     private void OnLogMemoryUsage(List<string> results)
     {
-        results.Add($"Groups: {knownGroups.Count}");
-        results.Add($"Queued group exits: {queuedExits.Count}");
+        results.Add($"Groups: {knownGroups?.Count}");
+        results.Add($"Queued group exits: {queuedExits?.Count}");
     }
 
     /// <summary>

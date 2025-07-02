@@ -144,9 +144,27 @@ public class BarricadeDrop
     public void ReceiveTransformRequest(in ServerInvocationContext context, Vector3 point, Quaternion rotation)
     {
         Player player = context.GetPlayer();
-        if (player == null || player.life.isDead || !player.look.canUseWorkzone || !BarricadeManager.tryGetRegion(_model, out var x, out var y, out var plant, out var _))
+        if (player == null || player.life.isDead || !player.look.canUseWorkzone || _model == null)
         {
             return;
+        }
+        byte x;
+        byte y;
+        ushort plant;
+        if (_model.parent != null && _model.parent.CompareTag("Vehicle"))
+        {
+            if (!BarricadeManager.tryGetPlant(_model.parent, out x, out y, out plant, out var _))
+            {
+                return;
+            }
+        }
+        else
+        {
+            if (!Regions.tryGetCoordinate(_model.position, out x, out y))
+            {
+                return;
+            }
+            plant = ushort.MaxValue;
         }
         if (BarricadeManager.onTransformRequested != null)
         {

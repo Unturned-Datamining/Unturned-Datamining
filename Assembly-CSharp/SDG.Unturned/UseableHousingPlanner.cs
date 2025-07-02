@@ -977,36 +977,21 @@ public class UseableHousingPlanner : Useable
             }
             itemAmounts[playerInventorySearchResultV.Jar.item.id] = value + playerInventorySearchResultV.Jar.item.amount;
         }
-        if (!HasSelection)
+        if (HasSelection)
         {
-            return;
-        }
-        itemAmounts.TryGetValue(selectedOption.asset.id, out var value2);
-        int num2 = 0;
-        if (selectedOption.craftable.status != null)
-        {
-            selectedOption.craftable.status.Reset();
-            UpdateBlueprintStatusParameters updateBlueprintStatusParameters = default(UpdateBlueprintStatusParameters);
-            updateBlueprintStatusParameters.status = selectedOption.craftable.status;
-            updateBlueprintStatusParameters.shouldExitEarly = true;
-            UpdateBlueprintStatusParameters p = updateBlueprintStatusParameters;
-            base.player.crafting.UpdateBlueprintStaticStatus(in p, bypassWorkstationRequirements: true);
-            base.player.crafting.UpdateBlueprintDynamicStatus(in p);
-            if (!selectedOption.craftable.status.IsCraftable)
+            itemAmounts.TryGetValue(selectedOption.asset.id, out var value2);
+            RefreshCraftableBlueprint(selectedOption.asset);
+            craftableBlueprints.TryGetValue(selectedOption.asset, out selectedOption.craftable);
+            int num2 = selectedOption.craftable.status?.EstimateOutputMaxAmount(selectedOption.craftable.structureOutputIndex) ?? 0;
+            if (value2 > 0 || num2 > 0)
             {
-                RefreshCraftableBlueprint(selectedOption.asset);
-                craftableBlueprints.TryGetValue(selectedOption.asset, out selectedOption.craftable);
+                selectedItemAvailableAmountLabel.Text = localization.format("AvailableAmount", value2);
+                selectedItemCraftableAmountLabel.Text = localization.format("CraftableAmount", num2);
             }
-            num2 = selectedOption.craftable.status?.EstimateOutputMaxAmount(selectedOption.craftable.structureOutputIndex) ?? 0;
-        }
-        if (value2 > 0 || num2 > 0)
-        {
-            selectedItemAvailableAmountLabel.Text = localization.format("AvailableAmount", value2);
-            selectedItemCraftableAmountLabel.Text = localization.format("CraftableAmount", num2);
-        }
-        else
-        {
-            ClearSelectedOption();
+            else
+            {
+                ClearSelectedOption();
+            }
         }
     }
 

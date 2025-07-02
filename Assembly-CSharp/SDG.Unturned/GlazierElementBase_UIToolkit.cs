@@ -250,6 +250,11 @@ internal abstract class GlazierElementBase_UIToolkit : GlazierElementBase
         }
     }
 
+    public override void ForceLayoutUpdate()
+    {
+        isTransformDirty = true;
+    }
+
     public override void InternalDestroy()
     {
         RemoveAllChildren();
