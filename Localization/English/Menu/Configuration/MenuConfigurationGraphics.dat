@@ -60,6 +60,8 @@ Water_Button_Label Water Quality
 Water_Button_Tooltip Water transparency, foam, waves and reflections
 Scope_Button_Label Dual-Render Scope Quality
 Scope_Button_Tooltip Enables peripheral vision while using scopes, quality increases resolution
+DarkScopePeripheral_Label Darken Scope Peripheral
+DarkScopePeripheral_Tooltip Fades scope peripheral vision to black instead of blurring.
 Outline_Button_Label Outline Quality
 Outline_Button_Tooltip Highlight resolution and blur
 Terrain_Button_Label Terrain Quality

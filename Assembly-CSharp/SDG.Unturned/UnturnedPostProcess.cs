@@ -162,7 +162,7 @@ public class UnturnedPostProcess : MonoBehaviour
         baseProfile.singleRenderScope.active = isActive;
     }
 
-    public void SetSingleRenderScopeZoomFactor(float zoomFactor)
+    public void SetSingleRenderScopeZoomFactor(float zoomFactor, float alpha)
     {
         if (zoomFactor > 1.0001f)
         {
@@ -173,6 +173,7 @@ public class UnturnedPostProcess : MonoBehaviour
         {
             baseProfile.singleRenderScope.standardDeviation.Override(-1f);
         }
+        baseProfile.singleRenderScope.scopeAlpha.Override(alpha);
     }
 
     public void SetSingleRenderScopeTarget(RenderTexture target)

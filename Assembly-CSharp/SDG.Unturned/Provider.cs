@@ -4040,33 +4040,27 @@ public class Provider : MonoBehaviour
         writer.WriteUInt8(aboutPlayer.playerID.characterID);
         writer.WriteString(aboutPlayer.playerID.playerName);
         writer.WriteString(aboutPlayer.playerID.characterName);
-        Vector3 vector;
-        byte value;
+        Vector3 value;
+        byte value2;
         if (!aboutPlayer.player.movement.hasMostRecentlyAddedUpdate)
         {
-            vector = aboutPlayer.model.transform.position;
-            value = MeasurementTool.angleToByte(aboutPlayer.model.transform.rotation.eulerAngles.y);
+            value = aboutPlayer.model.transform.position;
+            value2 = MeasurementTool.angleToByte(aboutPlayer.model.transform.rotation.eulerAngles.y);
         }
         else
         {
-            vector = aboutPlayer.player.movement.mostRecentlyAddedUpdate.pos;
-            value = aboutPlayer.player.movement.mostRecentlyAddedUpdate.rot;
+            value = aboutPlayer.player.movement.mostRecentlyAddedUpdate.pos;
+            value2 = aboutPlayer.player.movement.mostRecentlyAddedUpdate.rot;
         }
-        if (!num && !aboutPlayer.isMemberOfSameGroupAs(forPlayer) && !forPlayer.player.AdminUsageFlags.HasFlag(EPlayerAdminUsageFlags.SpectatorStatsOverlay) && (forPlayer.model.transform.position - vector).GetHorizontalSqrMagnitude() > 331776f)
-        {
-            vector = PlayerManager.CulledPosition;
-            value = 0;
-            forPlayer.culledPlayers.Add(aboutPlayer.playerID.steamID);
-        }
-        writer.WriteClampedVector3(vector);
-        writer.WriteUInt8(value);
+        writer.WriteClampedVector3(value);
+        writer.WriteUInt8(value2);
         writer.WriteBit(aboutPlayer.isPro);
-        bool value2 = aboutPlayer.isAdmin;
+        bool value3 = aboutPlayer.isAdmin;
         if (!num && hideAdmins)
         {
-            value2 = false;
+            value3 = false;
         }
-        writer.WriteBit(value2);
+        writer.WriteBit(value3);
         writer.WriteUInt8((byte)aboutPlayer.channel);
         writer.WriteSteamID(aboutPlayer.playerID.group);
         writer.WriteString(aboutPlayer.playerID.nickName);
@@ -4087,23 +4081,23 @@ public class Provider : MonoBehaviour
         int[] skinItems = aboutPlayer.skinItems;
         writer.WriteUInt8((byte)skinItems.Length);
         int[] array = skinItems;
-        foreach (int value3 in array)
+        foreach (int value4 in array)
         {
-            writer.WriteInt32(value3);
+            writer.WriteInt32(value4);
         }
         string[] skinTags = aboutPlayer.skinTags;
         writer.WriteUInt8((byte)skinTags.Length);
         string[] array2 = skinTags;
-        foreach (string value4 in array2)
+        foreach (string value5 in array2)
         {
-            writer.WriteString(value4);
+            writer.WriteString(value5);
         }
         string[] skinDynamicProps = aboutPlayer.skinDynamicProps;
         writer.WriteUInt8((byte)skinDynamicProps.Length);
         array2 = skinDynamicProps;
-        foreach (string value5 in array2)
+        foreach (string value6 in array2)
         {
-            writer.WriteString(value5);
+            writer.WriteString(value6);
         }
         writer.WriteEnum(aboutPlayer.skillset);
         writer.WriteString(aboutPlayer.language);

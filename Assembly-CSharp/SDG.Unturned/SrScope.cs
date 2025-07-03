@@ -13,5 +13,7 @@ public sealed class SrScope : PostProcessEffectSettings
 {
     public FloatParameter standardDeviation = new FloatParameter();
 
+    public FloatParameter scopeAlpha = new FloatParameter();
+
     public TextureParameter renderTarget = new TextureParameter();
 }

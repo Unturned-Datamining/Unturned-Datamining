@@ -40,6 +40,8 @@ public class GraphicsSettingsData
 
     public bool IsClutterEnabled;
 
+    public bool IsDarkScopePeripheralEnabled;
+
     public bool IsWindEnabled;
 
     /// <summary>
@@ -123,6 +125,7 @@ public class GraphicsSettingsData
         IsSkyboxReflectionEnabled = false;
         IsItemIconAntiAliasingEnabled = false;
         IsClutterEnabled = true;
+        IsDarkScopePeripheralEnabled = false;
         FarClipDistance = 0.333333f;
         EditorFarClipDistance = 1f;
         DrawDistance = 1f;

@@ -86,6 +86,8 @@ public class MenuConfigurationGraphicsUI
 
     private static SleekBoxIcon scopePerf;
 
+    private static ISleekToggle scopeDarkPeripheralToggle;
+
     private static SleekButtonState outlineButton;
 
     private static SleekButtonState terrainButton;
@@ -304,6 +306,11 @@ public class MenuConfigurationGraphicsUI
         updatePerfWarnings();
     }
 
+    private static void OnToggledDarkScopePeripheral(ISleekToggle toggle, bool value)
+    {
+        GraphicsSettings.WantsDarkScopePeripheral = value;
+    }
+
     private static void onSwappedOutlineState(SleekButtonState button, int index)
     {
         GraphicsSettings.outlineQuality = (EGraphicQuality)(index + 1);
@@ -381,6 +388,7 @@ public class MenuConfigurationGraphicsUI
         planarReflectionButton.state = (int)(GraphicsSettings.planarReflectionQuality - 1);
         waterButton.state = (int)(GraphicsSettings.waterQuality - 1);
         scopeButton.state = (int)GraphicsSettings.scopeQuality;
+        scopeDarkPeripheralToggle.Value = GraphicsSettings.WantsDarkScopePeripheral;
         outlineButton.state = (int)(GraphicsSettings.outlineQuality - 1);
         terrainButton.state = (int)(GraphicsSettings.terrainQuality - 1);
         renderButton.state = (int)GraphicsSettings.renderMode;
@@ -398,6 +406,7 @@ public class MenuConfigurationGraphicsUI
         scopePerf.IsVisible = GraphicsSettings.scopeQuality != EGraphicQuality.OFF;
         reflectionButton.isInteractable = GraphicsSettings.renderMode == ERenderMode.DEFERRED;
         blastToggle.IsInteractable = GraphicsSettings.renderMode == ERenderMode.DEFERRED;
+        scopeDarkPeripheralToggle.IsInteractable = GraphicsSettings.scopeQuality == EGraphicQuality.OFF;
     }
 
     public MenuConfigurationGraphicsUI()
@@ -776,6 +785,16 @@ public class MenuConfigurationGraphicsUI
         scopePerf.tooltip = RichTextUtil.wrapWithColor(localization.format("Perf_Dual_Render_Scope"), new Color(1f, 0.5f, 0f));
         graphicsBox.AddChild(scopePerf);
         num += 40;
+        scopeDarkPeripheralToggle = Glazier.Get().CreateToggle();
+        scopeDarkPeripheralToggle.PositionOffset_X = 205f;
+        scopeDarkPeripheralToggle.PositionOffset_Y = num;
+        scopeDarkPeripheralToggle.SizeOffset_X = 40f;
+        scopeDarkPeripheralToggle.SizeOffset_Y = 40f;
+        scopeDarkPeripheralToggle.AddLabel(localization.format("DarkScopePeripheral_Label"), ESleekSide.RIGHT);
+        scopeDarkPeripheralToggle.TooltipText = localization.format("DarkScopePeripheral_Tooltip");
+        scopeDarkPeripheralToggle.OnValueChanged += OnToggledDarkScopePeripheral;
+        graphicsBox.AddChild(scopeDarkPeripheralToggle);
+        num += 50;
         outlineButton = new SleekButtonState(new GUIContent(localization.format("Low")), new GUIContent(localization.format("Medium")), new GUIContent(localization.format("High")), new GUIContent(localization.format("Ultra")));
         outlineButton.PositionOffset_X = 205f;
         outlineButton.PositionOffset_Y = num;

@@ -5103,7 +5103,7 @@ public class UseableGun : Useable
             if (GraphicsSettings.scopeQuality == EGraphicQuality.OFF)
             {
                 base.player.look.scopeMaterial.SetFloat(ScopeMaterialAlphaId, interpolatedAimAlpha);
-                UnturnedPostProcess.instance.SetSingleRenderScopeZoomFactor(Mathf.Lerp(1f, base.player.look.scopeCameraZoomFactor, interpolatedAimAlpha));
+                UnturnedPostProcess.instance.SetSingleRenderScopeZoomFactor(Mathf.Lerp(1f, base.player.look.scopeCameraZoomFactor, interpolatedAimAlpha), interpolatedAimAlpha);
             }
             else
             {

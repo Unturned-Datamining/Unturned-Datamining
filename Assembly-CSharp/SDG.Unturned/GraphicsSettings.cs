@@ -472,6 +472,18 @@ public class GraphicsSettings
         }
     }
 
+    public static bool WantsDarkScopePeripheral
+    {
+        get
+        {
+            return graphicsSettingsData.IsDarkScopePeripheralEnabled;
+        }
+        set
+        {
+            graphicsSettingsData.IsDarkScopePeripheralEnabled = value;
+        }
+    }
+
     public static bool IsWindEnabled
     {
         get
