@@ -120,5 +120,13 @@ public enum EBbCodeTokenType
     /// <summary>
     /// [/p]
     /// </summary>
-    ParagraphClose
+    ParagraphClose,
+    /// <summary>
+    /// [u]
+    /// </summary>
+    UnderlineOpen,
+    /// <summary>
+    /// [/u]
+    /// </summary>
+    UnderlineClose
 }

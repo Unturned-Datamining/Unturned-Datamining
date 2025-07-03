@@ -9,5 +9,9 @@ public enum ENPCHoliday
     VALENTINES,
     PRIDE_MONTH,
     LUNAR_NEW_YEAR,
+    /// <summary>
+    /// July 7th!
+    /// </summary>
+    UNTURNED_ANNIVERSARY,
     MAX
 }

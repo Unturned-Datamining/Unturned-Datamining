@@ -62,6 +62,10 @@ public class MenuMapVisibility : MonoBehaviour
             UnturnedLog.info("Loading additive Pride Month scene");
             SceneManager.LoadSceneAsync("Menu_PrideMonth", LoadSceneMode.Additive);
             break;
+        case ENPCHoliday.UNTURNED_ANNIVERSARY:
+            UnturnedLog.info("Loading additive Unturned Anniversary scene");
+            SceneManager.LoadSceneAsync("Menu_UnturnedAnniversary", LoadSceneMode.Additive);
+            break;
         default:
             UnturnedLog.info("Loading additive default menu");
             SceneManager.LoadSceneAsync("Menu_NoHoliday", LoadSceneMode.Additive);

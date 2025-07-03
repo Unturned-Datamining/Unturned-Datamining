@@ -230,6 +230,10 @@ public class BbCodeTokenizer
             {
                 outputTokens.Add(new BbCodeToken(EBbCodeTokenType.ItalicClose));
             }
+            else if (string.Equals(text, "/u"))
+            {
+                outputTokens.Add(new BbCodeToken(EBbCodeTokenType.UnderlineClose));
+            }
             else if (string.Equals(text, "/*"))
             {
                 outputTokens.Add(new BbCodeToken(EBbCodeTokenType.ListItemClose));
@@ -286,6 +290,10 @@ public class BbCodeTokenizer
         else if (string.Equals(text, "i"))
         {
             outputTokens.Add(new BbCodeToken(EBbCodeTokenType.ItalicOpen));
+        }
+        else if (string.Equals(text, "u"))
+        {
+            outputTokens.Add(new BbCodeToken(EBbCodeTokenType.UnderlineOpen));
         }
         else if (string.Equals(text, "*"))
         {

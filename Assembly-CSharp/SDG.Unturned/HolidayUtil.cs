@@ -28,7 +28,7 @@ public static class HolidayUtil
             return holidayOverride;
         }
         DateTime utcNow = DateTime.UtcNow;
-        for (int i = 1; i < 7; i++)
+        for (int i = 1; i < 8; i++)
         {
             DateTimeRange dateTimeRange = scheduledHolidays[i];
             if (dateTimeRange != null && dateTimeRange.isWithinRange(utcNow))
@@ -60,18 +60,21 @@ public static class HolidayUtil
         if (data.LunarNewYear_StartOverride.Ticks > 0 && data.LunarNewYear_EndOverride.Ticks > 0)
         {
             scheduleHoliday(ENPCHoliday.LUNAR_NEW_YEAR, data.LunarNewYear_StartOverride, data.LunarNewYear_EndOverride);
-            return;
         }
-        DateTime dateTime = new ChineseLunisolarCalendar().ToDateTime(year, 1, 1, 0, 0, 0, 0);
-        DateTime dateTime2 = dateTime.AddDays(-1.0);
-        DateTime dateTime3 = dateTime.AddDays(data.LunarNewYear_Days);
-        scheduleHoliday(ENPCHoliday.LUNAR_NEW_YEAR, new DateTime(year, dateTime2.Month, dateTime2.Day, 0, 0, 0, DateTimeKind.Local), new DateTime(year, dateTime3.Month, dateTime3.Day, 23, 59, 59, DateTimeKind.Local));
+        else
+        {
+            DateTime dateTime = new ChineseLunisolarCalendar().ToDateTime(year, 1, 1, 0, 0, 0, 0);
+            DateTime dateTime2 = dateTime.AddDays(-1.0);
+            DateTime dateTime3 = dateTime.AddDays(data.LunarNewYear_Days);
+            scheduleHoliday(ENPCHoliday.LUNAR_NEW_YEAR, new DateTime(year, dateTime2.Month, dateTime2.Day, 0, 0, 0, DateTimeKind.Local), new DateTime(year, dateTime3.Month, dateTime3.Day, 23, 59, 59, DateTimeKind.Local));
+        }
+        scheduleHoliday(ENPCHoliday.UNTURNED_ANNIVERSARY, new DateTime(year, 7, 7, 0, 0, 0, DateTimeKind.Local), new DateTime(year, 7, 7, 23, 59, 59, DateTimeKind.Local));
     }
 
     static HolidayUtil()
     {
         clHolidayOverride = new CommandLineString("-Holiday");
-        scheduledHolidays = new DateTimeRange[7];
+        scheduledHolidays = new DateTimeRange[8];
         holidayOverride = ENPCHoliday.NONE;
         if (clHolidayOverride.hasValue)
         {
@@ -104,6 +107,11 @@ public static class HolidayUtil
             if (string.Equals(value, "LunarNewYear", StringComparison.OrdinalIgnoreCase) || string.Equals(value, "LNY", StringComparison.OrdinalIgnoreCase))
             {
                 holidayOverride = ENPCHoliday.LUNAR_NEW_YEAR;
+                return;
+            }
+            if (string.Equals(value, "UnturnedAnniversary", StringComparison.OrdinalIgnoreCase))
+            {
+                holidayOverride = ENPCHoliday.UNTURNED_ANNIVERSARY;
                 return;
             }
             UnturnedLog.warn("Unknown holiday \"{0}\" requested by command-line override", value);
