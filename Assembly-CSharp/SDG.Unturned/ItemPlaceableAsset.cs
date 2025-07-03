@@ -162,10 +162,8 @@ public class ItemPlaceableAsset : ItemAsset
                     ItemManager.dropItem(new Item(itemAsset, EItemOrigin.NATURE), position + new Vector3(UnityEngine.Random.Range(-2f, 2f), 2f, UnityEngine.Random.Range(-2f, 2f)), playEffect: false, Dedicator.IsDedicatedServer, wideSpread: true);
                 }
             }
-            return;
         }
-        ItemAsset asset2 = asset as ItemAsset;
-        if (asset != null)
+        else if (asset is ItemAsset asset2)
         {
             for (int j = 0; j < value; j++)
             {
