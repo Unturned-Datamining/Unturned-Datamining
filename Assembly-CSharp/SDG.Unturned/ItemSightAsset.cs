@@ -72,6 +72,11 @@ public class ItemSightAsset : ItemCaliberAsset
     /// </summary>
     public bool shouldZoomUsingEyes;
 
+    /// <summary>
+    /// If true, scale scope overly by 1 texel to keep "middle" pixel centered.
+    /// </summary>
+    public bool shouldOffsetScopeOverlayByOneTexel;
+
     public List<DistanceMarker> distanceMarkers;
 
     public GameObject sight => _sight;
@@ -147,6 +152,7 @@ public class ItemSightAsset : ItemCaliberAsset
         zoom = Mathf.Max(1f, p.data.ParseFloat("Zoom"));
         thirdPersonZoomFactor = Mathf.Max(1f, p.data.ParseFloat("ThirdPerson_Zoom", 1.25f));
         shouldZoomUsingEyes = p.data.ParseBool("Zoom_Using_Eyes");
+        shouldOffsetScopeOverlayByOneTexel = p.data.ParseBool("Offset_Scope_Overlay_By_One_Texel");
         AimAlignmentTransformOwner = p.data.ParseEnum("AimAlignment_Owner", EAimAlignmentTransformOwner.Sight);
         AimAlignmentTransformPath = p.data.GetString("AimAlignment_Path");
         AimAlignmentLocalOffset = p.data.ParseVector3("AimAlignment_LocalOffset");

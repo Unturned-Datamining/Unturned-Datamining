@@ -78,12 +78,12 @@ public class SleekScopeOverlay : SleekWrapper
             DisableDistanceMarkers();
             return;
         }
-        if (Player.LocalPlayer == null || Player.LocalPlayer.look == null || Player.LocalPlayer.look.mainCameraZoomFactor <= 0f)
+        if (Player.LocalPlayer == null || Player.LocalPlayer.look == null || Player.LocalPlayer.look.scopeCameraZoomFactor <= 0f)
         {
             DisableDistanceMarkers();
             return;
         }
-        float num = OptionsSettings.GetZoomBaseFieldOfView() / Player.LocalPlayer.look.mainCameraZoomFactor;
+        float num = OptionsSettings.GetZoomBaseFieldOfView() / Player.LocalPlayer.look.scopeCameraZoomFactor;
         float num2 = MathF.PI / 180f * num;
         if (num2 < 0.001f)
         {

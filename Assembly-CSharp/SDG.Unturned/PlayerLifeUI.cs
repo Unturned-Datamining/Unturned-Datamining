@@ -99,6 +99,8 @@ public class PlayerLifeUI
 
     private static ISleekButton tPoseButton;
 
+    public static SleekScopeOverlay scopeOverlay;
+
     public static ISleekImage binocularsOverlay;
 
     public static Crosshair crosshair;
@@ -1712,6 +1714,11 @@ public class PlayerLifeUI
         statTrackerLabel.FontSize = ESleekFontSize.Default;
         container.AddChild(statTrackerLabel);
         statTrackerLabel.IsVisible = false;
+        scopeOverlay = new SleekScopeOverlay();
+        scopeOverlay.SizeScale_X = 1f;
+        scopeOverlay.SizeScale_Y = 1f;
+        scopeOverlay.IsVisible = false;
+        PlayerUI.window.AddChild(scopeOverlay);
         binocularsOverlay = Glazier.Get().CreateImage((Texture2D)Resources.Load("Overlay/Binoculars"));
         binocularsOverlay.SizeScale_X = 1f;
         binocularsOverlay.SizeScale_Y = 1f;

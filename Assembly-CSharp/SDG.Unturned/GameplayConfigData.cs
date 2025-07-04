@@ -91,6 +91,16 @@ public class GameplayConfigData
     /// </summary>
     public bool Disable_Motion_Sickness_Options;
 
+    /// <summary>
+    /// If true, hide viewmodel while aiming a dual-render scope and show a 2D overlay instead.
+    ///
+    /// Nelson 2025-07-04: adding this option for backwards compatibility with modded scopes that have a small
+    /// enough dual-render surface to zoom-*out* when aiming in.
+    ///
+    /// Defaults to false.
+    /// </summary>
+    public bool Use_2D_Scope_Overlay;
+
     internal const uint MAX_TIMER_EXIT = 60u;
 
     public uint Timer_Exit;
@@ -175,6 +185,21 @@ public class GameplayConfigData
         else
         {
             Ballistics = true;
+        }
+        switch (mode)
+        {
+        case EGameMode.EASY:
+            ThirdPerson_RecoilMultiplier = 1f;
+            ThirdPerson_SpreadMultiplier = 1f;
+            Viewmodel_AimingMisalignmentMultiplier = 0.05f;
+            FirstPerson_AimingZoomRecoilReduction = 0.5f;
+            break;
+        case EGameMode.NORMAL:
+            Viewmodel_AimingMisalignmentMultiplier = 0.5f;
+            break;
+        case EGameMode.HARD:
+            Viewmodel_AimingMisalignmentMultiplier = 1f;
+            break;
         }
         Chart = mode == EGameMode.EASY;
         Satellite = false;

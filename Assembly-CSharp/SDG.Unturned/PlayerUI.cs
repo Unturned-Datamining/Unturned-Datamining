@@ -197,6 +197,16 @@ public class PlayerUI : MonoBehaviour
         PlayerLifeUI.crosshair.SetGameWantsCenterDotVisible(isVisible: false);
     }
 
+    public static void updateScope(bool isScoped)
+    {
+        if (PlayerLifeUI.scopeOverlay.IsVisible != isScoped)
+        {
+            PlayerLifeUI.scopeOverlay.IsVisible = isScoped;
+            container.IsVisible = !isScoped;
+            UpdateWindowEnabled();
+        }
+    }
+
     public static void updateBinoculars(bool isBinoculars)
     {
         PlayerLifeUI.binocularsOverlay.IsVisible = isBinoculars;
@@ -206,7 +216,7 @@ public class PlayerUI : MonoBehaviour
 
     private static void UpdateWindowEnabled()
     {
-        window.isEnabled = wantsWindowEnabled || PlayerLifeUI.binocularsOverlay.IsVisible || isBlindfolded || isWindowEnabledByColorOverlay;
+        window.isEnabled = wantsWindowEnabled || PlayerLifeUI.scopeOverlay.IsVisible || PlayerLifeUI.binocularsOverlay.IsVisible || isBlindfolded || isWindowEnabledByColorOverlay;
     }
 
     public static void enableCrosshair()

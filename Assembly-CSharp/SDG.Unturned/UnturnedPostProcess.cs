@@ -157,6 +157,11 @@ public class UnturnedPostProcess : MonoBehaviour
         scopePostProcessLayer.fog.excludeSkybox = true;
     }
 
+    public bool IsSingleRenderScopeActive()
+    {
+        return baseProfile.singleRenderScope.active;
+    }
+
     public void SetSingleRenderScopeIsActive(bool isActive)
     {
         baseProfile.singleRenderScope.active = isActive;

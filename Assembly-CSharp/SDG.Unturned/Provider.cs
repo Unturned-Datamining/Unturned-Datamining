@@ -4212,6 +4212,7 @@ public class Provider : MonoBehaviour
             writer.WriteBit(modeConfigData.Gameplay.Enable_Explosion_Camera_Shake);
             writer.WriteBit(modeConfigData.Gameplay.Enable_Workstation_Requirements);
             writer.WriteBit(modeConfigData.Gameplay.Disable_Motion_Sickness_Options);
+            writer.WriteBit(modeConfigData.Gameplay.Use_2D_Scope_Overlay);
             writer.WriteUInt16((ushort)modeConfigData.Gameplay.Timer_Exit);
             writer.WriteUInt16((ushort)modeConfigData.Gameplay.Timer_Respawn);
             writer.WriteUInt16((ushort)modeConfigData.Gameplay.Timer_Home);

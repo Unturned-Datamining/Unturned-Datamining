@@ -2902,6 +2902,7 @@ public class UseableGun : Useable
             DestroyLaser();
             if (isAiming)
             {
+                isAiming = false;
                 stopAim();
             }
             if (isAttaching)
@@ -3256,13 +3257,24 @@ public class UseableGun : Useable
             }
             if (rangeLabel != null)
             {
-                Vector3 vector10 = ((base.player.look.perspective == EPlayerPerspective.FIRST && firstAttachments.lightHook != null) ? base.player.animator.viewmodelCamera.WorldToViewportPoint(firstAttachments.lightHook.position) : ((!(thirdAttachments.lightHook != null)) ? Vector3.zero : MainCamera.instance.WorldToViewportPoint(thirdAttachments.lightHook.position)));
-                Vector2 vector11 = PlayerLifeUI.container.ViewportToNormalizedPosition(vector10);
-                rangeLabel.PositionOffset_X = -100f;
-                rangeLabel.PositionOffset_Y = -15f;
-                rangeLabel.PositionScale_X = vector11.x;
-                rangeLabel.PositionScale_Y = vector11.y;
-                rangeLabel.TextAlignment = TextAnchor.MiddleCenter;
+                if (PlayerLifeUI.scopeOverlay.IsVisible)
+                {
+                    rangeLabel.PositionOffset_X = -300f;
+                    rangeLabel.PositionOffset_Y = 100f;
+                    rangeLabel.PositionScale_X = 0.5f;
+                    rangeLabel.PositionScale_Y = 0.5f;
+                    rangeLabel.TextAlignment = TextAnchor.UpperRight;
+                }
+                else
+                {
+                    Vector3 vector10 = ((base.player.look.perspective == EPlayerPerspective.FIRST && firstAttachments.lightHook != null) ? base.player.animator.viewmodelCamera.WorldToViewportPoint(firstAttachments.lightHook.position) : ((!(thirdAttachments.lightHook != null)) ? Vector3.zero : MainCamera.instance.WorldToViewportPoint(thirdAttachments.lightHook.position)));
+                    Vector2 vector11 = PlayerLifeUI.container.ViewportToNormalizedPosition(vector10);
+                    rangeLabel.PositionOffset_X = -100f;
+                    rangeLabel.PositionOffset_Y = -15f;
+                    rangeLabel.PositionScale_X = vector11.x;
+                    rangeLabel.PositionScale_Y = vector11.y;
+                    rangeLabel.TextAlignment = TextAnchor.MiddleCenter;
+                }
                 rangeLabel.IsVisible = true;
             }
         }
@@ -4230,6 +4242,7 @@ public class UseableGun : Useable
                 base.player.look.enableZoom(1f, useAlpha: true);
             }
         }
+        base.player.look.UpdateScopeOverlay();
         if (thirdShellRenderer != null)
         {
             thirdShellRenderer.forceRenderingOff = newPerspective == EPlayerPerspective.FIRST && !equippedGunAsset.isTurret;
@@ -4329,6 +4342,64 @@ public class UseableGun : Useable
         UpdateMovementSpeedMultiplier();
         if (base.channel.IsLocalPlayer)
         {
+            if (!equippedGunAsset.isTurret && equippedGunAsset.action != EAction.Minigun)
+            {
+                if (base.player.look.IsUsing2DScope && firstAttachments.sightModel != null && firstAttachments.scopeHook != null && firstAttachments.scopeHook.Find("Reticule") != null)
+                {
+                    Texture mainTexture = firstAttachments.scopeHook.Find("Reticule").GetComponent<Renderer>().sharedMaterial.mainTexture;
+                    if (mainTexture.width <= 64)
+                    {
+                        PlayerLifeUI.scopeOverlay.scopeImage.PositionOffset_X = -mainTexture.width / 2;
+                        PlayerLifeUI.scopeOverlay.scopeImage.PositionOffset_Y = -mainTexture.height / 2;
+                        PlayerLifeUI.scopeOverlay.scopeImage.PositionScale_X = 0.5f;
+                        PlayerLifeUI.scopeOverlay.scopeImage.PositionScale_Y = 0.5f;
+                        PlayerLifeUI.scopeOverlay.scopeImage.SizeOffset_X = mainTexture.width;
+                        PlayerLifeUI.scopeOverlay.scopeImage.SizeOffset_Y = mainTexture.height;
+                        PlayerLifeUI.scopeOverlay.scopeImage.SizeScale_X = 0f;
+                        PlayerLifeUI.scopeOverlay.scopeImage.SizeScale_Y = 0f;
+                    }
+                    else
+                    {
+                        PlayerLifeUI.scopeOverlay.scopeImage.PositionOffset_X = 0f;
+                        PlayerLifeUI.scopeOverlay.scopeImage.PositionOffset_Y = 0f;
+                        PlayerLifeUI.scopeOverlay.scopeImage.PositionScale_X = 0f;
+                        PlayerLifeUI.scopeOverlay.scopeImage.PositionScale_Y = 0f;
+                        PlayerLifeUI.scopeOverlay.scopeImage.SizeOffset_X = 0f;
+                        PlayerLifeUI.scopeOverlay.scopeImage.SizeOffset_Y = 0f;
+                        if (firstAttachments.sightAsset.shouldOffsetScopeOverlayByOneTexel)
+                        {
+                            PlayerLifeUI.scopeOverlay.scopeImage.SizeScale_X = 1f + 1f / (float)mainTexture.width;
+                            PlayerLifeUI.scopeOverlay.scopeImage.SizeScale_Y = 1f + 1f / (float)mainTexture.height;
+                        }
+                        else
+                        {
+                            PlayerLifeUI.scopeOverlay.scopeImage.SizeScale_X = 1f;
+                            PlayerLifeUI.scopeOverlay.scopeImage.SizeScale_Y = 1f;
+                        }
+                    }
+                    PlayerLifeUI.scopeOverlay.scopeImage.Texture = mainTexture;
+                    if (firstAttachments.aimHook.parent.Find("Reticule") != null)
+                    {
+                        Color criticalHitmarkerColor = OptionsSettings.criticalHitmarkerColor;
+                        criticalHitmarkerColor.a = 1f;
+                        PlayerLifeUI.scopeOverlay.scopeImage.TintColor = criticalHitmarkerColor;
+                    }
+                    else
+                    {
+                        PlayerLifeUI.scopeOverlay.scopeImage.TintColor = ESleekTint.NONE;
+                    }
+                    base.player.animator.viewmodelCameraLocalPositionOffset = Vector3.up;
+                }
+                else
+                {
+                    PlayerLifeUI.scopeOverlay.scopeImage.Texture = null;
+                    base.player.animator.viewmodelCameraLocalPositionOffset = Vector3.zero;
+                }
+            }
+            else
+            {
+                PlayerLifeUI.scopeOverlay.scopeImage.Texture = null;
+            }
             base.player.animator.viewmodelSwayMultiplier = 0.1f;
             base.player.animator.viewmodelOffsetPreferenceMultiplier = 0f;
             if (equippedGunAsset.driverTurretViewmodelMode == EDriverTurretViewmodelMode.OffscreenWhileAiming)
@@ -4355,6 +4426,7 @@ public class UseableGun : Useable
             {
                 base.player.look.enableZoom(1f, useAlpha: true);
             }
+            base.player.look.UpdateScopeOverlay();
             UpdateCrosshairEnabled();
             PlayerUI.instance.groupUI.IsVisible = false;
         }
@@ -4389,6 +4461,7 @@ public class UseableGun : Useable
             base.player.look.ConvertScopeSwayToInputRotation();
             base.player.animator.viewmodelSwayMultiplier = 1f;
             base.player.animator.viewmodelOffsetPreferenceMultiplier = 1f;
+            base.player.look.UpdateScopeOverlay();
             base.player.look.shouldUseZoomFactorForSensitivity = false;
             UpdateCrosshairEnabled();
             PlayerUI.instance.groupUI.IsVisible = true;
@@ -5100,7 +5173,11 @@ public class UseableGun : Useable
         {
             float interpolatedAimAlpha = GetInterpolatedAimAlpha();
             base.player.look.scopeAlpha = interpolatedAimAlpha;
-            if (GraphicsSettings.scopeQuality == EGraphicQuality.OFF)
+            if (base.player.look.IsUsing2DScope)
+            {
+                base.player.look.scopeMaterial.SetFloat(ScopeMaterialAlphaId, 0f);
+            }
+            else if (GraphicsSettings.scopeQuality == EGraphicQuality.OFF)
             {
                 base.player.look.scopeMaterial.SetFloat(ScopeMaterialAlphaId, interpolatedAimAlpha);
                 UnturnedPostProcess.instance.SetSingleRenderScopeZoomFactor(Mathf.Lerp(1f, base.player.look.scopeCameraZoomFactor, interpolatedAimAlpha), interpolatedAimAlpha);

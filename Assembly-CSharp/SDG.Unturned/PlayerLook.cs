@@ -319,6 +319,8 @@ public class PlayerLook : PlayerCaller
 
     public EPlayerPerspective perspective => _perspective;
 
+    internal bool IsUsing2DScope => (Provider.modeConfigData?.Gameplay?.Use_2D_Scope_Overlay).GetValueOrDefault();
+
     public bool canUseFreecam
     {
         get
@@ -394,32 +396,40 @@ public class PlayerLook : PlayerCaller
 
     public void updateScope(EGraphicQuality quality)
     {
-        bool flag;
-        int num;
-        switch (quality)
+        bool flag = true;
+        bool flag2 = false;
+        int num = 0;
+        if (IsUsing2DScope)
         {
-        case EGraphicQuality.LOW:
-            flag = true;
-            num = 256;
-            break;
-        case EGraphicQuality.MEDIUM:
-            flag = true;
-            num = 512;
-            break;
-        case EGraphicQuality.HIGH:
-            flag = true;
-            num = 1024;
-            break;
-        case EGraphicQuality.ULTRA:
-            flag = true;
-            num = 2048;
-            break;
-        default:
             flag = false;
-            num = Mathf.Min(Screen.width, Screen.height);
-            break;
         }
-        if (scopeRenderTexture != null && scopeRenderTexture.width != num)
+        else
+        {
+            switch (quality)
+            {
+            case EGraphicQuality.LOW:
+                flag2 = true;
+                num = 256;
+                break;
+            case EGraphicQuality.MEDIUM:
+                flag2 = true;
+                num = 512;
+                break;
+            case EGraphicQuality.HIGH:
+                flag2 = true;
+                num = 1024;
+                break;
+            case EGraphicQuality.ULTRA:
+                flag2 = true;
+                num = 2048;
+                break;
+            default:
+                flag2 = false;
+                num = Mathf.Min(Screen.width, Screen.height);
+                break;
+            }
+        }
+        if (scopeRenderTexture != null && (scopeRenderTexture.width != num || !flag))
         {
             if (scopeCamera.targetTexture == scopeRenderTexture)
             {
@@ -428,16 +438,16 @@ public class PlayerLook : PlayerCaller
             UnityEngine.Object.Destroy(scopeRenderTexture);
             scopeRenderTexture = null;
         }
-        if (scopeRenderTexture == null)
+        if (scopeRenderTexture == null && flag)
         {
             GraphicsFormat colorFormat = GraphicsFormat.R8G8B8A8_SRGB;
-            GraphicsFormat depthStencilFormat = (flag ? GraphicsFormat.D24_UNorm_S8_UInt : GraphicsFormat.None);
+            GraphicsFormat depthStencilFormat = (flag2 ? GraphicsFormat.D24_UNorm_S8_UInt : GraphicsFormat.None);
             scopeRenderTexture = new RenderTexture(num, num, colorFormat, depthStencilFormat);
             scopeRenderTexture.useMipMap = true;
-            scopeRenderTexture.name = (flag ? "Dual-Render Scope" : "Single-Render Scope");
+            scopeRenderTexture.name = (flag2 ? "Dual-Render Scope" : "Single-Render Scope");
             scopeRenderTexture.hideFlags = HideFlags.HideAndDontSave;
         }
-        if (flag)
+        if (flag2)
         {
             scopeCamera.targetTexture = scopeRenderTexture;
             UnturnedPostProcess.instance.SetSingleRenderScopeTarget(null);
@@ -481,26 +491,42 @@ public class PlayerLook : PlayerCaller
         UpdateSingleRenderScope();
     }
 
+    internal void UpdateScopeOverlay()
+    {
+        bool isScoped = base.player.equipment.useable is UseableGun useableGun && useableGun.isAiming && IsUsing2DScope && isScopeActive && perspective == EPlayerPerspective.FIRST && PlayerLifeUI.scopeOverlay.scopeImage.Texture != null;
+        PlayerUI.updateScope(isScoped);
+        UpdateScopeVisionAppliedToLighting();
+    }
+
     private void UpdateSingleRenderScope()
     {
-        bool flag = perspective == EPlayerPerspective.FIRST && isScopeActive && GraphicsSettings.scopeQuality == EGraphicQuality.OFF;
-        if (flag && scopeVision != 0 && IsScopeHalfwayAimedIn)
+        bool singleRenderScopeIsActive = perspective == EPlayerPerspective.FIRST && isScopeActive && GraphicsSettings.scopeQuality == EGraphicQuality.OFF && !IsUsing2DScope;
+        UnturnedPostProcess.instance.SetSingleRenderScopeIsActive(singleRenderScopeIsActive);
+        UpdateScopeVisionAppliedToLighting();
+    }
+
+    private void UpdateScopeVisionAppliedToLighting()
+    {
+        bool flag = ((!IsUsing2DScope) ? (UnturnedPostProcess.instance.IsSingleRenderScopeActive() && IsScopeHalfwayAimedIn) : (PlayerLifeUI.scopeOverlay?.IsVisible ?? false));
+        if (flag && scopeVision != 0)
         {
-            isSingleRenderScopeVisionAppliedToLighting = true;
-            ApplyScopeVisionToLighting();
+            if (!isSingleRenderScopeVisionAppliedToLighting)
+            {
+                isSingleRenderScopeVisionAppliedToLighting = true;
+                ApplyScopeVisionToLighting();
+            }
         }
         else if (isSingleRenderScopeVisionAppliedToLighting)
         {
             isSingleRenderScopeVisionAppliedToLighting = false;
             base.player.equipment.updateVision();
         }
-        UnturnedPostProcess.instance.SetSingleRenderScopeIsActive(flag);
     }
 
     [Obsolete("this was never supported server-side")]
     public void setPerspective(EPlayerPerspective newPerspective)
     {
-        throw new NotSupportedException("this was never supported server-side");
+        throw new NotSupportedException("this wwas never supported server-side");
     }
 
     private void setActivePerspective(EPlayerPerspective newPerspective)
@@ -1175,7 +1201,7 @@ public class PlayerLook : PlayerCaller
                 {
                     mainCameraTargetFieldOfView = Mathf.Lerp(mainCameraTargetFieldOfView, b, 8f * Time.deltaTime);
                 }
-                if (isScopeActive && scopeCameraZoomFactor > float.Epsilon && GraphicsSettings.scopeQuality == EGraphicQuality.OFF && perspective == EPlayerPerspective.FIRST)
+                if (isScopeActive && scopeCameraZoomFactor > float.Epsilon && (GraphicsSettings.scopeQuality == EGraphicQuality.OFF || IsUsing2DScope) && perspective == EPlayerPerspective.FIRST)
                 {
                     flag2 = scopeAlpha > 0.001f;
                     instance.fieldOfView = Mathf.Lerp(mainCameraTargetFieldOfView, zoomBaseFieldOfView / scopeCameraZoomFactor, scopeAlpha);

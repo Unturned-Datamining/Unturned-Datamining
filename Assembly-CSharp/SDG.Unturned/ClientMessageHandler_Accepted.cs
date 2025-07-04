@@ -128,6 +128,7 @@ internal static class ClientMessageHandler_Accepted
         reader.ReadBit(out Provider._modeConfigData.Gameplay.Enable_Explosion_Camera_Shake);
         reader.ReadBit(out Provider._modeConfigData.Gameplay.Enable_Workstation_Requirements);
         reader.ReadBit(out Provider._modeConfigData.Gameplay.Disable_Motion_Sickness_Options);
+        reader.ReadBit(out Provider._modeConfigData.Gameplay.Use_2D_Scope_Overlay);
         reader.ReadUInt16(out var value4);
         Provider._modeConfigData.Gameplay.Timer_Exit = MathfEx.Min(value4, 60u);
         reader.ReadUInt16(out var value5);
