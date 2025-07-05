@@ -191,8 +191,8 @@ public class GameplayConfigData
         case EGameMode.EASY:
             ThirdPerson_RecoilMultiplier = 1f;
             ThirdPerson_SpreadMultiplier = 1f;
-            Viewmodel_AimingMisalignmentMultiplier = 0.05f;
-            FirstPerson_AimingZoomRecoilReduction = 0.5f;
+            Viewmodel_AimingMisalignmentMultiplier = 0.2f;
+            FirstPerson_AimingZoomRecoilReduction = 0.25f;
             break;
         case EGameMode.NORMAL:
             Viewmodel_AimingMisalignmentMultiplier = 0.5f;

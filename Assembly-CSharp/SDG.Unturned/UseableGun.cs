@@ -4793,13 +4793,13 @@ public class UseableGun : Useable
         {
             if (_aimAccuracy < maxAimingAccuracy)
             {
-                return MathfEx.SmootherStep01((float)_aimAccuracy * maxAimingAccuracyReciprocal + num * maxAimingAccuracyReciprocal);
+                return 1f - MathfEx.Square(1f - MathfEx.SmootherStep01((float)_aimAccuracy * maxAimingAccuracyReciprocal + num * maxAimingAccuracyReciprocal));
             }
             return 1f;
         }
         if (_aimAccuracy > 0)
         {
-            return MathfEx.SmootherStep01((float)_aimAccuracy * maxAimingAccuracyReciprocal - num * maxAimingAccuracyReciprocal);
+            return 1f - MathfEx.Square(1f - MathfEx.SmootherStep01((float)_aimAccuracy * maxAimingAccuracyReciprocal - num * maxAimingAccuracyReciprocal));
         }
         return 0f;
     }

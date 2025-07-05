@@ -104,6 +104,7 @@ internal static class ClientMessageHandler_Accepted
                 return;
             }
         }
+        bool valueOrDefault = (Provider._modeConfigData?.Gameplay?.Use_2D_Scope_Overlay).GetValueOrDefault();
         Provider._modeConfigData = new ModeConfigData(Provider.mode);
         reader.ReadUInt8(out var value3);
         Provider._modeConfigData.Gameplay.Repair_Level_Max = value3;
@@ -129,6 +130,10 @@ internal static class ClientMessageHandler_Accepted
         reader.ReadBit(out Provider._modeConfigData.Gameplay.Enable_Workstation_Requirements);
         reader.ReadBit(out Provider._modeConfigData.Gameplay.Disable_Motion_Sickness_Options);
         reader.ReadBit(out Provider._modeConfigData.Gameplay.Use_2D_Scope_Overlay);
+        if (Provider._modeConfigData.Gameplay.Use_2D_Scope_Overlay != valueOrDefault && Player.LocalPlayer != null)
+        {
+            Player.LocalPlayer.look.updateScope(GraphicsSettings.scopeQuality);
+        }
         reader.ReadUInt16(out var value4);
         Provider._modeConfigData.Gameplay.Timer_Exit = MathfEx.Min(value4, 60u);
         reader.ReadUInt16(out var value5);

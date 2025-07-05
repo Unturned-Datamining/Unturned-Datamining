@@ -289,7 +289,10 @@ public class PlayerPauseUI
         texture2D.LoadImage(data, markNonReadable: true);
         spyImage.Texture = texture2D;
         returnButton.PositionOffset_X = -435f;
-        inviteFriendsButton.PositionOffset_X = -435f;
+        if (inviteFriendsButton != null)
+        {
+            inviteFriendsButton.PositionOffset_X = -435f;
+        }
         optionsButton.PositionOffset_X = -435f;
         displayButton.PositionOffset_X = -435f;
         graphicsButton.PositionOffset_X = -435f;
@@ -321,6 +324,7 @@ public class PlayerPauseUI
 
     public PlayerPauseUI()
     {
+        inviteFriendsButton = null;
         localization = Localization.read("/Player/PlayerPause.dat");
         if (icons != null)
         {
