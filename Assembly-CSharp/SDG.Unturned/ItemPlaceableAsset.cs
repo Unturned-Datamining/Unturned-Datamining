@@ -199,7 +199,7 @@ public class ItemPlaceableAsset : ItemAsset
         if (p.data.TryParseInt32("Items_Recovered_On_Salvage", out var value))
         {
             MinItemsRecoveredOnSalvage = value;
-            maxItemsDroppedOnDestroy = value;
+            MaxItemsRecoveredOnSalvage = value;
         }
         else
         {
