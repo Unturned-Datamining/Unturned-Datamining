@@ -99,6 +99,8 @@ public class ObjectAsset : Asset
 
     public ushort interactabilityRewardID;
 
+    public EItemOrigin interactabilityRewardItemOrigin;
+
     public Guid interactabilityEffectGuid;
 
     [Obsolete]
@@ -770,6 +772,7 @@ public class ObjectAsset : Asset
                     interactabilityDrops[b] = p.data.ParseUInt16("Interactability_Drop_" + b, 0);
                 }
                 interactabilityRewardID = p.data.ParseUInt16("Interactability_Reward_ID", 0);
+                interactabilityRewardItemOrigin = p.data.ParseEnum("Interactability_RewardItem_Origin", EItemOrigin.NATURE);
                 interactabilityEffect = p.data.ParseGuidOrLegacyId("Interactability_Effect", out interactabilityEffectGuid);
                 if (interactability == EObjectInteractability.DIALOGUE)
                 {

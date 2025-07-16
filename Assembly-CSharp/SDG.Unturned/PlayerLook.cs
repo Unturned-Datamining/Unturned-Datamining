@@ -319,7 +319,17 @@ public class PlayerLook : PlayerCaller
 
     public EPlayerPerspective perspective => _perspective;
 
-    internal bool IsUsing2DScope => (Provider.modeConfigData?.Gameplay?.Use_2D_Scope_Overlay).GetValueOrDefault();
+    internal bool IsUsing2DScope
+    {
+        get
+        {
+            if ((Provider.modeConfigData?.Gameplay?.Use_2D_Scope_Overlay).GetValueOrDefault())
+            {
+                return GraphicsSettings.scopeQuality == EGraphicQuality.OFF;
+            }
+            return false;
+        }
+    }
 
     public bool canUseFreecam
     {

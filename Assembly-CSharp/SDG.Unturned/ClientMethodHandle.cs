@@ -111,6 +111,7 @@ public abstract class ClientMethodHandle
         catch (Exception e)
         {
             UnturnedLog.exception(e, "Exception invoking {0} by client loopback:", clientMethodInfo);
+            UnturnedLog.error("Additional context loopback calling stack trace:\n" + Environment.StackTrace);
         }
     }
 }

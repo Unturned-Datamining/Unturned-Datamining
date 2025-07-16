@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using SDG.Framework.Water;
 using UnityEngine;
@@ -29,9 +30,13 @@ public sealed class SkyFogRenderer : PostProcessEffectRenderer<SkyFog>
 
     private int waterMatricesId;
 
-    private const int MAX_WATER_COUNT = 16;
+    private const int MAX_WATER_COUNT = 3;
 
-    private static Matrix4x4[] waterMatrices = new Matrix4x4[16];
+    private static Matrix4x4[] waterMatrices = new Matrix4x4[3];
+
+    private static List<VolumeAlphaPair<WaterVolume>> relevantWaterVolumes = new List<VolumeAlphaPair<WaterVolume>>();
+
+    private static Comparison<VolumeAlphaPair<WaterVolume>> volumeComparison = CompareVolumes;
 
     public override void Init()
     {
@@ -58,17 +63,46 @@ public sealed class SkyFogRenderer : PostProcessEffectRenderer<SkyFog>
         propertySheet.properties.SetColor(groundColorId, RenderSettings.skybox.GetColor(groundColorId));
         propertySheet.properties.SetMatrix(inverseProjectionMatrixId, context.camera.projectionMatrix.inverse);
         propertySheet.properties.SetMatrix(cameraToWorldMatrixId, context.camera.cameraToWorldMatrix);
-        List<WaterVolume> list = VolumeManager<WaterVolume, WaterVolumeManager>.Get().InternalGetAllVolumes();
-        int num = (LevelLighting.enableUnderwaterEffects ? Mathf.Min(list.Count, 16) : 0);
+        FindRelevantWaterVolumes(context.camera.transform.position);
+        int num = (LevelLighting.enableUnderwaterEffects ? Mathf.Min(relevantWaterVolumes.Count, 3) : 0);
         bool flag = LevelLighting.isSea && num > 0;
         propertySheet.properties.SetColor(waterColorId, LevelLighting.getSeaColor("_BaseColor"));
         propertySheet.properties.SetFloat(isCameraUnderwaterId, flag ? 1f : 0f);
         propertySheet.properties.SetInt(waterCountId, num);
         for (int i = 0; i < num; i++)
         {
-            waterMatrices[i] = list[i].transform.worldToLocalMatrix;
+            waterMatrices[i] = relevantWaterVolumes[i].volume.transform.worldToLocalMatrix;
         }
         propertySheet.properties.SetMatrixArray(waterMatricesId, waterMatrices);
         context.command.BlitFullscreenTriangle(context.source, context.destination, propertySheet, 0);
+    }
+
+    private void FindRelevantWaterVolumes(Vector3 viewPosition)
+    {
+        relevantWaterVolumes.Clear();
+        List<WaterVolume> list = VolumeManager<WaterVolume, WaterVolumeManager>.Get().InternalGetAllVolumes();
+        if (list.Count > 3)
+        {
+            foreach (WaterVolume item in list)
+            {
+                Vector3 closestWorldPosition = item.GetClosestWorldPosition(viewPosition);
+                float sqrMagnitude = (viewPosition - closestWorldPosition).sqrMagnitude;
+                if (sqrMagnitude < 4f)
+                {
+                    relevantWaterVolumes.Add(new VolumeAlphaPair<WaterVolume>(item, sqrMagnitude));
+                }
+            }
+            relevantWaterVolumes.Sort(volumeComparison);
+            return;
+        }
+        foreach (WaterVolume item2 in list)
+        {
+            relevantWaterVolumes.Add(new VolumeAlphaPair<WaterVolume>(item2, 0f));
+        }
+    }
+
+    private static int CompareVolumes(VolumeAlphaPair<WaterVolume> lhs, VolumeAlphaPair<WaterVolume> rhs)
+    {
+        return lhs.alpha.CompareTo(rhs.alpha);
     }
 }

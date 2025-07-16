@@ -19,6 +19,13 @@ public struct PaintableVehicleSection : IDatParseable
 
     public bool TryParse(IDatNode node)
     {
+        if (node is DatValue datValue)
+        {
+            path = datValue.value;
+            materialIndex = -1;
+            allMaterials = true;
+            return !string.IsNullOrEmpty(path);
+        }
         if (node is IDatDictionary dictionary)
         {
             path = dictionary.GetString("Path");

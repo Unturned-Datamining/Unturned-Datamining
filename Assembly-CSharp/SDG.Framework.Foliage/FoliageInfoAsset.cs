@@ -38,6 +38,8 @@ public abstract class FoliageInfoAsset : Asset
 
     public virtual Quaternion randomRotation => Quaternion.Euler(new Vector3(Random.Range(minRotation.x, maxRotation.x), Random.Range(minRotation.y, maxRotation.y), Random.Range(minRotation.z, maxRotation.z)));
 
+    public bool UniformScale { get; set; }
+
     public virtual Vector3 randomScale => new Vector3(Random.Range(minScale.x, maxScale.x), Random.Range(minScale.y, maxScale.y), Random.Range(minScale.z, maxScale.z));
 
     public virtual void bakeFoliage(FoliageBakeSettings bakeSettings, IFoliageSurface surface, Bounds bounds, float surfaceWeight, float collectionWeight)
@@ -151,8 +153,19 @@ public abstract class FoliageInfoAsset : Asset
         maxSurfaceAngle = p.data.ParseFloat("Max_Angle");
         minRotation = p.data.ParseVector3("Min_Rotation");
         maxRotation = p.data.ParseVector3("Max_Rotation");
-        minScale = p.data.ParseVector3("Min_Scale");
-        maxScale = p.data.ParseVector3("Max_Scale");
+        UniformScale = p.data.ParseBool("Uniform_Scale");
+        if (UniformScale)
+        {
+            float num = p.data.ParseFloat("Min_Scale");
+            minScale = new Vector3(num, num, num);
+            float num2 = p.data.ParseFloat("Max_Scale");
+            maxScale = new Vector3(num2, num2, num2);
+        }
+        else
+        {
+            minScale = p.data.ParseVector3("Min_Scale");
+            maxScale = p.data.ParseVector3("Max_Scale");
+        }
     }
 
     protected virtual void resetFoliageInfo()

@@ -4771,30 +4771,45 @@ public class InteractableVehicle : Interactable, IExplosionDamageable, IEquatabl
             return;
         }
         DynamicWaterTransparentSort dynamicWaterTransparentSort = DynamicWaterTransparentSort.Get();
-        string[] extraTransparentSections = asset.extraTransparentSections;
-        foreach (string text in extraTransparentSections)
+        PaintableVehicleSection[] extraTransparentSections = asset.extraTransparentSections;
+        for (int i = 0; i < extraTransparentSections.Length; i++)
         {
-            Transform transform = base.transform.Find(text);
+            PaintableVehicleSection paintableVehicleSection = extraTransparentSections[i];
+            Transform transform = base.transform.Find(paintableVehicleSection.path);
             if (transform == null)
             {
-                Assets.ReportError(asset, "missing additional transparent section transform \"" + text + "\"");
+                Assets.ReportError(asset, "missing additional transparent section transform \"" + paintableVehicleSection.path + "\"");
                 continue;
             }
             Renderer component = transform.GetComponent<Renderer>();
             if (component == null)
             {
-                Assets.ReportError(asset, "additional transparent section \"" + text + "\" missing Renderer component");
+                Assets.ReportError(asset, "additional transparent section \"" + paintableVehicleSection.path + "\" missing Renderer component");
                 continue;
             }
-            Material material = component.material;
-            if (material == null)
+            tempMaterialsList.Clear();
+            component.GetMaterials(tempMaterialsList);
+            if (paintableVehicleSection.allMaterials)
             {
-                Assets.ReportError(asset, "additional transparent section \"" + text + "\" missing material");
+                foreach (Material tempMaterials in tempMaterialsList)
+                {
+                    materialsToDestroy.Add(tempMaterials);
+                    object item = dynamicWaterTransparentSort.Register(transform, tempMaterials);
+                    waterSortHandles.Add(item);
+                }
                 continue;
             }
-            materialsToDestroy.Add(material);
-            object item = dynamicWaterTransparentSort.Register(transform, material);
-            waterSortHandles.Add(item);
+            foreach (Material tempMaterials2 in tempMaterialsList)
+            {
+                materialsToDestroy.Add(tempMaterials2);
+            }
+            if (paintableVehicleSection.materialIndex < 0 || paintableVehicleSection.materialIndex >= tempMaterialsList.Count)
+            {
+                Assets.ReportError(asset, $"additional transparent section \"{paintableVehicleSection.path}\" material index out of range (index: {paintableVehicleSection.materialIndex} length: {tempMaterialsList.Count})");
+                continue;
+            }
+            object item2 = dynamicWaterTransparentSort.Register(transform, tempMaterialsList[paintableVehicleSection.materialIndex]);
+            waterSortHandles.Add(item2);
         }
     }
 

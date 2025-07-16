@@ -112,7 +112,7 @@ public class SleekBcAssetField : SleekWrapper
 
     private void UpdateValue()
     {
-        CachingBcAssetRef.TryParse(idField.Text, out var result);
+        CachingBcAssetRef.TryParse(idField.Text, LegacyType, out var result);
         if (_value != result)
         {
             _value = result;

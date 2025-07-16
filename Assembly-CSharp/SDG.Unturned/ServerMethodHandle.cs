@@ -78,6 +78,7 @@ public abstract class ServerMethodHandle
         catch (Exception e)
         {
             UnturnedLog.exception(e, "Exception invoking {0} by server loopback:", serverMethodInfo);
+            UnturnedLog.error("Additional context loopback calling stack trace:\n" + Environment.StackTrace);
         }
     }
 }

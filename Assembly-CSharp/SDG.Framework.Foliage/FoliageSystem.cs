@@ -52,11 +52,12 @@ public class FoliageSystem : DevkitHierarchyItemBase
 
     /// <summary>
     /// Nelson 2025-04-22: instanced foliage rendering is a decent chunk of CPU time. In retrospect this seems like
-    /// an obvious optimization: Graphics.DrawMeshInstanced accepts up to 1023 instances per call. Each tile
-    /// groups instances in lists of up to 1023, but often isn't that high. Now, we collect instances until we
-    /// hit the 1023 limit. This is particularly useful for sparse variants like colored flowers.
+    /// an obvious optimization: Graphics.DrawMeshInstanced accepts up to 1023* instances per call. Each tile
+    /// groups instances in lists of up to 1023*, but often isn't that high. Now, we collect instances until we
+    /// hit the 1023* limit. This is particularly useful for sparse variants like colored flowers.
     /// With a consistent camera transform ("/copycameratransform") on an upcoming map remaster I went from between
     /// 0.72-0.8 ms on my PC to 0.55-0.6 ms!
+    /// *Nelson 2025-07-14: refer to NON_UNIFORM_SCALE_INSTANCES_PER_BATCH.
     /// </summary>
     private static Dictionary<FoliageInstancingBatchConfig, FoliageInstancingBatchData> batches;
 
@@ -71,7 +72,14 @@ public class FoliageSystem : DevkitHierarchyItemBase
     /// </summary>
     private static readonly FoliageCoord[][] DRAW_OFFSETS;
 
-    private const int MAX_MATRICES_PER_BATCH = 1023;
+    internal const int MAX_MATRICES_PER_BATCH = 1023;
+
+    /// <summary>
+    /// Nelson 2025-07-14: although Graphics.DrawMeshInstanced accepts 1023 instances, it will split them into max
+    /// batches of [1, 511, 511] if shader does not have: #pragma instancing_options assumeuniformscaling
+    /// So, we might as well do our own splitting of batches to avoid batches of 1.
+    /// </summary>
+    internal const int NON_UNIFORM_SCALE_INSTANCES_PER_BATCH = 511;
 
     /// <summary>
     /// Version number associated with this particular system instance.
@@ -433,7 +441,7 @@ public class FoliageSystem : DevkitHierarchyItemBase
                 foliageInstancingBatchData.count = 0;
                 value = foliageInstancingBatchData;
             }
-            int num2 = 1023 - value.count;
+            int num2 = value2.maxMatricesPerBatch - value.count;
             if (num < num2)
             {
                 FastMatrixCopy(list2, 0, value.list, value.count, num);
@@ -442,7 +450,7 @@ public class FoliageSystem : DevkitHierarchyItemBase
             else
             {
                 FastMatrixCopy(list2, 0, value.list, value.count, num2);
-                DrawInstances(in value2.batchConfig, value.list, 1023, camera);
+                DrawInstances(in value2.batchConfig, value.list, value2.maxMatricesPerBatch, camera);
                 value.count = num - num2;
                 if (value.count > 0)
                 {

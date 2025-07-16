@@ -125,6 +125,12 @@ public class LevelInfoConfigData
     public int Batching_Version;
 
     /// <summary>
+    /// Overrides maximum size of textures included in LevelBatching atlas.
+    /// When using this, be mindful the combined texture doesn't exceed some reasonable size (~4k?)
+    /// </summary>
+    public int Batching_Max_Texture_Size = 128;
+
+    /// <summary>
     /// If true, map creator has verified the clutter option works as-expected.
     /// </summary>
     public bool Enable_Clutter_Option;

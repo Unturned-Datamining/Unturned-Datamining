@@ -69,7 +69,7 @@ public class InteractableObjectDropper : InteractableObjectTriggerableBase
             ushort num = SpawnTableTool.ResolveLegacyId(interactabilityRewardID, EAssetType.ITEM, OnGetDropSpawnTableErrorContext);
             if (num != 0)
             {
-                ItemManager.dropItem(new Item(num, EItemOrigin.NATURE), dropTransform.position, playEffect: false, isDropped: true, wideSpread: false);
+                ItemManager.dropItem(new Item(num, base.objectAsset.interactabilityRewardItemOrigin), dropTransform.position, playEffect: false, isDropped: true, wideSpread: false);
             }
         }
         else
@@ -77,7 +77,7 @@ public class InteractableObjectDropper : InteractableObjectTriggerableBase
             ushort num2 = interactabilityDrops[Random.Range(0, interactabilityDrops.Length)];
             if (num2 != 0)
             {
-                ItemManager.dropItem(new Item(num2, EItemOrigin.NATURE), dropTransform.position, playEffect: false, isDropped: true, wideSpread: false);
+                ItemManager.dropItem(new Item(num2, base.objectAsset.interactabilityRewardItemOrigin), dropTransform.position, playEffect: false, isDropped: true, wideSpread: false);
             }
         }
     }

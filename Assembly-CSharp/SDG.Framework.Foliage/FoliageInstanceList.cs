@@ -11,6 +11,8 @@ public class FoliageInstanceList : IPoolable
 
     internal bool isLoadedAndRenderable;
 
+    internal int maxMatricesPerBatch;
+
     internal FoliageInstancingBatchConfig batchConfig;
 
     public List<List<Matrix4x4>> matrices { get; protected set; }
@@ -42,6 +44,7 @@ public class FoliageInstanceList : IPoolable
         clearWhenBaked.Clear();
         isAssetLoaded = false;
         isLoadedAndRenderable = false;
+        maxMatricesPerBatch = 511;
     }
 
     public bool IsListEmpty()
@@ -101,7 +104,7 @@ public class FoliageInstanceList : IPoolable
         matrixList = null;
         foreach (List<Matrix4x4> matrix in matrices)
         {
-            if (matrix.Count < 1023)
+            if (matrix.Count < maxMatricesPerBatch)
             {
                 matrixList = matrix;
                 break;
@@ -115,7 +118,7 @@ public class FoliageInstanceList : IPoolable
         clearWhenBakedList = null;
         foreach (List<bool> item in clearWhenBaked)
         {
-            if (item.Count < 1023)
+            if (item.Count < maxMatricesPerBatch)
             {
                 clearWhenBakedList = item;
                 break;
@@ -179,9 +182,23 @@ public class FoliageInstanceList : IPoolable
         }
         Mesh mesh = Assets.load(foliageInstancedMeshInfoAsset.mesh);
         Material material = Assets.load(foliageInstancedMeshInfoAsset.material);
-        if (material != null && !material.enableInstancing)
+        if (material != null)
         {
-            material.enableInstancing = true;
+            if (!material.enableInstancing)
+            {
+                material.enableInstancing = true;
+            }
+            if ((bool)Assets.shouldValidateAssets)
+            {
+                if (material.IsKeywordEnabled("ASSUME_UNIFORM_SCALE_ON"))
+                {
+                    foliageInstancedMeshInfoAsset.ReportAssetError("material has Uniform Scale enabled, but asset does not (instancing will not benefit from assumeuniformscaling!)");
+                }
+                else if (foliageInstancedMeshInfoAsset.UniformScale)
+                {
+                    foliageInstancedMeshInfoAsset.ReportAssetError("asset has Uniform Scale enabled, but material does not (instancing will not benefit from assumeuniformscaling!)");
+                }
+            }
         }
         bool castShadows = foliageInstancedMeshInfoAsset.castShadows;
         batchConfig = new FoliageInstancingBatchConfig(mesh, material, castShadows);
@@ -195,6 +212,7 @@ public class FoliageInstanceList : IPoolable
             sqrDrawDistance = foliageInstancedMeshInfoAsset.drawDistance * foliageInstancedMeshInfoAsset.drawDistance;
         }
         isLoadedAndRenderable = mesh != null && material != null;
+        maxMatricesPerBatch = (foliageInstancedMeshInfoAsset.UniformScale ? 1023 : 511);
     }
 
     public FoliageInstanceList()

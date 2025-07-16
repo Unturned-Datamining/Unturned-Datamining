@@ -186,7 +186,7 @@ public class VehicleAsset : Asset, ISkinableAsset
     /// <summary>
     /// List of transforms to register with DynamicWaterTransparentSort.
     /// </summary>
-    internal string[] extraTransparentSections;
+    internal PaintableVehicleSection[] extraTransparentSections;
 
     internal CrawlerTrackTilingMaterial[] crawlerTrackTilingMaterials;
 
@@ -1533,22 +1533,7 @@ public class VehicleAsset : Asset, ISkinableAsset
         crawlerTrackTilingMaterials = p.data.ParseArrayOfStructs<CrawlerTrackTilingMaterial>("CrawlerTrackTilingMaterials");
         if (p.data.TryGetList("AdditionalTransparentSections", out var node))
         {
-            List<string> list = new List<string>(node.Count);
-            foreach (IDatNode item in node)
-            {
-                if (item is IDatValue datValue)
-                {
-                    list.Add(datValue.Value);
-                }
-                else
-                {
-                    Assets.ReportError(this, "unable to parse additional transparent section " + item.DebugDumpToString());
-                }
-            }
-            if (!list.IsEmpty())
-            {
-                extraTransparentSections = list.ToArray();
-            }
+            extraTransparentSections = node.ParseArrayOfStructs<PaintableVehicleSection>();
         }
         IDatList node2;
         bool flag = p.data.TryGetList("DefaultPaintColors", out node2);
@@ -1556,9 +1541,9 @@ public class VehicleAsset : Asset, ISkinableAsset
         if (defaultPaintColorMode == EVehicleDefaultPaintColorMode.List)
         {
             DefaultPaintColors = new List<Color32>(node2.Count);
-            foreach (IDatNode item2 in node2)
+            foreach (IDatNode item in node2)
             {
-                if (item2 is IDatValue node3 && node3.TryParseColor32RGB(out var value4))
+                if (item is IDatValue node3 && node3.TryParseColor32RGB(out var value4))
                 {
                     DefaultPaintColors.Add(value4);
                 }
@@ -1584,55 +1569,55 @@ public class VehicleAsset : Asset, ISkinableAsset
         rollAngularVelocityDamping = p.data.ParseFloat("RollAngularVelocityDamping", -1f);
         if (p.data.TryGetList("WheelConfigurations", out var node5))
         {
-            List<VehicleWheelConfiguration> list2 = new List<VehicleWheelConfiguration>();
+            List<VehicleWheelConfiguration> list = new List<VehicleWheelConfiguration>();
+            List<int> list2 = new List<int>();
             List<int> list3 = new List<int>();
-            List<int> list4 = new List<int>();
-            foreach (IDatNode item3 in node5)
+            foreach (IDatNode item2 in node5)
             {
                 VehicleWheelConfiguration vehicleWheelConfiguration = new VehicleWheelConfiguration();
-                if (vehicleWheelConfiguration.TryParse(item3))
+                if (vehicleWheelConfiguration.TryParse(item2))
                 {
                     if (vehicleWheelConfiguration.modelUseColliderPose)
                     {
-                        int count = list2.Count;
-                        list3.Add(count);
+                        int count = list.Count;
+                        list2.Add(count);
                     }
                     if (vehicleWheelConfiguration.isColliderPowered)
                     {
-                        int count2 = list2.Count;
-                        list4.Add(count2);
+                        int count2 = list.Count;
+                        list3.Add(count2);
                     }
-                    list2.Add(vehicleWheelConfiguration);
+                    list.Add(vehicleWheelConfiguration);
                 }
                 else
                 {
-                    Assets.reportError("Unable to parse entry in WheelConfigurations list: " + item3.DebugDumpToString());
+                    Assets.reportError("Unable to parse entry in WheelConfigurations list: " + item2.DebugDumpToString());
                 }
             }
-            wheelConfiguration = list2.ToArray();
+            wheelConfiguration = list.ToArray();
+            if (list2.Count > 0)
+            {
+                replicatedWheelIndices = list2.ToArray();
+            }
             if (list3.Count > 0)
             {
-                replicatedWheelIndices = list3.ToArray();
-            }
-            if (list4.Count > 0)
-            {
-                poweredWheelIndices = list4.ToArray();
+                poweredWheelIndices = list3.ToArray();
             }
         }
         reverseGearRatio = p.data.ParseFloat("ReverseGearRatio", 1f);
         if (p.data.TryGetList("ForwardGearRatios", out var node6))
         {
-            List<float> list5 = new List<float>();
-            foreach (IDatNode item4 in node6)
+            List<float> list4 = new List<float>();
+            foreach (IDatNode item3 in node6)
             {
-                if (item4 is IDatValue valueNode && valueNode.TryParseFloat(out var value5))
+                if (item3 is IDatValue valueNode && valueNode.TryParseFloat(out var value5))
                 {
-                    list5.Add(value5);
+                    list4.Add(value5);
                 }
             }
-            if (list5.Count > 0)
+            if (list4.Count > 0)
             {
-                forwardGearRatios = list5.ToArray();
+                forwardGearRatios = list4.ToArray();
                 AllowsEngineRpmAndGearsInHud = p.data.ParseBool("GearShift_VisibleInHUD", defaultValue: true);
             }
         }

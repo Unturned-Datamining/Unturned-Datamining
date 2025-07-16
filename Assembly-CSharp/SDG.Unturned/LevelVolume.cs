@@ -284,6 +284,40 @@ public class LevelVolume<TVolume, TManager> : VolumeBase, IDevkitInteractableBeg
     }
 
     /// <summary>
+    /// Given a point in world space, find the closest point within the total volume in world space.
+    /// </summary>
+    public Vector3 GetClosestWorldPosition(Vector3 position)
+    {
+        switch (_shape)
+        {
+        case ELevelVolumeShape.Box:
+        {
+            Vector3 position3 = base.transform.InverseTransformPoint(position);
+            position3.x = Mathf.Clamp(position3.x, -0.5f, 0.5f);
+            position3.y = Mathf.Clamp(position3.y, -0.5f, 0.5f);
+            position3.z = Mathf.Clamp(position3.z, -0.5f, 0.5f);
+            return base.transform.TransformPoint(position3);
+        }
+        case ELevelVolumeShape.Sphere:
+        {
+            Vector3 position2 = base.transform.position;
+            Vector3 vector = position - position2;
+            float magnitude = vector.magnitude;
+            if (magnitude < float.Epsilon)
+            {
+                return position2;
+            }
+            float sphereRadius = GetSphereRadius();
+            Vector3 vector2 = vector / magnitude;
+            magnitude = Mathf.Min(magnitude, sphereRadius);
+            return position2 + vector2 * magnitude;
+        }
+        default:
+            throw new NotImplementedException();
+        }
+    }
+
+    /// <summary>
     /// World space size of the box.
     /// </summary>
     public Vector3 GetBoxSize()

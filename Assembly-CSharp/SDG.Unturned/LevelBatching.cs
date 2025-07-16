@@ -161,6 +161,8 @@ internal class LevelBatching
 
     private int propertyID_Glossiness = Shader.PropertyToID("_Glossiness");
 
+    private int maxTextureSize;
+
     /// <summary>
     /// Meshes we logged an explanation for as to why they can't be atlased.
     /// </summary>
@@ -266,6 +268,11 @@ internal class LevelBatching
         loggedTextures.Clear();
         loggedMaterials.Clear();
         staticBatchingMeshRenderers.Clear();
+        maxTextureSize = Level.info.configData?.Batching_Max_Texture_Size ?? (-1);
+        if (maxTextureSize < 1)
+        {
+            maxTextureSize = 128;
+        }
     }
 
     public void Destroy()
@@ -483,19 +490,26 @@ internal class LevelBatching
             bool flag3 = false;
             if (renderer is MeshRenderer meshRenderer)
             {
-                MeshFilter component = renderer.GetComponent<MeshFilter>();
-                Mesh mesh = component?.sharedMesh;
-                if (mesh != null)
+                try
                 {
-                    if (CanBatchMesh(mesh, renderer))
+                    MeshFilter component = renderer.GetComponent<MeshFilter>();
+                    Mesh mesh = component?.sharedMesh;
+                    if (mesh != null)
                     {
-                        AddMesh(component, meshRenderer);
-                        staticBatchingMeshRenderers.Add(meshRenderer);
+                        if (CanBatchMesh(mesh, renderer))
+                        {
+                            AddMesh(component, meshRenderer);
+                            staticBatchingMeshRenderers.Add(meshRenderer);
+                        }
+                        else
+                        {
+                            flag3 = true;
+                        }
                     }
-                    else
-                    {
-                        flag3 = true;
-                    }
+                }
+                catch (MissingComponentException e)
+                {
+                    UnturnedLog.exception(e, "Caught MissingComponentException looking for MeshFilter component on MeshRenderer at " + meshRenderer.GetSceneHierarchyPath());
                 }
             }
             else if (renderer is SkinnedMeshRenderer { sharedMesh: var sharedMesh } skinnedMeshRenderer && sharedMesh != null)
@@ -596,11 +610,11 @@ internal class LevelBatching
         }
         else
         {
-            if (texture2D.width > 128 || texture2D.height > 128)
+            if (texture2D.width > maxTextureSize || texture2D.height > maxTextureSize)
             {
                 if ((bool)shouldLogTextureAtlasExclusions && loggedTextures.Add(texture2D))
                 {
-                    UnturnedLog.info($"Excluding texture \"{texture2D.name}\" in material \"{material.name}\" renderer \"{renderer.GetSceneHierarchyPath()}\" from atlas because dimensions ({texture2D.width}x{texture2D.height}) are higher than limit ({128}x{128})");
+                    UnturnedLog.info($"Excluding texture \"{texture2D.name}\" in material \"{material.name}\" renderer \"{renderer.GetSceneHierarchyPath()}\" from atlas because dimensions ({texture2D.width}x{texture2D.height}) are higher than limit ({maxTextureSize}x{maxTextureSize})");
                 }
                 return null;
             }
@@ -824,7 +838,7 @@ internal class LevelBatching
             num++;
         }
         RenderTexture.active = active;
-        Rect[] array3 = texture2D.PackTextures(array, 0, 2048, makeNoLongerReadable: true);
+        Rect[] array3 = texture2D.PackTextures(array, 0, 4096, makeNoLongerReadable: true);
         if (array3 != null)
         {
             objectsToDestroy.Add(texture2D);
@@ -888,6 +902,7 @@ internal class LevelBatching
         }
         else
         {
+            UnturnedLog.warn("Failed to pack textures for " + materialTemplate.shader.name + " atlas!");
             UnityEngine.Object.Destroy(texture2D);
         }
         Texture2D[] array4 = array;
