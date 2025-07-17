@@ -1,27 +1,28 @@
 # Host bans
 
 ## IPv4 filters
-| Address          | BanFlags                     |
-| ---------------- | ---------------------------- |
-| 156.236.84.205   | QueryPingWarning             |
-| 194.147.90.86    | HiddenFromInternetServerList |
-| 37.230.210.234   | HiddenFromInternetServerList |
-| 195.140.147.193  | HiddenFromInternetServerList |
-| 85.215.57.110    | HiddenFromInternetServerList |
-| 194.147.90.158   | HiddenFromAllServerLists     |
-| 193.227.241.0/24 | HiddenFromAllServerLists     |
-| 46.174.55.176    | HiddenFromAllServerLists     |
-| 91.197.96.0/22   | HiddenFromAllServerLists     |
-| 89.111.168.0/21  | HiddenFromAllServerLists     |
-| 212.22.85.29     | HiddenFromAllServerLists     |
-| 212.22.85.72     | HiddenFromAllServerLists     |
-| 194.67.88.0/24   | HiddenFromAllServerLists     |
-| 95.163.192.0/18  | HiddenFromAllServerLists     |
-| 79.174.80.0/20   | HiddenFromAllServerLists     |
-| 194.58.114.0/24  | HiddenFromAllServerLists     |
-| 31.31.207.0/24   | HiddenFromAllServerLists     |
-| 46.174.51.182    | HiddenFromInternetServerList |
-| 109.172.30.100   | HiddenFromInternetServerList |
+| Address             | BanFlags                     |
+| ------------------- | ---------------------------- |
+| 156.236.84.205      | QueryPingWarning             |
+| 194.147.90.86       | HiddenFromInternetServerList |
+| 37.230.210.234      | HiddenFromInternetServerList |
+| 195.140.147.193     | HiddenFromInternetServerList |
+| 85.215.57.110       | HiddenFromInternetServerList |
+| 194.147.90.158      | HiddenFromAllServerLists     |
+| 193.227.241.0/24    | HiddenFromAllServerLists     |
+| 46.174.55.176       | HiddenFromAllServerLists     |
+| 91.197.96.0/22      | HiddenFromAllServerLists     |
+| 89.111.168.0/21     | HiddenFromAllServerLists     |
+| 212.22.85.29        | HiddenFromAllServerLists     |
+| 212.22.85.72        | HiddenFromAllServerLists     |
+| 194.67.88.0/24      | HiddenFromAllServerLists     |
+| 95.163.192.0/18     | HiddenFromAllServerLists     |
+| 79.174.80.0/20      | HiddenFromAllServerLists     |
+| 194.58.114.0/24     | HiddenFromAllServerLists     |
+| 31.31.207.0/24      | HiddenFromAllServerLists     |
+| 46.174.51.182       | HiddenFromInternetServerList |
+| 43.241.18.191:22222 | MonetizationWarning          |
+| 109.172.30.100      | HiddenFromInternetServerList |
 
 ## Name filters
 | Regex                                                                                 | BanFlags                          |
@@ -58,6 +59,7 @@
 | (?i)(https://i.imgur.com/7pqS8L7.png)                   | ![https://i.imgur.com/7pqS8L7.png](https://i.imgur.com/7pqS8L7.png)                                     | HiddenFromAllServerLists          |
 | (?i)(https://i.imgur.com/Zapo5if.png)                   | ![https://i.imgur.com/Zapo5if.png](https://i.imgur.com/Zapo5if.png)                                     | HiddenFromAllServerLists          |
 | (?i)(https://imgur.com/Bzo2gJY.png)                     | ![https://imgur.com/Bzo2gJY.png](https://imgur.com/Bzo2gJY.png)                                         | HiddenFromInternetServerList      |
+| (?i)(http://whitelist.busil.cn:81/motable.jpg)          | ![http://whitelist.busil.cn:81/motable.jpg](http://whitelist.busil.cn:81/motable.jpg)                   | MonetizationWarning               |
 | (?i)(https://pic.imge.cc/2024/07/22/669e09cfbf24f.jpeg) | ![https://pic.imge.cc/2024/07/22/669e09cfbf24f.jpeg](https://pic.imge.cc/2024/07/22/669e09cfbf24f.jpeg) | HiddenFromInternetServerList      |
 | (?i)(https://i.imgur.com/oAbg6NM.png)                   | ![https://i.imgur.com/oAbg6NM.png](https://i.imgur.com/oAbg6NM.png)                                     | HiddenFromAllServerLists, Blocked |
 
@@ -74,6 +76,7 @@
 | 85568392934886729 | HiddenFromAllServerLists          |
 | 85568392932486552 | HiddenFromInternetServerList      |
 | 85568392932492857 | HiddenFromInternetServerList      |
+| 85568392932523241 | MonetizationWarning               |
 | 85568392931735316 | HiddenFromInternetServerList      |
 | 85568392933086384 | HiddenFromInternetServerList      |
 | 85568392932085893 | HiddenFromInternetServerList      |
