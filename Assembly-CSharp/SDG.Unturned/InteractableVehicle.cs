@@ -4794,6 +4794,11 @@ public class InteractableVehicle : Interactable, IExplosionDamageable, IEquatabl
                 foreach (Material tempMaterials in tempMaterialsList)
                 {
                     materialsToDestroy.Add(tempMaterials);
+                    if (tempMaterials.renderQueue != 3000)
+                    {
+                        Assets.ReportError(asset, $"additional transparent section \"{paintableVehicleSection.path}\" material render queue {tempMaterials.renderQueue} is not transparent");
+                        continue;
+                    }
                     object item = dynamicWaterTransparentSort.Register(transform, tempMaterials);
                     waterSortHandles.Add(item);
                 }
@@ -4808,7 +4813,13 @@ public class InteractableVehicle : Interactable, IExplosionDamageable, IEquatabl
                 Assets.ReportError(asset, $"additional transparent section \"{paintableVehicleSection.path}\" material index out of range (index: {paintableVehicleSection.materialIndex} length: {tempMaterialsList.Count})");
                 continue;
             }
-            object item2 = dynamicWaterTransparentSort.Register(transform, tempMaterialsList[paintableVehicleSection.materialIndex]);
+            Material material = tempMaterialsList[paintableVehicleSection.materialIndex];
+            if (material.renderQueue != 3000)
+            {
+                Assets.ReportError(asset, $"additional transparent section \"{paintableVehicleSection.path}\" material {paintableVehicleSection.materialIndex} render queue {material.renderQueue} is not transparent");
+                continue;
+            }
+            object item2 = dynamicWaterTransparentSort.Register(transform, material);
             waterSortHandles.Add(item2);
         }
     }

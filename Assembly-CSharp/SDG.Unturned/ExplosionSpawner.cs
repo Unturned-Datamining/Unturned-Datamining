@@ -57,7 +57,7 @@ public class ExplosionSpawner : MonoBehaviour
 
     public void Explode()
     {
-        if (Provider.isServer)
+        if (Provider.isServer && !EffectManager.isInstantiatingEffectForPreload)
         {
             ExplosionParameters parameters = new ExplosionParameters(base.transform.position, DamageRadius, Cause, CSteamID.Nil);
             parameters.damageType = DamageType;

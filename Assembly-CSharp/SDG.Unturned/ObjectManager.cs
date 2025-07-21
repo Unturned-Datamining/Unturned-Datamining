@@ -83,8 +83,15 @@ public class ObjectManager : SteamCaller
         {
             return;
         }
-        ObjectRegion objectRegion = regions[x, y];
-        if (objectRegion == null || (!Provider.isServer && !objectRegion.isNetworked) || LevelObjects.objects == null)
+        if (!Dedicator.IsDedicatedServer)
+        {
+            ObjectRegion objectRegion = regions[x, y];
+            if (objectRegion == null || (!Provider.isServer && !objectRegion.isNetworked))
+            {
+                return;
+            }
+        }
+        if (LevelObjects.objects == null)
         {
             return;
         }
@@ -329,8 +336,15 @@ public class ObjectManager : SteamCaller
         {
             return;
         }
-        ObjectRegion objectRegion = regions[x, y];
-        if ((Provider.isServer || objectRegion.isNetworked) && index < LevelObjects.objects[x, y].Count)
+        if (!Dedicator.IsDedicatedServer)
+        {
+            ObjectRegion objectRegion = regions[x, y];
+            if (!Provider.isServer && !objectRegion.isNetworked)
+            {
+                return;
+            }
+        }
+        if (index < LevelObjects.objects[x, y].Count)
         {
             InteractableObjectBinaryState interactableObjectBinaryState = LevelObjects.objects[x, y][index].interactable as InteractableObjectBinaryState;
             if (interactableObjectBinaryState != null)

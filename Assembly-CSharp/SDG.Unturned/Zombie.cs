@@ -286,6 +286,10 @@ public class Zombie : MonoBehaviour, IExplosionDamageable, IEquatable<IExplosion
 
     internal ZombieRegion zombieRegion;
 
+    private Vector3 lastFootstepPosition;
+
+    private bool wasGrounded;
+
     private bool isCountedAsAliveInZombieRegion;
 
     private bool isCountedAsAliveBossInZombieRegion;
@@ -2623,30 +2627,43 @@ public class Zombie : MonoBehaviour, IExplosionDamageable, IEquatable<IExplosion
             lastRegen = Time.time;
             health++;
         }
-        if (!Dedicator.IsDedicatedServer && Time.time - lastGroan > groanDelay)
+        if (!Dedicator.IsDedicatedServer)
         {
-            lastGroan = Time.time;
-            if (isVisible)
+            if (Time.time - lastGroan > groanDelay)
             {
-                if (isMega)
+                lastGroan = Time.time;
+                if (isVisible)
                 {
-                    groanDelay = UnityEngine.Random.Range(2f, 4f);
-                }
-                else
-                {
-                    groanDelay = UnityEngine.Random.Range(4f, 8f);
-                }
-                if (!isMoving)
-                {
-                    if ((double)UnityEngine.Random.value > 0.8)
+                    if (isMega)
                     {
-                        PlayOneShot(ZombieManager.groans);
+                        groanDelay = UnityEngine.Random.Range(2f, 4f);
+                    }
+                    else
+                    {
+                        groanDelay = UnityEngine.Random.Range(4f, 8f);
+                    }
+                    if (!isMoving)
+                    {
+                        if ((double)UnityEngine.Random.value > 0.8)
+                        {
+                            PlayOneShot(ZombieManager.groans);
+                        }
+                    }
+                    else
+                    {
+                        AudioClip[] clips = (speciality.IsDLVolatile() ? ZombieManager.dl_taunt : ZombieManager.roars);
+                        PlayOneShot(clips);
                     }
                 }
-                else
+            }
+            if (isMoving && OptionsSettings._zombieFootstepsVolume > 0.0001f)
+            {
+                EZombieSpeciality eZombieSpeciality = speciality;
+                bool flag = ((eZombieSpeciality == EZombieSpeciality.FLANKER_STALK || (uint)(eZombieSpeciality - 14) <= 1u) ? true : false);
+                if (!flag && (base.transform.position - lastFootstepPosition).sqrMagnitude > 2f)
                 {
-                    AudioClip[] clips = (speciality.IsDLVolatile() ? ZombieManager.dl_taunt : ZombieManager.roars);
-                    PlayOneShot(clips);
+                    lastFootstepPosition = base.transform.position;
+                    UodateFootsteps();
                 }
             }
         }
@@ -2874,6 +2891,110 @@ public class Zombie : MonoBehaviour, IExplosionDamageable, IEquatable<IExplosion
                 component2.height = height;
             }
         }
+    }
+
+    private void UodateFootsteps()
+    {
+        int bLOCK_COLLISION = RayMasks.BLOCK_COLLISION;
+        RaycastHit hitInfo;
+        bool flag = Physics.Raycast(new Ray(base.transform.position + new Vector3(0f, 0.1f, 0f), Vector3.down), out hitInfo, 0.35f, bLOCK_COLLISION, QueryTriggerInteraction.Ignore);
+        string text = (flag ? PhysicsTool.GetMaterialName(hitInfo) : null);
+        if (flag && !string.IsNullOrEmpty(text))
+        {
+            bool flag2 = false;
+            if (!wasGrounded)
+            {
+                flag2 = PlayLandAudioClip(text);
+            }
+            if (!flag2)
+            {
+                PlayFootstepAudioClip(text);
+            }
+        }
+        wasGrounded = flag;
+    }
+
+    /// <summary>
+    /// Very similar to <see cref="M:SDG.Unturned.PlayerMovement.PlayFootstepAudioClip" />.
+    /// </summary>
+    private void PlayFootstepAudioClip(string materialName)
+    {
+        EZombieSpeciality eZombieSpeciality = speciality;
+        bool flag = (((uint)(eZombieSpeciality - 4) <= 2u || (uint)(eZombieSpeciality - 17) <= 1u) ? true : false);
+        string propertyName = (flag ? "ZombieFootstepRun" : "ZombieFootstepWalk");
+        bool flag2 = false;
+        OneShotAudioDefinition audioDef = PhysicMaterialCustomData.GetAudioDef(materialName, propertyName);
+        if (audioDef == null)
+        {
+            flag2 = true;
+            propertyName = (flag ? "FootstepRun" : "FootstepWalk");
+            audioDef = PhysicMaterialCustomData.GetAudioDef(materialName, propertyName);
+            if (audioDef == null)
+            {
+                return;
+            }
+        }
+        AudioClip randomClip = audioDef.GetRandomClip();
+        if (!(randomClip == null))
+        {
+            float num = 0.125f;
+            OneShotAudioParameters oneShotAudioParameters = new OneShotAudioParameters(base.transform, randomClip);
+            oneShotAudioParameters.RandomizePitch(audioDef.minPitch, audioDef.maxPitch);
+            if (flag2)
+            {
+                oneShotAudioParameters.pitch *= 0.85f;
+            }
+            if (isMega)
+            {
+                num *= 1.5f;
+                oneShotAudioParameters.pitch *= 0.85f;
+            }
+            oneShotAudioParameters.volume = num * audioDef.volumeMultiplier;
+            oneShotAudioParameters.SetLinearRolloff(1f, 32f);
+            oneShotAudioParameters.outputAudioMixerGroup = UnturnedAudioMixer.GetZombieFootstepsGroup();
+            oneShotAudioParameters.Play();
+        }
+    }
+
+    /// <summary>
+    /// Very similar to <see cref="M:SDG.Unturned.PlayerMovement.PlayLandAudioClip" />.
+    /// </summary>
+    /// <returns>True if sound played.</returns>
+    private bool PlayLandAudioClip(string materialName)
+    {
+        bool flag = false;
+        OneShotAudioDefinition audioDef = PhysicMaterialCustomData.GetAudioDef(materialName, "ZombieBipedLand");
+        if (audioDef == null)
+        {
+            flag = true;
+            audioDef = PhysicMaterialCustomData.GetAudioDef(materialName, "BipedLand");
+            if (audioDef == null)
+            {
+                return false;
+            }
+        }
+        AudioClip randomClip = audioDef.GetRandomClip();
+        if (randomClip == null)
+        {
+            return false;
+        }
+        float num = 0.15f;
+        OneShotAudioParameters oneShotAudioParameters = new OneShotAudioParameters(base.transform, randomClip);
+        oneShotAudioParameters.RandomizePitch(audioDef.minPitch, audioDef.maxPitch);
+        if (flag)
+        {
+            oneShotAudioParameters.pitch *= 0.85f;
+        }
+        if (isMega)
+        {
+            num *= 1.5f;
+            oneShotAudioParameters.pitch *= 0.85f;
+        }
+        oneShotAudioParameters.volume = num * audioDef.volumeMultiplier;
+        oneShotAudioParameters.SetLinearRolloff(1f, 24f);
+        oneShotAudioParameters.outputAudioMixerGroup = UnturnedAudioMixer.GetZombieFootstepsGroup();
+        oneShotAudioParameters.Play();
+        return true;
     }
 
     void IExplosionDamageable.ApplyExplosionDamage(in ExplosionParameters explosionParameters, ref ExplosionDamageParameters damageParameters)

@@ -1549,6 +1549,7 @@
 - [SleekHotbarEntry.cs](SleekHotbarEntry.cs)
 - [SleekInventory.cs](SleekInventory.cs)
 - [SleekItem.cs](SleekItem.cs)
+- [SleekItemActionButton.cs](SleekItemActionButton.cs)
 - [SleekItemIcon.cs](SleekItemIcon.cs)
 - [SleekItems.cs](SleekItems.cs)
 - [SleekItemStoreBundleContentEntry.cs](SleekItemStoreBundleContentEntry.cs)

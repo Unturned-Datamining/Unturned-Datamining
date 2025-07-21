@@ -118,6 +118,8 @@ public class EffectManager : SteamCaller
     /// </summary>
     private List<UIEffectInstance> uiEffectInstances = new List<UIEffectInstance>();
 
+    internal static bool isInstantiatingEffectForPreload = false;
+
     /// <summary>
     /// Maps root transform to any attached effects.
     /// This allows us to detach effects when returning a barricade/structure to their pool.
@@ -1588,11 +1590,16 @@ public class EffectManager : SteamCaller
             }
             try
             {
+                isInstantiatingEffectForPreload = true;
                 pool.Instantiate(item.effect, item.id.ToString(), item.preload);
             }
             catch (Exception e)
             {
                 UnturnedLog.exception(e, "Caught exception while pre-populating pool with effect " + item.FriendlyName + ":");
+            }
+            finally
+            {
+                isInstantiatingEffectForPreload = false;
             }
             if (item.splatter <= 0 || item.splatterPreload <= 0)
             {
@@ -1600,16 +1607,22 @@ public class EffectManager : SteamCaller
             }
             for (int i = 0; i < item.splatters.Length; i++)
             {
-                if (!(item.splatters[i] == null))
+                if (item.splatters[i] == null)
                 {
-                    try
-                    {
-                        pool.Instantiate(item.splatters[i], "Splatter", item.splatterPreload);
-                    }
-                    catch (Exception e2)
-                    {
-                        UnturnedLog.exception(e2, $"Caught exception while pre-populating pool with effect {item.FriendlyName} Splatter_{i}:");
-                    }
+                    continue;
+                }
+                try
+                {
+                    isInstantiatingEffectForPreload = true;
+                    pool.Instantiate(item.splatters[i], "Splatter", item.splatterPreload);
+                }
+                catch (Exception e2)
+                {
+                    UnturnedLog.exception(e2, $"Caught exception while pre-populating pool with effect {item.FriendlyName} Splatter_{i}:");
+                }
+                finally
+                {
+                    isInstantiatingEffectForPreload = false;
                 }
             }
         }

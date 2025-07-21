@@ -15,6 +15,8 @@ internal static class UnturnedAudioMixer
 
     private static AudioMixerGroup atmosphereGroup;
 
+    private static AudioMixerGroup zombieFootstepsGroup;
+
     public static AudioMixerGroup GetDefaultGroup()
     {
         if (!hasBeenInitialized)
@@ -40,6 +42,15 @@ internal static class UnturnedAudioMixer
             Initialize();
         }
         return atmosphereGroup;
+    }
+
+    public static AudioMixerGroup GetZombieFootstepsGroup()
+    {
+        if (!hasBeenInitialized)
+        {
+            Initialize();
+        }
+        return zombieFootstepsGroup;
     }
 
     public static void SetDefaultVolume(float linearVolume)
@@ -87,6 +98,15 @@ internal static class UnturnedAudioMixer
         mainMix.SetFloat("AtmosphereVolume", LinearToDb(linearVolume));
     }
 
+    public static void SetZombieFootstepsVolume(float linearVolume)
+    {
+        if (!hasBeenInitialized)
+        {
+            Initialize();
+        }
+        mainMix.SetFloat("ZombieFootstepsVolume", LinearToDb(linearVolume));
+    }
+
     private static float LinearToDb(float linearVolume)
     {
         if (linearVolume < 0.0001f)
@@ -103,5 +123,6 @@ internal static class UnturnedAudioMixer
         defaultGroup = mainMix.FindMatchingGroups("Default")[0];
         musicGroup = mainMix.FindMatchingGroups("Music")[0];
         atmosphereGroup = mainMix.FindMatchingGroups("Atmosphere")[0];
+        zombieFootstepsGroup = mainMix.FindMatchingGroups("ZombieFootsteps")[0];
     }
 }

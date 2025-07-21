@@ -562,6 +562,8 @@ public class Provider : MonoBehaviour
 
     private static Callback<GameRichPresenceJoinRequested_t> gameRichPresenceJoinRequested;
 
+    private static Callback<NewUrlLaunchParameters_t> newUrlLaunchParametersCallback;
+
     private static HAuthTicket ticketHandle = HAuthTicket.Invalid;
 
     private static Dictionary<HAuthTicket, string> pluginTicketHandles = new Dictionary<HAuthTicket, string>();
@@ -4845,6 +4847,44 @@ public class Provider : MonoBehaviour
         }
     }
 
+    private static void OnNewUrlLaunchParametersPosted(NewUrlLaunchParameters_t callback)
+    {
+        if (isConnected)
+        {
+            return;
+        }
+        if (SteamApps.GetLaunchCommandLine(out var pszCommandLine, 2048) > 0 && !string.IsNullOrEmpty(pszCommandLine))
+        {
+            UnturnedLog.info("OnNewUrlLaunchParametersPosted: \"" + pszCommandLine + "\"");
+            if (!CommandLine.TryGetSteamConnect(pszCommandLine, out var newIP, out var queryPort, out var pass, out var serverCode))
+            {
+                return;
+            }
+            if (serverCode.IsValid())
+            {
+                UnturnedLog.info("URL connect code: {0} Password: '{1}'", serverCode, pass);
+                if (serverCode.BGameServerAccount())
+                {
+                    connect(new ServerConnectParameters(serverCode, pass), null, null);
+                }
+                else
+                {
+                    UnturnedLog.warn($"URL connect non-gameserver code ({serverCode.GetEAccountType()})");
+                }
+            }
+            else
+            {
+                SteamConnectionInfo steamConnectionInfo = new SteamConnectionInfo(newIP, queryPort, pass);
+                UnturnedLog.info("URL connect IP: {0} Port: {1} Password: '{2}'", Parser.getIPFromUInt32(steamConnectionInfo.ip), steamConnectionInfo.port, steamConnectionInfo.password);
+                MenuPlayConnectUI.connect(steamConnectionInfo, shouldAutoJoin: false, MenuPlayServerInfoUI.EServerInfoOpenContext.CONNECT);
+            }
+        }
+        else
+        {
+            UnturnedLog.info("OnNewUrlLaunchParametersPosted: empty");
+        }
+    }
+
     internal static void lag(float value)
     {
         value = Mathf.Clamp01(value);
@@ -5423,6 +5463,7 @@ public class Provider : MonoBehaviour
         getTicketForWebApiResponseCallback = Callback<GetTicketForWebApiResponse_t>.Create(OnGetTicketForWebApiResponse);
         gameServerChangeRequested = Callback<GameServerChangeRequested_t>.Create(onGameServerChangeRequested);
         gameRichPresenceJoinRequested = Callback<GameRichPresenceJoinRequested_t>.Create(onGameRichPresenceJoinRequested);
+        newUrlLaunchParametersCallback = Callback<NewUrlLaunchParameters_t>.Create(OnNewUrlLaunchParametersPosted);
         _user = SteamUser.GetSteamID();
         _client = user;
         _clientHash = Hash.SHA1(client);

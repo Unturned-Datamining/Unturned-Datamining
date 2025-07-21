@@ -153,8 +153,6 @@ public class PlayerDashboardInventoryUI
 
     private static Items areaItems;
 
-    private static List<Action> actions;
-
     private static OncePerFrameGuard eventGuard;
 
     public static bool isDragging { get; private set; }
@@ -451,51 +449,6 @@ public class PlayerDashboardInventoryUI
         ConsumeEvent();
     }
 
-    private static void onClickedAction(ISleekElement button)
-    {
-        int index = selectionExtraActionsBox.FindIndexOfChild(button);
-        Action action = actions[index];
-        if (!(action.FindBlueprintOwnerAsset() is IBlueprintOwner blueprintOwner))
-        {
-            return;
-        }
-        Blueprint[] array = new Blueprint[action.blueprints.Length];
-        int num = -1;
-        bool flag = false;
-        ActionBlueprint[] blueprints = action.blueprints;
-        foreach (ActionBlueprint actionBlueprint in blueprints)
-        {
-            num++;
-            Blueprint blueprint = actionBlueprint.FindBlueprint(blueprintOwner);
-            if (blueprint == null)
-            {
-                UnturnedLog.warn($"Unable to find action's blueprint {actionBlueprint}");
-                return;
-            }
-            array[num] = blueprint;
-            flag |= actionBlueprint.isLink;
-        }
-        flag &= !InputEx.GetKey(ControlsSettings.SkipActionCraftingMenu);
-        PlayerDashboardCraftingUI.filteredBlueprintsOverride = array;
-        if (!flag)
-        {
-            flag = Player.LocalPlayer.equipment.isBusy || !PlayerDashboardCraftingUI.UpdateFilteredBlueprintsAndGetAreAllCraftable();
-        }
-        if (flag)
-        {
-            close();
-            PlayerDashboardCraftingUI.open();
-            return;
-        }
-        bool key = InputEx.GetKey(ControlsSettings.other);
-        foreach (Blueprint blueprint2 in array)
-        {
-            Player.LocalPlayer.crafting.SendRequestToCraft(blueprint2, key);
-        }
-        PlayerDashboardCraftingUI.filteredBlueprintsOverride = null;
-        closeSelection();
-    }
-
     private static void onClickedRot_XButton(ISleekElement button)
     {
         InteractableStorage interactableStorage = PlayerInteract.interactable as InteractableStorage;
@@ -738,10 +691,8 @@ public class PlayerDashboardInventoryUI
         int num4 = 0;
         if (page != PlayerInventory.AREA)
         {
-            actions.Clear();
-            for (int i = 0; i < selectedAsset.actions.Count; i++)
+            foreach (Action action in selectedAsset.actions)
             {
-                Action action = selectedAsset.actions[i];
                 if (action.type == EActionType.BLUEPRINT)
                 {
                     if (page < PlayerInventory.SLOTS || page >= PlayerInventory.STORAGE || !(action.FindBlueprintOwnerAsset() is IBlueprintOwner blueprintOwner))
@@ -754,35 +705,11 @@ public class PlayerDashboardInventoryUI
                         continue;
                     }
                 }
-                actions.Add(action);
-                ISleekButton sleekButton = Glazier.Get().CreateButton();
-                sleekButton.PositionOffset_Y = num4;
-                sleekButton.SizeScale_X = 1f;
-                sleekButton.SizeOffset_Y = 30f;
-                string text;
-                if (!string.IsNullOrEmpty(action.key))
-                {
-                    sleekButton.Text = localization.format(action.key + "_Button");
-                    text = localization.format(action.key + "_Button_Tooltip");
-                }
-                else
-                {
-                    sleekButton.Text = action.text;
-                    text = action.tooltip;
-                }
-                if (action.type == EActionType.BLUEPRINT && !string.IsNullOrEmpty(text))
-                {
-                    text += "\n\n";
-                    if (action.IsAnyBlueprintLink)
-                    {
-                        text += localization.format("ActionBlueprint_SkipCraftingTooltip", MenuConfigurationControlsUI.getKeyCodeText(ControlsSettings.SkipActionCraftingMenu));
-                        text += "\n";
-                    }
-                    text += localization.format("ActionBlueprint_CraftAllTooltip", MenuConfigurationControlsUI.getKeyCodeText(ControlsSettings.other));
-                }
-                sleekButton.TooltipText = text;
-                sleekButton.OnClicked += onClickedAction;
-                selectionExtraActionsBox.AddChild(sleekButton);
+                SleekItemActionButton sleekItemActionButton = new SleekItemActionButton(action);
+                sleekItemActionButton.PositionOffset_Y = num4;
+                sleekItemActionButton.SizeScale_X = 1f;
+                sleekItemActionButton.SizeOffset_Y = 30f;
+                selectionExtraActionsBox.AddChild(sleekItemActionButton);
                 num4 += 40;
                 num3 += 40;
             }
@@ -2335,7 +2262,6 @@ public class PlayerDashboardInventoryUI
             clothingBox.AddChild(items[b4]);
         }
         areaItems = new Items(PlayerInventory.AREA);
-        actions = new List<Action>();
         selectionFrame = Glazier.Get().CreateFrame();
         selectionFrame.SizeScale_X = 1f;
         selectionFrame.SizeScale_Y = 1f;

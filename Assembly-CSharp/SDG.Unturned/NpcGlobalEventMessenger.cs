@@ -21,7 +21,7 @@ public class NpcGlobalEventMessenger : MonoBehaviour
 
     public void SendEventId(string eventId)
     {
-        if (Provider.isServer && !string.IsNullOrEmpty(eventId))
+        if (Provider.isServer && !string.IsNullOrEmpty(eventId) && !EffectManager.isInstantiatingEffectForPreload)
         {
             NPCEventManager.broadcastEvent(null, eventId, ShouldReplicate);
         }

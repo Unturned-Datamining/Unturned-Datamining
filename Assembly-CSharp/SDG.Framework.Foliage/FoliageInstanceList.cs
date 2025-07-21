@@ -192,7 +192,10 @@ public class FoliageInstanceList : IPoolable
             {
                 if (material.IsKeywordEnabled("ASSUME_UNIFORM_SCALE_ON"))
                 {
-                    foliageInstancedMeshInfoAsset.ReportAssetError("material has Uniform Scale enabled, but asset does not (instancing will not benefit from assumeuniformscaling!)");
+                    if (!foliageInstancedMeshInfoAsset.UniformScale)
+                    {
+                        foliageInstancedMeshInfoAsset.ReportAssetError("material has Uniform Scale enabled, but asset does not (instancing will not benefit from assumeuniformscaling!)");
+                    }
                 }
                 else if (foliageInstancedMeshInfoAsset.UniformScale)
                 {

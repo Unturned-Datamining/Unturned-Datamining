@@ -62,4 +62,9 @@ public class Action
         _tooltip = newTooltip;
         _key = newKey;
     }
+
+    public override string ToString()
+    {
+        return $"(Type: {_type} Blueprints: {_blueprints?.Length} Text: {_text} Tooltip: {_tooltip} Key: {_key})";
+    }
 }

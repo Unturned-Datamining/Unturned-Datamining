@@ -32,6 +32,10 @@ public class MobAlertSpawner : MonoBehaviour
 
     public void Alert()
     {
+        if (!Provider.isServer || EffectManager.isInstantiatingEffectForPreload)
+        {
+            return;
+        }
         Vector3 vector = ((!(AlertOriginTransformOverride != null)) ? base.transform.position : AlertOriginTransformOverride.position);
         if (UseScanForPlayers)
         {

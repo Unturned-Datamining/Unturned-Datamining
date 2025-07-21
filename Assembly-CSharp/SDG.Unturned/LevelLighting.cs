@@ -70,6 +70,17 @@ public class LevelLighting
 
     public delegate void IsSeaChangedHandler(bool isSea);
 
+    private struct CloudParticleSystemInstance
+    {
+        public LevelAsset.CloudOverrideParticleSystemsPath config;
+
+        public ParticleSystem particleSystem;
+
+        public Material material;
+
+        public float defaultColorAlpha;
+    }
+
     private class AmbianceAudioInstance
     {
         /// <summary>
@@ -223,6 +234,8 @@ public class LevelLighting
     private static Transform lighting;
 
     private static Rain puddles;
+
+    private static CloudParticleSystemInstance[] cloudOverrideParticles;
 
     private static float auroraBorealisCurrentIntensity;
 
@@ -999,7 +1012,7 @@ public class LevelLighting
         LightingInfo lightingInfo = ((num2 < 0) ? null : times[num2]);
         LightingInfo lightingInfo2 = times[num3];
         float num4;
-        float value2;
+        float num5;
         if (lightingInfo == null)
         {
             sunLight.color = lightingInfo2.colors[0];
@@ -1019,7 +1032,7 @@ public class LevelLighting
             raysIntensity = lightingInfo2.singles[4] * 4f;
             levelFogColor = lightingInfo2.colors[2];
             levelFogIntensity = lightingInfo2.singles[1];
-            value2 = lightingInfo2.singles[2];
+            num5 = lightingInfo2.singles[2];
         }
         else
         {
@@ -1040,12 +1053,12 @@ public class LevelLighting
             raysIntensity = Mathf.Lerp(lightingInfo.singles[4], lightingInfo2.singles[4], num) * 4f;
             levelFogColor = Color.Lerp(lightingInfo.colors[2], lightingInfo2.colors[2], num);
             levelFogIntensity = Mathf.Lerp(lightingInfo.singles[1], lightingInfo2.singles[1], num);
-            value2 = Mathf.Lerp(lightingInfo.singles[2], lightingInfo2.singles[2], num);
+            num5 = Mathf.Lerp(lightingInfo.singles[2], lightingInfo2.singles[2], num);
         }
         cloudColor = cloudRimColor;
         levelAtmosphericFog = 0f;
-        float num5 = 1f;
         float num6 = 1f;
+        float num7 = 1f;
         foreach (CustomWeatherInstance customWeatherInstance in customWeatherInstances)
         {
             customWeatherInstance.component.UpdateLightingTime(num2, num3, num);
@@ -1065,8 +1078,8 @@ public class LevelLighting
                 cloudColor = Color.Lerp(cloudColor, customWeatherInstance.component.cloudColor, t2);
                 cloudRimColor = Color.Lerp(cloudRimColor, customWeatherInstance.component.cloudRimColor, t2);
             }
-            num5 = Mathf.Lerp(num5, customWeatherInstance.component.shadowStrengthMultiplier, customWeatherInstance.component.EffectBlendAlpha);
-            num6 = Mathf.Lerp(num6, customWeatherInstance.component.brightnessMultiplier, customWeatherInstance.component.EffectBlendAlpha);
+            num6 = Mathf.Lerp(num6, customWeatherInstance.component.shadowStrengthMultiplier, customWeatherInstance.component.EffectBlendAlpha);
+            num7 = Mathf.Lerp(num7, customWeatherInstance.component.brightnessMultiplier, customWeatherInstance.component.EffectBlendAlpha);
         }
         if (localBlendingFog)
         {
@@ -1074,21 +1087,21 @@ public class LevelLighting
             levelFogIntensity = Mathf.Lerp(levelFogIntensity, localFogIntensity, localFogBlend);
             levelAtmosphericFog = Mathf.Lerp(levelAtmosphericFog, localAtmosphericFog, localFogBlend);
         }
-        sunLight.shadowStrength = num4 * num5;
-        if (num6 != 1f)
+        sunLight.shadowStrength = num4 * num6;
+        if (num7 != 1f)
         {
-            setSeaColor("_Foam", getSeaColor("_Foam") * num6);
-            setSeaFloat("_Shininess", getSeaFloat("_Shininess") * num6);
-            setSeaColor("_BaseColor", getSeaColor("_BaseColor") * num6);
-            setSeaColor("_ReflectionColor", getSeaColor("_ReflectionColor") * num6);
-            sunLight.intensity *= num6;
-            RenderSettings.ambientSkyColor *= num6;
-            RenderSettings.ambientEquatorColor *= num6;
-            RenderSettings.ambientGroundColor *= num6;
-            skyboxSky *= num6;
-            skyboxEquator *= num6;
-            skyboxGround *= num6;
-            particleLightingColor *= num6;
+            setSeaColor("_Foam", getSeaColor("_Foam") * num7);
+            setSeaFloat("_Shininess", getSeaFloat("_Shininess") * num7);
+            setSeaColor("_BaseColor", getSeaColor("_BaseColor") * num7);
+            setSeaColor("_ReflectionColor", getSeaColor("_ReflectionColor") * num7);
+            sunLight.intensity *= num7;
+            RenderSettings.ambientSkyColor *= num7;
+            RenderSettings.ambientEquatorColor *= num7;
+            RenderSettings.ambientGroundColor *= num7;
+            skyboxSky *= num7;
+            skyboxEquator *= num7;
+            skyboxGround *= num7;
+            particleLightingColor *= num7;
         }
         if (localBlendingLight)
         {
@@ -1153,7 +1166,26 @@ public class LevelLighting
         skybox.SetVector("_MoonLightDirection", moons[_moon].forward);
         skybox.SetColor("_CloudColor", cloudColor);
         skybox.SetColor("_CloudRimColor", cloudRimColor);
-        skybox.SetFloat("_CloudIntensity", value2);
+        skybox.SetFloat("_CloudIntensity", num5);
+        if (cloudOverrideParticles == null)
+        {
+            return;
+        }
+        CloudParticleSystemInstance[] array = cloudOverrideParticles;
+        for (int i = 0; i < array.Length; i++)
+        {
+            CloudParticleSystemInstance cloudParticleSystemInstance = array[i];
+            if (cloudParticleSystemInstance.particleSystem != null)
+            {
+                ParticleSystem.EmissionModule emission = cloudParticleSystemInstance.particleSystem.emission;
+                emission.rateOverTimeMultiplier = num5 * cloudParticleSystemInstance.config.RateOverTimeScale;
+            }
+            if (cloudParticleSystemInstance.material != null)
+            {
+                Color color = cloudColor.WithAlpha(cloudParticleSystemInstance.defaultColorAlpha);
+                cloudParticleSystemInstance.material.color = color;
+            }
+        }
     }
 
     private static void updateHolidayWeatherRestrictions()
@@ -1187,6 +1219,15 @@ public class LevelLighting
         activeCustomWeather = null;
         legacyWater = null;
         legacyWaterTransform = null;
+        if (cloudOverrideParticles != null)
+        {
+            CloudParticleSystemInstance[] array = cloudOverrideParticles;
+            for (int i = 0; i < array.Length; i++)
+            {
+                UnityEngine.Object.Destroy(array[i].material);
+            }
+            cloudOverrideParticles = null;
+        }
         if (!Dedicator.IsDedicatedServer)
         {
             skybox = (Material)UnityEngine.Object.Instantiate(Resources.Load("Level/Skybox"));
@@ -1205,6 +1246,48 @@ public class LevelLighting
             lighting.position = Vector3.zero;
             lighting.rotation = Quaternion.identity;
             lighting.parent = Level.level;
+            if (asset != null && asset.CloudOverridePrefab.isValid)
+            {
+                GameObject gameObject = asset.CloudOverridePrefab.loadAsset();
+                if (gameObject != null)
+                {
+                    GameObject gameObject2 = UnityEngine.Object.Instantiate(gameObject, Vector3.zero, Quaternion.identity, lighting);
+                    List<CloudParticleSystemInstance> list = new List<CloudParticleSystemInstance>(asset.CloudOverrideParticleSystemPaths.Length);
+                    LevelAsset.CloudOverrideParticleSystemsPath[] cloudOverrideParticleSystemPaths = asset.CloudOverrideParticleSystemPaths;
+                    for (int i = 0; i < cloudOverrideParticleSystemPaths.Length; i++)
+                    {
+                        LevelAsset.CloudOverrideParticleSystemsPath config = cloudOverrideParticleSystemPaths[i];
+                        Transform transform = gameObject2.transform.Find(config.ComponentPath);
+                        if (transform == null)
+                        {
+                            asset.ReportAssetError("cloud override missing child at \"" + config.ComponentPath + "\"");
+                            continue;
+                        }
+                        ParticleSystem component = transform.GetComponent<ParticleSystem>();
+                        if (component == null)
+                        {
+                            asset.ReportAssetError("cloud override missing ParticleSystem on \"" + config.ComponentPath + "\"");
+                            continue;
+                        }
+                        Material material = component.GetComponent<ParticleSystemRenderer>().material;
+                        CloudParticleSystemInstance cloudParticleSystemInstance = default(CloudParticleSystemInstance);
+                        cloudParticleSystemInstance.config = config;
+                        cloudParticleSystemInstance.particleSystem = component;
+                        cloudParticleSystemInstance.material = material;
+                        cloudParticleSystemInstance.defaultColorAlpha = material.color.a;
+                        CloudParticleSystemInstance item = cloudParticleSystemInstance;
+                        list.Add(item);
+                    }
+                    if (list.Count > 0)
+                    {
+                        cloudOverrideParticles = list.ToArray();
+                    }
+                    else
+                    {
+                        asset.ReportAssetError("cloud override particle system list is effectively empty");
+                    }
+                }
+            }
             sun = lighting.Find("Sun");
             sunLight = sun.GetComponent<Light>();
             if (GraphicsSettings.WantsCinematicMode)
@@ -1233,9 +1316,9 @@ public class LevelLighting
             isReflectionBuildingVision = false;
             puddles = lighting.GetComponent<Rain>();
             moons = new Transform[MOON_CYCLES];
-            for (int i = 0; i < moons.Length; i++)
+            for (int j = 0; j < moons.Length; j++)
             {
-                moons[i] = sun.Find("MoonLightDirection_" + i);
+                moons[j] = sun.Find("MoonLightDirection_" + j);
             }
             ambianceAudioGameObject = lighting.Find("Effect").gameObject;
             activeAmbianceAudioInstances = new List<AmbianceAudioInstance>();
@@ -1313,75 +1396,75 @@ public class LevelLighting
                     snowDur = block.readSingle();
                 }
                 _times = new LightingInfo[4];
-                for (int j = 0; j < times.Length; j++)
+                for (int k = 0; k < times.Length; k++)
                 {
-                    Color[] array = new Color[12];
-                    float[] array2 = new float[5];
+                    Color[] array2 = new Color[12];
+                    float[] array3 = new float[5];
                     if (b > 9)
                     {
-                        for (int k = 0; k < array.Length; k++)
-                        {
-                            array[k] = block.readColor();
-                        }
                         for (int l = 0; l < array2.Length; l++)
                         {
-                            array2[l] = block.readSingle();
+                            array2[l] = block.readColor();
+                        }
+                        for (int m = 0; m < array3.Length; m++)
+                        {
+                            array3[m] = block.readSingle();
                         }
                     }
                     else if (b > 8)
                     {
-                        for (int m = 0; m < array.Length - 1; m++)
+                        for (int n = 0; n < array2.Length - 1; n++)
                         {
-                            array[m] = block.readColor();
+                            array2[n] = block.readColor();
                         }
-                        array[11] = array[3];
-                        for (int n = 0; n < array2.Length; n++)
+                        array2[11] = array2[3];
+                        for (int num = 0; num < array3.Length; num++)
                         {
-                            array2[n] = block.readSingle();
+                            array3[num] = block.readSingle();
                         }
                     }
                     else
                     {
                         if (b >= 6)
                         {
-                            for (int num = 0; num < array.Length - 2; num++)
+                            for (int num2 = 0; num2 < array2.Length - 2; num2++)
                             {
-                                array[num] = block.readColor();
+                                array2[num2] = block.readColor();
                             }
                         }
                         else
                         {
-                            for (int num2 = 0; num2 < array.Length - 3; num2++)
+                            for (int num3 = 0; num3 < array2.Length - 3; num3++)
                             {
-                                array[num2] = block.readColor();
+                                array2[num3] = block.readColor();
                             }
-                            array[9] = array[2];
+                            array2[9] = array2[2];
                         }
-                        array[10] = array[0];
-                        array[11] = array[3];
-                        for (int num3 = 0; num3 < array2.Length - 1; num3++)
+                        array2[10] = array2[0];
+                        array2[11] = array2[3];
+                        for (int num4 = 0; num4 < array3.Length - 1; num4++)
                         {
-                            array2[num3] = block.readSingle();
+                            array3[num4] = block.readSingle();
                         }
-                        array2[4] = 0.25f;
+                        array3[4] = 0.25f;
                     }
                     if (b < 12)
                     {
-                        array2[1] = Mathf.Min(array2[1], 0.33f);
+                        array3[1] = Mathf.Min(array3[1], 0.33f);
                     }
-                    LightingInfo lightingInfo = new LightingInfo(array, array2);
-                    times[j] = lightingInfo;
+                    LightingInfo lightingInfo = new LightingInfo(array2, array3);
+                    times[k] = lightingInfo;
                 }
             }
             else
             {
                 _times = new LightingInfo[4];
-                for (int num4 = 0; num4 < times.Length; num4++)
+                for (int num5 = 0; num5 < times.Length; num5++)
                 {
                     Color[] newColors = new Color[12];
                     float[] newSingles = new float[5];
                     LightingInfo lightingInfo2 = new LightingInfo(newColors, newSingles);
-                    times[num4] = lightingInfo2;
+                    times[num5] = lightingInfo2;
                 }
                 times[0].colors[3] = block.readColor();
                 times[1].colors[3] = block.readColor();
@@ -1472,12 +1555,12 @@ public class LevelLighting
             snowFreq = 1f;
             snowDur = 1f;
             _times = new LightingInfo[4];
-            for (int num5 = 0; num5 < times.Length; num5++)
+            for (int num6 = 0; num6 < times.Length; num6++)
             {
                 Color[] newColors2 = new Color[12];
                 float[] newSingles2 = new float[5];
                 LightingInfo lightingInfo3 = new LightingInfo(newColors2, newSingles2);
-                times[num5] = lightingInfo3;
+                times[num6] = lightingInfo3;
             }
             hash = new byte[20];
         }
@@ -1495,10 +1578,10 @@ public class LevelLighting
         times[3].colors[1].a = 0.9f;
         if (Level.info.configData.Use_Legacy_Water)
         {
-            GameObject gameObject = new GameObject();
-            legacyWaterTransform = gameObject.transform;
+            GameObject gameObject3 = new GameObject();
+            legacyWaterTransform = gameObject3.transform;
             legacyWaterTransform.parent = Level.level;
-            legacyWater = gameObject.AddComponent<WaterVolume>();
+            legacyWater = gameObject3.AddComponent<WaterVolume>();
             legacyWater.isManagedByLighting = true;
             legacyWater.isSeaLevel = true;
             legacyWater.isSurfaceVisible = true;

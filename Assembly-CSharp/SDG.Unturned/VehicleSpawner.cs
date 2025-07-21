@@ -28,7 +28,7 @@ public class VehicleSpawner : MonoBehaviour
 
     public void Spawn(string assetId)
     {
-        if (!Provider.isServer)
+        if (!Provider.isServer || EffectManager.isInstantiatingEffectForPreload)
         {
             return;
         }

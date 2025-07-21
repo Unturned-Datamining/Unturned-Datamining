@@ -509,9 +509,9 @@ public class PlayerDashboardCraftingUI
         filteredBlueprints.Clear();
         if (Level.IsCraftingAllowedByLevel)
         {
+            RefreshLoadedBlueprintsIfNecessary();
             if (filteredBlueprintsOverride == null)
             {
-                RefreshLoadedBlueprintsIfNecessary();
                 if (flag2)
                 {
                     foreach (Blueprint loadedBlueprint in loadedBlueprints)

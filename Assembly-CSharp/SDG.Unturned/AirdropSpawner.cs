@@ -25,7 +25,7 @@ public class AirdropSpawner : MonoBehaviour
 
     public void Spawn(string cargoSpawnTableId)
     {
-        if (!Provider.isServer)
+        if (!Provider.isServer || EffectManager.isInstantiatingEffectForPreload)
         {
             return;
         }

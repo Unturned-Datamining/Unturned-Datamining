@@ -39,6 +39,27 @@ public class LevelAsset : Asset
         public float costMultiplier;
     }
 
+    public struct CloudOverrideParticleSystemsPath : IDatParseable
+    {
+        public string ComponentPath { get; set; }
+
+        /// <summary>
+        /// Multiplier for CloudOverrideParticlesPrefab emission rate according to level's clouds intensity.
+        /// </summary>
+        public float RateOverTimeScale { get; set; }
+
+        public bool TryParse(IDatNode node)
+        {
+            if (node is IDatDictionary dictionary)
+            {
+                ComponentPath = dictionary.GetString("Path");
+                RateOverTimeScale = dictionary.ParseFloat("RateOverTimeScale");
+                return true;
+            }
+            return false;
+        }
+    }
+
     internal class TerrainColorRule : IDatParseable
     {
         public enum EComparisonResult
@@ -181,6 +202,13 @@ public class LevelAsset : Asset
     /// Audio clip to play in 2D when a player dies.
     /// </summary>
     public MasterBundleReference<AudioClip> DeathMusicRef { get; private set; }
+
+    /// <summary>
+    /// If set, instantiate this particle system and set its material color to cloud color.
+    /// </summary>
+    public MasterBundleReference<GameObject> CloudOverridePrefab { get; set; }
+
+    public CloudOverrideParticleSystemsPath[] CloudOverrideParticleSystemPaths { get; set; }
 
     public bool isBlueprintBlacklisted(Blueprint blueprint)
     {
@@ -350,6 +378,11 @@ public class LevelAsset : Asset
         if (p.data.ContainsKey("Has_Clouds"))
         {
             hasClouds = p.data.ParseBool("Has_Clouds");
+            if (!hasClouds)
+            {
+                CloudOverridePrefab = p.data.readMasterBundleReference<GameObject>("CloudOverride_Prefab", p.bundle);
+                CloudOverrideParticleSystemPaths = p.data.ParseArrayOfStructs<CloudOverrideParticleSystemsPath>("CloudOverride_ParticleSystems");
+            }
         }
         else
         {

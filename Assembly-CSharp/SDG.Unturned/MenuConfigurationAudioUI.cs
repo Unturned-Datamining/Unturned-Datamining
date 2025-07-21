@@ -34,6 +34,8 @@ public class MenuConfigurationAudioUI : SleekFullscreenBox
 
     private ISleekSlider atmosphereVolumeSlider;
 
+    private ISleekSlider zombieFootstepsVolumeSlider;
+
     public void open()
     {
         if (!active)
@@ -70,6 +72,12 @@ public class MenuConfigurationAudioUI : SleekFullscreenBox
     {
         OptionsSettings.AtmosphereVolume = state;
         atmosphereVolumeSlider.UpdateLabel(localization.format("Atmosphere_Volume_Slider_Label", OptionsSettings.AtmosphereVolume.ToString("P0")));
+    }
+
+    private void OnZombieFootstepsVolumeSliderDragged(ISleekSlider slider, float state)
+    {
+        OptionsSettings.ZombieFootstepsVolume = state;
+        zombieFootstepsVolumeSlider.UpdateLabel(localization.format("Zombie_Footsteps_Volume_Slider_Label", OptionsSettings.ZombieFootstepsVolume.ToString("P0")));
     }
 
     private void OnGameVolumeSliderDragged(ISleekSlider slider, float state)
@@ -159,6 +167,8 @@ public class MenuConfigurationAudioUI : SleekFullscreenBox
         gameVolumeSlider.UpdateLabel(localization.format("Game_Volume_Slider_Label", OptionsSettings.gameVolume.ToString("P0")));
         atmosphereVolumeSlider.Value = OptionsSettings.AtmosphereVolume;
         atmosphereVolumeSlider.UpdateLabel(localization.format("Atmosphere_Volume_Slider_Label", OptionsSettings.AtmosphereVolume.ToString("P0")));
+        zombieFootstepsVolumeSlider.Value = OptionsSettings.ZombieFootstepsVolume;
+        zombieFootstepsVolumeSlider.UpdateLabel(localization.format("Zombie_Footsteps_Volume_Slider_Label", OptionsSettings.ZombieFootstepsVolume.ToString("P0")));
     }
 
     public MenuConfigurationAudioUI()
@@ -221,6 +231,15 @@ public class MenuConfigurationAudioUI : SleekFullscreenBox
         atmosphereVolumeSlider.AddLabel(localization.format("Atmosphere_Volume_Slider_Label", OptionsSettings.AtmosphereVolume.ToString("P0")), ESleekSide.RIGHT);
         atmosphereVolumeSlider.OnValueChanged += OnAtmosphereVolumeSliderDragged;
         audioBox.AddChild(atmosphereVolumeSlider);
+        num += 30;
+        zombieFootstepsVolumeSlider = Glazier.Get().CreateSlider();
+        zombieFootstepsVolumeSlider.PositionOffset_Y = num;
+        zombieFootstepsVolumeSlider.SizeOffset_X = 200f;
+        zombieFootstepsVolumeSlider.SizeOffset_Y = 20f;
+        zombieFootstepsVolumeSlider.Orientation = ESleekOrientation.HORIZONTAL;
+        zombieFootstepsVolumeSlider.AddLabel(localization.format("Zombie_Footsteps_Volume_Slider_Label", OptionsSettings.ZombieFootstepsVolume.ToString("P0")), ESleekSide.RIGHT);
+        zombieFootstepsVolumeSlider.OnValueChanged += OnZombieFootstepsVolumeSliderDragged;
+        audioBox.AddChild(zombieFootstepsVolumeSlider);
         num += 30;
         ISleekBox sleekBox = Glazier.Get().CreateBox();
         sleekBox.PositionOffset_Y = num;

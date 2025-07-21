@@ -43,7 +43,7 @@ public class EffectSpawner : MonoBehaviour
 
     public void SpawnEffect(string guid)
     {
-        if (AuthorityOnly && !Provider.isServer)
+        if ((AuthorityOnly && !Provider.isServer) || EffectManager.isInstantiatingEffectForPreload)
         {
             return;
         }

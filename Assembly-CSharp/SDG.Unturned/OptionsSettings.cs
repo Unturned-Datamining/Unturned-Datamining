@@ -71,9 +71,11 @@ public class OptionsSettings
 
     private const byte SAVEDATA_VERSION_ADDED_VIEWMODEL_BOB_SCALE = 65;
 
-    private const byte SAVEDATA_VERSION_NEWEST = 65;
+    private const byte SAVEDATA_VERSION_ADDED_ZOMBIE_FOOTSTEPS_VOLUME = 66;
 
-    public static readonly byte SAVEDATA_VERSION = 65;
+    private const byte SAVEDATA_VERSION_NEWEST = 66;
+
+    public static readonly byte SAVEDATA_VERSION = 66;
 
     public static readonly byte MIN_FOV = 60;
 
@@ -116,6 +118,10 @@ public class OptionsSettings
     public const float DEFAULT_ATMOSPHERE_VOLUME = 0.7f;
 
     private static float _atmosphereVolume;
+
+    public const float DEFAULT_ZOMBIE_FOOTSTEPS_VOLUME = 0.7f;
+
+    internal static float _zombieFootstepsVolume;
 
     public const float DEFAULT_AMBIENT_MUSIC_VOLUME = 0.7f;
 
@@ -336,6 +342,19 @@ public class OptionsSettings
         {
             _atmosphereVolume = value;
             UnturnedAudioMixer.SetAtmosphereVolume(value);
+        }
+    }
+
+    public static float ZombieFootstepsVolume
+    {
+        get
+        {
+            return _zombieFootstepsVolume;
+        }
+        set
+        {
+            _zombieFootstepsVolume = value;
+            UnturnedAudioMixer.SetZombieFootstepsVolume(value);
         }
     }
 
@@ -631,6 +650,7 @@ public class OptionsSettings
         ambientMusicVolume = 0.7f;
         voiceVolume = 0.7f;
         AtmosphereVolume = 0.7f;
+        ZombieFootstepsVolume = 0.7f;
     }
 
     public static void restoreDefaults()
@@ -1130,6 +1150,14 @@ public class OptionsSettings
         {
             viewmodelBobScale = 1f;
         }
+        if (b >= 66)
+        {
+            ZombieFootstepsVolume = block.readSingle();
+        }
+        else
+        {
+            ZombieFootstepsVolume = 0.7f;
+        }
         if (!Provider.isPro)
         {
             backgroundColor = new Color(0.9f, 0.9f, 0.9f);
@@ -1143,7 +1171,7 @@ public class OptionsSettings
     public static void save()
     {
         Block block = new Block();
-        block.writeByte(65);
+        block.writeByte(66);
         block.writeBoolean(value: false);
         block.writeBoolean(splashscreen);
         block.writeBoolean(timer);
@@ -1208,6 +1236,7 @@ public class OptionsSettings
         block.writeBoolean(ShouldHideRichPresence);
         block.writeBoolean(ShouldClickBlueprintToCraft);
         block.writeSingle(viewmodelBobScale);
+        block.writeSingle(ZombieFootstepsVolume);
         ReadWrite.writeBlock("/Options.dat", useCloud: true, block);
     }
 }
