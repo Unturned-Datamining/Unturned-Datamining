@@ -1,14 +1,14 @@
 MainMenuAlert
 {
-	Id 69
-	Header Sign Up for Summer Tournament by LDG & AMOX
-	Body From the organizers: "Check out LDG Summer Tournament today, where it's a survival tournament on the hottest map of Unturned, Kuwait. Sign up today!"
+	Id 70
+	Header Watch LDG Summer Tournament LIVE
+	Body From the organizers: "Come watch the LDG Tournament happening now!"
 	Color #00ffff
 	Link https://discord.gg/Ge9sbPH
 	IconURL https://cdn.smartlydressedgames.com/Images/LDGbanner.jpg
 	UseTimeWindow true
-	StartTime 2025-07-13 12:00:00
-	EndTime 2025-07-21 12:00:00
+	StartTime 2025-07-26 07:00:00
+	EndTime 2025-07-26 19:00:00
 }
 MainMenuWorkshop
 {
