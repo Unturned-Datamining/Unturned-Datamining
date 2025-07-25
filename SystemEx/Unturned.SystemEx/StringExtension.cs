@@ -6,6 +6,8 @@ public static class StringExtension
 {
     private static readonly char[] SplitNewLineSeparators = new char[2] { '\r', '\n' };
 
+    private static string[] SplitNewLineSeparatorStrings = new string[2] { "\r\n", "\n" };
+
     public static bool ContainsChar(this string s, char value)
     {
         if (string.IsNullOrEmpty(s))
@@ -25,6 +27,11 @@ public static class StringExtension
     public static string[] SplitLines(this string s)
     {
         return s.Split(SplitNewLineSeparators, StringSplitOptions.RemoveEmptyEntries);
+    }
+
+    public static string[] SplitLinesIncludingEmpty(this string s)
+    {
+        return s.Split(SplitNewLineSeparatorStrings, StringSplitOptions.None);
     }
 
     public static bool ContainsNewLine(this string s)

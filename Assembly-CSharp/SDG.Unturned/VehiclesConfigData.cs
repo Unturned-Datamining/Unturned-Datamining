@@ -12,44 +12,102 @@ public class VehiclesConfigData
     /// </summary>
     public float Decay_Damage_Per_Second;
 
+    /// <summary>
+    /// Percentage [0 to 1] probability of spawning with a battery.
+    /// </summary>
     public float Has_Battery_Chance;
 
+    /// <summary>
+    /// Percentage [0 to 1] minimum initial charge if spawning with a battery.
+    /// </summary>
     public float Min_Battery_Charge;
 
+    /// <summary>
+    /// Percentage [0 to 1] maximum initial charge if spawning with a battery.
+    /// </summary>
     public float Max_Battery_Charge;
 
+    /// <summary>
+    /// Percentage [0 to 1] probability of spawning with a tire per-wheel.
+    /// </summary>
     public float Has_Tire_Chance;
 
+    /// <summary>
+    /// How long (in seconds) after vehicle explodes or gets stuck underwater before it despawns.
+    /// </summary>
     public float Respawn_Time;
 
+    /// <summary>
+    /// How long (in seconds) a locked vehicle can sit empty in the safezone before it is
+    /// automatically unlocked.
+    /// </summary>
     public float Unlocked_After_Seconds_In_Safezone;
 
+    /// <summary>
+    /// Scales the amount of damage taken by vehicles.
+    /// For example, 0.5 halves the amount of damage dealt to vehicles.
+    /// </summary>
     public float Armor_Multiplier;
 
+    /// <summary>
+    /// Scales damage to the vehicle when an attached barricade obstructions an explosion.
+    /// For example, 0.5 halves the explosion damage when blocked by a barricade.
+    /// </summary>
     public float Child_Explosion_Armor_Multiplier;
 
+    /// <summary>
+    /// Scales the amount of damage taken by vehicles from non-"Heavy Weapon" guns.
+    /// For example, 2.0 doubles the amount of damage dealt to vehicles by non-"Heavy Weapon" guns.
+    /// </summary>
     public float Gun_Lowcal_Damage_Multiplier;
 
+    /// <summary>
+    /// Scales the amount of damage taken by vehicles from "Heavy Weapon" guns.
+    /// For example, 2.0 doubles the amount of damage dealt to vehicles by "Heavy Weapon" guns.
+    /// </summary>
     public float Gun_Highcal_Damage_Multiplier;
 
+    /// <summary>
+    /// Scales the amount of damage taken by vehicles from melee weapons and fists.
+    /// For example, 2.0 doubles the amount of damage dealt to vehicles by melee.
+    /// </summary>
     public float Melee_Damage_Multiplier;
 
+    /// <summary>
+    /// Scales the amount of HP restored by melee items like the Blowtorch.
+    /// For example, 2.0 doubles the amount of health restored by melee items.
+    /// </summary>
     public float Melee_Repair_Multiplier;
 
+    /// <summary>
+    /// Maximum number of naturally-spawned vehicles on "Tiny" size levels.
+    /// </summary>
     public uint Max_Instances_Tiny;
 
+    /// <summary>
+    /// Maximum number of naturally-spawned vehicles on "Small" size levels.
+    /// </summary>
     public uint Max_Instances_Small;
 
+    /// <summary>
+    /// Maximum number of naturally-spawned vehicles on "Medium" size levels.
+    /// </summary>
     public uint Max_Instances_Medium;
 
+    /// <summary>
+    /// Maximum number of naturally-spawned vehicles on "Large" size levels.
+    /// </summary>
     public uint Max_Instances_Large;
 
+    /// <summary>
+    /// Maximum number of naturally-spawned vehicles on "Insane" size levels.
+    /// </summary>
     public uint Max_Instances_Insane;
 
     /// <summary>
     /// Vehicles are considered "natural" if they were spawned by the level as opposed to players or vendors.
     /// If less than this many natural vehicles exist in the level, more will be spawned. The minimum of this or
-    /// Max_Instances is used. (i.e., if this value is higher than max instances the max instances value is used
+    /// Max_Instances is used. (I.e., if this value is higher than max instances the max instances value is used
     /// instead.)
     /// </summary>
     public uint Min_Natural_Vehicles;

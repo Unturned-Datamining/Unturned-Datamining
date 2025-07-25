@@ -77,4 +77,22 @@ public static class DatNodeEx
         path = null;
         return false;
     }
+
+    public static string GetPath(this IDatNode node)
+    {
+        if (!node.TryGetNodePath(out var path))
+        {
+            return null;
+        }
+        return path;
+    }
+
+    public static int GetParsedLineNumber(this IDatNode node)
+    {
+        if (!node.TryGetParsedLineNumber(out var lineNumber))
+        {
+            return -1;
+        }
+        return lineNumber;
+    }
 }

@@ -2,22 +2,53 @@ namespace SDG.Unturned;
 
 public class GameplayConfigData
 {
+    /// <summary>
+    /// Blueprints requiring a repair skill level higher than this cannot be crafted.
+    /// Restricts players from repairing higher-tier items.
+    /// </summary>
     public uint Repair_Level_Max;
 
+    /// <summary>
+    /// Should a hit confirmation be shown when players deal damage?
+    /// </summary>
     public bool Hitmarkers;
 
+    /// <summary>
+    /// Should a crosshair be visible while holding a gun?
+    /// </summary>
     public bool Crosshair;
 
+    /// <summary>
+    /// Should bullets be affected by gravity and travel time?
+    /// </summary>
     public bool Ballistics;
 
+    /// <summary>
+    /// Should the player have permanent access to a "paper" map of the level even when they
+    /// don't have the associated in-game item?
+    /// </summary>
     public bool Chart;
 
+    /// <summary>
+    /// Should the player have permanent access to a GPS map of the level even when they
+    /// don't have the associated in-game item?
+    /// </summary>
     public bool Satellite;
 
+    /// <summary>
+    /// Should the player have permanent access to their compass heading HUD even when they
+    /// don't have the associated in-game item?
+    /// </summary>
     public bool Compass;
 
+    /// <summary>
+    /// Should group members and similar info be visible on the in-game map?
+    /// </summary>
     public bool Group_Map;
 
+    /// <summary>
+    /// Should group member names be visible through walls?
+    /// </summary>
     public bool Group_HUD;
 
     /// <summary>
@@ -25,8 +56,14 @@ public class GameplayConfigData
     /// </summary>
     public bool Group_Player_List;
 
+    /// <summary>
+    /// Should Steam clans/groups be enables as in-game groups?
+    /// </summary>
     public bool Allow_Static_Groups;
 
+    /// <summary>
+    /// Should players be allowed to create in-game groups and invite members of the server?
+    /// </summary>
     public bool Allow_Dynamic_Groups;
 
     /// <summary>
@@ -35,12 +72,19 @@ public class GameplayConfigData
     /// </summary>
     public bool Allow_Lobby_Groups;
 
+    /// <summary>
+    /// Should the third-person camera extend out to the side?
+    /// If false, the third-person camera is centered over your character.
+    /// </summary>
     public bool Allow_Shoulder_Camera;
 
+    /// <summary>
+    /// Should players be allowed to kill themselves from the pause menu?
+    /// </summary>
     public bool Can_Suicide;
 
     /// <summary>
-    /// Is friendly-fire allowed?
+    /// Is friendly-fire within groups allowed?
     /// </summary>
     public bool Friendly_Fire;
 
@@ -56,30 +100,26 @@ public class GameplayConfigData
 
     /// <summary>
     /// Can "freeform" barricades be placed in the world?
-    /// Defaults to true.
     /// </summary>
     public bool Allow_Freeform_Buildables;
 
     /// <summary>
     /// Can "freeform" barricades be placed on vehicles?
-    /// Defaults to true.
     /// </summary>
     public bool Allow_Freeform_Buildables_On_Vehicles;
 
     /// <summary>
     /// If true, aim flinches away from center when damaged.
-    /// Defaults to true.
     /// </summary>
     public bool Enable_Damage_Flinch;
 
     /// <summary>
     /// If true, camera will shake near explosions. Can also be toned down client-side in Options menu.
-    /// Defaults to true.
     /// </summary>
     public bool Enable_Explosion_Camera_Shake;
 
     /// <summary>
-    /// If true, crafting blueprints can require nearby workstations. Defaults to true.
+    /// If true, crafting blueprints can require nearby workstations.
     /// If false, only the backwards-compatibility "Heat Source" vanilla crafting tag can be required. This
     /// functions identically to the cooking-skill-also-requires-heat behavior from before.
     /// </summary>
@@ -87,30 +127,43 @@ public class GameplayConfigData
 
     /// <summary>
     /// If true, client-side options like damage flinch, explosion camera shake, viewmodel bob are ignored.
-    /// Defaults to false.
     /// </summary>
     public bool Disable_Motion_Sickness_Options;
 
     /// <summary>
     /// If true, hide viewmodel while aiming a dual-render scope and show a 2D overlay instead.
-    ///
-    /// Nelson 2025-07-04: adding this option for backwards compatibility with modded scopes that have a small
-    /// enough dual-render surface to zoom-*out* when aiming in.
-    ///
-    /// Defaults to false.
+    /// Useful for backwards compatibility with modded scopes that have a small enough
+    /// dual-render surface to zoom-*out* when aiming in.
     /// </summary>
     public bool Use_2D_Scope_Overlay;
 
     internal const uint MAX_TIMER_EXIT = 60u;
 
+    /// <summary>
+    /// How long (in seconds) before a player can leave the server through the pause menu.
+    /// </summary>
     public uint Timer_Exit;
 
+    /// <summary>
+    /// How long (in seconds) after death before a player can respawn.
+    /// </summary>
     public uint Timer_Respawn;
 
+    /// <summary>
+    /// How long (in seconds) after death before a player can respawn at their bed.
+    /// </summary>
     public uint Timer_Home;
 
+    /// <summary>
+    /// How long (in seconds) after a player requests to leave an in-game "dynamic" group
+    /// before they are actually removed. Gives group members time to take cover.
+    /// </summary>
     public uint Timer_Leave_Group;
 
+    /// <summary>
+    /// Maximum number of players invitable to an in-game "dynamic" group.
+    /// Depends on Allow_Dynamic_Groups.
+    /// </summary>
     public uint Max_Group_Members;
 
     /// <summary>
@@ -154,12 +207,12 @@ public class GameplayConfigData
     public float ThirdPerson_SpreadMultiplier = 2f;
 
     /// <summary>
-    /// [0, 1] Scales how much the first-person move up and down while jumping/landing.
+    /// [0 to 1] Scales how much the first-person move up and down while jumping/landing.
     /// </summary>
     public float Viewmodel_AimingJumpLandMultiplier = 1f;
 
     /// <summary>
-    /// [0, 1] Scales how much the first-person arms move while ADS.
+    /// [0 to 1] Scales how much the first-person arms move while ADS.
     /// </summary>
     public float Viewmodel_AimingMisalignmentMultiplier = 1f;
 

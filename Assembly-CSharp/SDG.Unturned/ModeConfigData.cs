@@ -41,4 +41,14 @@ public class ModeConfigData
         Players.InitSingleplayerDefaults();
         Gameplay.InitSingleplayerDefaults();
     }
+
+    public static ModeConfigData CreateDefault(EGameMode mode, bool singleplayer)
+    {
+        ModeConfigData modeConfigData = new ModeConfigData(mode);
+        if (singleplayer)
+        {
+            modeConfigData.InitSingleplayerDefaults();
+        }
+        return modeConfigData;
+    }
 }

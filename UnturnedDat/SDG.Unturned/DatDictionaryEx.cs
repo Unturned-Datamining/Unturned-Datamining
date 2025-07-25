@@ -391,4 +391,67 @@ public static class DatDictionaryEx
         }
         return node.ParseArrayOfStructs(defaultValue);
     }
+
+    public static IEditableDatDictionary GetOrAddDictionary(this IEditableDatDictionary dictionary, string key, out bool isNew)
+    {
+        if (dictionary.TryGetNode(key, out var node))
+        {
+            isNew = false;
+            if (node is IDatDictionary datDictionary)
+            {
+                return datDictionary.Edit();
+            }
+            return dictionary.ReplaceWithDictionary(key);
+        }
+        isNew = true;
+        return dictionary.AddDictionary(key);
+    }
+
+    public static IEditableDatDictionary GetOrAddDictionary(this IEditableDatDictionary dictionary, string key)
+    {
+        bool isNew;
+        return dictionary.GetOrAddDictionary(key, out isNew);
+    }
+
+    public static IEditableDatList GetOrAddList(this IEditableDatDictionary dictionary, string key, out bool isNew)
+    {
+        if (dictionary.TryGetNode(key, out var node))
+        {
+            isNew = false;
+            if (node is IDatList datList)
+            {
+                return datList.Edit();
+            }
+            return dictionary.ReplaceWithList(key);
+        }
+        isNew = true;
+        return dictionary.AddList(key);
+    }
+
+    public static IEditableDatList GetOrAddList(this IEditableDatDictionary dictionary, string key)
+    {
+        bool isNew;
+        return dictionary.GetOrAddList(key, out isNew);
+    }
+
+    public static IEditableDatValue GetOrAddValue(this IEditableDatDictionary dictionary, string key, out bool isNew)
+    {
+        if (dictionary.TryGetNode(key, out var node))
+        {
+            isNew = false;
+            if (node is IDatValue datValue)
+            {
+                return datValue.Edit();
+            }
+            return dictionary.ReplaceWithValue(key);
+        }
+        isNew = true;
+        return dictionary.AddValue(key);
+    }
+
+    public static IEditableDatValue GetOrAddValue(this IEditableDatDictionary dictionary, string key)
+    {
+        bool isNew;
+        return dictionary.GetOrAddValue(key, out isNew);
+    }
 }

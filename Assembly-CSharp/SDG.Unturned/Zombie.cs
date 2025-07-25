@@ -2921,7 +2921,7 @@ public class Zombie : MonoBehaviour, IExplosionDamageable, IEquatable<IExplosion
     {
         EZombieSpeciality eZombieSpeciality = speciality;
         bool flag = (((uint)(eZombieSpeciality - 4) <= 2u || (uint)(eZombieSpeciality - 17) <= 1u) ? true : false);
-        string propertyName = (flag ? "ZombieFootstepRun" : "ZombieFootstepWalk");
+        string propertyName = (isMega ? "MegaZombieFootstep" : (flag ? "ZombieFootstepRun" : "ZombieFootstepWalk"));
         bool flag2 = false;
         OneShotAudioDefinition audioDef = PhysicMaterialCustomData.GetAudioDef(materialName, propertyName);
         if (audioDef == null)
@@ -2935,25 +2935,26 @@ public class Zombie : MonoBehaviour, IExplosionDamageable, IEquatable<IExplosion
             }
         }
         AudioClip randomClip = audioDef.GetRandomClip();
-        if (!(randomClip == null))
+        if (randomClip == null)
         {
-            float num = 0.125f;
-            OneShotAudioParameters oneShotAudioParameters = new OneShotAudioParameters(base.transform, randomClip);
-            oneShotAudioParameters.RandomizePitch(audioDef.minPitch, audioDef.maxPitch);
-            if (flag2)
-            {
-                oneShotAudioParameters.pitch *= 0.85f;
-            }
+            return;
+        }
+        float num = 0.125f;
+        OneShotAudioParameters oneShotAudioParameters = new OneShotAudioParameters(base.transform, randomClip);
+        oneShotAudioParameters.RandomizePitch(audioDef.minPitch, audioDef.maxPitch);
+        if (flag2)
+        {
+            oneShotAudioParameters.pitch *= 0.85f;
             if (isMega)
             {
                 num *= 1.5f;
                 oneShotAudioParameters.pitch *= 0.85f;
             }
-            oneShotAudioParameters.volume = num * audioDef.volumeMultiplier;
-            oneShotAudioParameters.SetLinearRolloff(1f, 32f);
-            oneShotAudioParameters.outputAudioMixerGroup = UnturnedAudioMixer.GetZombieFootstepsGroup();
-            oneShotAudioParameters.Play();
         }
+        oneShotAudioParameters.volume = num * audioDef.volumeMultiplier;
+        oneShotAudioParameters.SetLinearRolloff(1f, 32f);
+        oneShotAudioParameters.outputAudioMixerGroup = UnturnedAudioMixer.GetZombieFootstepsGroup();
+        oneShotAudioParameters.Play();
     }
 
     /// <summary>
@@ -2962,8 +2963,9 @@ public class Zombie : MonoBehaviour, IExplosionDamageable, IEquatable<IExplosion
     /// <returns>True if sound played.</returns>
     private bool PlayLandAudioClip(string materialName)
     {
+        string propertyName = (isMega ? "MegaZombieLand" : "ZombieBipedLand");
         bool flag = false;
-        OneShotAudioDefinition audioDef = PhysicMaterialCustomData.GetAudioDef(materialName, "ZombieBipedLand");
+        OneShotAudioDefinition audioDef = PhysicMaterialCustomData.GetAudioDef(materialName, propertyName);
         if (audioDef == null)
         {
             flag = true;
@@ -2984,11 +2986,11 @@ public class Zombie : MonoBehaviour, IExplosionDamageable, IEquatable<IExplosion
         if (flag)
         {
             oneShotAudioParameters.pitch *= 0.85f;
-        }
-        if (isMega)
-        {
-            num *= 1.5f;
-            oneShotAudioParameters.pitch *= 0.85f;
+            if (isMega)
+            {
+                num *= 1.5f;
+                oneShotAudioParameters.pitch *= 0.85f;
+            }
         }
         oneShotAudioParameters.volume = num * audioDef.volumeMultiplier;
         oneShotAudioParameters.SetLinearRolloff(1f, 24f);

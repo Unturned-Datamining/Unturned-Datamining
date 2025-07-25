@@ -9,6 +9,8 @@ Objects Objects
 Events Events
 Gameplay Gameplay
 
+Override_Tooltip Override
+
 Spawn_Chance Spawn Chance [0-1]
 Respawn_Time Respawn Time
 Unlocked_After_Seconds_In_Safezone Unlocked After Seconds in Safezone

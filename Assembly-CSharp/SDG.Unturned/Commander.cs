@@ -146,7 +146,6 @@ public class Commander
         register(new CommandCopyServerCode(newLocalization));
         register(new CommandCopyFakeIP(newLocalization));
         register(new CommandDebug(Localization.read("/Server/ServerCommandDebug.dat")));
-        register(new CommandResetConfig(Localization.read("/Server/ServerCommandResetConfig.dat")));
         register(new CommandBind(Localization.read("/Server/ServerCommandBind.dat")));
         register(new CommandSave(Localization.read("/Server/ServerCommandSave.dat")));
         register(new CommandShutdown(Localization.read("/Server/ServerCommandShutdown.dat")));

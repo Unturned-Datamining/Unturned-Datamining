@@ -7,6 +7,7 @@ using System.IO;
 using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Text;
+using System.Threading;
 using BattlEye;
 using SDG.Framework.Modules;
 using SDG.HostBans;
@@ -36,6 +37,24 @@ public class Provider : MonoBehaviour
     }
 
     public delegate void LoginSpawningHandler(SteamPlayerID playerID, ref Vector3 point, ref float yaw, ref EPlayerStance initialStance, ref bool needsNewSpawnpoint);
+
+    private class WriteGameplayConfigThreadState
+    {
+        public bool withComments;
+
+        public string filePath;
+
+        public List<KeyValuePair<Exception, string>> errors = new List<KeyValuePair<Exception, string>>();
+
+        public IEditableDatDictionary rootDictionary;
+
+        public Stopwatch watch;
+
+        public void AddError(Exception e, string message)
+        {
+            errors.Add(new KeyValuePair<Exception, string>(e, message));
+        }
+    }
 
     public delegate void CommenceShutdownHandler();
 
@@ -387,6 +406,15 @@ public class Provider : MonoBehaviour
     /// </summary>
     private static IServerTransport serverTransport;
 
+    /// <summary>
+    /// Anticipating some hosts will prefer the old format.
+    /// </summary>
+    private static CommandLineFlag clUseLegacyJsonConfig = new CommandLineFlag(defaultValue: false, "-UseLegacyJsonGameplayConfig");
+
+    private static CommandLineFlag clLogGameplayConfig = new CommandLineFlag(defaultValue: false, "-LogGameplayConfig");
+
+    private static CommandLineString clGameplayConfigFileOverride = new CommandLineString("-GameplayConfigFile");
+
     private static int countShutdownTimer = -1;
 
     private static string shutdownMessage = string.Empty;
@@ -534,6 +562,13 @@ public class Provider : MonoBehaviour
     private static ConfigData _configData;
 
     internal static ModeConfigData _modeConfigData;
+
+    /// <summary>
+    /// Populated when parsing modeConfigData. Level overrides check whether a property is overridden here before applying.
+    /// </summary>
+    private static Dictionary<FieldInfo, object> _modeConfigDataOverrides = new Dictionary<FieldInfo, object>();
+
+    private static CommandLineFlag clNoLevelConfigOverrides = new CommandLineFlag(defaultValue: false, "-NoLevelConfigOverrides");
 
     /// <summary>
     /// Number of transport connection failures on this frame.
@@ -2467,17 +2502,10 @@ public class Provider : MonoBehaviour
         SteamAdminlist.load();
         _currentServerAdvertisement = null;
         _configData = ConfigData.CreateDefault(singleplayer: true);
-        if (ServerSavedata.fileExists("/Config.json"))
+        _modeConfigDataOverrides.Clear();
+        if (singleplayerMode != EGameMode.TUTORIAL)
         {
-            try
-            {
-                ServerSavedata.populateJSON("/Config.json", _configData);
-            }
-            catch (Exception e)
-            {
-                UnturnedLog.error("Exception while parsing singleplayer config:");
-                UnturnedLog.exception(e);
-            }
+            LoadGameplayConfig(singleplayer: true);
         }
         _modeConfigData = _configData.getModeConfig(mode);
         if (_modeConfigData == null)
@@ -2498,6 +2526,241 @@ public class Provider : MonoBehaviour
         _clientHash = Hash.SHA1(client);
         timeLastPacketWasReceivedFromServer = Time.realtimeSinceStartup;
         broadcastServerHosted();
+    }
+
+    private static void LoadGameplayConfig(bool singleplayer)
+    {
+        Stopwatch stopwatch = Stopwatch.StartNew();
+        bool flag = !clUseLegacyJsonConfig;
+        string text = null;
+        if (flag)
+        {
+            if (clGameplayConfigFileOverride.hasValue)
+            {
+                if (Path.IsPathFullyQualified(clGameplayConfigFileOverride.value))
+                {
+                    if (File.Exists(clGameplayConfigFileOverride.value))
+                    {
+                        text = clGameplayConfigFileOverride.value;
+                    }
+                    else
+                    {
+                        CommandWindow.LogWarning("-GameplayConfigFile appears to be an absolute path but does not exist: \"" + clGameplayConfigFileOverride.value + "\"");
+                    }
+                }
+                else
+                {
+                    string text2 = ReadWrite.PATH + ServerSavedata.transformPath("/" + clGameplayConfigFileOverride.value);
+                    if (File.Exists(text2))
+                    {
+                        text = text2;
+                    }
+                    else
+                    {
+                        CommandWindow.LogWarning("-GameplayConfigFile appears to be a relative path but does not exist at: \"" + text2 + "\"");
+                    }
+                }
+            }
+            if (string.IsNullOrEmpty(text))
+            {
+                text = ((!singleplayer) ? PlayConfigUtils.GetServerConfigPathV2(serverID, mode) : PlayConfigUtils.GetSingleplayerConfigPathV2(Characters.selected, mode));
+            }
+        }
+        IEditableDatDictionary editableDatDictionary = null;
+        if (flag && File.Exists(text))
+        {
+            IDatDictionary datDictionary = null;
+            try
+            {
+                using FileStream stream = new FileStream(text, FileMode.Open, FileAccess.Read, FileShare.Read);
+                using StreamReader inputReader = new StreamReader(stream);
+                DatParser datParser = new DatParser();
+                datParser.EnableMetadata = true;
+                datDictionary = datParser.Parse(inputReader);
+                if (datParser.HasError)
+                {
+                    CommandWindow.LogWarning("Error(s) parsing gameplay config:");
+                    foreach (string errorMessage in datParser.ErrorMessages)
+                    {
+                        CommandWindow.LogWarning(errorMessage);
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                UnturnedLog.exception(e, "Caught exception parsing v2 gameplay config from \"" + text + "\":");
+            }
+            if (datDictionary == null)
+            {
+                return;
+            }
+            if (!singleplayer)
+            {
+                try
+                {
+                    PlayConfigUtils.ParseServerConfig(datDictionary, _configData);
+                }
+                catch (Exception e2)
+                {
+                    UnturnedLog.exception(e2, "Caught exception parsing server config from \"" + text + "\":");
+                }
+            }
+            try
+            {
+                PlayConfigUtils.ParseModeConfig(datDictionary, _configData.getModeConfig(mode), _modeConfigDataOverrides);
+            }
+            catch (Exception e3)
+            {
+                UnturnedLog.exception(e3, "Caught exception parsing mode config from \"" + text + "\":");
+            }
+            if (!singleplayer)
+            {
+                editableDatDictionary = datDictionary.Edit();
+            }
+        }
+        else
+        {
+            if (flag)
+            {
+                editableDatDictionary = MetadataPreservingDatWriter.CreateRoot();
+            }
+            if (ServerSavedata.fileExists("/Config.json"))
+            {
+                if (flag)
+                {
+                    CommandWindow.Log($"Converting older Config.json file {mode} mode section into newer txt file");
+                }
+                else
+                {
+                    CommandWindow.Log("Not converting legacy Config.json file, using as-is");
+                }
+                ConfigData configData = ConfigData.CreateDefault(singleplayer);
+                try
+                {
+                    ServerSavedata.populateJSON("/Config.json", configData);
+                }
+                catch (Exception e4)
+                {
+                    UnturnedLog.exception(e4, "Caught exception while parsing json gameplay config:");
+                }
+                if (!singleplayer && flag)
+                {
+                    Dictionary<FieldInfo, object> dictionary = new Dictionary<FieldInfo, object>();
+                    try
+                    {
+                        PlayConfigUtils.GatherServerModifiedFields(Provider.configData, configData, dictionary);
+                    }
+                    catch (Exception e5)
+                    {
+                        UnturnedLog.exception(e5, "Caught exception gathering server modified fields for json config conversion:");
+                    }
+                    foreach (KeyValuePair<FieldInfo, object> item in dictionary)
+                    {
+                        CommandWindow.Log($"Converted {PlayConfigUtils.GetFieldPath(item.Key)} = \"{item.Value}\"");
+                    }
+                    try
+                    {
+                        PlayConfigUtils.ApplyServerConfigOverrides(editableDatDictionary, dictionary);
+                    }
+                    catch (Exception e6)
+                    {
+                        UnturnedLog.exception(e6, "Caught exception applying server modified fields for json config conversion:");
+                    }
+                }
+                try
+                {
+                    PlayConfigUtils.GatherModifiedFields(Provider.configData.getModeConfig(mode), configData.getModeConfig(mode), _modeConfigDataOverrides);
+                }
+                catch (Exception e7)
+                {
+                    UnturnedLog.exception(e7, "Caught exception gathering mode modified fields for json config:");
+                }
+                if (flag)
+                {
+                    foreach (KeyValuePair<FieldInfo, object> modeConfigDataOverride in _modeConfigDataOverrides)
+                    {
+                        CommandWindow.Log($"Converted {PlayConfigUtils.GetFieldPath(modeConfigDataOverride.Key)} = \"{modeConfigDataOverride.Value}\"");
+                    }
+                    try
+                    {
+                        PlayConfigUtils.ApplyModeConfigOverrides(editableDatDictionary, _modeConfigDataOverrides);
+                    }
+                    catch (Exception e8)
+                    {
+                        UnturnedLog.exception(e8, "Caught exception applying mode modified fields for json config conversion:");
+                    }
+                }
+                _configData = configData;
+            }
+        }
+        if ((bool)clLogGameplayConfig)
+        {
+            CommandWindow.Log("Server gameplay config overrides:");
+            foreach (KeyValuePair<FieldInfo, object> modeConfigDataOverride2 in _modeConfigDataOverrides)
+            {
+                CommandWindow.Log($"{PlayConfigUtils.GetFieldPath(modeConfigDataOverride2.Key)} = \"{modeConfigDataOverride2.Value}\"");
+            }
+        }
+        stopwatch.Stop();
+        UnturnedLog.info($"Load gameplay config: {stopwatch.ElapsedMilliseconds} ms");
+        if (editableDatDictionary != null)
+        {
+            stopwatch.Restart();
+            WriteGameplayConfigThreadState writeGameplayConfigThreadState = new WriteGameplayConfigThreadState();
+            writeGameplayConfigThreadState.withComments = !singleplayer;
+            writeGameplayConfigThreadState.filePath = text;
+            writeGameplayConfigThreadState.rootDictionary = editableDatDictionary;
+            writeGameplayConfigThreadState.watch = stopwatch;
+            ThreadPool.QueueUserWorkItem(WriteGameplayConfigOnWorkerThread, writeGameplayConfigThreadState);
+        }
+    }
+
+    private static void WriteGameplayConfigOnWorkerThread(object voidState)
+    {
+        WriteGameplayConfigThreadState writeGameplayConfigThreadState = (WriteGameplayConfigThreadState)voidState;
+        if (writeGameplayConfigThreadState.withComments)
+        {
+            IEditableDatValue orAddValue = writeGameplayConfigThreadState.rootDictionary.GetOrAddValue("Version");
+            orAddValue.SetInt32(1);
+            orAddValue.PreferredLineNumber = 1;
+            orAddValue.SortingPreference = IEditableDatNode.ESortingPreference.TowardFront;
+            orAddValue.MergeGeneratedCommentAlloc("¦ ", new string[15]
+            {
+                "Unturned Server Configuration File", "", "Lines beginning with // are comments.", "Comments beginning with ¦ are auto-generated.", "Any comments you write (without ¦) will be preserved.", "", "Settings without a value use the default for the mode (easy/normal/hard).", "For example, this setting would use the default:", "", "Setting",
+                "", "Whereas this setting is overridden with value four:", "", "Setting 4", ""
+            });
+            try
+            {
+                PlayConfigUtils.PopulateConfigFilePropertiesAndComments(writeGameplayConfigThreadState.rootDictionary);
+            }
+            catch (Exception e)
+            {
+                writeGameplayConfigThreadState.AddError(e, "Caught exception updating config file \"" + writeGameplayConfigThreadState.filePath + "\":");
+            }
+        }
+        ReadWrite.MoveIfExistsAbsolute(writeGameplayConfigThreadState.filePath, ServerSavedata.GetBackupFilePath(writeGameplayConfigThreadState.filePath));
+        try
+        {
+            using StreamWriter output = new StreamWriter(writeGameplayConfigThreadState.filePath, append: false, Encoding.UTF8);
+            DatWriter writer = new DatWriter(output);
+            new MetadataPreservingDatWriter().WriteRootDictionary(writeGameplayConfigThreadState.rootDictionary, writer);
+        }
+        catch (Exception e2)
+        {
+            writeGameplayConfigThreadState.AddError(e2, "Caught exception writing updated config file to: \"" + writeGameplayConfigThreadState.filePath + "\"");
+        }
+        GameThreadQueueUtil.QueueGameThreadWorkItem(OnWriteGameplayConfigFinished, writeGameplayConfigThreadState);
+    }
+
+    private static void OnWriteGameplayConfigFinished(object voidState)
+    {
+        WriteGameplayConfigThreadState writeGameplayConfigThreadState = (WriteGameplayConfigThreadState)voidState;
+        writeGameplayConfigThreadState.watch.Stop();
+        UnturnedLog.info($"Rewriting gameplay config (on worker thread): {writeGameplayConfigThreadState.watch.ElapsedMilliseconds} ms");
+        foreach (KeyValuePair<Exception, string> error in writeGameplayConfigThreadState.errors)
+        {
+            UnturnedLog.exception(error.Key, error.Value);
+        }
     }
 
     public static void host()
@@ -3015,61 +3278,42 @@ public class Provider : MonoBehaviour
     /// </summary>
     private static void AdvertiseConfig()
     {
-        ModeConfigData modeConfig = ConfigData.CreateDefault(singleplayer: false).getModeConfig(mode);
-        if (modeConfig == null)
-        {
-            CommandWindow.LogError("Unable to compare default for advertise config");
-            return;
-        }
         int num = 0;
         FieldInfo[] fields = modeConfigData.GetType().GetFields();
         foreach (FieldInfo fieldInfo in fields)
         {
-            object value = fieldInfo.GetValue(modeConfigData);
-            object value2 = fieldInfo.GetValue(modeConfig);
-            FieldInfo[] fields2 = value.GetType().GetFields();
+            FieldInfo[] fields2 = fieldInfo.FieldType.GetFields();
             foreach (FieldInfo fieldInfo2 in fields2)
             {
-                object value3 = fieldInfo2.GetValue(value);
-                object value4 = fieldInfo2.GetValue(value2);
-                string text = null;
-                Type fieldType = fieldInfo2.FieldType;
-                if (fieldType == typeof(bool))
+                if (_modeConfigDataOverrides.TryGetValue(fieldInfo2, out var value) && value != null)
                 {
-                    bool flag = (bool)value3;
-                    bool flag2 = (bool)value4;
-                    if (flag != flag2)
+                    string text = null;
+                    Type fieldType = fieldInfo2.FieldType;
+                    if (fieldType == typeof(bool))
                     {
+                        bool flag = (bool)value;
                         text = fieldInfo.Name + "." + fieldInfo2.Name + "=" + (flag ? "T" : "F");
                     }
-                }
-                else if (fieldType == typeof(float))
-                {
-                    float a = (float)value3;
-                    float b = (float)value4;
-                    if (!MathfEx.IsNearlyEqual(a, b, 0.0001f))
+                    else if (fieldType == typeof(float))
                     {
-                        text = fieldInfo.Name + "." + fieldInfo2.Name + "=" + a.ToString(CultureInfo.InvariantCulture);
-                    }
-                }
-                else if (fieldType == typeof(uint))
-                {
-                    uint num2 = (uint)value3;
-                    uint num3 = (uint)value4;
-                    if (num2 != num3)
-                    {
+                        float num2 = (float)value;
                         text = fieldInfo.Name + "." + fieldInfo2.Name + "=" + num2.ToString(CultureInfo.InvariantCulture);
                     }
-                }
-                else
-                {
-                    CommandWindow.LogErrorFormat("Unable to advertise config type: {0}", fieldType);
-                }
-                if (!string.IsNullOrEmpty(text))
-                {
-                    string pKey = "Cfg_" + num.ToString(CultureInfo.InvariantCulture);
-                    num++;
-                    SteamGameServer.SetKeyValue(pKey, text);
+                    else if (fieldType == typeof(uint))
+                    {
+                        uint num3 = (uint)value;
+                        text = fieldInfo.Name + "." + fieldInfo2.Name + "=" + num3.ToString(CultureInfo.InvariantCulture);
+                    }
+                    else
+                    {
+                        CommandWindow.LogErrorFormat("Unable to advertise config type: {0}", fieldType);
+                    }
+                    if (!string.IsNullOrEmpty(text))
+                    {
+                        string pKey = "Cfg_" + num.ToString(CultureInfo.InvariantCulture);
+                        num++;
+                        SteamGameServer.SetKeyValue(pKey, text);
+                    }
                 }
             }
         }
@@ -3887,52 +4131,16 @@ public class Provider : MonoBehaviour
         return (ushort)(port + 1);
     }
 
-    /// <summary>
-    /// Called while running
-    /// </summary>
-    public static void resetConfig()
+    private static void applyLevelConfigOverride(FieldInfo field, object targetObject, KeyValuePair<string, object> levelOverride)
     {
-        _modeConfigData = new ModeConfigData(mode);
-        switch (mode)
-        {
-        case EGameMode.EASY:
-            configData.Easy = modeConfigData;
-            break;
-        case EGameMode.NORMAL:
-            configData.Normal = modeConfigData;
-            break;
-        case EGameMode.HARD:
-            configData.Hard = modeConfigData;
-            break;
-        }
-        ServerSavedata.serializeJSON("/Config.json", configData);
-    }
-
-    private static void applyLevelConfigOverride(FieldInfo field, object targetObject, object defaultTargetObject, KeyValuePair<string, object> levelOverride)
-    {
-        object value = field.GetValue(targetObject);
-        object value2 = field.GetValue(defaultTargetObject);
         Type fieldType = field.FieldType;
-        bool flag2;
         if (fieldType == typeof(bool))
         {
-            bool num = (bool)value;
-            bool flag = (bool)value2;
-            flag2 = num == flag;
-            if (flag2)
-            {
-                field.SetValue(targetObject, Convert.ToBoolean(levelOverride.Value));
-            }
+            field.SetValue(targetObject, Convert.ToBoolean(levelOverride.Value));
         }
         else if (fieldType == typeof(float))
         {
-            float a = (float)value;
-            float b = (float)value2;
-            flag2 = MathfEx.IsNearlyEqual(a, b, 0.0001f);
-            if (flag2)
-            {
-                field.SetValue(targetObject, Convert.ToSingle(levelOverride.Value));
-            }
+            field.SetValue(targetObject, Convert.ToSingle(levelOverride.Value));
         }
         else
         {
@@ -3941,34 +4149,20 @@ public class Provider : MonoBehaviour
                 CommandWindow.LogErrorFormat("Unable to handle level mode config override type: {0} ({1})", fieldType, levelOverride.Key);
                 return;
             }
-            uint num2 = (uint)value;
-            uint num3 = (uint)value2;
-            flag2 = num2 == num3;
-            if (flag2)
-            {
-                field.SetValue(targetObject, Convert.ToUInt32(levelOverride.Value));
-            }
+            field.SetValue(targetObject, Convert.ToUInt32(levelOverride.Value));
         }
-        if (!flag2)
-        {
-            CommandWindow.LogFormat("Skipping level config override {0} because server value ({1}) is not the default ({2})", levelOverride.Key, value, value2);
-        }
-        else
-        {
-            CommandWindow.LogFormat("Level overrides config {0}: {1} (Default: {2})", levelOverride.Key, levelOverride.Value, value2);
-        }
+        CommandWindow.LogFormat("Level overrides config {0}: {1}", levelOverride.Key, levelOverride.Value);
     }
 
     public static void applyLevelModeConfigOverrides()
     {
-        if (Level.info == null || Level.info.configData == null)
+        if (Level.info == null || Level.info.configData == null || Level.info.configData.Mode_Config_Overrides == null || Level.info.configData.Mode_Config_Overrides.Count < 1)
         {
             return;
         }
-        ModeConfigData modeConfig = ConfigData.CreateDefault(!Dedicator.IsDedicatedServer).getModeConfig(mode);
-        if (modeConfig == null)
+        if ((bool)clNoLevelConfigOverrides)
         {
-            CommandWindow.LogError("Unable to compare default for level mode config overrides");
+            CommandWindow.Log("Skipping all level config overrides because " + clNoLevelConfigOverrides.flag + " is enabled");
             return;
         }
         foreach (KeyValuePair<string, object> mode_Config_Override in Level.info.configData.Mode_Config_Overrides)
@@ -3990,7 +4184,6 @@ public class Provider : MonoBehaviour
             }
             Type type = typeof(ModeConfigData);
             object value = modeConfigData;
-            object obj = modeConfig;
             string[] array = mode_Config_Override.Key.Split('.');
             for (int i = 0; i < array.Length; i++)
             {
@@ -4003,9 +4196,14 @@ public class Provider : MonoBehaviour
                 }
                 if (i == array.Length - 1)
                 {
+                    if (_modeConfigDataOverrides.ContainsKey(field))
+                    {
+                        CommandWindow.Log("Skipping level config override " + mode_Config_Override.Key + " because it's overridden in server config");
+                        break;
+                    }
                     try
                     {
-                        applyLevelConfigOverride(field, value, obj, mode_Config_Override);
+                        applyLevelConfigOverride(field, value, mode_Config_Override);
                     }
                     catch (Exception e)
                     {
@@ -4018,7 +4216,6 @@ public class Provider : MonoBehaviour
                 {
                     type = field.FieldType;
                     value = field.GetValue(value);
-                    obj = field.GetValue(obj);
                 }
             }
         }
@@ -5412,27 +5609,16 @@ public class Provider : MonoBehaviour
                 ServerSavedata.createFolder("/Workshop/Maps");
             }
             _configData = ConfigData.CreateDefault(singleplayer: false);
-            if (ServerSavedata.fileExists("/Config.json"))
-            {
-                try
-                {
-                    ServerSavedata.populateJSON("/Config.json", _configData);
-                }
-                catch (Exception e)
-                {
-                    UnturnedLog.error("Exception while parsing server config:");
-                    UnturnedLog.exception(e);
-                }
-            }
-            ServerMessageHandler_ReadyToConnect.joinRateLimiter.window = configData.Server.Join_Rate_Limit_Window_Seconds;
-            badMessageRateLimiter.window = configData.Server.Bad_Packet_Rate_Limit_Window_Seconds;
-            badMessageRateLimiter.threshold = configData.Server.Bad_Packet_Rate_Limit_Threshold;
-            ServerSavedata.serializeJSON("/Config.json", configData);
+            _modeConfigDataOverrides.Clear();
+            LoadGameplayConfig(singleplayer: false);
             _modeConfigData = _configData.getModeConfig(mode);
             if (_modeConfigData == null)
             {
                 _modeConfigData = new ModeConfigData(mode);
             }
+            ServerMessageHandler_ReadyToConnect.joinRateLimiter.window = configData.Server.Join_Rate_Limit_Window_Seconds;
+            badMessageRateLimiter.window = configData.Server.Bad_Packet_Rate_Limit_Window_Seconds;
+            badMessageRateLimiter.threshold = configData.Server.Bad_Packet_Rate_Limit_Threshold;
             if (!Dedicator.offlineOnly)
             {
                 HostBansManager.Get().Refresh();
@@ -5583,7 +5769,8 @@ public class Provider : MonoBehaviour
         localization = Localization.read("/Server/ServerConsole.dat");
         updateRichPresence();
         _configData = ConfigData.CreateDefault(singleplayer: true);
-        _modeConfigData = configData.Normal;
+        _modeConfigDataOverrides.Clear();
+        _modeConfigData = configData.getModeConfig(EGameMode.NORMAL);
         LoadPreferences();
         if (ReadWrite.fileExists("/StreamerNames.json", useCloud: false, usePath: true))
         {
@@ -5591,9 +5778,9 @@ public class Provider : MonoBehaviour
             {
                 streamerNames = ReadWrite.deserializeJSON<List<string>>("/StreamerNames.json", useCloud: false, usePath: true);
             }
-            catch (Exception e2)
+            catch (Exception e)
             {
-                UnturnedLog.exception(e2, "Unable to parse StreamerNames.json! consider validating with a JSON linter");
+                UnturnedLog.exception(e, "Unable to parse StreamerNames.json! consider validating with a JSON linter");
                 streamerNames = null;
             }
             if (streamerNames == null)
@@ -5682,5 +5869,10 @@ public class Provider : MonoBehaviour
             return false;
         }
         return true;
+    }
+
+    [Obsolete("Removed", true)]
+    public static void resetConfig()
+    {
     }
 }

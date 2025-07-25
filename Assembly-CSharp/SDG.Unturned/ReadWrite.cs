@@ -500,10 +500,14 @@ public class ReadWrite
     /// </summary>
     public static void MoveIfExists(string sourceFileName, string destFileName)
     {
+        sourceFileName = PATH + sourceFileName;
+        destFileName = PATH + destFileName;
+    }
+
+    public static void MoveIfExistsAbsolute(string sourceFileName, string destFileName)
+    {
         try
         {
-            sourceFileName = PATH + sourceFileName;
-            destFileName = PATH + destFileName;
             if (File.Exists(destFileName))
             {
                 File.Delete(destFileName);

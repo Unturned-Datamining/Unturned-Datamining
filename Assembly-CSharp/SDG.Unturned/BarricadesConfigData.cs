@@ -2,18 +2,46 @@ namespace SDG.Unturned;
 
 public class BarricadesConfigData
 {
+    /// <summary>
+    /// How long (in seconds) since the barricade owner/group last played before the barricade won't be saved.
+    /// If the server is offline for more than half the Decay_Time, all decay timers are reset.
+    /// </summary>
     public uint Decay_Time;
 
+    /// <summary>
+    /// Scales the amount of damage taken by "Armor Tier: Low" barricades.
+    /// For example, 0.5 halves the amount of damage dealt to barricades.
+    /// </summary>
     public float Armor_Lowtier_Multiplier;
 
+    /// <summary>
+    /// Scales the amount of damage taken by "Armor Tier: High" barricades.
+    /// For example, 0.5 halves the amount of damage dealt to barricades.
+    /// </summary>
     public float Armor_Hightier_Multiplier;
 
+    /// <summary>
+    /// Scales the amount of damage taken by barricades from non-"Heavy Weapon" guns.
+    /// For example, 2.0 doubles the amount of damage dealt to barricades by non-"Heavy Weapon" guns.
+    /// </summary>
     public float Gun_Lowcal_Damage_Multiplier;
 
+    /// <summary>
+    /// Scales the amount of damage taken by barricades from "Heavy Weapon" guns.
+    /// For example, 2.0 doubles the amount of damage dealt to barricades by "Heavy Weapon" guns.
+    /// </summary>
     public float Gun_Highcal_Damage_Multiplier;
 
+    /// <summary>
+    /// Scales the amount of damage taken by barricades from melee weapons and fists.
+    /// For example, 2.0 doubles the amount of damage dealt to barricades by melee.
+    /// </summary>
     public float Melee_Damage_Multiplier;
 
+    /// <summary>
+    /// Scales the amount of HP restored by melee items like the Blowtorch.
+    /// For example, 2.0 doubles the amount of health restored by melee items.
+    /// </summary>
     public float Melee_Repair_Multiplier;
 
     /// <summary>

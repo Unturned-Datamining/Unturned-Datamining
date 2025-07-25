@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Reflection;
+using System.Text;
 using UnityEngine;
 
 namespace SDG.Unturned;
@@ -19,13 +21,11 @@ public class MenuPlayConfigUI
 
     private static ISleekScrollView configBox;
 
-    private static ConfigData configData;
+    private static ModeConfigData defaultModeConfigData;
 
-    private static ModeConfigData modeConfigData;
+    private static Dictionary<FieldInfo, SleekConfigProperty> propertyWidgets;
 
-    private static int configOffset;
-
-    private static List<object> configGroups;
+    private static Dictionary<FieldInfo, object> propertyOverrides;
 
     public static void open()
     {
@@ -34,44 +34,107 @@ public class MenuPlayConfigUI
             return;
         }
         active = true;
-        configData = ConfigData.CreateDefault(singleplayer: true);
-        string path = "/Worlds/Singleplayer_" + Characters.selected + "/Config.json";
-        if (ReadWrite.fileExists(path, useCloud: false))
+        if (propertyWidgets == null)
         {
+            CreatePropertyWidgets();
+        }
+        defaultModeConfigData = ModeConfigData.CreateDefault(PlaySettings.singleplayerMode, singleplayer: true);
+        propertyOverrides.Clear();
+        string singleplayerConfigPathV = PlayConfigUtils.GetSingleplayerConfigPathV2(Characters.selected, PlaySettings.singleplayerMode);
+        if (File.Exists(singleplayerConfigPathV))
+        {
+            IDatDictionary rootDictionary = null;
             try
             {
-                ReadWrite.populateJSON(path, configData);
+                using FileStream stream = new FileStream(singleplayerConfigPathV, FileMode.Open, FileAccess.Read, FileShare.Read);
+                using StreamReader inputReader = new StreamReader(stream);
+                DatParser datParser = new DatParser();
+                datParser.EnableMetadata = true;
+                rootDictionary = datParser.Parse(inputReader);
+                if (datParser.HasError)
+                {
+                    CommandWindow.LogWarning("Error(s) parsing gameplay config:");
+                    foreach (string errorMessage in datParser.ErrorMessages)
+                    {
+                        CommandWindow.LogWarning(errorMessage);
+                    }
+                }
             }
             catch (Exception e)
             {
-                UnturnedLog.error("Exception while parsing singleplayer config for menu:");
-                UnturnedLog.exception(e);
+                UnturnedLog.exception(e, "Caught exception parsing v2 gameplay config for menu:");
+            }
+            try
+            {
+                ModeConfigData config = ModeConfigData.CreateDefault(PlaySettings.singleplayerMode, singleplayer: true);
+                PlayConfigUtils.ParseModeConfig(rootDictionary, config, propertyOverrides);
+            }
+            catch (Exception e2)
+            {
+                UnturnedLog.exception(e2, "Caught exception parsing mode config for menu:");
             }
         }
-        switch (PlaySettings.singleplayerMode)
+        else
         {
-        case EGameMode.EASY:
-            modeConfigData = configData.Easy;
-            break;
-        case EGameMode.NORMAL:
-            modeConfigData = configData.Normal;
-            break;
-        case EGameMode.HARD:
-            modeConfigData = configData.Hard;
-            break;
+            ConfigData configData = ConfigData.CreateDefault(singleplayer: true);
+            string path = "/Worlds/Singleplayer_" + Characters.selected + "/Config.json";
+            if (ReadWrite.fileExists(path, useCloud: false))
+            {
+                try
+                {
+                    ReadWrite.populateJSON(path, configData);
+                }
+                catch (Exception e3)
+                {
+                    UnturnedLog.error("Exception while parsing singleplayer config json for menu:");
+                    UnturnedLog.exception(e3);
+                }
+            }
+            try
+            {
+                PlayConfigUtils.GatherModifiedFields(defaultModeConfigData, configData.getModeConfig(PlaySettings.singleplayerMode), propertyOverrides);
+                foreach (KeyValuePair<FieldInfo, object> propertyOverride in propertyOverrides)
+                {
+                    CommandWindow.Log($"Config menu converted {PlayConfigUtils.GetFieldPath(propertyOverride.Key)} = \"{propertyOverride.Value}\"");
+                }
+            }
+            catch (Exception e4)
+            {
+                UnturnedLog.exception(e4, "Caught exception gathering modified json fields for menu:");
+            }
         }
-        refreshConfig();
+        SyncPropertyWidgetValues();
         container.AnimateIntoView();
     }
 
     public static void close()
     {
-        if (active)
+        if (!active)
         {
-            active = false;
-            ReadWrite.serializeJSON("/Worlds/Singleplayer_" + Characters.selected + "/Config.json", useCloud: false, configData);
-            container.AnimateOutOfView(0f, 1f);
+            return;
         }
+        active = false;
+        IEditableDatDictionary rootDictionary = MetadataPreservingDatWriter.CreateRoot();
+        try
+        {
+            PlayConfigUtils.ApplyModeConfigOverrides(rootDictionary, propertyOverrides);
+        }
+        catch (Exception e)
+        {
+            UnturnedLog.exception(e, "Caught exception applying modified fields for config menu:");
+        }
+        string singleplayerConfigPathV = PlayConfigUtils.GetSingleplayerConfigPathV2(Characters.selected, PlaySettings.singleplayerMode);
+        try
+        {
+            using StreamWriter output = new StreamWriter(singleplayerConfigPathV, append: false, Encoding.UTF8);
+            DatWriter writer = new DatWriter(output);
+            new MetadataPreservingDatWriter().WriteRootDictionary(rootDictionary, writer);
+        }
+        catch (Exception e2)
+        {
+            UnturnedLog.exception(e2, "Caught exception writing updated config file to: \"" + singleplayerConfigPathV + "\"");
+        }
+        container.AnimateOutOfView(0f, 1f);
     }
 
     public static string sanitizeName(string fieldName)
@@ -83,96 +146,74 @@ public class MenuPlayConfigUI
         return fieldName.Replace('_', ' ');
     }
 
-    private static void refreshConfig()
+    /// <summary>
+    /// Creating all these elements is a bit slow, so we only do it once the menu is first opened.
+    /// </summary>
+    private static void CreatePropertyWidgets()
     {
-        configBox.RemoveAllChildren();
-        configOffset = 0;
-        configGroups.Clear();
-        FieldInfo[] fields = modeConfigData.GetType().GetFields();
+        propertyWidgets = new Dictionary<FieldInfo, SleekConfigProperty>();
+        float num = 0f;
+        FieldInfo[] fields = typeof(ModeConfigData).GetFields();
         foreach (FieldInfo fieldInfo in fields)
         {
             ISleekBox sleekBox = Glazier.Get().CreateBox();
-            sleekBox.PositionOffset_Y = configOffset;
+            sleekBox.PositionOffset_X = 100f;
+            sleekBox.PositionOffset_Y = num;
             sleekBox.SizeOffset_Y = 30f;
+            sleekBox.SizeOffset_X = -100f;
             sleekBox.SizeScale_X = 1f;
             sleekBox.Text = sanitizeName(fieldInfo.Name);
             configBox.AddChild(sleekBox);
-            int num = 40;
-            configOffset += 40;
-            object value = fieldInfo.GetValue(modeConfigData);
-            FieldInfo[] fields2 = value.GetType().GetFields();
+            float num2 = 40f;
+            num += 40f;
+            FieldInfo[] fields2 = fieldInfo.FieldType.GetFields();
             foreach (FieldInfo fieldInfo2 in fields2)
             {
-                object value2 = fieldInfo2.GetValue(value);
-                Type type = value2.GetType();
-                if (type == typeof(uint))
-                {
-                    ISleekUInt32Field sleekUInt32Field = Glazier.Get().CreateUInt32Field();
-                    sleekUInt32Field.PositionOffset_Y = num;
-                    sleekUInt32Field.SizeOffset_X = 200f;
-                    sleekUInt32Field.SizeOffset_Y = 30f;
-                    sleekUInt32Field.Value = (uint)value2;
-                    sleekUInt32Field.AddLabel(sanitizeName(fieldInfo2.Name), ESleekSide.RIGHT);
-                    sleekUInt32Field.OnValueChanged += onTypedUInt32;
-                    sleekBox.AddChild(sleekUInt32Field);
-                    num += 40;
-                    configOffset += 40;
-                }
-                else if (type == typeof(float))
-                {
-                    ISleekFloat32Field sleekFloat32Field = Glazier.Get().CreateFloat32Field();
-                    sleekFloat32Field.PositionOffset_Y = num;
-                    sleekFloat32Field.SizeOffset_X = 200f;
-                    sleekFloat32Field.SizeOffset_Y = 30f;
-                    sleekFloat32Field.Value = (float)value2;
-                    sleekFloat32Field.AddLabel(sanitizeName(fieldInfo2.Name), ESleekSide.RIGHT);
-                    sleekFloat32Field.OnValueChanged += onTypedSingle;
-                    sleekBox.AddChild(sleekFloat32Field);
-                    num += 40;
-                    configOffset += 40;
-                }
-                else if (type == typeof(bool))
-                {
-                    ISleekToggle sleekToggle = Glazier.Get().CreateToggle();
-                    sleekToggle.PositionOffset_Y = num;
-                    sleekToggle.SizeOffset_X = 40f;
-                    sleekToggle.SizeOffset_Y = 40f;
-                    sleekToggle.Value = (bool)value2;
-                    sleekToggle.AddLabel(sanitizeName(fieldInfo2.Name), ESleekSide.RIGHT);
-                    sleekToggle.OnValueChanged += onToggled;
-                    sleekBox.AddChild(sleekToggle);
-                    num += 50;
-                    configOffset += 50;
-                }
+                SleekConfigProperty sleekConfigProperty = new SleekConfigProperty(fieldInfo2);
+                sleekConfigProperty.SizeScale_X = 1f;
+                sleekConfigProperty.PositionOffset_Y = num2;
+                sleekConfigProperty.OnValueChanged += OnPropertyOverrideChanged;
+                sleekBox.AddChild(sleekConfigProperty);
+                propertyWidgets.Add(fieldInfo2, sleekConfigProperty);
+                num2 += sleekConfigProperty.SizeOffset_Y + 10f;
+                num += sleekConfigProperty.SizeOffset_Y + 10f;
             }
-            configOffset += 40;
-            configGroups.Add(value);
+            num += 40f;
         }
-        configBox.ContentSizeOffset = new Vector2(0f, configOffset - 50);
+        configBox.ContentSizeOffset = new Vector2(0f, num - 50f);
     }
 
-    private static void updateValue(ISleekElement sleek, object state)
+    private static void SyncPropertyWidgetValues()
     {
-        int index = configBox.FindIndexOfChild(sleek.Parent);
-        object obj = configGroups[index];
-        FieldInfo[] fields = obj.GetType().GetFields();
-        int num = sleek.Parent.FindIndexOfChild(sleek);
-        fields[num].SetValue(obj, state);
+        FieldInfo[] fields = typeof(ModeConfigData).GetFields();
+        foreach (FieldInfo obj in fields)
+        {
+            object value = obj.GetValue(defaultModeConfigData);
+            FieldInfo[] fields2 = obj.FieldType.GetFields();
+            foreach (FieldInfo fieldInfo in fields2)
+            {
+                fieldInfo.GetValue(value);
+                object value2;
+                bool isOverridden = propertyOverrides.TryGetValue(fieldInfo, out value2);
+                SleekConfigProperty sleekConfigProperty = propertyWidgets[fieldInfo];
+                sleekConfigProperty.defaultValue = fieldInfo.GetValue(value);
+                sleekConfigProperty.SetOverrideState(isOverridden, value2);
+            }
+        }
     }
 
-    private static void onTypedUInt32(ISleekUInt32Field uint32Field, uint state)
+    private static void OnPropertyOverrideChanged(SleekConfigProperty widget, bool hasOverride, object overrideValue)
     {
-        updateValue(uint32Field, state);
-    }
-
-    private static void onTypedSingle(ISleekFloat32Field singleField, float state)
-    {
-        updateValue(singleField, state);
-    }
-
-    private static void onToggled(ISleekToggle toggle, bool state)
-    {
-        updateValue(toggle, state);
+        if (hasOverride)
+        {
+            propertyOverrides[widget.fieldInfo] = overrideValue;
+            UnturnedLog.info($"Set {widget.fieldInfo.Name} override {overrideValue}");
+        }
+        else
+        {
+            propertyOverrides.Remove(widget.fieldInfo);
+            UnturnedLog.info("Remove " + widget.fieldInfo.Name + " override");
+        }
     }
 
     private static void onClickedBackButton(ISleekElement button)
@@ -183,21 +224,8 @@ public class MenuPlayConfigUI
 
     private static void onClickedDefaultButton(ISleekElement button)
     {
-        modeConfigData = new ModeConfigData(PlaySettings.singleplayerMode);
-        modeConfigData.InitSingleplayerDefaults();
-        switch (PlaySettings.singleplayerMode)
-        {
-        case EGameMode.EASY:
-            configData.Easy = modeConfigData;
-            break;
-        case EGameMode.NORMAL:
-            configData.Normal = modeConfigData;
-            break;
-        case EGameMode.HARD:
-            configData.Hard = modeConfigData;
-            break;
-        }
-        refreshConfig();
+        propertyOverrides.Clear();
+        SyncPropertyWidgetValues();
     }
 
     public MenuPlayConfigUI()
@@ -214,14 +242,16 @@ public class MenuPlayConfigUI
         MenuUI.container.AddChild(container);
         active = false;
         configBox = Glazier.Get().CreateScrollView();
-        configBox.PositionOffset_X = -200f;
+        configBox.PositionOffset_X = -300f;
         configBox.PositionOffset_Y = 100f;
         configBox.PositionScale_X = 0.5f;
-        configBox.SizeOffset_X = 430f;
+        configBox.SizeOffset_X = 530f;
         configBox.SizeOffset_Y = -200f;
         configBox.SizeScale_Y = 1f;
         configBox.ScaleContentToWidth = true;
         container.AddChild(configBox);
+        propertyWidgets = null;
+        propertyOverrides = new Dictionary<FieldInfo, object>();
         backButton = new SleekButtonIcon(MenuDashboardUI.icons.load<Texture2D>("Exit"));
         backButton.PositionOffset_Y = -50f;
         backButton.PositionScale_Y = 1f;
@@ -245,6 +275,5 @@ public class MenuPlayConfigUI
         defaultButton.OnClicked += onClickedDefaultButton;
         defaultButton.FontSize = ESleekFontSize.Medium;
         container.AddChild(defaultButton);
-        configGroups = new List<object>();
     }
 }

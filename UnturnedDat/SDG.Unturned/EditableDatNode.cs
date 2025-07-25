@@ -89,7 +89,7 @@ internal abstract class EditableDatNode<TInterface, TNode, TEditable> : Editable
     public void WriterGetSortingParameters(out int lineNumber, out int sortOrder)
     {
         lineNumber = WriterGetEarliestLineNumber();
-        sortOrder = creationId;
+        sortOrder = ((base.SortingPreference == IEditableDatNode.ESortingPreference.TowardBack) ? creationId : (-creationId));
     }
 
     public void WriterGetMargins(out int topMargin, out int bottomMargin)

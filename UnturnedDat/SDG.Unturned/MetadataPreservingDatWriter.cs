@@ -12,6 +12,11 @@ public sealed class MetadataPreservingDatWriter
 
     private DatWriter output;
 
+    public static IEditableDatDictionary CreateRoot()
+    {
+        return new EditableDatDictionary(new DatDictionary());
+    }
+
     public void WriteRootDictionary(IDatDictionary rootDictionary, DatWriter writer)
     {
         if (rootDictionary == null)
@@ -48,10 +53,12 @@ public sealed class MetadataPreservingDatWriter
         result.Sort(DictionaryLineNumberComparer);
         int previousElementLatestLineNumber = 0;
         int previousElementMargin = 0;
+        bool flag = true;
         foreach (KeyValuePair<string, IDatNode> item in result)
         {
             IMetadataPreservingDatWriterCompatible metadataPreservingDatWriterCompatible = (IMetadataPreservingDatWriterCompatible)item.Value;
-            WriteCommon(metadataPreservingDatWriterCompatible, ref previousElementLatestLineNumber, ref previousElementMargin);
+            WriteSpacingAndPrefixComment(metadataPreservingDatWriterCompatible, !flag, ref previousElementLatestLineNumber, ref previousElementMargin);
+            flag = false;
             switch (metadataPreservingDatWriterCompatible.NodeType)
             {
             case EDatNodeType.Value:
@@ -99,9 +106,11 @@ public sealed class MetadataPreservingDatWriter
         result.Sort(ListLineNumberComparer);
         int previousElementLatestLineNumber = 0;
         int previousElementMargin = 0;
+        bool flag = true;
         foreach (IMetadataPreservingDatWriterCompatible item in result)
         {
-            WriteCommon(item, ref previousElementLatestLineNumber, ref previousElementMargin);
+            WriteSpacingAndPrefixComment(item, !flag, ref previousElementLatestLineNumber, ref previousElementMargin);
+            flag = false;
             switch (item.NodeType)
             {
             case EDatNodeType.Value:
@@ -131,7 +140,7 @@ public sealed class MetadataPreservingDatWriter
         listPool.Push(result);
     }
 
-    private void WriteCommon(IMetadataPreservingDatWriterCompatible node, ref int previousElementLatestLineNumber, ref int previousElementMargin)
+    private void WriteSpacingAndPrefixComment(IMetadataPreservingDatWriterCompatible node, bool allowSpacing, ref int previousElementLatestLineNumber, ref int previousElementMargin)
     {
         int num = node.WriterGetEarliestLineNumber();
         int num2 = node.WriterGetLatestLineNumber();
@@ -145,10 +154,13 @@ public sealed class MetadataPreservingDatWriter
         a = Mathf.Max(a, b);
         previousElementLatestLineNumber = num2;
         previousElementMargin = lowerMargin;
-        while (a > 0)
+        if (allowSpacing)
         {
-            output.WriteEmptyLine();
-            a--;
+            while (a > 0)
+            {
+                output.WriteEmptyLine();
+                a--;
+            }
         }
         DatComment? datComment = node.WriterGetPrefixComment();
         if (datComment.HasValue && !datComment.Value.AreMessageLinesNullOrEmpty)

@@ -26,4 +26,6 @@ internal abstract class EditableDatNodeBase
     public int TopMargin { get; set; }
 
     public int BottomMargin { get; set; }
+
+    public IEditableDatNode.ESortingPreference SortingPreference { get; set; }
 }

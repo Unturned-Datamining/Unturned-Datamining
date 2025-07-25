@@ -1,3 +1,5 @@
+using System;
+
 namespace SDG.Unturned;
 
 public class ConfigData
@@ -8,10 +10,13 @@ public class ConfigData
 
     public UnityEventConfigData UnityEvents;
 
+    [Obsolete("Please update code to no longer reference this directly! The intention is to stop storing all three side-by-side in the future.")]
     public ModeConfigData Easy;
 
+    [Obsolete("Please update code to no longer reference this directly! The intention is to stop storing all three side-by-side in the future.")]
     public ModeConfigData Normal;
 
+    [Obsolete("Please update code to no longer reference this directly! The intention is to stop storing all three side-by-side in the future.")]
     public ModeConfigData Hard;
 
     private ConfigData()

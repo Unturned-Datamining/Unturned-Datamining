@@ -5,14 +5,29 @@ namespace SDG.Unturned;
 
 public class ServerConfigData
 {
+    /// <summary>
+    /// Whether to enable Valve Anti-Cheat.
+    /// </summary>
     public bool VAC_Secure;
 
+    /// <summary>
+    /// Whether to enable BattlEye Anti-Cheat.
+    /// </summary>
     public bool BattlEye_Secure;
 
+    /// <summary>
+    /// Players with a ping higher than this are kicked.
+    /// </summary>
     public uint Max_Ping_Milliseconds;
 
+    /// <summary>
+    /// Players in the pre-join queue we haven't heard from in this past number of seconds are kicked.
+    /// </summary>
     public float Timeout_Queue_Seconds;
 
+    /// <summary>
+    /// Players in the server we haven't heard from in this past number of seconds are kicked.
+    /// </summary>
     public float Timeout_Game_Seconds;
 
     [NonSerialized]
@@ -64,7 +79,6 @@ public class ServerConfigData
     /// Ordinarily the server should be receiving multiple input packets per second from a client. If more than this
     /// amount of time passes between input packets we flag the client as potentially using a lag switch, and modify
     /// their stats (e.g. reduce player damage) for a corresponding duration.
-    /// Minimum value is PlayerInput.MIN_FAKE_LAG_THRESHOLD_SECONDS.
     /// </summary>
     public float Fake_Lag_Threshold_Seconds;
 
@@ -101,6 +115,12 @@ public class ServerConfigData
 
     /// <summary>
     /// Broadcast "shutting down for scheduled maintenance" warnings at these intervals.
+    /// Format is a list of hours:minutes:seconds, for example to warn only 5 seconds before:
+    /// ` Scheduled_Shutdown_Warnings
+    /// ` [
+    /// `     00:00:05
+    /// ` ]
+    /// Default starts at 30 minutes and counts down.
     /// </summary>
     public string[] Scheduled_Shutdown_Warnings = new string[9] { "00:30:00", "00:15:00", "00:05:00", "00:01:00", "00:00:30", "00:00:15", "00:00:03", "00:00:02", "00:00:01" };
 
@@ -110,12 +130,15 @@ public class ServerConfigData
     public bool Enable_Update_Shutdown;
 
     /// <summary>
-    /// Unfortunately the server does not have a way to automatically determine the current beta branch.
+    /// If Enable_Update_Shutdown is true, we check for updates to this branch of the game.
+    /// (Unfortunately the server does not have a way to automatically determine the current beta branch.)
     /// </summary>
     public string Update_Steam_Beta_Name = "public";
 
     /// <summary>
     /// Broadcast "shutting down for update" warnings at these intervals.
+    /// Refer to Scheduled_Shutdown_Warnings for an explanation of the format.
+    /// Default starts at 3 minutes and counts down.
     /// </summary>
     public string[] Update_Shutdown_Warnings = new string[7] { "00:03:00", "00:01:00", "00:00:30", "00:00:15", "00:00:03", "00:00:02", "00:00:01" };
 
@@ -134,8 +157,7 @@ public class ServerConfigData
     public bool Validate_EconInfo_Hash;
 
     /// <summary>
-    /// If true, opt-in to SteamNetworkingSockets "FakeIP" system.
-    /// https://partner.steamgames.com/doc/api/ISteamNetworkingSockets#1
+    /// Documentation: https://docs.smartlydressedgames.com/en/stable/servers/fake-ip.html
     /// </summary>
     public bool Use_FakeIP;
 

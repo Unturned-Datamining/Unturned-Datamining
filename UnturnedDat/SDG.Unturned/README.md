@@ -30,6 +30,7 @@
 - [IDatList.cs](IDatList.cs)
 - [IDatNode.cs](IDatNode.cs)
 - [IDatParseable.cs](IDatParseable.cs)
+- [IDatSerializable.cs](IDatSerializable.cs)
 - [IDatValue.cs](IDatValue.cs)
 - [IEditableDatDictionary.cs](IEditableDatDictionary.cs)
 - [IEditableDatList.cs](IEditableDatList.cs)

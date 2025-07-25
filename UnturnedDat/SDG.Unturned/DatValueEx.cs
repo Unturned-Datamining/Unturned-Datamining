@@ -5,6 +5,15 @@ namespace SDG.Unturned;
 
 public static class DatValueEx
 {
+    public static bool IsValueNullOrEmpty(this IDatValue valueNode)
+    {
+        if (valueNode != null)
+        {
+            return string.IsNullOrEmpty(valueNode.Value);
+        }
+        return true;
+    }
+
     public static bool TryParseInt8(this IDatValue valueNode, out sbyte value)
     {
         return sbyte.TryParse(valueNode.Value, NumberStyles.Any, CultureInfo.InvariantCulture, out value);
@@ -153,6 +162,20 @@ public static class DatValueEx
     public static T ParseEnum<T>(this IDatValue valueNode, T defaultValue) where T : struct
     {
         if (!valueNode.TryParseEnum<T>(out var value))
+        {
+            return defaultValue;
+        }
+        return value;
+    }
+
+    public static bool TryParseEnum(this IDatValue valueNode, Type enumType, out object value)
+    {
+        return Enum.TryParse(enumType, valueNode.Value, ignoreCase: true, out value);
+    }
+
+    public static object ParseEnum(this IDatValue valueNode, Type enumType, object defaultValue)
+    {
+        if (!valueNode.TryParseEnum(enumType, out var value))
         {
             return defaultValue;
         }

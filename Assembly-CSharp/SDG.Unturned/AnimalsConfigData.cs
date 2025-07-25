@@ -2,22 +2,51 @@ namespace SDG.Unturned;
 
 public class AnimalsConfigData
 {
+    /// <summary>
+    /// How long (in seconds) before a dead animal respawns.
+    /// </summary>
     public float Respawn_Time;
 
+    /// <summary>
+    /// Scales the amount of damage dealt by animals.
+    /// For example, 2.0 doubles the amount of damage from animal attacks.
+    /// </summary>
     public float Damage_Multiplier;
 
+    /// <summary>
+    /// Scales the amount of damage taken by animals.
+    /// For example, 0.5 halves the amount of damage dealt to animals.
+    /// </summary>
     public float Armor_Multiplier;
 
+    /// <summary>
+    /// Maximum number of animals on "Tiny" size levels.
+    /// </summary>
     public uint Max_Instances_Tiny;
 
+    /// <summary>
+    /// Maximum number of animals on "Small" size levels.
+    /// </summary>
     public uint Max_Instances_Small;
 
+    /// <summary>
+    /// Maximum number of animals on "Medium" size levels.
+    /// </summary>
     public uint Max_Instances_Medium;
 
+    /// <summary>
+    /// Maximum number of animals on "Large" size levels.
+    /// </summary>
     public uint Max_Instances_Large;
 
+    /// <summary>
+    /// Maximum number of animals on "Insane" size levels.
+    /// </summary>
     public uint Max_Instances_Insane;
 
+    /// <summary>
+    /// If true, attacking an animal uses the weapon's PvP damage values rather than animal-specific damage.
+    /// </summary>
     public bool Weapons_Use_Player_Damage;
 
     public AnimalsConfigData(EGameMode mode)
