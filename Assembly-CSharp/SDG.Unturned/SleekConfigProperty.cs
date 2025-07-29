@@ -40,7 +40,7 @@ internal class SleekConfigProperty : SleekWrapper
         }
     }
 
-    public SleekConfigProperty(FieldInfo fieldInfo)
+    public SleekConfigProperty(FieldInfo fieldInfo, string tooltip)
     {
         this.fieldInfo = fieldInfo;
         Type fieldType = fieldInfo.FieldType;
@@ -51,6 +51,7 @@ internal class SleekConfigProperty : SleekWrapper
             sleekUInt32Field.SizeOffset_Y = 30f;
             sleekUInt32Field.AddLabel(MenuPlayConfigUI.sanitizeName(fieldInfo.Name), ESleekSide.RIGHT);
             sleekUInt32Field.OnValueChanged += OnTypedUInt32Value;
+            sleekUInt32Field.TooltipText = tooltip;
             AddChild(sleekUInt32Field);
             valueWidget = sleekUInt32Field;
             base.SizeOffset_Y = 30f;
@@ -62,6 +63,7 @@ internal class SleekConfigProperty : SleekWrapper
             sleekFloat32Field.SizeOffset_Y = 30f;
             sleekFloat32Field.AddLabel(MenuPlayConfigUI.sanitizeName(fieldInfo.Name), ESleekSide.RIGHT);
             sleekFloat32Field.OnValueChanged += OnTypedSingleValue;
+            sleekFloat32Field.TooltipText = tooltip;
             AddChild(sleekFloat32Field);
             valueWidget = sleekFloat32Field;
             base.SizeOffset_Y = 30f;
@@ -77,6 +79,7 @@ internal class SleekConfigProperty : SleekWrapper
             sleekToggle.SizeOffset_Y = 40f;
             sleekToggle.AddLabel(MenuPlayConfigUI.sanitizeName(fieldInfo.Name), ESleekSide.RIGHT);
             sleekToggle.OnValueChanged += OnToggledValue;
+            sleekToggle.TooltipText = tooltip;
             AddChild(sleekToggle);
             valueWidget = sleekToggle;
             base.SizeOffset_Y = 40f;

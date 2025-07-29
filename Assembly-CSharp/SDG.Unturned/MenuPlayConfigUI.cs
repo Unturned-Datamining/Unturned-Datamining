@@ -4,6 +4,7 @@ using System.IO;
 using System.Reflection;
 using System.Text;
 using UnityEngine;
+using Unturned.SystemEx;
 
 namespace SDG.Unturned;
 
@@ -151,7 +152,9 @@ public class MenuPlayConfigUI
     /// </summary>
     private static void CreatePropertyWidgets()
     {
+        UnturnedCodeDocsHelper unturnedCodeDocsHelper = new UnturnedCodeDocsHelper();
         propertyWidgets = new Dictionary<FieldInfo, SleekConfigProperty>();
+        StringBuilder stringBuilder = new StringBuilder();
         float num = 0f;
         FieldInfo[] fields = typeof(ModeConfigData).GetFields();
         foreach (FieldInfo fieldInfo in fields)
@@ -169,7 +172,34 @@ public class MenuPlayConfigUI
             FieldInfo[] fields2 = fieldInfo.FieldType.GetFields();
             foreach (FieldInfo fieldInfo2 in fields2)
             {
-                SleekConfigProperty sleekConfigProperty = new SleekConfigProperty(fieldInfo2);
+                string text = unturnedCodeDocsHelper.GetSummary(fieldInfo.FieldType.Name, fieldInfo2.Name);
+                if (!string.IsNullOrEmpty(text))
+                {
+                    string[] array = text.SplitLinesIncludingEmpty();
+                    int num3 = array.Length;
+                    if (string.IsNullOrWhiteSpace(array[num3 - 1]))
+                    {
+                        num3--;
+                    }
+                    if (num3 == 1)
+                    {
+                        text = array[0].Trim();
+                    }
+                    else
+                    {
+                        stringBuilder.Clear();
+                        for (int k = 0; k < num3; k++)
+                        {
+                            if (k > 0)
+                            {
+                                stringBuilder.AppendLine();
+                            }
+                            stringBuilder.Append(array[k].Trim());
+                        }
+                        text = stringBuilder.ToString();
+                    }
+                }
+                SleekConfigProperty sleekConfigProperty = new SleekConfigProperty(fieldInfo2, text);
                 sleekConfigProperty.SizeScale_X = 1f;
                 sleekConfigProperty.PositionOffset_Y = num2;
                 sleekConfigProperty.OnValueChanged += OnPropertyOverrideChanged;

@@ -42,6 +42,10 @@ public class Provider : MonoBehaviour
     {
         public bool withComments;
 
+        public bool noEmptyValues;
+
+        public bool noGeneratedComments;
+
         public string filePath;
 
         public List<KeyValuePair<Exception, string>> errors = new List<KeyValuePair<Exception, string>>();
@@ -406,6 +410,8 @@ public class Provider : MonoBehaviour
     /// </summary>
     private static IServerTransport serverTransport;
 
+    private static CommandLineString clGameplayConfigFileOverride = new CommandLineString("-GameplayConfigFile");
+
     /// <summary>
     /// Anticipating some hosts will prefer the old format.
     /// </summary>
@@ -413,7 +419,15 @@ public class Provider : MonoBehaviour
 
     private static CommandLineFlag clLogGameplayConfig = new CommandLineFlag(defaultValue: false, "-LogGameplayConfig");
 
-    private static CommandLineString clGameplayConfigFileOverride = new CommandLineString("-GameplayConfigFile");
+    /// <summary>
+    /// Remove empty strings, dictionaries, and lists.
+    /// </summary>
+    private static CommandLineFlag clGameplayConfigNoEmptyValues = new CommandLineFlag(defaultValue: false, "-GameplayConfigNoEmptyValues");
+
+    /// <summary>
+    /// Remove generated comments.
+    /// </summary>
+    private static CommandLineFlag clGameplayConfigNoGeneratedComments = new CommandLineFlag(defaultValue: false, "-GameplayConfigNoGeneratedComments");
 
     private static int countShutdownTimer = -1;
 
@@ -2563,7 +2577,18 @@ public class Provider : MonoBehaviour
             }
             if (string.IsNullOrEmpty(text))
             {
-                text = ((!singleplayer) ? PlayConfigUtils.GetServerConfigPathV2(serverID, mode) : PlayConfigUtils.GetSingleplayerConfigPathV2(Characters.selected, mode));
+                if (singleplayer)
+                {
+                    text = PlayConfigUtils.GetSingleplayerConfigPathV2(Characters.selected, mode);
+                }
+                else
+                {
+                    text = PlayConfigUtils.GetServerConfigPathV2(serverID);
+                    if (!File.Exists(text) && ServerSavedata.fileExists("/Config.json"))
+                    {
+                        text = PlayConfigUtils.GetServerConfigPathV2(serverID, mode);
+                    }
+                }
             }
         }
         IEditableDatDictionary editableDatDictionary = null;
@@ -2708,6 +2733,8 @@ public class Provider : MonoBehaviour
             stopwatch.Restart();
             WriteGameplayConfigThreadState writeGameplayConfigThreadState = new WriteGameplayConfigThreadState();
             writeGameplayConfigThreadState.withComments = !singleplayer;
+            writeGameplayConfigThreadState.noEmptyValues = !singleplayer && (bool)clGameplayConfigNoEmptyValues;
+            writeGameplayConfigThreadState.noGeneratedComments = !singleplayer && (bool)clGameplayConfigNoGeneratedComments;
             writeGameplayConfigThreadState.filePath = text;
             writeGameplayConfigThreadState.rootDictionary = editableDatDictionary;
             writeGameplayConfigThreadState.watch = stopwatch;
@@ -2724,10 +2751,23 @@ public class Provider : MonoBehaviour
             orAddValue.SetInt32(1);
             orAddValue.PreferredLineNumber = 1;
             orAddValue.SortingPreference = IEditableDatNode.ESortingPreference.TowardFront;
-            orAddValue.MergeGeneratedCommentAlloc("¦ ", new string[15]
+            orAddValue.MergeGeneratedCommentAlloc("> ", new string[15]
             {
-                "Unturned Server Configuration File", "", "Lines beginning with // are comments.", "Comments beginning with ¦ are auto-generated.", "Any comments you write (without ¦) will be preserved.", "", "Settings without a value use the default for the mode (easy/normal/hard).", "For example, this setting would use the default:", "", "Setting",
-                "", "Whereas this setting is overridden with value four:", "", "Setting 4", ""
+                "Unturned Server Configuration File",
+                "",
+                "Lines beginning with // are comments.",
+                "Comments beginning with " + "> ".Trim() + " are auto-generated.",
+                "Any comments you write (without " + "> ".Trim() + ") will be preserved.",
+                "",
+                "Settings without a value use the default for the mode (easy/normal/hard).",
+                "For example, this setting would use the default:",
+                "",
+                "Setting",
+                "",
+                "Whereas this setting is overridden with value four:",
+                "",
+                "Setting 4",
+                ""
             });
             try
             {
@@ -2738,6 +2778,28 @@ public class Provider : MonoBehaviour
                 writeGameplayConfigThreadState.AddError(e, "Caught exception updating config file \"" + writeGameplayConfigThreadState.filePath + "\":");
             }
         }
+        if (writeGameplayConfigThreadState.noEmptyValues)
+        {
+            try
+            {
+                PlayConfigUtils.RemoveEmptyValues(writeGameplayConfigThreadState.rootDictionary);
+            }
+            catch (Exception e2)
+            {
+                writeGameplayConfigThreadState.AddError(e2, "Caught exception removing empty values from config file \"" + writeGameplayConfigThreadState.filePath + "\":");
+            }
+        }
+        if (writeGameplayConfigThreadState.noGeneratedComments)
+        {
+            try
+            {
+                PlayConfigUtils.RemoveGeneratedComments(writeGameplayConfigThreadState.rootDictionary);
+            }
+            catch (Exception e3)
+            {
+                writeGameplayConfigThreadState.AddError(e3, "Caught exception removing empty values from config file \"" + writeGameplayConfigThreadState.filePath + "\":");
+            }
+        }
         ReadWrite.MoveIfExistsAbsolute(writeGameplayConfigThreadState.filePath, ServerSavedata.GetBackupFilePath(writeGameplayConfigThreadState.filePath));
         try
         {
@@ -2745,9 +2807,9 @@ public class Provider : MonoBehaviour
             DatWriter writer = new DatWriter(output);
             new MetadataPreservingDatWriter().WriteRootDictionary(writeGameplayConfigThreadState.rootDictionary, writer);
         }
-        catch (Exception e2)
+        catch (Exception e4)
         {
-            writeGameplayConfigThreadState.AddError(e2, "Caught exception writing updated config file to: \"" + writeGameplayConfigThreadState.filePath + "\"");
+            writeGameplayConfigThreadState.AddError(e4, "Caught exception writing updated config file to: \"" + writeGameplayConfigThreadState.filePath + "\"");
         }
         GameThreadQueueUtil.QueueGameThreadWorkItem(OnWriteGameplayConfigFinished, writeGameplayConfigThreadState);
     }

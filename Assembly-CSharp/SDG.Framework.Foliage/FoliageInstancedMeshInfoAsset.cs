@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using SDG.Framework.Utilities;
 using SDG.Unturned;
 using UnityEngine;
 
@@ -54,7 +53,7 @@ public class FoliageInstancedMeshInfoAsset : FoliageInfoAsset
         }
     }
 
-    public override int getInstanceCountInVolume(IShapeVolume volume)
+    public override int getInstanceCountInVolume<T>(T volume)
     {
         Bounds worldBounds = volume.worldBounds;
         FoliageBounds foliageBounds = new FoliageBounds(worldBounds);

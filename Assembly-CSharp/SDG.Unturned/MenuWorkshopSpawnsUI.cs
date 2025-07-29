@@ -167,11 +167,11 @@ public class MenuWorkshopSpawnsUI
                 sleekInt32Field.OnValueChanged += onTypedRootWeightField;
                 sleekButton.AddChild(sleekInt32Field);
                 ISleekBox sleekBox = Glazier.Get().CreateBox();
-                sleekBox.PositionOffset_X = 75f;
+                sleekBox.PositionOffset_X = 65f;
                 sleekBox.PositionScale_X = 1f;
-                sleekBox.SizeOffset_X = 55f;
+                sleekBox.SizeOffset_X = 65f;
                 sleekBox.SizeOffset_Y = 30f;
-                sleekBox.Text = spawnTable.normalizedWeight.ToString("P");
+                sleekBox.Text = spawnTable.normalizedWeight.ToString("P2");
                 sleekBox.TooltipText = localization.format("Chance_Tooltip");
                 sleekButton.AddChild(sleekBox);
                 SleekButtonIcon sleekButtonIcon = new SleekButtonIcon(MenuWorkshopEditorUI.icons.load<Texture2D>("Remove"));
@@ -316,11 +316,11 @@ public class MenuWorkshopSpawnsUI
                         num2 -= MenuWorkshopSpawnsUI.asset.tables[j - 1].normalizedWeight;
                     }
                     ISleekBox sleekBox3 = Glazier.Get().CreateBox();
-                    sleekBox3.PositionOffset_X = 75f;
+                    sleekBox3.PositionOffset_X = 65f;
                     sleekBox3.PositionScale_X = 1f;
-                    sleekBox3.SizeOffset_X = 55f;
+                    sleekBox3.SizeOffset_X = 65f;
                     sleekBox3.SizeOffset_Y = 30f;
-                    sleekBox3.Text = num2.ToString("P");
+                    sleekBox3.Text = num2.ToString("P2");
                     sleekBox3.TooltipText = localization.format("Chance_Tooltip");
                     sleekElement.AddChild(sleekBox3);
                     SleekButtonIcon sleekButtonIcon2 = new SleekButtonIcon(MenuWorkshopEditorUI.icons.load<Texture2D>("Remove"));

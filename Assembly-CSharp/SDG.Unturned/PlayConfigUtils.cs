@@ -10,6 +10,11 @@ internal static class PlayConfigUtils
 {
     private static ConfigData configDefaults = ConfigData.CreateDefault(singleplayer: false);
 
+    /// <summary>
+    /// Each generated comment line is prefixed with this string.
+    /// </summary>
+    public const string COMMENT_PREFIX = "> ";
+
     private static List<string> generatedLines = new List<string>();
 
     private static List<string> tempParsedLines = new List<string>();
@@ -20,9 +25,9 @@ internal static class PlayConfigUtils
     {
         return mode switch
         {
-            EGameMode.EASY => "EasyMode", 
-            EGameMode.NORMAL => "NormalMode", 
-            EGameMode.HARD => "HardMode", 
+            EGameMode.EASY => "EasyDifficulty", 
+            EGameMode.NORMAL => "NormalDifficulty", 
+            EGameMode.HARD => "HardDifficulty", 
             _ => throw new NotImplementedException(mode.ToString()), 
         };
     }
@@ -44,6 +49,17 @@ internal static class PlayConfigUtils
         return PathEx.Join(UnturnedPaths.RootDirectory, "Worlds", $"Singleplayer_{characterSlot}", "Config.json");
     }
 
+    /// <summary>
+    /// Config path used for new servers.
+    /// </summary>
+    public static string GetServerConfigPathV2(string serverId)
+    {
+        return PathEx.Join(UnturnedPaths.RootDirectory, "Servers", serverId, "Config.txt");
+    }
+
+    /// <summary>
+    /// Config path used for conversion from Config.json.
+    /// </summary>
     public static string GetServerConfigPathV2(string serverId, EGameMode serverMode)
     {
         string modeFileName = GetModeFileName(serverMode);
@@ -271,7 +287,7 @@ internal static class PlayConfigUtils
     /// WARNING: This is called on a worker thread.
     ///
     /// Add empty dat values (if not yet added), and include code documentation
-    /// in their comments prefixed with '&gt;'. User-supplied comments are preserved.
+    /// in their comments prefixed with COMMENT_PREFIX. User-supplied comments are preserved.
     /// </summary>
     public static void PopulateConfigFilePropertiesAndComments(IEditableDatDictionary rootDictionary)
     {
@@ -311,7 +327,7 @@ internal static class PlayConfigUtils
 
     /// <summary>
     /// Add empty dat values for every field in category (if not yet added), and include code documentation
-    /// in their comments prefixed with '&gt;'. User-supplied comments are preserved.
+    /// in their comments prefixed with COMMENT_PREFIX. User-supplied comments are preserved.
     ///
     /// In categories without easy/normal/hard split (server config), only normalObject is set.
     /// </summary>
@@ -562,6 +578,136 @@ internal static class PlayConfigUtils
         }
     }
 
+    public static void RemoveEmptyValues(IEditableDatDictionary dictionary)
+    {
+        List<string> list = new List<string>();
+        foreach (KeyValuePair<string, IDatNode> item in dictionary)
+        {
+            switch (item.Value.NodeType)
+            {
+            case EDatNodeType.Value:
+                if (((IDatValue)item.Value).IsValueNullOrEmpty())
+                {
+                    list.Add(item.Key);
+                }
+                break;
+            case EDatNodeType.Dictionary:
+            {
+                IEditableDatDictionary editableDatDictionary = ((IDatDictionary)item.Value).Edit();
+                if (editableDatDictionary != null)
+                {
+                    RemoveEmptyValues(editableDatDictionary);
+                }
+                if (((IDatDictionary)item.Value).Count < 1)
+                {
+                    list.Add(item.Key);
+                }
+                break;
+            }
+            case EDatNodeType.List:
+            {
+                IEditableDatList editableDatList = ((IDatList)item.Value).Edit();
+                if (editableDatList != null)
+                {
+                    RemoveEmptyValues(editableDatList);
+                }
+                if (((IDatList)item.Value).Count < 1)
+                {
+                    list.Add(item.Key);
+                }
+                break;
+            }
+            }
+        }
+        foreach (string item2 in list)
+        {
+            dictionary.Remove(item2);
+        }
+    }
+
+    private static void RemoveEmptyValues(IEditableDatList list)
+    {
+        for (int num = list.Count - 1; num >= 0; num--)
+        {
+            IDatNode datNode = list[num];
+            switch (datNode.NodeType)
+            {
+            case EDatNodeType.Value:
+                if (((IDatValue)datNode).IsValueNullOrEmpty())
+                {
+                    list.RemoveAt(num);
+                }
+                break;
+            case EDatNodeType.Dictionary:
+            {
+                IEditableDatDictionary editableDatDictionary = ((IDatDictionary)datNode).Edit();
+                if (editableDatDictionary != null)
+                {
+                    RemoveEmptyValues(editableDatDictionary);
+                }
+                if (((IDatDictionary)datNode).Count < 1)
+                {
+                    list.RemoveAt(num);
+                }
+                break;
+            }
+            case EDatNodeType.List:
+            {
+                IEditableDatList editableDatList = ((IDatList)datNode).Edit();
+                if (editableDatList != null)
+                {
+                    RemoveEmptyValues(editableDatList);
+                }
+                if (((IDatList)datNode).Count < 1)
+                {
+                    list.RemoveAt(num);
+                }
+                break;
+            }
+            }
+        }
+    }
+
+    public static void RemoveGeneratedComments(IEditableDatNode node)
+    {
+        node.MergeGeneratedComment<IEditableDatNode, string[]>("> ", null, commentStringBuilder, tempParsedLines);
+        switch (node.NodeType)
+        {
+        case EDatNodeType.Dictionary:
+        {
+            foreach (KeyValuePair<string, IDatNode> item in (IDatDictionary)node)
+            {
+                RemoveGeneratedCommentsWrapper(item.Value);
+            }
+            break;
+        }
+        case EDatNodeType.List:
+        {
+            foreach (IDatNode item2 in (IDatList)node)
+            {
+                RemoveGeneratedCommentsWrapper(item2);
+            }
+            break;
+        }
+        }
+    }
+
+    private static void RemoveGeneratedCommentsWrapper(IDatNode node)
+    {
+        switch (node.NodeType)
+        {
+        case EDatNodeType.Dictionary:
+            RemoveGeneratedComments(((IDatDictionary)node).Edit());
+            break;
+        case EDatNodeType.List:
+            RemoveGeneratedComments(((IDatList)node).Edit());
+            break;
+        case EDatNodeType.Value:
+            RemoveGeneratedComments(((IDatValue)node).Edit());
+            break;
+        }
+    }
+
     private static string GetDefaultValueComment(object defaultValue)
     {
         if (defaultValue == null)
@@ -640,6 +786,6 @@ internal static class PlayConfigUtils
             commentStringBuilder.Append(GetDefaultValueComment(hard));
             generatedLines.Add(commentStringBuilder.ToString());
         }
-        node.MergeGeneratedComment("¦ ", generatedLines, commentStringBuilder, tempParsedLines);
+        node.MergeGeneratedComment("> ", generatedLines, commentStringBuilder, tempParsedLines);
     }
 }

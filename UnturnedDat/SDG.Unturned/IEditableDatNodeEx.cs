@@ -79,15 +79,18 @@ public static class IEditableDatNodeEx
             stringBuilder.Append(parsedLines[j]);
             flag2 = false;
         }
-        foreach (string item in generatedLines)
+        if (generatedLines != null)
         {
-            if (!flag2)
+            foreach (string item in generatedLines)
             {
-                stringBuilder.AppendLine();
+                if (!flag2)
+                {
+                    stringBuilder.AppendLine();
+                }
+                stringBuilder.Append(prefix);
+                stringBuilder.Append(item);
+                flag2 = false;
             }
-            stringBuilder.Append(prefix);
-            stringBuilder.Append(item);
-            flag2 = false;
         }
         for (int k = num; k < parsedLines.Count; k++)
         {

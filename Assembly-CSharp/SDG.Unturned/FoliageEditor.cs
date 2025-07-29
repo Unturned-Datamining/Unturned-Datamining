@@ -23,6 +23,15 @@ internal class FoliageEditor : IDevkitTool
         BAKE
     }
 
+    [Flags]
+    private enum EFoliageRemovalFilter
+    {
+        None = 0,
+        ManuallyPlaced = 1,
+        Baked = 2,
+        All = 3
+    }
+
     public FoliageInfoCollectionAsset selectedCollectionAsset;
 
     public FoliageInfoAsset selectedInstanceAsset;
@@ -158,8 +167,8 @@ internal class FoliageEditor : IDevkitTool
                 }
                 if (num2 > 0.0001f)
                 {
-                    SphereVolume sphereVolume = new SphereVolume(hitInfo.point, num2);
-                    if (foliageAsset.getInstanceCountInVolume(sphereVolume) > 0)
+                    SphereVolume volume = new SphereVolume(hitInfo.point, num2);
+                    if (foliageAsset.getInstanceCountInVolume(volume) > 0)
                     {
                         continue;
                     }
@@ -175,7 +184,7 @@ internal class FoliageEditor : IDevkitTool
         }
     }
 
-    private void removeInstances(FoliageTile foliageTile, FoliageInstanceList list, float sqrBrushRadius, float sqrBrushFalloffRadius, bool allowRemoveBaked, ref int sampleCount)
+    private void removeInstances(FoliageTile foliageTile, FoliageInstanceList list, float sqrBrushRadius, float sqrBrushFalloffRadius, bool commit, EFoliageRemovalFilter filter, ref int sampleCount)
     {
         bool flag = false;
         for (int num = list.matrices.Count - 1; num >= 0; num--)
@@ -184,7 +193,8 @@ internal class FoliageEditor : IDevkitTool
             List<bool> list3 = list.clearWhenBaked[num];
             for (int num2 = list2.Count - 1; num2 >= 0; num2--)
             {
-                if (!list3[num2] || allowRemoveBaked)
+                EFoliageRemovalFilter eFoliageRemovalFilter = ((!list3[num2]) ? EFoliageRemovalFilter.ManuallyPlaced : EFoliageRemovalFilter.Baked);
+                if (filter.HasFlag(eFoliageRemovalFilter))
                 {
                     Vector3 position = list2[num2].GetPosition();
                     float sqrMagnitude = (position - brushWorldPosition).sqrMagnitude;
@@ -192,7 +202,7 @@ internal class FoliageEditor : IDevkitTool
                     {
                         bool flag2 = sqrMagnitude < sqrBrushFalloffRadius;
                         previewSamples.Add(new FoliagePreviewSample(position, flag2 ? Color.red : (Color.red / 2f)));
-                        if (InputEx.GetKey(KeyCode.Mouse0) && flag2 && sampleCount > 0)
+                        if (commit && flag2 && sampleCount > 0)
                         {
                             foliageTile.removeInstance(list, num, num2);
                             sampleCount--;
@@ -296,10 +306,25 @@ internal class FoliageEditor : IDevkitTool
             float num = brushRadius * brushRadius;
             float num2 = num * brushFalloff * brushFalloff;
             float num3 = MathF.PI * brushRadius * brushRadius;
-            bool key = InputEx.GetKey(KeyCode.LeftControl);
-            bool flag = key || InputEx.GetKey(KeyCode.LeftAlt);
-            if (key || flag || InputEx.GetKey(KeyCode.LeftShift))
+            bool key = InputEx.GetKey(KeyCode.LeftShift);
+            bool key2 = InputEx.GetKey(KeyCode.LeftControl);
+            bool key3 = InputEx.GetKey(KeyCode.LeftAlt);
+            if (key2 || key3 || key)
             {
+                bool key4 = InputEx.GetKey(KeyCode.Mouse0);
+                EFoliageRemovalFilter eFoliageRemovalFilter = EFoliageRemovalFilter.None;
+                if (key)
+                {
+                    eFoliageRemovalFilter |= EFoliageRemovalFilter.ManuallyPlaced;
+                }
+                if (key3)
+                {
+                    eFoliageRemovalFilter |= EFoliageRemovalFilter.Baked;
+                }
+                if (key2 && eFoliageRemovalFilter == EFoliageRemovalFilter.None)
+                {
+                    eFoliageRemovalFilter |= EFoliageRemovalFilter.ManuallyPlaced;
+                }
                 removeWeight += DevkitFoliageToolOptions.removeSensitivity * num3 * brushStrength * Time.deltaTime;
                 int sampleCount = 0;
                 if (removeWeight > 1f)
@@ -317,13 +342,13 @@ internal class FoliageEditor : IDevkitTool
                         {
                             continue;
                         }
-                        if (key)
+                        if (key2)
                         {
                             if (selectedInstanceAsset != null)
                             {
                                 if (tile.instances.TryGetValue(selectedInstanceAsset.getReferenceTo<FoliageInstancedMeshInfoAsset>(), out var value))
                                 {
-                                    removeInstances(tile, value, num, num2, flag, ref sampleCount);
+                                    removeInstances(tile, value, num, num2, key4, eFoliageRemovalFilter, ref sampleCount);
                                 }
                             }
                             else
@@ -336,7 +361,7 @@ internal class FoliageEditor : IDevkitTool
                                 {
                                     if (Assets.find(element.asset) is FoliageInstancedMeshInfoAsset foliageInstancedMeshInfoAsset && tile.instances.TryGetValue(foliageInstancedMeshInfoAsset.getReferenceTo<FoliageInstancedMeshInfoAsset>(), out var value2))
                                     {
-                                        removeInstances(tile, value2, num, num2, flag, ref sampleCount);
+                                        removeInstances(tile, value2, num, num2, key4, eFoliageRemovalFilter, ref sampleCount);
                                     }
                                 }
                             }
@@ -345,7 +370,7 @@ internal class FoliageEditor : IDevkitTool
                         foreach (KeyValuePair<AssetReference<FoliageInstancedMeshInfoAsset>, FoliageInstanceList> instance in tile.instances)
                         {
                             FoliageInstanceList value3 = instance.Value;
-                            removeInstances(tile, value3, num, num2, flag, ref sampleCount);
+                            removeInstances(tile, value3, num, num2, key4, eFoliageRemovalFilter, ref sampleCount);
                         }
                     }
                 }
@@ -358,11 +383,12 @@ internal class FoliageEditor : IDevkitTool
                             for (int num4 = treesOrNullInRegion.Count - 1; num4 >= 0; num4--)
                             {
                                 ResourceSpawnpoint resourceSpawnpoint = treesOrNullInRegion[num4];
-                                if (resourceSpawnpoint.isGenerated && !flag)
+                                EFoliageRemovalFilter eFoliageRemovalFilter2 = ((!resourceSpawnpoint.isGenerated) ? EFoliageRemovalFilter.ManuallyPlaced : EFoliageRemovalFilter.Baked);
+                                if (!eFoliageRemovalFilter.HasFlag(eFoliageRemovalFilter2))
                                 {
                                     continue;
                                 }
-                                if (key)
+                                if (key2)
                                 {
                                     if (selectedInstanceAsset != null)
                                     {
@@ -373,16 +399,16 @@ internal class FoliageEditor : IDevkitTool
                                     }
                                     else if (selectedCollectionAsset != null)
                                     {
-                                        bool flag2 = false;
+                                        bool flag = false;
                                         foreach (FoliageInfoCollectionAsset.FoliageInfoCollectionElement element2 in selectedCollectionAsset.elements)
                                         {
                                             if (Assets.find(element2.asset) is FoliageResourceInfoAsset foliageResourceInfoAsset2 && foliageResourceInfoAsset2.resource.isReferenceTo(resourceSpawnpoint.asset))
                                             {
-                                                flag2 = true;
+                                                flag = true;
                                                 break;
                                             }
                                         }
-                                        if (!flag2)
+                                        if (!flag)
                                         {
                                             continue;
                                         }
@@ -391,9 +417,9 @@ internal class FoliageEditor : IDevkitTool
                                 float sqrMagnitude = (resourceSpawnpoint.point - brushWorldPosition).sqrMagnitude;
                                 if (sqrMagnitude < num)
                                 {
-                                    bool flag3 = sqrMagnitude < num2;
-                                    previewSamples.Add(new FoliagePreviewSample(resourceSpawnpoint.point, flag3 ? Color.red : (Color.red / 2f)));
-                                    if (InputEx.GetKey(KeyCode.Mouse0) && flag3 && sampleCount > 0)
+                                    bool flag2 = sqrMagnitude < num2;
+                                    previewSamples.Add(new FoliagePreviewSample(resourceSpawnpoint.point, flag2 ? Color.red : (Color.red / 2f)));
+                                    if (key4 && flag2 && sampleCount > 0)
                                     {
                                         resourceSpawnpoint.destroy();
                                         treesOrNullInRegion.RemoveAt(num4);
@@ -406,7 +432,7 @@ internal class FoliageEditor : IDevkitTool
                         {
                             continue;
                         }
-                        bool flag4 = false;
+                        bool flag3 = false;
                         List<LevelObject> list = LevelObjects.objects[x, y];
                         for (int num5 = list.Count - 1; num5 >= 0; num5--)
                         {
@@ -415,7 +441,7 @@ internal class FoliageEditor : IDevkitTool
                             {
                                 continue;
                             }
-                            if (key)
+                            if (key2)
                             {
                                 if (selectedInstanceAsset != null)
                                 {
@@ -426,16 +452,16 @@ internal class FoliageEditor : IDevkitTool
                                 }
                                 else if (selectedCollectionAsset != null)
                                 {
-                                    bool flag5 = false;
+                                    bool flag4 = false;
                                     foreach (FoliageInfoCollectionAsset.FoliageInfoCollectionElement element3 in selectedCollectionAsset.elements)
                                     {
                                         if (Assets.find(element3.asset) is FoliageObjectInfoAsset foliageObjectInfoAsset2 && foliageObjectInfoAsset2.obj.isReferenceTo(levelObject.asset))
                                         {
-                                            flag5 = true;
+                                            flag4 = true;
                                             break;
                                         }
                                     }
-                                    if (!flag5)
+                                    if (!flag4)
                                     {
                                         continue;
                                     }
@@ -444,17 +470,17 @@ internal class FoliageEditor : IDevkitTool
                             float sqrMagnitude2 = (levelObject.transform.position - brushWorldPosition).sqrMagnitude;
                             if (sqrMagnitude2 < num)
                             {
-                                bool flag6 = sqrMagnitude2 < num2;
-                                previewSamples.Add(new FoliagePreviewSample(levelObject.transform.position, flag6 ? Color.red : (Color.red / 2f)));
-                                if (InputEx.GetKey(KeyCode.Mouse0) && flag6 && sampleCount > 0)
+                                bool flag5 = sqrMagnitude2 < num2;
+                                previewSamples.Add(new FoliagePreviewSample(levelObject.transform.position, flag5 ? Color.red : (Color.red / 2f)));
+                                if (key4 && flag5 && sampleCount > 0)
                                 {
-                                    flag4 = true;
+                                    flag3 = true;
                                     LevelObjects.removeObject(levelObject.transform);
                                     sampleCount--;
                                 }
                             }
                         }
-                        if (flag4)
+                        if (flag3)
                         {
                             LevelHierarchy.MarkDirty();
                         }

@@ -73,6 +73,11 @@ internal sealed class EditableDatList : EditableDatNode<IDatList, DatList, Edita
         return editableDatDictionary;
     }
 
+    public void RemoveAt(int index)
+    {
+        GetUnderlyingNode().RemoveAt(index);
+    }
+
     public override string WriterGetInlineComment()
     {
         return null;

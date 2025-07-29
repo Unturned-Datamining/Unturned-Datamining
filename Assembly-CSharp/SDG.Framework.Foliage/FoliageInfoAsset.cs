@@ -73,7 +73,7 @@ public abstract class FoliageInfoAsset : Asset
         }
     }
 
-    public abstract int getInstanceCountInVolume(IShapeVolume volume);
+    public abstract int getInstanceCountInVolume<T>(T volume) where T : IShapeVolume;
 
     protected abstract void addFoliage(Vector3 position, Quaternion rotation, Vector3 scale, bool clearWhenBaked);
 

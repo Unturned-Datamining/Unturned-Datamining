@@ -1,4 +1,4 @@
-using SDG.Framework.Utilities;
+using System.Collections.Generic;
 using SDG.Unturned;
 using UnityEngine;
 
@@ -20,12 +20,17 @@ public class FoliageResourceInfoAsset : FoliageInfoAsset
         }
     }
 
-    public override int getInstanceCountInVolume(IShapeVolume volume)
+    public override int getInstanceCountInVolume<T>(T volume)
     {
         int num = 0;
         foreach (Vector2Int item in Regions.GetCoordinateBoundsInt(volume.worldBounds))
         {
-            foreach (ResourceSpawnpoint item2 in LevelGround.GetTreesOrNullInRegion(item))
+            List<ResourceSpawnpoint> treesOrNullInRegion = LevelGround.GetTreesOrNullInRegion(item);
+            if (treesOrNullInRegion == null)
+            {
+                continue;
+            }
+            foreach (ResourceSpawnpoint item2 in treesOrNullInRegion)
             {
                 if (resource.isReferenceTo(item2.asset) && volume.containsPoint(item2.point))
                 {

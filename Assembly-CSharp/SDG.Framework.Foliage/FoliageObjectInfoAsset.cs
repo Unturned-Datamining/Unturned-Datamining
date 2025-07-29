@@ -1,4 +1,3 @@
-using SDG.Framework.Utilities;
 using SDG.Unturned;
 using UnityEngine;
 
@@ -18,7 +17,7 @@ public class FoliageObjectInfoAsset : FoliageInfoAsset
         }
     }
 
-    public override int getInstanceCountInVolume(IShapeVolume volume)
+    public override int getInstanceCountInVolume<T>(T volume)
     {
         Bounds worldBounds = volume.worldBounds;
         RegionBounds regionBounds = new RegionBounds(worldBounds);

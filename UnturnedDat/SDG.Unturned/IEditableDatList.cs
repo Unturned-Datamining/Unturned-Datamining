@@ -10,4 +10,6 @@ public interface IEditableDatList : IDatList, IDatNode, IEnumerable<IDatNode>, I
     IEditableDatList AddList();
 
     IEditableDatDictionary AddDictionary();
+
+    void RemoveAt(int index);
 }
