@@ -1,14 +1,14 @@
 MainMenuAlert
 {
-	Id 70
-	Header Watch LDG Summer Tournament LIVE
-	Body From the organizers: "Come watch the LDG Tournament happening now!"
-	Color #00ffff
-	Link https://discord.gg/Ge9sbPH
-	IconURL https://cdn.smartlydressedgames.com/Images/LDGbanner.jpg
+	Id 71
+	Header Community-Organized Event: Win Golden Skins @ AMOX Studios Summer Cup
+	Body From the organizers: "Prize pool with golden skins and much more! Sign up now on PeekSeek."
+	Color #ff0000
+	Link https://pksk.to/sdg
+	IconURL https://cdn.smartlydressedgames.com/Images/PeekSeek.png
 	UseTimeWindow true
-	StartTime 2025-07-26 07:00:00
-	EndTime 2025-07-26 19:00:00
+	StartTime 2025-08-01
+	EndTime 2025-08-10
 }
 MainMenuWorkshop
 {
