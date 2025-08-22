@@ -1,13 +1,14 @@
 MainMenuAlert
 {
-	Id 73
-	Header Summer 2025 Survey
-	Body Share feedback on base building, raiding, and potential gameplay changes! This survey should take ~5 minutes.
-	Link https://forms.gle/DihVucfj3m16Fcca6
-	IconURL cdn.smartlydressedgames.com/Images/survey.png
+	Id 75
+	Header Community-Organized Event: Watch the top qualifying players compete @ PeekSeek.net
+	Body From the organizers: "Over the past week, hundreds of teams have competed for a chance to reach the finals, and today they will go head-to-head to determine the winner. Watch on PeekSeek."
+	Color #ff0000
+	Link https://pksk.to/streams
+	IconURL https://cdn.smartlydressedgames.com/Images/PeekSeek.png
 	UseTimeWindow true
-	StartTime 2025-08-15 12:00:00
-	EndTime 2025-08-19
+	StartTime 2025-08-23 17:00:00
+	EndTime 2025-08-23 22:00:00
 }
 MainMenuWorkshop
 {
