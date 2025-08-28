@@ -1027,6 +1027,7 @@
 - [Local.cs](Local.cs)
 - [LocalHwid.cs](LocalHwid.cs)
 - [Localization.cs](Localization.cs)
+- [LocallyPredictImpactDestroyThrowable.cs](LocallyPredictImpactDestroyThrowable.cs)
 - [LocalNews.cs](LocalNews.cs)
 - [LocalPlayerBlocklist.cs](LocalPlayerBlocklist.cs)
 - [LocalWorkshopSettings.cs](LocalWorkshopSettings.cs)

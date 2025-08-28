@@ -2057,6 +2057,26 @@ public class InteractableVehicle : Interactable, IExplosionDamageable, IEquatabl
         return null;
     }
 
+    /// <summary>
+    /// Returns null if index is out of bounds or initialization has failed.
+    /// </summary>
+    public Passenger GetSeatByIndex(int seatIndex)
+    {
+        if (seatIndex >= 0 && passengers != null && seatIndex < passengers.Length)
+        {
+            return passengers[seatIndex];
+        }
+        return null;
+    }
+
+    /// <summary>
+    /// Returns null if index is out of bounds, initialization failed, or seat is empty.
+    /// </summary>
+    public SteamPlayer GetClientBySeatIndex(int seatIndex)
+    {
+        return GetSeatByIndex(seatIndex)?.player;
+    }
+
     public Player GetDriverPlayer()
     {
         return GetDriverClient()?.player;
@@ -2120,40 +2140,40 @@ public class InteractableVehicle : Interactable, IExplosionDamageable, IEquatabl
         return asset?.FriendlyName + " explosion drops";
     }
 
-    public void addPlayer(byte seat, CSteamID steamID)
+    public void addPlayer(byte seatIndex, CSteamID steamID)
     {
         SteamPlayer steamPlayer = PlayerTool.getSteamPlayer(steamID);
         if (steamPlayer != null)
         {
-            passengers[seat].player = steamPlayer;
+            passengers[seatIndex].player = steamPlayer;
             if (steamPlayer.player != null)
             {
-                steamPlayer.player.movement.setVehicle(this, seat, passengers[seat].seat, Vector3.zero, 0, forceUpdate: false);
-                if (passengers[seat].turret != null)
+                steamPlayer.player.movement.setVehicle(this, seatIndex, passengers[seatIndex].seat, Vector3.zero, 0, forceUpdate: false);
+                if (passengers[seatIndex].turret != null)
                 {
                     steamPlayer.player.equipment.turretEquipClient();
                     if (Provider.isServer)
                     {
-                        steamPlayer.player.equipment.turretEquipServer(passengers[seat].turret.itemID, passengers[seat].state);
+                        steamPlayer.player.equipment.turretEquipServer(passengers[seatIndex].turret.itemID, passengers[seatIndex].state);
                     }
                 }
             }
-            if (passengers[seat].collider != null)
+            if (passengers[seatIndex].collider != null)
             {
-                passengers[seat].collider.enabled = true;
+                passengers[seatIndex].collider.enabled = true;
             }
             updatePhysics();
-            if (seat == 0)
+            if (seatIndex == 0)
             {
                 grantTrunkAccess(steamPlayer.player);
             }
         }
-        if (seat == 0)
+        if (seatIndex == 0)
         {
             isEngineOn = (!usesBattery || HasBatteryWithCharge) && !isUnderwater;
         }
         updateEngine();
-        if (seat == 0 && isEnginePowered && isEngineOn && !Dedicator.IsDedicatedServer && !isUnderwater)
+        if (seatIndex == 0 && isEnginePowered && isEngineOn && !Dedicator.IsDedicatedServer && !isUnderwater)
         {
             PlayIgnitionSound();
         }
@@ -2161,7 +2181,7 @@ public class InteractableVehicle : Interactable, IExplosionDamageable, IEquatabl
         bool flag = !Dedicator.IsDedicatedServer && steamPlayer != null && Player.LocalPlayer != null && Player.LocalPlayer == steamPlayer.player;
         if (eventHook != null)
         {
-            if (seat == 0)
+            if (seatIndex == 0)
             {
                 eventHook.OnDriverAdded.TryInvoke(this);
                 if (flag)
@@ -2174,15 +2194,15 @@ public class InteractableVehicle : Interactable, IExplosionDamageable, IEquatabl
                 eventHook.OnLocalPassengerAdded.TryInvoke(this);
             }
         }
-        if (passengers[seat].turretEventHook != null)
+        if (passengers[seatIndex].turretEventHook != null)
         {
-            passengers[seat].turretEventHook.OnPassengerAdded.TryInvoke(this);
+            passengers[seatIndex].turretEventHook.OnPassengerAdded.TryInvoke(this);
             if (flag)
             {
-                passengers[seat].turretEventHook.OnLocalPassengerAdded.TryInvoke(this);
+                passengers[seatIndex].turretEventHook.OnLocalPassengerAdded.TryInvoke(this);
             }
         }
-        InteractableVehicle.OnPassengerAdded_Global.TryInvoke("OnPassengerAdded_Global", this, seat);
+        InteractableVehicle.OnPassengerAdded_Global.TryInvoke("OnPassengerAdded_Global", this, seatIndex);
     }
 
     public void removePlayer(byte seatIndex, Vector3 point, byte angle, bool forceUpdate)
@@ -2273,15 +2293,15 @@ public class InteractableVehicle : Interactable, IExplosionDamageable, IEquatabl
 
     public void swapPlayer(byte fromSeatIndex, byte toSeatIndex)
     {
+        Passenger seatByIndex = GetSeatByIndex(fromSeatIndex);
+        Passenger seatByIndex2 = GetSeatByIndex(toSeatIndex);
         SteamPlayer steamPlayer = null;
-        if (passengers != null && fromSeatIndex < passengers.Length && toSeatIndex < passengers.Length)
+        if (seatByIndex != null && seatByIndex2 != null)
         {
-            Passenger passenger = passengers[fromSeatIndex];
-            Passenger passenger2 = passengers[toSeatIndex];
-            steamPlayer = passenger.player;
+            steamPlayer = seatByIndex.player;
             if (steamPlayer != null && steamPlayer.player != null)
             {
-                if (passenger.turret != null)
+                if (seatByIndex.turret != null)
                 {
                     steamPlayer.player.equipment.turretDequipClient();
                     if (Provider.isServer)
@@ -2289,26 +2309,26 @@ public class InteractableVehicle : Interactable, IExplosionDamageable, IEquatabl
                         steamPlayer.player.equipment.turretDequipServer();
                     }
                 }
-                steamPlayer.player.movement.setVehicle(this, toSeatIndex, passengers[toSeatIndex].seat, Vector3.zero, 0, forceUpdate: false);
-                if (passenger2.turret != null)
+                steamPlayer.player.movement.setVehicle(this, toSeatIndex, seatByIndex2.seat, Vector3.zero, 0, forceUpdate: false);
+                if (seatByIndex2.turret != null)
                 {
                     steamPlayer.player.equipment.turretEquipClient();
                     if (Provider.isServer)
                     {
-                        steamPlayer.player.equipment.turretEquipServer(passengers[toSeatIndex].turret.itemID, passengers[toSeatIndex].state);
+                        steamPlayer.player.equipment.turretEquipServer(seatByIndex2.turret.itemID, seatByIndex2.state);
                     }
                 }
             }
-            if (passenger.collider != null)
+            if (seatByIndex.collider != null)
             {
-                passenger.collider.enabled = false;
+                seatByIndex.collider.enabled = false;
             }
-            if (passenger2.collider != null)
+            if (seatByIndex2.collider != null)
             {
-                passenger2.collider.enabled = true;
+                seatByIndex2.collider.enabled = true;
             }
-            passenger.player = null;
-            passenger2.player = steamPlayer;
+            seatByIndex.player = null;
+            seatByIndex2.player = steamPlayer;
             updatePhysics();
             if (Provider.isServer)
             {
@@ -2357,20 +2377,20 @@ public class InteractableVehicle : Interactable, IExplosionDamageable, IEquatabl
         }
         this.onPassengersUpdated?.Invoke();
         bool flag = !Dedicator.IsDedicatedServer && steamPlayer != null && Player.LocalPlayer != null && Player.LocalPlayer == steamPlayer.player;
-        if (passengers[fromSeatIndex].turretEventHook != null)
+        if (seatByIndex?.turretEventHook != null)
         {
             if (flag)
             {
-                passengers[fromSeatIndex].turretEventHook.OnLocalPassengerRemoved.TryInvoke(this);
+                seatByIndex.turretEventHook.OnLocalPassengerRemoved.TryInvoke(this);
             }
-            passengers[fromSeatIndex].turretEventHook.OnPassengerRemoved.TryInvoke(this);
+            seatByIndex.turretEventHook.OnPassengerRemoved.TryInvoke(this);
         }
-        if (passengers[toSeatIndex].turretEventHook != null)
+        if (seatByIndex2?.turretEventHook != null)
         {
-            passengers[toSeatIndex].turretEventHook.OnPassengerAdded.TryInvoke(this);
+            seatByIndex2.turretEventHook.OnPassengerAdded.TryInvoke(this);
             if (flag)
             {
-                passengers[toSeatIndex].turretEventHook.OnLocalPassengerAdded.TryInvoke(this);
+                seatByIndex2.turretEventHook.OnLocalPassengerAdded.TryInvoke(this);
             }
         }
         if (eventHook != null)
@@ -3731,11 +3751,25 @@ public class InteractableVehicle : Interactable, IExplosionDamageable, IEquatabl
         }
         if (num4 > ReplicatedEngineRpm)
         {
-            ReplicatedEngineRpm = Mathf.MoveTowards(ReplicatedEngineRpm, num4, asset.EngineRpmIncreaseRate * deltaTime);
+            if (asset.EngineRpmIncreaseRate > 0.001f)
+            {
+                ReplicatedEngineRpm = Mathf.MoveTowards(ReplicatedEngineRpm, num4, asset.EngineRpmIncreaseRate * deltaTime);
+            }
+            else
+            {
+                ReplicatedEngineRpm = num4;
+            }
         }
         else if (num4 < ReplicatedEngineRpm)
         {
-            ReplicatedEngineRpm = Mathf.MoveTowards(ReplicatedEngineRpm, num4, asset.EngineRpmDecreaseRate * deltaTime);
+            if (asset.EngineRpmDecreaseRate > 0.001f)
+            {
+                ReplicatedEngineRpm = Mathf.MoveTowards(ReplicatedEngineRpm, num4, asset.EngineRpmDecreaseRate * deltaTime);
+            }
+            else
+            {
+                ReplicatedEngineRpm = num4;
+            }
         }
         ReplicatedEngineRpm = Mathf.Clamp(ReplicatedEngineRpm, asset.EngineIdleRpm, asset.EngineMaxRpm);
         float num5 = Mathf.InverseLerp(asset.EngineIdleRpm, asset.EngineMaxRpm, ReplicatedEngineRpm);

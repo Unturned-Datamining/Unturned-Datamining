@@ -5,6 +5,18 @@ namespace SDG.Unturned;
 
 public class NPCFlagMathReward : INPCReward
 {
+    public enum ETextFormatMode
+    {
+        /// <summary>
+        /// Use text as-is without formatting. For backwards compatibility.
+        /// </summary>
+        None,
+        /// <summary>
+        /// Format flag A value into {0} and flag B value (or default) into {1}.
+        /// </summary>
+        FlagValues
+    }
+
     private short defaultFlag_B_Value;
 
     public ushort flag_A_ID { get; protected set; }
@@ -12,6 +24,11 @@ public class NPCFlagMathReward : INPCReward
     public ushort flag_B_ID { get; protected set; }
 
     public ENPCOperationType operationType { get; protected set; }
+
+    /// <summary>
+    /// Determines how NPCFlagMathReward handles formatReward.
+    /// </summary>
+    public ETextFormatMode TextFormatMode { get; set; }
 
     public override void GrantReward(Player player)
     {
@@ -66,6 +83,24 @@ public class NPCFlagMathReward : INPCReward
         player.quests.sendSetFlag(flag_A_ID, value);
     }
 
+    public override string formatReward(Player player)
+    {
+        if (TextFormatMode == ETextFormatMode.None)
+        {
+            return base.formatReward(player);
+        }
+        if (string.IsNullOrEmpty(text))
+        {
+            return null;
+        }
+        player.quests.getFlag(flag_A_ID, out var value);
+        if (flag_B_ID == 0 || !player.quests.getFlag(flag_B_ID, out var value2))
+        {
+            value2 = defaultFlag_B_Value;
+        }
+        return Local.FormatText(text, value, value2);
+    }
+
     internal override void PopulateV2(in PopulateRewardParameters p)
     {
         base.PopulateV2(in p);
@@ -95,6 +130,7 @@ public class NPCFlagMathReward : INPCReward
         {
             p.ReportRequiredOptionInvalid("Operation");
         }
+        TextFormatMode = p.data.ParseEnum("TextFormat", ETextFormatMode.None);
     }
 
     internal override void PopulateLegacy(in PopulateRewardParameters p)
@@ -126,6 +162,7 @@ public class NPCFlagMathReward : INPCReward
         {
             p.ReportRequiredOptionInvalid("Operation");
         }
+        TextFormatMode = p.data.ParseEnum(p.legacyPrefix + "_TextFormat", ETextFormatMode.None);
     }
 
     public NPCFlagMathReward()

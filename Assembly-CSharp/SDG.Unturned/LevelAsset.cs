@@ -48,12 +48,34 @@ public class LevelAsset : Asset
         /// </summary>
         public float RateOverTimeScale { get; set; }
 
+        /// <summary>
+        /// Particle system's material instance will have these color properties set to the level's cloud color.
+        /// Defaults to _Color.
+        /// </summary>
+        public string[] MaterialColorPropertyNames { get; set; }
+
         public bool TryParse(IDatNode node)
         {
             if (node is IDatDictionary dictionary)
             {
                 ComponentPath = dictionary.GetString("Path");
                 RateOverTimeScale = dictionary.ParseFloat("RateOverTimeScale");
+                if (dictionary.TryGetList("MaterialColorPropertyNames", out var node2))
+                {
+                    List<string> list = new List<string>();
+                    foreach (IDatValue item in node2)
+                    {
+                        if (!item.IsValueNullOrEmpty())
+                        {
+                            list.Add(item.Value);
+                        }
+                    }
+                    MaterialColorPropertyNames = list.ToArray();
+                }
+                else
+                {
+                    MaterialColorPropertyNames = new string[1] { "_Color" };
+                }
                 return true;
             }
             return false;

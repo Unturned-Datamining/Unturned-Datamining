@@ -328,7 +328,7 @@ public class UseableHousingPlanner : Useable
         return num;
     }
 
-    [SteamCall(ESteamCallValidation.ONLY_FROM_OWNER, ratelimitHz = 5)]
+    [SteamCall(ESteamCallValidation.ONLY_FROM_OWNER, ratelimitHz = 10)]
     public void ReceivePlaceHousingItem(in ServerInvocationContext context, Guid assetGuid, Vector3 position, float yaw, Guid blueprintGuid, byte blueprintIndex)
     {
         bool arg = ReceivePlaceHousingItemInternal(in context, assetGuid, position, yaw, blueprintGuid, blueprintIndex);
@@ -626,7 +626,7 @@ public class UseableHousingPlanner : Useable
         {
             SetItemSelectionMenuOpen(isOpen: false);
             DestroyPlacementPreview();
-            PlayerUI.container.RemoveChild(selectedItemBox);
+            PlayerLifeUI.container.RemoveChild(selectedItemBox);
             PlayerUI.container.RemoveChild(itemSelectionContainer);
         }
     }

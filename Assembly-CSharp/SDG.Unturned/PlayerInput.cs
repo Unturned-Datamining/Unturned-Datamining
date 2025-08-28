@@ -186,11 +186,16 @@ public class PlayerInput : PlayerCaller
         return inputs.Count;
     }
 
+    public InputInfo getInput(bool doOcclusionCheck, ERaycastInfoUsage usage)
+    {
+        return getInput(doOcclusionCheck, usage, null);
+    }
+
     /// <summary>
     /// Get the hit result of a raycast on the server. Until a generic way to address net objects is implemented
     /// this is how legacy features specify which player/animal/zombie/vehicle/etc they want to interact with.
     /// </summary>
-    public InputInfo getInput(bool doOcclusionCheck, ERaycastInfoUsage usage)
+    public InputInfo getInput(bool doOcclusionCheck, ERaycastInfoUsage usage, Vector3? rayOriginOverride)
     {
         if (inputs == null)
         {
@@ -209,17 +214,18 @@ public class PlayerInput : PlayerCaller
             }
             if (doOcclusionCheck && inputInfo != null)
             {
-                Vector3 vector = inputInfo.point - base.player.look.aim.position;
-                float magnitude = vector.magnitude;
-                Vector3 vector2 = vector / magnitude;
+                Vector3 vector = (rayOriginOverride.HasValue ? rayOriginOverride.Value : base.player.look.aim.position);
+                Vector3 vector2 = inputInfo.point - vector;
+                float magnitude = vector2.magnitude;
+                Vector3 vector3 = vector2 / magnitude;
                 if (magnitude > 0.025f)
                 {
-                    Physics.Raycast(new Ray(base.player.look.aim.position, vector2), out obstruction, magnitude - 0.025f, RayMasks.DAMAGE_SERVER);
+                    Physics.Raycast(new Ray(vector, vector3), out obstruction, magnitude - 0.025f, RayMasks.DAMAGE_SERVER);
                     if (obstruction.transform != null && !IsObstructionHitValid())
                     {
                         return null;
                     }
-                    Physics.Raycast(new Ray(base.player.look.aim.position + vector2 * (magnitude - 0.025f), -vector2), out obstruction, magnitude - 0.025f, RayMasks.DAMAGE_SERVER);
+                    Physics.Raycast(new Ray(vector + vector3 * (magnitude - 0.025f), -vector3), out obstruction, magnitude - 0.025f, RayMasks.DAMAGE_SERVER);
                     if (obstruction.transform != null && !IsObstructionHitValid())
                     {
                         return null;

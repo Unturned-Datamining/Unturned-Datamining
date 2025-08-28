@@ -56,23 +56,44 @@ public class MythicAsset : Asset
             if (systemArea != null)
             {
                 AssetValidation.ValidateLayersEqualRecursive(this, systemArea, 10);
+                ValidateRecursively(systemArea.transform);
             }
             if (systemHook != null)
             {
                 AssetValidation.ValidateLayersEqualRecursive(this, systemHook, 10);
+                ValidateRecursively(systemHook.transform);
             }
             if (systemFirst != null)
             {
                 AssetValidation.ValidateLayersEqualRecursive(this, systemFirst, 11);
+                ValidateRecursively(systemFirst.transform);
             }
             if (systemThird != null)
             {
                 AssetValidation.ValidateLayersEqualRecursive(this, systemThird, 13);
+                ValidateRecursively(systemThird.transform);
             }
         }
         if (systemArea == null && systemHook == null && systemFirst == null && systemThird == null)
         {
             Assets.ReportError(this, "missing all effect prefabs");
+        }
+    }
+
+    private void ValidateRecursively(Transform transform)
+    {
+        ParticleSystem component = transform.GetComponent<ParticleSystem>();
+        if (component != null)
+        {
+            ParticleSystem.CollisionModule collision = component.collision;
+            if (collision.enabled && (int)collision.collidesWith != 471449600)
+            {
+                ReportAssetError("particle system " + transform.GetSceneHierarchyPath() + " collision mask includes unexpected layers");
+            }
+        }
+        foreach (Transform item in transform)
+        {
+            ValidateRecursively(item);
         }
     }
 }

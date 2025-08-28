@@ -1463,7 +1463,7 @@ public class Assets : MonoBehaviour
                         Blueprint arg = itemAsset.blueprints[b2];
                         if (func(blueprint, arg))
                         {
-                            ReportError(itemAsset, "has an identical blueprint: " + blueprint);
+                            ReportError(itemAsset, $"blueprint [{b}] is identical to blueprint [{b2}]");
                         }
                     }
                 }
@@ -1492,13 +1492,13 @@ public class Assets : MonoBehaviour
                 ItemAsset itemAsset2 = list[l];
                 for (byte b3 = 0; b3 < itemAsset.blueprints.Count; b3++)
                 {
-                    Blueprint blueprint2 = itemAsset.blueprints[b3];
+                    Blueprint arg2 = itemAsset.blueprints[b3];
                     for (byte b4 = 0; b4 < itemAsset2.blueprints.Count; b4++)
                     {
-                        Blueprint arg2 = itemAsset2.blueprints[b4];
-                        if (func(blueprint2, arg2))
+                        Blueprint arg3 = itemAsset2.blueprints[b4];
+                        if (func(arg2, arg3))
                         {
-                            ReportError(itemAsset, "shares an identical blueprint with " + itemAsset2.itemName + ": " + blueprint2);
+                            ReportError(itemAsset, $"blueprint [{b3}] is identical to {itemAsset2.itemName} blueprint [{b4}]");
                         }
                     }
                 }

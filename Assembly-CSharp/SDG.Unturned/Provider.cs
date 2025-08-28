@@ -1916,7 +1916,12 @@ public class Provider : MonoBehaviour
         {
             _transportConnectionToPlayerMap.Remove(clientToRemove.transportConnection);
         }
+        CSteamID steamID = clientToRemove.playerID.steamID;
         clients.Remove(clientToRemove);
+        foreach (SteamPlayer client in clients)
+        {
+            client.culledPlayers.Remove(steamID);
+        }
         verifyNextPlayerInQueue();
         updateRichPresence();
     }
@@ -4301,27 +4306,37 @@ public class Provider : MonoBehaviour
         writer.WriteUInt8(aboutPlayer.playerID.characterID);
         writer.WriteString(aboutPlayer.playerID.playerName);
         writer.WriteString(aboutPlayer.playerID.characterName);
-        Vector3 value;
-        byte value2;
+        Vector3 vector;
+        byte value;
         if (!aboutPlayer.player.movement.hasMostRecentlyAddedUpdate)
         {
-            value = aboutPlayer.model.transform.position;
-            value2 = MeasurementTool.angleToByte(aboutPlayer.model.transform.rotation.eulerAngles.y);
+            vector = aboutPlayer.model.transform.position;
+            value = MeasurementTool.angleToByte(aboutPlayer.model.transform.rotation.eulerAngles.y);
         }
         else
         {
-            value = aboutPlayer.player.movement.mostRecentlyAddedUpdate.pos;
-            value2 = aboutPlayer.player.movement.mostRecentlyAddedUpdate.rot;
+            vector = aboutPlayer.player.movement.mostRecentlyAddedUpdate.pos;
+            value = aboutPlayer.player.movement.mostRecentlyAddedUpdate.rot;
         }
-        writer.WriteClampedVector3(value);
-        writer.WriteUInt8(value2);
+        if (!num)
+        {
+            Vector3 position = forPlayer.model.transform.position;
+            if (PlayerManager.IsPlayerCulledAtPosition(aboutPlayer, vector, forPlayer, position))
+            {
+                vector = PlayerManager.CulledPosition;
+                value = 0;
+                forPlayer.culledPlayers.Add(aboutPlayer.playerID.steamID);
+            }
+        }
+        writer.WriteClampedVector3(vector);
+        writer.WriteUInt8(value);
         writer.WriteBit(aboutPlayer.isPro);
-        bool value3 = aboutPlayer.isAdmin;
+        bool value2 = aboutPlayer.isAdmin;
         if (!num && hideAdmins)
         {
-            value3 = false;
+            value2 = false;
         }
-        writer.WriteBit(value3);
+        writer.WriteBit(value2);
         writer.WriteUInt8((byte)aboutPlayer.channel);
         writer.WriteSteamID(aboutPlayer.playerID.group);
         writer.WriteString(aboutPlayer.playerID.nickName);
@@ -4342,23 +4357,23 @@ public class Provider : MonoBehaviour
         int[] skinItems = aboutPlayer.skinItems;
         writer.WriteUInt8((byte)skinItems.Length);
         int[] array = skinItems;
-        foreach (int value4 in array)
+        foreach (int value3 in array)
         {
-            writer.WriteInt32(value4);
+            writer.WriteInt32(value3);
         }
         string[] skinTags = aboutPlayer.skinTags;
         writer.WriteUInt8((byte)skinTags.Length);
         string[] array2 = skinTags;
-        foreach (string value5 in array2)
+        foreach (string value4 in array2)
         {
-            writer.WriteString(value5);
+            writer.WriteString(value4);
         }
         string[] skinDynamicProps = aboutPlayer.skinDynamicProps;
         writer.WriteUInt8((byte)skinDynamicProps.Length);
         array2 = skinDynamicProps;
-        foreach (string value6 in array2)
+        foreach (string value5 in array2)
         {
-            writer.WriteString(value6);
+            writer.WriteString(value5);
         }
         writer.WriteEnum(aboutPlayer.skillset);
         writer.WriteString(aboutPlayer.language);
@@ -5823,8 +5838,8 @@ public class Provider : MonoBehaviour
             if (!flag)
             {
                 _path = ReadWrite.PATH + "/Localization/";
-                language = "English";
                 localizationRoot = path + language;
+                UnturnedLog.info("No installed translation for Steam language (" + steamUILanguage + ")");
             }
         }
         provider.economyService.loadTranslationEconInfo();

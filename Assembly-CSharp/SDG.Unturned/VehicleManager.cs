@@ -96,6 +96,10 @@ public class VehicleManager : SteamCaller
 
     internal static readonly ClientStaticMethod<uint, byte, CSteamID> SendEnterVehicle = ClientStaticMethod<uint, byte, CSteamID>.Get(ReceiveEnterVehicle);
 
+    /// <summary>
+    /// Plugin devs: if you are using reflection to call this even though it's private, please use sendExitVehicle
+    /// instead which properly handles player culling.
+    /// </summary>
     private static readonly ClientStaticMethod<uint, byte, Vector3, byte, bool> SendExitVehicle = ClientStaticMethod<uint, byte, Vector3, byte, bool>.Get(ReceiveExitVehicle);
 
     private static readonly ClientStaticMethod<uint, byte, byte> SendSwapVehicleSeats = ClientStaticMethod<uint, byte, byte>.Get(ReceiveSwapVehicleSeats);
@@ -1520,9 +1524,50 @@ public class VehicleManager : SteamCaller
         SendSwapVehicleSeats.InvokeAndLoopback(ENetReliability.Reliable, Provider.GatherRemoteClientConnections(), vehicle.instanceID, fromSeat, toSeat);
     }
 
+    /// <summary>
+    /// Handles culling if exit position is not visible to certain clients.
+    /// </summary>
     public static void sendExitVehicle(InteractableVehicle vehicle, byte seat, Vector3 point, byte angle, bool forceUpdate)
     {
-        SendExitVehicle.InvokeAndLoopback(ENetReliability.Reliable, Provider.GatherRemoteClientConnections(), vehicle.instanceID, seat, point, angle, forceUpdate);
+        SteamPlayer clientBySeatIndex = vehicle.GetClientBySeatIndex(seat);
+        if (clientBySeatIndex == null)
+        {
+            SendExitVehicle.InvokeAndLoopback(ENetReliability.Reliable, Provider.GatherRemoteClientConnections(), vehicle.instanceID, seat, point, angle, forceUpdate);
+            return;
+        }
+        PooledTransportConnectionList pooledTransportConnectionList = TransportConnectionListPool.Get();
+        PooledTransportConnectionList pooledTransportConnectionList2 = TransportConnectionListPool.Get();
+        foreach (SteamPlayer client in Provider._clients)
+        {
+            if (client.IsLocalServerHost)
+            {
+                continue;
+            }
+            if (client == clientBySeatIndex)
+            {
+                pooledTransportConnectionList.Add(client.transportConnection);
+                continue;
+            }
+            if (client.model == null)
+            {
+                pooledTransportConnectionList.Add(client.transportConnection);
+                continue;
+            }
+            Vector3 position = client.model.transform.position;
+            if (PlayerManager.IsPlayerCulledAtPosition(clientBySeatIndex, point, client, position))
+            {
+                pooledTransportConnectionList2.Add(client.transportConnection);
+            }
+            else
+            {
+                pooledTransportConnectionList.Add(client.transportConnection);
+            }
+        }
+        SendExitVehicle.InvokeAndLoopback(ENetReliability.Reliable, pooledTransportConnectionList, vehicle.instanceID, seat, point, angle, forceUpdate);
+        if (pooledTransportConnectionList2.Count > 0)
+        {
+            SendExitVehicle.Invoke(ENetReliability.Reliable, pooledTransportConnectionList2, vehicle.instanceID, seat, PlayerManager.CulledPosition, angle, forceUpdate);
+        }
     }
 
     public static void sendVehicleFuel(InteractableVehicle vehicle, ushort newFuel)

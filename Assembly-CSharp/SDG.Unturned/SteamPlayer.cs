@@ -122,6 +122,13 @@ public class SteamPlayer : SteamConnectedClientBase
 
     internal HashSet<Guid> validatedGuids = new HashSet<Guid>();
 
+    /// <summary>
+    /// Since this isn't accessible to plugins it isn't necessarily up-to-date. For example, when a player
+    /// teleports the culledPlayers list isn't updated until the next PlayerManager sync. If this becomes
+    /// publicly accessible in some way it should be kept in sync.
+    /// </summary>
+    internal HashSet<CSteamID> culledPlayers = new HashSet<CSteamID>();
+
     private HashSet<string> requestedSteamAuthTicketIdentities = new HashSet<string>();
 
     private HashSet<string> receivedSteamAuthTicketIdentities = new HashSet<string>();

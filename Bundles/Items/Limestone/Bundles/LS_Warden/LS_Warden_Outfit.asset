@@ -1,0 +1,23 @@
+﻿GUID 696e69a0ac144db7afcb3774b651f877
+Type SDG.Unturned.OutfitAsset, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+
+Items
+[
+	// Glasses
+	ec81a76598504200a1e08ebc288bc9b7
+
+	// Hat
+	cfd1de5ef3ac4a348dca114a562392fa
+
+	// Mask
+	006ac9fc3e5d47b6b58a17707abf9d05
+
+	// Pants
+	734c01e0ccbf4ea4aab69de55e315f76
+
+	// Shirt
+	ef43a100e1c440e78bba458fe4338fb6
+
+	// Vest
+	0daf0eb19c7c4f9b98e1faeddaba5fbe
+]

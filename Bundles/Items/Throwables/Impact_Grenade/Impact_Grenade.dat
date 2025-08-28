@@ -22,6 +22,7 @@ Explosion 34
 
 Explosive
 Explode_On_Impact
+Explode_On_Impact_Destroy_On_Client true
 Fuse_Length 4
 
 Blueprints

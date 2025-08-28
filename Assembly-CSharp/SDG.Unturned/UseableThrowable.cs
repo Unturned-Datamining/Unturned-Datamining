@@ -94,12 +94,16 @@ public class UseableThrowable : Useable
         {
             transform.gameObject.AddComponent<StickyGrenade>().ignoreTransform = base.transform;
         }
-        if (equippedThrowableAsset.explodeOnImpact && Provider.isServer)
+        if (equippedThrowableAsset.explodeOnImpact && (Provider.isServer || equippedThrowableAsset.ExplodeOnImpactDestroyOnClient))
         {
             transform.gameObject.SetLayerRecursively(30);
             ImpactGrenade impactGrenade = transform.gameObject.AddComponent<ImpactGrenade>();
             impactGrenade.explodable = transform.GetComponent<IExplodableThrowable>();
             impactGrenade.ignoreTransform = base.transform;
+            if (impactGrenade.explodable == null && equippedThrowableAsset.ExplodeOnImpactDestroyOnClient)
+            {
+                impactGrenade.explodable = transform.gameObject.AddComponent<LocallyPredictImpactDestroyThrowable>();
+            }
         }
         if (Dedicator.IsDedicatedServer)
         {

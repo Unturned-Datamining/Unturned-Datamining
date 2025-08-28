@@ -1583,7 +1583,7 @@ public class UseableGun : Useable
                 {
                     break;
                 }
-                InputInfo input = base.player.input.getInput(doOcclusionCheck: true, ERaycastInfoUsage.Gun);
+                InputInfo input = base.player.input.getInput(doOcclusionCheck: true, ERaycastInfoUsage.Gun, bullet.origin);
                 if (input == null || equippedGunAsset == null)
                 {
                     break;
@@ -3854,6 +3854,7 @@ public class UseableGun : Useable
         }
         if (base.channel.IsLocalPlayer)
         {
+            float scopeAlpha = base.player.look.scopeAlpha;
             if (firstAttachments.sightAsset != null)
             {
                 firstPersonZoomFactor = firstAttachments.sightAsset.zoom;
@@ -3893,6 +3894,7 @@ public class UseableGun : Useable
                 base.player.animator.viewmodelOffsetPreferenceUseScope = false;
             }
             UpdateCrosshairEnabled();
+            base.player.look.scopeAlpha = scopeAlpha;
         }
         UpdateMovementSpeedMultiplier();
         UpdateAimInDuration();

@@ -282,7 +282,7 @@ public abstract class Asset : IAssetErrorContext
         return fromBundle.load<T>(defaultName);
     }
 
-    protected T loadRequiredAsset<T>(Bundle fromBundle, string name) where T : UnityEngine.Object
+    internal T loadRequiredAsset<T>(Bundle fromBundle, string name) where T : UnityEngine.Object
     {
         T val = fromBundle.load<T>(name);
         if (val == null)

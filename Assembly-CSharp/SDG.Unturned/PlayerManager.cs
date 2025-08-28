@@ -9,6 +9,10 @@ namespace SDG.Unturned;
 
 public class PlayerManager : SteamCaller
 {
+    internal const float MAX_VISIBLE_DISTANCE = 576f;
+
+    internal const float SQR_MAX_VISIBLE_DISTANCE = 331776f;
+
     [Obsolete]
     public static ushort updates;
 
@@ -23,6 +27,14 @@ public class PlayerManager : SteamCaller
     private List<SteamPlayer> playersToSend = new List<SteamPlayer>();
 
     private float lastSendOverflowWarning;
+
+    /// <summary>
+    /// Position to place players outside visible range.
+    /// Defaults to as far away as supported by default clamped Vector3 precision.
+    /// Doesn't use world origin because that would potentially increase rendering cost for clients near the origin.
+    /// </summary>
+    public static Vector3 CulledPosition { get; set; } = new Vector3(-4095f, -4095f, -4095f);
+
 
     /// <summary>
     /// Whether local client is currently penalized for potentially using a lag switch. Server has an equivalent check which reduces
@@ -48,6 +60,36 @@ public class PlayerManager : SteamCaller
     [Obsolete]
     public void tellPlayerStates(CSteamID steamID)
     {
+    }
+
+    /// <summary>
+    /// Will test player be culled for viewer at a given position?
+    ///
+    /// Members of the same group are always visible to each other. (Used by map and HUD name overlay.)
+    ///
+    /// Admins with the Spectator Overlay enabled are able to see all clients.
+    /// Similarly, plugins can set ServerAllowKnowledgeOfAllClientPositions to show all clients.
+    ///
+    /// Players in vehicles:
+    /// VehicleManager notifies all clients when a player enters a vehicle, so a client may know the player's
+    /// position even if this method suggests otherwise. When exiting the vehicle, CulledPosition is sent
+    /// instead of the real exit position to clients who should cull the new position.
+    /// </summary>
+    public static bool IsPlayerCulledAtPosition(SteamPlayer testPlayer, Vector3 testPosition, SteamPlayer viewer, Vector3 viewerPosition)
+    {
+        if (testPlayer.isMemberOfSameGroupAs(viewer))
+        {
+            return false;
+        }
+        if (viewer.player.AdminUsageFlags.HasFlag(EPlayerAdminUsageFlags.SpectatorStatsOverlay))
+        {
+            return false;
+        }
+        if (viewer.player.ServerAllowKnowledgeOfAllClientPositions)
+        {
+            return false;
+        }
+        return (viewerPosition - testPosition).GetHorizontalSqrMagnitude() > 331776f;
     }
 
     [SteamCall(ESteamCallValidation.ONLY_FROM_SERVER)]
@@ -98,19 +140,47 @@ public class PlayerManager : SteamCaller
             {
                 continue;
             }
-            _ = steamPlayer.model.transform.position;
+            Vector3 position = steamPlayer.model.transform.position;
             ushort num = 0;
             playersToSend.Clear();
             for (int j = 0; j < Provider.clients.Count; j++)
             {
-                if (j != i)
+                if (j == i)
                 {
-                    SteamPlayer steamPlayer2 = Provider.clients[j];
-                    if (steamPlayer2 != null && !(steamPlayer2.player == null) && !(steamPlayer2.player.movement == null) && steamPlayer2.player.movement.updates != null && steamPlayer2.player.movement.updates.Count > 0)
+                    continue;
+                }
+                SteamPlayer steamPlayer2 = Provider.clients[j];
+                if (steamPlayer2 == null || steamPlayer2.player == null || steamPlayer2.player.movement == null || steamPlayer2.player.movement.updates == null)
+                {
+                    continue;
+                }
+                bool flag;
+                if (!steamPlayer2.isMemberOfSameGroupAs(steamPlayer) && !steamPlayer.player.AdminUsageFlags.HasFlag(EPlayerAdminUsageFlags.SpectatorStatsOverlay) && !steamPlayer.player.ServerAllowKnowledgeOfAllClientPositions)
+                {
+                    Vector3 vector = (steamPlayer2.player.movement.hasMostRecentlyAddedUpdate ? steamPlayer2.player.movement.mostRecentlyAddedUpdate.pos : steamPlayer2.model.transform.position);
+                    flag = (position - vector).GetHorizontalSqrMagnitude() > 331776f;
+                }
+                else
+                {
+                    flag = false;
+                }
+                bool flag2 = steamPlayer.culledPlayers.Contains(steamPlayer2.playerID.steamID);
+                bool num2 = flag != flag2;
+                if (num2)
+                {
+                    if (flag)
                     {
-                        playersToSend.Add(steamPlayer2);
-                        num += (ushort)steamPlayer2.player.movement.updates.Count;
+                        steamPlayer.culledPlayers.Add(steamPlayer2.playerID.steamID);
                     }
+                    else
+                    {
+                        steamPlayer.culledPlayers.Remove(steamPlayer2.playerID.steamID);
+                    }
+                }
+                if (num2 || (!flag && steamPlayer2.player.movement.updates.Count > 0))
+                {
+                    playersToSend.Add(steamPlayer2);
+                    num += (ushort)Mathf.Max(steamPlayer2.player.movement.updates.Count, 1);
                 }
             }
             SendPlayerStates.Invoke(ENetReliability.Unreliable, steamPlayer.transportConnection, SendPlayerStates_Write, num, steamPlayer);
@@ -132,13 +202,40 @@ public class PlayerManager : SteamCaller
         writer.WriteUInt16(updateCount);
         foreach (SteamPlayer item in playersToSend)
         {
-            for (int i = 0; i < item.player.movement.updates.Count; i++)
+            if (forClient.culledPlayers.Contains(item.playerID.steamID))
             {
-                PlayerStateUpdate playerStateUpdate = item.player.movement.updates[i];
                 writer.WriteUInt8((byte)item.channel);
-                writer.WriteClampedVector3(playerStateUpdate.pos);
-                writer.WriteUInt8(playerStateUpdate.angle);
-                writer.WriteUInt8(playerStateUpdate.rot);
+                writer.WriteClampedVector3(CulledPosition);
+                writer.WriteUInt8(90);
+                writer.WriteUInt8(0);
+            }
+            else if (item.player.movement.updates.Count < 1)
+            {
+                writer.WriteUInt8((byte)item.channel);
+                if (item.player.movement.hasMostRecentlyAddedUpdate)
+                {
+                    PlayerStateUpdate mostRecentlyAddedUpdate = item.player.movement.mostRecentlyAddedUpdate;
+                    writer.WriteClampedVector3(mostRecentlyAddedUpdate.pos);
+                    writer.WriteUInt8(mostRecentlyAddedUpdate.angle);
+                    writer.WriteUInt8(mostRecentlyAddedUpdate.rot);
+                }
+                else
+                {
+                    writer.WriteClampedVector3(item.model.transform.position);
+                    writer.WriteUInt8(90);
+                    writer.WriteUInt8(MeasurementTool.angleToByte(item.model.transform.rotation.eulerAngles.y));
+                }
+            }
+            else
+            {
+                for (int i = 0; i < item.player.movement.updates.Count; i++)
+                {
+                    PlayerStateUpdate playerStateUpdate = item.player.movement.updates[i];
+                    writer.WriteUInt8((byte)item.channel);
+                    writer.WriteClampedVector3(playerStateUpdate.pos);
+                    writer.WriteUInt8(playerStateUpdate.angle);
+                    writer.WriteUInt8(playerStateUpdate.rot);
+                }
             }
         }
         if (writer.errors != 0 && Time.realtimeSinceStartup - lastSendOverflowWarning > 1f)

@@ -64,15 +64,17 @@ public class Commander
         {
             throw new ArgumentNullException("messenger");
         }
-        if (!Dedicator.IsDedicatedServer || Provider.configData.UnityEvents.Allow_Server_Commands)
+        if (Dedicator.IsDedicatedServer && !Provider.configData.UnityEvents.Allow_Server_Commands)
         {
-            bool shouldAllow = true;
-            Commander.onCheckUnityEventPermissions?.Invoke(messenger, command, ref shouldAllow);
-            UnturnedLog.info("UnityEventCmd {0}: '{1}' Allow: {2}", messenger.gameObject.GetSceneHierarchyPath(), command, shouldAllow);
-            if (shouldAllow)
-            {
-                execute(CSteamID.Nil, command);
-            }
+            UnturnedLog.info("Blocking ServerTextChatMessenger component at " + messenger.gameObject.GetSceneHierarchyPath() + " from executing command \"" + command + "\" because UnityEvents.Allow_Server_Commands is off");
+            return;
+        }
+        bool shouldAllow = true;
+        Commander.onCheckUnityEventPermissions?.Invoke(messenger, command, ref shouldAllow);
+        UnturnedLog.info("UnityEventCmd {0}: '{1}' Allow: {2}", messenger.gameObject.GetSceneHierarchyPath(), command, shouldAllow);
+        if (shouldAllow)
+        {
+            execute(CSteamID.Nil, command);
         }
     }
 

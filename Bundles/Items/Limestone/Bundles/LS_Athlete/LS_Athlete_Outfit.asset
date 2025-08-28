@@ -1,0 +1,17 @@
+﻿GUID c8fde17f16844c678b275e9ff2649855
+Type SDG.Unturned.OutfitAsset, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+
+Items
+[
+	// Pants
+	3d1fd4b7846d44c4b6e24b846bf1372e
+
+	// Shoulder Bag
+	94810df626434182b15bcd643c0805bb
+
+	// Shirt
+	ec406d974d32403a8001b65a8c44cac3
+
+	// Visor
+	3000b47bc72e4c80919eb8d461376a45
+]

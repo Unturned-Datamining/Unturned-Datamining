@@ -611,12 +611,14 @@ public class VehicleAsset : Asset, ISkinableAsset
     /// <summary>
     /// How quickly RPM can increase in RPM/s.
     /// e.g., 1000 will take 2 seconds to go from 2000 to 4000 RPM.
+    /// Defaults to -1 which instantly changes RPM.
     /// </summary>
     public float EngineRpmIncreaseRate { get; private set; }
 
     /// <summary>
     /// How quickly RPM can decrease in RPM/s.
     /// e.g., 1000 will take 2 seconds to go from 4000 to 2000 RPM.
+    /// Defaults to -1 which instantly changes RPM.
     /// </summary>
     public float EngineRpmDecreaseRate { get; private set; }
 
@@ -1627,8 +1629,8 @@ public class VehicleAsset : Asset, ISkinableAsset
         GearShiftInterval = p.data.ParseFloat("GearShift_Interval", 1f);
         EngineIdleRpm = p.data.ParseFloat("EngineIdleRPM", 1000f);
         EngineMaxRpm = p.data.ParseFloat("EngineMaxRPM", 7000f);
-        EngineRpmIncreaseRate = p.data.ParseFloat("EngineRPM_IncreaseRate", 10000f);
-        EngineRpmDecreaseRate = p.data.ParseFloat("EngineRPM_DecreaseRate", 10000f);
+        EngineRpmIncreaseRate = p.data.ParseFloat("EngineRPM_IncreaseRate", -1f);
+        EngineRpmDecreaseRate = p.data.ParseFloat("EngineRPM_DecreaseRate", -1f);
         EngineMaxTorque = p.data.ParseFloat("EngineMaxTorque", 1f);
         engineSoundType = p.data.ParseEnum("EngineSound_Type", EVehicleEngineSoundType.Legacy);
         if (engineSoundType == EVehicleEngineSoundType.EngineRPMSimple)

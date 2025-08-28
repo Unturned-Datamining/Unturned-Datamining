@@ -124,6 +124,7 @@ public class InteractableTrap : InteractablePower
             if (!other.transform.CompareTag("Player") || (Provider.isPvP && (other.transform.parent == null || !other.transform.parent.CompareTag("Vehicle"))) || explosionLaunchSpeed > 0.01f)
             {
                 Vector3 position = base.transform.position;
+                BarricadeManager.damage(base.transform, 5f, 1f, armor: false, default(CSteamID), EDamageOrigin.Trap_Wear_And_Tear);
                 ExplosionParameters parameters = new ExplosionParameters(position, range2, EDeathCause.LANDMINE, GetKillerId());
                 parameters.playerDamage = playerDamage;
                 parameters.zombieDamage = zombieDamage;

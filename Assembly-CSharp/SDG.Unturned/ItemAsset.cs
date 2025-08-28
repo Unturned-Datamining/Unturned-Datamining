@@ -127,6 +127,8 @@ public class ItemAsset : Asset, ISkinableAsset, IBlueprintOwner
 
     private NPCRewardsList _deletedAtZeroQualityRewards;
 
+    private static List<AnimationClip> tempAnimations = new List<AnimationClip>();
+
     /// sortOrder values for description lines.
     /// Difference in value greater than 100 creates an empty line.
     internal const int DescSort_RarityAndType = 0;
@@ -583,21 +585,24 @@ public class ItemAsset : Asset, ISkinableAsset, IBlueprintOwner
             Assets.ReportError(this, "missing Animation component on 'Animations' GameObject");
             return;
         }
-        _animations = new AnimationClip[component.GetClipCount()];
-        if (animations.Length < 1)
+        if (component.GetClipCount() < 1)
         {
             Assets.ReportError(this, "animation clips list is empty");
             return;
         }
-        int num = 0;
+        tempAnimations.Clear();
         bool flag = false;
         bool flag2 = false;
         foreach (AnimationState item in component)
         {
-            animations[num] = item.clip;
-            num++;
-            flag |= item.clip == null;
-            flag2 = flag2 || (item.clip != null && item.clip.name == "Equip");
+            AnimationClip clip = item.clip;
+            if (clip == null)
+            {
+                flag = true;
+                continue;
+            }
+            flag2 = flag2 || clip.name == "Equip";
+            tempAnimations.Add(clip);
         }
         if (flag)
         {
@@ -606,6 +611,10 @@ public class ItemAsset : Asset, ISkinableAsset, IBlueprintOwner
         if (!flag2)
         {
             Assets.ReportError(this, "missing 'Equip' animation clip");
+        }
+        if (tempAnimations.Count >= 1)
+        {
+            _animations = tempAnimations.ToArray();
         }
     }
 
@@ -793,7 +802,7 @@ public class ItemAsset : Asset, ISkinableAsset, IBlueprintOwner
             _item = p.bundle.load<GameObject>("Item");
             if (item == null)
             {
-                if (!isPro || type == EItemType.SHIRT || type == EItemType.PANTS)
+                if (!isPro)
                 {
                     throw new NotSupportedException("missing \"Item\" GameObject (expected at " + p.bundle.WhereLoadLookedToString("Item") + ")");
                 }

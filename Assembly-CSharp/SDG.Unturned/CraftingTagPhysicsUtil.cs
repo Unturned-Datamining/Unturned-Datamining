@@ -57,10 +57,15 @@ public static class CraftingTagPhysicsUtil
         tagProviders.Clear();
         QueryTagProviders(position, radius, tagProviders);
         CraftingTagProviderGetAvailableTagsParameters p = default(CraftingTagProviderGetAvailableTagsParameters);
-        p.ResultTags = results;
+        p.ResultTags = pendingTags;
         foreach (ICraftingTagProvider tagProvider in tagProviders)
         {
+            pendingTags.Clear();
             tagProvider.GetAvailableTags(ref p);
+            foreach (TagAsset pendingTag in pendingTags)
+            {
+                results.Add(pendingTag);
+            }
         }
     }
 

@@ -2,6 +2,8 @@ namespace SDG.Unturned;
 
 public class ChatPreferenceData
 {
+    public const int DEFAULT_HISTORY_LENGTH = 16;
+
     public float Fade_Delay;
 
     public int History_Length;

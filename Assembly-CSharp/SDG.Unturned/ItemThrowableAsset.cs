@@ -47,6 +47,12 @@ public class ItemThrowableAsset : ItemWeaponAsset
 
     public float fuseLength => _fuseLength;
 
+    /// <summary>
+    /// If true, clients destroy Throwable prefab upon collision. Defaults to false.
+    /// Optional to ensure backwards compatibility for unexpected setups.
+    /// </summary>
+    public bool ExplodeOnImpactDestroyOnClient { get; set; }
+
     public override bool shouldFriendlySentryTargetUser
     {
         get
@@ -106,6 +112,7 @@ public class ItemThrowableAsset : ItemWeaponAsset
         _isFlash = p.data.ContainsKey("Flash");
         _isSticky = p.data.ContainsKey("Sticky");
         _explodeOnImpact = p.data.ContainsKey("Explode_On_Impact");
+        ExplodeOnImpactDestroyOnClient = p.data.ParseBool("Explode_On_Impact_Destroy_On_Client");
         if (p.data.ContainsKey("Fuse_Length"))
         {
             _fuseLength = p.data.ParseFloat("Fuse_Length");

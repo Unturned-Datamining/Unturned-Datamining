@@ -48,9 +48,9 @@ internal class GlazierToggle_IMGUI : GlazierElementBase_IMGUI, ISleekToggle, ISl
         GUI.enabled = enabled;
         if (flag != Value)
         {
+            Value = flag;
             this.OnValueChanged?.Invoke(this, flag);
         }
-        Value = flag;
         ChildrenOnGUI();
     }
 

@@ -243,6 +243,13 @@ public class Player : MonoBehaviour, IDialogueTarget, IExplosionDamageable, IEqu
 
 
     /// <summary>
+    /// If true, bypass player culling test as if freecam overlay were active.
+    /// Enables plugins to implement a custom admin culling bypass switch. (Was requested.)
+    /// Defaults to false.
+    /// </summary>
+    public bool ServerAllowKnowledgeOfAllClientPositions { get; set; }
+
+    /// <summary>
     /// Which admin powers are currently in use by the client.
     /// Reported to the server by the client.
     /// Does not control which admin powers are available.
@@ -750,7 +757,10 @@ public class Player : MonoBehaviour, IDialogueTarget, IExplosionDamageable, IEqu
     internal void PostTeleport()
     {
         onPlayerTeleported?.Invoke(this, base.transform.position);
-        VolumeManager<CullingVolume, CullingVolumeManager>.Get().OnPlayerTeleported();
+        if (channel.IsLocalPlayer)
+        {
+            VolumeManager<CullingVolume, CullingVolumeManager>.Get().OnPlayerTeleported();
+        }
     }
 
     [Obsolete]
@@ -849,6 +859,35 @@ public class Player : MonoBehaviour, IDialogueTarget, IExplosionDamageable, IEqu
         return stance.adjustStanceOrTeleportIfStuck();
     }
 
+    /// <summary>
+    /// Teleport is always handled by owner and locally (loopback), but *not* by culled clients.
+    /// </summary>
+    private PooledTransportConnectionList GatherTeleportRemoteClientConnections(Vector3 destination)
+    {
+        SteamPlayer owner = channel.owner;
+        PooledTransportConnectionList pooledTransportConnectionList = TransportConnectionListPool.Get();
+        foreach (SteamPlayer client in Provider._clients)
+        {
+            if (client.IsLocalServerHost)
+            {
+                continue;
+            }
+            if (client == owner)
+            {
+                pooledTransportConnectionList.Add(client.transportConnection);
+            }
+            else if (!(client.model == null))
+            {
+                Vector3 position = client.model.transform.position;
+                if (!PlayerManager.IsPlayerCulledAtPosition(owner, destination, client, position))
+                {
+                    pooledTransportConnectionList.Add(client.transportConnection);
+                }
+            }
+        }
+        return pooledTransportConnectionList;
+    }
+
     public void teleportToLocationUnsafe(Vector3 position, float yaw)
     {
         InteractableVehicle vehicle = movement.getVehicle();
@@ -857,7 +896,7 @@ public class Player : MonoBehaviour, IDialogueTarget, IExplosionDamageable, IEqu
             byte b = MeasurementTool.angleToByte(yaw);
             if (movement.canAddSimulationResultsToUpdates)
             {
-                SendTeleport.InvokeAndLoopback(GetNetId(), ENetReliability.Reliable, Provider.GatherRemoteClientConnections(), position, b);
+                SendTeleport.InvokeAndLoopback(GetNetId(), ENetReliability.Reliable, GatherTeleportRemoteClientConnections(position), position, b);
                 return;
             }
             SendTeleport.Invoke(GetNetId(), ENetReliability.Reliable, channel.GetOwnerTransportConnection(), position, b);

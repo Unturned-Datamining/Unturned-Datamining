@@ -541,7 +541,11 @@ public class ChatManager : SteamCaller
         {
             throw new ArgumentNullException("messenger");
         }
-        if (!Dedicator.IsDedicatedServer || Provider.configData.UnityEvents.Allow_Server_Messages)
+        if (Dedicator.IsDedicatedServer && !Provider.configData.UnityEvents.Allow_Server_Messages)
+        {
+            UnturnedLog.info("Blocking ServerTextChatMessenger component at " + messenger.gameObject.GetSceneHierarchyPath() + " from sending message \"" + text + "\" because UnityEvents.Allow_Server_Messages is off");
+        }
+        else
         {
             UnturnedLog.info("UnityEventMsg {0}: '{1}'", messenger.gameObject.GetSceneHierarchyPath(), text);
             serverSendMessage(text, color, null, null, EChatMode.SAY, iconURL, useRichTextFormatting);

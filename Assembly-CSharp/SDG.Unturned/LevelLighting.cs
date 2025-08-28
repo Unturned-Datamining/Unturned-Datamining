@@ -78,6 +78,13 @@ public class LevelLighting
 
         public Material material;
 
+        public CloudParticleSystemMaterialColor[] materialColorProperties;
+    }
+
+    private struct CloudParticleSystemMaterialColor
+    {
+        public int propertyId;
+
         public float defaultColorAlpha;
     }
 
@@ -1182,8 +1189,13 @@ public class LevelLighting
             }
             if (cloudParticleSystemInstance.material != null)
             {
-                Color color = cloudColor.WithAlpha(cloudParticleSystemInstance.defaultColorAlpha);
-                cloudParticleSystemInstance.material.color = color;
+                CloudParticleSystemMaterialColor[] materialColorProperties = cloudParticleSystemInstance.materialColorProperties;
+                for (int j = 0; j < materialColorProperties.Length; j++)
+                {
+                    CloudParticleSystemMaterialColor cloudParticleSystemMaterialColor = materialColorProperties[j];
+                    Color value2 = cloudColor.WithAlpha(cloudParticleSystemMaterialColor.defaultColorAlpha);
+                    cloudParticleSystemInstance.material.SetColor(cloudParticleSystemMaterialColor.propertyId, value2);
+                }
             }
         }
     }
@@ -1224,7 +1236,11 @@ public class LevelLighting
             CloudParticleSystemInstance[] array = cloudOverrideParticles;
             for (int i = 0; i < array.Length; i++)
             {
-                UnityEngine.Object.Destroy(array[i].material);
+                CloudParticleSystemInstance cloudParticleSystemInstance = array[i];
+                if (cloudParticleSystemInstance.material != null)
+                {
+                    UnityEngine.Object.Destroy(cloudParticleSystemInstance.material);
+                }
             }
             cloudOverrideParticles = null;
         }
@@ -1270,12 +1286,20 @@ public class LevelLighting
                             continue;
                         }
                         Material material = component.GetComponent<ParticleSystemRenderer>().material;
-                        CloudParticleSystemInstance cloudParticleSystemInstance = default(CloudParticleSystemInstance);
-                        cloudParticleSystemInstance.config = config;
-                        cloudParticleSystemInstance.particleSystem = component;
-                        cloudParticleSystemInstance.material = material;
-                        cloudParticleSystemInstance.defaultColorAlpha = material.color.a;
-                        CloudParticleSystemInstance item = cloudParticleSystemInstance;
+                        CloudParticleSystemMaterialColor[] array2 = new CloudParticleSystemMaterialColor[config.MaterialColorPropertyNames.Length];
+                        for (int j = 0; j < array2.Length; j++)
+                        {
+                            ref CloudParticleSystemMaterialColor reference = ref array2[j];
+                            string name = config.MaterialColorPropertyNames[j];
+                            reference.propertyId = Shader.PropertyToID(name);
+                            reference.defaultColorAlpha = material.GetColor(reference.propertyId).a;
+                        }
+                        CloudParticleSystemInstance cloudParticleSystemInstance2 = default(CloudParticleSystemInstance);
+                        cloudParticleSystemInstance2.config = config;
+                        cloudParticleSystemInstance2.particleSystem = component;
+                        cloudParticleSystemInstance2.material = material;
+                        cloudParticleSystemInstance2.materialColorProperties = array2;
+                        CloudParticleSystemInstance item = cloudParticleSystemInstance2;
                         list.Add(item);
                     }
                     if (list.Count > 0)
@@ -1316,9 +1340,9 @@ public class LevelLighting
             isReflectionBuildingVision = false;
             puddles = lighting.GetComponent<Rain>();
             moons = new Transform[MOON_CYCLES];
-            for (int j = 0; j < moons.Length; j++)
+            for (int k = 0; k < moons.Length; k++)
             {
-                moons[j] = sun.Find("MoonLightDirection_" + j);
+                moons[k] = sun.Find("MoonLightDirection_" + k);
             }
             ambianceAudioGameObject = lighting.Find("Effect").gameObject;
             activeAmbianceAudioInstances = new List<AmbianceAudioInstance>();
@@ -1396,75 +1420,75 @@ public class LevelLighting
                     snowDur = block.readSingle();
                 }
                 _times = new LightingInfo[4];
-                for (int k = 0; k < times.Length; k++)
+                for (int l = 0; l < times.Length; l++)
                 {
-                    Color[] array2 = new Color[12];
-                    float[] array3 = new float[5];
+                    Color[] array3 = new Color[12];
+                    float[] array4 = new float[5];
                     if (b > 9)
                     {
-                        for (int l = 0; l < array2.Length; l++)
-                        {
-                            array2[l] = block.readColor();
-                        }
                         for (int m = 0; m < array3.Length; m++)
                         {
-                            array3[m] = block.readSingle();
+                            array3[m] = block.readColor();
+                        }
+                        for (int n = 0; n < array4.Length; n++)
+                        {
+                            array4[n] = block.readSingle();
                         }
                     }
                     else if (b > 8)
                     {
-                        for (int n = 0; n < array2.Length - 1; n++)
+                        for (int num = 0; num < array3.Length - 1; num++)
                         {
-                            array2[n] = block.readColor();
+                            array3[num] = block.readColor();
                         }
-                        array2[11] = array2[3];
-                        for (int num = 0; num < array3.Length; num++)
+                        array3[11] = array3[3];
+                        for (int num2 = 0; num2 < array4.Length; num2++)
                         {
-                            array3[num] = block.readSingle();
+                            array4[num2] = block.readSingle();
                         }
                     }
                     else
                     {
                         if (b >= 6)
                         {
-                            for (int num2 = 0; num2 < array2.Length - 2; num2++)
+                            for (int num3 = 0; num3 < array3.Length - 2; num3++)
                             {
-                                array2[num2] = block.readColor();
+                                array3[num3] = block.readColor();
                             }
                         }
                         else
                         {
-                            for (int num3 = 0; num3 < array2.Length - 3; num3++)
+                            for (int num4 = 0; num4 < array3.Length - 3; num4++)
                             {
-                                array2[num3] = block.readColor();
+                                array3[num4] = block.readColor();
                             }
-                            array2[9] = array2[2];
+                            array3[9] = array3[2];
                         }
-                        array2[10] = array2[0];
-                        array2[11] = array2[3];
-                        for (int num4 = 0; num4 < array3.Length - 1; num4++)
+                        array3[10] = array3[0];
+                        array3[11] = array3[3];
+                        for (int num5 = 0; num5 < array4.Length - 1; num5++)
                         {
-                            array3[num4] = block.readSingle();
+                            array4[num5] = block.readSingle();
                         }
-                        array3[4] = 0.25f;
+                        array4[4] = 0.25f;
                     }
                     if (b < 12)
                     {
-                        array3[1] = Mathf.Min(array3[1], 0.33f);
+                        array4[1] = Mathf.Min(array4[1], 0.33f);
                     }
-                    LightingInfo lightingInfo = new LightingInfo(array2, array3);
-                    times[k] = lightingInfo;
+                    LightingInfo lightingInfo = new LightingInfo(array3, array4);
+                    times[l] = lightingInfo;
                 }
             }
             else
             {
                 _times = new LightingInfo[4];
-                for (int num5 = 0; num5 < times.Length; num5++)
+                for (int num6 = 0; num6 < times.Length; num6++)
                 {
                     Color[] newColors = new Color[12];
                     float[] newSingles = new float[5];
                     LightingInfo lightingInfo2 = new LightingInfo(newColors, newSingles);
-                    times[num5] = lightingInfo2;
+                    times[num6] = lightingInfo2;
                 }
                 times[0].colors[3] = block.readColor();
                 times[1].colors[3] = block.readColor();
@@ -1555,12 +1579,12 @@ public class LevelLighting
             snowFreq = 1f;
             snowDur = 1f;
             _times = new LightingInfo[4];
-            for (int num6 = 0; num6 < times.Length; num6++)
+            for (int num7 = 0; num7 < times.Length; num7++)
             {
                 Color[] newColors2 = new Color[12];
                 float[] newSingles2 = new float[5];
                 LightingInfo lightingInfo3 = new LightingInfo(newColors2, newSingles2);
-                times[num6] = lightingInfo3;
+                times[num7] = lightingInfo3;
             }
             hash = new byte[20];
         }

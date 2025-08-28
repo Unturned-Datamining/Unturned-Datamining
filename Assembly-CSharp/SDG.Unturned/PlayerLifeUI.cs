@@ -1462,6 +1462,10 @@ public class PlayerLifeUI
         PlayerUI.container.AddChild(container);
         active = true;
         chatting = false;
+        if (Provider.preferenceData.Chat.History_Length > 16)
+        {
+            UnturnedLog.warn($"Chat history length ({Provider.preferenceData.Chat.History_Length}) is higher than the default ({16}) and may be the cause of performance issues if significantly higher");
+        }
         if (Glazier.Get().SupportsAutomaticLayout)
         {
             chatScrollViewV2 = Glazier.Get().CreateScrollView();
