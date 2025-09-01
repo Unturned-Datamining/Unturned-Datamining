@@ -77,11 +77,13 @@ public class EditorEnvironmentLightingUI
     private static void onDraggedBiasSlider(ISleekSlider slider, float state)
     {
         LevelLighting.bias = state;
+        LevelLighting.EditorDirtyClouds();
     }
 
     private static void onDraggedFadeSlider(ISleekSlider slider, float state)
     {
         LevelLighting.fade = state;
+        LevelLighting.EditorDirtyClouds();
     }
 
     private static void onValuedSeaLevelSlider(SleekValue slider, float state)
@@ -137,6 +139,7 @@ public class EditorEnvironmentLightingUI
     private static void onDraggedTimeSlider(ISleekSlider slider, float state)
     {
         LevelLighting.time = state;
+        LevelLighting.EditorDirtyClouds();
     }
 
     private static void onClickedTimeButton(ISleekElement button)
@@ -163,6 +166,7 @@ public class EditorEnvironmentLightingUI
             break;
         }
         timeSlider.Value = LevelLighting.time;
+        LevelLighting.EditorDirtyClouds();
     }
 
     private static void OnClickedPreviewWeather(ISleekElement button)
@@ -198,6 +202,10 @@ public class EditorEnvironmentLightingUI
         }
         LevelLighting.times[(int)selectedTime].singles[i] = state;
         LevelLighting.updateLighting();
+        if (i == 2)
+        {
+            LevelLighting.EditorDirtyClouds();
+        }
     }
 
     private static void updateSelection()

@@ -951,7 +951,14 @@ public class PlayerMovement : PlayerCaller
         {
             _isMoving = (double)Mathf.Abs(move.x) > 0.1 || (double)Mathf.Abs(move.z) > 0.1;
             checkGround(base.transform.position);
-            pendingLaunchVelocity = Vector3.zero;
+            if (move.z > 0.1f)
+            {
+                pendingLaunchVelocity = base.transform.rotation * new Vector3(0f, 0f, 0.5f);
+            }
+            else
+            {
+                pendingLaunchVelocity = Vector3.zero;
+            }
             velocity = new Vector3(0f, _move.z * speed * 0.5f, 0f);
             mostRecentControllerColliderHit = null;
             if (controller.enabled)

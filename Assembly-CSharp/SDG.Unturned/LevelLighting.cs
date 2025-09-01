@@ -76,6 +76,10 @@ public class LevelLighting
 
         public ParticleSystem particleSystem;
 
+        public float defaultEmissionRateMin;
+
+        public float defaultEmissionRateMax;
+
         public Material material;
 
         public CloudParticleSystemMaterialColor[] materialColorProperties;
@@ -1184,8 +1188,24 @@ public class LevelLighting
             CloudParticleSystemInstance cloudParticleSystemInstance = array[i];
             if (cloudParticleSystemInstance.particleSystem != null)
             {
+                float num8 = num5 * cloudParticleSystemInstance.config.RateOverTimeScale;
                 ParticleSystem.EmissionModule emission = cloudParticleSystemInstance.particleSystem.emission;
-                emission.rateOverTimeMultiplier = num5 * cloudParticleSystemInstance.config.RateOverTimeScale;
+                switch (emission.rateOverTime.mode)
+                {
+                case ParticleSystemCurveMode.Constant:
+                case ParticleSystemCurveMode.Curve:
+                case ParticleSystemCurveMode.TwoCurves:
+                    emission.rateOverTimeMultiplier = num8;
+                    break;
+                case ParticleSystemCurveMode.TwoConstants:
+                {
+                    ParticleSystem.MinMaxCurve rateOverTime = emission.rateOverTime;
+                    rateOverTime.constantMin = cloudParticleSystemInstance.defaultEmissionRateMin * num8;
+                    rateOverTime.constantMax = cloudParticleSystemInstance.defaultEmissionRateMax * num8;
+                    emission.rateOverTime = rateOverTime;
+                    break;
+                }
+                }
             }
             if (cloudParticleSystemInstance.material != null)
             {
@@ -1196,6 +1216,27 @@ public class LevelLighting
                     Color value2 = cloudColor.WithAlpha(cloudParticleSystemMaterialColor.defaultColorAlpha);
                     cloudParticleSystemInstance.material.SetColor(cloudParticleSystemMaterialColor.propertyId, value2);
                 }
+            }
+        }
+    }
+
+    /// <summary>
+    /// Nelson 2025-09-01: hacking this in to reset cloud particle systems when changing time
+    /// in the level editor. Otherwise, it's hard to tell how the intensity affects them.
+    /// </summary>
+    internal static void EditorDirtyClouds()
+    {
+        if (cloudOverrideParticles == null)
+        {
+            return;
+        }
+        CloudParticleSystemInstance[] array = cloudOverrideParticles;
+        for (int i = 0; i < array.Length; i++)
+        {
+            CloudParticleSystemInstance cloudParticleSystemInstance = array[i];
+            if (cloudParticleSystemInstance.particleSystem != null)
+            {
+                cloudParticleSystemInstance.particleSystem.Simulate(0f, withChildren: true, restart: true);
             }
         }
     }
@@ -1294,9 +1335,12 @@ public class LevelLighting
                             reference.propertyId = Shader.PropertyToID(name);
                             reference.defaultColorAlpha = material.GetColor(reference.propertyId).a;
                         }
+                        ParticleSystem.MinMaxCurve rateOverTime = component.emission.rateOverTime;
                         CloudParticleSystemInstance cloudParticleSystemInstance2 = default(CloudParticleSystemInstance);
                         cloudParticleSystemInstance2.config = config;
                         cloudParticleSystemInstance2.particleSystem = component;
+                        cloudParticleSystemInstance2.defaultEmissionRateMin = rateOverTime.constantMin;
+                        cloudParticleSystemInstance2.defaultEmissionRateMax = rateOverTime.constantMax;
                         cloudParticleSystemInstance2.material = material;
                         cloudParticleSystemInstance2.materialColorProperties = array2;
                         CloudParticleSystemInstance item = cloudParticleSystemInstance2;
