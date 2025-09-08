@@ -50,6 +50,18 @@ public class BarricadeDrop
 
     public ItemBarricadeAsset asset { get; protected set; }
 
+    public bool IsChildOfVehicle
+    {
+        get
+        {
+            if (_model != null && _model.parent != null)
+            {
+                return _model.parent.CompareTag("Vehicle");
+            }
+            return false;
+        }
+    }
+
     public static event SalvageRequestHandler OnSalvageRequested_Global;
 
     public BarricadeData GetServersideData()

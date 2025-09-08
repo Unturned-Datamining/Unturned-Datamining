@@ -27,23 +27,21 @@ public class MenuUI : MonoBehaviour
 
     private static bool isAlerting;
 
-    private Transform title;
+    private Transform titleCameraTransform;
 
-    private Transform play;
+    private Transform playCameraTransform;
 
-    private Transform survivors;
+    private Transform survivorsCameraTransform;
 
-    private Transform configuration;
+    private Transform configurationCameraTransform;
 
-    private Transform workshop;
+    private Transform workshopCameraTransform;
 
-    private Transform target;
+    private Transform targetCameraTransform;
 
     private static bool hasHandledCommandLineConnectionRequests;
 
-    private static bool hasPanned;
-
-    private static bool hasTitled;
+    private static bool hasReachedTitleCameraTransform;
 
     internal static MenuUI instance;
 
@@ -565,42 +563,42 @@ public class MenuUI : MonoBehaviour
         window.showCursor = true;
         if (MenuPlayUI.active || MenuPlayConnectUI.active || MenuPlayUI.serverListUI.active || MenuPlayServersUI.serverListFiltersUI.active || MenuPlayServersUI.serverCurationUI.active || MenuPlayServersUI.serverCurationUI.rulesUI.active || MenuPlayServersUI.mapFiltersUI.active || MenuPlayServerInfoUI.active || MenuServerPasswordUI.isActive || MenuPlaySingleplayerUI.active || MenuPlayLobbiesUI.active || MenuPlayConfigUI.active || MenuPlayUI.serverBookmarksUI.active || MenuPlayUI.onlineSafetyUI.active)
         {
-            target = play;
+            targetCameraTransform = playCameraTransform;
         }
         else if (MenuSurvivorsUI.active || MenuSurvivorsCharacterUI.active || MenuSurvivorsAppearanceUI.active || MenuSurvivorsGroupUI.active || MenuSurvivorsClothingUI.active || MenuSurvivorsClothingItemUI.active || MenuSurvivorsClothingInspectUI.active || MenuSurvivorsClothingDeleteUI.active || MenuSurvivorsClothingBoxUI.active || ItemStoreMenu.instance.IsOpen || ItemStoreCartMenu.instance.IsOpen || ItemStoreDetailsMenu.instance.IsOpen || ItemStoreBundleContentsMenu.instance.IsOpen)
         {
-            target = survivors;
+            targetCameraTransform = survivorsCameraTransform;
         }
         else if (MenuConfigurationUI.active || MenuConfigurationOptionsUI.active || MenuConfigurationControlsUI.active || MenuConfigurationGraphicsUI.active || MenuConfigurationDisplayUI.active || MenuConfigurationUI.audioMenu.active)
         {
-            target = configuration;
+            targetCameraTransform = configurationCameraTransform;
         }
         else if (MenuWorkshopUI.active || MenuWorkshopSubmitUI.active || MenuWorkshopEditorUI.active || MenuWorkshopErrorUI.active || MenuWorkshopLocalizationUI.active || MenuWorkshopSpawnsUI.active || MenuWorkshopSubscriptionsUI.active)
         {
-            target = workshop;
+            targetCameraTransform = workshopCameraTransform;
         }
         else
         {
-            target = title;
+            targetCameraTransform = titleCameraTransform;
         }
-        if (target == title)
+        if (targetCameraTransform == titleCameraTransform)
         {
-            if (hasTitled)
+            if (hasReachedTitleCameraTransform)
             {
-                base.transform.position = Vector3.Lerp(base.transform.position, target.position, Time.deltaTime * 4f);
-                base.transform.rotation = Quaternion.Lerp(base.transform.rotation, target.rotation, Time.deltaTime * 4f);
+                base.transform.position = Vector3.Lerp(base.transform.position, targetCameraTransform.position, Time.deltaTime * 4f);
+                base.transform.rotation = Quaternion.Lerp(base.transform.rotation, targetCameraTransform.rotation, Time.deltaTime * 4f);
             }
             else
             {
-                base.transform.position = Vector3.Lerp(base.transform.position, target.position, Time.deltaTime);
-                base.transform.rotation = Quaternion.Lerp(base.transform.rotation, target.rotation, Time.deltaTime);
+                base.transform.position = Vector3.Lerp(base.transform.position, targetCameraTransform.position, Time.deltaTime);
+                base.transform.rotation = Quaternion.Lerp(base.transform.rotation, targetCameraTransform.rotation, Time.deltaTime);
             }
         }
         else
         {
-            hasTitled = true;
-            base.transform.position = Vector3.Lerp(base.transform.position, target.position, Time.deltaTime * 4f);
-            base.transform.rotation = Quaternion.Lerp(base.transform.rotation, target.rotation, Time.deltaTime * 4f);
+            hasReachedTitleCameraTransform = true;
+            base.transform.position = Vector3.Lerp(base.transform.position, targetCameraTransform.position, Time.deltaTime * 4f);
+            base.transform.rotation = Quaternion.Lerp(base.transform.rotation, targetCameraTransform.rotation, Time.deltaTime * 4f);
         }
     }
 
@@ -747,11 +745,11 @@ public class MenuUI : MonoBehaviour
         AudioListener.pause = false;
         if (!Dedicator.IsDedicatedServer)
         {
-            title = base.transform.parent.Find("Title");
-            play = base.transform.parent.Find("Play");
-            survivors = base.transform.parent.Find("Survivors");
-            configuration = base.transform.parent.Find("Configuration");
-            workshop = base.transform.parent.Find("Workshop");
+            titleCameraTransform = base.transform.parent.Find("Title");
+            playCameraTransform = base.transform.parent.Find("Play");
+            survivorsCameraTransform = base.transform.parent.Find("Survivors");
+            configurationCameraTransform = base.transform.parent.Find("Configuration");
+            workshopCameraTransform = base.transform.parent.Find("Workshop");
             window = new SleekWindow();
             container = new SleekFullscreenBox();
             container.SizeScale_X = 1f;
@@ -807,12 +805,12 @@ public class MenuUI : MonoBehaviour
             OptionsSettings.apply();
             GraphicsSettings.apply("loaded menu");
             dashboard = new MenuDashboardUI();
-            if (hasPanned && title != null)
+            if (hasReachedTitleCameraTransform && titleCameraTransform != null)
             {
-                base.transform.position = title.position;
-                base.transform.rotation = title.rotation;
+                base.transform.position = titleCameraTransform.position;
+                base.transform.rotation = titleCameraTransform.rotation;
             }
-            hasPanned = true;
+            MenuOverridableObjects.OnMenuOverridesApplied += OnMenuOverridesApplied;
             if (!hasHandledCommandLineConnectionRequests)
             {
                 hasHandledCommandLineConnectionRequests = true;
@@ -826,10 +824,26 @@ public class MenuUI : MonoBehaviour
         }
     }
 
+    private void OnMenuOverridesApplied(MenuOverridableObjects source)
+    {
+        Vector3 position;
+        Quaternion rotation;
+        if (hasReachedTitleCameraTransform)
+        {
+            titleCameraTransform.GetPositionAndRotation(out position, out rotation);
+        }
+        else
+        {
+            source.initialCamera.transform.GetPositionAndRotation(out position, out rotation);
+        }
+        base.transform.SetPositionAndRotation(position, rotation);
+    }
+
     private void OnDestroy()
     {
         if (window != null)
         {
+            MenuOverridableObjects.OnMenuOverridesApplied -= OnMenuOverridesApplied;
             if (dashboard != null)
             {
                 dashboard.OnDestroy();

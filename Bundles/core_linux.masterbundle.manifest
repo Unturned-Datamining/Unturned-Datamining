@@ -1,9 +1,9 @@
 ManifestFileVersion: 0
-CRC: 2200889887
+CRC: 1820728420
 Hashes:
   AssetFileHash:
     serializedVersion: 2
-    Hash: 32e9719d8a59106329edb859d6adacec
+    Hash: aebb800d786e6629eb80a5b3ee35a051
   TypeTreeHash:
     serializedVersion: 2
     Hash: 49ad314d7545c707b1d76e2f0d39250c
@@ -639,6 +639,7 @@ Assets:
 - Assets/CoreMasterBundle/Objects/Medium/Business/Quarry_Catwalk_0/Nav.prefab
 - Assets/CoreMasterBundle/Items/Barricades/Landmine/Item.prefab
 - Assets/CoreMasterBundle/Items/Hats/FranceHistorical_Crown/Hat.prefab
+- Assets/CoreMasterBundle/Objects/Promo/LS_Promo_0/Nav.prefab
 - Assets/CoreMasterBundle/Skins/Katana/Cardboard/Skin_Primary.mat
 - Assets/CoreMasterBundle/Objects/Large/Roads/Bridge_Line_Cap_0/Object.prefab
 - Assets/CoreMasterBundle/Items/Shirts/Molt_Hoodie/Item.prefab
@@ -3133,6 +3134,7 @@ Assets:
 - Assets/CoreMasterBundle/Skins/Machete/Elver_Machete/Skin_Primary.mat
 - Assets/CoreMasterBundle/Items/Barricades/Umbrella_Purple/Animations.prefab
 - Assets/CoreMasterBundle/Items/Outfits/Beekeeper/Beekeeper_Hat/Item.prefab
+- Assets/CoreMasterBundle/Objects/Promo/LS_Promo_0/Skybox.prefab
 - Assets/CoreMasterBundle/Items/Barricades/Cot_Green/Barricade.prefab
 - Assets/CoreMasterBundle/Items/RioRemastered/Free/Rio_Soccer_Top_Spain/Item.prefab
 - Assets/CoreMasterBundle/Items/Barricades/Stack_Plank_Pine/Animations.prefab
@@ -4313,13 +4315,13 @@ Assets:
 - Assets/CoreMasterBundle/Terrain/Materials/Peaks/Grass_04_Source.psd
 - Assets/CoreMasterBundle/Items/Shirts/Shirt_Orange/Item.prefab
 - Assets/CoreMasterBundle/Items/Shirts/Snowman_Top/Shirt.png
-- Assets/CoreMasterBundle/Skins/Desert_Falcon/Constellation/Skin_Secondary_489.mat
+- Assets/CoreMasterBundle/Objects/Medium/Parks/Chair_Lawn_1/Object.prefab
 - Assets/CoreMasterBundle/Items/Barricades/Library_Birch/Barricade.prefab
 - Assets/CoreMasterBundle/Items/Buak/Buak_Skeleton_Pants/Material.mat
 - Assets/CoreMasterBundle/Items/Detonators/Detonator/Animations.prefab
 - Assets/CoreMasterBundle/Items/Glasses/Rose_Tinted/Item.prefab
+- Assets/CoreMasterBundle/Skins/Desert_Falcon/Constellation/Skin_Secondary_489.mat
 - Assets/CoreMasterBundle/Items/Backpacks/BelgiumAcid_Canister/Backpack.prefab
-- Assets/CoreMasterBundle/Objects/Medium/Parks/Chair_Lawn_1/Object.prefab
 - Assets/CoreMasterBundle/Objects/Medium/Business/Computer_1/Nav.prefab
 - Assets/CoreMasterBundle/Skins/Axe_Fire/Marked/Albedo.png
 - Assets/CoreMasterBundle/Items/Shirts/Gingerbread_Top/Shirt.png
@@ -4806,6 +4808,7 @@ Assets:
 - Assets/CoreMasterBundle/Skins/Maplestrike/Insane/Skin_Secondary_21.mat
 - Assets/CoreMasterBundle/Effects/Physics/Footstep/Water_Walk/footstep_water_walk_02.wav
 - Assets/CoreMasterBundle/Items/Tools/Vehicle_Spraypaint_LightGray/Animations.prefab
+- Assets/CoreMasterBundle/Objects/Promo/LS_Promo_1/Object.prefab
 - Assets/CoreMasterBundle/Objects/Large/Vehicles/Van_Red/Nav.prefab
 - Assets/CoreMasterBundle/Vehicles/Tank/Ignition.mp3
 - Assets/CoreMasterBundle/Items/Vests/Kratos_Shoulder/Vest.prefab
@@ -5324,6 +5327,7 @@ Assets:
 - Assets/CoreMasterBundle/Skins/Ekho/Darkheart/Skin_Attachment.mat
 - Assets/CoreMasterBundle/Items/Tools/Vehicle_Spraypaint_MidnightBlack/Animations.prefab
 - Assets/CoreMasterBundle/Items/Structures/Wall_Ramp_Metal/Structure.prefab
+- Assets/CoreMasterBundle/Items/Boxes/Limestone_Box/Item.prefab
 - Assets/CoreMasterBundle/Objects/Medium/Furniture/Table_Wood_0/Nav.prefab
 - Assets/CoreMasterBundle/Items/Shirts/Shirt_Snow/Material.mat
 - Assets/CoreMasterBundle/Skins/Maplestrike/Backyard/Skin_Tertiary.mat
@@ -8523,6 +8527,7 @@ Assets:
 - Assets/CoreMasterBundle/Vehicles/Engine_Balloon/Engine_Balloon_Loop.ogg
 - Assets/CoreMasterBundle/Skins/Patterns/Bluesteel/Skin_Tertiary.mat
 - Assets/CoreMasterBundle/Trees/Pine_2/Stump.prefab
+- Assets/CoreMasterBundle/Objects/Promo/LS_Promo.fbx
 - Assets/CoreMasterBundle/Items/Structures/Roof_Birch_Triangle/Animations.prefab
 - Assets/CoreMasterBundle/Skins/Yuri/Hieroglyphic/Skin_Primary.mat
 - Assets/CoreMasterBundle/Objects/Large/Scenery/Boulder_04/Skybox.prefab
@@ -9177,6 +9182,7 @@ Assets:
 - Assets/CoreMasterBundle/Objects/Large/Buildings/Barracks_France_0/Object.prefab
 - Assets/CoreMasterBundle/Effects/Physics/MeleeImpact/MetalLight/metal_impact_light_02.wav
 - Assets/CoreMasterBundle/Mythics/Melting/System_Third.prefab
+- Assets/CoreMasterBundle/Objects/Promo/LS_Promo_1/Nav.prefab
 - Assets/CoreMasterBundle/Effects/Physics/MeleeImpact/Grass/sweeping_broom_leaves_stones_14.wav
 - Assets/CoreMasterBundle/Objects/Large/Roads/Bridge_Line_5/Skybox.prefab
 - Assets/CoreMasterBundle/Objects/Large/Buildings/House_07/Object.prefab
@@ -12005,8 +12011,8 @@ Assets:
 - Assets/CoreMasterBundle/Effects/Physics/Footstep/Wood_Run/footstep_wood_run_08.wav
 - Assets/CoreMasterBundle/Skins/Honeybadger/Foxtail/Skin_Attachment.mat
 - Assets/CoreMasterBundle/Items/Magazines/Paintballs_Red_35/Magazine.prefab
-- Assets/CoreMasterBundle/Skins/Desert_Falcon/Constellation/Skin_Attachment.mat
 - Assets/CoreMasterBundle/Skins/Avenger/Crimson/Skin_Attachment.mat
+- Assets/CoreMasterBundle/Skins/Desert_Falcon/Constellation/Skin_Attachment.mat
 - Assets/CoreMasterBundle/Objects/Large/Roads/Road_Quad_Cap_0/Object.prefab
 - Assets/CoreMasterBundle/Items/Pants/Ghillie_Bottom/Pants.png
 - Assets/CoreMasterBundle/Items/Masks/Bandana_Blue/Item.prefab
@@ -12474,9 +12480,10 @@ Assets:
 - Assets/CoreMasterBundle/Objects/Large/Buildings/Trailer_1/Skybox.prefab
 - Assets/CoreMasterBundle/Skins/Bane/Native/Skin_Primary.mat
 - Assets/CoreMasterBundle/Skins/Zubeknakov/Apex/Override_Mesh_0.prefab
-- Assets/CoreMasterBundle/Skins/Zubeknakov/UMarine/Skin_Secondary_144.mat
+- Assets/CoreMasterBundle/Objects/Promo/LS_Promo_0/Object.prefab
 - Assets/CoreMasterBundle/Skins/Patterns/Honeycomb_1024x1024/Skin_Primary.mat
 - Assets/CoreMasterBundle/Items/Shirts/Skeleton_Top/Shirt.png
+- Assets/CoreMasterBundle/Skins/Zubeknakov/UMarine/Skin_Secondary_144.mat
 - Assets/CoreMasterBundle/Skins/Colt/Pearl/Skin_Primary.mat
 - Assets/CoreMasterBundle/Items/Masks/BattlEye_Mask/Item.prefab
 - Assets/CoreMasterBundle/Skins/Viper/CC24_DevTex/Skin_Secondary_153.mat

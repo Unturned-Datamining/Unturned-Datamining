@@ -550,6 +550,10 @@ public class UseableGun : Useable
         {
             playGunshot();
         }
+        if (equippedGunAsset.ShouldEjectCasingAfterShooting)
+        {
+            EjectCasingAfterShooting();
+        }
         if (barrelAsset == null || !barrelAsset.isBraked)
         {
             if (firstMuzzleEmitter != null && base.player.look.perspective == EPlayerPerspective.FIRST && !equippedGunAsset.isTurret)
@@ -724,22 +728,27 @@ public class UseableGun : Useable
         }
     }
 
+    private void EjectCasingAfterShooting()
+    {
+        if (firstShellEmitter != null && base.player.look.perspective == EPlayerPerspective.FIRST && !equippedGunAsset.isTurret)
+        {
+            firstShellEmitter.Emit(1);
+        }
+        if (thirdShellEmitter != null)
+        {
+            thirdShellEmitter.Emit(1);
+        }
+    }
+
     private void shoot()
     {
         if (gunshotAudioSource != null)
         {
             playGunshot();
         }
-        if (equippedGunAsset.action == EAction.Trigger || equippedGunAsset.action == EAction.Minigun)
+        if (equippedGunAsset.ShouldEjectCasingAfterShooting)
         {
-            if (firstShellEmitter != null && base.player.look.perspective == EPlayerPerspective.FIRST && !equippedGunAsset.isTurret)
-            {
-                firstShellEmitter.Emit(1);
-            }
-            if (thirdShellEmitter != null)
-            {
-                thirdShellEmitter.Emit(1);
-            }
+            EjectCasingAfterShooting();
         }
         if (thirdAttachments.barrelModel == null || !thirdAttachments.barrelAsset.isBraked || base.player.equipment.state[16] == 0)
         {
@@ -2533,7 +2542,7 @@ public class UseableGun : Useable
             {
                 firstAttachments.rope.gameObject.SetActive(value: true);
             }
-            if (firstAttachments.ejectHook != null && equippedGunAsset.action != EAction.String && equippedGunAsset.action != EAction.Rocket)
+            if (firstAttachments.ejectHook != null)
             {
                 EffectAsset effectAsset = equippedGunAsset.FindShellEffectAsset();
                 if (effectAsset != null && effectAsset.effect != null)
@@ -2618,7 +2627,7 @@ public class UseableGun : Useable
             whir.outputAudioMixerGroup = UnturnedAudioMixer.GetDefaultGroup();
             whir.Play();
         }
-        if (thirdAttachments.ejectHook != null && equippedGunAsset.action != EAction.String && equippedGunAsset.action != EAction.Rocket)
+        if (thirdAttachments.ejectHook != null)
         {
             EffectAsset effectAsset3 = equippedGunAsset.FindShellEffectAsset();
             if (effectAsset3 != null && effectAsset3.effect != null)

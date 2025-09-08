@@ -74,6 +74,8 @@ public class ItemPlaceableAsset : ItemAsset
     /// </summary>
     public CachingAssetRef[] PlaceableProvidedCraftingTags { get; protected set; }
 
+    public EPlaceableExplosionEffectFlags ExplosionEffectFlags { get; set; }
+
     [Obsolete("Replaced by SalvageItemRef which supports spawn tables as well")]
     public AssetReference<ItemAsset> salvageItemRef => new AssetReference<ItemAsset>(SalvageItemRef.Guid);
 
@@ -225,6 +227,14 @@ public class ItemPlaceableAsset : ItemAsset
             _itemDroppedOnDestroyRef = this;
         }
         PlaceableProvidedCraftingTags = p.data.ParseArrayOfStructs<CachingAssetRef>("PlaceableProvidesCraftingTags");
+        if (p.data.ParseBool("ExplosionEffect_CopyModelPosition"))
+        {
+            ExplosionEffectFlags |= EPlaceableExplosionEffectFlags.CopyModelPosition;
+        }
+        if (p.data.ParseBool("ExplosionEffect_CopyModelRotation"))
+        {
+            ExplosionEffectFlags |= EPlaceableExplosionEffectFlags.CopyModelRotation;
+        }
     }
 
     internal override void BuildCargoData(CargoBuilder builder)

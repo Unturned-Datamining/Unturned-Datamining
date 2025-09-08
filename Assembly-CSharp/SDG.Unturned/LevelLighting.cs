@@ -246,6 +246,8 @@ public class LevelLighting
 
     private static Rain puddles;
 
+    private static bool cloudOverrideParticlesNeedRestart;
+
     private static CloudParticleSystemInstance[] cloudOverrideParticles;
 
     private static float auroraBorealisCurrentIntensity;
@@ -1218,27 +1220,29 @@ public class LevelLighting
                 }
             }
         }
+        if (!cloudOverrideParticlesNeedRestart)
+        {
+            return;
+        }
+        cloudOverrideParticlesNeedRestart = false;
+        array = cloudOverrideParticles;
+        for (int i = 0; i < array.Length; i++)
+        {
+            CloudParticleSystemInstance cloudParticleSystemInstance2 = array[i];
+            if (cloudParticleSystemInstance2.particleSystem != null)
+            {
+                cloudParticleSystemInstance2.particleSystem.Simulate(0f, withChildren: true, restart: true);
+            }
+        }
     }
 
     /// <summary>
     /// Nelson 2025-09-01: hacking this in to reset cloud particle systems when changing time
     /// in the level editor. Otherwise, it's hard to tell how the intensity affects them.
     /// </summary>
-    internal static void EditorDirtyClouds()
+    public static void MarkParticleCloudsNeedRestart()
     {
-        if (cloudOverrideParticles == null)
-        {
-            return;
-        }
-        CloudParticleSystemInstance[] array = cloudOverrideParticles;
-        for (int i = 0; i < array.Length; i++)
-        {
-            CloudParticleSystemInstance cloudParticleSystemInstance = array[i];
-            if (cloudParticleSystemInstance.particleSystem != null)
-            {
-                cloudParticleSystemInstance.particleSystem.Simulate(0f, withChildren: true, restart: true);
-            }
-        }
+        cloudOverrideParticlesNeedRestart = true;
     }
 
     private static void updateHolidayWeatherRestrictions()
@@ -1285,6 +1289,7 @@ public class LevelLighting
             }
             cloudOverrideParticles = null;
         }
+        cloudOverrideParticlesNeedRestart = true;
         if (!Dedicator.IsDedicatedServer)
         {
             skybox = (Material)UnityEngine.Object.Instantiate(Resources.Load("Level/Skybox"));

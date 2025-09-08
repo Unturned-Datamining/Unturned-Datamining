@@ -43,6 +43,32 @@ public class PlayerInputPacket
 
     public float pitch;
 
+    private static List<Collider> tempColliders = new List<Collider>();
+
+    private bool IsBarricadeHitWithinBounds(InputInfo info, BarricadeDrop barricade)
+    {
+        if (barricade.IsChildOfVehicle || barricade.asset.hasClipPrefab)
+        {
+            return (info.point - barricade.model.position).sqrMagnitude < 256f;
+        }
+        if (info.colliderTransform == null)
+        {
+            return false;
+        }
+        tempColliders.Clear();
+        info.colliderTransform.GetComponents(tempColliders);
+        foreach (Collider tempCollider in tempColliders)
+        {
+            Bounds bounds = tempCollider.bounds;
+            bounds.Expand(0.1f);
+            if (bounds.Contains(info.point))
+            {
+                return true;
+            }
+        }
+        return false;
+    }
+
     public virtual void read(SteamChannel channel, NetPakReader reader)
     {
         reader.ReadUInt32(out clientSimulationFrameNumber);
@@ -99,8 +125,8 @@ public class PlayerInputPacket
                 reader.ReadNormalVector3(out inputInfo.direction);
                 reader.ReadNormalVector3(out inputInfo.normal);
                 reader.ReadEnum(out inputInfo.limb);
-                reader.ReadSteamID(out CSteamID value14);
-                Player player = PlayerTool.getPlayer(value14);
+                reader.ReadSteamID(out CSteamID value9);
+                Player player = PlayerTool.getPlayer(value9);
                 if (player != null)
                 {
                     bool flag = false;
@@ -143,8 +169,8 @@ public class PlayerInputPacket
                 reader.ReadNormalVector3(out inputInfo.direction);
                 reader.ReadNormalVector3(out inputInfo.normal);
                 reader.ReadEnum(out inputInfo.limb);
-                reader.ReadUInt16(out var value8);
-                Zombie zombie = ZombieManager.getZombie(inputInfo.point, value8);
+                reader.ReadUInt16(out var value14);
+                Zombie zombie = ZombieManager.getZombie(inputInfo.point, value14);
                 if (zombie != null)
                 {
                     if (new Vector2(inputInfo.point.x - zombie.transform.position.x, inputInfo.point.z - zombie.transform.position.z).sqrMagnitude < 256f)
@@ -180,8 +206,8 @@ public class PlayerInputPacket
                 reader.ReadNormalVector3(out inputInfo.direction);
                 reader.ReadNormalVector3(out inputInfo.normal);
                 reader.ReadEnum(out inputInfo.limb);
-                reader.ReadUInt16(out var value13);
-                Animal animal = AnimalManager.getAnimal(value13);
+                reader.ReadUInt16(out var value7);
+                Animal animal = AnimalManager.getAnimal(value7);
                 if (animal != null && (inputInfo.point - animal.transform.position).sqrMagnitude < 256f)
                 {
                     inputInfo.materialName = "Flesh_Dynamic";
@@ -202,9 +228,9 @@ public class PlayerInputPacket
                 reader.ReadNormalVector3(out inputInfo.normal);
                 reader.ReadPhysicsMaterialName(out inputInfo.materialName);
                 inputInfo.material = PhysicsTool.GetLegacyMaterialByName(inputInfo.materialName);
-                reader.ReadUInt32(out var value7);
+                reader.ReadUInt32(out var value8);
                 reader.ReadTransform(out inputInfo.colliderTransform);
-                InteractableVehicle interactableVehicle = VehicleManager.findVehicleByNetInstanceID(value7);
+                InteractableVehicle interactableVehicle = VehicleManager.findVehicleByNetInstanceID(value8);
                 float num2 = interactableVehicle?.asset?.ValidHitDistanceMultiplier ?? 1f;
                 float num3 = 64f * num2;
                 float num4 = num3 * num3;
@@ -226,17 +252,13 @@ public class PlayerInputPacket
                 reader.ReadNormalVector3(out inputInfo.normal);
                 reader.ReadPhysicsMaterialName(out inputInfo.materialName);
                 inputInfo.material = PhysicsTool.GetLegacyMaterialByName(inputInfo.materialName);
-                reader.ReadNetId(out var value12);
+                reader.ReadNetId(out var value13);
                 reader.ReadTransform(out inputInfo.colliderTransform);
-                BarricadeDrop barricadeDrop = NetIdRegistry.Get<BarricadeDrop>(value12);
-                if (barricadeDrop != null)
+                BarricadeDrop barricadeDrop = NetIdRegistry.Get<BarricadeDrop>(value13);
+                if (barricadeDrop != null && barricadeDrop.asset != null && barricadeDrop.model != null)
                 {
-                    Transform model = barricadeDrop.model;
-                    if (model != null && (inputInfo.point - model.position).sqrMagnitude < 256f)
-                    {
-                        inputInfo.transform = model;
-                    }
-                    else
+                    inputInfo.transform = barricadeDrop.model;
+                    if (!IsBarricadeHitWithinBounds(inputInfo, barricadeDrop))
                     {
                         inputInfo = null;
                     }
@@ -260,10 +282,10 @@ public class PlayerInputPacket
                 StructureDrop structureDrop = NetIdRegistry.Get<StructureDrop>(value15);
                 if (structureDrop != null)
                 {
-                    Transform model2 = structureDrop.model;
-                    if (model2 != null && (inputInfo.point - model2.position).sqrMagnitude < 256f)
+                    Transform model = structureDrop.model;
+                    if (model != null && (inputInfo.point - model.position).sqrMagnitude < 256f)
                     {
-                        inputInfo.transform = model2;
+                        inputInfo.transform = model;
                     }
                     else
                     {
@@ -284,11 +306,11 @@ public class PlayerInputPacket
                 reader.ReadNormalVector3(out inputInfo.normal);
                 reader.ReadPhysicsMaterialName(out inputInfo.materialName);
                 inputInfo.material = PhysicsTool.GetLegacyMaterialByName(inputInfo.materialName);
-                reader.ReadUInt8(out var value9);
                 reader.ReadUInt8(out var value10);
-                reader.ReadUInt16(out var value11);
+                reader.ReadUInt8(out var value11);
+                reader.ReadUInt16(out var value12);
                 reader.ReadTransform(out inputInfo.colliderTransform);
-                Transform resource = ResourceManager.getResource(value9, value10, value11);
+                Transform resource = ResourceManager.getResource(value10, value11, value12);
                 if (resource != null && (inputInfo.point - resource.transform.position).sqrMagnitude < 256f)
                 {
                     inputInfo.transform = resource;

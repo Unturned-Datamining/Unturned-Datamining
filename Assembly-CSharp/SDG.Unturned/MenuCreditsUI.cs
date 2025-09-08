@@ -105,12 +105,13 @@ public class MenuCreditsUI
         Array.Sort(obj);
         AddRowColumns(obj, ref verticalOffset);
         AddHeader(localization.format("Header_MapCreators"), ref verticalOffset);
-        string[] obj2 = new string[39]
+        string[] obj2 = new string[41]
         {
             "Nicolas \"Putin3D\" Arisi", "Mia \"Myria\" Brookman", "Ben \"Paladin\" Hoefer", "Nathan \"Wolf_Maniac\" Zwerka", "Nolan \"Nolamo\" Ross", "Husky", "Emily Barry", "Justin \"Gamez2much\" Morton", "Terran \"Spyjack\" Orion", "Alex \"Rain\" Storanov",
             "Amanda \"Mooki2much\" Hubler", "Joshua \"Storm_Epidemic\" Rist", "Th3o", "Diesel_Sisel", "Misterl212", "Mitch \"Sketches\" Wheaton", "AnimaticFreak", "NSTM", "Maciej \"Renaxon\" Maziarz", "Daniel \"danaby2\" Segboer",
             "Dug", "Thom \"Spebby\" Mott", "Steven \"MeloCa\" Nadeau", "Ethan \"Vilespring\" Lossner", "SluggedCascade", "Sam \"paper_walls84\" Clerke", "clue", "Vilaskis \"BATTLEKOT\" Shaleshev", "Andrii \"TheCubicNoobik\" Vitiv", "Oleksandr \"BlackLion\" Shcherba",
-            "Dmitriy \"Potatoes\" Usenko", "Liya \"Ms.Evrika\" Bognat", "Denis \"Flodo\" Souza", "João \"L2\" Vitor", "Josh \"Leprechan12\" Hogan", "Toothy Deerryte", "Witness Protection", "Maria \"Zefirka\" Kosyakova", "Sultan \"Sultan\" Sultanović"
+            "Dmitriy \"Potatoes\" Usenko", "Liya \"Ms.Evrika\" Bognat", "Denis \"Flodo\" Souza", "João \"L2\" Vitor", "Josh \"Leprechan12\" Hogan", "Toothy Deerryte", "Witness Protection", "Maria \"Zefirka\" Kosyakova", "Sultan \"Sultan\" Sultanović", "LVOmega",
+            "janeks"
         };
         Array.Sort(obj2);
         AddRowColumns(obj2, ref verticalOffset);

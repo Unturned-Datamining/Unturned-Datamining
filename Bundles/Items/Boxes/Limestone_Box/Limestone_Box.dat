@@ -1,0 +1,38 @@
+GUID dfaa252b6a6344b69471da2ecbfba10e
+Type Box
+
+Size_X 1
+Size_Y 1
+
+Generate 21086
+
+Contains_Bonus_Items True
+
+Drops 25
+Drop_0 -1
+Drop_1 "111801" // Wendigo Shirt
+Drop_2 "111901" // Acid Burn Shirt
+Drop_3 "112001" // Beachside Sneakers
+Drop_4 "112101" // Crewmate Backpack
+Drop_5 "112201" // Crewmate Helmet
+Drop_6 "112301" // Flak Vest
+Drop_7 "112401" // Supervisor's Toolbag
+Drop_8 "112501" // Imp Horns
+Drop_9 "112601" // Imp Tail
+Drop_10 "112701" // Lifeguard Vest
+Drop_11 "112801" // Oversize Shirt Modifier
+Drop_12 "112901" // Patrol Rig
+Drop_13 "113001" // Perched Glasses
+Drop_14 "113101" // Recon Cap
+Drop_15 "113201" // Shark Pack
+Drop_16 "113301" // Timberline Shirt
+Drop_17 "113401" // Tower Bag
+Drop_18 "113501" // Vanguard Vest
+Drop_19 "113601" // Tactical VR Headset
+Drop_20 "113701" // Whiskers
+Drop_21 "113801" // Windproof Jacket
+Drop_22 "113901" // Wireles Earbuds
+Drop_23 "114001" // Wolf Mask
+Drop_24 "114101" // Zip-Up Hoodie Modifier
+
+Pro

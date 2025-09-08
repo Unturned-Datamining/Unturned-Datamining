@@ -66,6 +66,12 @@ public class ItemBarricadeAsset : ItemPlaceableAsset
 
     private ushort _vehicleId;
 
+    /// <summary>
+    /// Nelson 2025-09-08: experimentally exposing to PlayerInput for server-side barricade hit validation. If
+    /// hasClipPrefab is false then client-supplied colliderTransform must be valid.
+    /// </summary>
+    internal bool hasClipPrefab;
+
     public GameObject barricade => _barricade;
 
     [Obsolete("Only one of Barricade.prefab or Clip.prefab are loaded now as _barricade")]
@@ -265,8 +271,9 @@ public class ItemBarricadeAsset : ItemPlaceableAsset
     public override void PopulateAsset(in PopulateAssetParameters p)
     {
         base.PopulateAsset(in p);
+        hasClipPrefab = p.data.ParseBool("Has_Clip_Prefab", defaultValue: true);
         bool flag;
-        if (Dedicator.IsDedicatedServer && p.data.ParseBool("Has_Clip_Prefab", defaultValue: true))
+        if (Dedicator.IsDedicatedServer && hasClipPrefab)
         {
             _barricade = p.bundle.load<GameObject>("Clip");
             if (barricade == null)

@@ -741,6 +741,18 @@ public class Characters : MonoBehaviour
         }
     }
 
+    private void ResetCharacterYaw(MenuOverridableObjects source)
+    {
+        characterOffset = character.transform.eulerAngles.y;
+        _characterYaw = characterOffset;
+        characterYaw = 0f;
+    }
+
+    private void OnDestroy()
+    {
+        MenuOverridableObjects.OnMenuOverridesApplied -= ResetCharacterYaw;
+    }
+
     internal void customStart()
     {
         character = GameObject.Find("Hero").transform;
@@ -754,9 +766,8 @@ public class Characters : MonoBehaviour
             .Find("Secondary_Melee");
         secondaryGunSlot = character.Find("Skeleton").Find("Right_Hip").Find("Right_Leg")
             .Find("Secondary_Gun");
-        characterOffset = character.transform.eulerAngles.y;
-        _characterYaw = characterOffset;
-        characterYaw = 0f;
+        MenuOverridableObjects.OnMenuOverridesApplied += ResetCharacterYaw;
+        ResetCharacterYaw(null);
         previewItemDefId = 0;
         previewItemSolo = false;
         hasDropped = false;

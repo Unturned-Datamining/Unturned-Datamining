@@ -247,7 +247,18 @@ public class StructureManager : SteamCaller
             if (effectAsset != null)
             {
                 TriggerEffectParameters parameters = new TriggerEffectParameters(effectAsset);
-                parameters.position = transform.position + Vector3.down * HEIGHT;
+                if (asset.ExplosionEffectFlags.HasFlag(EPlaceableExplosionEffectFlags.CopyModelPosition))
+                {
+                    parameters.position = transform.position;
+                }
+                else
+                {
+                    parameters.position = transform.position + Vector3.down * HEIGHT;
+                }
+                if (asset.ExplosionEffectFlags.HasFlag(EPlaceableExplosionEffectFlags.CopyModelRotation))
+                {
+                    parameters.SetRotation(transform.rotation);
+                }
                 parameters.relevantDistance = EffectManager.MEDIUM;
                 parameters.reliable = true;
                 EffectManager.triggerEffect(parameters);

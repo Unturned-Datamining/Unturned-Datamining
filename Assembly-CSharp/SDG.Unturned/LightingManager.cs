@@ -153,6 +153,7 @@ public class LightingManager : SteamCaller
             _cycle = ((value != 0) ? value : 3600u);
             if (Provider.isServer)
             {
+                LevelLighting.MarkParticleCloudsNeedRestart();
                 manager.updateLighting();
                 SendLightingCycle.Invoke(ENetReliability.Reliable, Provider.GatherRemoteClientConnections(), cycle);
             }
@@ -173,6 +174,7 @@ public class LightingManager : SteamCaller
             }
             _offset = Provider.time - value;
             _time = value;
+            LevelLighting.MarkParticleCloudsNeedRestart();
             manager.updateLighting();
             SendLightingOffset.Invoke(ENetReliability.Reliable, Provider.GatherRemoteClientConnections(), offset);
         }
@@ -383,6 +385,7 @@ public class LightingManager : SteamCaller
         {
             ClientAssetIntegrity.QueueRequest(activeWeatherGuid, asset, "ReceiveInitialLightingState");
         }
+        LevelLighting.MarkParticleCloudsNeedRestart();
         manager.updateLighting();
         LevelLighting.moon = moon;
         isCycled = day > LevelLighting.bias;
@@ -419,6 +422,7 @@ public class LightingManager : SteamCaller
     {
         _offset = Provider.time - (uint)(day * (float)newScale);
         _cycle = newScale;
+        LevelLighting.MarkParticleCloudsNeedRestart();
         manager.updateLighting();
     }
 
@@ -432,6 +436,7 @@ public class LightingManager : SteamCaller
     public static void ReceiveLightingOffset(uint newOffset)
     {
         _offset = newOffset;
+        LevelLighting.MarkParticleCloudsNeedRestart();
         manager.updateLighting();
     }
 
@@ -789,6 +794,7 @@ public class LightingManager : SteamCaller
             Level.isLoadingLighting = false;
             if (!Dedicator.IsDedicatedServer)
             {
+                LevelLighting.MarkParticleCloudsNeedRestart();
                 LevelLighting.time = day;
                 LevelLighting.moon = 2;
             }
@@ -811,6 +817,7 @@ public class LightingManager : SteamCaller
             {
                 InitLoadedWeather();
             }
+            LevelLighting.MarkParticleCloudsNeedRestart();
             updateLighting();
             Level.isLoadingLighting = false;
         }

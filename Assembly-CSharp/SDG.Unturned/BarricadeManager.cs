@@ -1218,7 +1218,18 @@ public class BarricadeManager : SteamCaller
         if (effectAsset != null && !(barricade?.model == null))
         {
             TriggerEffectParameters parameters = new TriggerEffectParameters(effectAsset);
-            parameters.position = barricade.model.position + Vector3.down * barricade.asset.offset;
+            if (barricade.asset.ExplosionEffectFlags.HasFlag(EPlaceableExplosionEffectFlags.CopyModelPosition))
+            {
+                parameters.position = barricade.model.position;
+            }
+            else
+            {
+                parameters.position = barricade.model.position + Vector3.down * barricade.asset.offset;
+            }
+            if (barricade.asset.ExplosionEffectFlags.HasFlag(EPlaceableExplosionEffectFlags.CopyModelRotation))
+            {
+                parameters.SetRotation(barricade.model.rotation);
+            }
             parameters.relevantDistance = EffectManager.MEDIUM;
             parameters.reliable = true;
             EffectManager.triggerEffect(parameters);

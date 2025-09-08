@@ -455,6 +455,12 @@ public class ItemGunAsset : ItemWeaponAsset
     /// </summary>
     public int CasingEjectCountAfterReload { get; set; }
 
+    /// <summary>
+    /// If true, emit particles when a shot is fired.
+    /// Defaults to true for EAction.Trigger and EAction.Minigun.
+    /// </summary>
+    public bool ShouldEjectCasingAfterShooting { get; set; }
+
     protected override bool doesItemTypeHaveSkins => true;
 
     public override void BuildDescription(ItemDescriptionBuilder builder, Item itemInstance)
@@ -952,6 +958,8 @@ public class ItemGunAsset : ItemWeaponAsset
         CasingEjectCountAfterRechamberingAfterShooting = p.data.ParseInt32("CasingEjectCountAfterRechamberingAfterShooting", 1);
         int defaultValue4 = ((action == EAction.Break) ? ammoMax : 0);
         CasingEjectCountAfterReload = p.data.ParseInt32("CasingEjectCountAfterReload", defaultValue4);
+        bool defaultValue5 = action == EAction.Trigger || action == EAction.Minigun;
+        ShouldEjectCasingAfterShooting = p.data.ParseBool("EjectCasingAfterShooting", defaultValue5);
         RechamberAfterMagazineAttached = p.data.ParseEnum("RechamberAfterMagazineAttached", ERechamberGunAfterReloadMode.IfAmmoWasEmpty);
         RechamberAfterMagazineDetached = p.data.ParseEnum("RechamberAfterMagazineDetached", ERechamberGunAfterReloadMode.Always);
     }
