@@ -125,17 +125,17 @@ public class PlayerInputPacket
                 reader.ReadNormalVector3(out inputInfo.direction);
                 reader.ReadNormalVector3(out inputInfo.normal);
                 reader.ReadEnum(out inputInfo.limb);
-                reader.ReadSteamID(out CSteamID value9);
-                Player player = PlayerTool.getPlayer(value9);
+                reader.ReadSteamID(out CSteamID value7);
+                Player player = PlayerTool.getPlayer(value7);
                 if (player != null)
                 {
                     bool flag = false;
                     if (player.movement.getVehicle() != null)
                     {
-                        float num5 = player.movement.getVehicle().asset?.ValidHitDistanceMultiplier ?? 1f;
-                        float num6 = 64f * num5;
-                        float num7 = num6 * num6;
-                        if ((inputInfo.point - player.transform.position).sqrMagnitude < num7)
+                        float num2 = player.movement.getVehicle().asset?.ValidHitDistanceMultiplier ?? 1f;
+                        float num3 = 64f * num2;
+                        float num4 = num3 * num3;
+                        if ((inputInfo.point - player.transform.position).sqrMagnitude < num4)
                         {
                             flag = true;
                         }
@@ -169,8 +169,8 @@ public class PlayerInputPacket
                 reader.ReadNormalVector3(out inputInfo.direction);
                 reader.ReadNormalVector3(out inputInfo.normal);
                 reader.ReadEnum(out inputInfo.limb);
-                reader.ReadUInt16(out var value14);
-                Zombie zombie = ZombieManager.getZombie(inputInfo.point, value14);
+                reader.ReadUInt16(out var value9);
+                Zombie zombie = ZombieManager.getZombie(inputInfo.point, value9);
                 if (zombie != null)
                 {
                     if (new Vector2(inputInfo.point.x - zombie.transform.position.x, inputInfo.point.z - zombie.transform.position.z).sqrMagnitude < 256f)
@@ -206,8 +206,8 @@ public class PlayerInputPacket
                 reader.ReadNormalVector3(out inputInfo.direction);
                 reader.ReadNormalVector3(out inputInfo.normal);
                 reader.ReadEnum(out inputInfo.limb);
-                reader.ReadUInt16(out var value7);
-                Animal animal = AnimalManager.getAnimal(value7);
+                reader.ReadUInt16(out var value14);
+                Animal animal = AnimalManager.getAnimal(value14);
                 if (animal != null && (inputInfo.point - animal.transform.position).sqrMagnitude < 256f)
                 {
                     inputInfo.materialName = "Flesh_Dynamic";
@@ -231,10 +231,10 @@ public class PlayerInputPacket
                 reader.ReadUInt32(out var value8);
                 reader.ReadTransform(out inputInfo.colliderTransform);
                 InteractableVehicle interactableVehicle = VehicleManager.findVehicleByNetInstanceID(value8);
-                float num2 = interactableVehicle?.asset?.ValidHitDistanceMultiplier ?? 1f;
-                float num3 = 64f * num2;
-                float num4 = num3 * num3;
-                if (interactableVehicle != null && (interactableVehicle == channel.owner.player.movement.getVehicle() || (inputInfo.point - interactableVehicle.transform.position).sqrMagnitude < num4))
+                float num5 = interactableVehicle?.asset?.ValidHitDistanceMultiplier ?? 1f;
+                float num6 = 64f * num5;
+                float num7 = num6 * num6;
+                if (interactableVehicle != null && (interactableVehicle == channel.owner.player.movement.getVehicle() || (inputInfo.point - interactableVehicle.transform.position).sqrMagnitude < num7))
                 {
                     inputInfo.vehicle = interactableVehicle;
                     inputInfo.transform = interactableVehicle.transform;
@@ -258,7 +258,7 @@ public class PlayerInputPacket
                 if (barricadeDrop != null && barricadeDrop.asset != null && barricadeDrop.model != null)
                 {
                     inputInfo.transform = barricadeDrop.model;
-                    if (!IsBarricadeHitWithinBounds(inputInfo, barricadeDrop))
+                    if (inputInfo.usage.RequiresBarricadeBoundsTest() && !IsBarricadeHitWithinBounds(inputInfo, barricadeDrop))
                     {
                         inputInfo = null;
                     }

@@ -13,9 +13,9 @@ internal class BoundsHistory
     private float expansion;
 
     /// <summary>
-    /// Half second history at 50 tickrate.
+    /// One second history at 50 tickrate.
     /// </summary>
-    private const int CAPACITY = 25;
+    private const int CAPACITY = 50;
 
     public float Expansion
     {
@@ -31,7 +31,7 @@ internal class BoundsHistory
 
     public BoundsHistory()
     {
-        buffer = new Bounds[25];
+        buffer = new Bounds[50];
         writeIndex = 0;
         writeCount = 0;
     }
@@ -45,8 +45,8 @@ internal class BoundsHistory
     public void AddBounds(Bounds bounds)
     {
         buffer[writeIndex] = bounds;
-        writeIndex = (writeIndex + 1) % 25;
-        writeCount = Mathf.Min(writeCount + 1, 25);
+        writeIndex = (writeIndex + 1) % 50;
+        writeCount = Mathf.Min(writeCount + 1, 50);
     }
 
     public void AddCharacterControllerBounds(CharacterController characterController)
@@ -83,7 +83,7 @@ internal class BoundsHistory
             num--;
             if (num < 0)
             {
-                num = 24;
+                num = 49;
             }
             num2++;
         }
@@ -131,7 +131,7 @@ internal class BoundsHistory
             num--;
             if (num < 0)
             {
-                num = 24;
+                num = 49;
             }
             num2++;
         }

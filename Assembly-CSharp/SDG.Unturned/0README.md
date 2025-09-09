@@ -550,6 +550,7 @@
 - [ERaycastInfoType.cs](ERaycastInfoType.cs)
 - [ERaycastInfoUsage_NetEnum.cs](ERaycastInfoUsage_NetEnum.cs)
 - [ERaycastInfoUsage.cs](ERaycastInfoUsage.cs)
+- [ERaycastInfoUsageEx.cs](ERaycastInfoUsageEx.cs)
 - [ERayMask.cs](ERayMask.cs)
 - [EReadTextureFromFileMode.cs](EReadTextureFromFileMode.cs)
 - [ERechamberGunAfterReloadMode.cs](ERechamberGunAfterReloadMode.cs)
