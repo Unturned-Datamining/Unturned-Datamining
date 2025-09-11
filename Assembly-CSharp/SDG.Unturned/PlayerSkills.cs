@@ -331,7 +331,7 @@ public class PlayerSkills : PlayerCaller
 
     public uint cost(int speciality, int index)
     {
-        if (Level.info != null && Level.info.type != ELevelType.ARENA)
+        if ((Provider.modeConfigData?.Players?.Skillset_Reduces_Skill_Cost ?? true) && Level.info != null && Level.info.type != ELevelType.ARENA)
         {
             for (byte b = 0; b < SKILLSETS[(byte)base.channel.owner.skillset].Length; b++)
             {
@@ -746,11 +746,20 @@ public class PlayerSkills : PlayerCaller
                     LevelAsset.SkillRule skillRule = asset.skillRules[i][j];
                     if (skillRule != null)
                     {
+                        Skill skill = skills[i][j];
                         if (skillRule.maxUnlockableLevel > -1)
                         {
-                            skills[i][j].maxUnlockableLevel = skillRule.maxUnlockableLevel;
+                            skill.maxUnlockableLevel = skillRule.maxUnlockableLevel;
                         }
-                        skills[i][j].costMultiplier = skillRule.costMultiplier;
+                        skill.costMultiplier = skillRule.costMultiplier;
+                        if (skillRule.baseCostOverride > -1)
+                        {
+                            skill.baseCost = skillRule.baseCostOverride;
+                        }
+                        if (skillRule.perLevelCostIncreaseOverride > -1)
+                        {
+                            skill.perLevelCostIncrease = skillRule.perLevelCostIncreaseOverride;
+                        }
                     }
                 }
             }
@@ -885,13 +894,16 @@ public class PlayerSkills : PlayerCaller
 
     private bool CanDecreaseLevelOfSkill(int specialityIndex, int skillIndex)
     {
-        int skillset = (int)base.channel.owner.skillset;
-        for (int i = 0; i < SKILLSETS[skillset].Length; i++)
+        if (Provider.modeConfigData?.Players?.Skillset_Prevents_Skill_Loss ?? true)
         {
-            SpecialitySkillPair specialitySkillPair = SKILLSETS[skillset][i];
-            if (specialityIndex == specialitySkillPair.speciality && skillIndex == specialitySkillPair.skill)
+            int skillset = (int)base.channel.owner.skillset;
+            for (int i = 0; i < SKILLSETS[skillset].Length; i++)
             {
-                return false;
+                SpecialitySkillPair specialitySkillPair = SKILLSETS[skillset][i];
+                if (specialityIndex == specialitySkillPair.speciality && skillIndex == specialitySkillPair.skill)
+                {
+                    return false;
+                }
             }
         }
         return true;

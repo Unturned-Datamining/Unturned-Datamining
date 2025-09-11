@@ -21,9 +21,9 @@ public class Skill
     /// </summary>
     public float costMultiplier = 1f;
 
-    private uint _cost;
+    internal int baseCost;
 
-    private float difficulty;
+    internal int perLevelCostIncrease;
 
     public float mastery
     {
@@ -41,7 +41,7 @@ public class Skill
         }
     }
 
-    public uint cost => MathfEx.RoundAndClampToUInt((float)_cost * ((float)(int)level * difficulty + 1f) * costMultiplier);
+    public uint cost => MathfEx.RoundAndClampToUInt((float)(baseCost + level * perLevelCostIncrease) * costMultiplier);
 
     /// <summary>
     /// Get maximum level, or maxUnlockableLevel if set.
@@ -78,7 +78,7 @@ public class Skill
     {
         level = newLevel;
         max = newMax;
-        _cost = newCost;
-        difficulty = newDifficulty;
+        baseCost = (int)newCost;
+        perLevelCostIncrease = Mathf.RoundToInt((float)baseCost * newDifficulty);
     }
 }

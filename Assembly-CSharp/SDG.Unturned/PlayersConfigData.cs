@@ -220,6 +220,16 @@ public class PlayersConfigData
     public bool Spawn_With_Stamina_Skills;
 
     /// <summary>
+    /// If true, skills related to player's skillset/speciality are half cost.
+    /// </summary>
+    public bool Skillset_Reduces_Skill_Cost = true;
+
+    /// <summary>
+    /// If true, skills related to player's skillset/speciality cannot lose levels on death.
+    /// </summary>
+    public bool Skillset_Prevents_Skill_Loss = true;
+
+    /// <summary>
     /// Should guns with Instakill Headshots (snipers) bypass armor?
     /// </summary>
     public bool Allow_Instakill_Headshots;

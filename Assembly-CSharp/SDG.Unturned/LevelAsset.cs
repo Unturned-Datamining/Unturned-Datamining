@@ -37,6 +37,20 @@ public class LevelAsset : Asset
         public int maxUnlockableLevel;
 
         public float costMultiplier;
+
+        /// <summary>
+        /// If &gt;= 0, overrides vanilla skill cost.
+        /// Defaults to -1.
+        /// </summary>
+        public int baseCostOverride;
+
+        /// <summary>
+        /// If &gt;= 0, overrides vanilla increase in skill cost with each level.
+        /// For example, if the base cost is 10 and this is 15, the first level will cost 10 XP,
+        /// the second level 25 XP, the third 40 XP, so on and so forth.
+        /// Defaults to -1.
+        /// </summary>
+        public int perLevelCostIncreaseOverride;
     }
 
     public struct CloudOverrideParticleSystemsPath : IDatParseable
@@ -77,6 +91,27 @@ public class LevelAsset : Asset
                     MaterialColorPropertyNames = new string[1] { "_Color" };
                 }
                 return true;
+            }
+            return false;
+        }
+    }
+
+    public struct DefaultLoadoutItem : IDatParseable
+    {
+        public CachingBcAssetRef assetRef;
+
+        public int amount;
+
+        public EItemOrigin origin;
+
+        public bool TryParse(IDatNode node)
+        {
+            if (node is IDatDictionary dictionary)
+            {
+                bool result = dictionary.TryParseBcAssetRef("Asset", EAssetType.ITEM, out assetRef);
+                amount = dictionary.ParseInt32("Amount", 1);
+                origin = dictionary.ParseEnum("Origin", EItemOrigin.WORLD);
+                return result;
             }
             return false;
         }
@@ -231,6 +266,25 @@ public class LevelAsset : Asset
     public MasterBundleReference<GameObject> CloudOverridePrefab { get; set; }
 
     public CloudOverrideParticleSystemsPath[] CloudOverrideParticleSystemPaths { get; set; }
+
+    /// <summary>
+    /// If set, overrides the per-skillset items players spawn with.
+    /// Can be used to prevent skillset default items in singleplayer.
+    /// Server "Loadout" command takes priority over this option.
+    /// Defaults to null.
+    /// </summary>
+    public DefaultLoadoutItem[][] DefaultSkillsetLoadouts { get; set; }
+
+    public bool HasSkillsetLoadoutsOverride => DefaultSkillsetLoadouts != null;
+
+    public DefaultLoadoutItem[] GetSkillsetLoadoutOrNull(EPlayerSkillset skillset)
+    {
+        if (DefaultSkillsetLoadouts == null)
+        {
+            return null;
+        }
+        return DefaultSkillsetLoadouts[(int)skillset];
+    }
 
     public bool isBlueprintBlacklisted(Blueprint blueprint)
     {
@@ -388,6 +442,8 @@ public class LevelAsset : Asset
                 {
                     skillRule.costMultiplier = 1f;
                 }
+                skillRule.baseCostOverride = datDictionary2.ParseInt32("Base_Cost", -1);
+                skillRule.perLevelCostIncreaseOverride = datDictionary2.ParseInt32("Per_Level_Cost_Increase", -1);
                 skillRules[specialityIndex][skillIndex] = skillRule;
             }
         }
@@ -410,16 +466,30 @@ public class LevelAsset : Asset
         {
             hasClouds = true;
         }
-        if (!p.data.TryGetList("TerrainColors", out var node6))
+        if (p.data.TryGetDictionary("Skillset_Loadouts", out var node6))
+        {
+            int num = 11;
+            DefaultSkillsetLoadouts = new DefaultLoadoutItem[num][];
+            for (int l = 0; l < num; l++)
+            {
+                EPlayerSkillset ePlayerSkillset = (EPlayerSkillset)l;
+                string key = ePlayerSkillset.ToString();
+                if (node6.TryGetList(key, out var node7))
+                {
+                    DefaultSkillsetLoadouts[l] = node7.ParseArrayOfStructs<DefaultLoadoutItem>();
+                }
+            }
+        }
+        if (!p.data.TryGetList("TerrainColors", out var node8))
         {
             return;
         }
-        List<TerrainColorRule> list2 = new List<TerrainColorRule>(node6.Count);
-        for (int l = 0; l < node6.Count; l++)
+        List<TerrainColorRule> list2 = new List<TerrainColorRule>(node8.Count);
+        for (int m = 0; m < node8.Count; m++)
         {
-            IDatNode node7 = node6[l];
+            IDatNode node9 = node8[m];
             TerrainColorRule terrainColorRule = new TerrainColorRule();
-            if (terrainColorRule.TryParse(node7))
+            if (terrainColorRule.TryParse(node9))
             {
                 bool flag = false;
                 Color[] sKINS = Customization.SKINS;
@@ -430,7 +500,7 @@ public class LevelAsset : Asset
                     {
                         flag = true;
                         string arg = Palette.hex(color);
-                        Assets.ReportError(this, $"skipping TerrainColor entry {l} because it blocks default skin color {arg}");
+                        Assets.ReportError(this, $"skipping TerrainColor entry {m} because it blocks default skin color {arg}");
                         break;
                     }
                 }
@@ -441,7 +511,7 @@ public class LevelAsset : Asset
             }
             else
             {
-                Assets.ReportError(this, "unable to parse entry in TerrainColors: " + node7.DebugDumpToString());
+                Assets.ReportError(this, "unable to parse entry in TerrainColors: " + node9.DebugDumpToString());
             }
         }
         if (list2.Count > 0)

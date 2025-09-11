@@ -5,6 +5,7 @@ using SDG.NetPak;
 using SDG.NetTransport;
 using Steamworks;
 using UnityEngine;
+using Unturned.SystemEx;
 
 namespace SDG.Unturned;
 
@@ -1099,6 +1100,38 @@ public class PlayerInventory : PlayerCaller
         SendItemRemove.Invoke(GetNetId(), ENetReliability.Reliable, base.channel.GetOwnerTransportConnection(), page, jar.x, jar.y);
     }
 
+    private void GrantSkillsetLoadout(LevelAsset.DefaultLoadoutItem[] loadout)
+    {
+        for (int i = 0; i < loadout.Length; i++)
+        {
+            LevelAsset.DefaultLoadoutItem defaultLoadoutItem = loadout[i];
+            CachingBcAssetRef assetRef = defaultLoadoutItem.assetRef;
+            Asset asset = assetRef.Get();
+            if (asset == null)
+            {
+                UnturnedLog.warn($"Unable to find skillset loadout asset {defaultLoadoutItem.assetRef}");
+                continue;
+            }
+            if (asset is SpawnAsset spawnAsset)
+            {
+                asset = SpawnTableTool.Resolve(spawnAsset, EAssetType.ITEM, OnGetLevelSkillsetLoadoutSpawnErrorContext);
+                if (asset == null)
+                {
+                    continue;
+                }
+            }
+            if (!(asset is ItemAsset asset2))
+            {
+                UnturnedLog.warn("Level skillset loadout tried to spawn non-item asset " + asset.FriendlyNameWithFriendlyType);
+                continue;
+            }
+            for (int j = 0; j < defaultLoadoutItem.amount; j++)
+            {
+                tryAddItem(new Item(asset2, defaultLoadoutItem.origin), auto: true, playEffect: false);
+            }
+        }
+    }
+
     private void bestowLoadout()
     {
         if (loadout != null && loadout.Length != 0)
@@ -1110,11 +1143,25 @@ public class PlayerInventory : PlayerCaller
         }
         else if (Level.info != null)
         {
-            if (skillsets != null && skillsets[(byte)base.channel.owner.skillset] != null && skillsets[(byte)base.channel.owner.skillset].Length != 0)
+            bool flag = Level.getAsset()?.HasSkillsetLoadoutsOverride ?? false;
+            if (skillsets != SKILLSETS_CLIENT && skillsets != SKILLSETS_SERVER)
             {
-                for (int j = 0; j < skillsets[(byte)base.channel.owner.skillset].Length; j++)
+                flag = false;
+            }
+            int skillset = (int)base.channel.owner.skillset;
+            if (flag)
+            {
+                LevelAsset.DefaultLoadoutItem[] skillsetLoadoutOrNull = Level.getAsset().GetSkillsetLoadoutOrNull(base.channel.owner.skillset);
+                if (!skillsetLoadoutOrNull.IsNullOrEmpty())
                 {
-                    tryAddItem(new Item(skillsets[(byte)base.channel.owner.skillset][j], EItemOrigin.WORLD), auto: true, playEffect: false);
+                    GrantSkillsetLoadout(skillsetLoadoutOrNull);
+                }
+            }
+            else if (skillsets != null && skillsets[skillset] != null && skillsets[skillset].Length != 0)
+            {
+                for (int j = 0; j < skillsets[skillset].Length; j++)
+                {
+                    tryAddItem(new Item(skillsets[skillset][j], EItemOrigin.WORLD), auto: true, playEffect: false);
                 }
             }
             else if (Level.info.type == ELevelType.HORDE)
@@ -1140,6 +1187,11 @@ public class PlayerInventory : PlayerCaller
                 }
             }
         }
+    }
+
+    private string OnGetLevelSkillsetLoadoutSpawnErrorContext()
+    {
+        return "level skillset loadout";
     }
 
     private string OnGetSpawnLoadoutErrorContext()
