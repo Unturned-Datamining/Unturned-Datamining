@@ -271,6 +271,11 @@ public class ObjectAsset : Asset
     public float RubbleAllSectionsDestroyedAlertRadius { get; protected set; }
 
     /// <summary>
+    /// If true, all sections respawn at the same time.
+    /// </summary>
+    public bool RubbleRespawnAllSectionsSimultaneously { get; set; }
+
+    /// <summary>
     /// Only activated during this holiday.
     /// </summary>
     public ENPCHoliday holidayRestriction { get; protected set; }
@@ -814,6 +819,7 @@ public class ObjectAsset : Asset
                 RubbleZombieDamageMultiplier = p.data.ParseFloat("Interactability_Zombie_Damage_Multiplier", 1f);
                 RubbleSectionDestroyedAlertRadius = p.data.ParseFloat("Interactability_Section_Destroyed_Alert_Radius", -1f);
                 RubbleAllSectionsDestroyedAlertRadius = p.data.ParseFloat("Interactability_All_Sections_Destroyed_Alert_Radius", -1f);
+                RubbleRespawnAllSectionsSimultaneously = p.data.ParseBool("Interactability_Respawn_All_Sections_Simultaneously");
                 RubbleNavMode = p.data.ParseEnum("Interactability_Nav_Mode", EObjectRubbleNavMode.Unaffected);
             }
             else if (p.data.ContainsKey("Rubble"))
@@ -835,6 +841,7 @@ public class ObjectAsset : Asset
                 RubbleZombieDamageMultiplier = p.data.ParseFloat("Rubble_Zombie_Damage_Multiplier", 1f);
                 RubbleSectionDestroyedAlertRadius = p.data.ParseFloat("Rubble_Section_Destroyed_Alert_Radius", -1f);
                 RubbleAllSectionsDestroyedAlertRadius = p.data.ParseFloat("Rubble_All_Sections_Destroyed_Alert_Radius", -1f);
+                RubbleRespawnAllSectionsSimultaneously = p.data.ParseBool("Rubble_Respawn_All_Sections_Simultaneously");
                 RubbleNavMode = p.data.ParseEnum("Rubble_Nav_Mode", EObjectRubbleNavMode.Unaffected);
                 if (p.data.ContainsKey("Rubble_Editor"))
                 {

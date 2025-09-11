@@ -190,7 +190,7 @@ public class FoliageInstanceList : IPoolable
             }
             if ((bool)Assets.shouldValidateAssets)
             {
-                if (material.IsKeywordEnabled("ASSUME_UNIFORM_SCALE_ON"))
+                if (material.shader.name.Contains("Uniform Scale"))
                 {
                     if (!foliageInstancedMeshInfoAsset.UniformScale)
                     {

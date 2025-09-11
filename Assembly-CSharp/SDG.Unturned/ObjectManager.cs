@@ -573,7 +573,14 @@ public class ObjectManager : SteamCaller
                 if (b != byte.MaxValue)
                 {
                     byte[] state = LevelObjects.objects[updateObjects_X, updateObjects_Y][regions[updateObjects_X, updateObjects_Y].updateObjectIndex].state;
-                    state[^1] = (byte)(state[^1] | Types.SHIFTS[b]);
+                    if (levelObject.asset.RubbleRespawnAllSectionsSimultaneously)
+                    {
+                        state[^1] = byte.MaxValue;
+                    }
+                    else
+                    {
+                        state[^1] = (byte)(state[^1] | Types.SHIFTS[b]);
+                    }
                     SendObjectRubble.InvokeAndLoopback(ENetReliability.Reliable, GatherRemoteClientConnections(updateObjects_X, updateObjects_Y), updateObjects_X, updateObjects_Y, regions[updateObjects_X, updateObjects_Y].updateObjectIndex, b, arg5: true, Vector3.zero);
                 }
             }
