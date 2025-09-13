@@ -1431,7 +1431,48 @@ public class PlayerLife : PlayerCaller
             angle = MeasurementTool.angleToByte(yaw);
         }
         position += new Vector3(0f, 0.5f, 0f);
-        SendRevive.InvokeAndLoopback(GetNetId(), ENetReliability.Reliable, Provider.GatherRemoteClientConnections(), position, angle);
+        SendReviveTeleport(position, angle);
+    }
+
+    /// <summary>
+    /// Very similar to VehicleManager.sendExitVehicle. Please refer to that for comments.
+    /// </summary>
+    private void SendReviveTeleport(Vector3 point, byte packedAngle)
+    {
+        SteamPlayer owner = base.channel.owner;
+        PooledTransportConnectionList pooledTransportConnectionList = TransportConnectionListPool.Get();
+        PooledTransportConnectionList pooledTransportConnectionList2 = TransportConnectionListPool.Get();
+        foreach (SteamPlayer client in Provider._clients)
+        {
+            if (client.IsLocalServerHost)
+            {
+                continue;
+            }
+            if (client == owner)
+            {
+                pooledTransportConnectionList.Add(client.transportConnection);
+                continue;
+            }
+            if (client.model == null)
+            {
+                pooledTransportConnectionList.Add(client.transportConnection);
+                continue;
+            }
+            Vector3 position = client.model.transform.position;
+            if (PlayerManager.IsPlayerCulledAtPosition(owner, point, client, position))
+            {
+                pooledTransportConnectionList2.Add(client.transportConnection);
+            }
+            else
+            {
+                pooledTransportConnectionList.Add(client.transportConnection);
+            }
+        }
+        SendRevive.InvokeAndLoopback(GetNetId(), ENetReliability.Reliable, pooledTransportConnectionList, point, packedAngle);
+        if (pooledTransportConnectionList2.Count > 0)
+        {
+            SendRevive.Invoke(GetNetId(), ENetReliability.Reliable, pooledTransportConnectionList2, PlayerManager.CulledPosition, packedAngle);
+        }
     }
 
     [SteamCall(ESteamCallValidation.ONLY_FROM_OWNER, ratelimitHz = 2, legacyName = "askRespawn")]

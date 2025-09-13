@@ -108,6 +108,7 @@ internal static class ClientMessageHandler_Accepted
         Provider._modeConfigData = new ModeConfigData(Provider.mode);
         reader.ReadUInt8(out var value3);
         Provider._modeConfigData.Gameplay.Repair_Level_Max = value3;
+        reader.ReadBit(out Provider._modeConfigData.Players.Skillset_Reduces_Skill_Cost);
         reader.ReadBit(out Provider._modeConfigData.Gameplay.Hitmarkers);
         reader.ReadBit(out Provider._modeConfigData.Gameplay.Crosshair);
         reader.ReadBit(out Provider._modeConfigData.Gameplay.Ballistics);

@@ -98,6 +98,10 @@ public class ItemSentryAsset : ItemStorageAsset
         QualityConsumptionProbability = p.data.ParseFloat("QualityConsumptionProbability", 1f);
         detectionRadius = p.data.ParseFloat("Detection_Radius", 48f);
         targetLossRadius = p.data.ParseFloat("Target_Loss_Radius", detectionRadius * 1.2f);
+        if (targetLossRadius < detectionRadius - 1E-05f)
+        {
+            ReportAssetError($"Target_Loss_Radius ({targetLossRadius}) is less than Detection_Radius ({detectionRadius})");
+        }
         CanTargetPlayers = p.data.ParseBool("Target_Players", defaultValue: true);
         CanTargetZombies = p.data.ParseBool("Target_Zombies", defaultValue: true);
         CanTargetAnimals = p.data.ParseBool("Target_Animals", defaultValue: true);

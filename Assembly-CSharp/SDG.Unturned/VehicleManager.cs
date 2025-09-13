@@ -1526,6 +1526,7 @@ public class VehicleManager : SteamCaller
 
     /// <summary>
     /// Handles culling if exit position is not visible to certain clients.
+    /// If adjusting how this works, PlayerLife.SendReviveTeleport may need revision.
     /// </summary>
     public static void sendExitVehicle(InteractableVehicle vehicle, byte seat, Vector3 point, byte angle, bool forceUpdate)
     {

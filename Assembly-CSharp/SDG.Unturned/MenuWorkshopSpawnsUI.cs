@@ -56,7 +56,6 @@ public class MenuWorkshopSpawnsUI
         if (!active)
         {
             active = true;
-            Localization.refresh();
             refresh();
             container.AnimateIntoView();
         }

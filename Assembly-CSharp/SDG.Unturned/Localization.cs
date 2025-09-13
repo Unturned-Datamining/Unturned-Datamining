@@ -172,9 +172,12 @@ public class Localization
         {
             messages.Clear();
         }
-        scanFolder("/Player");
-        scanFolder("/Menu");
-        scanFolder("/Server");
-        scanFolder("/Editor");
+        if (ReadWrite.folderExists(Provider.localizationRoot, usePath: false))
+        {
+            scanFolder("/Player");
+            scanFolder("/Menu");
+            scanFolder("/Server");
+            scanFolder("/Editor");
+        }
     }
 }

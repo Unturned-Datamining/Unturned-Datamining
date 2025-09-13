@@ -4467,6 +4467,7 @@ public class Provider : MonoBehaviour
             writer.WriteUInt32(ipForClient);
             writer.WriteUInt16(queryPortForClient);
             writer.WriteUInt8((byte)modeConfigData.Gameplay.Repair_Level_Max);
+            writer.WriteBit(modeConfigData.Players.Skillset_Reduces_Skill_Cost);
             writer.WriteBit(modeConfigData.Gameplay.Hitmarkers);
             writer.WriteBit(modeConfigData.Gameplay.Crosshair);
             writer.WriteBit(modeConfigData.Gameplay.Ballistics);
