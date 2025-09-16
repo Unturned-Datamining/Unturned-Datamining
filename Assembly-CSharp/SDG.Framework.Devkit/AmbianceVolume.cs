@@ -12,6 +12,14 @@ public class AmbianceVolume : LevelVolume<AmbianceVolume, AmbianceVolumeManager>
     {
         private AmbianceVolume volume;
 
+        private SleekButtonStateEnum<EAmbianceVolumeFogOverrideMode> fogMode;
+
+        private SleekButtonStateEnum<ELightingTime> timeButton;
+
+        private SleekColorPicker fogColor;
+
+        private ISleekFloat32Field fogIntensityField;
+
         private ISleekFloat32Field audioFadeInField;
 
         private ISleekFloat32Field audioFadeOutField;
@@ -27,8 +35,10 @@ public class AmbianceVolume : LevelVolume<AmbianceVolume, AmbianceVolumeManager>
         public Menu(AmbianceVolume volume)
         {
             this.volume = volume;
-            base.SizeOffset_X = 600f;
+            base.SizeOffset_X = 400f;
+            float num = 0f;
             ISleekField sleekField = Glazier.Get().CreateStringField();
+            sleekField.PositionOffset_Y = num;
             sleekField.SizeOffset_X = 200f;
             sleekField.SizeOffset_Y = 30f;
             if (volume._effectGuid.IsEmpty())
@@ -42,80 +52,96 @@ public class AmbianceVolume : LevelVolume<AmbianceVolume, AmbianceVolumeManager>
             sleekField.AddLabel("Effect ID", ESleekSide.RIGHT);
             sleekField.OnTextChanged += OnIdChanged;
             AddChild(sleekField);
+            num += sleekField.SizeOffset_Y + 10f;
             ISleekToggle sleekToggle = Glazier.Get().CreateToggle();
-            sleekToggle.PositionOffset_Y = 40f;
+            sleekToggle.PositionOffset_Y = num;
             sleekToggle.SizeOffset_X = 40f;
             sleekToggle.SizeOffset_Y = 40f;
             sleekToggle.Value = volume.noWater;
             sleekToggle.AddLabel("No Water", ESleekSide.RIGHT);
             sleekToggle.OnValueChanged += OnNoWaterToggled;
             AddChild(sleekToggle);
+            num += sleekToggle.SizeOffset_Y + 10f;
             ISleekToggle sleekToggle2 = Glazier.Get().CreateToggle();
-            sleekToggle2.PositionOffset_Y = 80f;
+            sleekToggle2.PositionOffset_Y = num;
             sleekToggle2.SizeOffset_X = 40f;
             sleekToggle2.SizeOffset_Y = 40f;
             sleekToggle2.Value = volume.noLighting;
             sleekToggle2.AddLabel("No Lighting", ESleekSide.RIGHT);
             sleekToggle2.OnValueChanged += OnNoLightingToggled;
             AddChild(sleekToggle2);
+            num += sleekToggle2.SizeOffset_Y + 10f;
             ISleekUInt32Field sleekUInt32Field = Glazier.Get().CreateUInt32Field();
-            sleekUInt32Field.PositionOffset_Y = 120f;
+            sleekUInt32Field.PositionOffset_Y = num;
             sleekUInt32Field.SizeOffset_X = 200f;
             sleekUInt32Field.SizeOffset_Y = 30f;
             sleekUInt32Field.Value = volume.weatherMask;
             sleekUInt32Field.AddLabel("Weather Mask", ESleekSide.RIGHT);
             sleekUInt32Field.OnValueChanged += OnWeatherMaskChanged;
             AddChild(sleekUInt32Field);
+            num += sleekUInt32Field.SizeOffset_Y + 10f;
+            fogMode = new SleekButtonStateEnum<EAmbianceVolumeFogOverrideMode>();
+            fogMode.PositionOffset_Y = num;
+            fogMode.SizeOffset_X = 200f;
+            fogMode.SizeOffset_Y = 30f;
+            fogMode.SetEnum(volume.FogOverrideMode);
+            fogMode.AddLabel("Override Fog", ESleekSide.RIGHT);
+            SleekButtonStateEnum<EAmbianceVolumeFogOverrideMode> sleekButtonStateEnum = fogMode;
+            sleekButtonStateEnum.OnSwappedEnum = (Action<SleekButtonStateEnum<EAmbianceVolumeFogOverrideMode>, EAmbianceVolumeFogOverrideMode>)Delegate.Combine(sleekButtonStateEnum.OnSwappedEnum, new Action<SleekButtonStateEnum<EAmbianceVolumeFogOverrideMode>, EAmbianceVolumeFogOverrideMode>(OnFogModeChanged));
+            AddChild(fogMode);
+            num += fogMode.SizeOffset_Y + 10f;
+            timeButton = new SleekButtonStateEnum<ELightingTime>();
+            timeButton.PositionOffset_Y = num;
+            timeButton.SizeOffset_X = 200f;
+            timeButton.SizeOffset_Y = 30f;
+            timeButton.AddLabel("Fog Time", ESleekSide.RIGHT);
+            SleekButtonStateEnum<ELightingTime> sleekButtonStateEnum2 = timeButton;
+            sleekButtonStateEnum2.OnSwappedEnum = (Action<SleekButtonStateEnum<ELightingTime>, ELightingTime>)Delegate.Combine(sleekButtonStateEnum2.OnSwappedEnum, new Action<SleekButtonStateEnum<ELightingTime>, ELightingTime>(OnFogTimeChanged));
+            AddChild(timeButton);
+            num += timeButton.SizeOffset_Y + 10f;
+            fogColor = new SleekColorPicker();
+            fogColor.PositionOffset_Y = num;
+            SleekColorPicker sleekColorPicker = fogColor;
+            sleekColorPicker.onColorPicked = (ColorPicked)Delegate.Combine(sleekColorPicker.onColorPicked, new ColorPicked(OnFogColorPicked));
+            AddChild(fogColor);
+            num += fogColor.SizeOffset_Y + 10f;
+            fogIntensityField = Glazier.Get().CreateFloat32Field();
+            fogIntensityField.PositionOffset_Y = num;
+            fogIntensityField.SizeOffset_X = 200f;
+            fogIntensityField.SizeOffset_Y = 30f;
+            fogIntensityField.AddLabel("Fog Intensity", ESleekSide.RIGHT);
+            fogIntensityField.OnValueChanged += OnFogIntensityChanged;
+            AddChild(fogIntensityField);
+            num += fogIntensityField.SizeOffset_Y + 10f;
             ISleekToggle sleekToggle3 = Glazier.Get().CreateToggle();
-            sleekToggle3.PositionOffset_Y = 150f;
+            sleekToggle3.PositionOffset_Y = num;
             sleekToggle3.SizeOffset_X = 40f;
             sleekToggle3.SizeOffset_Y = 40f;
-            sleekToggle3.Value = volume.overrideFog;
-            sleekToggle3.AddLabel("Override Fog", ESleekSide.RIGHT);
-            sleekToggle3.OnValueChanged += OnOverrideFogToggled;
+            sleekToggle3.Value = volume.overrideAtmosphericFog;
+            sleekToggle3.AddLabel("Override Atmospheric Fog", ESleekSide.RIGHT);
+            sleekToggle3.OnValueChanged += OnOverrideAtmosphericFogToggled;
             AddChild(sleekToggle3);
-            SleekColorPicker sleekColorPicker = new SleekColorPicker
-            {
-                PositionOffset_Y = 190f,
-                state = volume.fogColor
-            };
-            sleekColorPicker.onColorPicked = (ColorPicked)Delegate.Combine(sleekColorPicker.onColorPicked, new ColorPicked(OnFogColorPicked));
-            AddChild(sleekColorPicker);
-            ISleekFloat32Field sleekFloat32Field = Glazier.Get().CreateFloat32Field();
-            sleekFloat32Field.PositionOffset_Y = 200f + sleekColorPicker.SizeOffset_Y;
-            sleekFloat32Field.SizeOffset_X = 200f;
-            sleekFloat32Field.SizeOffset_Y = 30f;
-            sleekFloat32Field.Value = volume.fogIntensity;
-            sleekFloat32Field.AddLabel("Fog Intensity", ESleekSide.RIGHT);
-            sleekFloat32Field.OnValueChanged += OnFogIntensityChanged;
-            AddChild(sleekFloat32Field);
+            num += sleekToggle3.SizeOffset_Y + 10f;
             ISleekToggle sleekToggle4 = Glazier.Get().CreateToggle();
-            sleekToggle4.PositionOffset_Y = sleekFloat32Field.PositionOffset_Y + 40f;
+            sleekToggle4.PositionOffset_Y = num;
             sleekToggle4.SizeOffset_X = 40f;
             sleekToggle4.SizeOffset_Y = 40f;
-            sleekToggle4.Value = volume.overrideAtmosphericFog;
-            sleekToggle4.AddLabel("Override Atmospheric Fog", ESleekSide.RIGHT);
-            sleekToggle4.OnValueChanged += OnOverrideAtmosphericFogToggled;
+            sleekToggle4.Value = volume.enableFalloff;
+            sleekToggle4.AddLabel("Use Falloff", ESleekSide.RIGHT);
+            sleekToggle4.OnValueChanged += OnEnableFalloffToggled;
             AddChild(sleekToggle4);
-            ISleekToggle sleekToggle5 = Glazier.Get().CreateToggle();
-            sleekToggle5.PositionOffset_Y = sleekToggle4.PositionOffset_Y + 40f;
-            sleekToggle5.SizeOffset_X = 40f;
-            sleekToggle5.SizeOffset_Y = 40f;
-            sleekToggle5.Value = volume.enableFalloff;
-            sleekToggle5.AddLabel("Use Falloff", ESleekSide.RIGHT);
-            sleekToggle5.OnValueChanged += OnEnableFalloffToggled;
-            AddChild(sleekToggle5);
+            num += sleekToggle4.SizeOffset_Y + 10f;
             ISleekInt32Field sleekInt32Field = Glazier.Get().CreateInt32Field();
-            sleekInt32Field.PositionOffset_Y = sleekToggle5.PositionOffset_Y + 40f;
+            sleekInt32Field.PositionOffset_Y = num;
             sleekInt32Field.SizeOffset_X = 200f;
             sleekInt32Field.SizeOffset_Y = 30f;
             sleekInt32Field.Value = volume.priority;
             sleekInt32Field.AddLabel("Priority", ESleekSide.RIGHT);
             sleekInt32Field.OnValueChanged += OnPriorityChanged;
             AddChild(sleekInt32Field);
+            num += sleekInt32Field.SizeOffset_Y + 10f;
             audioFadeInField = Glazier.Get().CreateFloat32Field();
-            audioFadeInField.PositionOffset_X = 300f;
-            audioFadeInField.PositionOffset_Y = 0f;
+            audioFadeInField.PositionOffset_Y = num;
             audioFadeInField.SizeOffset_X = 200f;
             audioFadeInField.SizeOffset_Y = 30f;
             audioFadeInField.Value = volume.audioFadeInDuration;
@@ -123,9 +149,9 @@ public class AmbianceVolume : LevelVolume<AmbianceVolume, AmbianceVolumeManager>
             audioFadeInField.TooltipText = "Seconds for effect audio to fade in when distance falloff is disabled.";
             audioFadeInField.OnValueChanged += OnAudioFadeInDurationChanged;
             AddChild(audioFadeInField);
+            num += audioFadeInField.SizeOffset_Y + 10f;
             audioFadeOutField = Glazier.Get().CreateFloat32Field();
-            audioFadeOutField.PositionOffset_X = 300f;
-            audioFadeOutField.PositionOffset_Y = audioFadeInField.PositionOffset_Y + 40f;
+            audioFadeOutField.PositionOffset_Y = num;
             audioFadeOutField.SizeOffset_X = 200f;
             audioFadeOutField.SizeOffset_Y = 30f;
             audioFadeOutField.Value = volume.audioFadeOutDuration;
@@ -133,9 +159,9 @@ public class AmbianceVolume : LevelVolume<AmbianceVolume, AmbianceVolumeManager>
             audioFadeOutField.TooltipText = "Seconds for effect audio to fade out when distance falloff is disabled.";
             audioFadeOutField.OnValueChanged += OnAudioFadeOutDurationChanged;
             AddChild(audioFadeOutField);
+            num += audioFadeOutField.SizeOffset_Y + 10f;
             fogFadeInField = Glazier.Get().CreateFloat32Field();
-            fogFadeInField.PositionOffset_X = 300f;
-            fogFadeInField.PositionOffset_Y = audioFadeOutField.PositionOffset_Y + 40f;
+            fogFadeInField.PositionOffset_Y = num;
             fogFadeInField.SizeOffset_X = 200f;
             fogFadeInField.SizeOffset_Y = 30f;
             fogFadeInField.Value = volume.fogFadeInDuration;
@@ -143,9 +169,9 @@ public class AmbianceVolume : LevelVolume<AmbianceVolume, AmbianceVolumeManager>
             fogFadeInField.TooltipText = "Seconds for fog to fade in when distance falloff is disabled.";
             fogFadeInField.OnValueChanged += OnFogFadeInDurationChanged;
             AddChild(fogFadeInField);
+            num += fogFadeInField.SizeOffset_Y + 10f;
             fogFadeOutField = Glazier.Get().CreateFloat32Field();
-            fogFadeOutField.PositionOffset_X = 300f;
-            fogFadeOutField.PositionOffset_Y = fogFadeInField.PositionOffset_Y + 40f;
+            fogFadeOutField.PositionOffset_Y = num;
             fogFadeOutField.SizeOffset_X = 200f;
             fogFadeOutField.SizeOffset_Y = 30f;
             fogFadeOutField.Value = volume.fogFadeOutDuration;
@@ -153,9 +179,9 @@ public class AmbianceVolume : LevelVolume<AmbianceVolume, AmbianceVolumeManager>
             fogFadeOutField.TooltipText = "Seconds for fog to fade out when distance falloff is disabled.";
             fogFadeOutField.OnValueChanged += OnFogFadeOutDurationChanged;
             AddChild(fogFadeOutField);
+            num += fogFadeOutField.SizeOffset_Y + 10f;
             lightingFadeInField = Glazier.Get().CreateFloat32Field();
-            lightingFadeInField.PositionOffset_X = 300f;
-            lightingFadeInField.PositionOffset_Y = fogFadeOutField.PositionOffset_Y + 40f;
+            lightingFadeInField.PositionOffset_Y = num;
             lightingFadeInField.SizeOffset_X = 200f;
             lightingFadeInField.SizeOffset_Y = 30f;
             lightingFadeInField.Value = volume.lightingFadeInDuration;
@@ -163,9 +189,9 @@ public class AmbianceVolume : LevelVolume<AmbianceVolume, AmbianceVolumeManager>
             lightingFadeInField.TooltipText = "Seconds for lighting to fade in when distance falloff is disabled.";
             lightingFadeInField.OnValueChanged += OnLightingFadeInDurationChanged;
             AddChild(lightingFadeInField);
+            num += lightingFadeInField.SizeOffset_Y + 10f;
             lightingFadeOutField = Glazier.Get().CreateFloat32Field();
-            lightingFadeOutField.PositionOffset_X = 300f;
-            lightingFadeOutField.PositionOffset_Y = lightingFadeInField.PositionOffset_Y + 40f;
+            lightingFadeOutField.PositionOffset_Y = num;
             lightingFadeOutField.SizeOffset_X = 200f;
             lightingFadeOutField.SizeOffset_Y = 30f;
             lightingFadeOutField.Value = volume.lightingFadeOutDuration;
@@ -173,8 +199,10 @@ public class AmbianceVolume : LevelVolume<AmbianceVolume, AmbianceVolumeManager>
             lightingFadeOutField.TooltipText = "Seconds for lighting to fade out when distance falloff is disabled.";
             lightingFadeOutField.OnValueChanged += OnLightingFadeOutDurationChanged;
             AddChild(lightingFadeOutField);
+            num += lightingFadeOutField.SizeOffset_Y + 10f;
+            UpdateFogSettings();
             UpdateFade();
-            base.SizeOffset_Y = sleekInt32Field.PositionOffset_Y + sleekInt32Field.SizeOffset_Y;
+            base.SizeOffset_Y = num - 10f;
         }
 
         private void OnIdChanged(ISleekField field, string effectIdString)
@@ -213,21 +241,41 @@ public class AmbianceVolume : LevelVolume<AmbianceVolume, AmbianceVolumeManager>
             LevelHierarchy.MarkDirty();
         }
 
-        private void OnOverrideFogToggled(ISleekToggle toggle, bool overrideFog)
+        private void OnFogModeChanged(SleekButtonStateEnum<EAmbianceVolumeFogOverrideMode> button, EAmbianceVolumeFogOverrideMode newFogMode)
         {
-            volume.overrideFog = overrideFog;
+            volume.FogOverrideMode = newFogMode;
+            UpdateFogSettings();
             LevelHierarchy.MarkDirty();
+        }
+
+        private void OnFogTimeChanged(SleekButtonStateEnum<ELightingTime> button, ELightingTime newTime)
+        {
+            UpdateFogSettings();
         }
 
         private void OnFogColorPicked(SleekColorPicker picker, Color color)
         {
-            volume.fogColor = color;
+            if (volume.FogOverrideMode == EAmbianceVolumeFogOverrideMode.PerTimeOfDay)
+            {
+                volume.GetFogSettings(timeButton.GetEnum()).fogColor = color;
+            }
+            else
+            {
+                volume.fogColor = color;
+            }
             LevelHierarchy.MarkDirty();
         }
 
         private void OnFogIntensityChanged(ISleekFloat32Field field, float value)
         {
-            volume.fogIntensity = value;
+            if (volume.FogOverrideMode == EAmbianceVolumeFogOverrideMode.PerTimeOfDay)
+            {
+                volume.GetFogSettings(timeButton.GetEnum()).fogIntensity = value;
+            }
+            else
+            {
+                volume.fogIntensity = value;
+            }
             LevelHierarchy.MarkDirty();
         }
 
@@ -288,13 +336,29 @@ public class AmbianceVolume : LevelVolume<AmbianceVolume, AmbianceVolumeManager>
 
         private void UpdateFade()
         {
-            bool isVisible = !volume.enableFalloff;
-            audioFadeInField.IsVisible = isVisible;
-            audioFadeOutField.IsVisible = isVisible;
-            fogFadeInField.IsVisible = isVisible;
-            fogFadeOutField.IsVisible = isVisible;
-            lightingFadeInField.IsVisible = isVisible;
-            lightingFadeOutField.IsVisible = isVisible;
+            bool isClickable = !volume.enableFalloff;
+            audioFadeInField.IsClickable = isClickable;
+            audioFadeOutField.IsClickable = isClickable;
+            fogFadeInField.IsClickable = isClickable;
+            fogFadeOutField.IsClickable = isClickable;
+            lightingFadeInField.IsClickable = isClickable;
+            lightingFadeOutField.IsClickable = isClickable;
+        }
+
+        private void UpdateFogSettings()
+        {
+            timeButton.isInteractable = volume.FogOverrideMode == EAmbianceVolumeFogOverrideMode.PerTimeOfDay;
+            if (volume.FogOverrideMode == EAmbianceVolumeFogOverrideMode.PerTimeOfDay)
+            {
+                ref AmbianceVolumeTimeOfDaySettings fogSettings = ref volume.GetFogSettings(timeButton.GetEnum());
+                fogColor.state = fogSettings.fogColor;
+                fogIntensityField.Value = fogSettings.fogIntensity;
+            }
+            else
+            {
+                fogColor.state = volume.fogColor;
+                fogIntensityField.Value = volume.fogIntensity;
+            }
         }
     }
 
@@ -321,6 +385,12 @@ public class AmbianceVolume : LevelVolume<AmbianceVolume, AmbianceVolumeManager>
     public uint weatherMask = uint.MaxValue;
 
     [SerializeField]
+    protected EAmbianceVolumeFogOverrideMode _fogOverrideMode;
+
+    /// <summary>
+    /// Kept for backwards compatibility with fog volumes created in Unity / by mods.
+    /// </summary>
+    [SerializeField]
     protected bool _overrideFog;
 
     [SerializeField]
@@ -328,6 +398,9 @@ public class AmbianceVolume : LevelVolume<AmbianceVolume, AmbianceVolumeManager>
 
     [SerializeField]
     protected float _fogIntensity;
+
+    [SerializeField]
+    internal AmbianceVolumeTimeOfDaySettings[] perTimeOfDaySettings;
 
     [SerializeField]
     public bool overrideAtmosphericFog;
@@ -426,6 +499,19 @@ public class AmbianceVolume : LevelVolume<AmbianceVolume, AmbianceVolumeManager>
         }
     }
 
+    public EAmbianceVolumeFogOverrideMode FogOverrideMode
+    {
+        get
+        {
+            return _fogOverrideMode;
+        }
+        set
+        {
+            _fogOverrideMode = value;
+        }
+    }
+
+    [Obsolete]
     public bool overrideFog
     {
         get
@@ -434,7 +520,8 @@ public class AmbianceVolume : LevelVolume<AmbianceVolume, AmbianceVolumeManager>
         }
         set
         {
-            _overrideFog = value;
+            _overrideFog = false;
+            _fogOverrideMode = (value ? EAmbianceVolumeFogOverrideMode.Constant : EAmbianceVolumeFogOverrideMode.PerTimeOfDay);
         }
     }
 
@@ -481,6 +568,41 @@ public class AmbianceVolume : LevelVolume<AmbianceVolume, AmbianceVolumeManager>
         return cachedEffectAsset;
     }
 
+    internal void GetFogSettings(int blendKey, int currentKey, float timeAlpha, out Color overrideFogColor, out float overrideFogIntensity)
+    {
+        if (_fogOverrideMode != EAmbianceVolumeFogOverrideMode.PerTimeOfDay)
+        {
+            overrideFogColor = fogColor;
+            overrideFogIntensity = fogIntensity;
+            return;
+        }
+        if (perTimeOfDaySettings == null || perTimeOfDaySettings.Length != 4)
+        {
+            overrideFogColor = Color.white;
+            overrideFogIntensity = 0f;
+            return;
+        }
+        ref AmbianceVolumeTimeOfDaySettings reference = ref perTimeOfDaySettings[currentKey];
+        ref AmbianceVolumeTimeOfDaySettings reference2 = ref perTimeOfDaySettings[(blendKey == -1) ? currentKey : blendKey];
+        overrideFogColor = Color.Lerp(reference2.fogColor, reference.fogColor, timeAlpha);
+        overrideFogIntensity = Mathf.Lerp(reference2.fogIntensity, reference.fogIntensity, timeAlpha);
+    }
+
+    internal ref AmbianceVolumeTimeOfDaySettings GetFogSettings(ELightingTime time)
+    {
+        if (perTimeOfDaySettings == null || perTimeOfDaySettings.Length != 4)
+        {
+            perTimeOfDaySettings = new AmbianceVolumeTimeOfDaySettings[4];
+            for (int i = 0; i < 4; i++)
+            {
+                ref AmbianceVolumeTimeOfDaySettings reference = ref perTimeOfDaySettings[i];
+                reference.fogColor = Color.white;
+                reference.fogIntensity = 1f;
+            }
+        }
+        return ref perTimeOfDaySettings[(int)time];
+    }
+
     protected override void readHierarchyItem(IFormattedFileReader reader)
     {
         base.readHierarchyItem(reader);
@@ -511,7 +633,22 @@ public class AmbianceVolume : LevelVolume<AmbianceVolume, AmbianceVolumeManager>
                 weatherMask &= 4294967293u;
             }
         }
-        overrideFog = reader.readValue<bool>("Override_Fog");
+        if (reader.containsKey("Override_Fog_Mode"))
+        {
+            _fogOverrideMode = reader.readValue<EAmbianceVolumeFogOverrideMode>("Override_Fog_Mode");
+            if (_fogOverrideMode == EAmbianceVolumeFogOverrideMode.PerTimeOfDay)
+            {
+                perTimeOfDaySettings = new AmbianceVolumeTimeOfDaySettings[4];
+                perTimeOfDaySettings[0] = new AmbianceVolumeTimeOfDaySettings(reader.readObject("Dawn"));
+                perTimeOfDaySettings[1] = new AmbianceVolumeTimeOfDaySettings(reader.readObject("Midday"));
+                perTimeOfDaySettings[2] = new AmbianceVolumeTimeOfDaySettings(reader.readObject("Dusk"));
+                perTimeOfDaySettings[3] = new AmbianceVolumeTimeOfDaySettings(reader.readObject("Midnight"));
+            }
+        }
+        else if (reader.readValue<bool>("Override_Fog"))
+        {
+            _fogOverrideMode = EAmbianceVolumeFogOverrideMode.Constant;
+        }
         fogColor = reader.readValue<Color>("Fog_Color");
         if (reader.containsKey("Fog_Intensity"))
         {
@@ -565,7 +702,22 @@ public class AmbianceVolume : LevelVolume<AmbianceVolume, AmbianceVolumeManager>
         writer.writeValue("No_Water", noWater);
         writer.writeValue("No_Lighting", noLighting);
         writer.writeValue("Weather_Mask", weatherMask);
-        writer.writeValue("Override_Fog", overrideFog);
+        writer.writeValue("Override_Fog_Mode", _fogOverrideMode);
+        if (_fogOverrideMode == EAmbianceVolumeFogOverrideMode.PerTimeOfDay && perTimeOfDaySettings != null && perTimeOfDaySettings.Length == 4)
+        {
+            writer.beginObject("Dawn");
+            perTimeOfDaySettings[0].Write(writer);
+            writer.endObject();
+            writer.beginObject("Midday");
+            perTimeOfDaySettings[1].Write(writer);
+            writer.endObject();
+            writer.beginObject("Dusk");
+            perTimeOfDaySettings[2].Write(writer);
+            writer.endObject();
+            writer.beginObject("Midnight");
+            perTimeOfDaySettings[3].Write(writer);
+            writer.endObject();
+        }
         writer.writeValue("Fog_Color", fogColor);
         writer.writeValue("Fog_Intensity", fogIntensity);
         writer.writeValue("Override_Atmospheric_Fog", overrideAtmosphericFog);
@@ -582,6 +734,11 @@ public class AmbianceVolume : LevelVolume<AmbianceVolume, AmbianceVolumeManager>
     protected override void Awake()
     {
         supportsFalloff = true;
+        if (_overrideFog)
+        {
+            _overrideFog = false;
+            _fogOverrideMode = EAmbianceVolumeFogOverrideMode.Constant;
+        }
         base.Awake();
     }
 }

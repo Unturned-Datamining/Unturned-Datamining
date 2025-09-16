@@ -15,6 +15,8 @@ internal class EditorVolumesUI : SleekFullscreenBox
 
     private GameObject focusedGameObject;
 
+    private ISleekScrollView focusedItemScrollView;
+
     private ISleekElement focusedItemMenu;
 
     private ISleekFloat32Field snapTransformField;
@@ -75,8 +77,9 @@ internal class EditorVolumesUI : SleekFullscreenBox
         }
         if (focusedItemMenu != null)
         {
-            RemoveChild(focusedItemMenu);
+            focusedItemScrollView.RemoveChild(focusedItemMenu);
             focusedItemMenu = null;
+            focusedItemScrollView.IsVisible = false;
         }
         focusedGameObject = mostRecentGameObject;
         VolumeBase volumeBase = focusedGameObject?.GetComponent<VolumeBase>();
@@ -85,9 +88,16 @@ internal class EditorVolumesUI : SleekFullscreenBox
             focusedItemMenu = volumeBase.CreateMenu();
             if (focusedItemMenu != null)
             {
-                focusedItemMenu.PositionOffset_Y = snapTransformField.PositionOffset_Y - 10f - focusedItemMenu.SizeOffset_Y;
-                focusedItemMenu.PositionScale_Y = 1f;
-                AddChild(focusedItemMenu);
+                ISleekBox sleekBox = Glazier.Get().CreateBox();
+                sleekBox.BackgroundColor = ColorEx.WhiteZeroAlpha;
+                sleekBox.SizeScale_X = 1f;
+                sleekBox.SizeScale_Y = 1f;
+                focusedItemMenu.AddChild(sleekBox);
+                sleekBox.SetAsFirstSibling();
+                focusedItemScrollView.ContentSizeOffset = new Vector2(0f, focusedItemMenu.SizeOffset_Y);
+                focusedItemScrollView.AddChild(focusedItemMenu);
+                focusedItemScrollView.IsVisible = true;
+                focusedItemScrollView.ScrollToTop();
             }
         }
     }
@@ -171,9 +181,17 @@ internal class EditorVolumesUI : SleekFullscreenBox
         snapTransformField.SizeOffset_Y = 30f;
         num -= snapTransformField.SizeOffset_Y;
         snapTransformField.PositionOffset_Y = num;
+        num -= 10f;
         snapTransformField.AddLabel(local.format("SnapTransformLabelText"), ESleekSide.RIGHT);
         snapTransformField.OnValueChanged += OnTypedSnapTransformField;
         AddChild(snapTransformField);
+        focusedItemScrollView = Glazier.Get().CreateScrollView();
+        focusedItemScrollView.SizeOffset_X = 430f;
+        focusedItemScrollView.SizeOffset_Y = num;
+        focusedItemScrollView.SizeScale_Y = 1f;
+        focusedItemScrollView.IsVisible = false;
+        focusedItemScrollView.AlignContentToBottom = true;
+        AddChild(focusedItemScrollView);
         bundle.unload();
         enableUnderwaterEffectsToggle = Glazier.Get().CreateToggle();
         enableUnderwaterEffectsToggle.PositionOffset_X = 400f;

@@ -931,6 +931,49 @@ public class LevelLighting
         return readOnlyList[0];
     }
 
+    private static void GetLightingIndices(out int blendLightingIndex, out int currentLightingIndex, out float blendAlpha)
+    {
+        if (time < bias)
+        {
+            if (time < transition)
+            {
+                blendLightingIndex = 0;
+                currentLightingIndex = 1;
+                blendAlpha = time / transition;
+            }
+            else if (time < bias - transition)
+            {
+                blendLightingIndex = -1;
+                currentLightingIndex = 1;
+                blendAlpha = 0f;
+            }
+            else
+            {
+                blendLightingIndex = 1;
+                currentLightingIndex = 2;
+                blendAlpha = (time - bias + transition) / transition;
+            }
+        }
+        else if (time < bias + transition)
+        {
+            blendLightingIndex = 2;
+            currentLightingIndex = 3;
+            blendAlpha = (time - bias) / transition;
+        }
+        else if (time < 1f - transition)
+        {
+            blendLightingIndex = -1;
+            currentLightingIndex = 3;
+            blendAlpha = 0f;
+        }
+        else
+        {
+            blendLightingIndex = 3;
+            currentLightingIndex = 0;
+            blendAlpha = (time - 1f + transition) / transition;
+        }
+    }
+
     public static void updateLighting()
     {
         if (sun == null)
@@ -1231,7 +1274,7 @@ public class LevelLighting
             CloudParticleSystemInstance cloudParticleSystemInstance2 = array[i];
             if (cloudParticleSystemInstance2.particleSystem != null)
             {
-                cloudParticleSystemInstance2.particleSystem.Simulate(0f, withChildren: true, restart: true);
+                cloudParticleSystemInstance2.particleSystem.Simulate(cloudParticleSystemInstance2.config.WarmupTime, withChildren: true, restart: true);
             }
         }
     }
@@ -2263,27 +2306,29 @@ public class LevelLighting
             localAtmosphericFog = levelAtmosphericFog;
             localBlendingFogFadeOutDuration = null;
         }
+        GetLightingIndices(out var blendLightingIndex, out var currentLightingIndex, out var blendAlpha);
         bool flag = false;
         float? num = null;
         float a = 0f;
         for (int num2 = activeAmbianceVolumes.Count - 1; num2 >= 0; num2--)
         {
             VolumeAlphaPair<AmbianceVolume> volumeAlphaPair = activeAmbianceVolumes[num2];
-            if (volumeAlphaPair.volume.overrideFog)
+            if (volumeAlphaPair.volume.FogOverrideMode != 0)
             {
-                float b = (volumeAlphaPair.volume.overrideAtmosphericFog ? volumeAlphaPair.volume.fogIntensity : 0f);
+                volumeAlphaPair.volume.GetFogSettings(blendLightingIndex, currentLightingIndex, blendAlpha, out var overrideFogColor, out var overrideFogIntensity);
+                float b = (volumeAlphaPair.volume.overrideAtmosphericFog ? overrideFogIntensity : 0f);
                 if (volumeAlphaPair.volume.enableFalloff)
                 {
                     a = Mathf.Max(a, volumeAlphaPair.alpha);
-                    localFogColor = Color.Lerp(localFogColor, volumeAlphaPair.volume.fogColor, volumeAlphaPair.alpha);
-                    localFogIntensity = Mathf.Lerp(localFogIntensity, volumeAlphaPair.volume.fogIntensity, volumeAlphaPair.alpha);
+                    localFogColor = Color.Lerp(localFogColor, overrideFogColor, volumeAlphaPair.alpha);
+                    localFogIntensity = Mathf.Lerp(localFogIntensity, overrideFogIntensity, volumeAlphaPair.alpha);
                     localAtmosphericFog = Mathf.Lerp(localAtmosphericFog, b, volumeAlphaPair.alpha);
                 }
                 else
                 {
                     flag = true;
-                    localFogColor = volumeAlphaPair.volume.fogColor;
-                    localFogIntensity = volumeAlphaPair.volume.fogIntensity;
+                    localFogColor = overrideFogColor;
+                    localFogIntensity = overrideFogIntensity;
                     localAtmosphericFog = b;
                     num = ((!num.HasValue) ? new float?(Mathf.Max(0.0001f, volumeAlphaPair.volume.fogFadeInDuration)) : new float?(Mathf.Max(0.0001f, Mathf.Min(num.Value, volumeAlphaPair.volume.fogFadeInDuration))));
                     if (localBlendingFogFadeOutDuration.HasValue)

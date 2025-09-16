@@ -55,6 +55,11 @@ public class LevelAsset : Asset
 
     public struct CloudOverrideParticleSystemsPath : IDatParseable
     {
+        /// <summary>
+        /// t passed into ParticleSystem.Simulate when clouds need an update.
+        /// </summary>
+        public float WarmupTime;
+
         public string ComponentPath { get; set; }
 
         /// <summary>
@@ -90,6 +95,7 @@ public class LevelAsset : Asset
                 {
                     MaterialColorPropertyNames = new string[1] { "_Color" };
                 }
+                WarmupTime = dictionary.ParseFloat("WarmupTime");
                 return true;
             }
             return false;
