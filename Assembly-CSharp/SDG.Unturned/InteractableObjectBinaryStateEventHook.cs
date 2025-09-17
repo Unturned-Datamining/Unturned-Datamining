@@ -44,12 +44,26 @@ public class InteractableObjectBinaryStateEventHook : MonoBehaviour
     public bool InvokeWhenInitialized = true;
 
     /// <summary>
+    /// If true, OnStateEnabled and OnStateDisabled are only invoked in singleplayer and on the server.
+    /// </summary>
+    [Tooltip("If true, OnStateEnabled and OnStateDisabled are only invoked in singleplayer and on the server.")]
+    public bool InvokeEventsAuthorityOnly;
+
+    /// <summary>
+    /// If true, calls to GotoEnabledState, GotoDisabledState, and ToggleState are only processed in singleplayer
+    /// and on the server.
+    /// </summary>
+    [Tooltip("If true, calls to GotoEnabledState, GotoDisabledState, and ToggleState are only processed in singleplayer and on the server.")]
+    public bool ChangeStateAuthorityOnly;
+
+    /// <summary>
     /// Controls how state change requests are performed when running as both client and server ("listen server").
     /// On the dedicated server, requesting a state change overrides the current state without processing NPC
     /// conditions, whereas when a client requests a state change NPC conditions apply. This option fixes the
     /// inconsistency in singleplayer of whether to treat as server or client. (public issue #4298)
     /// At the time of writing (2024-01-29) listen server only applies to singleplayer.
     /// </summary>
+    [Tooltip("Controls how state change requests are performed when running as both client and server (singleplayer/listen server).")]
     public EListenServerHostMode ListenServerHostMode;
 
     private InteractableObjectBinaryState interactable;
@@ -62,7 +76,7 @@ public class InteractableObjectBinaryStateEventHook : MonoBehaviour
     /// </summary>
     public void GotoEnabledState()
     {
-        if (interactable != null)
+        if ((!ChangeStateAuthorityOnly || Provider.isServer) && interactable != null)
         {
             interactable.SetUsedFromClientOrServer(newUsed: true, ListenServerHostMode);
         }
@@ -76,7 +90,7 @@ public class InteractableObjectBinaryStateEventHook : MonoBehaviour
     /// </summary>
     public void GotoDisabledState()
     {
-        if (interactable != null)
+        if ((!ChangeStateAuthorityOnly || Provider.isServer) && interactable != null)
         {
             interactable.SetUsedFromClientOrServer(newUsed: false, ListenServerHostMode);
         }
@@ -90,7 +104,7 @@ public class InteractableObjectBinaryStateEventHook : MonoBehaviour
     /// </summary>
     public void ToggleState()
     {
-        if (interactable != null)
+        if ((!ChangeStateAuthorityOnly || Provider.isServer) && interactable != null)
         {
             interactable.SetUsedFromClientOrServer(!interactable.isUsed, ListenServerHostMode);
         }
@@ -105,23 +119,33 @@ public class InteractableObjectBinaryStateEventHook : MonoBehaviour
             return;
         }
         interactable.modHookCounter++;
-        interactable.onStateChanged += onStateChanged;
-        if (InvokeWhenInitialized)
+        if (Provider.isServer || !InvokeEventsAuthorityOnly)
         {
-            interactable.onStateInitialized += onStateChanged;
-            onStateChanged(interactable);
+            interactable.onStateChanged += onStateChanged;
+            if (InvokeWhenInitialized)
+            {
+                interactable.onStateInitialized += onStateChanged;
+                onStateChanged(interactable);
+            }
         }
     }
 
     protected void OnDestroy()
     {
-        if (interactable != null)
+        if (!(interactable != null))
         {
-            interactable.onStateInitialized -= onStateChanged;
-            interactable.onStateChanged -= onStateChanged;
-            interactable.modHookCounter--;
-            interactable = null;
+            return;
         }
+        if (Provider.isServer || !InvokeEventsAuthorityOnly)
+        {
+            if (InvokeWhenInitialized)
+            {
+                interactable.onStateInitialized -= onStateChanged;
+            }
+            interactable.onStateChanged -= onStateChanged;
+        }
+        interactable.modHookCounter--;
+        interactable = null;
     }
 
     protected void onStateChanged(InteractableObjectBinaryState sender)

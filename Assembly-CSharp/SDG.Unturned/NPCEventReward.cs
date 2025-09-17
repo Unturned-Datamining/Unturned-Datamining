@@ -4,11 +4,17 @@ namespace SDG.Unturned;
 
 public class NPCEventReward : INPCReward
 {
+    /// <summary>
+    /// If true, the server will replicate the event to clients.
+    /// Defaults to true.
+    /// </summary>
+    public bool ShouldReplicate = true;
+
     public string id { get; protected set; }
 
     public override void GrantReward(Player player)
     {
-        NPCEventManager.broadcastEvent(player, id, shouldReplicate: true);
+        NPCEventManager.broadcastEvent(player, id, ShouldReplicate);
     }
 
     internal override void PopulateV2(in PopulateRewardParameters p)
@@ -22,6 +28,7 @@ public class NPCEventReward : INPCReward
         {
             p.ReportRequiredOptionInvalid("ID");
         }
+        ShouldReplicate = p.data.ParseBool("Replicate", defaultValue: true);
     }
 
     internal override void PopulateLegacy(in PopulateRewardParameters p)
@@ -35,6 +42,7 @@ public class NPCEventReward : INPCReward
         {
             p.ReportRequiredOptionInvalid("ID");
         }
+        ShouldReplicate = p.data.ParseBool(p.legacyPrefix + "_Replicate", defaultValue: true);
     }
 
     public NPCEventReward()

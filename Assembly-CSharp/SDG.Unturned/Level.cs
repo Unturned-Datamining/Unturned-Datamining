@@ -623,6 +623,10 @@ public class Level : MonoBehaviour
             {
                 text = "Elver_Visited";
             }
+            else if (string.Equals(info.name, "limestone", StringComparison.InvariantCultureIgnoreCase))
+            {
+                text = "LS_Visited";
+            }
             else if (string.Equals(info.name, "germany", StringComparison.InvariantCultureIgnoreCase))
             {
                 text = "Peaks";

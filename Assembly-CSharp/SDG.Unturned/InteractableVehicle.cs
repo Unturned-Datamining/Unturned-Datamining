@@ -4231,7 +4231,7 @@ public class InteractableVehicle : Interactable, IExplosionDamageable, IEquatabl
             }
             Transform transform9 = null;
             Transform transform10 = null;
-            Transform newTurretPitch = null;
+            Transform transform11 = null;
             Transform newTurretAim = null;
             if (transform6 != null)
             {
@@ -4241,30 +4241,41 @@ public class InteractableVehicle : Interactable, IExplosionDamageable, IEquatabl
                     transform10 = transform9.Find("Yaw");
                     if (transform10 != null)
                     {
-                        Transform transform11 = transform10.Find("Seats");
+                        Transform transform12 = transform10.Find("Seats");
+                        Transform transform13 = transform10.Find("Objects");
+                        transform11 = transform10.Find("Pitch");
                         if (transform11 != null)
                         {
-                            transform8 = transform11.Find("Seat_" + j);
+                            if (transform12 == null)
+                            {
+                                transform12 = transform11.Find("Seats");
+                            }
+                            if (transform13 == null)
+                            {
+                                newObj = transform11.Find("Objects");
+                            }
                         }
-                        Transform transform12 = transform10.Find("Objects");
                         if (transform12 != null)
                         {
-                            newObj = transform12.Find("Seat_" + j);
+                            transform8 = transform12.Find("Seat_" + j);
                         }
-                        newTurretPitch = transform10.Find("Pitch");
+                        if (transform13 != null)
+                        {
+                            newObj = transform13.Find("Seat_" + j);
+                        }
                     }
                     newTurretAim = transform9.FindChildRecursive("Aim");
                 }
             }
             if (transform7 != null)
             {
-                Transform transform13 = transform7.FindChildRecursive(text);
-                if (transform13 != null)
+                Transform transform14 = transform7.FindChildRecursive(text);
+                if (transform14 != null)
                 {
-                    transform8 = transform13;
+                    transform8 = transform14;
                 }
             }
-            passengers[j] = new Passenger(transform8, newObj, transform10, newTurretPitch, newTurretAim);
+            passengers[j] = new Passenger(transform8, newObj, transform10, transform11, newTurretAim);
             if (transform9 != null)
             {
                 passengers[j].turretEventHook = transform9.GetComponent<VehicleTurretEventHook>();
@@ -4323,13 +4334,13 @@ public class InteractableVehicle : Interactable, IExplosionDamageable, IEquatabl
             }
             pedalLeft = base.transform.Find("Objects").Find("Pedal_Left");
             pedalRight = base.transform.Find("Objects").Find("Pedal_Right");
-            Transform transform14 = base.transform.Find("Rotors");
-            if (transform14 != null)
+            Transform transform15 = base.transform.Find("Rotors");
+            if (transform15 != null)
             {
-                propellerModels = new PropellerModel[transform14.childCount];
+                propellerModels = new PropellerModel[transform15.childCount];
                 isPropellerMotionBlurEnabled = false;
                 int num2 = 0;
-                foreach (Transform item3 in transform14)
+                foreach (Transform item3 in transform15)
                 {
                     PropellerModel propellerModel = new PropellerModel();
                     propellerModel.transform = item3;
@@ -4360,15 +4371,15 @@ public class InteractableVehicle : Interactable, IExplosionDamageable, IEquatabl
                     num2++;
                 }
             }
-            Transform transform16 = base.transform.Find("Exhaust");
-            if (transform16 != null)
+            Transform transform17 = base.transform.Find("Exhaust");
+            if (transform17 != null)
             {
-                exhaustGameObject = transform16.gameObject;
+                exhaustGameObject = transform17.gameObject;
                 isExhaustGameObjectActive = exhaustGameObject.activeSelf;
-                exhaustParticleSystems = new ParticleSystem[transform16.childCount];
-                for (int m = 0; m < transform16.childCount; m++)
+                exhaustParticleSystems = new ParticleSystem[transform17.childCount];
+                for (int m = 0; m < transform17.childCount; m++)
                 {
-                    Transform child2 = transform16.GetChild(m);
+                    Transform child2 = transform17.GetChild(m);
                     exhaustParticleSystems[m] = child2.GetComponent<ParticleSystem>();
                     ParticleSystem.EmissionModule emission = exhaustParticleSystems[m].emission;
                     emission.rateOverTime = 0f;
@@ -4399,10 +4410,10 @@ public class InteractableVehicle : Interactable, IExplosionDamageable, IEquatabl
             trainCars[0] = getTrainCar(base.transform);
             for (int n = 1; n <= childCount; n++)
             {
-                Transform transform17 = transform7.Find("Train_Car_" + n);
-                transform17.parent = null;
-                transform17.GetOrAddComponent<VehicleRef>().vehicle = this;
-                TrainCar trainCar = getTrainCar(transform17);
+                Transform transform18 = transform7.Find("Train_Car_" + n);
+                transform18.parent = null;
+                transform18.GetOrAddComponent<VehicleRef>().vehicle = this;
+                TrainCar trainCar = getTrainCar(transform18);
                 trainCar.trackPositionOffset = (float)n * (0f - asset.trainCarLength);
                 trainCars[n] = trainCar;
             }
