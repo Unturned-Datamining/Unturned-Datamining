@@ -20,28 +20,41 @@ public class NPCEffectReward : INPCReward
 
     public string Spawnpoint { get; protected set; }
 
+    /// <summary>
+    /// If true, spawn effect at player's position (rather than Spawnpoint).
+    /// </summary>
+    public bool AtPlayerPosition { get; set; }
+
     public override void GrantReward(Player player)
     {
-        Spawnpoint spawnpoint = SpawnpointSystemV2.Get().FindSpawnpoint(Spawnpoint);
-        if (spawnpoint != null)
+        Vector3 position;
+        Quaternion rotation;
+        if (AtPlayerPosition)
         {
-            Vector3 position = spawnpoint.transform.position;
-            Quaternion rotation = spawnpoint.transform.rotation;
-            TriggerEffectParameters parameters = new TriggerEffectParameters(AssetRef);
-            parameters.shouldReplicate = true;
-            parameters.reliable = IsReliable;
-            if (OverrideRelevantDistance > 0.01f)
-            {
-                parameters.relevantDistance = OverrideRelevantDistance;
-            }
-            parameters.position = position;
-            parameters.SetRotation(rotation);
-            EffectManager.triggerEffect(parameters);
+            position = player.transform.position;
+            rotation = player.transform.rotation;
         }
         else
         {
-            UnturnedLog.error("Failed to find NPC effect reward spawnpoint: " + Spawnpoint);
+            Spawnpoint spawnpoint = SpawnpointSystemV2.Get().FindSpawnpoint(Spawnpoint);
+            if (!(spawnpoint != null))
+            {
+                UnturnedLog.error("Failed to find NPC effect reward spawnpoint: " + Spawnpoint);
+                return;
+            }
+            position = spawnpoint.transform.position;
+            rotation = spawnpoint.transform.rotation;
         }
+        TriggerEffectParameters parameters = new TriggerEffectParameters(AssetRef);
+        parameters.shouldReplicate = true;
+        parameters.reliable = IsReliable;
+        if (OverrideRelevantDistance > 0.01f)
+        {
+            parameters.relevantDistance = OverrideRelevantDistance;
+        }
+        parameters.position = position;
+        parameters.SetRotation(rotation);
+        EffectManager.triggerEffect(parameters);
     }
 
     internal override void PopulateV2(in PopulateRewardParameters p)
@@ -55,13 +68,17 @@ public class NPCEffectReward : INPCReward
         {
             p.ReportRequiredOptionInvalid("GUID");
         }
-        if (p.data.TryGetString("Spawnpoint", out var value2))
+        AtPlayerPosition = p.data.ParseBool("AtPlayerPosition");
+        if (!AtPlayerPosition)
         {
-            Spawnpoint = value2;
-        }
-        else
-        {
-            p.ReportRequiredOptionInvalid("Spawnpoint");
+            if (p.data.TryGetString("Spawnpoint", out var value2))
+            {
+                Spawnpoint = value2;
+            }
+            else
+            {
+                p.ReportRequiredOptionInvalid("Spawnpoint");
+            }
         }
         IsReliable = p.data.ParseBool("IsReliable", defaultValue: true);
         OverrideRelevantDistance = p.data.ParseFloat("RelevantDistance", -1f);
@@ -78,13 +95,17 @@ public class NPCEffectReward : INPCReward
         {
             p.ReportRequiredOptionInvalid("GUID");
         }
-        if (p.data.TryGetString(p.legacyPrefix + "_Spawnpoint", out var value2))
+        AtPlayerPosition = p.data.ParseBool(p.legacyPrefix + "_AtPlayerPosition");
+        if (!AtPlayerPosition)
         {
-            Spawnpoint = value2;
-        }
-        else
-        {
-            p.ReportRequiredOptionInvalid("Spawnpoint");
+            if (p.data.TryGetString(p.legacyPrefix + "_Spawnpoint", out var value2))
+            {
+                Spawnpoint = value2;
+            }
+            else
+            {
+                p.ReportRequiredOptionInvalid("Spawnpoint");
+            }
         }
         IsReliable = p.data.ParseBool(p.legacyPrefix + "_IsReliable", defaultValue: true);
         OverrideRelevantDistance = p.data.ParseFloat(p.legacyPrefix + "_RelevantDistance", -1f);

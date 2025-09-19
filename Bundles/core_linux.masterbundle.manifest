@@ -1,9 +1,9 @@
 ManifestFileVersion: 0
-CRC: 2062999251
+CRC: 2601331767
 Hashes:
   AssetFileHash:
     serializedVersion: 2
-    Hash: 25c35bbb7738342e1f756e26d2618c8a
+    Hash: 27c1224892da620512246b9d456af4b6
   TypeTreeHash:
     serializedVersion: 2
     Hash: 19e168211509a315be50bca8ddaad303
@@ -1070,6 +1070,7 @@ Assets:
 - Assets/CoreMasterBundle/Items/Shirts/FranceRULA_Top/Material.mat
 - Assets/CoreMasterBundle/Items/Barricades/Table_Rect_Metal/Barricade.prefab
 - Assets/CoreMasterBundle/Items/RioRemastered/Free/Rio_Soccer_Top_Serbia/Shirt.png
+- Assets/CoreMasterBundle/Items/Limestone/Achievement/LS_HiVisVest/Vest.prefab
 - Assets/CoreMasterBundle/Items/Hats/Eskimo_Hat/Animations.prefab
 - Assets/CoreMasterBundle/Items/Shirts/Construction_Top/Shirt.png
 - Assets/CoreMasterBundle/Effects/Physics/Footstep/Concrete_Run/footstep_concrete_run_18.wav
@@ -2509,6 +2510,7 @@ Assets:
 - Assets/CoreMasterBundle/Items/Pants/HalloSkullBottom/Item.prefab
 - Assets/CoreMasterBundle/Items/Vests/Sweatervest_Orange/Vest.prefab
 - Assets/CoreMasterBundle/Skins/Dragonfang/Dragonblaster/Skin_Primary.mat
+- Assets/CoreMasterBundle/Items/Limestone/Achievement/LS_ShirtContractor/Material.mat
 - Assets/CoreMasterBundle/Items/RioRemastered/Free/Rio_Chewing_Gum/Mask.prefab
 - Assets/CoreMasterBundle/Objects/Large/Scenery/Monolith/Object.prefab
 - Assets/CoreMasterBundle/Objects/Large/Vehicles/Heli_3/Nav.prefab
@@ -2523,6 +2525,7 @@ Assets:
 - Assets/CoreMasterBundle/Items/Throwables/Flare_Purple/Throwable.prefab
 - Assets/CoreMasterBundle/Items/Limestone/Extras/LS_Softshell_1/Material.mat
 - Assets/CoreMasterBundle/Items/Outfits/Cali_Mercenary/Cali_Mercenary_Heavy_Mask/Item.prefab
+- Assets/CoreMasterBundle/Items/Limestone/Achievement/LS_ShirtContractor/Shirt.png
 - Assets/CoreMasterBundle/Objects/Medium/Fences/Fence_Metal_4/Nav.prefab
 - Assets/CoreMasterBundle/Objects/Large/Buildings/Shed_0/Slots.prefab
 - Assets/CoreMasterBundle/Skins/Timberwolf/Ancestral/Skin_Secondary_153.mat
@@ -3519,6 +3522,7 @@ Assets:
 - Assets/CoreMasterBundle/Items/Elver2/Elver2_Medal/Item.prefab
 - Assets/CoreMasterBundle/Items/Guns/Bow_Compound/Aim.mp3
 - Assets/CoreMasterBundle/Skins/Detonator/Frost_Detonator/Skin_Primary.mat
+- Assets/CoreMasterBundle/Items/Limestone/Achievement/LS_HiVisVest/Item.prefab
 - Assets/CoreMasterBundle/Items/Hats/Skater_Beanie/Material.mat
 - Assets/CoreMasterBundle/Effects/Explosions/Dead_2/Texture.png
 - Assets/CoreMasterBundle/Effects/Impacts/Wood_WithDecal_NoAudio/Effect.prefab
@@ -4361,6 +4365,7 @@ Assets:
 - Assets/CoreMasterBundle/Items/Pants/VampireHunter_Pants/Item.prefab
 - Assets/CoreMasterBundle/Items/Barricades/Stack_Plank_Maple/Animations.prefab
 - Assets/CoreMasterBundle/Terrain/Materials/README.txt
+- Assets/CoreMasterBundle/Items/Limestone/Achievement/LS_PetWorm/Vest.prefab
 - Assets/CoreMasterBundle/Skins/Honeybadger/Chill/Skin_Tertiary.mat
 - Assets/CoreMasterBundle/Items/Sights/Bane_Iron_Sights/Item.prefab
 - Assets/CoreMasterBundle/Items/Vests/Military_Vest_Forest/Item.prefab
@@ -5143,6 +5148,7 @@ Assets:
 - Assets/CoreMasterBundle/Items/Barricades/Hatch_Maple/Nav.prefab
 - Assets/CoreMasterBundle/Objects/Large/Buildings/Barn_1/Triggers.prefab
 - Assets/CoreMasterBundle/Items/Barricades/Stack_Stick_Birch/Animations.prefab
+- Assets/CoreMasterBundle/Items/Limestone/Achievement/LS_BlastGlasses/Item.prefab
 - Assets/CoreMasterBundle/Skins/Yuri/Carbonator/Skin_Secondary_1042.mat
 - Assets/CoreMasterBundle/Items/Structures/Post_Birch/Item.prefab
 - Assets/CoreMasterBundle/Items/Barricades/Glass_Weak/Item.prefab
@@ -6633,6 +6639,7 @@ Assets:
 - Assets/CoreMasterBundle/Items/Pants/Suit_Bottom_Gold/Material.mat
 - Assets/CoreMasterBundle/Effects/Physics/Footstep/MetalHigh_Walk/footstep_metal_high_walk_03.wav
 - Assets/CoreMasterBundle/UI/BlueprintCategoryTagIcons/Barricade.png
+- Assets/CoreMasterBundle/Items/Limestone/Achievement/LS_PetWorm/Item.prefab
 - Assets/CoreMasterBundle/Sounds/Inventory/LightCloth/foley_cloth_light_fast_movement_10.wav
 - Assets/CoreMasterBundle/Items/Clouds/Umbrella_Yellow/Animations.prefab
 - Assets/CoreMasterBundle/Skins/Heartbreaker/Eye/Skin_Primary.mat
@@ -6776,6 +6783,7 @@ Assets:
 - Assets/CoreMasterBundle/Items/RioRemastered/Free/Rio_Horde_Control/Backpack.prefab
 - Assets/CoreMasterBundle/Effects/Physics/ShotgunShellBounce/Metal/ShotgunShellBounce_Metal.asset
 - Assets/CoreMasterBundle/Items/RioRemastered/Free/Rio_Soccer_Top_Japan/Material.mat
+- Assets/CoreMasterBundle/Items/Limestone/Achievement/LS_ShirtContractor/Item.prefab
 - Assets/CoreMasterBundle/Items/Water/Bottled_Energy/Item.prefab
 - Assets/CoreMasterBundle/Items/Shirts/Festive_Top/Material.mat
 - Assets/CoreMasterBundle/Items/Shirts/Tuxedo_Top_White/Item.prefab
@@ -11689,6 +11697,7 @@ Assets:
 - Assets/CoreMasterBundle/Skins/Timberwolf/Phantox/Skin_Secondary_21.mat
 - Assets/CoreMasterBundle/Items/Barricades/Garageframe_Birch/Item.prefab
 - Assets/CoreMasterBundle/Skins/Card/Samuka/Skin_Tertiary.mat
+- Assets/CoreMasterBundle/Items/Limestone/Achievement/LS_BlastGlasses/Glasses.prefab
 - Assets/CoreMasterBundle/Skins/Heartbreaker/Overkill/Skin_Secondary_1490.mat
 - Assets/CoreMasterBundle/Skins/Knife_Butcher/Heated/Skin_Primary.mat
 - Assets/CoreMasterBundle/Skins/Zubeknakov/Elemental/Skin_Secondary_146.mat

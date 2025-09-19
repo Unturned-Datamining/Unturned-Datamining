@@ -444,6 +444,10 @@ public class LevelNavigation
             river3.writeSingleVector3(flag.point);
             river3.writeSingle(flag.width);
             river3.writeSingle(flag.height);
+            if (flag.graph.tileXCount < 1 || flag.graph.tileZCount < 1)
+            {
+                UnturnedLog.warn($"Navmesh at {flag.point} has not been baked yet");
+            }
             if (flag.needsNavigationSave)
             {
                 River river4 = new River(Level.info.path + "/Environment/Navigation_" + b3.ToString(CultureInfo.InvariantCulture) + ".dat", usePath: false);
