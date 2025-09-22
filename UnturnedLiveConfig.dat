@@ -15,7 +15,26 @@ MainMenuWorkshop
 	AllowNews true
 	Featured
 	{
-		Id 0
+		Id 1000
+		FileIds
+		[
+			3565225438
+		]
+		Status New
+		Type Curated
+		OverrideDescription Welcome to a mountainous state southwest of Canada.\n\nTourist attractions include mountain climbing, target shooting, and fishing.\n\nBut don’t forget about the county’s central city, Pinehurst! Try the delicious donuts at Double Deсked Donuts, visit the incredible exhibition at the city gallery, spend an unforgettable night at Hotel Boxter, and stop by one of the newest branches of the Kraymarkt supermarket chain.\n\nRumor has it that the local mountains (and not only them) hide many secrets. Some are eerie, others very useful… if, of course, you know how to handle them.\n\nAnd while you explore the local landmarks and natural beauty, don’t forget about the wild animals! Unfortunately, they’re not as friendly as we are...\n\nWell then, we look forward to seeing you in\n\nLimestone National Park!
+		LinkText Read Launch Announcement
+		LinkURL https://store.steampowered.com/news/app/304930/view/500584162306032135
+		AssociatedStockpileItems
+		[
+			1987
+			1994
+			1995
+			21085
+		]
+		UseTimeWindow true
+		StartTime 2025-09-20 12:00:00
+		EndTime 2025-10-20 12:00:00
 	}
 	Popular
 	{
@@ -25,9 +44,20 @@ MainMenuWorkshop
 }
 ItemStore
 {
-	PromotionId 6
+	PromotionId 1000
+	NewItems
+	[
+		1987
+		1994
+		1995
+		21085
+	]
 	FeaturedItems
 	[
+		1987
+		1994
+		1995
+		21085
 		21081
 		1955
 		1960
