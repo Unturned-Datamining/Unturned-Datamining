@@ -45,8 +45,8 @@
 	"Game":
 	{
 		"Major_Version": 25,
-		"Minor_Version": 8,
-		"Patch_Version": 4,
+		"Minor_Version": 9,
+		"Patch_Version": 0,
 		"GrantPackageIDs":
 		[
 			487
@@ -59,9 +59,9 @@
 	},
 	"Menu":
 	{
-		"PromoStart": "2025-03-17T12:00:00Z",
-		"PromoEnd": "2025-04-09T12:00:00Z",
-		"PromoLevel": ""
+		"PromoStart": "2025-09-20T12:00:00Z",
+		"PromoEnd": "2025-10-20T12:00:00Z",
+		"PromoLevel": "Menu_Limestone"
 	},
 	"News":
 	{
@@ -72,13 +72,18 @@
 		"Auto_Subscribe":
 		[
 			{
-				"Workshop_File_Id": 3416057692,
-				"Start": "2025-03-19T16:00:00Z",
-				"End": "2026-03-19T16:00:00Z"
+				"Workshop_File_Id": 3565225438,
+				"Start": "2025-09-20T16:00:00Z",
+				"End": "2026-09-20T16:00:00Z"
 			}
 		],
 		"Curated_Map_Links":
 		[
+			{
+				"Name": "Limestone",
+				"Workshop_File_Id": 3565225438,
+				"Visible_In_Singleplayer_Recommendations_List": true
+			},
 			{
 				"Name": "Rio de Janeiro Remastered",
 				"Workshop_File_Id": 3416057692,
