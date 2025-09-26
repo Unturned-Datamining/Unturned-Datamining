@@ -24,27 +24,28 @@
 | 109.172.30.100   | HiddenFromInternetServerList |
 
 ## Name filters
-| Regex                                                                                 | BanFlags                          |
-| ------------------------------------------------------------------------------------- | --------------------------------- |
-| (?i)(pandahut&#124;panda hut)(?!.* )                                                  | HiddenFromAllServerLists          |
-| (?i)(Auschwitz&#124;Nazi&#124;Nazista&#124;Anti-Negro&#124;Anti-Jew&#124;Anti-Judeus) | HiddenFromAllServerLists, Blocked |
-| (?i)(nigger)                                                                          | HiddenFromAllServerLists, Blocked |
-| (?i)(UnityPlay)                                                                       | HiddenFromInternetServerList      |
-| (?i)(no\s*-*\s*lag)                                                                   | HiddenFromInternetServerList      |
-| (?i)(DWS)                                                                             | HiddenFromInternetServerList      |
-| (?i)(Debalcevo)                                                                       | HiddenFromInternetServerList      |
-| (?i)(Takistan 1942)                                                                   | HiddenFromInternetServerList      |
-| (?i)(BEBRO)                                                                           | HiddenFromAllServerLists          |
-| (?i)(Bebri)                                                                           | HiddenFromAllServerLists          |
-| (?i)(Бебри)                                                                           | HiddenFromAllServerLists          |
-| (?i)(Бебri)                                                                           | HiddenFromAllServerLists          |
-| (?i)(Бебrи)                                                                           | HiddenFromAllServerLists          |
-| (?i)(Беbrи)                                                                           | HiddenFromAllServerLists          |
-| (?i)(Беbриks)                                                                         | HiddenFromAllServerLists          |
-| (Бeбpиks)                                                                             | HiddenFromAllServerLists          |
-| (?i)(БЕБРА)                                                                           | HiddenFromAllServerLists          |
-| (?i)(] wiped)                                                                         | HiddenFromAllServerLists          |
-| (?i)(MegaNine)                                                                        | HiddenFromInternetServerList      |
+| Regex                                                                                 | BanFlags                                          |
+| ------------------------------------------------------------------------------------- | ------------------------------------------------- |
+| (?i)(pandahut&#124;panda hut)(?!.* )                                                  | HiddenFromAllServerLists                          |
+| (?i)(Auschwitz&#124;Nazi&#124;Nazista&#124;Anti-Negro&#124;Anti-Jew&#124;Anti-Judeus) | HiddenFromAllServerLists, Blocked                 |
+| (?i)(nigger)                                                                          | HiddenFromAllServerLists, Blocked                 |
+| (?i)(UnityPlay)                                                                       | HiddenFromInternetServerList                      |
+| (?i)(no\s*-*\s*lag)                                                                   | HiddenFromInternetServerList                      |
+| (?i)(DWS)                                                                             | HiddenFromInternetServerList                      |
+| (?i)(Debalcevo)                                                                       | HiddenFromInternetServerList                      |
+| (?i)(Takistan 1942)                                                                   | HiddenFromInternetServerList                      |
+| (?i)(BEBRO)                                                                           | HiddenFromAllServerLists                          |
+| (?i)(Bebri)                                                                           | HiddenFromAllServerLists                          |
+| (?i)(Бебри)                                                                           | HiddenFromAllServerLists                          |
+| (?i)(Бебri)                                                                           | HiddenFromAllServerLists                          |
+| (?i)(Бебrи)                                                                           | HiddenFromAllServerLists                          |
+| (?i)(Беbrи)                                                                           | HiddenFromAllServerLists                          |
+| (?i)(Беbриks)                                                                         | HiddenFromAllServerLists                          |
+| (Бeбpиks)                                                                             | HiddenFromAllServerLists                          |
+| (?i)(БЕБРА)                                                                           | HiddenFromAllServerLists                          |
+| (?i)(] wiped)                                                                         | HiddenFromAllServerLists                          |
+| (?i)(MegaNine)                                                                        | HiddenFromInternetServerList                      |
+| (?i)(Zumbas Brasil)                                                                   | MonetizationWarning, HiddenFromInternetServerList |
 
 ## Description filters
 | Regex | BanFlags |
@@ -63,28 +64,29 @@
 | (?i)(https://i.imgur.com/oAbg6NM.png)                   | ![https://i.imgur.com/oAbg6NM.png](https://i.imgur.com/oAbg6NM.png)                                     | HiddenFromAllServerLists, Blocked |
 
 ## SteamId filters
-| SteamId           | BanFlags                          |
-| ----------------- | --------------------------------- |
-| 85568392927283679 | HiddenFromInternetServerList      |
-| 85568392927159806 | HiddenFromInternetServerList      |
-| 85568392931810335 | HiddenFromInternetServerList      |
-| 85568392931954075 | HiddenFromInternetServerList      |
-| 85568392934886726 | HiddenFromAllServerLists          |
-| 85568392934886725 | HiddenFromAllServerLists          |
-| 85568392934886728 | HiddenFromAllServerLists          |
-| 85568392934886729 | HiddenFromAllServerLists          |
-| 85568392932486552 | HiddenFromInternetServerList      |
-| 85568392932492857 | HiddenFromInternetServerList      |
-| 85568392931735316 | HiddenFromInternetServerList      |
-| 85568392933086384 | HiddenFromInternetServerList      |
-| 85568392932085893 | HiddenFromInternetServerList      |
-| 85568392934727749 | HiddenFromInternetServerList      |
-| 85568392934832312 | HiddenFromInternetServerList      |
-| 85568392934832317 | HiddenFromInternetServerList      |
-| 85568392934832315 | HiddenFromInternetServerList      |
-| 85568392934835349 | HiddenFromInternetServerList      |
-| 85568392934835347 | HiddenFromInternetServerList      |
-| 85568392934835350 | HiddenFromInternetServerList      |
-| 85568392934832311 | HiddenFromInternetServerList      |
-| 85568392934835348 | HiddenFromInternetServerList      |
-| 85568392934936077 | HiddenFromAllServerLists, Blocked |
+| SteamId           | BanFlags                                          |
+| ----------------- | ------------------------------------------------- |
+| 85568392927283679 | HiddenFromInternetServerList                      |
+| 85568392927159806 | HiddenFromInternetServerList                      |
+| 85568392931810335 | HiddenFromInternetServerList                      |
+| 85568392931954075 | HiddenFromInternetServerList                      |
+| 85568392934886726 | HiddenFromAllServerLists                          |
+| 85568392934886725 | HiddenFromAllServerLists                          |
+| 85568392934886728 | HiddenFromAllServerLists                          |
+| 85568392934886729 | HiddenFromAllServerLists                          |
+| 85568392932486552 | HiddenFromInternetServerList                      |
+| 85568392932492857 | HiddenFromInternetServerList                      |
+| 85568392931735316 | HiddenFromInternetServerList                      |
+| 85568392933086384 | HiddenFromInternetServerList                      |
+| 85568392932085893 | HiddenFromInternetServerList                      |
+| 85568392934727749 | HiddenFromInternetServerList                      |
+| 85568392934832312 | HiddenFromInternetServerList                      |
+| 85568392934832317 | HiddenFromInternetServerList                      |
+| 85568392934832315 | HiddenFromInternetServerList                      |
+| 85568392934835349 | HiddenFromInternetServerList                      |
+| 85568392934835347 | HiddenFromInternetServerList                      |
+| 85568392934835350 | HiddenFromInternetServerList                      |
+| 85568392934832311 | HiddenFromInternetServerList                      |
+| 85568392934835348 | HiddenFromInternetServerList                      |
+| 85568392934936077 | HiddenFromAllServerLists, Blocked                 |
+| 85568392933179303 | MonetizationWarning, HiddenFromInternetServerList |
