@@ -159,5 +159,9 @@ public enum EPlayerMessage
     /// <summary>
     /// Explaining that some blueprints require workstations.
     /// </summary>
-    TUTORIAL_WORKSTATION
+    TUTORIAL_WORKSTATION,
+    /// <summary>
+    /// Barricades are allowed here but not structures.
+    /// </summary>
+    INSIDE_NO_STRUCTURES_VOLUME
 }

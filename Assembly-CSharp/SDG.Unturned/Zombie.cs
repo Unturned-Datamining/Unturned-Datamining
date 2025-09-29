@@ -1717,6 +1717,21 @@ public class Zombie : MonoBehaviour, IExplosionDamageable, IEquatable<IExplosion
         {
             health = 6000;
         }
+        if (difficulty != null && difficulty.SpecialityHealthOverrideMode != 0 && difficulty.SpecialityHealthOverrides != null && difficulty.SpecialityHealthOverrides.TryGetValue(speciality, out var value))
+        {
+            switch (difficulty.SpecialityHealthOverrideMode)
+            {
+            case EZombieDifficultyHealthOverrideMode.MultiplyEditorHealth:
+                health = MathfEx.RoundAndClampToUShort((float)(int)LevelZombies.tables[type].health * value);
+                break;
+            case EZombieDifficultyHealthOverrideMode.MultiplyDefaultHealth:
+                health = MathfEx.RoundAndClampToUShort((float)(int)health * value);
+                break;
+            case EZombieDifficultyHealthOverrideMode.Replace:
+                health = MathfEx.RoundAndClampToUShort(value);
+                break;
+            }
+        }
         if (Level.info.type == ELevelType.HORDE)
         {
             health += (ushort)(Mathf.Min(ZombieManager.waveIndex - 1, 20) * 10);
@@ -2708,6 +2723,7 @@ public class Zombie : MonoBehaviour, IExplosionDamageable, IEquatable<IExplosion
 
     private void start()
     {
+        updateDifficulty();
         if (Provider.isServer)
         {
             seeker = GetComponent<AIPath>();
@@ -2734,7 +2750,6 @@ public class Zombie : MonoBehaviour, IExplosionDamageable, IEquatable<IExplosion
         {
             groanDelay = UnityEngine.Random.Range(4f, 8f);
         }
-        updateDifficulty();
         updateLife();
         apply();
         updateEffects();

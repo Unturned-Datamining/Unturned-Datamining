@@ -3032,7 +3032,7 @@ public class InteractableVehicle : Interactable, IExplosionDamageable, IEquatabl
             {
                 break;
             }
-            float num4 = Mathf.Lerp(asset.steerMax, asset.steerMin, replicatedForwardSpeedPercentageOfTargetSpeed2);
+            float num4 = Mathf.Lerp(asset.MaxSteeringAngle, asset.MaxSteeringAngleAtFullSpeed, replicatedForwardSpeedPercentageOfTargetSpeed2);
             bool flag3 = WaterUtility.isPointUnderwater(base.transform.position + new Vector3(0f, -1f, 0f));
             boatTraction = Mathf.Lerp(boatTraction, flag3 ? 1 : 0, 4f * delta);
             if (!MathfEx.IsNearlyZero(boatTraction))
@@ -3089,7 +3089,7 @@ public class InteractableVehicle : Interactable, IExplosionDamageable, IEquatabl
         case EEngine.HELICOPTER:
         {
             float replicatedForwardSpeedPercentageOfTargetSpeed5 = GetReplicatedForwardSpeedPercentageOfTargetSpeed();
-            float num7 = Mathf.Lerp(asset.steerMax, asset.steerMin, replicatedForwardSpeedPercentageOfTargetSpeed5);
+            float num7 = Mathf.Lerp(asset.MaxSteeringAngle, asset.MaxSteeringAngleAtFullSpeed, replicatedForwardSpeedPercentageOfTargetSpeed5);
             if (num > 0f)
             {
                 inputTargetVelocity = Mathf.Lerp(inputTargetVelocity, asset.TargetForwardVelocity * num2, delta / 4f);
@@ -3110,7 +3110,7 @@ public class InteractableVehicle : Interactable, IExplosionDamageable, IEquatabl
         case EEngine.BLIMP:
         {
             float replicatedForwardSpeedPercentageOfTargetSpeed3 = GetReplicatedForwardSpeedPercentageOfTargetSpeed();
-            float num5 = Mathf.Lerp(asset.steerMax, asset.steerMin, replicatedForwardSpeedPercentageOfTargetSpeed3);
+            float num5 = Mathf.Lerp(asset.MaxSteeringAngle, asset.MaxSteeringAngleAtFullSpeed, replicatedForwardSpeedPercentageOfTargetSpeed3);
             if (num > 0f)
             {
                 inputTargetVelocity = Mathf.Lerp(inputTargetVelocity, asset.TargetForwardVelocity * num2, delta / 4f);
@@ -3135,7 +3135,7 @@ public class InteractableVehicle : Interactable, IExplosionDamageable, IEquatabl
         case EEngine.BOAT:
         {
             float replicatedForwardSpeedPercentageOfTargetSpeed6 = GetReplicatedForwardSpeedPercentageOfTargetSpeed();
-            float num8 = Mathf.Lerp(asset.steerMax, asset.steerMin, replicatedForwardSpeedPercentageOfTargetSpeed6);
+            float num8 = Mathf.Lerp(asset.MaxSteeringAngle, asset.MaxSteeringAngleAtFullSpeed, replicatedForwardSpeedPercentageOfTargetSpeed6);
             boatTraction = Mathf.Lerp(boatTraction, WaterUtility.isPointUnderwater(base.transform.position + new Vector3(0f, -1f, 0f)) ? 1 : 0, 4f * delta);
             if (num > 0f)
             {
@@ -3327,7 +3327,7 @@ public class InteractableVehicle : Interactable, IExplosionDamageable, IEquatabl
         }
         else
         {
-            float num = Mathf.Lerp(asset.steerMax, asset.steerMin, GetReplicatedForwardSpeedPercentageOfTargetSpeed());
+            float num = Mathf.Lerp(asset.MaxSteeringAngle, asset.MaxSteeringAngleAtFullSpeed, GetReplicatedForwardSpeedPercentageOfTargetSpeed());
             float target = ReplicatedSteeringInput * num;
             float maxDelta = asset.SteeringAngleTurnSpeed * deltaTime;
             AnimatedSteeringAngle = Mathf.MoveTowards(AnimatedSteeringAngle, target, maxDelta);

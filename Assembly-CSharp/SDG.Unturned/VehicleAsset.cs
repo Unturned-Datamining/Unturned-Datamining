@@ -261,14 +261,36 @@ public class VehicleAsset : Asset, ISkinableAsset
     public float TargetForwardSpeed => Mathf.Abs(TargetForwardVelocity);
 
     /// <summary>
-    /// Steering angle range at zero speed.
+    /// Steering angle range at target maximum speed (for the current forward/backward direction).
+    /// Reducing steering range at higher speeds keeps the vehicle controlable with digital (non-analog) input.
     /// </summary>
-    public float steerMin => _steerMin;
+    public float MaxSteeringAngleAtFullSpeed
+    {
+        get
+        {
+            return _steerMin;
+        }
+        set
+        {
+            _steerMin = value;
+        }
+    }
 
     /// <summary>
-    /// Steering angle range at target maximum speed (for the current forward/backward direction).
+    /// Steering angle range at zero speed (idle/parked).
+    /// For example, 45 means the wheels connected to steering can rotate ±45 degrees.
     /// </summary>
-    public float steerMax => _steerMax;
+    public float MaxSteeringAngle
+    {
+        get
+        {
+            return _steerMax;
+        }
+        set
+        {
+            _steerMax = value;
+        }
+    }
 
     /// <summary>
     /// Steering angle rotation change in degrees per second.
@@ -725,6 +747,12 @@ public class VehicleAsset : Asset, ISkinableAsset
 
     [Obsolete("Renamed to TargetForwardVelocity.")]
     public float speedMax => TargetForwardVelocity;
+
+    [Obsolete("Renamed to MaxSteeringAngle")]
+    public float steerMax => _steerMax;
+
+    [Obsolete("Renamed to MaxSteeringAngleAtFullSpeed")]
+    public float steerMin => _steerMin;
 
     /// <summary>
     /// Supports redirects by VehicleRedirectorAsset.
@@ -1300,8 +1328,18 @@ public class VehicleAsset : Asset, ISkinableAsset
         {
             TargetForwardVelocity *= 1.25f;
         }
-        _steerMin = p.data.ParseFloat("Steer_Min");
-        _steerMax = p.data.ParseFloat("Steer_Max") * 0.75f;
+        if (!p.data.TryParseFloat("Steering_Angle_Max", out _steerMax))
+        {
+            _steerMax = p.data.ParseFloat("Steer_Max") * 0.75f;
+        }
+        if (p.data.TryParseFloat("Steering_Angle_FullSpeed_Factor", out var value))
+        {
+            _steerMin = _steerMax * value;
+        }
+        else
+        {
+            _steerMin = p.data.ParseFloat("Steer_Min");
+        }
         CrawlerTrackSteeringTorque = p.data.ParseFloat("CrawlerTrackSteering_Torque");
         CrawlerTrackSteeringSidewaysFrictionMultiplier = p.data.ParseFloat("CrawlerTrackSteering_SidewaysFrictionMultiplier", 1f);
         CrawlerTrackSteeringMaxSpeedScale = p.data.ParseFloat("CrawlerTrackSteering_MaxSpeedScale", 1f);
@@ -1329,9 +1367,9 @@ public class VehicleAsset : Asset, ISkinableAsset
             explosionBurnMaterialSections = p.data.ParseArrayOfStructs<PaintableVehicleSection>("ExplosionBurnMaterialSections");
         }
         float num = p.data.ParseFloat("Explosion_Force_Multiplier", 1f);
-        if (p.data.TryParseVector3("Explosion_Min_Force", out var value))
+        if (p.data.TryParseVector3("Explosion_Min_Force", out var value2))
         {
-            minExplosionForce = value * num;
+            minExplosionForce = value2 * num;
         }
         else if (p.data.ContainsKey("Explosion_Min_Force_Y"))
         {
@@ -1341,9 +1379,9 @@ public class VehicleAsset : Asset, ISkinableAsset
         {
             minExplosionForce = new Vector3(0f, 1024f * num, 0f);
         }
-        if (p.data.TryParseVector3("Explosion_Max_Force", out var value2))
+        if (p.data.TryParseVector3("Explosion_Max_Force", out var value3))
         {
-            maxExplosionForce = value2 * num;
+            maxExplosionForce = value3 * num;
         }
         else if (p.data.ContainsKey("Explosion_Max_Force_Y"))
         {
@@ -1461,7 +1499,7 @@ public class VehicleAsset : Asset, ISkinableAsset
         }
         else
         {
-            airSteerMin = steerMin;
+            airSteerMin = MaxSteeringAngleAtFullSpeed;
         }
         if (p.data.ContainsKey("Air_Steer_Max"))
         {
@@ -1469,16 +1507,16 @@ public class VehicleAsset : Asset, ISkinableAsset
         }
         else
         {
-            airSteerMax = steerMax;
+            airSteerMax = MaxSteeringAngle;
         }
         bicycleAnimSpeed = p.data.ParseFloat("Bicycle_Anim_Speed");
         staminaBoost = p.data.ParseFloat("Stamina_Boost");
         useStaminaBoost = p.data.ContainsKey("Stamina_Boost");
         isStaminaPowered = p.data.ContainsKey("Stamina_Powered");
         isBatteryPowered = p.data.ContainsKey("Battery_Powered");
-        if (p.data.TryParseEnum<EVehicleBuildablePlacementRule>("Buildable_Placement_Rule", out var value3))
+        if (p.data.TryParseEnum<EVehicleBuildablePlacementRule>("Buildable_Placement_Rule", out var value4))
         {
-            BuildablePlacementRule = value3;
+            BuildablePlacementRule = value4;
         }
         else if (p.data.ContainsKey("Supports_Mobile_Buildables"))
         {
@@ -1545,9 +1583,9 @@ public class VehicleAsset : Asset, ISkinableAsset
             DefaultPaintColors = new List<Color32>(node2.Count);
             foreach (IDatNode item in node2)
             {
-                if (item is IDatValue node3 && node3.TryParseColor32RGB(out var value4))
+                if (item is IDatValue node3 && node3.TryParseColor32RGB(out var value5))
                 {
-                    DefaultPaintColors.Add(value4);
+                    DefaultPaintColors.Add(value5);
                 }
             }
         }
@@ -1612,9 +1650,9 @@ public class VehicleAsset : Asset, ISkinableAsset
             List<float> list4 = new List<float>();
             foreach (IDatNode item3 in node6)
             {
-                if (item3 is IDatValue valueNode && valueNode.TryParseFloat(out var value5))
+                if (item3 is IDatValue valueNode && valueNode.TryParseFloat(out var value6))
                 {
-                    list4.Add(value5);
+                    list4.Add(value6);
                 }
             }
             if (list4.Count > 0)
@@ -1719,8 +1757,8 @@ public class VehicleAsset : Asset, ISkinableAsset
         orAddDeclaration2.Append("TargetReverseVelocity", TargetReverseVelocity);
         orAddDeclaration2.Append("Stamina_Boost", staminaBoost);
         orAddDeclaration2.Append("Stamina_Powered", isStaminaPowered);
-        orAddDeclaration2.Append("steerMax", steerMax);
-        orAddDeclaration2.Append("steerMin", steerMin);
+        orAddDeclaration2.Append("steerMax", MaxSteeringAngle);
+        orAddDeclaration2.Append("steerMin", MaxSteeringAngleAtFullSpeed);
         orAddDeclaration2.Append("Steering_Angle_Turn_Speed", SteeringAngleTurnSpeed);
         orAddDeclaration2.Append("Steering_LeaningForceMultiplier", steeringLeaningForceMultiplier);
         orAddDeclaration2.Append("Tire_ID", tireID);

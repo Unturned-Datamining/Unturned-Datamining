@@ -171,6 +171,8 @@ public class Level : MonoBehaviour
 
     private static CartographyVolumeManager cartographyVolumeManager;
 
+    private static NoStructuresVolumeManager noStructuresVolumeManager;
+
     private static OxygenVolumeManager oxygenVolumeManager;
 
     private static CullingVolumeManager cullingVolumeManager;
@@ -1637,6 +1639,7 @@ public class Level : MonoBehaviour
         arenaVolumeManager = new ArenaCompactorVolumeManager();
         hordePurchaseVolumeManager = new HordePurchaseVolumeManager();
         cartographyVolumeManager = new CartographyVolumeManager();
+        noStructuresVolumeManager = new NoStructuresVolumeManager();
         oxygenVolumeManager = new OxygenVolumeManager();
         cullingVolumeManager = new CullingVolumeManager();
         rewardVolumeManager = new NPCRewardVolumeManager();

@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+
 namespace SDG.Unturned;
 
 public class ZombieDifficultyAsset : Asset
@@ -38,6 +40,13 @@ public class ZombieDifficultyAsset : Asset
     /// Can horde beacons be placed in the associated bounds?
     /// </summary>
     public bool Allow_Horde_Beacon;
+
+    public EZombieDifficultyHealthOverrideMode SpecialityHealthOverrideMode { get; set; }
+
+    /// <summary>
+    /// Can be null if not assigned.
+    /// </summary>
+    public Dictionary<EZombieSpeciality, float> SpecialityHealthOverrides { get; set; }
 
     public override void PopulateAsset(in PopulateAssetParameters p)
     {
@@ -80,6 +89,26 @@ public class ZombieDifficultyAsset : Asset
         else
         {
             Allow_Horde_Beacon = true;
+        }
+        SpecialityHealthOverrideMode = p.data.ParseEnum("Speciality_Health_Override_Mode", EZombieDifficultyHealthOverrideMode.None);
+        if (SpecialityHealthOverrideMode == EZombieDifficultyHealthOverrideMode.None)
+        {
+            return;
+        }
+        if (!p.data.TryGetDictionary("Speciality_Health_Overrides", out var node))
+        {
+            ReportAssetError("missing Speciality_Health_Overrides");
+            return;
+        }
+        SpecialityHealthOverrides = new Dictionary<EZombieSpeciality, float>();
+        for (int i = 1; i <= 24; i++)
+        {
+            EZombieSpeciality key = (EZombieSpeciality)i;
+            string key2 = key.ToString();
+            if (node.TryParseFloat(key2, out var value))
+            {
+                SpecialityHealthOverrides[key] = value;
+            }
         }
     }
 

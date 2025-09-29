@@ -7,7 +7,7 @@ internal enum EWheelSteeringMode
     /// </summary>
     None,
     /// <summary>
-    /// Set steering angle according to <see cref="P:SDG.Unturned.VehicleAsset.steerMin" /> and <see cref="P:SDG.Unturned.VehicleAsset.steerMax" />.
+    /// Set steering angle according to <see cref="P:SDG.Unturned.VehicleAsset.MaxSteeringAngleAtFullSpeed" /> and <see cref="P:SDG.Unturned.VehicleAsset.MaxSteeringAngle" />.
     /// </summary>
     SteeringAngle,
     /// <summary>

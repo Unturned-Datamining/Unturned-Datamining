@@ -111,6 +111,7 @@ PlacementObstructedBy Blocked by: {0}
 PlacementObstructedByGround Cannot Build Underground
 FreeformBuildableNotAllowed Freeform Buildables Not Allowed
 NotPaintable Not Paintable
+Inside_No_Structures_Volume Cannot Build Structures Here
 
 VehicleGear_Reverse R
 VehicleGear_Neutral N

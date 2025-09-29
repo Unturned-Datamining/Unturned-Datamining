@@ -618,7 +618,7 @@ public class Wheel
         }
         if (config.steeringMode == EWheelSteeringMode.SteeringAngle)
         {
-            float num = Mathf.Lerp(vehicle.asset.steerMax, vehicle.asset.steerMin, vehicle.GetReplicatedForwardSpeedPercentageOfTargetSpeed());
+            float num = Mathf.Lerp(vehicle.asset.MaxSteeringAngle, vehicle.asset.MaxSteeringAngleAtFullSpeed, vehicle.GetReplicatedForwardSpeedPercentageOfTargetSpeed());
             float num2 = latestLocalSteeringInput * num;
             num2 *= config.steeringAngleMultiplier;
             float maxDelta = vehicle.asset.SteeringAngleTurnSpeed * delta;

@@ -210,8 +210,6 @@ public class PlayerInputPacket
                 Animal animal = AnimalManager.getAnimal(value14);
                 if (animal != null && (inputInfo.point - animal.transform.position).sqrMagnitude < 256f)
                 {
-                    inputInfo.materialName = "Flesh_Dynamic";
-                    inputInfo.material = EPhysicsMaterial.FLESH_DYNAMIC;
                     inputInfo.animal = animal;
                     inputInfo.transform = animal.transform;
                 }

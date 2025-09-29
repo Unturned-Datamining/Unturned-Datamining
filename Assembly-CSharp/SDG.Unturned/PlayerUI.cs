@@ -806,6 +806,9 @@ public class PlayerUI : MonoBehaviour
         case EPlayerMessage.CLIMB:
             messageLabel.Text = PlayerLifeUI.localization.format("Climb", MenuConfigurationControlsUI.getKeyCodeText(ControlsSettings.interact));
             break;
+        case EPlayerMessage.INSIDE_NO_STRUCTURES_VOLUME:
+            messageLabel.Text = PlayerLifeUI.localization.format("Inside_No_Structures_Volume");
+            break;
         }
         messageBox.PositionOffset_X = (0f - messageBox.SizeOffset_X) / 2f;
         if (transform != null && MainCamera.instance != null)

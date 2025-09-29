@@ -249,6 +249,14 @@ internal static class UseableHousingUtils
             }
             return false;
         }
+        if (VolumeManager<NoStructuresVolume, NoStructuresVolumeManager>.Get().IsPositionInsideAnyVolume(pendingPlacementPosition))
+        {
+            if (channel.IsLocalPlayer)
+            {
+                PlayerUI.hint(null, EPlayerMessage.INSIDE_NO_STRUCTURES_VOLUME);
+            }
+            return false;
+        }
         return true;
     }
 }

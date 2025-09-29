@@ -129,9 +129,6 @@ public sealed class DatWriter : IDisposable
             case '\n':
                 output.Write("\\n");
                 break;
-            case '\r':
-                output.Write("\\r");
-                break;
             case '\t':
                 output.Write("\\t");
                 break;
@@ -143,6 +140,8 @@ public sealed class DatWriter : IDisposable
                 break;
             default:
                 output.Write(c);
+                break;
+            case '\r':
                 break;
             }
         }
