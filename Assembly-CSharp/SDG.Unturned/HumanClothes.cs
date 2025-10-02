@@ -1491,7 +1491,7 @@ public class HumanClothes : MonoBehaviour
         {
             if (shader == null)
             {
-                shader = Shader.Find("Standard");
+                shader = Shader.Find("Standard (Specular setup)");
             }
             if (clothingShader == null)
             {
@@ -1511,6 +1511,7 @@ public class HumanClothes : MonoBehaviour
             materialHair.name = "Hair";
             materialHair.hideFlags = HideFlags.HideAndDontSave;
             materialHair.SetFloat("_Glossiness", 0f);
+            materialHair.SetColor("_SpecColor", Color.black);
         }
         setCharacterMaterial(materialClothing);
         markAllDirty(isDirty: true);
