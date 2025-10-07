@@ -44,6 +44,19 @@ public class Grenade : MonoBehaviour, IExplodableThrowable
     /// </summary>
     public bool shouldDestroySelf = true;
 
+    public bool TryGetOwnership(out ulong ownerUser, out ulong ownerGroup)
+    {
+        if (killer != CSteamID.Nil)
+        {
+            ownerUser = killer.m_SteamID;
+            ownerGroup = 0uL;
+            return true;
+        }
+        ownerUser = 0uL;
+        ownerGroup = 0uL;
+        return false;
+    }
+
     public void Explode()
     {
         if (shouldDestroySelf)
@@ -54,7 +67,12 @@ public class Grenade : MonoBehaviour, IExplodableThrowable
         {
             return;
         }
-        ExplosionParameters parameters = new ExplosionParameters(base.transform.position, range, EDeathCause.GRENADE, killer);
+        CSteamID cSteamID = killer;
+        if (cSteamID == CSteamID.Nil && DamageTool.TryFindOwnership(base.transform.parent, out var ownerUser, out var _))
+        {
+            cSteamID = new CSteamID(ownerUser);
+        }
+        ExplosionParameters parameters = new ExplosionParameters(base.transform.position, range, EDeathCause.GRENADE, cSteamID);
         parameters.playerDamage = playerDamage;
         parameters.zombieDamage = zombieDamage;
         parameters.animalDamage = animalDamage;
@@ -76,7 +94,7 @@ public class Grenade : MonoBehaviour, IExplodableThrowable
             parameters2.reliable = true;
             EffectManager.triggerEffect(parameters2);
         }
-        Player player = PlayerTool.getPlayer(killer);
+        Player player = PlayerTool.getPlayer(cSteamID);
         if (!(player != null))
         {
             return;

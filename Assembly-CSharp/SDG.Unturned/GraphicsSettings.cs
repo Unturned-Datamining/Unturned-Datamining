@@ -874,10 +874,6 @@ public class GraphicsSettings
             }
         }
         QualitySettings.SetQualityLevel((byte)lightingQuality + 1, applyExpensiveChanges: true);
-        if (WantsCinematicMode)
-        {
-            QualitySettings.shadowDistance = 4096f;
-        }
         ApplyVSyncAndTargetFrameRate();
         switch (anisotropicFilteringMode)
         {
@@ -896,9 +892,13 @@ public class GraphicsSettings
         {
             num = Mathf.Clamp(clFarClipDistance.value, 16f, 2048f);
         }
-        if (WantsCinematicMode && IsCinematicModeUnlimited)
+        else if (WantsCinematicMode && !IsCinematicModeUnlimited)
         {
             num = 4096f;
+        }
+        if (WantsCinematicMode)
+        {
+            QualitySettings.shadowDistance = num;
         }
         float num2 = num + 725f;
         float a = 256f + normalizedDrawDistance * 256f;

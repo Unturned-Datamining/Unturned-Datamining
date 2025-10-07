@@ -62,7 +62,7 @@ public class DecalRenderer : MonoBehaviour
         float num2 = 128f + GraphicsSettings.normalizedDrawDistance * 128f;
         if (GraphicsSettings.WantsCinematicMode)
         {
-            num2 = 16384f;
+            num2 = cam.farClipPlane;
         }
         buffer.SetRenderTarget(DIFFUSE, BuiltinRenderTextureType.CameraTarget);
         foreach (Decal item in DecalSystem.decalsDiffuse)

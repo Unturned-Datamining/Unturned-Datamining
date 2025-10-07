@@ -148,6 +148,11 @@ public class Assets : MonoBehaviour
     /// </summary>
     private static MasterBundleConfig coreMasterBundle;
 
+    /// <summary>
+    /// While an asset is being loaded, this is the asset.
+    /// Used by some error logging.
+    /// Note: not ideal because any global state like this prevents parallelization.
+    /// </summary>
     internal static Asset currentAsset;
 
     internal static List<AssetOrigin> assetOrigins;

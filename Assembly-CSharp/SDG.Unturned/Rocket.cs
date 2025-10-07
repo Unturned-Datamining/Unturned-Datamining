@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace SDG.Unturned;
 
-public class Rocket : MonoBehaviour
+public class Rocket : MonoBehaviour, IOwnershipInfo
 {
     public CSteamID killer;
 
@@ -48,6 +48,19 @@ public class Rocket : MonoBehaviour
 
     private Vector3 secondLastPos;
 
+    public bool TryGetOwnership(out ulong ownerUser, out ulong ownerGroup)
+    {
+        if (killer != CSteamID.Nil)
+        {
+            ownerUser = killer.m_SteamID;
+            ownerGroup = 0uL;
+            return true;
+        }
+        ownerUser = 0uL;
+        ownerGroup = 0uL;
+        return false;
+    }
+
     private void OnTriggerEnter(Collider other)
     {
         if (isExploded || other.isTrigger || (ignoreTransform != null && (other.transform == ignoreTransform || other.transform.IsChildOf(ignoreTransform))))
@@ -57,7 +70,12 @@ public class Rocket : MonoBehaviour
         isExploded = true;
         if (Provider.isServer)
         {
-            ExplosionParameters parameters = new ExplosionParameters(secondLastPos, range, EDeathCause.MISSILE, killer);
+            CSteamID cSteamID = killer;
+            if (cSteamID == CSteamID.Nil && DamageTool.TryFindOwnership(base.transform.parent, out var ownerUser, out var _))
+            {
+                cSteamID = new CSteamID(ownerUser);
+            }
+            ExplosionParameters parameters = new ExplosionParameters(secondLastPos, range, EDeathCause.MISSILE, cSteamID);
             parameters.playerDamage = playerDamage;
             parameters.zombieDamage = zombieDamage;
             parameters.animalDamage = animalDamage;
@@ -77,7 +95,7 @@ public class Rocket : MonoBehaviour
             parameters2.wasInstigatedByPlayer = true;
             parameters2.reliable = true;
             EffectManager.triggerEffect(parameters2);
-            Player player = PlayerTool.getPlayer(killer);
+            Player player = PlayerTool.getPlayer(cSteamID);
             if (player != null)
             {
                 foreach (EPlayerKill item in kills)

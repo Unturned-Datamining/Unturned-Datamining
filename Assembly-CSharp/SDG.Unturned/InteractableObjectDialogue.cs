@@ -27,12 +27,22 @@ public class InteractableObjectDialogue : InteractableObject, IDialogueTarget
 
     public string GetDialogueTargetDebugName()
     {
-        return base.objectAsset.FriendlyName;
+        string interactabilityDialogueDisplayName = base.objectAsset.InteractabilityDialogueDisplayName;
+        if (string.IsNullOrEmpty(interactabilityDialogueDisplayName))
+        {
+            return "object " + base.objectAsset.objectName;
+        }
+        return "object " + interactabilityDialogueDisplayName + " / " + base.objectAsset.objectName;
     }
 
     public string GetDialogueTargetNameShownToPlayer(Player player)
     {
-        return base.objectAsset.FriendlyName;
+        string text = base.objectAsset.InteractabilityDialogueDisplayName;
+        if (string.IsNullOrEmpty(text))
+        {
+            text = base.objectAsset.objectName;
+        }
+        return text;
     }
 
     public void SetFaceOverride(byte? faceOverride)

@@ -246,6 +246,11 @@ public class ObjectAsset : Asset
     public bool IsClutter { get; set; }
 
     /// <summary>
+    /// If set, overrides objectName as character name in dialogue.
+    /// </summary>
+    public string InteractabilityDialogueDisplayName { get; set; }
+
+    /// <summary>
     /// If true, zombies can attack this object if it's blocking them. Defaults to false.
     /// </summary>
     public bool RubbleCanZombiesDamage { get; protected set; }
@@ -746,6 +751,10 @@ public class ObjectAsset : Asset
                         interactabilityText = ItemTool.filterRarityRichText(interactabilityText);
                         RichTextUtil.replaceNewlineMarkup(ref interactabilityText);
                     }
+                }
+                if (interactability == EObjectInteractability.DIALOGUE)
+                {
+                    InteractabilityDialogueDisplayName = p.localization.FormatOrNull("Dialogue_Name");
                 }
                 if (p.data.ContainsKey("Interactability_Power"))
                 {

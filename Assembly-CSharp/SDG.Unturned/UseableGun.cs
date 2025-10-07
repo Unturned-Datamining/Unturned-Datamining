@@ -1085,6 +1085,7 @@ public class UseableGun : Useable
             equippedGunAsset.GrantShootQuestRewards(base.player);
             if (equippedGunAsset.projectile == null)
             {
+                bool flag2 = ammo == 0 && equippedGunAsset.shouldDeleteEmptyMagazines;
                 byte b4 = (byte)((thirdAttachments.magazineAsset == null) ? 1 : thirdAttachments.magazineAsset.pellets);
                 float gravityMultiplier2 = CalculateBulletGravityMultiplier();
                 for (byte b5 = 0; b5 < b4; b5++)
@@ -1112,11 +1113,7 @@ public class UseableGun : Useable
                     {
                         if (equippedGunAsset.action == EAction.String)
                         {
-                            base.player.equipment.state[8] = 0;
-                            base.player.equipment.state[9] = 0;
-                            base.player.equipment.state[10] = 0;
-                            base.player.equipment.state[17] = 0;
-                            base.player.equipment.sendUpdateState();
+                            flag2 = true;
                         }
                     }
                     else if (equippedGunAsset.action == EAction.String)
@@ -1136,11 +1133,15 @@ public class UseableGun : Useable
                             bulletInfo2.dropAmount = base.player.equipment.state[10];
                             bulletInfo2.dropQuality = base.player.equipment.state[17];
                         }
-                        base.player.equipment.state[8] = 0;
-                        base.player.equipment.state[9] = 0;
-                        base.player.equipment.state[10] = 0;
-                        base.player.equipment.sendUpdateState();
+                        flag2 = true;
                     }
+                }
+                if (flag2)
+                {
+                    base.player.equipment.state[8] = 0;
+                    base.player.equipment.state[9] = 0;
+                    base.player.equipment.state[10] = 0;
+                    base.player.equipment.sendUpdateState();
                 }
             }
             else

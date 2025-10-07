@@ -143,6 +143,11 @@ public struct TriggerEffectParameters
         relevantTransportConnection = transportConnection;
     }
 
+    public void SetRelevantPlayer(Player player)
+    {
+        relevantTransportConnection = player?.channel?.owner?.transportConnection;
+    }
+
     public void SetRelevantTransportConnections(PooledTransportConnectionList transportConnections)
     {
         relevantTransportConnections = transportConnections;

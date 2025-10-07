@@ -11,7 +11,7 @@ public class CommandNpcEvent : Command
             SteamPlayer steamPlayer = PlayerTool.getSteamPlayer(executorID);
             if (steamPlayer != null && !(steamPlayer.player == null))
             {
-                NPCEventManager.broadcastEvent(steamPlayer.player, parameter, shouldReplicate: true);
+                NPCEventManager.BroadcastEvent(steamPlayer.player, parameter, ENPCEventReplicationMode.AuthorityAndClients);
             }
         }
     }

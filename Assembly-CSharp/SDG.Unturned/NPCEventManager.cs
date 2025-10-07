@@ -29,12 +29,43 @@ public class NPCEventManager
 
     public static void broadcastEvent(Player instigatingPlayer, string eventId)
     {
-        broadcastEvent(instigatingPlayer, eventId, shouldReplicate: false);
+        BroadcastEvent(instigatingPlayer, eventId, ENPCEventReplicationMode.AuthorityOnly);
     }
 
     public static void broadcastEvent(Player instigatingPlayer, string eventId, bool shouldReplicate = false)
     {
-        if (!string.IsNullOrEmpty(eventId))
+        ENPCEventReplicationMode replicationMode = (shouldReplicate ? ENPCEventReplicationMode.AuthorityAndClients : ENPCEventReplicationMode.AuthorityOnly);
+        BroadcastEvent(instigatingPlayer, eventId, replicationMode);
+    }
+
+    public static void BroadcastEvent(Player instigatingPlayer, string eventId, ENPCEventReplicationMode replicationMode)
+    {
+        if (string.IsNullOrEmpty(eventId))
+        {
+            return;
+        }
+        bool flag;
+        bool flag2;
+        switch (replicationMode)
+        {
+        default:
+            flag = true;
+            flag2 = false;
+            break;
+        case ENPCEventReplicationMode.AuthorityAndClients:
+            flag = true;
+            flag2 = true;
+            break;
+        case ENPCEventReplicationMode.InstigatorOnly:
+            if (instigatingPlayer == null)
+            {
+                return;
+            }
+            flag = instigatingPlayer.channel.IsLocalPlayer;
+            flag2 = !flag;
+            break;
+        }
+        if (flag)
         {
             try
             {
@@ -44,9 +75,16 @@ public class NPCEventManager
             {
                 UnturnedLog.exception(e, "Exception raised during server NPC event \"{0}\"", eventId);
             }
-            if (shouldReplicate)
+        }
+        if (flag2)
+        {
+            byte arg = (byte)((instigatingPlayer != null && instigatingPlayer.channel != null && instigatingPlayer.channel.owner != null) ? ((byte)instigatingPlayer.channel.owner.channel) : 0);
+            if (replicationMode == ENPCEventReplicationMode.InstigatorOnly)
             {
-                byte arg = (byte)((instigatingPlayer != null && instigatingPlayer.channel != null && instigatingPlayer.channel.owner != null) ? ((byte)instigatingPlayer.channel.owner.channel) : 0);
+                SendBroadcast.Invoke(ENetReliability.Reliable, instigatingPlayer.channel?.GetOwnerTransportConnection(), arg, eventId);
+            }
+            else
+            {
                 SendBroadcast.Invoke(ENetReliability.Reliable, Provider.GatherRemoteClientConnections(), arg, eventId);
             }
         }

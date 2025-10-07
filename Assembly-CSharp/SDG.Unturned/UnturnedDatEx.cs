@@ -106,7 +106,14 @@ public static class UnturnedDatEx
             else
             {
                 name = string.Empty;
-                Assets.reportError("MasterBundleRef \"" + key + "\" is not associated with a master bundle nor does it specify one");
+                if (Assets.currentAsset != null)
+                {
+                    Assets.currentAsset.ReportAssetError("MasterBundleRef \"" + key + "\" is not associated with a master bundle nor does it specify one");
+                }
+                else
+                {
+                    Assets.reportError("MasterBundleRef \"" + key + "\" is not associated with a master bundle nor does it specify one");
+                }
             }
             path = value;
             return;
@@ -115,11 +122,25 @@ public static class UnturnedDatEx
         path = value.Substring(num + 1);
         if (string.IsNullOrEmpty(name))
         {
-            Assets.reportError("MasterBundleRef \"" + key + "\" specified asset bundle name is empty");
+            if (Assets.currentAsset != null)
+            {
+                Assets.currentAsset.ReportAssetError("MasterBundleRef \"" + key + "\" specified asset bundle name is empty");
+            }
+            else
+            {
+                Assets.reportError("MasterBundleRef \"" + key + "\" specified asset bundle name is empty");
+            }
         }
         if (string.IsNullOrEmpty(path))
         {
-            Assets.reportError("MasterBundleRef \"" + key + "\" specified asset path is empty");
+            if (Assets.currentAsset != null)
+            {
+                Assets.currentAsset.ReportAssetError("MasterBundleRef \"" + key + "\" specified asset path is empty");
+            }
+            else
+            {
+                Assets.reportError("MasterBundleRef \"" + key + "\" specified asset path is empty");
+            }
         }
     }
 

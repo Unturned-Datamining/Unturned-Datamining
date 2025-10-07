@@ -25,6 +25,11 @@ public class NPCEffectReward : INPCReward
     /// </summary>
     public bool AtPlayerPosition { get; set; }
 
+    /// <summary>
+    /// If true, only spawn effect on player's machine. (Singleplayer or client.)
+    /// </summary>
+    public bool IsOnlyRelevantToInstigator { get; set; }
+
     public override void GrantReward(Player player)
     {
         Vector3 position;
@@ -48,7 +53,11 @@ public class NPCEffectReward : INPCReward
         TriggerEffectParameters parameters = new TriggerEffectParameters(AssetRef);
         parameters.shouldReplicate = true;
         parameters.reliable = IsReliable;
-        if (OverrideRelevantDistance > 0.01f)
+        if (IsOnlyRelevantToInstigator)
+        {
+            parameters.SetRelevantPlayer(player);
+        }
+        else if (OverrideRelevantDistance > 0.01f)
         {
             parameters.relevantDistance = OverrideRelevantDistance;
         }
@@ -82,6 +91,7 @@ public class NPCEffectReward : INPCReward
         }
         IsReliable = p.data.ParseBool("IsReliable", defaultValue: true);
         OverrideRelevantDistance = p.data.ParseFloat("RelevantDistance", -1f);
+        IsOnlyRelevantToInstigator = p.data.ParseBool("OnlyRelevantToInstigator");
     }
 
     internal override void PopulateLegacy(in PopulateRewardParameters p)
@@ -109,6 +119,7 @@ public class NPCEffectReward : INPCReward
         }
         IsReliable = p.data.ParseBool(p.legacyPrefix + "_IsReliable", defaultValue: true);
         OverrideRelevantDistance = p.data.ParseFloat(p.legacyPrefix + "_RelevantDistance", -1f);
+        IsOnlyRelevantToInstigator = p.data.ParseBool(p.legacyPrefix + "_OnlyRelevantToInstigator");
     }
 
     public NPCEffectReward()

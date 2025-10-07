@@ -194,13 +194,20 @@ public class DamageTool
 
     /// <summary>
     /// Somewhat hacked-together to find owner of a vehicle, barricade, or structure descendant.
+    /// Checks each IOwnershipInfo up the hierarchy until one returns true.
     /// </summary>
     public static bool TryFindOwnership(Transform transform, out ulong ownerUser, out ulong ownerGroup)
     {
-        IOwnershipInfo ownershipInfo = transform?.GetComponentInParent<IOwnershipInfo>();
-        if (ownershipInfo != null)
+        for (IOwnershipInfo ownershipInfo = transform?.GetComponentInParent<IOwnershipInfo>(); ownershipInfo != null; ownershipInfo = component.transform.parent?.GetComponentInParent<IOwnershipInfo>())
         {
-            return ownershipInfo.TryGetOwnership(out ownerUser, out ownerGroup);
+            if (ownershipInfo.TryGetOwnership(out ownerUser, out ownerGroup))
+            {
+                return true;
+            }
+            if (!(ownershipInfo is Component component))
+            {
+                break;
+            }
         }
         ownerUser = 0uL;
         ownerGroup = 0uL;

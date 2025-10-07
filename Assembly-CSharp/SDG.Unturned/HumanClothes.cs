@@ -975,13 +975,14 @@ public class HumanClothes : MonoBehaviour
             _glassesAsset = null;
             glassesDirty = true;
         }
-        ItemShirtAsset itemShirtAsset = ((visualShirtAsset != null && isVisual && (shirtAsset == null || !shirtAsset.TakesPriorityOverCosmetic)) ? visualShirtAsset : shirtAsset);
-        ItemPantsAsset itemPantsAsset = ((visualPantsAsset != null && isVisual && (pantsAsset == null || !pantsAsset.TakesPriorityOverCosmetic)) ? visualPantsAsset : pantsAsset);
-        ItemHatAsset itemHatAsset = ((visualHatAsset != null && isVisual && (hatAsset == null || !hatAsset.TakesPriorityOverCosmetic)) ? visualHatAsset : hatAsset);
-        ItemBackpackAsset itemBackpackAsset = ((visualBackpackAsset != null && isVisual && (backpackAsset == null || !backpackAsset.TakesPriorityOverCosmetic)) ? visualBackpackAsset : backpackAsset);
-        ItemVestAsset itemVestAsset = ((visualVestAsset != null && isVisual && (vestAsset == null || !vestAsset.TakesPriorityOverCosmetic)) ? visualVestAsset : vestAsset);
-        ItemMaskAsset itemMaskAsset = ((visualMaskAsset != null && isVisual && (maskAsset == null || !maskAsset.TakesPriorityOverCosmetic)) ? visualMaskAsset : maskAsset);
-        ItemGlassesAsset itemGlassesAsset = ((visualGlassesAsset != null && isVisual && (glassesAsset == null || !glassesAsset.TakesPriorityOverCosmetic)) ? visualGlassesAsset : glassesAsset);
+        bool flag = (Provider.isServer && !Dedicator.IsDedicatedServer) || !Provider.isPvP;
+        ItemShirtAsset itemShirtAsset = ((visualShirtAsset != null && isVisual && (flag || shirtAsset == null || !shirtAsset.TakesPriorityOverCosmetic)) ? visualShirtAsset : shirtAsset);
+        ItemPantsAsset itemPantsAsset = ((visualPantsAsset != null && isVisual && (flag || pantsAsset == null || !pantsAsset.TakesPriorityOverCosmetic)) ? visualPantsAsset : pantsAsset);
+        ItemHatAsset itemHatAsset = ((visualHatAsset != null && isVisual && (flag || hatAsset == null || !hatAsset.TakesPriorityOverCosmetic)) ? visualHatAsset : hatAsset);
+        ItemBackpackAsset itemBackpackAsset = ((visualBackpackAsset != null && isVisual && (flag || backpackAsset == null || !backpackAsset.TakesPriorityOverCosmetic)) ? visualBackpackAsset : backpackAsset);
+        ItemVestAsset itemVestAsset = ((visualVestAsset != null && isVisual && (flag || vestAsset == null || !vestAsset.TakesPriorityOverCosmetic)) ? visualVestAsset : vestAsset);
+        ItemMaskAsset itemMaskAsset = ((visualMaskAsset != null && isVisual && (flag || maskAsset == null || !maskAsset.TakesPriorityOverCosmetic)) ? visualMaskAsset : maskAsset);
+        ItemGlassesAsset itemGlassesAsset = ((visualGlassesAsset != null && isVisual && (flag || glassesAsset == null || !glassesAsset.TakesPriorityOverCosmetic)) ? visualGlassesAsset : glassesAsset);
         if (itemShirtAsset == null && itemVestAsset != null && itemVestAsset.hasFallbackShirt)
         {
             itemShirtAsset = itemVestAsset.fallbackShirt.Get<ItemShirtAsset>();
@@ -1001,8 +1002,8 @@ public class HumanClothes : MonoBehaviour
         }
         if (shirtDirty)
         {
-            bool flag = true;
             bool flag2 = true;
+            bool flag3 = true;
             if (itemShirtAsset != null && itemShirtAsset.shouldBeVisible(isRagdoll))
             {
                 materialClothing.SetTexture(shirtAlbedoTexturePropertyID, itemShirtAsset.shirt);
@@ -1012,12 +1013,12 @@ public class HumanClothes : MonoBehaviour
                 Mesh[] array = (isMine ? itemShirtAsset.characterMeshOverride1pLODs : itemShirtAsset.characterMeshOverride3pLODs);
                 if (array != null)
                 {
-                    flag = false;
+                    flag2 = false;
                     setCharacterMeshes(array);
                 }
                 if (itemShirtAsset.characterMaterialOverride != null)
                 {
-                    flag2 = false;
+                    flag3 = false;
                     setCharacterMaterial(itemShirtAsset.characterMaterialOverride);
                 }
             }
@@ -1027,17 +1028,17 @@ public class HumanClothes : MonoBehaviour
                 materialClothing.SetTexture(shirtEmissionTexturePropertyID, null);
                 materialClothing.SetTexture(shirtMetallicTexturePropertyID, null);
             }
-            if (flag != usingHumanMeshes)
+            if (flag2 != usingHumanMeshes)
             {
-                usingHumanMeshes = flag;
+                usingHumanMeshes = flag2;
                 if (usingHumanMeshes)
                 {
                     setCharacterMeshes(humanMeshes);
                 }
             }
-            if (flag2 != usingHumanMaterials)
+            if (flag3 != usingHumanMaterials)
             {
-                usingHumanMaterials = flag2;
+                usingHumanMaterials = flag3;
                 if (usingHumanMaterials)
                 {
                     setCharacterMaterial(materialClothing);
@@ -1061,8 +1062,8 @@ public class HumanClothes : MonoBehaviour
         }
         if (!isMine)
         {
-            bool flag3 = true;
             bool flag4 = true;
+            bool flag5 = true;
             if (shirtDirty)
             {
                 if (isUpper && upperSystems != null)
@@ -1089,8 +1090,8 @@ public class HumanClothes : MonoBehaviour
             }
             if (itemShirtAsset != null)
             {
-                flag3 &= itemShirtAsset.hairVisible;
-                flag4 &= itemShirtAsset.beardVisible;
+                flag4 &= itemShirtAsset.hairVisible;
+                flag5 &= itemShirtAsset.beardVisible;
             }
             if (pantsDirty)
             {
@@ -1118,8 +1119,8 @@ public class HumanClothes : MonoBehaviour
             }
             if (itemPantsAsset != null)
             {
-                flag3 &= itemPantsAsset.hairVisible;
-                flag4 &= itemPantsAsset.beardVisible;
+                flag4 &= itemPantsAsset.hairVisible;
+                flag5 &= itemPantsAsset.beardVisible;
             }
             if (hatDirty)
             {
@@ -1156,8 +1157,8 @@ public class HumanClothes : MonoBehaviour
             }
             if (itemHatAsset != null && itemHatAsset.hat != null)
             {
-                flag3 &= itemHatAsset.hairVisible;
-                flag4 &= itemHatAsset.beardVisible;
+                flag4 &= itemHatAsset.hairVisible;
+                flag5 &= itemHatAsset.beardVisible;
             }
             if (backpackDirty)
             {
@@ -1193,8 +1194,8 @@ public class HumanClothes : MonoBehaviour
             }
             if (itemBackpackAsset != null)
             {
-                flag3 &= itemBackpackAsset.hairVisible;
-                flag4 &= itemBackpackAsset.beardVisible;
+                flag4 &= itemBackpackAsset.hairVisible;
+                flag5 &= itemBackpackAsset.beardVisible;
             }
             if (vestDirty)
             {
@@ -1229,8 +1230,8 @@ public class HumanClothes : MonoBehaviour
             }
             if (itemVestAsset != null)
             {
-                flag3 &= itemVestAsset.hairVisible;
-                flag4 &= itemVestAsset.beardVisible;
+                flag4 &= itemVestAsset.hairVisible;
+                flag5 &= itemVestAsset.beardVisible;
             }
             if (maskDirty)
             {
@@ -1268,8 +1269,8 @@ public class HumanClothes : MonoBehaviour
             }
             if (itemMaskAsset != null && itemMaskAsset.mask != null)
             {
-                flag3 &= itemMaskAsset.hairVisible;
-                flag4 &= itemMaskAsset.beardVisible;
+                flag4 &= itemMaskAsset.hairVisible;
+                flag5 &= itemMaskAsset.beardVisible;
             }
             if (glassesDirty)
             {
@@ -1306,16 +1307,16 @@ public class HumanClothes : MonoBehaviour
             }
             if (itemGlassesAsset != null && itemGlassesAsset.glasses != null)
             {
-                flag3 &= itemGlassesAsset.hairVisible;
-                flag4 &= itemGlassesAsset.beardVisible;
+                flag4 &= itemGlassesAsset.hairVisible;
+                flag5 &= itemGlassesAsset.beardVisible;
             }
             if (materialHair != null)
             {
                 materialHair.color = color;
             }
-            if (hasHair != flag3)
+            if (hasHair != flag4)
             {
-                hasHair = flag3;
+                hasHair = flag4;
                 hairDirty = true;
             }
             if (hairDirty)
@@ -1343,9 +1344,9 @@ public class HumanClothes : MonoBehaviour
                     }
                 }
             }
-            if (hasBeard != flag4)
+            if (hasBeard != flag5)
             {
-                hasBeard = flag4;
+                hasBeard = flag5;
                 beardDirty = true;
             }
             if (beardDirty)
