@@ -63,12 +63,21 @@ public class InteractableObjectResource : InteractableObject
 
     public override bool checkUseable()
     {
-        return amount > 0;
+        if (amount > 0)
+        {
+            return base.IsRubbleNullOrAllAlive;
+        }
+        return false;
     }
 
     public override bool checkHint(out EPlayerMessage message, out string text, out Color color)
     {
-        if (base.objectAsset.interactability == EObjectInteractability.WATER)
+        if (!base.IsRubbleNullOrAllAlive)
+        {
+            message = EPlayerMessage.VOLUME_DESTROYED;
+            text = "";
+        }
+        else if (base.objectAsset.interactability == EObjectInteractability.WATER)
         {
             message = EPlayerMessage.VOLUME_WATER;
             text = amount + "/" + capacity;

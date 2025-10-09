@@ -8,6 +8,21 @@ public class InteractableObject : InteractablePower
 
     public ObjectAsset objectAsset => _objectAsset;
 
+    /// <summary>
+    /// True if rubble is not applicable or all sections are alive.
+    /// </summary>
+    public bool IsRubbleNullOrAllAlive
+    {
+        get
+        {
+            if (owningLevelObject != null && !(owningLevelObject.rubble == null))
+            {
+                return owningLevelObject.rubble.isAllAlive();
+            }
+            return true;
+        }
+    }
+
     public override void updateState(Asset asset, byte[] state)
     {
         base.updateState(asset, state);

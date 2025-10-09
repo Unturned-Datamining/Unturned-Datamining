@@ -62,52 +62,53 @@ internal static class ServerMessageHandler_ReadyToConnect
         reader.ReadColor32RGB(out Color32 value13);
         reader.ReadColor32RGB(out Color32 value14);
         reader.ReadColor32RGB(out Color32 value15);
-        reader.ReadBit(out var value16);
-        reader.ReadUInt64(out var value17);
+        reader.ReadColor32RGB(out Color value16);
+        reader.ReadBit(out var value17);
         reader.ReadUInt64(out var value18);
         reader.ReadUInt64(out var value19);
         reader.ReadUInt64(out var value20);
         reader.ReadUInt64(out var value21);
         reader.ReadUInt64(out var value22);
         reader.ReadUInt64(out var value23);
+        reader.ReadUInt64(out var value24);
         pendingPackageSkins.Clear();
         reader.ReadList(pendingPackageSkins, reader.ReadUInt64, Provider.MAX_SKINS_LENGTH);
-        reader.ReadEnum(out var value24);
-        reader.ReadString(out var value25);
+        reader.ReadEnum(out var value25);
         reader.ReadString(out var value26);
-        reader.ReadSteamID(out CSteamID value27);
-        reader.ReadUInt32(out var value28);
-        reader.ReadUInt8(out var value29);
-        if (value29 > 8)
+        reader.ReadString(out var value27);
+        reader.ReadSteamID(out CSteamID value28);
+        reader.ReadUInt32(out var value29);
+        reader.ReadUInt8(out var value30);
+        if (value30 > 8)
         {
             Provider.reject(transportConnection, ESteamRejection.WRONG_HASH_ASSEMBLY);
             return;
         }
-        byte[][] array5 = new byte[value29][];
-        for (byte b = 0; b < value29; b++)
+        byte[][] array5 = new byte[value30][];
+        for (byte b = 0; b < value30; b++)
         {
             array5[b] = new byte[20];
             reader.ReadBytes(array5[b]);
         }
         byte[] array6 = new byte[20];
         reader.ReadBytes(array6, 20);
-        reader.ReadSteamID(out CSteamID value30);
-        if (transportConnection.TryGetSteamId(out var steamId) && value30.m_SteamID != steamId)
+        reader.ReadSteamID(out CSteamID value31);
+        if (transportConnection.TryGetSteamId(out var steamId) && value31.m_SteamID != steamId)
         {
             Provider.reject(transportConnection, ESteamRejection.STEAM_ID_MISMATCH);
             return;
         }
-        if (joinRateLimiter.IsBlockedBySteamIdRateLimiting(value30))
+        if (joinRateLimiter.IsBlockedBySteamIdRateLimiting(value31))
         {
             Provider.reject(transportConnection, ESteamRejection.CONNECT_RATE_LIMITING);
             return;
         }
-        if (Provider.findPendingPlayerBySteamId(value30) != null)
+        if (Provider.findPendingPlayerBySteamId(value31) != null)
         {
             Provider.reject(transportConnection, ESteamRejection.ALREADY_PENDING);
             return;
         }
-        if (PlayerTool.getSteamPlayer(value30) != null)
+        if (PlayerTool.getSteamPlayer(value31) != null)
         {
             Provider.reject(transportConnection, ESteamRejection.ALREADY_CONNECTED);
             return;
@@ -116,13 +117,13 @@ internal static class ServerMessageHandler_ReadyToConnect
         {
             value = 0;
         }
-        SteamPlayerID steamPlayerID = new SteamPlayerID(value30, value, value2, value3, value8, value9, array5);
+        SteamPlayerID steamPlayerID = new SteamPlayerID(value31, value, value2, value3, value8, value9, array5);
         if (!Provider.canClientVersionJoinServer(value5))
         {
             Provider.reject(transportConnection, ESteamRejection.WRONG_VERSION, Provider.APP_VERSION);
             return;
         }
-        if (value28 != Level.packedVersion)
+        if (value29 != Level.packedVersion)
         {
             Provider.reject(transportConnection, ESteamRejection.WRONG_LEVEL_VERSION, Level.version);
             return;
@@ -226,7 +227,7 @@ internal static class ServerMessageHandler_ReadyToConnect
             Provider.reject(transportConnection, ESteamRejection.CONNECT_RATE_LIMITING);
             return;
         }
-        bool flag2 = SteamWhitelist.checkWhitelisted(value30);
+        bool flag2 = SteamWhitelist.checkWhitelisted(value31);
         if (Provider.isWhitelisted && !flag2)
         {
             Provider.reject(transportConnection, ESteamRejection.WHITELISTED);
@@ -263,13 +264,13 @@ internal static class ServerMessageHandler_ReadyToConnect
             return;
         }
         ModuleDependency[] array7;
-        if (string.IsNullOrEmpty(value25))
+        if (string.IsNullOrEmpty(value26))
         {
             array7 = new ModuleDependency[0];
         }
         else
         {
-            string[] array8 = value25.Split(';');
+            string[] array8 = value26.Split(';');
             array7 = new ModuleDependency[array8.Length];
             for (int i = 0; i < array7.Length; i++)
             {
@@ -362,7 +363,7 @@ internal static class ServerMessageHandler_ReadyToConnect
             Provider.reject(transportConnection, ESteamRejection.TOO_MANY_CLIENTS_WITH_SAME_IP_ADDRESS);
             return;
         }
-        SteamPending steamPending = new SteamPending(transportConnection, steamPlayerID, value6, value10, value11, value12, value13, value14, value15, value16, value17, value18, value19, value20, value21, value22, value23, pendingPackageSkins.ToArray(), value24, value26, value27, value4);
+        SteamPending steamPending = new SteamPending(transportConnection, steamPlayerID, value6, value10, value11, value12, value13, value14, value15, value16, value17, value18, value19, value20, value21, value22, value23, value24, pendingPackageSkins.ToArray(), value25, value27, value28, value4);
         byte queuePosition;
         bool flag7;
         if (!Provider.isWhitelisted && flag2)

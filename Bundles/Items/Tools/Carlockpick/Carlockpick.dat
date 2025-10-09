@@ -1,5 +1,5 @@
 ﻿GUID 1f315672d98f4ebbb9f76255faa43721
-Type Tool
+Type Vehicle_Lockpick_Tool
 Rarity Uncommon
 Useable Carlockpick
 ID 1353
@@ -18,3 +18,5 @@ Blueprints
 		Effect "84347b13028340b8976033c08675d458" // Wrench
 	}
 ]
+
+FailureProbability 0.5

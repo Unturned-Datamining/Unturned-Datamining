@@ -1993,7 +1993,7 @@ public class LevelLighting
         if (isSea)
         {
             RenderSettings.fogColor = getSeaColor("_BaseColor");
-            RenderSettings.fogDensity = 0.075f;
+            RenderSettings.fogDensity = Level.getAsset()?.UnderwaterFogDensity ?? 0.075f;
             setAtmosphericFog(1f);
         }
         else

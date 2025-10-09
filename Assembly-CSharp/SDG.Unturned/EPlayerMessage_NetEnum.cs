@@ -8,7 +8,7 @@ public static class EPlayerMessage_NetEnum
     {
         uint value2;
         bool result = reader.ReadBits(7, out value2);
-        if (value2 <= 116)
+        if (value2 <= 117)
         {
             value = (EPlayerMessage)value2;
             return result;

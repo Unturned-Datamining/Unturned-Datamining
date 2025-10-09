@@ -50,5 +50,6 @@ public enum EItemType
     TIRE,
     COMPASS,
     OIL_PUMP,
-    VEHICLE_PAINT_TOOL
+    VEHICLE_PAINT_TOOL,
+    VEHICLE_LOCKPICK_TOOL
 }

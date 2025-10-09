@@ -180,10 +180,32 @@ public struct NPCConditionsList
         }
     }
 
+    public void DebugDumpToStringBuilder(Player player, StringBuilder output)
+    {
+        if (conditions != null)
+        {
+            for (int i = 0; i < conditions.Length; i++)
+            {
+                output.Append("[");
+                output.Append(i);
+                output.Append("] ");
+                conditions[i].DebugDumpToStringBuilder(player, output);
+                output.AppendLine();
+            }
+        }
+    }
+
     public string DebugDumpToString()
     {
         StringBuilder stringBuilder = new StringBuilder();
         DebugDumpToStringBuilder(stringBuilder);
+        return stringBuilder.ToString();
+    }
+
+    public string DebugDumpToString(Player player)
+    {
+        StringBuilder stringBuilder = new StringBuilder();
+        DebugDumpToStringBuilder(player, stringBuilder);
         return stringBuilder.ToString();
     }
 }

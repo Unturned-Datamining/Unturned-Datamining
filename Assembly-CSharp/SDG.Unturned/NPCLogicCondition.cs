@@ -1,4 +1,5 @@
 using System;
+using System.Text;
 
 namespace SDG.Unturned;
 
@@ -9,6 +10,13 @@ public class NPCLogicCondition : INPCCondition
     protected bool doesLogicPass<T>(T a, T b) where T : IComparable
     {
         return NPCTool.doesLogicPass(logicType, a, b);
+    }
+
+    public override void DebugDumpToStringBuilder(Player player, StringBuilder sb)
+    {
+        base.DebugDumpToStringBuilder(player, sb);
+        sb.Append(", Op: ");
+        sb.Append(logicType.ToCharAbbr());
     }
 
     internal override void PopulateV2(in PopulateConditionParameters p)

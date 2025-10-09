@@ -4,7 +4,7 @@ namespace SDG.Unturned;
 
 public class NPCRewardsAsset : Asset
 {
-    private NPCConditionsList conditionsList;
+    internal NPCConditionsList conditionsList;
 
     private NPCRewardsList rewardsList;
 

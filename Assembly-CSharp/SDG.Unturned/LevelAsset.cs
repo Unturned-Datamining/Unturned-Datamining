@@ -199,6 +199,8 @@ public class LevelAsset : Asset
 
     public AssetReference<AirdropAsset> airdropRef;
 
+    public const float DEFAULT_UNDERWATER_FOG_DENSITY = 0.075f;
+
     /// <summary>
     /// Player stealth radius cannot go below this value.
     /// </summary>
@@ -260,6 +262,13 @@ public class LevelAsset : Asset
     /// Players are kicked from multiplayer if their skin color is within threshold of any of these rules.
     /// </summary>
     internal List<TerrainColorRule> terrainColorRules;
+
+    /// <summary>
+    /// Intensity of fog effect while camera is inside a water volume.
+    /// Defaults to 0.075.
+    /// </summary>
+    public float UnderwaterFogDensity { get; set; } = 0.075f;
+
 
     /// <summary>
     /// Audio clip to play in 2D when a player dies.
@@ -486,48 +495,48 @@ public class LevelAsset : Asset
                 }
             }
         }
-        if (!p.data.TryGetList("TerrainColors", out var node8))
+        if (p.data.TryGetList("TerrainColors", out var node8))
         {
-            return;
-        }
-        List<TerrainColorRule> list2 = new List<TerrainColorRule>(node8.Count);
-        for (int m = 0; m < node8.Count; m++)
-        {
-            IDatNode node9 = node8[m];
-            TerrainColorRule terrainColorRule = new TerrainColorRule();
-            if (terrainColorRule.TryParse(node9))
+            List<TerrainColorRule> list2 = new List<TerrainColorRule>(node8.Count);
+            for (int m = 0; m < node8.Count; m++)
             {
-                bool flag = false;
-                Color[] sKINS = Customization.SKINS;
-                foreach (Color color in sKINS)
+                IDatNode node9 = node8[m];
+                TerrainColorRule terrainColorRule = new TerrainColorRule();
+                if (terrainColorRule.TryParse(node9))
                 {
-                    Color.RGBToHSV(color, out var H, out var S, out var V);
-                    if (terrainColorRule.CompareColors(H, S, V) == TerrainColorRule.EComparisonResult.TooSimilar)
+                    bool flag = false;
+                    Color[] sKINS = Customization.SKINS;
+                    foreach (Color color in sKINS)
                     {
-                        flag = true;
-                        string arg = Palette.hex(color);
-                        Assets.ReportError(this, $"skipping TerrainColor entry {m} because it blocks default skin color {arg}");
-                        break;
+                        Color.RGBToHSV(color, out var H, out var S, out var V);
+                        if (terrainColorRule.CompareColors(H, S, V) == TerrainColorRule.EComparisonResult.TooSimilar)
+                        {
+                            flag = true;
+                            string arg = Palette.hex(color);
+                            Assets.ReportError(this, $"skipping TerrainColor entry {m} because it blocks default skin color {arg}");
+                            break;
+                        }
+                    }
+                    if (!flag)
+                    {
+                        list2.Add(terrainColorRule);
                     }
                 }
-                if (!flag)
+                else
                 {
-                    list2.Add(terrainColorRule);
+                    Assets.ReportError(this, "unable to parse entry in TerrainColors: " + node9.DebugDumpToString());
                 }
+            }
+            if (list2.Count > 0)
+            {
+                terrainColorRules = list2;
             }
             else
             {
-                Assets.ReportError(this, "unable to parse entry in TerrainColors: " + node9.DebugDumpToString());
+                Assets.ReportError(this, "TerrainColors list is empty");
             }
         }
-        if (list2.Count > 0)
-        {
-            terrainColorRules = list2;
-        }
-        else
-        {
-            Assets.ReportError(this, "TerrainColors list is empty");
-        }
+        UnderwaterFogDensity = p.data.ParseFloat("UnderwaterFogDensity", 0.075f);
     }
 
     public LevelAsset()

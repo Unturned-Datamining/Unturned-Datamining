@@ -106,7 +106,7 @@ public class UseableFuel : Useable
                 InteractableGenerator component = raycastInfo.transform.GetComponent<InteractableGenerator>();
                 InteractableOil component2 = raycastInfo.transform.GetComponent<InteractableOil>();
                 InteractableTank component3 = raycastInfo.transform.GetComponent<InteractableTank>();
-                InteractableObjectResource component4 = raycastInfo.transform.GetComponent<InteractableObjectResource>();
+                InteractableObjectResource componentInParent = raycastInfo.transform.GetComponentInParent<InteractableObjectResource>();
                 if (component != null)
                 {
                     if (mode == EUseMode.Deposit)
@@ -165,11 +165,11 @@ public class UseableFuel : Useable
                     }
                     else
                     {
-                        if (!(component4 != null))
+                        if (!(componentInParent != null))
                         {
                             return false;
                         }
-                        if (component4.objectAsset.interactability != EObjectInteractability.FUEL)
+                        if (componentInParent.objectAsset.interactability != EObjectInteractability.FUEL || !componentInParent.IsRubbleNullOrAllAlive)
                         {
                             return false;
                         }
@@ -179,7 +179,7 @@ public class UseableFuel : Useable
                             {
                                 return false;
                             }
-                            if (component4.amount == component4.capacity)
+                            if (componentInParent.amount == componentInParent.capacity)
                             {
                                 return false;
                             }
@@ -190,7 +190,7 @@ public class UseableFuel : Useable
                             {
                                 return false;
                             }
-                            if (component4.amount == 0)
+                            if (componentInParent.amount == 0)
                             {
                                 return false;
                             }
@@ -259,10 +259,43 @@ public class UseableFuel : Useable
                 {
                     return false;
                 }
-                InteractableGenerator component5 = input.transform.GetComponent<InteractableGenerator>();
-                InteractableOil component6 = input.transform.GetComponent<InteractableOil>();
-                InteractableTank component7 = input.transform.GetComponent<InteractableTank>();
-                if (component5 != null)
+                InteractableGenerator component4 = input.transform.GetComponent<InteractableGenerator>();
+                InteractableOil component5 = input.transform.GetComponent<InteractableOil>();
+                InteractableTank component6 = input.transform.GetComponent<InteractableTank>();
+                if (component4 != null)
+                {
+                    if (mode == EUseMode.Deposit)
+                    {
+                        if (fuel == 0)
+                        {
+                            return false;
+                        }
+                        if (!component4.isRefillable)
+                        {
+                            return false;
+                        }
+                        ushort num2 = (ushort)Mathf.Min(fuel, component4.capacity - component4.fuel);
+                        component4.askFill(num2);
+                        BarricadeManager.sendFuel(input.transform, component4.fuel);
+                        fuel -= num2;
+                    }
+                    else
+                    {
+                        if (fuel == ((ItemFuelAsset)base.player.equipment.asset).fuel)
+                        {
+                            return false;
+                        }
+                        if (!component4.isSiphonable)
+                        {
+                            return false;
+                        }
+                        ushort num3 = (ushort)Mathf.Min(component4.fuel, ((ItemFuelAsset)base.player.equipment.asset).fuel - fuel);
+                        component4.askBurn(num3);
+                        BarricadeManager.sendFuel(input.transform, component4.fuel);
+                        fuel += num3;
+                    }
+                }
+                else if (component5 != null)
                 {
                     if (mode == EUseMode.Deposit)
                     {
@@ -274,10 +307,10 @@ public class UseableFuel : Useable
                         {
                             return false;
                         }
-                        ushort num2 = (ushort)Mathf.Min(fuel, component5.capacity - component5.fuel);
-                        component5.askFill(num2);
-                        BarricadeManager.sendFuel(input.transform, component5.fuel);
-                        fuel -= num2;
+                        ushort num4 = (ushort)Mathf.Min(fuel, component5.capacity - component5.fuel);
+                        component5.askFill(num4);
+                        BarricadeManager.sendOil(input.transform, component5.fuel);
+                        fuel -= num4;
                     }
                     else
                     {
@@ -289,14 +322,22 @@ public class UseableFuel : Useable
                         {
                             return false;
                         }
-                        ushort num3 = (ushort)Mathf.Min(component5.fuel, ((ItemFuelAsset)base.player.equipment.asset).fuel - fuel);
-                        component5.askBurn(num3);
-                        BarricadeManager.sendFuel(input.transform, component5.fuel);
-                        fuel += num3;
+                        ushort num5 = (ushort)Mathf.Min(component5.fuel, ((ItemFuelAsset)base.player.equipment.asset).fuel - fuel);
+                        component5.askBurn(num5);
+                        BarricadeManager.sendOil(input.transform, component5.fuel);
+                        fuel += num5;
                     }
                 }
-                else if (component6 != null)
+                else
                 {
+                    if (!(component6 != null))
+                    {
+                        return false;
+                    }
+                    if (component6.source != ETankSource.FUEL)
+                    {
+                        return false;
+                    }
                     if (mode == EUseMode.Deposit)
                     {
                         if (fuel == 0)
@@ -307,10 +348,9 @@ public class UseableFuel : Useable
                         {
                             return false;
                         }
-                        ushort num4 = (ushort)Mathf.Min(fuel, component6.capacity - component6.fuel);
-                        component6.askFill(num4);
-                        BarricadeManager.sendOil(input.transform, component6.fuel);
-                        fuel -= num4;
+                        ushort num6 = (ushort)Mathf.Min(fuel, component6.capacity - component6.amount);
+                        component6.ServerSetAmount((ushort)(component6.amount + num6));
+                        fuel -= num6;
                     }
                     else
                     {
@@ -322,48 +362,8 @@ public class UseableFuel : Useable
                         {
                             return false;
                         }
-                        ushort num5 = (ushort)Mathf.Min(component6.fuel, ((ItemFuelAsset)base.player.equipment.asset).fuel - fuel);
-                        component6.askBurn(num5);
-                        BarricadeManager.sendOil(input.transform, component6.fuel);
-                        fuel += num5;
-                    }
-                }
-                else
-                {
-                    if (!(component7 != null))
-                    {
-                        return false;
-                    }
-                    if (component7.source != ETankSource.FUEL)
-                    {
-                        return false;
-                    }
-                    if (mode == EUseMode.Deposit)
-                    {
-                        if (fuel == 0)
-                        {
-                            return false;
-                        }
-                        if (!component7.isRefillable)
-                        {
-                            return false;
-                        }
-                        ushort num6 = (ushort)Mathf.Min(fuel, component7.capacity - component7.amount);
-                        component7.ServerSetAmount((ushort)(component7.amount + num6));
-                        fuel -= num6;
-                    }
-                    else
-                    {
-                        if (fuel == ((ItemFuelAsset)base.player.equipment.asset).fuel)
-                        {
-                            return false;
-                        }
-                        if (!component7.isSiphonable)
-                        {
-                            return false;
-                        }
-                        ushort num7 = (ushort)Mathf.Min(component7.amount, ((ItemFuelAsset)base.player.equipment.asset).fuel - fuel);
-                        component7.ServerSetAmount((ushort)(component7.amount - num7));
+                        ushort num7 = (ushort)Mathf.Min(component6.amount, ((ItemFuelAsset)base.player.equipment.asset).fuel - fuel);
+                        component6.ServerSetAmount((ushort)(component6.amount - num7));
                         fuel += num7;
                     }
                 }
@@ -374,8 +374,8 @@ public class UseableFuel : Useable
                 {
                     return false;
                 }
-                InteractableObjectResource component8 = input.transform.GetComponent<InteractableObjectResource>();
-                if (component8 == null || component8.objectAsset.interactability != EObjectInteractability.FUEL)
+                InteractableObjectResource componentInParent2 = input.transform.GetComponentInParent<InteractableObjectResource>();
+                if (componentInParent2 == null || componentInParent2.objectAsset.interactability != EObjectInteractability.FUEL || !componentInParent2.IsRubbleNullOrAllAlive)
                 {
                     return false;
                 }
@@ -385,12 +385,12 @@ public class UseableFuel : Useable
                     {
                         return false;
                     }
-                    if (!component8.isRefillable)
+                    if (!componentInParent2.isRefillable)
                     {
                         return false;
                     }
-                    ushort num8 = (ushort)Mathf.Min(fuel, component8.capacity - component8.amount);
-                    ObjectManager.updateObjectResource(component8.transform, (ushort)(component8.amount + num8), shouldSend: true);
+                    ushort num8 = (ushort)Mathf.Min(fuel, componentInParent2.capacity - componentInParent2.amount);
+                    ObjectManager.updateObjectResource(componentInParent2.transform, (ushort)(componentInParent2.amount + num8), shouldSend: true);
                     fuel -= num8;
                 }
                 else
@@ -399,12 +399,12 @@ public class UseableFuel : Useable
                     {
                         return false;
                     }
-                    if (!component8.isSiphonable)
+                    if (!componentInParent2.isSiphonable)
                     {
                         return false;
                     }
-                    ushort num9 = (ushort)Mathf.Min(component8.amount, ((ItemFuelAsset)base.player.equipment.asset).fuel - fuel);
-                    ObjectManager.updateObjectResource(component8.transform, (ushort)(component8.amount - num9), shouldSend: true);
+                    ushort num9 = (ushort)Mathf.Min(componentInParent2.amount, ((ItemFuelAsset)base.player.equipment.asset).fuel - fuel);
+                    ObjectManager.updateObjectResource(componentInParent2.transform, (ushort)(componentInParent2.amount - num9), shouldSend: true);
                     fuel += num9;
                 }
             }

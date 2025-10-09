@@ -179,6 +179,8 @@ public class Level : MonoBehaviour
 
     private static NPCRewardVolumeManager rewardVolumeManager;
 
+    private static NPCOverlapVolumeManager playerActivityVolumeManager;
+
     private static AirdropDevkitNodeSystem airdropNodeSystem;
 
     private static LocationDevkitNodeSystem locationNodeSystem;
@@ -1643,6 +1645,7 @@ public class Level : MonoBehaviour
         oxygenVolumeManager = new OxygenVolumeManager();
         cullingVolumeManager = new CullingVolumeManager();
         rewardVolumeManager = new NPCRewardVolumeManager();
+        playerActivityVolumeManager = new NPCOverlapVolumeManager();
         LevelBatching.instance = new LevelBatching();
         airdropNodeSystem = new AirdropDevkitNodeSystem();
         locationNodeSystem = new LocationDevkitNodeSystem();

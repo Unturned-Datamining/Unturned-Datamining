@@ -54,6 +54,7 @@ Type_45 Tool
 Type_46 Compass
 Type_47 Oil Pump
 Type_48 Paint
+Type_49 Vehicle Lockpick
 
 Hotkey_Set Hotkey: {0}
 Hotkey_Unset Hotkey: [3-9]

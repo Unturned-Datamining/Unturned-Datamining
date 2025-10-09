@@ -56,6 +56,8 @@ public class ObjectNPCAsset : ObjectAsset
 
     public Color color { get; protected set; }
 
+    public Color BeardColor { get; set; }
+
     public bool IsLeftHanded { get; protected set; }
 
     [Obsolete]
@@ -147,6 +149,7 @@ public class ObjectNPCAsset : ObjectAsset
         beard = p.data.ParseUInt8("Beard", 0);
         skin = Palette.hex(p.data.GetString("Color_Skin"));
         color = Palette.hex(p.data.GetString("Color_Hair"));
+        BeardColor = p.data.ParseColor32RGB("Color_Beard", color);
         IsLeftHanded = p.data.ContainsKey("Backward");
         primary = p.data.ParseGuidOrLegacyId("Primary", out primaryWeaponGuid);
         secondary = p.data.ParseGuidOrLegacyId("Secondary", out secondaryWeaponGuid);

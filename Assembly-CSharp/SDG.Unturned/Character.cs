@@ -63,6 +63,8 @@ public class Character
 
     public EPlayerSkillset skillset;
 
+    public Color BeardColor { get; set; }
+
     public void applyHero()
     {
         shirt = 0;
@@ -131,6 +133,7 @@ public class Character
         skin = Customization.SKINS[Random.Range(0, Customization.SKINS.Length)];
         color = Customization.COLORS[Random.Range(0, Customization.COLORS.Length)];
         markerColor = Customization.MARKER_COLORS[Random.Range(0, Customization.MARKER_COLORS.Length)];
+        BeardColor = color;
         hand = false;
         name = Provider.clientName;
         nick = Provider.clientName;
@@ -139,7 +142,7 @@ public class Character
         applyHero();
     }
 
-    public Character(ushort newShirt, ushort newPants, ushort newHat, ushort newBackpack, ushort newVest, ushort newMask, ushort newGlasses, ulong newPackageShirt, ulong newPackagePants, ulong newPackageHat, ulong newPackageBackpack, ulong newPackageVest, ulong newPackageMask, ulong newPackageGlasses, ushort newPrimaryItem, byte[] newPrimaryState, ushort newSecondaryItem, byte[] newSecondaryState, byte newFace, byte newHair, byte newBeard, Color newSkin, Color newColor, Color newMarkerColor, bool newHand, string newName, string newNick, CSteamID newGroup, EPlayerSkillset newSkillset)
+    public Character(ushort newShirt, ushort newPants, ushort newHat, ushort newBackpack, ushort newVest, ushort newMask, ushort newGlasses, ulong newPackageShirt, ulong newPackagePants, ulong newPackageHat, ulong newPackageBackpack, ulong newPackageVest, ulong newPackageMask, ulong newPackageGlasses, ushort newPrimaryItem, byte[] newPrimaryState, ushort newSecondaryItem, byte[] newSecondaryState, byte newFace, byte newHair, byte newBeard, Color newSkin, Color newColor, Color newMarkerColor, Color newBeardColor, bool newHand, string newName, string newNick, CSteamID newGroup, EPlayerSkillset newSkillset)
     {
         shirt = newShirt;
         pants = newPants;
@@ -165,6 +168,7 @@ public class Character
         skin = newSkin;
         color = newColor;
         markerColor = newMarkerColor;
+        BeardColor = newBeardColor;
         hand = newHand;
         name = newName;
         nick = newNick;

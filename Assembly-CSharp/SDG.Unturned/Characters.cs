@@ -8,7 +8,13 @@ namespace SDG.Unturned;
 
 public class Characters : MonoBehaviour
 {
-    public static readonly byte SAVEDATA_VERSION = 21;
+    public const byte SAVEDATA_VERSION_INITIAL = 21;
+
+    public const byte SAVEDATA_VERSION_ADDED_BEARD_COLOR = 22;
+
+    private const byte SAVEDATA_VERSION_NEWEST = 22;
+
+    public static readonly byte SAVEDATA_VERSION = 22;
 
     private static bool hasLoaded;
 
@@ -129,6 +135,12 @@ public class Characters : MonoBehaviour
     public static void paintMarkerColor(Color color)
     {
         active.markerColor = color;
+    }
+
+    public static void ChangeBeardColor(Color color)
+    {
+        active.BeardColor = color;
+        RefreshPreviewCharacterModel();
     }
 
     public static void group(CSteamID group)
@@ -646,6 +658,7 @@ public class Characters : MonoBehaviour
         clothes.beard = active.beard;
         clothes.skin = active.skin;
         clothes.color = active.color;
+        clothes.BeardColor = active.BeardColor;
         clothes.hand = active.hand;
         clothes.apply();
         for (byte b = 0; b < slots.Length; b++)
@@ -847,6 +860,7 @@ public class Characters : MonoBehaviour
                         Color color = block.readColor();
                         Color color2 = block.readColor();
                         Color newMarkerColor = ((b2 <= 20) ? Customization.MARKER_COLORS[UnityEngine.Random.Range(0, Customization.MARKER_COLORS.Length)] : block.readColor());
+                        Color color3 = ((b2 < 22) ? color2 : block.readColor());
                         bool newHand = block.readBoolean();
                         string newName = block.readString();
                         if (b2 < 19)
@@ -899,8 +913,12 @@ public class Characters : MonoBehaviour
                             {
                                 color2 = Customization.COLORS[UnityEngine.Random.Range(0, Customization.COLORS.Length)];
                             }
+                            if (!Customization.checkColor(color3))
+                            {
+                                color3 = color2;
+                            }
                         }
-                        list[b3] = new Character(newShirt, newPants, newHat, newBackpack, newVest, newMask, newGlasses, newPackageShirt, newPackagePants, newPackageHat, newPackageBackpack, newPackageVest, newPackageMask, newPackageGlasses, newPrimaryItem, newPrimaryState, newSecondaryItem, newSecondaryState, b4, b5, b6, color, color2, newMarkerColor, newHand, newName, newNick, cSteamID, (EPlayerSkillset)b7);
+                        list[b3] = new Character(newShirt, newPants, newHat, newBackpack, newVest, newMask, newGlasses, newPackageShirt, newPackagePants, newPackageHat, newPackageBackpack, newPackageVest, newPackageMask, newPackageGlasses, newPrimaryItem, newPrimaryState, newSecondaryItem, newSecondaryState, b4, b5, b6, color, color2, newMarkerColor, color3, newHand, newName, newNick, cSteamID, (EPlayerSkillset)b7);
                         onCharacterUpdated?.Invoke(b3, list[b3]);
                     }
                 }
@@ -938,7 +956,7 @@ public class Characters : MonoBehaviour
             return;
         }
         Block block = new Block();
-        block.writeByte(SAVEDATA_VERSION);
+        block.writeByte(22);
         block.writeUInt16((ushort)packageSkins.Count);
         for (ushort num = 0; num < packageSkins.Count; num++)
         {
@@ -977,6 +995,7 @@ public class Characters : MonoBehaviour
             block.writeColor(character.skin);
             block.writeColor(character.color);
             block.writeColor(character.markerColor);
+            block.writeColor(character.BeardColor);
             block.writeBoolean(character.hand);
             block.writeString(character.name);
             block.writeString(character.nick);

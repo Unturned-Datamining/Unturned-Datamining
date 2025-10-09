@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Text;
 using UnityEngine;
 
 namespace SDG.Unturned;
@@ -182,6 +183,35 @@ public class INPCCondition
             }
         }
         return true;
+    }
+
+    public virtual string GetTypeFriendlyName()
+    {
+        string text = GetType().Name;
+        if (text.StartsWith("NPC"))
+        {
+            text = text.Substring("NPC".Length);
+        }
+        if (text.EndsWith("Condition"))
+        {
+            text = text.Substring(0, text.Length - "Condition".Length);
+        }
+        StringBuilder stringBuilder = new StringBuilder(32);
+        for (int i = 0; i < text.Length; i++)
+        {
+            char c = text[i];
+            if (i > 0 && char.IsUpper(c) && !char.IsUpper(text[i - 1]))
+            {
+                stringBuilder.Append(' ');
+            }
+            stringBuilder.Append(c);
+        }
+        return stringBuilder.ToString();
+    }
+
+    public virtual void DebugDumpToStringBuilder(Player player, StringBuilder sb)
+    {
+        sb.Append(GetTypeFriendlyName());
     }
 
     public INPCCondition()

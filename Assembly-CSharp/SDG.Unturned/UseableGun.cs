@@ -583,45 +583,65 @@ public class UseableGun : Useable
                 }
             }
         }
+        bool flag = false;
         float num = 1f;
         float num2 = 1f;
         float num3 = 1f;
         if (magazineAsset != null)
         {
+            flag = magazineAsset.ProjectilePrefabOverride != null;
             num *= magazineAsset.projectileDamageMultiplier;
             num2 *= magazineAsset.projectileBlastRadiusMultiplier;
             num3 *= magazineAsset.projectileLaunchForceMultiplier;
         }
-        Transform transform = UnityEngine.Object.Instantiate(equippedGunAsset.projectile).transform;
-        transform.name = "Projectile";
-        EffectManager.RegisterDebris(transform.gameObject);
-        transform.position = origin;
-        transform.rotation = Quaternion.LookRotation(direction) * Quaternion.Euler(90f, 0f, 0f);
-        Rigidbody component3 = transform.GetComponent<Rigidbody>();
+        Quaternion rotation = Quaternion.LookRotation(direction) * Quaternion.Euler(90f, 0f, 0f);
+        GameObject gameObject = UnityEngine.Object.Instantiate(flag ? magazineAsset.ProjectilePrefabOverride : equippedGunAsset.projectile, origin, rotation);
+        gameObject.name = "Projectile";
+        EffectManager.RegisterDebris(gameObject);
+        Rigidbody component3 = gameObject.GetComponent<Rigidbody>();
         if (component3 != null)
         {
             component3.AddForce(direction * equippedGunAsset.ballisticForce * num3);
             component3.collisionDetectionMode = CollisionDetectionMode.Continuous;
         }
-        if (base.channel.IsLocalPlayer && transform.GetComponent<AudioSource>() != null)
+        if (base.channel.IsLocalPlayer && gameObject.GetComponent<AudioSource>() != null)
         {
-            transform.GetComponent<AudioSource>().maxDistance = 512f;
+            gameObject.GetComponent<AudioSource>().maxDistance = 512f;
         }
         IncrementShotCountForRechamber();
-        Rocket rocket = transform.gameObject.AddComponent<Rocket>();
+        Rocket rocket = gameObject.AddComponent<Rocket>();
         rocket.ignoreTransform = base.transform;
         if (Provider.isServer)
         {
             rocket.killer = base.channel.owner.playerID.steamID;
-            rocket.range = equippedGunAsset.range * num2;
-            rocket.playerDamage = equippedGunAsset.playerDamageMultiplier.damage * num;
-            rocket.zombieDamage = equippedGunAsset.zombieDamageMultiplier.damage * num;
-            rocket.animalDamage = equippedGunAsset.animalDamageMultiplier.damage * num;
-            rocket.barricadeDamage = equippedGunAsset.barricadeDamage * num;
-            rocket.structureDamage = equippedGunAsset.structureDamage * num;
-            rocket.vehicleDamage = equippedGunAsset.vehicleDamage * num;
-            rocket.resourceDamage = equippedGunAsset.resourceDamage * num;
-            rocket.objectDamage = equippedGunAsset.objectDamage * num;
+            if (flag)
+            {
+                rocket.range = magazineAsset.range;
+                rocket.playerDamage = magazineAsset.playerDamage;
+                rocket.zombieDamage = magazineAsset.zombieDamage * num;
+                rocket.animalDamage = magazineAsset.animalDamage * num;
+                rocket.barricadeDamage = magazineAsset.barricadeDamage * num;
+                rocket.structureDamage = magazineAsset.structureDamage * num;
+                rocket.vehicleDamage = magazineAsset.vehicleDamage * num;
+                rocket.resourceDamage = magazineAsset.resourceDamage * num;
+                rocket.objectDamage = magazineAsset.objectDamage * num;
+                rocket.penetrateBuildables = magazineAsset.ExplosionPenetratesBuildables;
+                rocket.explosionLaunchSpeed = magazineAsset.explosionLaunchSpeed;
+            }
+            else
+            {
+                rocket.range = equippedGunAsset.range * num2;
+                rocket.playerDamage = equippedGunAsset.playerDamageMultiplier.damage * num;
+                rocket.zombieDamage = equippedGunAsset.zombieDamageMultiplier.damage * num;
+                rocket.animalDamage = equippedGunAsset.animalDamageMultiplier.damage * num;
+                rocket.barricadeDamage = equippedGunAsset.barricadeDamage * num;
+                rocket.structureDamage = equippedGunAsset.structureDamage * num;
+                rocket.vehicleDamage = equippedGunAsset.vehicleDamage * num;
+                rocket.resourceDamage = equippedGunAsset.resourceDamage * num;
+                rocket.objectDamage = equippedGunAsset.objectDamage * num;
+                rocket.penetrateBuildables = equippedGunAsset.projectilePenetrateBuildables;
+                rocket.explosionLaunchSpeed = equippedGunAsset.projectileExplosionLaunchSpeed;
+            }
             if (magazineAsset != null && !magazineAsset.IsExplosionEffectRefNull())
             {
                 rocket.explosionEffectGuid = magazineAsset.explosionEffectGuid;
@@ -632,18 +652,16 @@ public class UseableGun : Useable
                 rocket.explosionEffectGuid = equippedGunAsset.projectileExplosionEffectGuid;
                 rocket.explosion = equippedGunAsset.explosion;
             }
-            rocket.penetrateBuildables = equippedGunAsset.projectilePenetrateBuildables;
-            rocket.explosionLaunchSpeed = equippedGunAsset.projectileExplosionLaunchSpeed;
             rocket.ragdollEffect = base.player.equipment.getUseableRagdollEffect();
-            Grenade component4 = transform.gameObject.GetComponent<Grenade>();
+            Grenade component4 = gameObject.GetComponent<Grenade>();
             if (component4 != null)
             {
                 component4.killer = rocket.killer;
             }
         }
-        UnityEngine.Object.Destroy(transform.gameObject, equippedGunAsset.projectileLifespan);
+        UnityEngine.Object.Destroy(gameObject, equippedGunAsset.projectileLifespan);
         lastShot = Time.realtimeSinceStartup;
-        UseableGun.onProjectileSpawned?.Invoke(this, transform.gameObject);
+        UseableGun.onProjectileSpawned?.Invoke(this, gameObject);
         InvokeModHookShotFiredEvents();
     }
 
@@ -5155,6 +5173,8 @@ public class UseableGun : Useable
         parameters2.damageOrigin = EDamageOrigin.Bullet_Explosion;
         parameters2.ragdollEffect = ragdollEffect;
         parameters2.launchSpeed = magazineAsset.explosionLaunchSpeed;
+        parameters2.playImpactEffect = magazineAsset.ExplosionPlaysImpactEffects;
+        parameters2.penetrateBuildables = magazineAsset.ExplosionPenetratesBuildables;
         DamageTool.explode(parameters2, out var kills);
         if (!(instigatingPlayer != null))
         {

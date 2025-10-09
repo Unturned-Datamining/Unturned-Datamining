@@ -1838,7 +1838,7 @@ public class Provider : MonoBehaviour
         return NetIdRegistry.ClaimBlock(17u);
     }
 
-    internal static SteamPlayer addPlayer(ITransportConnection transportConnection, NetId netId, SteamPlayerID playerID, Vector3 point, byte angle, bool isPro, bool isAdmin, int channel, byte face, byte hair, byte beard, Color skin, Color color, Color markerColor, bool hand, int shirtItem, int pantsItem, int hatItem, int backpackItem, int vestItem, int maskItem, int glassesItem, int[] skinItems, string[] skinTags, string[] skinDynamicProps, EPlayerSkillset skillset, string language, CSteamID lobbyID, EClientPlatform clientPlatform)
+    internal static SteamPlayer addPlayer(ITransportConnection transportConnection, NetId netId, SteamPlayerID playerID, Vector3 point, byte angle, bool isPro, bool isAdmin, int channel, byte face, byte hair, byte beard, Color skin, Color color, Color markerColor, Color beardColor, bool hand, int shirtItem, int pantsItem, int hatItem, int backpackItem, int vestItem, int maskItem, int glassesItem, int[] skinItems, string[] skinTags, string[] skinDynamicProps, EPlayerSkillset skillset, string language, CSteamID lobbyID, EClientPlatform clientPlatform)
     {
         if (!Dedicator.IsDedicatedServer && playerID.steamID != client)
         {
@@ -1864,7 +1864,7 @@ public class Provider : MonoBehaviour
         SteamPlayer steamPlayer = null;
         try
         {
-            steamPlayer = new SteamPlayer(transportConnection, netId, playerID, transform, isPro, isAdmin, channel, face, hair, beard, skin, color, markerColor, hand, shirtItem, pantsItem, hatItem, backpackItem, vestItem, maskItem, glassesItem, skinItems, skinTags, skinDynamicProps, skillset, language, lobbyID, clientPlatform);
+            steamPlayer = new SteamPlayer(transportConnection, netId, playerID, transform, isPro, isAdmin, channel, face, hair, beard, skin, color, markerColor, beardColor, hand, shirtItem, pantsItem, hatItem, backpackItem, vestItem, maskItem, glassesItem, skinItems, skinTags, skinDynamicProps, skillset, language, lobbyID, clientPlatform);
             clients.Add(steamPlayer);
         }
         catch (Exception e2)
@@ -2126,7 +2126,7 @@ public class Provider : MonoBehaviour
                     array3[k] = provider.economyService.getInventoryDynamicProps(Characters.packageSkins[k]);
                 }
                 TransportConnection_Loopback transportConnection_Loopback = TransportConnection_Loopback.Create();
-                SteamPlayer steamPlayer = addPlayer(netId: ClaimNetIdBlockForNewPlayer(), transportConnection: transportConnection_Loopback, playerID: steamPlayerID, point: point, angle: angle, isPro: isPro, isAdmin: true, channel: allocPlayerChannelId(), face: Characters.active.face, hair: Characters.active.hair, beard: Characters.active.beard, skin: Characters.active.skin, color: Characters.active.color, markerColor: Characters.active.markerColor, hand: Characters.active.hand, shirtItem: inventoryItem, pantsItem: inventoryItem2, hatItem: inventoryItem3, backpackItem: inventoryItem4, vestItem: inventoryItem5, maskItem: inventoryItem6, glassesItem: inventoryItem7, skinItems: array, skinTags: array2, skinDynamicProps: array3, skillset: Characters.active.skillset, language: language, lobbyID: Lobbies.currentLobby, clientPlatform: EClientPlatform.Windows);
+                SteamPlayer steamPlayer = addPlayer(netId: ClaimNetIdBlockForNewPlayer(), transportConnection: transportConnection_Loopback, playerID: steamPlayerID, point: point, angle: angle, isPro: isPro, isAdmin: true, channel: allocPlayerChannelId(), face: Characters.active.face, hair: Characters.active.hair, beard: Characters.active.beard, skin: Characters.active.skin, color: Characters.active.color, markerColor: Characters.active.markerColor, beardColor: Characters.active.BeardColor, hand: Characters.active.hand, shirtItem: inventoryItem, pantsItem: inventoryItem2, hatItem: inventoryItem3, backpackItem: inventoryItem4, vestItem: inventoryItem5, maskItem: inventoryItem6, glassesItem: inventoryItem7, skinItems: array, skinTags: array2, skinDynamicProps: array3, skillset: Characters.active.skillset, language: language, lobbyID: Lobbies.currentLobby, clientPlatform: EClientPlatform.Windows);
                 steamPlayer.player.stance.initialStance = initialStance;
                 steamPlayer.player.InitializePlayer();
                 steamPlayer.player.SendInitialPlayerState(steamPlayer);
@@ -2199,6 +2199,7 @@ public class Provider : MonoBehaviour
             writer.WriteColor32RGB(Characters.active.skin);
             writer.WriteColor32RGB(Characters.active.color);
             writer.WriteColor32RGB(Characters.active.markerColor);
+            writer.WriteColor32RGB(Characters.active.BeardColor);
             writer.WriteBit(Characters.active.hand);
             writer.WriteUInt64(Characters.active.packageShirt);
             writer.WriteUInt64(Characters.active.packagePants);
@@ -4290,7 +4291,7 @@ public class Provider : MonoBehaviour
 
     public static void accept(SteamPending player)
     {
-        accept(player.playerID, player.assignedPro, player.assignedAdmin, player.face, player.hair, player.beard, player.skin, player.color, player.markerColor, player.hand, player.shirtItem, player.pantsItem, player.hatItem, player.backpackItem, player.vestItem, player.maskItem, player.glassesItem, player.skinItems, player.skinTags, player.skinDynamicProps, player.skillset, player.language, player.lobbyID, player.clientPlatform);
+        accept(player.playerID, player.assignedPro, player.assignedAdmin, player.face, player.hair, player.beard, player.skin, player.color, player.markerColor, player.BeardColor, player.hand, player.shirtItem, player.pantsItem, player.hatItem, player.backpackItem, player.vestItem, player.maskItem, player.glassesItem, player.skinItems, player.skinTags, player.skinDynamicProps, player.skillset, player.language, player.lobbyID, player.clientPlatform);
     }
 
     /// <summary>
@@ -4346,6 +4347,7 @@ public class Provider : MonoBehaviour
         writer.WriteColor32RGB(aboutPlayer.skin);
         writer.WriteColor32RGB(aboutPlayer.color);
         writer.WriteColor32RGB(aboutPlayer.markerColor);
+        writer.WriteColor32RGB(aboutPlayer.BeardColor);
         writer.WriteBit(aboutPlayer.IsLeftHanded);
         writer.WriteInt32(aboutPlayer.shirtItem);
         writer.WriteInt32(aboutPlayer.pantsItem);
@@ -4395,10 +4397,10 @@ public class Provider : MonoBehaviour
     [Obsolete("This should not have been public in the first place")]
     public static void accept(SteamPlayerID playerID, bool isPro, bool isAdmin, byte face, byte hair, byte beard, Color skin, Color color, Color markerColor, bool hand, int shirtItem, int pantsItem, int hatItem, int backpackItem, int vestItem, int maskItem, int glassesItem, int[] skinItems, string[] skinTags, string[] skinDynamicProps, EPlayerSkillset skillset, string language, CSteamID lobbyID)
     {
-        accept(playerID, isPro, isAdmin, face, hair, beard, skin, color, markerColor, hand, shirtItem, pantsItem, hatItem, backpackItem, vestItem, maskItem, glassesItem, skinItems, skinTags, skinDynamicProps, skillset, language, lobbyID, EClientPlatform.Windows);
+        accept(playerID, isPro, isAdmin, face, hair, beard, skin, color, markerColor, color, hand, shirtItem, pantsItem, hatItem, backpackItem, vestItem, maskItem, glassesItem, skinItems, skinTags, skinDynamicProps, skillset, language, lobbyID, EClientPlatform.Windows);
     }
 
-    internal static void accept(SteamPlayerID playerID, bool isPro, bool isAdmin, byte face, byte hair, byte beard, Color skin, Color color, Color markerColor, bool hand, int shirtItem, int pantsItem, int hatItem, int backpackItem, int vestItem, int maskItem, int glassesItem, int[] skinItems, string[] skinTags, string[] skinDynamicProps, EPlayerSkillset skillset, string language, CSteamID lobbyID, EClientPlatform clientPlatform)
+    internal static void accept(SteamPlayerID playerID, bool isPro, bool isAdmin, byte face, byte hair, byte beard, Color skin, Color color, Color markerColor, Color beardColor, bool hand, int shirtItem, int pantsItem, int hatItem, int backpackItem, int vestItem, int maskItem, int glassesItem, int[] skinItems, string[] skinTags, string[] skinDynamicProps, EPlayerSkillset skillset, string language, CSteamID lobbyID, EClientPlatform clientPlatform)
     {
         ITransportConnection transportConnection = null;
         bool flag = false;
@@ -4435,7 +4437,7 @@ public class Provider : MonoBehaviour
         loadPlayerSpawn(playerID, out var point, out var angle, out var initialStance);
         int channel = allocPlayerChannelId();
         NetId netId = ClaimNetIdBlockForNewPlayer();
-        SteamPlayer newClient = addPlayer(transportConnection, netId, playerID, point, angle, isPro, isAdmin, channel, face, hair, beard, skin, color, markerColor, hand, shirtItem, pantsItem, hatItem, backpackItem, vestItem, maskItem, glassesItem, skinItems, skinTags, skinDynamicProps, skillset, language, lobbyID, clientPlatform);
+        SteamPlayer newClient = addPlayer(transportConnection, netId, playerID, point, angle, isPro, isAdmin, channel, face, hair, beard, skin, color, markerColor, beardColor, hand, shirtItem, pantsItem, hatItem, backpackItem, vestItem, maskItem, glassesItem, skinItems, skinTags, skinDynamicProps, skillset, language, lobbyID, clientPlatform);
         newClient.battlEyeId = allocBattlEyePlayerId();
         PlayerStance component = newClient.player.GetComponent<PlayerStance>();
         if (component != null)

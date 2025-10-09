@@ -112,6 +112,7 @@ PlacementObstructedByGround Cannot Build Underground
 FreeformBuildableNotAllowed Freeform Buildables Not Allowed
 NotPaintable Not Paintable
 Inside_No_Structures_Volume Cannot Build Structures Here
+Volume_Destroyed Inoperable
 
 VehicleGear_Reverse R
 VehicleGear_Neutral N

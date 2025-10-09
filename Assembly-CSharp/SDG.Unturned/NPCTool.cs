@@ -137,7 +137,7 @@ public class NPCTool
 
     static NPCTool()
     {
-        conditionTypes = new Type[27]
+        conditionTypes = new Type[28]
         {
             null,
             typeof(NPCExperienceCondition),
@@ -165,7 +165,8 @@ public class NPCTool
             typeof(NPCWeatherBlendAlphaCondition),
             typeof(NPCIsFullMoonCondition),
             typeof(NPCDateCounterCondition),
-            typeof(NPCPlayerLifeStaminaCondition)
+            typeof(NPCPlayerLifeStaminaCondition),
+            typeof(NPCVolumeOverlapCondition)
         };
         rewardTypes = new Type[26]
         {

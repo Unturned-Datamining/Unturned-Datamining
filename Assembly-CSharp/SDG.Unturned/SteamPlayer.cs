@@ -183,6 +183,8 @@ public class SteamPlayer : SteamConnectedClientBase
 
     public Color markerColor => _markerColor;
 
+    public Color BeardColor { get; set; }
+
     public bool IsLeftHanded => _hand;
 
     [Obsolete("Renamed to IsLeftHanded")]
@@ -614,7 +616,7 @@ public class SteamPlayer : SteamConnectedClientBase
         OnSteamAuthTicketForWebApiReceived?.TryInvoke("OnSteamAuthTicketForWebApiReceived", callingPlayer, value, array);
     }
 
-    public SteamPlayer(ITransportConnection transportConnection, NetId netId, SteamPlayerID newPlayerID, Transform newModel, bool newPro, bool newAdmin, int newChannel, byte newFace, byte newHair, byte newBeard, Color newSkin, Color newColor, Color newMarkerColor, bool newHand, int newShirtItem, int newPantsItem, int newHatItem, int newBackpackItem, int newVestItem, int newMaskItem, int newGlassesItem, int[] newSkinItems, string[] newSkinTags, string[] newSkinDynamicProps, EPlayerSkillset newSkillset, string newLanguage, CSteamID newLobbyID, EClientPlatform clientPlatform)
+    public SteamPlayer(ITransportConnection transportConnection, NetId netId, SteamPlayerID newPlayerID, Transform newModel, bool newPro, bool newAdmin, int newChannel, byte newFace, byte newHair, byte newBeard, Color newSkin, Color newColor, Color newMarkerColor, Color newBeardColor, bool newHand, int newShirtItem, int newPantsItem, int newHatItem, int newBackpackItem, int newVestItem, int newMaskItem, int newGlassesItem, int[] newSkinItems, string[] newSkinTags, string[] newSkinDynamicProps, EPlayerSkillset newSkillset, string newLanguage, CSteamID newLobbyID, EClientPlatform clientPlatform)
     {
         base.transportConnection = transportConnection;
         _netId = netId;
@@ -643,6 +645,7 @@ public class SteamPlayer : SteamConnectedClientBase
         _skin = newSkin;
         _color = newColor;
         _markerColor = newMarkerColor;
+        BeardColor = newBeardColor;
         _hand = newHand;
         _skillset = newSkillset;
         _language = newLanguage;

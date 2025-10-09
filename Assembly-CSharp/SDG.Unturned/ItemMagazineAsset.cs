@@ -50,6 +50,11 @@ public class ItemMagazineAsset : ItemCaliberAsset
 
     public GameObject magazine => _magazine;
 
+    /// <summary>
+    /// If set and gun is a Projectile launcher, overrides Projectile prefab.
+    /// </summary>
+    public GameObject ProjectilePrefabOverride { get; set; }
+
     public byte pellets => _pellets;
 
     public byte stuck => _stuck;
@@ -70,6 +75,22 @@ public class ItemMagazineAsset : ItemCaliberAsset
     /// Multiplier for explosive projectile's initial force.
     /// </summary>
     public float projectileLaunchForceMultiplier { get; protected set; }
+
+    /// <summary>
+    /// Only applicable if Projectile prefab override is used.
+    /// Seconds before physics projectile is destroyed.
+    /// </summary>
+    public float ProjectileLifespanOverride { get; set; }
+
+    /// <summary>
+    /// If true, per-surface effects like blood splatter are created.
+    /// Defaults to true, but can be disabled particularly if a performance issue (e.g., an
+    /// explosive many-pellet shotgun shell).
+    /// </summary>
+    public bool ExplosionPlaysImpactEffects { get; set; } = true;
+
+
+    public bool ExplosionPenetratesBuildables { get; set; }
 
     public ushort explosion => _explosion;
 
@@ -172,6 +193,7 @@ public class ItemMagazineAsset : ItemCaliberAsset
     {
         base.PopulateAsset(in p);
         _magazine = loadRequiredAsset<GameObject>(p.bundle, "Magazine");
+        ProjectilePrefabOverride = p.bundle.load<GameObject>("Projectile");
         _pellets = p.data.ParseUInt8("Pellets", 0);
         if (pellets < 1)
         {
@@ -190,6 +212,8 @@ public class ItemMagazineAsset : ItemCaliberAsset
         vehicleDamage = p.data.ParseFloat("Vehicle_Damage");
         resourceDamage = p.data.ParseFloat("Resource_Damage");
         explosionLaunchSpeed = p.data.ParseFloat("Explosion_Launch_Speed", playerDamage * 0.1f);
+        ExplosionPlaysImpactEffects = p.data.ParseBool("Explosion_Plays_Impact_Effects", defaultValue: true);
+        ExplosionPenetratesBuildables = p.data.ParseBool("Explosion_Penetrate_Buildables");
         _explosion = p.data.ParseGuidOrLegacyId("Explosion", out explosionEffectGuid);
         if (p.data.ContainsKey("Object_Damage"))
         {

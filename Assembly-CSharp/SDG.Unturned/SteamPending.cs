@@ -108,6 +108,8 @@ public class SteamPending : SteamConnectedClientBase
 
     public Color markerColor => _markerColor;
 
+    public Color BeardColor { get; set; }
+
     public bool hand => _hand;
 
     public bool canAcceptYet
@@ -208,7 +210,7 @@ public class SteamPending : SteamConnectedClientBase
         return 0;
     }
 
-    public SteamPending(ITransportConnection transportConnection, SteamPlayerID newPlayerID, bool newPro, byte newFace, byte newHair, byte newBeard, Color newSkin, Color newColor, Color newMarkerColor, bool newHand, ulong newPackageShirt, ulong newPackagePants, ulong newPackageHat, ulong newPackageBackpack, ulong newPackageVest, ulong newPackageMask, ulong newPackageGlasses, ulong[] newPackageSkins, EPlayerSkillset newSkillset, string newLanguage, CSteamID newLobbyID, EClientPlatform clientPlatform)
+    public SteamPending(ITransportConnection transportConnection, SteamPlayerID newPlayerID, bool newPro, byte newFace, byte newHair, byte newBeard, Color newSkin, Color newColor, Color newMarkerColor, Color newBeardColor, bool newHand, ulong newPackageShirt, ulong newPackagePants, ulong newPackageHat, ulong newPackageBackpack, ulong newPackageVest, ulong newPackageMask, ulong newPackageGlasses, ulong[] newPackageSkins, EPlayerSkillset newSkillset, string newLanguage, CSteamID newLobbyID, EClientPlatform clientPlatform)
     {
         base.transportConnection = transportConnection;
         _playerID = newPlayerID;
@@ -219,6 +221,7 @@ public class SteamPending : SteamConnectedClientBase
         _skin = newSkin;
         _color = newColor;
         _markerColor = newMarkerColor;
+        BeardColor = newBeardColor;
         _hand = newHand;
         _skillset = newSkillset;
         _language = newLanguage;

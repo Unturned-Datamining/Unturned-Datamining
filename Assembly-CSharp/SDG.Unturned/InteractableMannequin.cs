@@ -293,6 +293,7 @@ public class InteractableMannequin : Interactable, IManualOnDestroy
         _group = new CSteamID((ulong)block.read(Types.UINT64_TYPE));
         clothes.skin = new Color32(210, 210, 210, byte.MaxValue);
         clothes.color = clothes.skin;
+        clothes.BeardColor = clothes.skin;
         clothes.visualShirt = block.readInt32();
         clothes.visualPants = block.readInt32();
         clothes.visualHat = block.readInt32();

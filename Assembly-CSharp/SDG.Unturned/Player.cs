@@ -888,6 +888,16 @@ public class Player : MonoBehaviour, IDialogueTarget, IExplosionDamageable, IEqu
         return pooledTransportConnectionList;
     }
 
+    /// <summary>
+    /// Get simulation center of mass.
+    /// </summary>
+    public Vector3 GetCapsuleCenter()
+    {
+        CharacterController characterController = movement?.controller;
+        float num = ((characterController != null) ? characterController.height : PlayerMovement.HEIGHT_STAND);
+        return base.transform.TransformPoint(0f, num * 0.5f, 0f);
+    }
+
     public void teleportToLocationUnsafe(Vector3 position, float yaw)
     {
         InteractableVehicle vehicle = movement.getVehicle();

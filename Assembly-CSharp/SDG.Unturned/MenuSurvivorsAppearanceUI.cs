@@ -29,7 +29,9 @@ public class MenuSurvivorsAppearanceUI
 
     private static ISleekBox skinBox;
 
-    private static ISleekBox colorBox;
+    private static ISleekBox hairColorBox;
+
+    private static ISleekBox beardColorBox;
 
     private static ISleekButton[] skinButtons;
 
@@ -37,7 +39,9 @@ public class MenuSurvivorsAppearanceUI
 
     private static SleekColorPicker skinColorPicker;
 
-    private static SleekColorPicker colorColorPicker;
+    private static SleekColorPicker hairColorPicker;
+
+    private static SleekColorPicker beardColorPicker;
 
     private static SleekButtonState handState;
 
@@ -71,15 +75,19 @@ public class MenuSurvivorsAppearanceUI
         }
     }
 
-    private static void updateColors(Color color)
+    private static void UpdateHairButtonTint(Color color)
     {
         for (int i = 1; i < hairButtons.Length; i++)
         {
             ((ISleekImage)hairButtons[i].GetChildAtIndex(0)).TintColor = color;
         }
-        for (int j = 1; j < beardButtons.Length; j++)
+    }
+
+    private static void UpdateBeardButtonTint(Color color)
+    {
+        for (int i = 1; i < beardButtons.Length; i++)
         {
-            ((ISleekImage)beardButtons[j].GetChildAtIndex(0)).TintColor = color;
+            ((ISleekImage)beardButtons[i].GetChildAtIndex(0)).TintColor = color;
         }
     }
 
@@ -88,9 +96,11 @@ public class MenuSurvivorsAppearanceUI
         if (index == Characters.selected)
         {
             skinColorPicker.state = character.skin;
-            colorColorPicker.state = character.color;
+            hairColorPicker.state = character.color;
+            beardColorPicker.state = character.BeardColor;
             updateFaces(character.skin);
-            updateColors(character.color);
+            UpdateHairButtonTint(character.color);
+            UpdateBeardButtonTint(character.BeardColor);
             handState.state = (character.hand ? 1 : 0);
         }
     }
@@ -125,19 +135,28 @@ public class MenuSurvivorsAppearanceUI
         updateFaces(color);
     }
 
-    private static void onClickedColorButton(ISleekElement button)
+    private static void OnClickedHairColorButton(ISleekElement button)
     {
         int num = Mathf.FloorToInt(button.PositionOffset_X / 50f + (button.PositionOffset_Y - 40f) / 50f * 5f);
         Color color = Customization.COLORS[num];
         Characters.paintColor(color);
-        colorColorPicker.state = color;
-        updateColors(color);
+        hairColorPicker.state = color;
+        UpdateHairButtonTint(color);
+        Characters.ChangeBeardColor(color);
+        beardColorPicker.state = color;
+        UpdateBeardButtonTint(color);
     }
 
-    private static void onColorColorPicked(SleekColorPicker picker, Color color)
+    private static void OnHairColorPicked(SleekColorPicker picker, Color color)
     {
         Characters.paintColor(color);
-        updateColors(color);
+        UpdateHairButtonTint(color);
+    }
+
+    private static void OnBeardColorPicked(SleekColorPicker picker, Color color)
+    {
+        Characters.ChangeBeardColor(color);
+        UpdateBeardButtonTint(color);
     }
 
     private static void onSwappedHandState(SleekButtonState button, int index)
@@ -182,12 +201,15 @@ public class MenuSurvivorsAppearanceUI
         customizationBox.SizeOffset_Y = -270f;
         customizationBox.SizeScale_Y = 1f;
         container.AddChild(customizationBox);
+        float num = 0f;
         faceBox = Glazier.Get().CreateBox();
+        faceBox.PositionOffset_Y = num;
         faceBox.SizeOffset_X = 240f;
         faceBox.SizeOffset_Y = 30f;
         faceBox.Text = localization.format("Face_Box");
         faceBox.TooltipText = localization.format("Face_Box_Tooltip");
         customizationBox.AddChild(faceBox);
+        num += faceBox.SizeOffset_Y + 10f;
         faceButtons = new ISleekButton[Customization.FACES_FREE + Customization.FACES_PRO];
         for (int i = 0; i < faceButtons.Length; i++)
         {
@@ -239,13 +261,15 @@ public class MenuSurvivorsAppearanceUI
             }
             faceButtons[i] = sleekButton;
         }
+        num += (float)(MathfEx.GetPageCount(faceButtons.Length, 5) * 50);
         hairBox = Glazier.Get().CreateBox();
-        hairBox.PositionOffset_Y = 80 + Mathf.CeilToInt((float)faceButtons.Length / 5f) * 50;
+        hairBox.PositionOffset_Y = num;
         hairBox.SizeOffset_X = 240f;
         hairBox.SizeOffset_Y = 30f;
         hairBox.Text = localization.format("Hair_Box");
         hairBox.TooltipText = localization.format("Hair_Box_Tooltip");
         customizationBox.AddChild(hairBox);
+        num += hairBox.SizeOffset_Y + 10f;
         hairButtons = new ISleekButton[Customization.HAIRS_FREE + Customization.HAIRS_PRO];
         for (int j = 0; j < hairButtons.Length; j++)
         {
@@ -290,13 +314,15 @@ public class MenuSurvivorsAppearanceUI
             }
             hairButtons[j] = sleekButton2;
         }
+        num += (float)(MathfEx.GetPageCount(hairButtons.Length, 5) * 50);
         beardBox = Glazier.Get().CreateBox();
-        beardBox.PositionOffset_Y = 160 + Mathf.CeilToInt((float)faceButtons.Length / 5f) * 50 + Mathf.CeilToInt((float)hairButtons.Length / 5f) * 50;
+        beardBox.PositionOffset_Y = num;
         beardBox.SizeOffset_X = 240f;
         beardBox.SizeOffset_Y = 30f;
         beardBox.Text = localization.format("Beard_Box");
         beardBox.TooltipText = localization.format("Beard_Box_Tooltip");
         customizationBox.AddChild(beardBox);
+        num += beardBox.SizeOffset_Y + 10f;
         beardButtons = new ISleekButton[Customization.BEARDS_FREE + Customization.BEARDS_PRO];
         for (int k = 0; k < beardButtons.Length; k++)
         {
@@ -341,13 +367,15 @@ public class MenuSurvivorsAppearanceUI
             }
             beardButtons[k] = sleekButton3;
         }
+        num += (float)(MathfEx.GetPageCount(beardButtons.Length, 5) * 50);
         skinBox = Glazier.Get().CreateBox();
-        skinBox.PositionOffset_Y = 240 + Mathf.CeilToInt((float)faceButtons.Length / 5f) * 50 + Mathf.CeilToInt((float)hairButtons.Length / 5f) * 50 + Mathf.CeilToInt((float)beardButtons.Length / 5f) * 50;
+        skinBox.PositionOffset_Y = num;
         skinBox.SizeOffset_X = 240f;
         skinBox.SizeOffset_Y = 30f;
         skinBox.Text = localization.format("Skin_Box");
         skinBox.TooltipText = localization.format("Skin_Box_Tooltip");
         customizationBox.AddChild(skinBox);
+        num += skinBox.SizeOffset_Y + 10f;
         skinButtons = new ISleekButton[Customization.SKINS.Length];
         for (int l = 0; l < skinButtons.Length; l++)
         {
@@ -368,9 +396,11 @@ public class MenuSurvivorsAppearanceUI
             sleekButton4.AddChild(sleekImage8);
             skinButtons[l] = sleekButton4;
         }
+        num += (float)(MathfEx.GetPageCount(skinButtons.Length, 5) * 50);
         skinColorPicker = new SleekColorPicker();
-        skinColorPicker.PositionOffset_Y = 280 + Mathf.CeilToInt((float)faceButtons.Length / 5f) * 50 + Mathf.CeilToInt((float)hairButtons.Length / 5f) * 50 + Mathf.CeilToInt((float)beardButtons.Length / 5f) * 50 + Mathf.CeilToInt((float)skinButtons.Length / 5f) * 50;
+        skinColorPicker.PositionOffset_Y = num;
         customizationBox.AddChild(skinColorPicker);
+        num += skinColorPicker.SizeOffset_Y + 10f;
         if (Provider.isPro)
         {
             skinColorPicker.onColorPicked = onSkinColorPicked;
@@ -389,13 +419,14 @@ public class MenuSurvivorsAppearanceUI
             skinColorPicker.AddChild(sleekImage9);
             bundle4.unload();
         }
-        colorBox = Glazier.Get().CreateBox();
-        colorBox.PositionOffset_Y = 440 + Mathf.CeilToInt((float)faceButtons.Length / 5f) * 50 + Mathf.CeilToInt((float)hairButtons.Length / 5f) * 50 + Mathf.CeilToInt((float)beardButtons.Length / 5f) * 50 + Mathf.CeilToInt((float)skinButtons.Length / 5f) * 50;
-        colorBox.SizeOffset_X = 240f;
-        colorBox.SizeOffset_Y = 30f;
-        colorBox.Text = localization.format("Color_Box");
-        colorBox.TooltipText = localization.format("Color_Box_Tooltip");
-        customizationBox.AddChild(colorBox);
+        hairColorBox = Glazier.Get().CreateBox();
+        hairColorBox.PositionOffset_Y = num;
+        hairColorBox.SizeOffset_X = 240f;
+        hairColorBox.SizeOffset_Y = 30f;
+        hairColorBox.Text = localization.format("Color_Box");
+        hairColorBox.TooltipText = localization.format("Color_Box_Tooltip");
+        customizationBox.AddChild(hairColorBox);
+        num += hairColorBox.SizeOffset_Y + 10f;
         colorButtons = new ISleekButton[Customization.COLORS.Length];
         for (int m = 0; m < colorButtons.Length; m++)
         {
@@ -404,8 +435,8 @@ public class MenuSurvivorsAppearanceUI
             sleekButton5.PositionOffset_Y = 40 + Mathf.FloorToInt((float)m / 5f) * 50;
             sleekButton5.SizeOffset_X = 40f;
             sleekButton5.SizeOffset_Y = 40f;
-            sleekButton5.OnClicked += onClickedColorButton;
-            colorBox.AddChild(sleekButton5);
+            sleekButton5.OnClicked += OnClickedHairColorButton;
+            hairColorBox.AddChild(sleekButton5);
             ISleekImage sleekImage10 = Glazier.Get().CreateImage();
             sleekImage10.PositionOffset_X = 10f;
             sleekImage10.PositionOffset_Y = 10f;
@@ -416,12 +447,14 @@ public class MenuSurvivorsAppearanceUI
             sleekButton5.AddChild(sleekImage10);
             colorButtons[m] = sleekButton5;
         }
-        colorColorPicker = new SleekColorPicker();
-        colorColorPicker.PositionOffset_Y = 480 + Mathf.CeilToInt((float)faceButtons.Length / 5f) * 50 + Mathf.CeilToInt((float)hairButtons.Length / 5f) * 50 + Mathf.CeilToInt((float)beardButtons.Length / 5f) * 50 + Mathf.CeilToInt((float)skinButtons.Length / 5f) * 50 + Mathf.CeilToInt((float)colorButtons.Length / 5f) * 50;
-        customizationBox.AddChild(colorColorPicker);
+        num += (float)(MathfEx.GetPageCount(colorButtons.Length, 5) * 50);
+        hairColorPicker = new SleekColorPicker();
+        hairColorPicker.PositionOffset_Y = num;
+        customizationBox.AddChild(hairColorPicker);
+        num += hairColorPicker.SizeOffset_Y + 10f;
         if (Provider.isPro)
         {
-            colorColorPicker.onColorPicked = onColorColorPicked;
+            hairColorPicker.onColorPicked = OnHairColorPicked;
         }
         else
         {
@@ -434,11 +467,41 @@ public class MenuSurvivorsAppearanceUI
             sleekImage11.SizeOffset_X = 80f;
             sleekImage11.SizeOffset_Y = 80f;
             sleekImage11.Texture = bundle5.load<Texture2D>("Lock_Large");
-            colorColorPicker.AddChild(sleekImage11);
+            hairColorPicker.AddChild(sleekImage11);
             bundle5.unload();
         }
+        beardColorBox = Glazier.Get().CreateBox();
+        beardColorBox.PositionOffset_Y = num;
+        beardColorBox.SizeOffset_X = 240f;
+        beardColorBox.SizeOffset_Y = 30f;
+        beardColorBox.Text = localization.format("Beard_Color_Box");
+        beardColorBox.TooltipText = localization.format("Beard_Color_Box_Tooltip");
+        customizationBox.AddChild(beardColorBox);
+        num += beardColorBox.SizeOffset_Y + 10f;
+        beardColorPicker = new SleekColorPicker();
+        beardColorPicker.PositionOffset_Y = num;
+        customizationBox.AddChild(beardColorPicker);
+        num += beardColorPicker.SizeOffset_Y + 10f;
+        if (Provider.isPro)
+        {
+            beardColorPicker.onColorPicked = OnBeardColorPicked;
+        }
+        else
+        {
+            Bundle bundle6 = Bundles.getBundle("/Bundles/Textures/Menu/Icons/Pro/Pro.unity3d");
+            ISleekImage sleekImage12 = Glazier.Get().CreateImage();
+            sleekImage12.PositionOffset_X = -40f;
+            sleekImage12.PositionOffset_Y = -40f;
+            sleekImage12.PositionScale_X = 0.5f;
+            sleekImage12.PositionScale_Y = 0.5f;
+            sleekImage12.SizeOffset_X = 80f;
+            sleekImage12.SizeOffset_Y = 80f;
+            sleekImage12.Texture = bundle6.load<Texture2D>("Lock_Large");
+            beardColorPicker.AddChild(sleekImage12);
+            bundle6.unload();
+        }
         customizationBox.ScaleContentToWidth = true;
-        customizationBox.ContentSizeOffset = new Vector2(0f, 600 + Mathf.CeilToInt((float)faceButtons.Length / 5f) * 50 + Mathf.CeilToInt((float)hairButtons.Length / 5f) * 50 + Mathf.CeilToInt((float)beardButtons.Length / 5f) * 50 + Mathf.CeilToInt((float)skinButtons.Length / 5f) * 50 + Mathf.CeilToInt((float)colorButtons.Length / 5f) * 50);
+        customizationBox.ContentSizeOffset = new Vector2(0f, num - 10f);
         handState = new SleekButtonState(new GUIContent(localization.format("Right")), new GUIContent(localization.format("Left")));
         handState.PositionOffset_X = -140f;
         handState.PositionOffset_Y = -160f;

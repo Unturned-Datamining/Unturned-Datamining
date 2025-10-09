@@ -267,6 +267,7 @@ public class InteractableObjectNPC : InteractableObject, IDialogueTarget
         clothes.beard = npcAsset.beard;
         clothes.skin = npcAsset.skin;
         clothes.color = npcAsset.color;
+        clothes.BeardColor = npcAsset.BeardColor;
         clothes.apply();
         ItemAsset itemAsset2 = Assets.FindItemByGuidOrLegacyId<ItemAsset>(npcAsset.primaryWeaponGuid, npcAsset.primary);
         if (itemAsset2 != null)

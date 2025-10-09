@@ -177,6 +177,8 @@ public class PlayerClothing : PlayerCaller
 
     public Color color => thirdClothes.color;
 
+    public Color BeardColor => thirdClothes.BeardColor;
+
     /// <summary>
     /// Called when the player clicks the cosmetic, visual or skin toggle buttons.
     /// </summary>
@@ -1171,6 +1173,7 @@ public class PlayerClothing : PlayerCaller
             thirdClothes.beard = base.channel.owner.beard;
             thirdClothes.skin = base.channel.owner.skin;
             thirdClothes.color = base.channel.owner.color;
+            thirdClothes.BeardColor = base.channel.owner.BeardColor;
             thirdClothes.shirtGuid = value;
             shirtQuality = value2;
             shirtState = value3;
@@ -1211,6 +1214,7 @@ public class PlayerClothing : PlayerCaller
             characterClothes.beard = base.channel.owner.beard;
             characterClothes.skin = base.channel.owner.skin;
             characterClothes.color = base.channel.owner.color;
+            characterClothes.BeardColor = base.channel.owner.BeardColor;
             characterClothes.shirtGuid = value;
             characterClothes.pantsGuid = value4;
             characterClothes.hatGuid = value7;

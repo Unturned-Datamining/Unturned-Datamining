@@ -163,5 +163,9 @@ public enum EPlayerMessage
     /// <summary>
     /// Barricades are allowed here but not structures.
     /// </summary>
-    INSIDE_NO_STRUCTURES_VOLUME
+    INSIDE_NO_STRUCTURES_VOLUME,
+    /// <summary>
+    /// Alternative to VOLUME_WATER or VOLUME_FUEL shown when object is destroyed.
+    /// </summary>
+    VOLUME_DESTROYED
 }

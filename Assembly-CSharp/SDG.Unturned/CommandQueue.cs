@@ -34,8 +34,8 @@ public class CommandQueue : Command
         {
             for (int i = 0; i < 12; i++)
             {
-                Provider.pending.Add(new SteamPending(null, new SteamPlayerID(CSteamID.Nil, 0, "dummy", "dummy", "dummy", CSteamID.Nil), newPro: true, 0, 0, 0, Color.white, Color.white, Color.white, newHand: false, 0uL, 0uL, 0uL, 0uL, 0uL, 0uL, 0uL, new ulong[0], EPlayerSkillset.NONE, "english", CSteamID.Nil, EClientPlatform.Windows));
-                Provider.accept(new SteamPlayerID(CSteamID.Nil, 1, "dummy", "dummy", "dummy", CSteamID.Nil), isPro: true, isAdmin: true, 0, 0, 0, Color.white, Color.white, Color.white, hand: false, 0, 0, 0, 0, 0, 0, 0, new int[0], new string[0], new string[0], EPlayerSkillset.NONE, "english", CSteamID.Nil, EClientPlatform.Windows);
+                Provider.pending.Add(new SteamPending(null, new SteamPlayerID(CSteamID.Nil, 0, "dummy", "dummy", "dummy", CSteamID.Nil), newPro: true, 0, 0, 0, Color.white, Color.white, Color.white, Color.white, newHand: false, 0uL, 0uL, 0uL, 0uL, 0uL, 0uL, 0uL, new ulong[0], EPlayerSkillset.NONE, "english", CSteamID.Nil, EClientPlatform.Windows));
+                Provider.accept(new SteamPlayerID(CSteamID.Nil, 1, "dummy", "dummy", "dummy", CSteamID.Nil), isPro: true, isAdmin: true, 0, 0, 0, Color.white, Color.white, Color.white, Color.white, hand: false, 0, 0, 0, 0, 0, 0, 0, new int[0], new string[0], new string[0], EPlayerSkillset.NONE, "english", CSteamID.Nil, EClientPlatform.Windows);
             }
             break;
         }

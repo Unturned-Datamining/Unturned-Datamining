@@ -809,6 +809,9 @@ public class PlayerUI : MonoBehaviour
         case EPlayerMessage.INSIDE_NO_STRUCTURES_VOLUME:
             messageLabel.Text = PlayerLifeUI.localization.format("Inside_No_Structures_Volume");
             break;
+        case EPlayerMessage.VOLUME_DESTROYED:
+            messageLabel.Text = PlayerLifeUI.localization.format("Volume_Destroyed");
+            break;
         }
         messageBox.PositionOffset_X = (0f - messageBox.SizeOffset_X) / 2f;
         if (transform != null && MainCamera.instance != null)

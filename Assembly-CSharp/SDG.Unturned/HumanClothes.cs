@@ -15,6 +15,8 @@ public class HumanClothes : MonoBehaviour
 
     private Material materialHair;
 
+    private Material materialBeard;
+
     private Transform spine;
 
     private Transform skull;
@@ -874,6 +876,8 @@ public class HumanClothes : MonoBehaviour
         }
     }
 
+    public Color BeardColor { get; set; }
+
     private void markAllDirty(bool isDirty)
     {
         hairDirty = isDirty;
@@ -909,6 +913,29 @@ public class HumanClothes : MonoBehaviour
         else
         {
             Assets.ReportError(itemAsset, "hair override \"{0}\" does not have a renderer component", itemAsset.hairOverride);
+        }
+    }
+
+    private void ApplyBeardOverride(ItemGearAsset itemAsset, Transform rootModel)
+    {
+        if (string.IsNullOrEmpty(itemAsset.BeardOverride))
+        {
+            return;
+        }
+        Transform transform = rootModel.FindChildRecursive(itemAsset.BeardOverride);
+        if (transform == null)
+        {
+            Assets.ReportError(itemAsset, "cannot find beard override \"{0}\"", itemAsset.hairOverride);
+            return;
+        }
+        Renderer component = transform.GetComponent<Renderer>();
+        if (component != null)
+        {
+            component.sharedMaterial = materialBeard;
+        }
+        else
+        {
+            Assets.ReportError(itemAsset, "beard override \"{0}\" does not have a renderer component", itemAsset.BeardOverride);
         }
     }
 
@@ -1152,6 +1179,7 @@ public class HumanClothes : MonoBehaviour
                         }
                     }
                     ApplyHairOverride(itemHatAsset, hatModel);
+                    ApplyBeardOverride(itemHatAsset, hatModel);
                     ApplySkinOverride(itemHatAsset, hatModel);
                 }
             }
@@ -1264,6 +1292,7 @@ public class HumanClothes : MonoBehaviour
                         ItemTool.ApplyMythicalEffect(maskModel, num, EEffectType.HEAD_COSMETIC);
                     }
                     ApplyHairOverride(itemMaskAsset, maskModel);
+                    ApplyBeardOverride(itemMaskAsset, maskModel);
                     ApplySkinOverride(itemMaskAsset, maskModel);
                 }
             }
@@ -1302,6 +1331,7 @@ public class HumanClothes : MonoBehaviour
                         }
                     }
                     ApplyHairOverride(itemGlassesAsset, glassesModel);
+                    ApplyBeardOverride(itemGlassesAsset, glassesModel);
                     ApplySkinOverride(itemGlassesAsset, glassesModel);
                 }
             }
@@ -1313,6 +1343,10 @@ public class HumanClothes : MonoBehaviour
             if (materialHair != null)
             {
                 materialHair.color = color;
+            }
+            if (materialBeard != null)
+            {
+                materialBeard.color = BeardColor;
             }
             if (hasHair != flag4)
             {
@@ -1368,7 +1402,7 @@ public class HumanClothes : MonoBehaviour
                         beardModel.localScale = Vector3.one;
                         if (beardModel.Find("Model_0") != null)
                         {
-                            beardModel.Find("Model_0").GetComponent<Renderer>().sharedMaterial = materialHair;
+                            beardModel.Find("Model_0").GetComponent<Renderer>().sharedMaterial = materialBeard;
                         }
                         beardModel.DestroyRigidbody();
                     }
@@ -1513,6 +1547,11 @@ public class HumanClothes : MonoBehaviour
             materialHair.hideFlags = HideFlags.HideAndDontSave;
             materialHair.SetFloat("_Glossiness", 0f);
             materialHair.SetColor("_SpecColor", Color.black);
+            materialBeard = new Material(shader);
+            materialBeard.name = "Hair";
+            materialBeard.hideFlags = HideFlags.HideAndDontSave;
+            materialBeard.SetFloat("_Glossiness", 0f);
+            materialBeard.SetColor("_SpecColor", Color.black);
         }
         setCharacterMaterial(materialClothing);
         markAllDirty(isDirty: true);
@@ -1529,6 +1568,11 @@ public class HumanClothes : MonoBehaviour
         {
             UnityEngine.Object.DestroyImmediate(materialHair);
             materialHair = null;
+        }
+        if (materialBeard != null)
+        {
+            UnityEngine.Object.DestroyImmediate(materialBeard);
+            materialBeard = null;
         }
     }
 }

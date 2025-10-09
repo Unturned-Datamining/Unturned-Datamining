@@ -15,11 +15,16 @@ public class UseableCarlockpick : Useable
 
     private bool isUnlocking;
 
+    /// <summary>
+    /// If true, unlocking has failed.
+    /// </summary>
+    private bool isUnlockingFailure;
+
     private InteractableVehicle vehicle;
 
-    private static readonly ClientInstanceMethod SendPlayJimmy = ClientInstanceMethod.Get(typeof(UseableCarlockpick), "ReceivePlayJimmy");
+    private static readonly ClientInstanceMethod<bool> SendPlayJimmy = ClientInstanceMethod<bool>.Get(typeof(UseableCarlockpick), "ReceivePlayJimmy");
 
-    private bool wasSuccessfullyUsed;
+    private bool shouldConsumeItem;
 
     private bool isUseable => Time.realtimeSinceStartup - startedUse > useTime;
 
@@ -29,7 +34,14 @@ public class UseableCarlockpick : Useable
     {
         startedUse = Time.realtimeSinceStartup;
         isUsing = true;
-        base.player.animator.play("Use", smooth: false);
+        if (isUnlockingFailure && base.player.animator.checkExists("Use_Failure"))
+        {
+            base.player.animator.play("Use_Failure", smooth: false);
+        }
+        else
+        {
+            base.player.animator.play("Use", smooth: false);
+        }
         if (!Dedicator.IsDedicatedServer)
         {
             base.player.playSound(((ItemToolAsset)base.player.equipment.asset).use);
@@ -43,12 +55,13 @@ public class UseableCarlockpick : Useable
     [Obsolete]
     public void askJimmy(CSteamID steamID)
     {
-        ReceivePlayJimmy();
+        ReceivePlayJimmy(isFailure: false);
     }
 
     [SteamCall(ESteamCallValidation.ONLY_FROM_SERVER, legacyName = "askJimmy")]
-    public void ReceivePlayJimmy()
+    public void ReceivePlayJimmy(bool isFailure)
     {
+        isUnlockingFailure = isFailure;
         if (base.player.equipment.IsEquipAnimationFinished)
         {
             jimmy();
@@ -90,6 +103,10 @@ public class UseableCarlockpick : Useable
                 return false;
             }
             isUnlocking = true;
+            if (base.player.equipment.asset is ItemVehicleLockpickToolAsset { FailureProbability: >1E-05f } itemVehicleLockpickToolAsset)
+            {
+                isUnlockingFailure = UnityEngine.Random.value <= itemVehicleLockpickToolAsset.FailureProbability;
+            }
             vehicle = input.vehicle;
         }
         return true;
@@ -110,7 +127,7 @@ public class UseableCarlockpick : Useable
             if (Provider.isServer)
             {
                 base.player.life.markAggressive(force: true);
-                SendPlayJimmy.Invoke(GetNetId(), ENetReliability.Unreliable, base.channel.GatherRemoteClientConnectionsExcludingOwner());
+                SendPlayJimmy.Invoke(GetNetId(), ENetReliability.Unreliable, base.channel.GatherRemoteClientConnectionsExcludingOwner(), isUnlockingFailure);
             }
             return true;
         }
@@ -130,13 +147,30 @@ public class UseableCarlockpick : Useable
             isUnlocking = false;
             if (vehicle != null && vehicle.isEmpty && vehicle.isLocked)
             {
-                VehicleManager.unlockVehicle(vehicle, base.player);
-                wasSuccessfullyUsed = !vehicle.isLocked;
+                if (isUnlockingFailure)
+                {
+                    if (base.player.equipment.asset is ItemVehicleLockpickToolAsset itemVehicleLockpickToolAsset)
+                    {
+                        EffectAsset effectAsset = itemVehicleLockpickToolAsset.FindFailureEffect();
+                        if (effectAsset != null)
+                        {
+                            TriggerEffectParameters parameters = new TriggerEffectParameters(effectAsset);
+                            parameters.position = base.transform.position;
+                            parameters.reliable = true;
+                            EffectManager.triggerEffect(parameters);
+                        }
+                    }
+                }
+                else
+                {
+                    VehicleManager.unlockVehicle(vehicle, base.player);
+                }
+                shouldConsumeItem = isUnlockingFailure || !vehicle.isLocked;
                 vehicle = null;
             }
             if (Provider.isServer)
             {
-                if (wasSuccessfullyUsed)
+                if (shouldConsumeItem)
                 {
                     base.player.equipment.useStepA();
                 }
@@ -150,7 +184,7 @@ public class UseableCarlockpick : Useable
         {
             base.player.equipment.isBusy = false;
             isUsing = false;
-            if (Provider.isServer && wasSuccessfullyUsed)
+            if (Provider.isServer && shouldConsumeItem)
             {
                 base.player.equipment.useStepB();
             }

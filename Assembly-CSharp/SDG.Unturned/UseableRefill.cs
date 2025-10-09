@@ -116,7 +116,7 @@ public class UseableRefill : Useable
             }
             InteractableRainBarrel component = raycastInfo.transform.GetComponent<InteractableRainBarrel>();
             InteractableTank component2 = raycastInfo.transform.GetComponent<InteractableTank>();
-            InteractableObjectResource component3 = raycastInfo.transform.GetComponent<InteractableObjectResource>();
+            InteractableObjectResource componentInParent = raycastInfo.transform.GetComponentInParent<InteractableObjectResource>();
             if (WaterUtility.isPointUnderwater(raycastInfo.point, out var volume))
             {
                 if (mode)
@@ -196,11 +196,11 @@ public class UseableRefill : Useable
             }
             else
             {
-                if (!(component3 != null))
+                if (!(componentInParent != null))
                 {
                     return false;
                 }
-                if (component3.objectAsset.interactability != EObjectInteractability.WATER)
+                if (componentInParent.objectAsset.interactability != EObjectInteractability.WATER || !componentInParent.IsRubbleNullOrAllAlive)
                 {
                     return false;
                 }
@@ -210,7 +210,7 @@ public class UseableRefill : Useable
                     {
                         return false;
                     }
-                    if (component3.amount == component3.capacity)
+                    if (componentInParent.amount == componentInParent.capacity)
                     {
                         return false;
                     }
@@ -222,7 +222,7 @@ public class UseableRefill : Useable
                     {
                         return false;
                     }
-                    if (component3.amount == 0)
+                    if (componentInParent.amount == 0)
                     {
                         return false;
                     }
@@ -271,9 +271,9 @@ public class UseableRefill : Useable
                 {
                     return false;
                 }
-                InteractableRainBarrel component4 = input.transform.GetComponent<InteractableRainBarrel>();
-                InteractableTank component5 = input.transform.GetComponent<InteractableTank>();
-                if (component4 != null)
+                InteractableRainBarrel component3 = input.transform.GetComponent<InteractableRainBarrel>();
+                InteractableTank component4 = input.transform.GetComponent<InteractableTank>();
+                if (component3 != null)
                 {
                     if (mode)
                     {
@@ -281,11 +281,11 @@ public class UseableRefill : Useable
                         {
                             return false;
                         }
-                        if (component4.isFull)
+                        if (component3.isFull)
                         {
                             return false;
                         }
-                        BarricadeManager.updateRainBarrel(component4.transform, isFull: true, shouldSend: true);
+                        BarricadeManager.updateRainBarrel(component3.transform, isFull: true, shouldSend: true);
                         newWaterType = ERefillWaterType.EMPTY;
                     }
                     else
@@ -294,21 +294,21 @@ public class UseableRefill : Useable
                         {
                             return false;
                         }
-                        if (!component4.isFull)
+                        if (!component3.isFull)
                         {
                             return false;
                         }
-                        BarricadeManager.updateRainBarrel(component4.transform, isFull: false, shouldSend: true);
+                        BarricadeManager.updateRainBarrel(component3.transform, isFull: false, shouldSend: true);
                         newWaterType = ERefillWaterType.CLEAN;
                     }
                 }
                 else
                 {
-                    if (!(component5 != null))
+                    if (!(component4 != null))
                     {
                         return false;
                     }
-                    if (component5.source != ETankSource.WATER)
+                    if (component4.source != ETankSource.WATER)
                     {
                         return false;
                     }
@@ -318,11 +318,11 @@ public class UseableRefill : Useable
                         {
                             return false;
                         }
-                        if (component5.amount == component5.capacity)
+                        if (component4.amount == component4.capacity)
                         {
                             return false;
                         }
-                        component5.ServerSetAmount((ushort)(component5.amount + 1));
+                        component4.ServerSetAmount((ushort)(component4.amount + 1));
                         newWaterType = ERefillWaterType.EMPTY;
                     }
                     else
@@ -331,11 +331,11 @@ public class UseableRefill : Useable
                         {
                             return false;
                         }
-                        if (component5.amount == 0)
+                        if (component4.amount == 0)
                         {
                             return false;
                         }
-                        component5.ServerSetAmount((ushort)(component5.amount - 1));
+                        component4.ServerSetAmount((ushort)(component4.amount - 1));
                         newWaterType = ERefillWaterType.CLEAN;
                     }
                 }
@@ -346,8 +346,8 @@ public class UseableRefill : Useable
                 {
                     return false;
                 }
-                InteractableObjectResource component6 = input.transform.GetComponent<InteractableObjectResource>();
-                if (component6 == null || component6.objectAsset.interactability != EObjectInteractability.WATER)
+                InteractableObjectResource componentInParent2 = input.transform.GetComponentInParent<InteractableObjectResource>();
+                if (componentInParent2 == null || componentInParent2.objectAsset.interactability != EObjectInteractability.WATER || !componentInParent2.IsRubbleNullOrAllAlive)
                 {
                     return false;
                 }
@@ -357,11 +357,11 @@ public class UseableRefill : Useable
                     {
                         return false;
                     }
-                    if (component6.amount == component6.capacity)
+                    if (componentInParent2.amount == componentInParent2.capacity)
                     {
                         return false;
                     }
-                    ObjectManager.updateObjectResource(component6.transform, (byte)(component6.amount + 1), shouldSend: true);
+                    ObjectManager.updateObjectResource(componentInParent2.transform, (byte)(componentInParent2.amount + 1), shouldSend: true);
                     newWaterType = ERefillWaterType.EMPTY;
                 }
                 else
@@ -370,11 +370,11 @@ public class UseableRefill : Useable
                     {
                         return false;
                     }
-                    if (component6.amount == 0)
+                    if (componentInParent2.amount == 0)
                     {
                         return false;
                     }
-                    ObjectManager.updateObjectResource(component6.transform, (byte)(component6.amount - 1), shouldSend: true);
+                    ObjectManager.updateObjectResource(componentInParent2.transform, (byte)(componentInParent2.amount - 1), shouldSend: true);
                     newWaterType = ERefillWaterType.DIRTY;
                 }
             }

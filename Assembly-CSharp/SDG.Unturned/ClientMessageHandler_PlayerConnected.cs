@@ -35,14 +35,15 @@ internal static class ClientMessageHandler_PlayerConnected
         reader.ReadColor32RGB(out Color32 value16);
         reader.ReadColor32RGB(out Color32 value17);
         reader.ReadColor32RGB(out Color32 value18);
-        reader.ReadBit(out var value19);
-        reader.ReadInt32(out var value20);
+        reader.ReadColor32RGB(out Color32 value19);
+        reader.ReadBit(out var value20);
         reader.ReadInt32(out var value21);
         reader.ReadInt32(out var value22);
         reader.ReadInt32(out var value23);
         reader.ReadInt32(out var value24);
         reader.ReadInt32(out var value25);
         reader.ReadInt32(out var value26);
+        reader.ReadInt32(out var value27);
         skinItems.Clear();
         reader.ReadList(skinItems, delegate(out int item)
         {
@@ -58,8 +59,8 @@ internal static class ClientMessageHandler_PlayerConnected
         {
             return reader.ReadString(out dynProp);
         }, MAX_LENGTH);
-        reader.ReadEnum(out var value27);
-        reader.ReadString(out var value28);
-        Provider.addPlayer(null, value, new SteamPlayerID(value2, value3, value4, value5, value12, value11), value6, value7, value8, value9, value10, value13, value14, value15, value16, value17, value18, value19, value20, value21, value22, value23, value24, value25, value26, skinItems.ToArray(), skinTags.ToArray(), skinDynamicProps.ToArray(), value27, value28, CSteamID.Nil, EClientPlatform.Windows).player.InitializePlayer();
+        reader.ReadEnum(out var value28);
+        reader.ReadString(out var value29);
+        Provider.addPlayer(null, value, new SteamPlayerID(value2, value3, value4, value5, value12, value11), value6, value7, value8, value9, value10, value13, value14, value15, value16, value17, value18, value19, value20, value21, value22, value23, value24, value25, value26, value27, skinItems.ToArray(), skinTags.ToArray(), skinDynamicProps.ToArray(), value28, value29, CSteamID.Nil, EClientPlatform.Windows).player.InitializePlayer();
     }
 }

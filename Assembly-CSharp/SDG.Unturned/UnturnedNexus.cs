@@ -58,6 +58,7 @@ public class UnturnedNexus : IModuleNexus
         Assets.assetTypes.addType("Tire", typeof(ItemTireAsset));
         Assets.assetTypes.addType("Oil_Pump", typeof(ItemOilPumpAsset));
         Assets.assetTypes.addType("Vehicle_Paint_Tool", typeof(ItemVehiclePaintToolAsset));
+        Assets.assetTypes.addType("Vehicle_Lockpick_Tool", typeof(ItemVehicleLockpickToolAsset));
         Assets.assetTypes.addType("Effect", typeof(EffectAsset));
         Assets.assetTypes.addType("Large", typeof(ObjectAsset));
         Assets.assetTypes.addType("Medium", typeof(ObjectAsset));

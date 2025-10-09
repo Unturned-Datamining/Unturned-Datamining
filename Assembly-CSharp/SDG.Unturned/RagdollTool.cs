@@ -191,6 +191,7 @@ public class RagdollTool
                 component.isRagdoll = true;
                 component.skin = clothes.skin;
                 component.color = clothes.color;
+                component.BeardColor = clothes.BeardColor;
                 component.face = clothes.face;
                 component.hair = clothes.hair;
                 component.beard = clothes.beard;
