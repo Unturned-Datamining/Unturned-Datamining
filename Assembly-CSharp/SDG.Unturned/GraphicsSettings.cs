@@ -805,7 +805,11 @@ public class GraphicsSettings
         if (fullscreenMode == FullScreenMode.ExclusiveFullScreen && num3 > 0)
         {
             UnturnedLog.info($"Requesting resolution change: {fullScreenMode} {num} x {num2} @ {num3} hz");
-            Screen.SetResolution(num, num2, fullScreenMode, num3);
+            RefreshRate refreshRate = default(RefreshRate);
+            refreshRate.numerator = (uint)num3;
+            refreshRate.denominator = 1u;
+            RefreshRate preferredRefreshRate = refreshRate;
+            Screen.SetResolution(num, num2, fullScreenMode, preferredRefreshRate);
         }
         else
         {

@@ -145,6 +145,22 @@ public class ItemPlaceableAsset : ItemAsset
         }
     }
 
+    public bool DoesAnyPlaceableProvidedCraftingTagNameContainText(string text)
+    {
+        if (PlaceableProvidedCraftingTags != null && PlaceableProvidedCraftingTags.Length != 0)
+        {
+            for (int i = 0; i < PlaceableProvidedCraftingTags.Length; i++)
+            {
+                TagAsset tagAsset = PlaceableProvidedCraftingTags[i].Get<TagAsset>();
+                if (tagAsset != null && !string.IsNullOrEmpty(tagAsset.PlainTextName) && tagAsset.PlainTextName.IndexOf(text, StringComparison.OrdinalIgnoreCase) >= 0)
+                {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
     internal void SpawnItemDropsOnDestroy(Vector3 position)
     {
         int value = UnityEngine.Random.Range(minItemsDroppedOnDestroy, maxItemsDroppedOnDestroy + 1);
@@ -177,7 +193,7 @@ public class ItemPlaceableAsset : ItemAsset
     public override void BuildDescription(ItemDescriptionBuilder builder, Item itemInstance)
     {
         base.BuildDescription(builder, itemInstance);
-        if (builder.shouldRestrictToLegacyContent || PlaceableProvidedCraftingTags == null || PlaceableProvidedCraftingTags.Length == 0)
+        if (!builder.HasFlag(EItemDescriptionFlags.Uncategorized) || PlaceableProvidedCraftingTags == null || PlaceableProvidedCraftingTags.Length == 0)
         {
             return;
         }

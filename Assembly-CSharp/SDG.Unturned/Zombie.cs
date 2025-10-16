@@ -96,7 +96,7 @@ public class Zombie : MonoBehaviour, IExplosionDamageable, IEquatable<IExplosion
 
     public bool isUpdated;
 
-    private AIPath seeker;
+    private LegacyAIPath seeker;
 
     private Player player;
 
@@ -1299,7 +1299,6 @@ public class Zombie : MonoBehaviour, IExplosionDamageable, IEquatable<IExplosion
         seeker.canSearch = false;
         seeker.canMove = false;
         target.position = base.transform.position;
-        seeker.stop();
     }
 
     private void stun()
@@ -2726,12 +2725,11 @@ public class Zombie : MonoBehaviour, IExplosionDamageable, IEquatable<IExplosion
         updateDifficulty();
         if (Provider.isServer)
         {
-            seeker = GetComponent<AIPath>();
+            seeker = GetComponent<LegacyAIPath>();
             GetComponent<CharacterController>().enableOverlapRecovery = false;
             target = base.transform.Find("Target");
             target.parent = null;
             seeker.target = target;
-            seeker.canSmooth = !Dedicator.IsDedicatedServer;
             reset();
         }
         else

@@ -110,9 +110,9 @@ public class ResourceAsset : Asset
     public float MinRandomAngleDeviation { get; protected set; }
 
     /// <summary>
-    /// Before <see cref="!:FoliageResourceInfoAsset" /> had randomization properties (which trees don't currently use
-    /// as of 2024-12-11 because rotation/scale aren't saved) each tree has some random rotation and scale variation
-    /// based on its position. This property controls the rotation away from upright.
+    /// Before <see cref="!:FoliageResourceInfoAsset" /> had randomization properties each tree has
+    /// some random rotation and scale variation based on its position. This property controls
+    /// the rotation away from upright.
     /// </summary>
     public float MaxRandomAngleDeviation { get; protected set; }
 
@@ -155,6 +155,16 @@ public class ResourceAsset : Asset
             ENPCHoliday.HALLOWEEN => halloweenRedirect, 
             _ => AssetReference<ResourceAsset>.invalid, 
         };
+    }
+
+    public void GetLegacyRotationAndScale(Vector3 point, out Quaternion rotation, out Vector3 scale)
+    {
+        float num = Mathf.Sin((point.x + 4096f) * 32f + (point.z + 4096f) * 32f);
+        float t = (num + 1f) * 0.5f;
+        float x = Mathf.Lerp(MinRandomAngleDeviation, MaxRandomAngleDeviation, t);
+        rotation = Quaternion.Euler(x, num * 360f, 0f);
+        float num2 = Mathf.Lerp(MinRandomUniformScale, MaxRandomUniformScale, t);
+        scale = new Vector3(num2, num2, num2);
     }
 
     protected void applyDefaultLODs(LODGroup lod, bool fade)

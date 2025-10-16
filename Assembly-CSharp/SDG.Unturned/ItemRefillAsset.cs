@@ -147,7 +147,7 @@ public class ItemRefillAsset : ItemAsset
             ERefillWaterType.DIRTY => "Dirty", 
             _ => "Full", 
         })), 2000);
-        if (!builder.shouldRestrictToLegacyContent)
+        if (builder.HasFlag(EItemDescriptionFlags.Uncategorized))
         {
             int num = Mathf.RoundToInt(GetRefillHealth(eRefillWaterType));
             if (num > 0)

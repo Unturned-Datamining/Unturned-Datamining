@@ -41,7 +41,7 @@ public class ItemFarmAsset : ItemBarricadeAsset
     public override void BuildDescription(ItemDescriptionBuilder builder, Item itemInstance)
     {
         base.BuildDescription(builder, itemInstance);
-        if (builder.shouldRestrictToLegacyContent)
+        if (!builder.HasFlag(EItemDescriptionFlags.Uncategorized))
         {
             return;
         }

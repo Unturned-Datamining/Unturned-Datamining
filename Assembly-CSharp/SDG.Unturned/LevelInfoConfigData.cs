@@ -23,6 +23,12 @@ public class LevelInfoConfigData
 
     public Dictionary<string, object> Mode_Config_Overrides;
 
+    public Dictionary<string, object> EasyDifficulty_Config_Overrides;
+
+    public Dictionary<string, object> NormalDifficulty_Config_Overrides;
+
+    public Dictionary<string, object> HardDifficulty_Config_Overrides;
+
     public bool Allow_Underwater_Features;
 
     public bool Terrain_Snow_Sparkle;
@@ -141,6 +147,20 @@ public class LevelInfoConfigData
 
     [JsonIgnore]
     public byte[] Hash;
+
+    /// <summary>
+    /// Can be null if not configured.
+    /// </summary>
+    public Dictionary<string, object> GetPerDifficultyConfigOverrides(EGameMode mode)
+    {
+        return mode switch
+        {
+            EGameMode.EASY => EasyDifficulty_Config_Overrides, 
+            EGameMode.NORMAL => NormalDifficulty_Config_Overrides, 
+            EGameMode.HARD => HardDifficulty_Config_Overrides, 
+            _ => null, 
+        };
+    }
 
     public LevelInfoConfigData()
     {

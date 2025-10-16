@@ -85,6 +85,7 @@ public class ItemAsset : Asset, ISkinableAsset, IBlueprintOwner
     /// If true, stats like damage, accuracy, health, etc. are automatically appended to the description.
     /// Defaults to true.
     /// </summary>
+    [Obsolete("Replaced by DescriptionFlags. Will be removed in a future update.")]
     public bool isEligibleForAutoStatDescriptions;
 
     protected GameObject _item;
@@ -333,6 +334,8 @@ public class ItemAsset : Asset, ISkinableAsset, IBlueprintOwner
     [Obsolete("Replaced by EquipableModelParent property's LeftHook option.")]
     public bool ShouldAttachEquippedModelToLeftHand => EquipableModelParent == EEquipableModelParent.LeftHook;
 
+    public EItemDescriptionFlags PreferredDescriptionFlags { get; set; }
+
     /// <summary>
     /// Nelson 2024-12-11: This can now be null for cosmetic items (<see cref="F:SDG.Unturned.ItemAsset.isPro" />). For those items it wasn't
     /// used outside of the main menu 3D item preview, in which case the clothing prefab is typically a better
@@ -491,7 +494,7 @@ public class ItemAsset : Asset, ISkinableAsset, IBlueprintOwner
                 builder.Append(PlayerDashboardInventoryUI.localization.format("Amount", MaxAmount), 400);
             }
         }
-        if (!builder.shouldRestrictToLegacyContent && equipableMovementSpeedMultiplier != 1f)
+        if (builder.HasFlag(EItemDescriptionFlags.Uncategorized) && equipableMovementSpeedMultiplier != 1f)
         {
             builder.Append(PlayerDashboardInventoryUI.localization.format("ItemDescription_EquipableMovementSpeedModifier", PlayerDashboardInventoryUI.FormatStatModifier(equipableMovementSpeedMultiplier, higherIsPositive: true, higherIsBeneficial: true)), 10000 + DescSort_HigherIsBeneficial(equipableMovementSpeedMultiplier));
         }
@@ -759,6 +762,24 @@ public class ItemAsset : Asset, ISkinableAsset, IBlueprintOwner
         }
         shouldLeftHandedCharactersMirrorEquippedItem = p.data.ParseBool("Left_Handed_Characters_Mirror_Equipable", defaultValue: true);
         isEligibleForAutoStatDescriptions = p.data.ParseBool("Use_Auto_Stat_Descriptions", defaultValue: true);
+        if (isEligibleForAutoStatDescriptions)
+        {
+            EItemDescriptionFlags eItemDescriptionFlags = EItemDescriptionFlags.All;
+            if (p.data.TryParseEnum<EItemDescriptionFlags>("Description_Excludes", out var value2))
+            {
+                eItemDescriptionFlags &= ~value2;
+            }
+            PreferredDescriptionFlags = eItemDescriptionFlags;
+        }
+        else
+        {
+            EItemDescriptionFlags eItemDescriptionFlags2 = EItemDescriptionFlags.LegacyContent;
+            if (p.data.TryParseEnum<EItemDescriptionFlags>("Description_Includes", out var value3))
+            {
+                eItemDescriptionFlags2 |= value3;
+            }
+            PreferredDescriptionFlags = eItemDescriptionFlags2;
+        }
         shouldProcedurallyAnimateInertia = p.data.ParseBool("Procedurally_Animate_Inertia", defaultValue: true);
         updateUseableType(p.data);
         bool defaultValue = useableType != null;
@@ -827,10 +848,10 @@ public class ItemAsset : Asset, ISkinableAsset, IBlueprintOwner
         {
             if (node is IDatValue valueNode)
             {
-                if (valueNode.TryParseUInt8(out var value2))
+                if (valueNode.TryParseUInt8(out var value4))
                 {
                     flag2 = true;
-                    PopulateBlueprintsLegacy(p.data, value2, p.localization, flag);
+                    PopulateBlueprintsLegacy(p.data, value4, p.localization, flag);
                 }
                 else
                 {
@@ -854,9 +875,9 @@ public class ItemAsset : Asset, ISkinableAsset, IBlueprintOwner
         {
             if (node2 is IDatValue valueNode2)
             {
-                if (valueNode2.TryParseUInt8(out var value3))
+                if (valueNode2.TryParseUInt8(out var value5))
                 {
-                    PopulateActionsLegacy(p.data, value3, p.localization);
+                    PopulateActionsLegacy(p.data, value5, p.localization);
                 }
                 else
                 {

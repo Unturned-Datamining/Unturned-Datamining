@@ -24,7 +24,7 @@ public class ItemMaskAsset : ItemGearAsset
     public override void BuildDescription(ItemDescriptionBuilder builder, Item itemInstance)
     {
         base.BuildDescription(builder, itemInstance);
-        if (!builder.shouldRestrictToLegacyContent)
+        if (builder.HasFlag(EItemDescriptionFlags.Uncategorized))
         {
             if (FilterDegradationRateMultiplier != 1f)
             {

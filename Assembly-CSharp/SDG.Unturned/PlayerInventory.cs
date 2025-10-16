@@ -1105,29 +1105,13 @@ public class PlayerInventory : PlayerCaller
         for (int i = 0; i < loadout.Length; i++)
         {
             LevelAsset.DefaultLoadoutItem defaultLoadoutItem = loadout[i];
-            CachingBcAssetRef assetRef = defaultLoadoutItem.assetRef;
-            Asset asset = assetRef.Get();
-            if (asset == null)
+            ItemAsset itemAsset = defaultLoadoutItem.ResolveAsset(OnGetLevelSkillsetLoadoutSpawnErrorContext);
+            if (itemAsset != null)
             {
-                UnturnedLog.warn($"Unable to find skillset loadout asset {defaultLoadoutItem.assetRef}");
-                continue;
-            }
-            if (asset is SpawnAsset spawnAsset)
-            {
-                asset = SpawnTableTool.Resolve(spawnAsset, EAssetType.ITEM, OnGetLevelSkillsetLoadoutSpawnErrorContext);
-                if (asset == null)
+                for (int j = 0; j < defaultLoadoutItem.amount; j++)
                 {
-                    continue;
+                    tryAddItem(new Item(itemAsset, defaultLoadoutItem.origin), auto: true, playEffect: false);
                 }
-            }
-            if (!(asset is ItemAsset asset2))
-            {
-                UnturnedLog.warn("Level skillset loadout tried to spawn non-item asset " + asset.FriendlyNameWithFriendlyType);
-                continue;
-            }
-            for (int j = 0; j < defaultLoadoutItem.amount; j++)
-            {
-                tryAddItem(new Item(asset2, defaultLoadoutItem.origin), auto: true, playEffect: false);
             }
         }
     }

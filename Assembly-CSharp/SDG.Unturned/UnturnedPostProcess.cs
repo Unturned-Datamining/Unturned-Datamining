@@ -334,7 +334,7 @@ public class UnturnedPostProcess : MonoBehaviour
         }
         switch (GraphicsSettings.antiAliasingType)
         {
-        case EAntiAliasingType.OFF:
+        default:
             layer.antialiasingMode = PostProcessLayer.Antialiasing.None;
             break;
         case EAntiAliasingType.FXAA:
@@ -342,6 +342,9 @@ public class UnturnedPostProcess : MonoBehaviour
             break;
         case EAntiAliasingType.TAA:
             layer.antialiasingMode = PostProcessLayer.Antialiasing.TemporalAntialiasing;
+            break;
+        case EAntiAliasingType.SMAA:
+            layer.antialiasingMode = PostProcessLayer.Antialiasing.SubpixelMorphologicalAntialiasing;
             break;
         }
     }

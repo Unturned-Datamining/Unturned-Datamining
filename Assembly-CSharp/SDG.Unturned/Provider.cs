@@ -2806,6 +2806,7 @@ public class Provider : MonoBehaviour
                 writeGameplayConfigThreadState.AddError(e3, "Caught exception removing empty values from config file \"" + writeGameplayConfigThreadState.filePath + "\":");
             }
         }
+        ReadWrite.DeleteIfExistsAbsolute(ServerSavedata.GetBackupFilePathV1(writeGameplayConfigThreadState.filePath));
         ReadWrite.MoveIfExistsAbsolute(writeGameplayConfigThreadState.filePath, ServerSavedata.GetBackupFilePath(writeGameplayConfigThreadState.filePath));
         try
         {
@@ -4224,7 +4225,7 @@ public class Provider : MonoBehaviour
 
     public static void applyLevelModeConfigOverrides()
     {
-        if (Level.info == null || Level.info.configData == null || Level.info.configData.Mode_Config_Overrides == null || Level.info.configData.Mode_Config_Overrides.Count < 1)
+        if (Level.info == null || Level.info.configData == null)
         {
             return;
         }
@@ -4233,6 +4234,19 @@ public class Provider : MonoBehaviour
             CommandWindow.Log("Skipping all level config overrides because " + clNoLevelConfigOverrides.flag + " is enabled");
             return;
         }
+        if (Level.info.configData.Mode_Config_Overrides != null && Level.info.configData.Mode_Config_Overrides.Count > 0)
+        {
+            ApplyLevelModeConfigOverrides(Level.info.configData.Mode_Config_Overrides);
+        }
+        Dictionary<string, object> perDifficultyConfigOverrides = Level.info.configData.GetPerDifficultyConfigOverrides(mode);
+        if (perDifficultyConfigOverrides != null && perDifficultyConfigOverrides.Count > 0)
+        {
+            ApplyLevelModeConfigOverrides(perDifficultyConfigOverrides);
+        }
+    }
+
+    private static void ApplyLevelModeConfigOverrides(Dictionary<string, object> levelOverrides)
+    {
         foreach (KeyValuePair<string, object> mode_Config_Override in Level.info.configData.Mode_Config_Overrides)
         {
             if (string.IsNullOrEmpty(mode_Config_Override.Key))

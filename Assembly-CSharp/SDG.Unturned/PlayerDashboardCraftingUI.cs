@@ -86,7 +86,7 @@ public class PlayerDashboardCraftingUI
 
     private static bool filterFavorites;
 
-    private static string itemNameFilter;
+    private static string itemTextFilter;
 
     /// <summary>
     /// Left-hand column.
@@ -212,27 +212,34 @@ public class PlayerDashboardCraftingUI
         }
     }
 
-    private static bool DoesAnyItemNameContainString(Blueprint blueprint)
+    private static bool DoesBlueprintMatchFilterText(Blueprint blueprint)
     {
-        string value = itemNameFilter;
+        string text = itemTextFilter;
         for (byte b = 0; b < blueprint.outputs.Length; b++)
         {
             ItemAsset itemAsset = blueprint.outputs[b].FindItemAsset();
-            if (itemAsset != null && itemAsset.itemName != null && itemAsset.itemName.IndexOf(value, StringComparison.OrdinalIgnoreCase) != -1)
+            if (itemAsset != null)
             {
-                return true;
+                if (itemAsset.itemName != null && itemAsset.itemName.IndexOf(text, StringComparison.OrdinalIgnoreCase) != -1)
+                {
+                    return true;
+                }
+                if (itemAsset is ItemPlaceableAsset itemPlaceableAsset && itemPlaceableAsset.DoesAnyPlaceableProvidedCraftingTagNameContainText(text))
+                {
+                    return true;
+                }
             }
         }
         for (byte b2 = 0; b2 < blueprint.supplies.Length; b2++)
         {
             ItemAsset itemAsset2 = blueprint.supplies[b2].FindItemAsset();
-            if (itemAsset2 != null && itemAsset2.itemName != null && itemAsset2.itemName.IndexOf(value, StringComparison.OrdinalIgnoreCase) != -1)
+            if (itemAsset2 != null && itemAsset2.itemName != null && itemAsset2.itemName.IndexOf(text, StringComparison.OrdinalIgnoreCase) != -1)
             {
                 return true;
             }
         }
         ItemAsset itemAsset3 = blueprint.TargetItem?.FindItemAsset();
-        if (itemAsset3 != null && !string.IsNullOrEmpty(itemAsset3.itemName) && itemAsset3.itemName.IndexOf(value, StringComparison.OrdinalIgnoreCase) != -1)
+        if (itemAsset3 != null && !string.IsNullOrEmpty(itemAsset3.itemName) && itemAsset3.itemName.IndexOf(text, StringComparison.OrdinalIgnoreCase) != -1)
         {
             return true;
         }
@@ -419,7 +426,7 @@ public class PlayerDashboardCraftingUI
     {
         Player.LocalPlayer.crafting.UpdateAvailableCraftingTags();
         RefreshTagProviderButtons();
-        bool flag = !string.IsNullOrEmpty(itemNameFilter);
+        bool flag = !string.IsNullOrEmpty(itemTextFilter);
         bool flag2 = false;
         filteringDescriptionSb.Clear();
         if (filterFavorites)
@@ -492,7 +499,7 @@ public class PlayerDashboardCraftingUI
                 filteringDescriptionSb.Append(localization.format("FilteringDescription_Separator"));
             }
             string format6 = localization.format("FilteringDescription_Name");
-            string arg3 = "<color=" + Palette.hex(OptionsSettings.fontColor) + ">" + itemNameFilter + "</color>";
+            string arg3 = "<color=" + Palette.hex(OptionsSettings.fontColor) + ">" + itemTextFilter + "</color>";
             filteringDescriptionSb.AppendFormat(format6, arg3);
         }
         filteringDescriptionButton.IsVisible = flag2;
@@ -544,7 +551,7 @@ public class PlayerDashboardCraftingUI
                                 continue;
                             }
                         }
-                        if (!flag || DoesAnyItemNameContainString(loadedBlueprint))
+                        if (!flag || DoesBlueprintMatchFilterText(loadedBlueprint))
                         {
                             filteredBlueprints.Add(loadedBlueprint);
                         }
@@ -638,7 +645,7 @@ public class PlayerDashboardCraftingUI
         filterRequiresAnyOfTags.Clear();
         filterTagProvider = null;
         searchField.Text = "";
-        itemNameFilter = null;
+        itemTextFilter = null;
         filterFavorites = false;
     }
 
@@ -718,7 +725,7 @@ public class PlayerDashboardCraftingUI
             filterTagProvider = null;
             filterFavorites = false;
         }
-        itemNameFilter = searchField.Text;
+        itemTextFilter = searchField.Text;
         RefreshBlueprintList();
     }
 
@@ -854,7 +861,7 @@ public class PlayerDashboardCraftingUI
         filterAnyOfCategories = new HashSet<TagAsset>();
         hideUncraftable = false;
         showIgnored = false;
-        itemNameFilter = string.Empty;
+        itemTextFilter = string.Empty;
         filterRequiresAnyOfTags = new HashSet<TagAsset>();
         filterTagProvider = null;
         filterFavorites = false;

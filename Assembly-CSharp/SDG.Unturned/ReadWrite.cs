@@ -502,6 +502,7 @@ public class ReadWrite
     {
         sourceFileName = PATH + sourceFileName;
         destFileName = PATH + destFileName;
+        MoveIfExistsAbsolute(sourceFileName, destFileName);
     }
 
     public static void MoveIfExistsAbsolute(string sourceFileName, string destFileName)
@@ -520,6 +521,29 @@ public class ReadWrite
         catch (Exception e)
         {
             UnturnedLog.exception(e, "Caught exception moving \"" + sourceFileName + "\" to \"" + destFileName + "\":");
+        }
+    }
+
+    /// <summary>
+    /// NOTE: From and to are both relative to PATH.
+    /// </summary>
+    public static void DeleteIfExists(string fileName)
+    {
+        DeleteIfExistsAbsolute(PATH + fileName);
+    }
+
+    public static void DeleteIfExistsAbsolute(string fileName)
+    {
+        try
+        {
+            if (File.Exists(fileName))
+            {
+                File.Delete(fileName);
+            }
+        }
+        catch (Exception e)
+        {
+            UnturnedLog.exception(e, "Caught exception deleting \"" + fileName + "\":");
         }
     }
 

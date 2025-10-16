@@ -118,7 +118,7 @@ public class ItemStructureAsset : ItemPlaceableAsset
     public override void BuildDescription(ItemDescriptionBuilder builder, Item itemInstance)
     {
         base.BuildDescription(builder, itemInstance);
-        if (!builder.shouldRestrictToLegacyContent)
+        if (builder.HasFlag(EItemDescriptionFlags.Uncategorized))
         {
             builder.Append(PlayerDashboardInventoryUI.localization.format("ItemDescription_Buildable_Health", _health), 20000);
             switch (armorTier)

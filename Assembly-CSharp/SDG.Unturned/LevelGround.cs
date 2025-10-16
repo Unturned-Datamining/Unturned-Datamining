@@ -40,7 +40,9 @@ public class LevelGround : MonoBehaviour
 
     private const byte SAVEDATA_TREES_VERSION_INT_REGION_COORDS = 7;
 
-    private const byte SAVEDATA_TREES_VERSION_NEWEST = 7;
+    private const byte SAVEDATA_TREES_VERSION_ROTATION_AND_SCALE = 8;
+
+    private const byte SAVEDATA_TREES_VERSION_NEWEST = 8;
 
     public static readonly byte SAVEDATA_TREES_VERSION;
 
@@ -403,9 +405,9 @@ public class LevelGround : MonoBehaviour
         }
     }
 
-    public static void addSpawn(Vector3 point, Guid guid, bool isGenerated = false)
+    public static void addSpawn(Vector3 point, Quaternion rotation, Vector3 scale, Guid guid, bool isGenerated = false)
     {
-        ResourceSpawnpoint resourceSpawnpoint = new ResourceSpawnpoint(0, guid, point, isGenerated, NetId.INVALID);
+        ResourceSpawnpoint resourceSpawnpoint = new ResourceSpawnpoint(0, 0, guid, point, rotation, scale, isGenerated, NetId.INVALID);
         resourceSpawnpoint.SetIsActiveInRegion(isActive: true);
         Vector2Int coordinateVector2Int = Regions.GetCoordinateVector2Int(point);
         _regionTrees.GetOrAddList(coordinateVector2Int).Add(resourceSpawnpoint);
@@ -414,6 +416,12 @@ public class LevelGround : MonoBehaviour
             _trees[coordinateVector2Int.x, coordinateVector2Int.y].Add(resourceSpawnpoint);
         }
         _total++;
+    }
+
+    [Obsolete("Replaced by overload which takes a rotation and scale")]
+    public static void addSpawn(Vector3 point, Guid guid, bool isGenerated = false)
+    {
+        addSpawn(point, Quaternion.identity, Vector3.one, guid, isGenerated);
     }
 
     [Obsolete("Replaced by overload which takes GUID rather than legacy ID")]
@@ -694,6 +702,18 @@ public class LevelGround : MonoBehaviour
                 {
                     Guid guid = river.readGUID();
                     Vector3 vector = river.readSingleVector3();
+                    Quaternion rotation;
+                    Vector3 scale;
+                    if (b3 >= 8)
+                    {
+                        rotation = river.readSingleQuaternion();
+                        scale = river.readSingleVector3();
+                    }
+                    else
+                    {
+                        rotation = Quaternion.identity;
+                        scale = Vector3.one;
+                    }
                     bool newGenerated = river.readBoolean();
                     if (guid == Guid.Empty)
                     {
@@ -713,8 +733,12 @@ public class LevelGround : MonoBehaviour
                     }
                     if (!(guid == Guid.Empty))
                     {
+                        if (b3 < 8 && Assets.find(guid) is ResourceAsset resourceAsset2)
+                        {
+                            resourceAsset2.GetLegacyRotationAndScale(vector, out rotation, out scale);
+                        }
                         NetId treeNetIdV = LevelNetIdRegistry.GetTreeNetIdV2(i);
-                        ResourceSpawnpoint resourceSpawnpoint = new ResourceSpawnpoint(0, guid, vector, newGenerated, treeNetIdV);
+                        ResourceSpawnpoint resourceSpawnpoint = new ResourceSpawnpoint(0, 0, guid, vector, rotation, scale, newGenerated, treeNetIdV);
                         if (resourceSpawnpoint.asset == null && (bool)Assets.shouldLoadAnyAssets)
                         {
                             UnturnedLog.error("Tree with no asset at {0} (ID: {1})", vector, guid);
@@ -743,37 +767,43 @@ public class LevelGround : MonoBehaviour
                             {
                                 ushort num4 = river.readUInt16();
                                 Guid guid2 = ((b3 >= 6) ? river.readGUID() : Guid.Empty);
-                                Vector3 newPoint = river.readSingleVector3();
+                                Vector3 vector2 = river.readSingleVector3();
                                 bool newGenerated2 = river.readBoolean();
                                 if (num4 != 0 || guid2 != Guid.Empty)
                                 {
                                     if (treeRedirectorMap != null)
                                     {
-                                        ResourceAsset resourceAsset2 = treeRedirectorMap.redirect(guid2);
-                                        if (resourceAsset2 == null)
+                                        ResourceAsset resourceAsset3 = treeRedirectorMap.redirect(guid2);
+                                        if (resourceAsset3 == null)
                                         {
                                             num4 = 0;
                                             guid2 = Guid.Empty;
                                         }
                                         else
                                         {
-                                            num4 = resourceAsset2.id;
-                                            guid2 = resourceAsset2.GUID;
-                                        }
-                                    }
-                                    else if (flag)
-                                    {
-                                        ResourceAsset resourceAsset3 = EditorAssetRedirector.Redirect<ResourceAsset>(guid2);
-                                        if (resourceAsset3 != null)
-                                        {
                                             num4 = resourceAsset3.id;
                                             guid2 = resourceAsset3.GUID;
                                         }
                                     }
+                                    else if (flag)
+                                    {
+                                        ResourceAsset resourceAsset4 = EditorAssetRedirector.Redirect<ResourceAsset>(guid2);
+                                        if (resourceAsset4 != null)
+                                        {
+                                            num4 = resourceAsset4.id;
+                                            guid2 = resourceAsset4.GUID;
+                                        }
+                                    }
                                     if (num4 != 0 || guid2 != Guid.Empty)
                                     {
+                                        Quaternion rotation2 = Quaternion.identity;
+                                        Vector3 scale2 = Vector3.one;
+                                        if (Assets.find(guid2) is ResourceAsset resourceAsset5)
+                                        {
+                                            resourceAsset5.GetLegacyRotationAndScale(vector2, out rotation2, out scale2);
+                                        }
                                         NetId treeNetId = LevelNetIdRegistry.GetTreeNetId(b4, b5, num3);
-                                        ResourceSpawnpoint resourceSpawnpoint2 = new ResourceSpawnpoint(num4, guid2, newPoint, newGenerated2, treeNetId);
+                                        ResourceSpawnpoint resourceSpawnpoint2 = new ResourceSpawnpoint(0, num4, guid2, vector2, rotation2, scale2, newGenerated2, treeNetId);
                                         if (resourceSpawnpoint2.asset == null && (bool)Assets.shouldLoadAnyAssets)
                                         {
                                             UnturnedLog.error("Tree with no asset in region {0}, {1}: {2} {3}", b4, b5, num4, guid2);
@@ -789,10 +819,16 @@ public class LevelGround : MonoBehaviour
                             {
                                 byte b6 = river.readByte();
                                 ushort num5 = 3;
-                                Vector3 newPoint2 = river.readSingleVector3();
+                                Vector3 vector3 = river.readSingleVector3();
                                 bool newGenerated3 = river.readBoolean();
+                                Quaternion rotation3 = Quaternion.identity;
+                                Vector3 scale3 = Vector3.one;
+                                if (Assets.find(EAssetType.RESOURCE, num5) is ResourceAsset resourceAsset6)
+                                {
+                                    resourceAsset6.GetLegacyRotationAndScale(vector3, out rotation3, out scale3);
+                                }
                                 NetId treeNetId2 = LevelNetIdRegistry.GetTreeNetId(b4, b5, num3);
-                                ResourceSpawnpoint resourceSpawnpoint3 = new ResourceSpawnpoint(num5, newPoint2, newGenerated3, treeNetId2);
+                                ResourceSpawnpoint resourceSpawnpoint3 = new ResourceSpawnpoint(b6, num5, Guid.Empty, vector3, rotation3, scale3, newGenerated3, treeNetId2);
                                 if (resourceSpawnpoint3.asset == null && (bool)Assets.shouldLoadAnyAssets)
                                 {
                                     UnturnedLog.error("Tree with no asset in region {0}, {1}: {2} {3}", b4, b5, num5, b6);
@@ -1083,7 +1119,7 @@ public class LevelGround : MonoBehaviour
     protected static void saveTrees()
     {
         River river = new River(Level.info.path + "/Terrain/Trees.dat", usePath: false);
-        river.writeByte(7);
+        river.writeByte(8);
         if (saveTreesAllTreesList == null)
         {
             saveTreesAllTreesList = new List<ResourceSpawnpoint>();
@@ -1100,12 +1136,16 @@ public class LevelGround : MonoBehaviour
             {
                 river.writeGUID(saveTreesAllTrees.guid);
                 river.writeSingleVector3(saveTreesAllTrees.point);
+                river.writeSingleQuaternion(saveTreesAllTrees.angle);
+                river.writeSingleVector3(Vector3.one);
                 river.writeBoolean(saveTreesAllTrees.isGenerated);
             }
             else
             {
                 river.writeGUID(Guid.Empty);
                 river.writeSingleVector3(Vector3.zero);
+                river.writeSingleQuaternion(Quaternion.identity);
+                river.writeSingleVector3(Vector3.one);
                 river.writeBoolean(value: true);
             }
         }
@@ -1307,7 +1347,7 @@ public class LevelGround : MonoBehaviour
         _Triplanar_Tertiary_Weight = -1;
         _triplanarTertiaryWeight = 0.2f;
         obstructionColliders = new Collider[16];
-        SAVEDATA_TREES_VERSION = 7;
+        SAVEDATA_TREES_VERSION = 8;
         RESOURCE_REGIONS = 3;
         ALPHAMAPS = 2;
         regionTrackerData = new Dictionary<Vector2Int, RegionVisibilityData>();

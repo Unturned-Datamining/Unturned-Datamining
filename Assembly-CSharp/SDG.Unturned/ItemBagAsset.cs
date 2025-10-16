@@ -13,7 +13,7 @@ public class ItemBagAsset : ItemClothingAsset
     public override void BuildDescription(ItemDescriptionBuilder builder, Item itemInstance)
     {
         base.BuildDescription(builder, itemInstance);
-        if (!builder.shouldRestrictToLegacyContent && width > 0 && height > 0)
+        if (builder.HasFlag(EItemDescriptionFlags.Uncategorized) && width > 0 && height > 0)
         {
             builder.Append(PlayerDashboardInventoryUI.localization.format("ItemDescription_StorageDimensions", width, height), 2000);
         }

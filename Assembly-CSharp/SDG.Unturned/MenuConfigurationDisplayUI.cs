@@ -53,7 +53,7 @@ public class MenuConfigurationDisplayUI
         int num = Mathf.FloorToInt((button.PositionOffset_Y - 300f) / 40f);
         Resolution resolution = ScreenEx.GetRecommendedResolutions()[num];
         GraphicsSettings.resolution = new GraphicsSettingsResolution(resolution);
-        GraphicsSettings.apply($"changed resolution to {resolution.width} x {resolution.height} [{resolution.refreshRate} Hz]");
+        GraphicsSettings.apply($"changed resolution to {resolution.width} x {resolution.height} [{resolution.refreshRateRatio.value} Hz]");
     }
 
     private static void onSwappedFullscreenState(SleekButtonState button, int index)
@@ -175,7 +175,7 @@ public class MenuConfigurationDisplayUI
             sleekButton.SizeOffset_Y = 30f;
             sleekButton.SizeScale_X = 1f;
             sleekButton.OnClicked += onClickedResolutionButton;
-            sleekButton.Text = resolution.width + " x " + resolution.height + " [" + resolution.refreshRate + "Hz]";
+            sleekButton.Text = resolution.width + " x " + resolution.height + " [" + resolution.refreshRateRatio.value + "Hz]";
             resolutionsBox.AddChild(sleekButton);
             buttons[b] = sleekButton;
         }

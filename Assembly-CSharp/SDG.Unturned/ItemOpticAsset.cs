@@ -13,7 +13,7 @@ public class ItemOpticAsset : ItemAsset
     public override void BuildDescription(ItemDescriptionBuilder builder, Item itemInstance)
     {
         base.BuildDescription(builder, itemInstance);
-        if (!builder.shouldRestrictToLegacyContent && zoom != 1f)
+        if (builder.HasFlag(EItemDescriptionFlags.Uncategorized) && zoom != 1f)
         {
             builder.Append(PlayerDashboardInventoryUI.localization.format("ItemDescription_ZoomFactor", zoom), 10000);
         }

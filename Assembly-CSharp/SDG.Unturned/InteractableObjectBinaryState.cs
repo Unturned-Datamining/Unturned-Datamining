@@ -125,7 +125,7 @@ public class InteractableObjectBinaryState : InteractableObject
         navmeshCut.isDual = false;
         navmeshCut.cutsAddedGeom = true;
         navmeshCut.updateRotationDistance = 10f;
-        navmeshCut.useRotation = true;
+        navmeshCut.useRotationAndScale = true;
         navmeshCut.center = box.center;
         navmeshCut.rectangleSize = new Vector2(box.size.x, box.size.z);
         navmeshCut.height = box.size.y;
@@ -150,7 +150,7 @@ public class InteractableObjectBinaryState : InteractableObject
             return;
         }
         cutComponent = transform2.GetComponent<NavmeshCut>();
-        if (cutComponent == null)
+        if ((UnityEngine.Object)(object)cutComponent == null)
         {
             BoxCollider component = transform2.GetComponent<BoxCollider>();
             if (component != null)
@@ -158,8 +158,15 @@ public class InteractableObjectBinaryState : InteractableObject
                 cutComponent = initCutComponentFromBox(component);
             }
         }
-        if (cutComponent != null)
+        if ((UnityEngine.Object)(object)cutComponent != null)
         {
+            NavGraph navGraph = LevelNavigation.GetNavGraph(transform2.position);
+            if (navGraph != null && navGraph.graphIndex < 31)
+            {
+                cutComponent.graphMask = GraphMask.FromGraph(navGraph);
+                ((Behaviour)(object)cutComponent).enabled = false;
+                ((Behaviour)(object)cutComponent).enabled = true;
+            }
             cutHeight = cutComponent.height;
         }
     }
@@ -178,7 +185,7 @@ public class InteractableObjectBinaryState : InteractableObject
             flag = !isUsed;
             break;
         }
-        if (cutComponent != null)
+        if ((UnityEngine.Object)(object)cutComponent != null)
         {
             if (flag)
             {

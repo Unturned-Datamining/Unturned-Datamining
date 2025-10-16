@@ -407,13 +407,13 @@ public class ItemTool : MonoBehaviour
         Color ambientSkyColor = RenderSettings.ambientSkyColor;
         Color ambientEquatorColor = RenderSettings.ambientEquatorColor;
         Color ambientGroundColor = RenderSettings.ambientGroundColor;
-        Texture customReflection = RenderSettings.customReflection;
+        Texture customReflectionTexture = RenderSettings.customReflectionTexture;
         RenderSettings.fog = false;
         RenderSettings.ambientMode = AmbientMode.Trilight;
         RenderSettings.ambientSkyColor = Color.white;
         RenderSettings.ambientEquatorColor = Color.white;
         RenderSettings.ambientGroundColor = Color.white;
-        RenderSettings.customReflection = null;
+        RenderSettings.customReflectionTexture = null;
         if (Provider.isConnected)
         {
             LevelLighting.setEnabled(isEnabled: false);
@@ -438,7 +438,7 @@ public class ItemTool : MonoBehaviour
         RenderSettings.ambientSkyColor = ambientSkyColor;
         RenderSettings.ambientEquatorColor = ambientEquatorColor;
         RenderSettings.ambientGroundColor = ambientGroundColor;
-        RenderSettings.customReflection = customReflection;
+        RenderSettings.customReflectionTexture = customReflectionTexture;
         item.position = new Vector3(0f, -256f, -256f);
         UnityEngine.Object.Destroy(item.gameObject);
         for (int i = 0; i < texture2D.width; i++)
@@ -565,13 +565,13 @@ public class ItemTool : MonoBehaviour
         Color ambientSkyColor = RenderSettings.ambientSkyColor;
         Color ambientEquatorColor = RenderSettings.ambientEquatorColor;
         Color ambientGroundColor = RenderSettings.ambientGroundColor;
-        Texture customReflection = RenderSettings.customReflection;
+        Texture customReflectionTexture = RenderSettings.customReflectionTexture;
         RenderSettings.fog = false;
         RenderSettings.ambientMode = AmbientMode.Trilight;
         RenderSettings.ambientSkyColor = Color.white;
         RenderSettings.ambientEquatorColor = Color.white;
         RenderSettings.ambientGroundColor = Color.white;
-        RenderSettings.customReflection = null;
+        RenderSettings.customReflectionTexture = null;
         if (Provider.isConnected)
         {
             LevelLighting.setEnabled(isEnabled: false);
@@ -592,7 +592,7 @@ public class ItemTool : MonoBehaviour
         RenderSettings.ambientSkyColor = ambientSkyColor;
         RenderSettings.ambientEquatorColor = ambientEquatorColor;
         RenderSettings.ambientGroundColor = ambientGroundColor;
-        RenderSettings.customReflection = customReflection;
+        RenderSettings.customReflectionTexture = customReflectionTexture;
         model.position = new Vector3(0f, -256f, -256f);
         UnityEngine.Object.Destroy(model.gameObject);
         Texture2D texture2D = new Texture2D(width, height, TextureFormat.ARGB32, mipChain: false);

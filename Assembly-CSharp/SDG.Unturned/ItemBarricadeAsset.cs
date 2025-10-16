@@ -226,7 +226,7 @@ public class ItemBarricadeAsset : ItemPlaceableAsset
     public override void BuildDescription(ItemDescriptionBuilder builder, Item itemInstance)
     {
         base.BuildDescription(builder, itemInstance);
-        if (!builder.shouldRestrictToLegacyContent && build != EBuild.VEHICLE)
+        if (builder.HasFlag(EItemDescriptionFlags.Uncategorized) && build != EBuild.VEHICLE)
         {
             if (_health > 0)
             {

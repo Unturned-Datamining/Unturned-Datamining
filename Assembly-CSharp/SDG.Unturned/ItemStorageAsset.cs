@@ -1,3 +1,5 @@
+using Unturned.SystemEx;
+
 namespace SDG.Unturned;
 
 public class ItemStorageAsset : ItemBarricadeAsset
@@ -16,6 +18,35 @@ public class ItemStorageAsset : ItemBarricadeAsset
 
     public bool shouldCloseWhenOutsideRange { get; protected set; }
 
+    public LevelAsset.DefaultLoadoutItem[] DefaultContainedItems { get; set; }
+
+    public void AddDefaultContainedItemsToStorage(InteractableStorage storage)
+    {
+        if (storage == null || DefaultContainedItems.IsNullOrEmpty())
+        {
+            return;
+        }
+        LevelAsset.DefaultLoadoutItem[] defaultContainedItems = DefaultContainedItems;
+        for (int i = 0; i < defaultContainedItems.Length; i++)
+        {
+            LevelAsset.DefaultLoadoutItem defaultLoadoutItem = defaultContainedItems[i];
+            ItemAsset itemAsset = defaultLoadoutItem.ResolveAsset(OnGetDefaultContainedItemsErrorContext);
+            if (itemAsset != null)
+            {
+                for (int j = 0; j < defaultLoadoutItem.amount; j++)
+                {
+                    storage.items.tryAddItem(new Item(itemAsset, defaultLoadoutItem.origin), isStateUpdatable: false);
+                }
+            }
+        }
+        storage.items.onStateUpdated?.Invoke();
+    }
+
+    private string OnGetDefaultContainedItemsErrorContext()
+    {
+        return base.FriendlyNameWithFriendlyType + " default contained items";
+    }
+
     public override byte[] getState(EItemOrigin origin)
     {
         if (isDisplay)
@@ -28,7 +59,7 @@ public class ItemStorageAsset : ItemBarricadeAsset
     public override void BuildDescription(ItemDescriptionBuilder builder, Item itemInstance)
     {
         base.BuildDescription(builder, itemInstance);
-        if (!builder.shouldRestrictToLegacyContent && storage_x > 0 && storage_y > 0)
+        if (builder.HasFlag(EItemDescriptionFlags.Uncategorized) && storage_x > 0 && storage_y > 0)
         {
             builder.Append(PlayerDashboardInventoryUI.localization.format("ItemDescription_StorageDimensions", storage_x, storage_y), 2000);
         }
@@ -49,6 +80,10 @@ public class ItemStorageAsset : ItemBarricadeAsset
         }
         _isDisplay = p.data.ContainsKey("Display");
         shouldCloseWhenOutsideRange = p.data.ParseBool("Should_Close_When_Outside_Range");
+        if (p.data.TryGetList("Default_Contained_Items", out var node))
+        {
+            DefaultContainedItems = node.ParseArrayOfStructs<LevelAsset.DefaultLoadoutItem>();
+        }
     }
 
     internal override void BuildCargoData(CargoBuilder builder)

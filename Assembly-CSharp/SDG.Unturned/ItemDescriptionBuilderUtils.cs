@@ -35,7 +35,14 @@ internal class ItemDescriptionBuilderUtils
         ItemDescriptionBuilder result = default(ItemDescriptionBuilder);
         descriptionStringBuilder.Clear();
         result.stringBuilder = descriptionStringBuilder;
-        result.shouldRestrictToLegacyContent = !Glazier.Get().SupportsAutomaticLayout || !itemAsset.isEligibleForAutoStatDescriptions;
+        if (!Glazier.Get().SupportsAutomaticLayout)
+        {
+            result.flags = EItemDescriptionFlags.LegacyContent;
+        }
+        else
+        {
+            result.flags = itemAsset.PreferredDescriptionFlags;
+        }
         lines.Clear();
         result.lines = lines;
         return result;

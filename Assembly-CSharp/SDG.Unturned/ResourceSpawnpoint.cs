@@ -281,12 +281,14 @@ public class ResourceSpawnpoint
         }
     }
 
-    public ResourceSpawnpoint(byte newType, ushort newID, Guid newGuid, Vector3 newPoint, bool newGenerated, NetId netId)
+    public ResourceSpawnpoint(byte newType, ushort newID, Guid newGuid, Vector3 newPoint, Quaternion newRotation, Vector3 newScale, bool newGenerated, NetId netId)
     {
         type = newType;
         id = newID;
         guid = newGuid;
         _point = newPoint;
+        _angle = newRotation;
+        _scale = newScale;
         _isGenerated = newGenerated;
         if (guid == Guid.Empty)
         {
@@ -314,12 +316,6 @@ public class ResourceSpawnpoint
             health = asset.health;
             isAlive = true;
             areConditionsMet = true;
-            float num = Mathf.Sin((point.x + 4096f) * 32f + (point.z + 4096f) * 32f);
-            float t = (num + 1f) * 0.5f;
-            float x = Mathf.Lerp(asset.MinRandomAngleDeviation, asset.MaxRandomAngleDeviation, t);
-            _angle = Quaternion.Euler(x, num * 360f, 0f);
-            float num2 = Mathf.Lerp(asset.MinRandomUniformScale, asset.MaxRandomUniformScale, t);
-            _scale = new Vector3(num2, num2, num2);
             GameObject gameObject = null;
             if (asset.modelGameObject != null)
             {
@@ -381,17 +377,17 @@ public class ResourceSpawnpoint
     }
 
     public ResourceSpawnpoint(byte newType, ushort newID, Vector3 newPoint, bool newGenerated, NetId netId)
-        : this(newType, newID, Guid.Empty, newPoint, newGenerated, netId)
+        : this(newType, newID, Guid.Empty, newPoint, Quaternion.identity, Vector3.one, newGenerated, netId)
     {
     }
 
     public ResourceSpawnpoint(ushort newID, Vector3 newPoint, bool newGenerated, NetId netId)
-        : this(0, newID, Guid.Empty, newPoint, newGenerated, netId)
+        : this(0, newID, Guid.Empty, newPoint, Quaternion.identity, Vector3.one, newGenerated, netId)
     {
     }
 
     public ResourceSpawnpoint(ushort newID, Guid guid, Vector3 newPoint, bool newGenerated, NetId netId)
-        : this(0, newID, guid, newPoint, newGenerated, netId)
+        : this(0, newID, guid, newPoint, Quaternion.identity, Vector3.one, newGenerated, netId)
     {
     }
 

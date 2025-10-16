@@ -257,7 +257,7 @@ public class ItemWeaponAsset : ItemAsset
     public override void BuildDescription(ItemDescriptionBuilder builder, Item itemInstance)
     {
         base.BuildDescription(builder, itemInstance);
-        _ = builder.shouldRestrictToLegacyContent;
+        builder.HasFlag(EItemDescriptionFlags.Uncategorized);
     }
 
     public ItemWeaponAsset()

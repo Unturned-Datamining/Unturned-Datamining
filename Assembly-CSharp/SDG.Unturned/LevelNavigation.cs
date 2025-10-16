@@ -2,7 +2,8 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using Pathfinding;
-using SDG.Framework.Landscapes;
+using Pathfinding.Graphs.Navmesh;
+using Pathfinding.Util;
 using UnityEngine;
 
 namespace SDG.Unturned;
@@ -73,18 +74,46 @@ public class LevelNavigation
     public static bool tryGetNavigation(Vector3 point, out byte nav)
     {
         nav = byte.MaxValue;
-        if (AstarPath.active != null)
+        bool result = false;
+        if ((UnityEngine.Object)(object)AstarPath.active != null)
         {
             for (byte b = 0; b < Mathf.Min(bounds.Count, AstarPath.active.graphs.Length); b++)
             {
-                if (AstarPath.active.graphs[b] != null && ((RecastGraph)AstarPath.active.graphs[b]).forcedBounds.ContainsXZ(point))
+                if (AstarPath.active.graphs[b] is RecastGraph recastGraph)
                 {
-                    nav = b;
-                    return true;
+                    float f = point.x - recastGraph.forcedBoundsCenter.x;
+                    float f2 = point.z - recastGraph.forcedBoundsCenter.z;
+                    if (Mathf.Abs(f) <= recastGraph.forcedBoundsSize.x / 2f && Mathf.Abs(f2) <= recastGraph.forcedBoundsSize.z / 2f)
+                    {
+                        nav = b;
+                        result = true;
+                        break;
+                    }
                 }
             }
         }
-        return false;
+        return result;
+    }
+
+    internal static NavGraph GetNavGraph(Vector3 position)
+    {
+        if ((UnityEngine.Object)(object)AstarPath.active != null)
+        {
+            NavGraph[] graphs = AstarPath.active.graphs;
+            foreach (NavGraph navGraph in graphs)
+            {
+                if (navGraph is RecastGraph recastGraph)
+                {
+                    float f = position.x - recastGraph.forcedBoundsCenter.x;
+                    float f2 = position.z - recastGraph.forcedBoundsCenter.z;
+                    if (Mathf.Abs(f) <= recastGraph.forcedBoundsSize.x / 2f && Mathf.Abs(f2) <= recastGraph.forcedBoundsSize.z / 2f)
+                    {
+                        return navGraph;
+                    }
+                }
+            }
+        }
+        return null;
     }
 
     public static bool checkSafe(byte bound)
@@ -132,15 +161,21 @@ public class LevelNavigation
 
     public static bool checkNavigation(Vector3 point)
     {
-        if (AstarPath.active == null)
+        if ((UnityEngine.Object)(object)AstarPath.active == null)
         {
             return false;
         }
-        for (byte b = 0; b < AstarPath.active.graphs.Length; b++)
+        NavGraph[] graphs = AstarPath.active.graphs;
+        for (int i = 0; i < graphs.Length; i++)
         {
-            if (AstarPath.active.graphs[b] != null && ((RecastGraph)AstarPath.active.graphs[b]).forcedBounds.ContainsXZ(point))
+            if (graphs[i] is RecastGraph recastGraph)
             {
-                return true;
+                float f = point.x - recastGraph.forcedBoundsCenter.x;
+                float f2 = point.z - recastGraph.forcedBoundsCenter.z;
+                if (Mathf.Abs(f) <= recastGraph.forcedBoundsSize.x / 2f && Mathf.Abs(f2) <= recastGraph.forcedBoundsSize.z / 2f)
+                {
+                    return true;
+                }
             }
         }
         return false;
@@ -159,25 +194,25 @@ public class LevelNavigation
 
     public static RecastGraph addGraph()
     {
-        RecastGraph obj = (RecastGraph)AstarPath.active.astarData.AddGraph(typeof(RecastGraph));
-        obj.cellSize = 0.1f;
-        obj.cellHeight = 0.1f;
-        obj.useTiles = true;
-        obj.editorTileSize = 128;
-        obj.minRegionSize = 64f;
-        obj.walkableHeight = 2f;
-        obj.walkableClimb = 0.75f;
-        obj.characterRadius = 0.5f;
-        obj.maxSlope = 75f;
-        obj.maxEdgeLength = 16f;
-        obj.contourMaxError = 2f;
-        obj.terrainSampleSize = 1;
-        obj.rasterizeTrees = false;
-        obj.rasterizeMeshes = false;
-        obj.rasterizeColliders = true;
-        obj.colliderRasterizeDetail = 4f;
-        obj.mask = RayMasks.BLOCK_NAVMESH;
-        return obj;
+        RecastGraph recastGraph = AstarPath.active.data.AddGraph<RecastGraph>();
+        recastGraph.cellSize = 0.1f;
+        recastGraph.useTiles = true;
+        recastGraph.editorTileSize = 128;
+        recastGraph.minRegionSize = 64f;
+        recastGraph.walkableHeight = 2f;
+        recastGraph.walkableClimb = 0.75f;
+        recastGraph.characterRadius = 0.5f;
+        recastGraph.maxSlope = 75f;
+        recastGraph.maxEdgeLength = 16f;
+        recastGraph.contourMaxError = 2f;
+        recastGraph.collectionSettings.terrainHeightmapDownsamplingFactor = 1;
+        recastGraph.collectionSettings.rasterizeTrees = false;
+        recastGraph.collectionSettings.rasterizeMeshes = false;
+        recastGraph.collectionSettings.rasterizeColliders = true;
+        recastGraph.collectionSettings.colliderRasterizeDetail = 4f;
+        recastGraph.collectionSettings.layerMask = RayMasks.BLOCK_NAVMESH;
+        recastGraph.enableNavmeshCutting = !Level.isEditor;
+        return recastGraph;
     }
 
     public static void updateBounds()
@@ -200,12 +235,11 @@ public class LevelNavigation
     public static Transform addFlag(Vector3 point)
     {
         RecastGraph graph = null;
-        Func<bool, bool> update = delegate
+        System.Action callback = delegate
         {
             graph = addGraph();
-            return true;
         };
-        AstarPath.active.AddWorkItem(new AstarPath.AstarWorkItem(update));
+        AstarPath.active.AddWorkItem(callback);
         AstarPath.active.FlushWorkItems();
         FlagData flagData = new FlagData("", 64);
         flags.Add(new Flag(point, graph, flagData));
@@ -254,7 +288,6 @@ public class LevelNavigation
     {
         _bounds = new List<Bounds>();
         flagData = new List<FlagData>();
-        RecastGraph.UnturnedIsPointInsideTerrainHole = Landscape.IsPointInsideHole;
         if (ReadWrite.fileExists(Level.info.path + "/Environment/Bounds.dat", useCloud: false, usePath: false))
         {
             River river = new River(Level.info.path + "/Environment/Bounds.dat", usePath: false);
@@ -312,12 +345,11 @@ public class LevelNavigation
                 flagData.Add(new FlagData("", 64));
             }
         }
-        Func<bool, bool> update = delegate
+        System.Action callback = delegate
         {
             if (Level.isEditor)
             {
                 flags = new List<Flag>();
-                UnityEngine.Object.Destroy(AstarPath.active.GetComponent<TileHandlerHelpers>());
                 if (ReadWrite.fileExists(Level.info.path + "/Environment/Flags.dat", useCloud: false, usePath: false))
                 {
                     River river3 = new River(Level.info.path + "/Environment/Flags.dat", usePath: false);
@@ -396,9 +428,8 @@ public class LevelNavigation
                     UnturnedLog.error("Navigation bounds count ({0}) does not match graph count ({1}) during server load", bounds.Count, AstarPath.active.graphs.Length);
                 }
             }
-            return true;
         };
-        AstarPath.active.AddWorkItem(new AstarPath.AstarWorkItem(update));
+        AstarPath.active.AddWorkItem(callback);
         AstarPath.active.FlushWorkItems();
     }
 
@@ -457,12 +488,12 @@ public class LevelNavigation
                 river4.writeSingleVector3(graph.forcedBoundsSize);
                 river4.writeByte((byte)graph.tileXCount);
                 river4.writeByte((byte)graph.tileZCount);
-                RecastGraph.NavmeshTile[] tiles = graph.GetTiles();
+                NavmeshTile[] tiles = graph.GetTiles();
                 for (int i = 0; i < graph.tileZCount; i++)
                 {
                     for (int j = 0; j < graph.tileXCount; j++)
                     {
-                        RecastGraph.NavmeshTile navmeshTile = tiles[j + i * graph.tileXCount];
+                        NavmeshTile navmeshTile = tiles[j + i * graph.tileXCount];
                         river4.writeUInt16((ushort)navmeshTile.tris.Length);
                         for (int k = 0; k < navmeshTile.tris.Length; k++)
                         {
@@ -488,62 +519,40 @@ public class LevelNavigation
     private static RecastGraph buildGraph(River river)
     {
         RecastGraph recastGraph = addGraph();
-        int graphIndex = AstarPath.active.astarData.GetGraphIndex(recastGraph);
-        TriangleMeshNode.SetNavmeshHolder(graphIndex, recastGraph);
+        TriangleMeshNode.SetNavmeshHolder(AstarPath.active.data.GetGraphIndex(recastGraph), recastGraph);
         recastGraph.forcedBoundsCenter = river.readSingleVector3();
         recastGraph.forcedBoundsSize = river.readSingleVector3();
         recastGraph.tileXCount = river.readByte();
         recastGraph.tileZCount = river.readByte();
-        RecastGraph.NavmeshTile[] array = new RecastGraph.NavmeshTile[recastGraph.tileXCount * recastGraph.tileZCount];
-        recastGraph.SetTiles(array);
+        GraphTransform graphTransform = recastGraph.CalculateTransform();
+        TileMeshes tileMeshes = default(TileMeshes);
+        tileMeshes.tileMeshes = new TileMesh[recastGraph.tileXCount * recastGraph.tileZCount];
+        tileMeshes.tileRect = new IntRect(0, 0, recastGraph.tileXCount - 1, recastGraph.tileZCount - 1);
+        tileMeshes.tileWorldSize = new Vector2(recastGraph.TileWorldSizeX, recastGraph.TileWorldSizeZ);
         for (int i = 0; i < recastGraph.tileZCount; i++)
         {
             for (int j = 0; j < recastGraph.tileXCount; j++)
             {
-                RecastGraph.NavmeshTile navmeshTile = new RecastGraph.NavmeshTile();
-                navmeshTile.x = j;
-                navmeshTile.z = i;
-                navmeshTile.w = 1;
-                navmeshTile.d = 1;
-                navmeshTile.bbTree = new BBTree(navmeshTile);
+                TileMesh tileMesh = default(TileMesh);
+                tileMesh.triangles = new int[river.readUInt16()];
+                for (int k = 0; k < tileMesh.triangles.Length; k++)
+                {
+                    tileMesh.triangles[k] = river.readUInt16();
+                }
+                tileMesh.verticesInTileSpace = new Int3[river.readUInt16()];
+                for (int l = 0; l < tileMesh.verticesInTileSpace.Length; l++)
+                {
+                    Int3 point = new Int3(river.readInt32(), river.readInt32(), river.readInt32());
+                    Int3 @int = graphTransform.InverseTransform(point);
+                    Int3 int2 = (Int3)new Vector3(recastGraph.TileWorldSizeX * (float)j, 0f, recastGraph.TileWorldSizeZ * (float)i);
+                    tileMesh.verticesInTileSpace[l] = @int - int2;
+                }
+                tileMesh.tags = new uint[tileMesh.triangles.Length];
                 int num = j + i * recastGraph.tileXCount;
-                array[num] = navmeshTile;
-                navmeshTile.tris = new int[river.readUInt16()];
-                for (int k = 0; k < navmeshTile.tris.Length; k++)
-                {
-                    navmeshTile.tris[k] = river.readUInt16();
-                }
-                navmeshTile.verts = new Int3[river.readUInt16()];
-                for (int l = 0; l < navmeshTile.verts.Length; l++)
-                {
-                    navmeshTile.verts[l] = new Int3(river.readInt32(), river.readInt32(), river.readInt32());
-                }
-                navmeshTile.nodes = new TriangleMeshNode[navmeshTile.tris.Length / 3];
-                num <<= 12;
-                for (int m = 0; m < navmeshTile.nodes.Length; m++)
-                {
-                    navmeshTile.nodes[m] = new TriangleMeshNode(AstarPath.active);
-                    TriangleMeshNode triangleMeshNode = navmeshTile.nodes[m];
-                    triangleMeshNode.GraphIndex = (uint)graphIndex;
-                    triangleMeshNode.Penalty = 0u;
-                    triangleMeshNode.Walkable = true;
-                    triangleMeshNode.v0 = navmeshTile.tris[m * 3] | num;
-                    triangleMeshNode.v1 = navmeshTile.tris[m * 3 + 1] | num;
-                    triangleMeshNode.v2 = navmeshTile.tris[m * 3 + 2] | num;
-                    triangleMeshNode.UpdatePositionFromVertices();
-                    navmeshTile.bbTree.Insert(triangleMeshNode);
-                }
-                recastGraph.CreateNodeConnections(navmeshTile.nodes);
+                tileMeshes.tileMeshes[num] = tileMesh;
             }
         }
-        for (int n = 0; n < recastGraph.tileZCount; n++)
-        {
-            for (int num2 = 0; num2 < recastGraph.tileXCount; num2++)
-            {
-                RecastGraph.NavmeshTile tile = array[num2 + n * recastGraph.tileXCount];
-                recastGraph.ConnectTileWithNeighbours(tile);
-            }
-        }
+        recastGraph.ReplaceTiles(tileMeshes);
         return recastGraph;
     }
 }

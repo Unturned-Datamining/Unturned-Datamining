@@ -104,9 +104,9 @@ public class MasterBundleConfig
         {
             throw new Exception("Lowest master bundle version is 2 (default), associated with 2017.4 LTS.");
         }
-        if (version > 5)
+        if (version > 6)
         {
-            throw new Exception("Highest master bundle version is 5, associated with 2021 LTS.");
+            throw new Exception("Highest master bundle version is 6, associated with 2022 LTS.");
         }
         string assetBundlePath = getAssetBundlePath();
         if (!File.Exists(assetBundlePath))

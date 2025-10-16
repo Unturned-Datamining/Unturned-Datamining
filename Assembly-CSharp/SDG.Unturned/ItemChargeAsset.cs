@@ -45,7 +45,7 @@ public class ItemChargeAsset : ItemBarricadeAsset
     public override void BuildDescription(ItemDescriptionBuilder builder, Item itemInstance)
     {
         base.BuildDescription(builder, itemInstance);
-        if (!builder.shouldRestrictToLegacyContent)
+        if (builder.HasFlag(EItemDescriptionFlags.Uncategorized))
         {
             int sortOrder = 30000;
             builder.Append(PlayerDashboardInventoryUI.localization.format("ItemDescription_ExplosionBlastRadius", MeasurementTool.FormatLengthString(range2)), sortOrder++);

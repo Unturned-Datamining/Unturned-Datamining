@@ -485,11 +485,7 @@ public class ItemGunAsset : ItemWeaponAsset
                 builder.Append(PlayerDashboardInventoryUI.localization.format("Ammo", PlayerDashboardInventoryUI.localization.format("None"), 0, 0), 2000);
             }
         }
-        if (builder.shouldRestrictToLegacyContent)
-        {
-            return;
-        }
-        if (itemInstance != null)
+        if (itemInstance != null && builder.HasFlag(EItemDescriptionFlags.GunAttachments))
         {
             ushort num2 = BitConverter.ToUInt16(itemInstance.state, 0);
             ushort num3 = BitConverter.ToUInt16(itemInstance.state, 2);
@@ -544,30 +540,33 @@ public class ItemGunAsset : ItemWeaponAsset
                 builder.Append(PlayerDashboardInventoryUI.localization.format("ItemDescription_BarrelAttachment", PlayerDashboardInventoryUI.localization.format("None")), 2000);
             }
         }
-        float f = CalculateRoundsPerSecond() * 60f;
-        builder.Append(PlayerDashboardInventoryUI.localization.format("ItemDescription_Firerate", Mathf.RoundToInt(f)), 10000);
-        builder.Append(PlayerDashboardInventoryUI.localization.format("ItemDescription_Spread", $"{57.29578f * baseSpreadAngleRadians:N1}"), 10000);
-        if (spreadAim != 1f)
+        if (builder.HasFlag(EItemDescriptionFlags.Uncategorized))
         {
-            builder.Append(PlayerDashboardInventoryUI.localization.format("ItemDescription_Spread_Aim", $"{57.29578f * baseSpreadAngleRadians * spreadAim:N1}"), 10000);
-        }
-        if (aimingRecoilMultiplier != 1f)
-        {
-            builder.Append(PlayerDashboardInventoryUI.localization.format("ItemDescription_RecoilModifier_Aiming", PlayerDashboardInventoryUI.FormatStatModifier(aimingRecoilMultiplier, higherIsPositive: false, higherIsBeneficial: false)), 10000 + DescSort_LowerIsBeneficial(aimingRecoilMultiplier));
-        }
-        if (damageFalloffRange != 1f && damageFalloffMultiplier != 1f)
-        {
-            string arg = MeasurementTool.FormatLengthString(range * damageFalloffRange);
-            string arg2 = MeasurementTool.FormatLengthString(range * damageFalloffMaxRange);
-            builder.Append(PlayerDashboardInventoryUI.localization.format("ItemDescription_DamageFalloff", arg, arg2, $"{damageFalloffMultiplier:P}"), 10000);
-        }
-        if (_projectile != null)
-        {
-            BuildExplosiveDescription(builder, itemInstance);
-        }
-        else
-        {
-            BuildNonExplosiveDescription(builder, itemInstance);
+            float f = CalculateRoundsPerSecond() * 60f;
+            builder.Append(PlayerDashboardInventoryUI.localization.format("ItemDescription_Firerate", Mathf.RoundToInt(f)), 10000);
+            builder.Append(PlayerDashboardInventoryUI.localization.format("ItemDescription_Spread", $"{57.29578f * baseSpreadAngleRadians:N1}"), 10000);
+            if (spreadAim != 1f)
+            {
+                builder.Append(PlayerDashboardInventoryUI.localization.format("ItemDescription_Spread_Aim", $"{57.29578f * baseSpreadAngleRadians * spreadAim:N1}"), 10000);
+            }
+            if (aimingRecoilMultiplier != 1f)
+            {
+                builder.Append(PlayerDashboardInventoryUI.localization.format("ItemDescription_RecoilModifier_Aiming", PlayerDashboardInventoryUI.FormatStatModifier(aimingRecoilMultiplier, higherIsPositive: false, higherIsBeneficial: false)), 10000 + DescSort_LowerIsBeneficial(aimingRecoilMultiplier));
+            }
+            if (damageFalloffRange != 1f && damageFalloffMultiplier != 1f)
+            {
+                string arg = MeasurementTool.FormatLengthString(range * damageFalloffRange);
+                string arg2 = MeasurementTool.FormatLengthString(range * damageFalloffMaxRange);
+                builder.Append(PlayerDashboardInventoryUI.localization.format("ItemDescription_DamageFalloff", arg, arg2, $"{damageFalloffMultiplier:P}"), 10000);
+            }
+            if (_projectile != null)
+            {
+                BuildExplosiveDescription(builder, itemInstance);
+            }
+            else
+            {
+                BuildNonExplosiveDescription(builder, itemInstance);
+            }
         }
     }
 

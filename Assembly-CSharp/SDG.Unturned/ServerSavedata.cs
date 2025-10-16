@@ -33,8 +33,18 @@ public class ServerSavedata
 
     /// <summary>
     /// If the file already exists when writing we will move it to this path. (public issue #4636)
+    /// Appends '~' so that terminal autocomplete finds the original file first.
+    /// Use GetBackupFilePathV1 for the earlier "example-backup.dat" style.
     /// </summary>
     public static string GetBackupFilePath(string filePath)
+    {
+        return filePath + "~";
+    }
+
+    /// <summary>
+    /// To assist with getting "example-backup.dat" path from prior to "example.dat~" change.
+    /// </summary>
+    public static string GetBackupFilePathV1(string filePath)
     {
         int num = filePath.LastIndexOf('.');
         if (num < 0)
@@ -47,6 +57,7 @@ public class ServerSavedata
     public static void serializeJSON<T>(string path, T instance)
     {
         string text = directory + "/" + Provider.serverID + path;
+        ReadWrite.DeleteIfExists(GetBackupFilePathV1(text));
         ReadWrite.MoveIfExists(text, GetBackupFilePath(text));
         ReadWrite.serializeJSON(text, useCloud: false, instance);
     }
@@ -64,6 +75,7 @@ public class ServerSavedata
     public static void writeData(string path, Data data)
     {
         string text = directory + "/" + Provider.serverID + path;
+        ReadWrite.DeleteIfExists(GetBackupFilePathV1(text));
         ReadWrite.MoveIfExists(text, GetBackupFilePath(text));
         ReadWrite.writeData(text, useCloud: false, data);
     }
@@ -76,6 +88,7 @@ public class ServerSavedata
     public static void writeBlock(string path, Block block)
     {
         string text = directory + "/" + Provider.serverID + path;
+        ReadWrite.DeleteIfExists(GetBackupFilePathV1(text));
         ReadWrite.MoveIfExists(text, GetBackupFilePath(text));
         ReadWrite.writeBlock(text, useCloud: false, block);
     }
@@ -90,6 +103,7 @@ public class ServerSavedata
         string text = directory + "/" + Provider.serverID + path;
         if (!isReading)
         {
+            ReadWrite.DeleteIfExists(GetBackupFilePathV1(text));
             ReadWrite.MoveIfExists(text, GetBackupFilePath(text));
         }
         return new River(text, usePath: true, useCloud: false, isReading);

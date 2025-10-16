@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using Pathfinding;
+using Pathfinding.Graphs.Navmesh;
 using SDG.Framework.Landscapes;
 using UnityEngine;
 
@@ -74,7 +75,7 @@ public class Flag
 
     public void remove()
     {
-        AstarPath.active.astarData.RemoveGraph(graph);
+        AstarPath.active.data.RemoveGraph(graph);
         UnityEngine.Object.Destroy(model.gameObject);
     }
 
@@ -95,7 +96,7 @@ public class Flag
             graph.forcedBoundsCenter = new Vector3(point.x, 0f, point.z);
             graph.forcedBoundsSize = new Vector3(x, Landscape.TILE_HEIGHT, z);
         }
-        AstarPath.active.ScanSpecific(graph);
+        AstarPath.active.Scan(graph);
         LevelNavigation.updateBounds();
     }
 
@@ -108,13 +109,14 @@ public class Flag
         List<Vector3> list = new List<Vector3>();
         List<int> list2 = new List<int>();
         List<Vector2> list3 = new List<Vector2>();
-        RecastGraph.NavmeshTile[] tiles = graph.GetTiles();
+        NavmeshTile[] tiles = graph.GetTiles();
         int num = 0;
         if (tiles == null)
         {
             return;
         }
-        foreach (RecastGraph.NavmeshTile navmeshTile in tiles)
+        NavmeshTile[] array = tiles;
+        foreach (NavmeshTile navmeshTile in array)
         {
             for (int j = 0; j < navmeshTile.verts.Length; j++)
             {
@@ -156,7 +158,7 @@ public class Flag
     public Flag(Vector3 newPoint, RecastGraph newGraph, FlagData newData)
     {
         _point = newPoint;
-        _model = ((GameObject)UnityEngine.Object.Instantiate(Resources.Load("Edit/Flag"))).transform;
+        _model = UnityEngine.Object.Instantiate(Resources.Load<GameObject>("Edit/Flag")).transform;
         model.name = "Flag";
         model.position = point;
         _area = model.Find("Area").GetComponent<LineRenderer>();
@@ -173,7 +175,7 @@ public class Flag
     public Flag(Vector3 newPoint, float newWidth, float newHeight, RecastGraph newGraph, FlagData newData)
     {
         _point = newPoint;
-        _model = ((GameObject)UnityEngine.Object.Instantiate(Resources.Load("Edit/Flag"))).transform;
+        _model = UnityEngine.Object.Instantiate(Resources.Load<GameObject>("Edit/Flag")).transform;
         model.name = "Flag";
         model.position = point;
         _area = model.Find("Area").GetComponent<LineRenderer>();

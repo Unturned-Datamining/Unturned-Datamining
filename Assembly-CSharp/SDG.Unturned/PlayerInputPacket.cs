@@ -125,17 +125,17 @@ public class PlayerInputPacket
                 reader.ReadNormalVector3(out inputInfo.direction);
                 reader.ReadNormalVector3(out inputInfo.normal);
                 reader.ReadEnum(out inputInfo.limb);
-                reader.ReadSteamID(out CSteamID value7);
-                Player player = PlayerTool.getPlayer(value7);
+                reader.ReadSteamID(out CSteamID value8);
+                Player player = PlayerTool.getPlayer(value8);
                 if (player != null)
                 {
                     bool flag = false;
                     if (player.movement.getVehicle() != null)
                     {
-                        float num2 = player.movement.getVehicle().asset?.ValidHitDistanceMultiplier ?? 1f;
-                        float num3 = 64f * num2;
-                        float num4 = num3 * num3;
-                        if ((inputInfo.point - player.transform.position).sqrMagnitude < num4)
+                        float num5 = player.movement.getVehicle().asset?.ValidHitDistanceMultiplier ?? 1f;
+                        float num6 = 64f * num5;
+                        float num7 = num6 * num6;
+                        if ((inputInfo.point - player.transform.position).sqrMagnitude < num7)
                         {
                             flag = true;
                         }
@@ -169,8 +169,8 @@ public class PlayerInputPacket
                 reader.ReadNormalVector3(out inputInfo.direction);
                 reader.ReadNormalVector3(out inputInfo.normal);
                 reader.ReadEnum(out inputInfo.limb);
-                reader.ReadUInt16(out var value9);
-                Zombie zombie = ZombieManager.getZombie(inputInfo.point, value9);
+                reader.ReadUInt16(out var value14);
+                Zombie zombie = ZombieManager.getZombie(inputInfo.point, value14);
                 if (zombie != null)
                 {
                     if (new Vector2(inputInfo.point.x - zombie.transform.position.x, inputInfo.point.z - zombie.transform.position.z).sqrMagnitude < 256f)
@@ -205,11 +205,21 @@ public class PlayerInputPacket
                 reader.ReadClampedVector3(out inputInfo.point);
                 reader.ReadNormalVector3(out inputInfo.direction);
                 reader.ReadNormalVector3(out inputInfo.normal);
+                reader.ReadPhysicsMaterialName(out inputInfo.materialName);
                 reader.ReadEnum(out inputInfo.limb);
-                reader.ReadUInt16(out var value14);
-                Animal animal = AnimalManager.getAnimal(value14);
+                reader.ReadUInt16(out var value13);
+                Animal animal = AnimalManager.getAnimal(value13);
                 if (animal != null && (inputInfo.point - animal.transform.position).sqrMagnitude < 256f)
                 {
+                    if (string.IsNullOrEmpty(inputInfo.materialName))
+                    {
+                        inputInfo.materialName = "Flesh_Dynamic";
+                        inputInfo.material = EPhysicsMaterial.FLESH_DYNAMIC;
+                    }
+                    else
+                    {
+                        inputInfo.material = PhysicsTool.GetLegacyMaterialByName(inputInfo.materialName);
+                    }
                     inputInfo.animal = animal;
                     inputInfo.transform = animal.transform;
                 }
@@ -226,13 +236,13 @@ public class PlayerInputPacket
                 reader.ReadNormalVector3(out inputInfo.normal);
                 reader.ReadPhysicsMaterialName(out inputInfo.materialName);
                 inputInfo.material = PhysicsTool.GetLegacyMaterialByName(inputInfo.materialName);
-                reader.ReadUInt32(out var value8);
+                reader.ReadUInt32(out var value7);
                 reader.ReadTransform(out inputInfo.colliderTransform);
-                InteractableVehicle interactableVehicle = VehicleManager.findVehicleByNetInstanceID(value8);
-                float num5 = interactableVehicle?.asset?.ValidHitDistanceMultiplier ?? 1f;
-                float num6 = 64f * num5;
-                float num7 = num6 * num6;
-                if (interactableVehicle != null && (interactableVehicle == channel.owner.player.movement.getVehicle() || (inputInfo.point - interactableVehicle.transform.position).sqrMagnitude < num7))
+                InteractableVehicle interactableVehicle = VehicleManager.findVehicleByNetInstanceID(value7);
+                float num2 = interactableVehicle?.asset?.ValidHitDistanceMultiplier ?? 1f;
+                float num3 = 64f * num2;
+                float num4 = num3 * num3;
+                if (interactableVehicle != null && (interactableVehicle == channel.owner.player.movement.getVehicle() || (inputInfo.point - interactableVehicle.transform.position).sqrMagnitude < num4))
                 {
                     inputInfo.vehicle = interactableVehicle;
                     inputInfo.transform = interactableVehicle.transform;
@@ -250,9 +260,9 @@ public class PlayerInputPacket
                 reader.ReadNormalVector3(out inputInfo.normal);
                 reader.ReadPhysicsMaterialName(out inputInfo.materialName);
                 inputInfo.material = PhysicsTool.GetLegacyMaterialByName(inputInfo.materialName);
-                reader.ReadNetId(out var value13);
+                reader.ReadNetId(out var value12);
                 reader.ReadTransform(out inputInfo.colliderTransform);
-                BarricadeDrop barricadeDrop = NetIdRegistry.Get<BarricadeDrop>(value13);
+                BarricadeDrop barricadeDrop = NetIdRegistry.Get<BarricadeDrop>(value12);
                 if (barricadeDrop != null && barricadeDrop.asset != null && barricadeDrop.model != null)
                 {
                     inputInfo.transform = barricadeDrop.model;
@@ -304,11 +314,11 @@ public class PlayerInputPacket
                 reader.ReadNormalVector3(out inputInfo.normal);
                 reader.ReadPhysicsMaterialName(out inputInfo.materialName);
                 inputInfo.material = PhysicsTool.GetLegacyMaterialByName(inputInfo.materialName);
+                reader.ReadUInt8(out var value9);
                 reader.ReadUInt8(out var value10);
-                reader.ReadUInt8(out var value11);
-                reader.ReadUInt16(out var value12);
+                reader.ReadUInt16(out var value11);
                 reader.ReadTransform(out inputInfo.colliderTransform);
-                Transform resource = ResourceManager.getResource(value10, value11, value12);
+                Transform resource = ResourceManager.getResource(value9, value10, value11);
                 if (resource != null && (inputInfo.point - resource.transform.position).sqrMagnitude < 256f)
                 {
                     inputInfo.transform = resource;
@@ -403,6 +413,7 @@ public class PlayerInputPacket
                 writer.WriteClampedVector3(info.point);
                 writer.WriteNormalVector3(info.direction);
                 writer.WriteNormalVector3(info.normal);
+                writer.WritePhysicsMaterialName(info.materialName);
                 writer.WriteEnum(info.limb);
                 writer.WriteUInt16(info.animal.index);
             }

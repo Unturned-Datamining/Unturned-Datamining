@@ -70,6 +70,10 @@ public class Bundle
                 {
                     audioSource.outputAudioMixerGroup = UnturnedAudioMixer.GetDefaultGroup();
                 }
+                if (audioSource.dopplerLevel > 0.0001f && audioSource.GetComponent<EnableDopplerEffect>() == null)
+                {
+                    audioSource.dopplerLevel = 0f;
+                }
             }
         }
         if ((!convertShadersToStandard && !consolidateShaders) || Dedicator.IsDedicatedServer)

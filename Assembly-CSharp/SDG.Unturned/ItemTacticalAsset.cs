@@ -33,7 +33,7 @@ public class ItemTacticalAsset : ItemCaliberAsset
     public override void BuildDescription(ItemDescriptionBuilder builder, Item itemInstance)
     {
         base.BuildDescription(builder, itemInstance);
-        if (!builder.shouldRestrictToLegacyContent && MeleeProperties != null)
+        if (builder.HasFlag(EItemDescriptionFlags.Uncategorized) && MeleeProperties != null)
         {
             MeleeProperties.BuildDescription(builder);
         }

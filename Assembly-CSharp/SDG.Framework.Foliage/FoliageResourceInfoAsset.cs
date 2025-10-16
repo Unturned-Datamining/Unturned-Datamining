@@ -12,6 +12,13 @@ public class FoliageResourceInfoAsset : FoliageInfoAsset
 
     public float obstructionRadius;
 
+    /// <summary>
+    /// If true, ResourceAsset's legacy random rotation and scale properties are used.
+    /// (As opposed to FoliageInfoAsset properties.)
+    /// Defaults to true for backwards compatibility.
+    /// </summary>
+    public bool UsesLegacyRotationAndScale { get; set; }
+
     public override void bakeFoliage(FoliageBakeSettings bakeSettings, IFoliageSurface surface, Bounds bounds, float surfaceWeight, float collectionWeight)
     {
         if (bakeSettings.bakeResources && !bakeSettings.bakeClear)
@@ -46,7 +53,11 @@ public class FoliageResourceInfoAsset : FoliageInfoAsset
         ResourceAsset resourceAsset = Assets.find(resource);
         if (resourceAsset != null)
         {
-            LevelGround.addSpawn(position, resourceAsset.GUID, clearWhenBaked);
+            if (UsesLegacyRotationAndScale)
+            {
+                resourceAsset.GetLegacyRotationAndScale(position, out rotation, out scale);
+            }
+            LevelGround.addSpawn(position, rotation, scale, resourceAsset.GUID, clearWhenBaked);
         }
     }
 
@@ -79,6 +90,7 @@ public class FoliageResourceInfoAsset : FoliageInfoAsset
         {
             obstructionRadius = p.data.ParseFloat("Obstruction_Radius");
         }
+        UsesLegacyRotationAndScale = p.data.ParseBool("Legacy_Rotation_and_Scale", defaultValue: true);
     }
 
     protected virtual void resetResource()

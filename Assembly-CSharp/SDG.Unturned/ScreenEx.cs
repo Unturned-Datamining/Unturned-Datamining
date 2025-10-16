@@ -85,7 +85,7 @@ public static class ScreenEx
                 int num2 = lhs.height.CompareTo(rhs.height);
                 if (num2 == 0)
                 {
-                    return lhs.refreshRate.CompareTo(rhs.refreshRate);
+                    return lhs.refreshRateRatio.CompareTo(rhs.refreshRateRatio);
                 }
                 return num2;
             }

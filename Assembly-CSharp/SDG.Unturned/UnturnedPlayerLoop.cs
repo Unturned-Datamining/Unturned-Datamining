@@ -32,7 +32,6 @@ public static class UnturnedPlayerLoop
             typeof(PostLateUpdate.XRPreEndFrame),
             typeof(PreLateUpdate.AIUpdatePostScript),
             typeof(PreLateUpdate.Physics2DLateUpdate),
-            typeof(PreLateUpdate.UNetUpdate),
             typeof(PreLateUpdate.UpdateMasterServerInterface),
             typeof(PreLateUpdate.UpdateNetworkManager),
             typeof(PreUpdate.AIUpdate),

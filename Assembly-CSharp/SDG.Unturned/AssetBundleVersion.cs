@@ -23,8 +23,10 @@ public static class AssetBundleVersion
 
     public const int UNITY_2020_LTS = 4;
 
+    public const int UNITY_2021_LTS = 5;
+
     /// <summary>
-    /// 2021 LTS+
+    /// 2022 LTS+
     /// </summary>
-    public const int NEWEST = 5;
+    public const int NEWEST = 6;
 }

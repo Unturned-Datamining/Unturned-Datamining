@@ -1352,12 +1352,11 @@ public class BarricadeManager : SteamCaller
             BarricadeDrop tail = vehicleBarricadeRegion.drops.GetTail();
             BarricadeData serversideData = tail.serversideData;
             SendSingleBarricade.Invoke(ENetReliability.Reliable, Provider.GatherRemoteClientConnections(), vehicleBarricadeRegion._netId, barricade.asset.GUID, barricade.state, serversideData.point, serversideData.rotation, serversideData.owner, serversideData.group, tail.GetNetId());
-            BarricadeSpawnedHandler barricadeSpawnedHandler = onBarricadeSpawned;
-            if (barricadeSpawnedHandler == null)
+            onBarricadeSpawned?.Invoke(vehicleBarricadeRegion, tail);
+            if (tail.interactable is IBarricadePlacedHandler barricadePlacedHandler)
             {
-                return obj;
+                barricadePlacedHandler.OnBarricadePlaced(vehicleBarricadeRegion, tail);
             }
-            barricadeSpawnedHandler(vehicleBarricadeRegion, tail);
         }
         return obj;
     }
@@ -1381,12 +1380,11 @@ public class BarricadeManager : SteamCaller
             BarricadeDrop tail = region.drops.GetTail();
             BarricadeData serversideData = tail.serversideData;
             SendSingleBarricade.Invoke(ENetReliability.Reliable, Regions.GatherRemoteClientConnections(x, y, BARRICADE_REGIONS), NetId.INVALID, barricade.asset.GUID, barricade.state, serversideData.point, serversideData.rotation, serversideData.owner, serversideData.group, tail.GetNetId());
-            BarricadeSpawnedHandler barricadeSpawnedHandler = onBarricadeSpawned;
-            if (barricadeSpawnedHandler == null)
+            onBarricadeSpawned?.Invoke(region, tail);
+            if (tail.interactable is IBarricadePlacedHandler barricadePlacedHandler)
             {
-                return obj;
+                barricadePlacedHandler.OnBarricadePlaced(region, tail);
             }
-            barricadeSpawnedHandler(region, tail);
         }
         return obj;
     }

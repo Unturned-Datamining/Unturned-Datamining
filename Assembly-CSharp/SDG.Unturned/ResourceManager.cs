@@ -166,8 +166,10 @@ public class ResourceManager : SteamCaller
                         resource_Drops_Multiplier *= drop;
                         if (asset.rewardID != 0)
                         {
-                            direction.y = 0f;
-                            direction.Normalize();
+                            Vector3 direction2 = resource.InverseTransformDirection(direction);
+                            direction2.y = 0f;
+                            direction2.Normalize();
+                            Vector3 vector = resource.TransformDirection(direction2);
                             int value = Mathf.CeilToInt((float)UnityEngine.Random.Range(asset.rewardMin, asset.rewardMax + 1) * resource_Drops_Multiplier);
                             value = Mathf.Clamp(value, 0, 100);
                             for (int i = 0; i < value; i++)
@@ -175,14 +177,7 @@ public class ResourceManager : SteamCaller
                                 ushort num2 = SpawnTableTool.ResolveLegacyId(asset.rewardID, EAssetType.ITEM, asset.OnGetRewardSpawnTableErrorContext);
                                 if (num2 != 0)
                                 {
-                                    if (asset.hasDebris)
-                                    {
-                                        ItemManager.dropItem(new Item(num2, EItemOrigin.NATURE), resource.position + direction * (2 + i) + new Vector3(0f, 2f, 0f), playEffect: false, Dedicator.IsDedicatedServer, wideSpread: true);
-                                    }
-                                    else
-                                    {
-                                        ItemManager.dropItem(new Item(num2, EItemOrigin.NATURE), resource.position + new Vector3(UnityEngine.Random.Range(-2f, 2f), 2f, UnityEngine.Random.Range(-2f, 2f)), playEffect: false, Dedicator.IsDedicatedServer, wideSpread: true);
-                                    }
+                                    ItemManager.dropItem(point: (!asset.hasDebris) ? (resource.position + resource.right * UnityEngine.Random.Range(-2f, 2f) + resource.up * 2f + resource.forward * UnityEngine.Random.Range(-2f, 2f)) : (resource.position + vector * (2 + i) + resource.up * 2f), item: new Item(num2, EItemOrigin.NATURE), playEffect: false, isDropped: Dedicator.IsDedicatedServer, wideSpread: true);
                                 }
                             }
                         }
@@ -190,11 +185,15 @@ public class ResourceManager : SteamCaller
                         {
                             if (asset.log != 0)
                             {
+                                Vector3 direction3 = resource.InverseTransformDirection(direction);
+                                direction3.y = 0f;
+                                direction3.Normalize();
+                                resource.TransformDirection(direction3);
                                 int value2 = Mathf.CeilToInt((float)UnityEngine.Random.Range(3, 7) * resource_Drops_Multiplier);
                                 value2 = Mathf.Clamp(value2, 0, 100);
                                 for (int j = 0; j < value2; j++)
                                 {
-                                    ItemManager.dropItem(new Item(asset.log, EItemOrigin.NATURE), resource.position + direction * (2 + j * 2) + Vector3.up, playEffect: false, Dedicator.IsDedicatedServer, wideSpread: true);
+                                    ItemManager.dropItem(new Item(asset.log, EItemOrigin.NATURE), resource.position + direction * (2 + j * 2) + resource.up, playEffect: false, Dedicator.IsDedicatedServer, wideSpread: true);
                                 }
                             }
                             if (asset.stick != 0)
@@ -204,17 +203,18 @@ public class ResourceManager : SteamCaller
                                 for (int k = 0; k < value3; k++)
                                 {
                                     float f = UnityEngine.Random.Range(0f, MathF.PI * 2f);
-                                    ItemManager.dropItem(new Item(asset.stick, EItemOrigin.NATURE), resource.position + new Vector3(Mathf.Sin(f) * 3f, 1f, Mathf.Cos(f) * 3f), playEffect: false, Dedicator.IsDedicatedServer, wideSpread: true);
+                                    Vector3 point2 = resource.position + resource.right * Mathf.Sin(f) * 3f + resource.up + resource.forward * Mathf.Cos(f) * 3f;
+                                    ItemManager.dropItem(new Item(asset.stick, EItemOrigin.NATURE), point2, playEffect: false, Dedicator.IsDedicatedServer, wideSpread: true);
                                 }
                             }
                         }
                         xp = asset.rewardXP;
-                        Vector3 point = treesOrNullInRegion[num].point;
+                        Vector3 point3 = treesOrNullInRegion[num].point;
                         Guid gUID = asset.GUID;
                         for (int l = 0; l < Provider.clients.Count; l++)
                         {
                             SteamPlayer steamPlayer = Provider.clients[l];
-                            if (!(steamPlayer.player == null) && !(steamPlayer.player.movement == null) && !(steamPlayer.player.life == null) && !steamPlayer.player.life.isDead && (steamPlayer.player.transform.position - point).sqrMagnitude < 90000f)
+                            if (!(steamPlayer.player == null) && !(steamPlayer.player.movement == null) && !(steamPlayer.player.life == null) && !steamPlayer.player.life.isDead && (steamPlayer.player.transform.position - point3).sqrMagnitude < 90000f)
                             {
                                 steamPlayer.player.quests.trackTreeKill(gUID);
                             }

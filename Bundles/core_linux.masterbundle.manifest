@@ -1,15 +1,15 @@
 ManifestFileVersion: 0
-CRC: 4083627301
+CRC: 1023226019
 Hashes:
   AssetFileHash:
     serializedVersion: 2
-    Hash: 48a0d3a283144c3b0f25b2bc681fc2e9
+    Hash: 838c610464e74083da3f3dc2f34700a9
   TypeTreeHash:
     serializedVersion: 2
-    Hash: 38c759ffe00393eb7cee2c514d8f8ced
+    Hash: 80879fa42dd211abf54d14c81f71526a
   IncrementalBuildHash:
     serializedVersion: 2
-    Hash: 48a0d3a283144c3b0f25b2bc681fc2e9
+    Hash: 838c610464e74083da3f3dc2f34700a9
 HashAppended: 0
 ClassTypes:
 - Class: 1
@@ -25,8 +25,6 @@ ClassTypes:
 - Class: 33
   Script: {instanceID: 0}
 - Class: 43
-  Script: {instanceID: 0}
-- Class: 48
   Script: {instanceID: 0}
 - Class: 49
   Script: {instanceID: 0}
@@ -56,6 +54,8 @@ ClassTypes:
   Script: {fileID: 11500000, guid: 0cd44c1031e13a943bb63640046fad76, type: 3}
 - Class: 114
   Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
+- Class: 114
+  Script: {fileID: 11500000, guid: 32b86b4ff8993b1439e53471302b8ef4, type: 3}
 - Class: 114
   Script: {fileID: 11500000, guid: a6e9242e5cb8b78429e422f41de137fd, type: 3}
 - Class: 114
@@ -157,6 +157,8 @@ ClassTypes:
 - Class: 1818360609
   Script: {instanceID: 0}
 SerializeReferenceClassIdentifiers:
+- AssemblyName: AstarPathfindingProject
+  ClassName: Pathfinding.GraphMask
 - AssemblyName: Unity.TextMeshPro
   ClassName: TMPro.FaceInfo_Legacy
 - AssemblyName: Unity.TextMeshPro

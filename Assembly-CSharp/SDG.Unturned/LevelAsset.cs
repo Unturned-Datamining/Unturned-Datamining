@@ -110,6 +110,30 @@ public class LevelAsset : Asset
 
         public EItemOrigin origin;
 
+        public ItemAsset ResolveAsset(Func<string> errorContextCallback)
+        {
+            Asset asset = assetRef.Get();
+            if (asset == null)
+            {
+                UnturnedLog.warn(string.Format("{0} unable to find asset {1}", errorContextCallback?.Invoke() ?? "Unknown", assetRef));
+                return null;
+            }
+            if (asset is SpawnAsset spawnAsset)
+            {
+                asset = SpawnTableTool.Resolve(spawnAsset, EAssetType.ITEM, errorContextCallback);
+                if (asset == null)
+                {
+                    return null;
+                }
+            }
+            if (!(asset is ItemAsset result))
+            {
+                UnturnedLog.warn((errorContextCallback?.Invoke() ?? "Unknown") + " tried to spawn non-item asset " + asset.FriendlyNameWithFriendlyType);
+                return null;
+            }
+            return result;
+        }
+
         public bool TryParse(IDatNode node)
         {
             if (node is IDatDictionary dictionary)

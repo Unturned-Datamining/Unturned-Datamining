@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace SDG.Unturned;
 
-public class InteractableStorage : Interactable, IManualOnDestroy
+public class InteractableStorage : Interactable, IManualOnDestroy, IBarricadePlacedHandler
 {
     public delegate void RebuiltStateHandler(InteractableStorage storage, byte[] state, int size);
 
@@ -553,6 +553,14 @@ public class InteractableStorage : Interactable, IManualOnDestroy
         {
             SendRotDisplay.InvokeAndLoopback(GetNetId(), ENetReliability.Reliable, BarricadeManager.GatherRemoteClientConnections(x, y, plant), rotComp);
             rebuildState();
+        }
+    }
+
+    public void OnBarricadePlaced(BarricadeRegion region, BarricadeDrop barricade)
+    {
+        if (barricade?.asset is ItemStorageAsset itemStorageAsset)
+        {
+            itemStorageAsset.AddDefaultContainedItemsToStorage(this);
         }
     }
 }

@@ -2104,17 +2104,17 @@ public class LevelLighting
             if (vision == ELightingVision.NONE)
             {
                 renderSkyboxReflection(reflectionMap, ref reflectionIndex, ref isReflectionBuilding);
-                RenderSettings.customReflection = reflectionMap;
+                RenderSettings.customReflectionTexture = reflectionMap;
             }
             else
             {
                 renderSkyboxReflection(reflectionMapVision, ref reflectionIndexVision, ref isReflectionBuildingVision);
-                RenderSettings.customReflection = reflectionMapVision;
+                RenderSettings.customReflectionTexture = reflectionMapVision;
             }
         }
         else
         {
-            RenderSettings.customReflection = null;
+            RenderSettings.customReflectionTexture = null;
         }
     }
 

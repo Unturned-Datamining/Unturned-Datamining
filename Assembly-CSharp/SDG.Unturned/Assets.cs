@@ -1081,10 +1081,10 @@ public class Assets : MonoBehaviour
             reportError(text + " Lowest individual asset bundle version is 1 (default), associated with 5.5.");
             num2 = 1;
         }
-        else if (num2 > 5)
+        else if (num2 > 6)
         {
-            reportError(text + " Highest individual asset bundle version is 5, associated with 2021 LTS.");
-            num2 = 5;
+            reportError(text + " Highest individual asset bundle version is 6, associated with 2022 LTS.");
+            num2 = 6;
         }
         int num3 = Mathf.Max(a, num2);
         bundle.convertShadersToStandard = num3 < 2;

@@ -660,7 +660,7 @@ public class MenuConfigurationGraphicsUI
         chromaticAberrationToggle.OnValueChanged += onToggledChromaticAberrationToggle;
         graphicsBox.AddChild(chromaticAberrationToggle);
         num += 50;
-        antiAliasingButton = new SleekButtonState(new GUIContent(localization.format("Off")), new GUIContent(localization.format("FXAA")), new GUIContent(localization.format("TAA")));
+        antiAliasingButton = new SleekButtonState(new GUIContent(localization.format("Off")), new GUIContent(localization.format("FXAA")), new GUIContent(localization.format("TAA")), new GUIContent(localization.format("SMAA")));
         antiAliasingButton.PositionOffset_X = 205f;
         antiAliasingButton.PositionOffset_Y = num;
         antiAliasingButton.SizeOffset_X = 200f;
