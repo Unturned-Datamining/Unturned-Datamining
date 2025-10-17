@@ -1,4 +1,5 @@
 using System;
+using SDG.Unturned;
 using UnityEngine;
 
 namespace SDG.Framework.Rendering;
@@ -31,7 +32,7 @@ public class GLUtility
     {
         get
         {
-            if (_LINE_FLAT_COLOR == null)
+            if (_LINE_FLAT_COLOR == null && !Dedicator.IsDedicatedServer)
             {
                 _LINE_FLAT_COLOR = new Material(Shader.Find("GL/LineFlatColor"));
             }
@@ -43,7 +44,7 @@ public class GLUtility
     {
         get
         {
-            if (_LINE_CHECKERED_COLOR == null)
+            if (_LINE_CHECKERED_COLOR == null && !Dedicator.IsDedicatedServer)
             {
                 _LINE_CHECKERED_COLOR = new Material(Shader.Find("GL/LineCheckeredColor"));
             }
@@ -55,7 +56,7 @@ public class GLUtility
     {
         get
         {
-            if (_LINE_DEPTH_CHECKERED_COLOR == null)
+            if (_LINE_DEPTH_CHECKERED_COLOR == null && !Dedicator.IsDedicatedServer)
             {
                 _LINE_DEPTH_CHECKERED_COLOR = new Material(Shader.Find("GL/LineDepthCheckeredColor"));
             }
@@ -67,7 +68,7 @@ public class GLUtility
     {
         get
         {
-            if (_LINE_CHECKERED_DEPTH_CUTOFF_COLOR == null)
+            if (_LINE_CHECKERED_DEPTH_CUTOFF_COLOR == null && !Dedicator.IsDedicatedServer)
             {
                 _LINE_CHECKERED_DEPTH_CUTOFF_COLOR = new Material(Shader.Find("GL/LineCheckeredDepthCutoffColor"));
             }
@@ -79,7 +80,7 @@ public class GLUtility
     {
         get
         {
-            if (_LINE_DEPTH_CUTOFF_COLOR == null)
+            if (_LINE_DEPTH_CUTOFF_COLOR == null && !Dedicator.IsDedicatedServer)
             {
                 _LINE_DEPTH_CUTOFF_COLOR = new Material(Shader.Find("GL/LineDepthCutoffColor"));
             }
@@ -91,7 +92,7 @@ public class GLUtility
     {
         get
         {
-            if (_TRI_FLAT_COLOR == null)
+            if (_TRI_FLAT_COLOR == null && !Dedicator.IsDedicatedServer)
             {
                 _TRI_FLAT_COLOR = new Material(Shader.Find("GL/TriFlatColor"));
             }
@@ -103,7 +104,7 @@ public class GLUtility
     {
         get
         {
-            if (_TRI_CHECKERED_COLOR == null)
+            if (_TRI_CHECKERED_COLOR == null && !Dedicator.IsDedicatedServer)
             {
                 _TRI_CHECKERED_COLOR = new Material(Shader.Find("GL/TriCheckeredColor"));
             }
@@ -115,7 +116,7 @@ public class GLUtility
     {
         get
         {
-            if (_TRI_DEPTH_CHECKERED_COLOR == null)
+            if (_TRI_DEPTH_CHECKERED_COLOR == null && !Dedicator.IsDedicatedServer)
             {
                 _TRI_DEPTH_CHECKERED_COLOR = new Material(Shader.Find("GL/TriDepthCheckeredColor"));
             }
@@ -127,7 +128,7 @@ public class GLUtility
     {
         get
         {
-            if (_TRI_CHECKERED_DEPTH_CUTOFF_COLOR == null)
+            if (_TRI_CHECKERED_DEPTH_CUTOFF_COLOR == null && !Dedicator.IsDedicatedServer)
             {
                 _TRI_CHECKERED_DEPTH_CUTOFF_COLOR = new Material(Shader.Find("GL/TriCheckeredDepthCutoffColor"));
             }
@@ -139,7 +140,7 @@ public class GLUtility
     {
         get
         {
-            if (_TRI_DEPTH_CUTOFF_COLOR == null)
+            if (_TRI_DEPTH_CUTOFF_COLOR == null && !Dedicator.IsDedicatedServer)
             {
                 _TRI_DEPTH_CUTOFF_COLOR = new Material(Shader.Find("GL/TriDepthCutoffColor"));
             }

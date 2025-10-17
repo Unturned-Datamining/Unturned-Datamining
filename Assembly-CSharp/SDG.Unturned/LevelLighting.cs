@@ -1346,6 +1346,10 @@ public class LevelLighting
             {
                 skybox.DisableKeyword("WITH_CLOUDS");
             }
+            if (!Level.info.configData.Has_Atmosphere)
+            {
+                skybox.DisableKeyword("WITH_STARS");
+            }
             lighting = ((GameObject)UnityEngine.Object.Instantiate(Resources.Load("Level/Lighting"))).transform;
             lighting.name = "Lighting";
             lighting.position = Vector3.zero;

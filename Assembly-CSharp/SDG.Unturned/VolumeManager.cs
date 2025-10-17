@@ -8,11 +8,11 @@ namespace SDG.Unturned;
 
 public class VolumeManager<TVolume, TManager> : VolumeManagerBase where TVolume : LevelVolume<TVolume, TManager> where TManager : VolumeManager<TVolume, TManager>
 {
+    private ELevelVolumeVisibility visibility;
+
     internal Color debugColor;
 
     internal Material solidMaterial;
-
-    private ELevelVolumeVisibility visibility;
 
     private CustomSampler gizmoUpdateSampler;
 
@@ -28,7 +28,7 @@ public class VolumeManager<TVolume, TManager> : VolumeManagerBase where TVolume 
 
     private static TManager instance;
 
-    private static Shader solidShader = Shader.Find("Standard");
+    private static Shader solidShader = Shader.Find("Standard (Specular setup)");
 
     public override ELevelVolumeVisibility Visibility
     {
@@ -174,8 +174,13 @@ public class VolumeManager<TVolume, TManager> : VolumeManagerBase where TVolume 
         VolumeManagerBase.allManagers.Add(this);
         base.FriendlyName = typeof(TVolume).Name;
         allVolumes = new List<TVolume>();
-        solidMaterial = new Material(solidShader);
-        solidMaterial.hideFlags = HideFlags.HideAndDontSave;
+        if (!Dedicator.IsDedicatedServer)
+        {
+            solidMaterial = new Material(solidShader);
+            solidMaterial.hideFlags = HideFlags.HideAndDontSave;
+            solidMaterial.SetFloat("_Glossiness", 0f);
+            solidMaterial.SetColor("_SpecColor", Color.black);
+        }
         gizmoUpdateSampler = CustomSampler.Create(GetType().Name + ".UpdateGizmos");
         if (ConvenientSavedata.get().read("Visibility_" + typeof(TVolume).Name, out long value))
         {

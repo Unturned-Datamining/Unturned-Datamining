@@ -192,8 +192,6 @@ public class RuntimeGizmos : MonoBehaviour
 
     private Camera lineRendererForegroundCamera;
 
-    private static RuntimeGizmos instance;
-
     private const int LAYER_COUNT = 2;
 
     private const float CIRCLE_RESOLUTION_MULTIPLIER = 8f;
@@ -204,11 +202,13 @@ public class RuntimeGizmos : MonoBehaviour
 
     private static CommandLineFlag clUseLineRenderers = new CommandLineFlag(defaultValue: false, "-FallbackGizmos");
 
+    private static RuntimeGizmos instance;
+
     public bool HasQueuedElements
     {
         get
         {
-            if (clUseLineRenderers.value)
+            if (clUseLineRenderers.value || Dedicator.IsDedicatedServer)
             {
                 return false;
             }
@@ -390,28 +390,31 @@ public class RuntimeGizmos : MonoBehaviour
 
     public void Render()
     {
-        renderTime = Time.realtimeSinceStartup;
-        Camera camera = MainCamera.instance;
-        if (camera != null)
+        if (!Dedicator.IsDedicatedServer)
         {
-            mainCameraPosition = camera.transform.position;
-            cullDistance = camera.farClipPlane;
-            sqrCullDistance = cullDistance * cullDistance;
-        }
-        else
-        {
-            mainCameraPosition = Vector3.zero;
-            cullDistance = 0f;
-            sqrCullDistance = 0f;
-        }
-        for (int i = 0; i < 2; i++)
-        {
-            materialLayers[i].SetPass(0);
-            RenderBoxes(boxLayers[i]);
-            RenderLines(lineLayers[i]);
-            RenderCapsules(capsuleLayers[i]);
-            RenderSpheres(sphereLayers[i]);
-            RenderCircles(circleLayers[i]);
+            renderTime = Time.realtimeSinceStartup;
+            Camera camera = MainCamera.instance;
+            if (camera != null)
+            {
+                mainCameraPosition = camera.transform.position;
+                cullDistance = camera.farClipPlane;
+                sqrCullDistance = cullDistance * cullDistance;
+            }
+            else
+            {
+                mainCameraPosition = Vector3.zero;
+                cullDistance = 0f;
+                sqrCullDistance = 0f;
+            }
+            for (int i = 0; i < 2; i++)
+            {
+                materialLayers[i].SetPass(0);
+                RenderBoxes(boxLayers[i]);
+                RenderLines(lineLayers[i]);
+                RenderCapsules(capsuleLayers[i]);
+                RenderSpheres(sphereLayers[i]);
+                RenderCircles(circleLayers[i]);
+            }
         }
     }
 
@@ -861,7 +864,7 @@ public class RuntimeGizmos : MonoBehaviour
     /// </summary>
     private void LateUpdate()
     {
-        if (!clUseLineRenderers.value)
+        if (!clUseLineRenderers.value || Dedicator.IsDedicatedServer)
         {
             return;
         }

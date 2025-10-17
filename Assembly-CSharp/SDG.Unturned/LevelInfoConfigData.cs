@@ -66,6 +66,8 @@ public class LevelInfoConfigData
 
     public ELevelWeatherOverride Weather_Override;
 
+    public bool Has_Atmosphere;
+
     public bool Allow_Crafting;
 
     public bool Allow_Skills;
@@ -185,6 +187,7 @@ public class LevelInfoConfigData
         Use_Snow_Volumes = false;
         Is_Aurora_Borealis_Visible = false;
         Snow_Affects_Temperature = true;
+        Has_Atmosphere = true;
         Allow_Crafting = true;
         Allow_Skills = true;
         Allow_Information = true;
