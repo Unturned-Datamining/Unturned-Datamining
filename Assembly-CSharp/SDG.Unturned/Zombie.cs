@@ -687,11 +687,12 @@ public class Zombie : MonoBehaviour, IExplosionDamageable, IEquatable<IExplosion
                 oneShotAudioParameters.SetLinearRolloff(1f, 32f);
                 oneShotAudioParameters.Play();
             }
-            boulderItem = ((GameObject)UnityEngine.Object.Instantiate(Resources.Load("Characters/Mega_Boulder_Item"))).transform;
+            InstantiateParameters instantiateParameters = default(InstantiateParameters);
+            instantiateParameters.parent = rightHook;
+            instantiateParameters.worldSpace = false;
+            InstantiateParameters parameters = instantiateParameters;
+            boulderItem = UnityEngine.Object.Instantiate(Resources.Load<GameObject>("Characters/Mega_Boulder_Item"), Vector3.zero, Quaternion.Euler(0f, 0f, 90f), parameters).transform;
             boulderItem.name = "Boulder";
-            boulderItem.parent = rightHook;
-            boulderItem.localPosition = Vector3.zero;
-            boulderItem.localRotation = Quaternion.Euler(0f, 0f, 90f);
             boulderItem.localScale = Vector3.one;
             UnityEngine.Object.Destroy(boulderItem.gameObject, 2f);
         }
@@ -717,11 +718,10 @@ public class Zombie : MonoBehaviour, IExplosionDamageable, IEquatable<IExplosion
     {
         if (!isDead)
         {
-            Transform obj = ((GameObject)UnityEngine.Object.Instantiate(Resources.Load(Dedicator.IsDedicatedServer ? "Characters/Mega_Boulder_Projectile_Server" : "Characters/Mega_Boulder_Projectile_Client"))).transform;
+            Quaternion rotation = Quaternion.LookRotation(direction) * Quaternion.Euler((float)UnityEngine.Random.Range(0, 2) * 180f, (float)UnityEngine.Random.Range(0, 2) * 180f, (float)UnityEngine.Random.Range(0, 2) * 180f);
+            Transform obj = UnityEngine.Object.Instantiate(Resources.Load<GameObject>(Dedicator.IsDedicatedServer ? "Characters/Mega_Boulder_Projectile_Server" : "Characters/Mega_Boulder_Projectile_Client"), origin, rotation).transform;
             obj.name = "Boulder";
             EffectManager.RegisterDebris(obj.gameObject);
-            obj.position = origin;
-            obj.rotation = Quaternion.LookRotation(direction) * Quaternion.Euler((float)UnityEngine.Random.Range(0, 2) * 180f, (float)UnityEngine.Random.Range(0, 2) * 180f, (float)UnityEngine.Random.Range(0, 2) * 180f);
             obj.localScale = Vector3.one * 1.75f;
             obj.GetComponent<Rigidbody>().AddForce(direction * 1500f);
             obj.GetComponent<Rigidbody>().AddRelativeTorque(UnityEngine.Random.Range(-500f, 500f), UnityEngine.Random.Range(-500f, 500f), UnityEngine.Random.Range(-500f, 500f), ForceMode.Force);
@@ -764,11 +764,10 @@ public class Zombie : MonoBehaviour, IExplosionDamageable, IEquatable<IExplosion
             {
                 PlayOneShot(ZombieManager.spits);
             }
-            Transform obj = ((GameObject)UnityEngine.Object.Instantiate(Resources.Load(Dedicator.IsDedicatedServer ? "Characters/Acid_Projectile_Server" : ((speciality == EZombieSpeciality.BOSS_NUCLEAR) ? "Characters/Acid_Projectile_Client_Nuclear" : "Characters/Acid_Projectile_Client")))).transform;
+            Quaternion rotation = Quaternion.LookRotation(direction);
+            Transform obj = UnityEngine.Object.Instantiate(Resources.Load<GameObject>(Dedicator.IsDedicatedServer ? "Characters/Acid_Projectile_Server" : ((speciality == EZombieSpeciality.BOSS_NUCLEAR) ? "Characters/Acid_Projectile_Client_Nuclear" : "Characters/Acid_Projectile_Client")), origin, rotation).transform;
             obj.name = "Acid";
             EffectManager.RegisterDebris(obj.gameObject);
-            obj.position = origin;
-            obj.rotation = Quaternion.LookRotation(direction);
             obj.GetComponent<Rigidbody>().AddForce(direction * 1000f);
             obj.Find("Trap").gameObject.AddComponent<Acid>().effectGuid = ((speciality == EZombieSpeciality.BOSS_NUCLEAR) ? Zombie_7_Ref : Zombie_3_Ref).GUID;
             UnityEngine.Object.Destroy(obj.gameObject, 8f);

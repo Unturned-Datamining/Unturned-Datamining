@@ -260,11 +260,12 @@ public class Attachments : MonoBehaviour
         tempSightMaterial = null;
         if (sightAsset != null && sightHook != null && sightAsset.sight != null)
         {
-            _sightModel = UnityEngine.Object.Instantiate(sightAsset.sight).transform;
+            InstantiateParameters instantiateParameters = default(InstantiateParameters);
+            instantiateParameters.parent = SelectAttachmentParent(sightHook, sightAsset);
+            instantiateParameters.worldSpace = false;
+            InstantiateParameters parameters = instantiateParameters;
+            _sightModel = UnityEngine.Object.Instantiate(sightAsset.sight, Vector3.zero, Quaternion.identity, parameters).transform;
             sightModel.name = sightAsset.instantiatedAttachmentName;
-            sightModel.transform.parent = SelectAttachmentParent(sightHook, sightAsset);
-            sightModel.transform.localPosition = Vector3.zero;
-            sightModel.transform.localRotation = Quaternion.identity;
             sightModel.localScale = Vector3.one;
             if (shouldDestroyColliders && sightAsset.shouldDestroyAttachmentColliders)
             {
@@ -316,11 +317,12 @@ public class Attachments : MonoBehaviour
         tempTacticalMaterial = null;
         if (tacticalAsset != null && tacticalHook != null && tacticalAsset.tactical != null)
         {
-            _tacticalModel = UnityEngine.Object.Instantiate(tacticalAsset.tactical).transform;
+            InstantiateParameters instantiateParameters = default(InstantiateParameters);
+            instantiateParameters.parent = SelectAttachmentParent(tacticalHook, tacticalAsset);
+            instantiateParameters.worldSpace = false;
+            InstantiateParameters parameters2 = instantiateParameters;
+            _tacticalModel = UnityEngine.Object.Instantiate(tacticalAsset.tactical, Vector3.zero, Quaternion.identity, parameters2).transform;
             tacticalModel.name = tacticalAsset.instantiatedAttachmentName;
-            tacticalModel.transform.parent = SelectAttachmentParent(tacticalHook, tacticalAsset);
-            tacticalModel.transform.localPosition = Vector3.zero;
-            tacticalModel.transform.localRotation = Quaternion.identity;
             tacticalModel.localScale = Vector3.one;
             if (shouldDestroyColliders && tacticalAsset.shouldDestroyAttachmentColliders)
             {
@@ -372,11 +374,12 @@ public class Attachments : MonoBehaviour
         tempGripMaterial = null;
         if (gripAsset != null && gripHook != null && gripAsset.grip != null)
         {
-            _gripModel = UnityEngine.Object.Instantiate(gripAsset.grip).transform;
+            InstantiateParameters instantiateParameters = default(InstantiateParameters);
+            instantiateParameters.parent = SelectAttachmentParent(gripHook, gripAsset);
+            instantiateParameters.worldSpace = false;
+            InstantiateParameters parameters3 = instantiateParameters;
+            _gripModel = UnityEngine.Object.Instantiate(gripAsset.grip, Vector3.zero, Quaternion.identity, parameters3).transform;
             gripModel.name = gripAsset.instantiatedAttachmentName;
-            gripModel.transform.parent = SelectAttachmentParent(gripHook, gripAsset);
-            gripModel.transform.localPosition = Vector3.zero;
-            gripModel.transform.localRotation = Quaternion.identity;
             gripModel.localScale = Vector3.one;
             if (shouldDestroyColliders && gripAsset.shouldDestroyAttachmentColliders)
             {
@@ -428,11 +431,12 @@ public class Attachments : MonoBehaviour
         tempBarrelMaterial = null;
         if (barrelAsset != null && barrelHook != null && barrelAsset.barrel != null)
         {
-            _barrelModel = UnityEngine.Object.Instantiate(barrelAsset.barrel).transform;
+            InstantiateParameters instantiateParameters = default(InstantiateParameters);
+            instantiateParameters.parent = SelectAttachmentParent(barrelHook, barrelAsset);
+            instantiateParameters.worldSpace = false;
+            InstantiateParameters parameters4 = instantiateParameters;
+            _barrelModel = UnityEngine.Object.Instantiate(barrelAsset.barrel, Vector3.zero, Quaternion.identity, parameters4).transform;
             barrelModel.name = barrelAsset.instantiatedAttachmentName;
-            barrelModel.transform.parent = SelectAttachmentParent(barrelHook, barrelAsset);
-            barrelModel.transform.localPosition = Vector3.zero;
-            barrelModel.transform.localRotation = Quaternion.identity;
             barrelModel.localScale = Vector3.one;
             if (shouldDestroyColliders && barrelAsset.shouldDestroyAttachmentColliders)
             {
@@ -488,11 +492,12 @@ public class Attachments : MonoBehaviour
         }
         if (magazineAsset != null && magazineHook != null && magazineAsset.magazine != null)
         {
-            _magazineModel = UnityEngine.Object.Instantiate(magazineAsset.magazine).transform;
+            InstantiateParameters instantiateParameters = default(InstantiateParameters);
+            instantiateParameters.parent = SelectAttachmentParent(magazineHook, magazineAsset);
+            instantiateParameters.worldSpace = false;
+            InstantiateParameters parameters5 = instantiateParameters;
+            _magazineModel = UnityEngine.Object.Instantiate(magazineAsset.magazine, Vector3.zero, Quaternion.identity, parameters5).transform;
             magazineModel.name = magazineAsset.instantiatedAttachmentName;
-            magazineModel.transform.parent = SelectAttachmentParent(magazineHook, magazineAsset);
-            magazineModel.transform.localPosition = Vector3.zero;
-            magazineModel.transform.localRotation = Quaternion.identity;
             magazineModel.localScale = Vector3.one;
             if (shouldDestroyColliders && magazineAsset.shouldDestroyAttachmentColliders)
             {

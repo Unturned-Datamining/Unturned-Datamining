@@ -38,11 +38,10 @@ public class UseableThrowable : Useable
 
     private void toss(Vector3 origin, Vector3 force)
     {
-        Transform transform = UnityEngine.Object.Instantiate(equippedThrowableAsset.throwable).transform;
+        Quaternion rotation = Quaternion.LookRotation(force);
+        Transform transform = UnityEngine.Object.Instantiate(equippedThrowableAsset.throwable, origin, rotation).transform;
         transform.name = "Throwable";
         EffectManager.RegisterDebris(transform.gameObject);
-        transform.position = origin;
-        transform.rotation = Quaternion.LookRotation(force);
         Rigidbody component = transform.GetComponent<Rigidbody>();
         if (component != null)
         {

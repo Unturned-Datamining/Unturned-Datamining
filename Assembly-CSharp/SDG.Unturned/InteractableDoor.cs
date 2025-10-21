@@ -161,13 +161,15 @@ public class InteractableDoor : Interactable
     {
         if (placeholderCollider != null && !base.IsChildOfVehicle)
         {
-            barrierTransform = UnityEngine.Object.Instantiate(placeholderCollider.gameObject).transform;
-            barrierTransform.position = placeholderCollider.transform.position;
-            barrierTransform.rotation = placeholderCollider.transform.rotation;
+            InstantiateParameters instantiateParameters = default(InstantiateParameters);
+            instantiateParameters.parent = base.transform;
+            instantiateParameters.worldSpace = true;
+            InstantiateParameters parameters = instantiateParameters;
+            placeholderCollider.transform.GetPositionAndRotation(out var position, out var rotation);
+            barrierTransform = UnityEngine.Object.Instantiate(placeholderCollider.gameObject, position, rotation, parameters).transform;
             barrierTransform.tag = "Barricade";
             barrierTransform.name = "ExpandedBarrier";
             barrierTransform.gameObject.layer = 27;
-            barrierTransform.parent = base.transform;
             Rigidbody component = barrierTransform.GetComponent<Rigidbody>();
             if (component != null)
             {

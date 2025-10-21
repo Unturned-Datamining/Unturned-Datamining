@@ -368,9 +368,8 @@ public class UseableFisher : Useable
                 {
                     position += forward;
                 }
-                bobberTransform = UnityEngine.Object.Instantiate(Resources.Load<GameObject>("Fishers/Bob")).transform;
+                bobberTransform = UnityEngine.Object.Instantiate(Resources.Load<GameObject>("Fishers/Bob"), position, Quaternion.identity).transform;
                 bobberTransform.name = "Bob";
-                bobberTransform.position = position;
                 bobberRigidbody = bobberTransform.GetComponent<Rigidbody>();
                 if (bobberRigidbody != null)
                 {
@@ -483,11 +482,10 @@ public class UseableFisher : Useable
         else if (Time.realtimeSinceStartup - lastLuck > luckTime - 2.4f && !hasSplashed)
         {
             hasSplashed = true;
-            Transform obj = ((GameObject)UnityEngine.Object.Instantiate(Resources.Load("Fishers/Splash"))).transform;
+            Quaternion rotation = Quaternion.Euler(-90f, UnityEngine.Random.Range(0f, 360f), 0f);
+            Transform obj = UnityEngine.Object.Instantiate(Resources.Load<GameObject>("Fishers/Splash"), water, rotation).transform;
             obj.name = "Splash";
             EffectManager.RegisterDebris(obj.gameObject);
-            obj.position = water;
-            obj.rotation = Quaternion.Euler(-90f, UnityEngine.Random.Range(0f, 360f), 0f);
             UnityEngine.Object.Destroy(obj.gameObject, 8f);
         }
         if (Time.realtimeSinceStartup - lastLuck > luckTime - 1.4f)

@@ -173,11 +173,12 @@ public class EffectVolume : LevelVolume<EffectVolume, EffectVolumeManager>
         EffectAsset effectAsset = Assets.FindEffectAssetByGuidOrLegacyId(_effectGuid, _id);
         if (effectAsset != null && effectAsset.effect != null && (!Dedicator.IsDedicatedServer || effectAsset.spawnOnDedicatedServer))
         {
-            effect = UnityEngine.Object.Instantiate(effectAsset.effect).transform;
+            InstantiateParameters instantiateParameters = default(InstantiateParameters);
+            instantiateParameters.parent = base.transform;
+            instantiateParameters.worldSpace = false;
+            InstantiateParameters parameters = instantiateParameters;
+            effect = UnityEngine.Object.Instantiate(effectAsset.effect, Vector3.zero, Quaternion.Euler(-90f, 0f, 0f), parameters).transform;
             effect.name = "Effect";
-            effect.transform.parent = base.transform;
-            effect.transform.localPosition = new Vector3(0f, 0f, 0f);
-            effect.transform.localRotation = Quaternion.Euler(-90f, 0f, 0f);
             effect.transform.localScale = new Vector3(1f, 1f, 1f);
             ParticleSystem component = effect.GetComponent<ParticleSystem>();
             if (component != null)

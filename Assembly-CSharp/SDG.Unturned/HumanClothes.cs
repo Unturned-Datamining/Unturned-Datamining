@@ -1158,11 +1158,12 @@ public class HumanClothes : MonoBehaviour
                 if (itemHatAsset != null && itemHatAsset.hat != null && itemHatAsset.shouldBeVisible(isRagdoll))
                 {
                     GameObject original = ((isCosmeticPreview && itemHatAsset.cosmeticPreviewModelOverride != null) ? itemHatAsset.cosmeticPreviewModelOverride : itemHatAsset.hat);
-                    hatModel = UnityEngine.Object.Instantiate(original).transform;
+                    InstantiateParameters instantiateParameters = default(InstantiateParameters);
+                    instantiateParameters.parent = skull;
+                    instantiateParameters.worldSpace = false;
+                    InstantiateParameters parameters = instantiateParameters;
+                    hatModel = UnityEngine.Object.Instantiate(original, Vector3.zero, Quaternion.identity, parameters).transform;
                     hatModel.name = "Hat";
-                    hatModel.transform.parent = skull;
-                    hatModel.transform.localPosition = Vector3.zero;
-                    hatModel.transform.localRotation = Quaternion.identity;
                     hatModel.transform.localScale = new Vector3(1f, (_isLeftHanded && itemHatAsset.shouldMirrorLeftHandedModel) ? (-1f) : 1f, 1f);
                     if (!isView && itemHatAsset.shouldDestroyClothingColliders)
                     {
@@ -1197,11 +1198,12 @@ public class HumanClothes : MonoBehaviour
                 if (itemBackpackAsset != null && itemBackpackAsset.backpack != null && itemBackpackAsset.shouldBeVisible(isRagdoll))
                 {
                     GameObject original2 = ((isCosmeticPreview && itemBackpackAsset.cosmeticPreviewModelOverride != null) ? itemBackpackAsset.cosmeticPreviewModelOverride : itemBackpackAsset.backpack);
-                    backpackModel = UnityEngine.Object.Instantiate(original2).transform;
+                    InstantiateParameters instantiateParameters = default(InstantiateParameters);
+                    instantiateParameters.parent = spine;
+                    instantiateParameters.worldSpace = false;
+                    InstantiateParameters parameters2 = instantiateParameters;
+                    backpackModel = UnityEngine.Object.Instantiate(original2, Vector3.zero, Quaternion.identity, parameters2).transform;
                     backpackModel.name = "Backpack";
-                    backpackModel.transform.parent = spine;
-                    backpackModel.transform.localPosition = Vector3.zero;
-                    backpackModel.transform.localRotation = Quaternion.identity;
                     backpackModel.transform.localScale = new Vector3(1f, (_isLeftHanded && itemBackpackAsset.shouldMirrorLeftHandedModel) ? (-1f) : 1f, 1f);
                     if (!isView && itemBackpackAsset.shouldDestroyClothingColliders)
                     {
@@ -1234,11 +1236,12 @@ public class HumanClothes : MonoBehaviour
                 if (itemVestAsset != null && itemVestAsset.vest != null && itemVestAsset.shouldBeVisible(isRagdoll))
                 {
                     GameObject original3 = ((isCosmeticPreview && itemVestAsset.cosmeticPreviewModelOverride != null) ? itemVestAsset.cosmeticPreviewModelOverride : itemVestAsset.vest);
-                    vestModel = UnityEngine.Object.Instantiate(original3).transform;
+                    InstantiateParameters instantiateParameters = default(InstantiateParameters);
+                    instantiateParameters.parent = spine;
+                    instantiateParameters.worldSpace = false;
+                    InstantiateParameters parameters3 = instantiateParameters;
+                    vestModel = UnityEngine.Object.Instantiate(original3, Vector3.zero, Quaternion.identity, parameters3).transform;
                     vestModel.name = "Vest";
-                    vestModel.transform.parent = spine;
-                    vestModel.transform.localPosition = Vector3.zero;
-                    vestModel.transform.localRotation = Quaternion.identity;
                     vestModel.transform.localScale = new Vector3(1f, (_isLeftHanded && itemVestAsset.shouldMirrorLeftHandedModel) ? (-1f) : 1f, 1f);
                     if (!isView && itemVestAsset.shouldDestroyClothingColliders)
                     {
@@ -1270,11 +1273,12 @@ public class HumanClothes : MonoBehaviour
                 if (itemMaskAsset != null && itemMaskAsset.mask != null && itemMaskAsset.shouldBeVisible(isRagdoll))
                 {
                     GameObject original4 = ((isCosmeticPreview && itemMaskAsset.cosmeticPreviewModelOverride != null) ? itemMaskAsset.cosmeticPreviewModelOverride : itemMaskAsset.mask);
-                    maskModel = UnityEngine.Object.Instantiate(original4).transform;
+                    InstantiateParameters instantiateParameters = default(InstantiateParameters);
+                    instantiateParameters.parent = skull;
+                    instantiateParameters.worldSpace = false;
+                    InstantiateParameters parameters4 = instantiateParameters;
+                    maskModel = UnityEngine.Object.Instantiate(original4, Vector3.zero, Quaternion.identity, parameters4).transform;
                     maskModel.name = "Mask";
-                    maskModel.transform.parent = skull;
-                    maskModel.transform.localPosition = Vector3.zero;
-                    maskModel.transform.localRotation = Quaternion.identity;
                     maskModel.transform.localScale = new Vector3(1f, (_isLeftHanded && itemMaskAsset.shouldMirrorLeftHandedModel) ? (-1f) : 1f, 1f);
                     if (!isView && itemMaskAsset.shouldDestroyClothingColliders)
                     {
@@ -1310,11 +1314,12 @@ public class HumanClothes : MonoBehaviour
                 if (itemGlassesAsset != null && itemGlassesAsset.glasses != null && itemGlassesAsset.shouldBeVisible(isRagdoll))
                 {
                     GameObject original5 = ((isCosmeticPreview && itemGlassesAsset.cosmeticPreviewModelOverride != null) ? itemGlassesAsset.cosmeticPreviewModelOverride : itemGlassesAsset.glasses);
-                    glassesModel = UnityEngine.Object.Instantiate(original5).transform;
+                    InstantiateParameters instantiateParameters = default(InstantiateParameters);
+                    instantiateParameters.parent = skull;
+                    instantiateParameters.worldSpace = false;
+                    InstantiateParameters parameters5 = instantiateParameters;
+                    glassesModel = UnityEngine.Object.Instantiate(original5, Vector3.zero, Quaternion.identity, parameters5).transform;
                     glassesModel.name = "Glasses";
-                    glassesModel.transform.parent = skull;
-                    glassesModel.transform.localPosition = Vector3.zero;
-                    glassesModel.transform.localRotation = Quaternion.identity;
                     glassesModel.localScale = new Vector3(1f, (_isLeftHanded && itemGlassesAsset.shouldMirrorLeftHandedModel) ? (-1f) : 1f, 1f);
                     if (!isView && itemGlassesAsset.shouldDestroyClothingColliders)
                     {
@@ -1361,14 +1366,15 @@ public class HumanClothes : MonoBehaviour
                 }
                 if (hasHair)
                 {
-                    UnityEngine.Object @object = Resources.Load("Hairs/" + hair + "/Hair");
-                    if (@object != null)
+                    GameObject gameObject = Resources.Load<GameObject>("Hairs/" + hair + "/Hair");
+                    if (gameObject != null)
                     {
-                        hairModel = ((GameObject)UnityEngine.Object.Instantiate(@object)).transform;
+                        InstantiateParameters instantiateParameters = default(InstantiateParameters);
+                        instantiateParameters.parent = skull;
+                        instantiateParameters.worldSpace = false;
+                        InstantiateParameters parameters6 = instantiateParameters;
+                        hairModel = UnityEngine.Object.Instantiate(gameObject, Vector3.zero, Quaternion.identity, parameters6).transform;
                         hairModel.name = "Hair";
-                        hairModel.transform.parent = skull;
-                        hairModel.transform.localPosition = Vector3.zero;
-                        hairModel.transform.localRotation = Quaternion.identity;
                         hairModel.transform.localScale = Vector3.one;
                         if (hairModel.Find("Model_0") != null)
                         {
@@ -1391,14 +1397,15 @@ public class HumanClothes : MonoBehaviour
                 }
                 if (hasBeard)
                 {
-                    UnityEngine.Object object2 = Resources.Load("Beards/" + beard + "/Beard");
-                    if (object2 != null)
+                    GameObject gameObject2 = Resources.Load<GameObject>("Beards/" + beard + "/Beard");
+                    if (gameObject2 != null)
                     {
-                        beardModel = ((GameObject)UnityEngine.Object.Instantiate(object2)).transform;
+                        InstantiateParameters instantiateParameters = default(InstantiateParameters);
+                        instantiateParameters.parent = skull;
+                        instantiateParameters.worldSpace = false;
+                        InstantiateParameters parameters7 = instantiateParameters;
+                        beardModel = UnityEngine.Object.Instantiate(gameObject2, Vector3.zero, Quaternion.identity, parameters7).transform;
                         beardModel.name = "Beard";
-                        beardModel.transform.parent = skull;
-                        beardModel.transform.localPosition = Vector3.zero;
-                        beardModel.transform.localRotation = Quaternion.identity;
                         beardModel.localScale = Vector3.one;
                         if (beardModel.Find("Model_0") != null)
                         {

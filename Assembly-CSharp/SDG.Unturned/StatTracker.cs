@@ -17,10 +17,11 @@ public class StatTracker : MonoBehaviour
 
     public void updateStatTracker(bool viewmodel)
     {
-        GameObject gameObject = Object.Instantiate((GameObject)statTrackerRef);
-        gameObject.transform.SetParent(statTrackerHook);
-        gameObject.transform.localPosition = Vector3.zero;
-        gameObject.transform.localRotation = Quaternion.identity;
+        InstantiateParameters instantiateParameters = default(InstantiateParameters);
+        instantiateParameters.parent = statTrackerHook;
+        instantiateParameters.worldSpace = false;
+        InstantiateParameters parameters = instantiateParameters;
+        GameObject gameObject = Object.Instantiate((GameObject)statTrackerRef, Vector3.zero, Quaternion.identity, parameters);
         statTrackerText = gameObject.GetComponentInChildren<TextMeshPro>();
         if (viewmodel)
         {

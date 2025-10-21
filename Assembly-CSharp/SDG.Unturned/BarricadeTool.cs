@@ -23,19 +23,31 @@ public class BarricadeTool : MonoBehaviour
     {
         if (asset != null)
         {
-            Transform transform = ((!(asset.barricade != null)) ? null : Object.Instantiate(asset.barricade).transform);
+            Transform transform;
+            if (asset.barricade != null)
+            {
+                InstantiateParameters instantiateParameters = default(InstantiateParameters);
+                instantiateParameters.parent = parent;
+                instantiateParameters.worldSpace = false;
+                InstantiateParameters parameters = instantiateParameters;
+                transform = Object.Instantiate(asset.barricade, pos, rot, parameters).transform;
+            }
+            else
+            {
+                transform = null;
+            }
             if (transform == null)
             {
                 transform = getEmptyBarricade(id);
+                transform.parent = parent;
+                transform.localPosition = pos;
+                transform.localRotation = rot;
             }
             if (asset.useWaterHeightTransparentSort && !Dedicator.IsDedicatedServer)
             {
                 transform.gameObject.AddComponent<WaterHeightTransparentSort>();
             }
             transform.name = id.ToString();
-            transform.parent = parent;
-            transform.localPosition = pos;
-            transform.localRotation = rot;
             if (Provider.isServer && asset.nav != null)
             {
                 Transform transform2 = Object.Instantiate(asset.nav).transform;

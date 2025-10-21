@@ -1,3 +1,4 @@
+using System.Globalization;
 using UnityEngine;
 
 namespace SDG.Unturned;
@@ -36,12 +37,12 @@ public static class UnityDatEx
             value = default(Vector2);
             return false;
         }
-        if (!float.TryParse(node.Value.Substring(num3, num5 - num3), out value.x))
+        if (!float.TryParse(node.Value.Substring(num3, num5 - num3), NumberStyles.Any, CultureInfo.InvariantCulture, out value.x))
         {
             value = default(Vector2);
             return false;
         }
-        if (!float.TryParse(node.Value.Substring(num5 + 1, num4 - num5), out value.y))
+        if (!float.TryParse(node.Value.Substring(num5 + 1, num4 - num5), NumberStyles.Any, CultureInfo.InvariantCulture, out value.y))
         {
             value = default(Vector2);
             return false;
@@ -126,17 +127,17 @@ public static class UnityDatEx
             value = default(Vector3);
             return false;
         }
-        if (!float.TryParse(node.Value.Substring(num3, num5 - num3), out value.x))
+        if (!float.TryParse(node.Value.Substring(num3, num5 - num3), NumberStyles.Any, CultureInfo.InvariantCulture, out value.x))
         {
             value = default(Vector3);
             return false;
         }
-        if (!float.TryParse(node.Value.Substring(num5 + 1, num6 - num5 - 1), out value.y))
+        if (!float.TryParse(node.Value.Substring(num5 + 1, num6 - num5 - 1), NumberStyles.Any, CultureInfo.InvariantCulture, out value.y))
         {
             value = default(Vector3);
             return false;
         }
-        if (!float.TryParse(node.Value.Substring(num6 + 1, num4 - num6), out value.z))
+        if (!float.TryParse(node.Value.Substring(num6 + 1, num4 - num6), NumberStyles.Any, CultureInfo.InvariantCulture, out value.z))
         {
             value = default(Vector3);
             return false;

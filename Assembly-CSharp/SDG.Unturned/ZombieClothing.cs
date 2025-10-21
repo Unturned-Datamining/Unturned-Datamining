@@ -148,11 +148,12 @@ public class ZombieClothing
         {
             if (itemClothingAsset.type == EItemType.HAT)
             {
-                transform3 = UnityEngine.Object.Instantiate(((ItemHatAsset)itemClothingAsset).hat).transform;
+                InstantiateParameters instantiateParameters = default(InstantiateParameters);
+                instantiateParameters.parent = transform2;
+                instantiateParameters.worldSpace = false;
+                InstantiateParameters parameters = instantiateParameters;
+                transform3 = UnityEngine.Object.Instantiate(((ItemHatAsset)itemClothingAsset).hat, Vector3.zero, Quaternion.identity, parameters).transform;
                 transform3.name = "Hat";
-                transform3.transform.parent = transform2;
-                transform3.transform.localPosition = Vector3.zero;
-                transform3.transform.localRotation = Quaternion.identity;
                 transform3.transform.localScale = Vector3.one;
                 if (itemClothingAsset.shouldDestroyClothingColliders)
                 {
@@ -163,11 +164,12 @@ public class ZombieClothing
             }
             else if (itemClothingAsset.type == EItemType.BACKPACK)
             {
-                transform4 = UnityEngine.Object.Instantiate(((ItemBackpackAsset)itemClothingAsset).backpack).transform;
+                InstantiateParameters instantiateParameters = default(InstantiateParameters);
+                instantiateParameters.parent = transform;
+                instantiateParameters.worldSpace = false;
+                InstantiateParameters parameters2 = instantiateParameters;
+                transform4 = UnityEngine.Object.Instantiate(((ItemBackpackAsset)itemClothingAsset).backpack, Vector3.zero, Quaternion.identity, parameters2).transform;
                 transform4.name = "Backpack";
-                transform4.transform.parent = transform;
-                transform4.transform.localPosition = Vector3.zero;
-                transform4.transform.localRotation = Quaternion.identity;
                 transform4.transform.localScale = (flag ? new Vector3(1.05f, 1f, 1.1f) : Vector3.one);
                 if (itemClothingAsset.shouldDestroyClothingColliders)
                 {
@@ -178,11 +180,12 @@ public class ZombieClothing
             }
             else if (itemClothingAsset.type == EItemType.VEST)
             {
-                transform5 = UnityEngine.Object.Instantiate(((ItemVestAsset)itemClothingAsset).vest).transform;
+                InstantiateParameters instantiateParameters = default(InstantiateParameters);
+                instantiateParameters.parent = transform;
+                instantiateParameters.worldSpace = false;
+                InstantiateParameters parameters3 = instantiateParameters;
+                transform5 = UnityEngine.Object.Instantiate(((ItemVestAsset)itemClothingAsset).vest, Vector3.zero, Quaternion.identity, parameters3).transform;
                 transform5.name = "Vest";
-                transform5.transform.parent = transform;
-                transform5.transform.localPosition = Vector3.zero;
-                transform5.transform.localRotation = Quaternion.identity;
                 transform5.transform.localScale = (flag ? new Vector3(1.05f, 1f, 1.1f) : Vector3.one);
                 if (itemClothingAsset.shouldDestroyClothingColliders)
                 {
@@ -193,11 +196,12 @@ public class ZombieClothing
             }
             else if (itemClothingAsset.type == EItemType.MASK)
             {
-                transform6 = UnityEngine.Object.Instantiate(((ItemMaskAsset)itemClothingAsset).mask).transform;
+                InstantiateParameters instantiateParameters = default(InstantiateParameters);
+                instantiateParameters.parent = transform2;
+                instantiateParameters.worldSpace = false;
+                InstantiateParameters parameters4 = instantiateParameters;
+                transform6 = UnityEngine.Object.Instantiate(((ItemMaskAsset)itemClothingAsset).mask, Vector3.zero, Quaternion.identity, parameters4).transform;
                 transform6.name = "Mask";
-                transform6.transform.parent = transform2;
-                transform6.transform.localPosition = Vector3.zero;
-                transform6.transform.localRotation = Quaternion.identity;
                 transform6.transform.localScale = Vector3.one;
                 if (itemClothingAsset.shouldDestroyClothingColliders)
                 {
@@ -208,11 +212,12 @@ public class ZombieClothing
             }
             else if (itemClothingAsset.type == EItemType.GLASSES)
             {
-                transform7 = UnityEngine.Object.Instantiate(((ItemGlassesAsset)itemClothingAsset).glasses).transform;
+                InstantiateParameters instantiateParameters = default(InstantiateParameters);
+                instantiateParameters.parent = transform2;
+                instantiateParameters.worldSpace = false;
+                InstantiateParameters parameters5 = instantiateParameters;
+                transform7 = UnityEngine.Object.Instantiate(((ItemGlassesAsset)itemClothingAsset).glasses, Vector3.zero, Quaternion.identity, parameters5).transform;
                 transform7.name = "Glasses";
-                transform7.transform.parent = transform2;
-                transform7.transform.localPosition = Vector3.zero;
-                transform7.transform.localRotation = Quaternion.identity;
                 transform7.transform.localScale = Vector3.one;
                 if (itemClothingAsset.shouldDestroyClothingColliders)
                 {
@@ -232,11 +237,12 @@ public class ZombieClothing
         }
         if (itemClothingAsset2.type == EItemType.HAT)
         {
-            transform3 = UnityEngine.Object.Instantiate(((ItemHatAsset)itemClothingAsset2).hat).transform;
+            InstantiateParameters instantiateParameters = default(InstantiateParameters);
+            instantiateParameters.parent = transform2;
+            instantiateParameters.worldSpace = false;
+            InstantiateParameters parameters6 = instantiateParameters;
+            transform3 = UnityEngine.Object.Instantiate(((ItemHatAsset)itemClothingAsset2).hat, Vector3.zero, Quaternion.identity, parameters6).transform;
             transform3.name = "Hat";
-            transform3.transform.parent = transform2;
-            transform3.transform.localPosition = Vector3.zero;
-            transform3.transform.localRotation = Quaternion.identity;
             transform3.transform.localScale = Vector3.one;
             if (itemClothingAsset2.shouldDestroyClothingColliders)
             {
@@ -247,11 +253,12 @@ public class ZombieClothing
         }
         else if (itemClothingAsset2.type == EItemType.BACKPACK)
         {
-            transform4 = UnityEngine.Object.Instantiate(((ItemBackpackAsset)itemClothingAsset2).backpack).transform;
+            InstantiateParameters instantiateParameters = default(InstantiateParameters);
+            instantiateParameters.parent = transform;
+            instantiateParameters.worldSpace = false;
+            InstantiateParameters parameters7 = instantiateParameters;
+            transform4 = UnityEngine.Object.Instantiate(((ItemBackpackAsset)itemClothingAsset2).backpack, Vector3.zero, Quaternion.identity, parameters7).transform;
             transform4.name = "Backpack";
-            transform4.transform.parent = transform;
-            transform4.transform.localPosition = Vector3.zero;
-            transform4.transform.localRotation = Quaternion.identity;
             transform4.transform.localScale = (flag ? new Vector3(1.05f, 1f, 1.1f) : Vector3.one);
             if (itemClothingAsset2.shouldDestroyClothingColliders)
             {
@@ -262,11 +269,12 @@ public class ZombieClothing
         }
         else if (itemClothingAsset2.type == EItemType.VEST)
         {
-            transform5 = UnityEngine.Object.Instantiate(((ItemVestAsset)itemClothingAsset2).vest).transform;
+            InstantiateParameters instantiateParameters = default(InstantiateParameters);
+            instantiateParameters.parent = transform;
+            instantiateParameters.worldSpace = false;
+            InstantiateParameters parameters8 = instantiateParameters;
+            transform5 = UnityEngine.Object.Instantiate(((ItemVestAsset)itemClothingAsset2).vest, Vector3.zero, Quaternion.identity, parameters8).transform;
             transform5.name = "Vest";
-            transform5.transform.parent = transform;
-            transform5.transform.localPosition = Vector3.zero;
-            transform5.transform.localRotation = Quaternion.identity;
             transform5.transform.localScale = (flag ? new Vector3(1.05f, 1f, 1.1f) : Vector3.one);
             if (itemClothingAsset2.shouldDestroyClothingColliders)
             {
@@ -277,11 +285,12 @@ public class ZombieClothing
         }
         else if (itemClothingAsset2.type == EItemType.MASK)
         {
-            transform6 = UnityEngine.Object.Instantiate(((ItemMaskAsset)itemClothingAsset2).mask).transform;
+            InstantiateParameters instantiateParameters = default(InstantiateParameters);
+            instantiateParameters.parent = transform2;
+            instantiateParameters.worldSpace = false;
+            InstantiateParameters parameters9 = instantiateParameters;
+            transform6 = UnityEngine.Object.Instantiate(((ItemMaskAsset)itemClothingAsset2).mask, Vector3.zero, Quaternion.identity, parameters9).transform;
             transform6.name = "Mask";
-            transform6.transform.parent = transform2;
-            transform6.transform.localPosition = Vector3.zero;
-            transform6.transform.localRotation = Quaternion.identity;
             transform6.transform.localScale = Vector3.one;
             if (itemClothingAsset2.shouldDestroyClothingColliders)
             {
@@ -292,11 +301,12 @@ public class ZombieClothing
         }
         else if (itemClothingAsset2.type == EItemType.GLASSES)
         {
-            transform7 = UnityEngine.Object.Instantiate(((ItemGlassesAsset)itemClothingAsset2).glasses).transform;
+            InstantiateParameters instantiateParameters = default(InstantiateParameters);
+            instantiateParameters.parent = transform2;
+            instantiateParameters.worldSpace = false;
+            InstantiateParameters parameters10 = instantiateParameters;
+            transform7 = UnityEngine.Object.Instantiate(((ItemGlassesAsset)itemClothingAsset2).glasses, Vector3.zero, Quaternion.identity, parameters10).transform;
             transform7.name = "Glasses";
-            transform7.transform.parent = transform2;
-            transform7.transform.localPosition = Vector3.zero;
-            transform7.transform.localRotation = Quaternion.identity;
             transform7.transform.localScale = Vector3.one;
             if (itemClothingAsset2.shouldDestroyClothingColliders)
             {
