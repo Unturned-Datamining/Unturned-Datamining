@@ -1,14 +1,6 @@
 MainMenuAlert
 {
-	Id 75
-	Header Community-Organized Event: Watch the top qualifying players compete @ PeekSeek.net
-	Body From the organizers: "Over the past week, hundreds of teams have competed for a chance to reach the finals, and today they will go head-to-head to determine the winner. Watch on PeekSeek."
-	Color #ff0000
-	Link https://pksk.to/streams
-	IconURL https://cdn.smartlydressedgames.com/Images/PeekSeek.png
-	UseTimeWindow true
-	StartTime 2025-08-23 17:00:00
-	EndTime 2025-08-23 22:00:00
+	Id 0
 }
 MainMenuWorkshop
 {
@@ -52,9 +44,9 @@ ItemStore
 		1383
 		1394
 	]
-	SaleTitle Steam Autumn Sale 2025
-	SaleStart 2025-09-29 16:55:00
-	SaleEnd 2025-10-06 17:05:00
+	SaleTitle Steam Scream Fest 2025
+	SaleStart 2025-10-27 16:55:00
+	SaleEnd 2025-11-03 18:05:00
 }
 ItemCrafting
 {
