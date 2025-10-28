@@ -44,6 +44,7 @@
 | (?i)(БЕБРА)                                                                           | HiddenFromAllServerLists          |
 | (?i)(] wiped)                                                                         | HiddenFromAllServerLists          |
 | (?i)(MegaNine)                                                                        | HiddenFromInternetServerList      |
+| (?i)(LOWRUST)                                                                         | HiddenFromInternetServerList      |
 
 ## Description filters
 | Regex | BanFlags |
