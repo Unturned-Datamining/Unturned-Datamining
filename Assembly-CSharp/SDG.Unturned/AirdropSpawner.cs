@@ -74,7 +74,7 @@ public class AirdropSpawner : MonoBehaviour
         }
         else if (!string.IsNullOrEmpty(SpawnpointName))
         {
-            Spawnpoint spawnpoint = SpawnpointSystemV2.Get().FindSpawnpoint(SpawnpointName);
+            Spawnpoint spawnpoint = SpawnpointSystemV2.Get().FindFirstSpawnpoint(SpawnpointName);
             if (spawnpoint != null)
             {
                 position = spawnpoint.transform.position;

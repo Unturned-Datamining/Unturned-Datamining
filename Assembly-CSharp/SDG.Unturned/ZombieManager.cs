@@ -108,6 +108,8 @@ public class ZombieManager : SteamCaller
 
     private static ZombieRegion[] _regions;
 
+    private static Dictionary<string, double> cooldowns = new Dictionary<string, double>(StringComparer.InvariantCultureIgnoreCase);
+
     public static int wanderingCount;
 
     private static int tickIndex;
@@ -202,6 +204,25 @@ public class ZombieManager : SteamCaller
     public static int waveIndex => _waveIndex;
 
     public static int waveRemaining => _waveRemaining;
+
+    /// <summary>
+    /// False if time since this was last called with same cooldownId is less than duration.
+    /// True otherwise.
+    /// </summary>
+    public static bool CheckCustomCooldown(string cooldownId, double duration)
+    {
+        if (string.IsNullOrEmpty(cooldownId) || duration <= 0.0)
+        {
+            return false;
+        }
+        double timeAsDouble = Time.timeAsDouble;
+        if (cooldowns.TryGetValue(cooldownId, out var value) && timeAsDouble - value < duration)
+        {
+            return false;
+        }
+        cooldowns[cooldownId] = timeAsDouble;
+        return true;
+    }
 
     public static void getZombiesInRadius(Vector3 center, float sqrRadius, List<Zombie> result)
     {
@@ -745,32 +766,54 @@ public class ZombieManager : SteamCaller
         return null;
     }
 
-    private static EZombieSpeciality generateZombieSpeciality(byte bound, ZombieTable table)
+    /// <summary>
+    /// Allows level to override whether per-table or per-navmesh difficulty asset takes priority.
+    /// </summary>
+    public static ZombieDifficultyAsset GetDifficultyInBoundForTable(byte bound, ZombieTable table, bool forSpawnOverrides)
     {
-        ZombieDifficultyAsset zombieDifficultyAsset = getDifficultyInBound(bound);
-        if (zombieDifficultyAsset == null || !zombieDifficultyAsset.Overrides_Spawn_Chance)
+        EZombieDifficultyAssetPrioritization eZombieDifficultyAssetPrioritization = Level.getAsset()?.ZombieDifficultyAssetPrioritization ?? EZombieDifficultyAssetPrioritization.NavmeshOverridesTable;
+        ZombieDifficultyAsset zombieDifficultyAsset;
+        if (eZombieDifficultyAssetPrioritization == EZombieDifficultyAssetPrioritization.NavmeshOverridesTable || eZombieDifficultyAssetPrioritization != EZombieDifficultyAssetPrioritization.TableOverridesNavmesh)
+        {
+            zombieDifficultyAsset = getDifficultyInBound(bound);
+            if (zombieDifficultyAsset == null || (forSpawnOverrides && !zombieDifficultyAsset.Overrides_Spawn_Chance))
+            {
+                zombieDifficultyAsset = table.resolveDifficulty();
+            }
+        }
+        else
         {
             zombieDifficultyAsset = table.resolveDifficulty();
+            if (zombieDifficultyAsset == null || (forSpawnOverrides && !zombieDifficultyAsset.Overrides_Spawn_Chance))
+            {
+                zombieDifficultyAsset = getDifficultyInBound(bound);
+            }
         }
+        return zombieDifficultyAsset;
+    }
+
+    private static EZombieSpeciality generateZombieSpeciality(byte bound, ZombieTable table)
+    {
         zombieSpecialityTable.clear();
-        if (zombieDifficultyAsset != null && zombieDifficultyAsset.Overrides_Spawn_Chance)
+        ZombieDifficultyAsset difficultyInBoundForTable = GetDifficultyInBoundForTable(bound, table, forSpawnOverrides: true);
+        if (difficultyInBoundForTable != null && difficultyInBoundForTable.Overrides_Spawn_Chance)
         {
-            zombieSpecialityTable.add(EZombieSpeciality.CRAWLER, zombieDifficultyAsset.Crawler_Chance);
-            zombieSpecialityTable.add(EZombieSpeciality.SPRINTER, zombieDifficultyAsset.Sprinter_Chance);
-            zombieSpecialityTable.add(EZombieSpeciality.FLANKER_FRIENDLY, zombieDifficultyAsset.Flanker_Chance);
-            zombieSpecialityTable.add(EZombieSpeciality.BURNER, zombieDifficultyAsset.Burner_Chance);
-            zombieSpecialityTable.add(EZombieSpeciality.ACID, zombieDifficultyAsset.Acid_Chance);
-            zombieSpecialityTable.add(EZombieSpeciality.BOSS_ELECTRIC, zombieDifficultyAsset.Boss_Electric_Chance);
-            zombieSpecialityTable.add(EZombieSpeciality.BOSS_WIND, zombieDifficultyAsset.Boss_Wind_Chance);
-            zombieSpecialityTable.add(EZombieSpeciality.BOSS_FIRE, zombieDifficultyAsset.Boss_Fire_Chance);
-            zombieSpecialityTable.add(EZombieSpeciality.SPIRIT, zombieDifficultyAsset.Spirit_Chance);
+            zombieSpecialityTable.add(EZombieSpeciality.CRAWLER, difficultyInBoundForTable.Crawler_Chance);
+            zombieSpecialityTable.add(EZombieSpeciality.SPRINTER, difficultyInBoundForTable.Sprinter_Chance);
+            zombieSpecialityTable.add(EZombieSpeciality.FLANKER_FRIENDLY, difficultyInBoundForTable.Flanker_Chance);
+            zombieSpecialityTable.add(EZombieSpeciality.BURNER, difficultyInBoundForTable.Burner_Chance);
+            zombieSpecialityTable.add(EZombieSpeciality.ACID, difficultyInBoundForTable.Acid_Chance);
+            zombieSpecialityTable.add(EZombieSpeciality.BOSS_ELECTRIC, difficultyInBoundForTable.Boss_Electric_Chance);
+            zombieSpecialityTable.add(EZombieSpeciality.BOSS_WIND, difficultyInBoundForTable.Boss_Wind_Chance);
+            zombieSpecialityTable.add(EZombieSpeciality.BOSS_FIRE, difficultyInBoundForTable.Boss_Fire_Chance);
+            zombieSpecialityTable.add(EZombieSpeciality.SPIRIT, difficultyInBoundForTable.Spirit_Chance);
             if (Level.isLoaded && LightingManager.isNighttime)
             {
-                zombieSpecialityTable.add(EZombieSpeciality.DL_RED_VOLATILE, zombieDifficultyAsset.DL_Red_Volatile_Chance);
-                zombieSpecialityTable.add(EZombieSpeciality.DL_BLUE_VOLATILE, zombieDifficultyAsset.DL_Blue_Volatile_Chance);
+                zombieSpecialityTable.add(EZombieSpeciality.DL_RED_VOLATILE, difficultyInBoundForTable.DL_Red_Volatile_Chance);
+                zombieSpecialityTable.add(EZombieSpeciality.DL_BLUE_VOLATILE, difficultyInBoundForTable.DL_Blue_Volatile_Chance);
             }
-            zombieSpecialityTable.add(EZombieSpeciality.BOSS_ELVER_STOMPER, zombieDifficultyAsset.Boss_Elver_Stomper_Chance);
-            zombieSpecialityTable.add(EZombieSpeciality.BOSS_KUWAIT, zombieDifficultyAsset.Boss_Kuwait_Chance);
+            zombieSpecialityTable.add(EZombieSpeciality.BOSS_ELVER_STOMPER, difficultyInBoundForTable.Boss_Elver_Stomper_Chance);
+            zombieSpecialityTable.add(EZombieSpeciality.BOSS_KUWAIT, difficultyInBoundForTable.Boss_Kuwait_Chance);
         }
         else
         {
@@ -1122,6 +1165,7 @@ public class ZombieManager : SteamCaller
                 Vector3 center = LevelNavigation.bounds[b].center;
                 regions[b].isRadioactive = VolumeManager<DeadzoneVolume, DeadzoneVolumeManager>.Get().IsNavmeshCenterInsideAnyVolume(center);
             }
+            cooldowns.Clear();
             wanderingCount = 0;
             tickIndex = 0;
             _tickingZombies = new List<Zombie>();

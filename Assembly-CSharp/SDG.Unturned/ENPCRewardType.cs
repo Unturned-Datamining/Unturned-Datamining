@@ -27,5 +27,6 @@ public enum ENPCRewardType
     CUTSCENE_MODE,
     PLAYER_LIFE_STAMINA,
     EFFECT,
-    AIRDROP
+    AIRDROP,
+    ZOMBIE
 }

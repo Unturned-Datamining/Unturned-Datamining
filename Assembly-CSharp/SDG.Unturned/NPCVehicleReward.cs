@@ -44,7 +44,7 @@ public class NPCVehicleReward : INPCReward
 
     public override void GrantReward(Player player)
     {
-        Spawnpoint spawnpoint = SpawnpointSystemV2.Get().FindSpawnpoint(this.spawnpoint);
+        Spawnpoint spawnpoint = SpawnpointSystemV2.Get().FindFirstSpawnpoint(this.spawnpoint);
         Vector3 point;
         Quaternion rotation;
         if (spawnpoint != null)

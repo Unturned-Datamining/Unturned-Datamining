@@ -1402,7 +1402,7 @@ public class PlayerLife : PlayerCaller
             string npcSpawnId = base.player.quests.npcSpawnId;
             if (!string.IsNullOrEmpty(npcSpawnId))
             {
-                Spawnpoint spawnpoint = SpawnpointSystemV2.Get().FindSpawnpoint(npcSpawnId);
+                Spawnpoint spawnpoint = SpawnpointSystemV2.Get().FindFirstSpawnpoint(npcSpawnId);
                 if (spawnpoint != null)
                 {
                     position = spawnpoint.transform.position;

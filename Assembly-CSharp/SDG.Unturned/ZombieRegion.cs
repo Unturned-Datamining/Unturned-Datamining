@@ -151,6 +151,42 @@ public class ZombieRegion
         }
     }
 
+    public Zombie FindBestZombieToRespawnDifferentSpeciality(EZombieSpeciality speciality)
+    {
+        foreach (Zombie zombie in zombies)
+        {
+            if (zombie != null && zombie.isDead)
+            {
+                return zombie;
+            }
+        }
+        if (speciality != EZombieSpeciality.NORMAL)
+        {
+            foreach (Zombie zombie2 in zombies)
+            {
+                if (zombie2 != null && !zombie2.isHunting && zombie2.speciality == EZombieSpeciality.NORMAL)
+                {
+                    return zombie2;
+                }
+            }
+        }
+        foreach (Zombie zombie3 in zombies)
+        {
+            if (zombie3 != null && !zombie3.isHunting && zombie3.speciality != speciality)
+            {
+                return zombie3;
+            }
+        }
+        foreach (Zombie zombie4 in zombies)
+        {
+            if (zombie4 != null && zombie4.speciality != speciality)
+            {
+                return zombie4;
+            }
+        }
+        return null;
+    }
+
     /// <summary>
     /// Checks for players in the area with quests and spawns boss zombies accordingly.
     /// </summary>
@@ -188,60 +224,27 @@ public class ZombieRegion
                     }
                     int num = Mathf.Min(zombies.Count, nPCZombieKillsCondition.spawnQuantity);
                     int num2 = 0;
-                    foreach (Zombie zombie5 in zombies)
+                    foreach (Zombie zombie2 in zombies)
                     {
-                        if (zombie5 != null && !zombie5.isDead && zombie5.speciality == nPCZombieKillsCondition.zombie)
+                        if (zombie2 != null && !zombie2.isDead && zombie2.speciality == nPCZombieKillsCondition.zombie)
                         {
                             num2++;
                         }
                     }
                     int num3 = LevelZombies.FindTableIndexByUniqueId(nPCZombieKillsCondition.LevelTableUniqueId);
                     ZombieTable zombieTable = ((num3 >= 0) ? LevelZombies.tables[num3] : null);
-                    int l;
-                    for (l = num2; l < num; l++)
+                    int num4 = num2;
+                    while (num4 < num)
                     {
-                        Zombie zombie = null;
-                        for (int m = 0; m < zombies.Count; m++)
-                        {
-                            Zombie zombie2 = zombies[m];
-                            if (zombie2 != null && zombie2.isDead)
-                            {
-                                zombie = zombie2;
-                                break;
-                            }
-                        }
+                        Zombie zombie = FindBestZombieToRespawnDifferentSpeciality(nPCZombieKillsCondition.zombie);
                         if (zombie == null)
                         {
-                            for (int n = 0; n < zombies.Count; n++)
-                            {
-                                Zombie zombie3 = zombies[n];
-                                if (zombie3 != null && !zombie3.isDead && zombie3.speciality != nPCZombieKillsCondition.zombie && !zombie3.isHunting)
-                                {
-                                    zombie = zombie3;
-                                    break;
-                                }
-                            }
-                        }
-                        if (zombie == null)
-                        {
-                            for (int num4 = 0; num4 < zombies.Count; num4++)
-                            {
-                                Zombie zombie4 = zombies[num4];
-                                if (zombie4 != null && !zombie4.isDead && zombie4.speciality != nPCZombieKillsCondition.zombie)
-                                {
-                                    zombie = zombie4;
-                                    break;
-                                }
-                            }
-                        }
-                        if (!(zombie != null))
-                        {
-                            continue;
+                            break;
                         }
                         Vector3 position = zombie.transform.position;
                         if (zombie.isDead)
                         {
-                            for (int num5 = 0; num5 < 10; num5++)
+                            for (int l = 0; l < 10; l++)
                             {
                                 ZombieSpawnpoint zombieSpawnpoint = LevelZombies.zombies[nav][UnityEngine.Random.Range(0, LevelZombies.zombies[nav].Count)];
                                 if (SafezoneManager.checkPointValid(zombieSpawnpoint.point))
@@ -268,7 +271,7 @@ public class ZombieRegion
                             bossZombie = zombie;
                         }
                     }
-                    UnturnedLog.info("Spawned " + l + " " + nPCZombieKillsCondition.zombie.ToString() + " zombies in nav " + nav + " for quest " + playerQuest.id + ", isBoss " + usesBossInterval + " boss = " + bossZombie);
+                    UnturnedLog.info("Spawned " + num4 + " " + nPCZombieKillsCondition.zombie.ToString() + " zombies in nav " + nav + " for quest " + playerQuest.id + ", isBoss " + usesBossInterval + " boss = " + bossZombie);
                 }
             }
         }

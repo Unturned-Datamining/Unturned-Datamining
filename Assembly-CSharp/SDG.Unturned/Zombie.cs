@@ -1586,10 +1586,14 @@ public class Zombie : MonoBehaviour, IExplosionDamageable, IEquatable<IExplosion
     {
         if (Provider.isServer)
         {
-            difficulty = ZombieManager.getDifficultyInBound(bound);
-            if (difficulty == null && type < LevelZombies.tables.Count)
+            ZombieTable zombieTable = ((type < LevelZombies.tables.Count) ? LevelZombies.tables[type] : null);
+            if (zombieTable != null)
             {
-                difficulty = LevelZombies.tables[type].resolveDifficulty();
+                difficulty = ZombieManager.GetDifficultyInBoundForTable(bound, zombieTable, forSpawnOverrides: false);
+            }
+            else
+            {
+                difficulty = ZombieManager.getDifficultyInBound(bound);
             }
         }
     }

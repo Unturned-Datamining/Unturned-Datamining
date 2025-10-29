@@ -40,6 +40,8 @@ public class LevelObjects : MonoBehaviour
 
     private static List<LevelBuildableObject>[,] _buildables;
 
+    internal static Dictionary<uint, LevelObject> instanceIdToObject;
+
     private static int _total;
 
     private static bool[,] _regions;
@@ -470,10 +472,24 @@ public class LevelObjects : MonoBehaviour
         return null;
     }
 
+    /// <summary>
+    /// Note: refers to per-LevelObject unique ID, not Unity object instance ID.
+    /// </summary>
+    public static LevelObject FindLevelObjectByInstanceId(uint instanceId)
+    {
+        if (instanceIdToObject == null)
+        {
+            return null;
+        }
+        instanceIdToObject.TryGetValue(instanceId, out var value);
+        return value;
+    }
+
     public static void load()
     {
         _objects = new List<LevelObject>[Regions.WORLD_SIZE, Regions.WORLD_SIZE];
         _buildables = new List<LevelBuildableObject>[Regions.WORLD_SIZE, Regions.WORLD_SIZE];
+        instanceIdToObject = new Dictionary<uint, LevelObject>();
         _total = 0;
         _regions = new bool[Regions.WORLD_SIZE, Regions.WORLD_SIZE];
         shouldInstantlyLoad = true;

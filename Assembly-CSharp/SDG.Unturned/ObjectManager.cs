@@ -9,7 +9,13 @@ namespace SDG.Unturned;
 
 public class ObjectManager : SteamCaller
 {
-    public static readonly byte SAVEDATA_VERSION = 1;
+    public const byte SAVEDATA_VERSION_INITIAL = 1;
+
+    public const byte SAVEDATA_VERSION_REPLACE_INDEX_WITH_INSTANCE_ID = 2;
+
+    private const byte SAVEDATA_VERSION_NEWEST = 2;
+
+    public static readonly byte SAVEDATA_VERSION = 2;
 
     public static readonly byte OBJECT_REGIONS = 2;
 
@@ -699,12 +705,24 @@ public class ObjectManager : SteamCaller
             return;
         }
         River river = LevelSavedata.openRiver("/Objects.dat", isReading: true);
-        river.readByte();
-        for (byte b = 0; b < Regions.WORLD_SIZE; b++)
+        if (river.readByte() >= 2)
         {
-            for (byte b2 = 0; b2 < Regions.WORLD_SIZE; b2++)
+            for (byte b = 0; b < Regions.WORLD_SIZE; b++)
             {
-                loadRegion(river, LevelObjects.objects[b, b2]);
+                for (byte b2 = 0; b2 < Regions.WORLD_SIZE; b2++)
+                {
+                    LoadRegionV2(river, LevelObjects.objects[b, b2]);
+                }
+            }
+        }
+        else
+        {
+            for (byte b3 = 0; b3 < Regions.WORLD_SIZE; b3++)
+            {
+                for (byte b4 = 0; b4 < Regions.WORLD_SIZE; b4++)
+                {
+                    loadRegion(river, LevelObjects.objects[b3, b4]);
+                }
             }
         }
         river.closeRiver();
@@ -713,7 +731,7 @@ public class ObjectManager : SteamCaller
     public static void save()
     {
         River river = LevelSavedata.openRiver("/Objects.dat", isReading: false);
-        river.writeByte(SAVEDATA_VERSION);
+        river.writeByte(2);
         for (byte b = 0; b < Regions.WORLD_SIZE; b++)
         {
             for (byte b2 = 0; b2 < Regions.WORLD_SIZE; b2++)
@@ -724,61 +742,128 @@ public class ObjectManager : SteamCaller
         river.closeRiver();
     }
 
+    private static void ApplyLevelObjectLoadedState(LevelObject obj, byte[] state)
+    {
+        if (obj.transform == null || obj.asset == null)
+        {
+            UnturnedLog.warn($"Unable to load savedata for an object with asset GUID {obj.GUID:N} because its asset is missing");
+            return;
+        }
+        if (state.Length < 1)
+        {
+            UnturnedLog.error("Unable to load savedata for object \"" + obj.asset.FriendlyName + "\" because loaded state array is empty (should never happen)");
+            return;
+        }
+        if (obj.state == null || obj.state.Length < 1)
+        {
+            UnturnedLog.warn("Unable to load savedata for object \"" + obj.asset.FriendlyName + "\" because it doesn't have a state array");
+            return;
+        }
+        obj.state = state;
+        if (obj.interactable != null)
+        {
+            if (obj.interactable is InteractableObjectBinaryState)
+            {
+                if (obj.asset.interactabilityReset >= 1f)
+                {
+                    state[0] = 0;
+                }
+            }
+            else if (obj.interactable is InteractableObjectResource)
+            {
+                if (obj.asset.rubble == EObjectRubble.DESTROY)
+                {
+                    if (state.Length < 3)
+                    {
+                        state = obj.asset.getState();
+                        obj.state = state;
+                    }
+                }
+                else if (state.Length < 2)
+                {
+                    state = obj.asset.getState();
+                    obj.state = state;
+                }
+            }
+            obj.interactable.updateState(obj.asset, state);
+        }
+        if (obj.rubble != null)
+        {
+            state[^1] = byte.MaxValue;
+            obj.rubble.updateState(obj.asset, state);
+        }
+    }
+
+    private static void LoadRegionV2(River river, List<LevelObject> objects)
+    {
+        while (true)
+        {
+            uint num = river.readUInt32();
+            LevelObject levelObject;
+            switch (num)
+            {
+            case uint.MaxValue:
+                return;
+            default:
+                levelObject = LevelObjects.FindLevelObjectByInstanceId(num);
+                if (levelObject == null)
+                {
+                    UnturnedLog.warn($"Unable to load savedata for object with instance ID {num} because it's been removed from the map");
+                }
+                break;
+            case 0u:
+            {
+                ushort num2 = river.readUInt16();
+                ushort num3 = river.readUInt16();
+                if (num2 >= objects.Count)
+                {
+                    levelObject = null;
+                    UnturnedLog.warn($"Unable to load savedata for object with legacy asset ID {num3} because it's been removed from the map");
+                    break;
+                }
+                levelObject = objects[num2];
+                if (levelObject != null && levelObject.id != num3)
+                {
+                    levelObject = null;
+                    UnturnedLog.warn($"Unable to load savedata for object with legacy asset ID {num3} because the corresponding object in the map has changed");
+                }
+                break;
+            }
+            }
+            byte[] state = river.readBytes();
+            if (levelObject != null)
+            {
+                ApplyLevelObjectLoadedState(levelObject, state);
+            }
+        }
+    }
+
     private static void loadRegion(River river, List<LevelObject> objects)
     {
         while (true)
         {
             ushort num = river.readUInt16();
-            if (num == ushort.MaxValue)
+            if (num != ushort.MaxValue)
             {
-                break;
-            }
-            ushort num2 = river.readUInt16();
-            byte[] array = river.readBytes();
-            if (num >= objects.Count)
-            {
-                break;
-            }
-            LevelObject levelObject = objects[num];
-            if (num2 != levelObject.id)
-            {
+                ushort num2 = river.readUInt16();
+                byte[] state = river.readBytes();
+                if (num >= objects.Count)
+                {
+                    UnturnedLog.warn($"Unable to load savedata for object with legacy asset ID {num2} because it's been removed from the map");
+                    break;
+                }
+                LevelObject levelObject = objects[num];
+                if (num2 != levelObject.id)
+                {
+                    UnturnedLog.warn($"Unable to load savedata for object with legacy asset ID {num2} because the corresponding object in the map has changed");
+                }
+                else
+                {
+                    ApplyLevelObjectLoadedState(levelObject, state);
+                }
                 continue;
             }
-            levelObject.state = array;
-            if (levelObject.transform == null || levelObject.asset == null)
-            {
-                continue;
-            }
-            if (levelObject.interactable != null)
-            {
-                if (levelObject.interactable is InteractableObjectBinaryState)
-                {
-                    if (levelObject.asset.interactabilityReset >= 1f)
-                    {
-                        array[0] = 0;
-                    }
-                }
-                else if (levelObject.interactable is InteractableObjectResource)
-                {
-                    if (levelObject.asset.rubble == EObjectRubble.DESTROY)
-                    {
-                        if (array.Length < 3)
-                        {
-                            array = (levelObject.state = levelObject.asset.getState());
-                        }
-                    }
-                    else if (array.Length < 2)
-                    {
-                        array = (levelObject.state = levelObject.asset.getState());
-                    }
-                }
-                levelObject.interactable.updateState(levelObject.asset, array);
-            }
-            if (levelObject.rubble != null)
-            {
-                array[^1] = byte.MaxValue;
-                levelObject.rubble.updateState(levelObject.asset, array);
-            }
+            break;
         }
     }
 
@@ -787,14 +872,18 @@ public class ObjectManager : SteamCaller
         for (ushort num = 0; num < objects.Count; num++)
         {
             LevelObject levelObject = objects[num];
-            if (levelObject.state != null && levelObject.state.Length != 0)
+            if (levelObject.state != null && levelObject.state.Length >= 1)
             {
-                river.writeUInt16(num);
-                river.writeUInt16(levelObject.id);
+                river.writeUInt32(levelObject.instanceID);
+                if (levelObject.instanceID < 1)
+                {
+                    river.writeUInt16(num);
+                    river.writeUInt16(levelObject.id);
+                }
                 river.writeBytes(levelObject.state);
             }
         }
-        river.writeUInt16(ushort.MaxValue);
+        river.writeUInt32(uint.MaxValue);
     }
 
     public static PooledTransportConnectionList GatherRemoteClientConnections(byte x, byte y)

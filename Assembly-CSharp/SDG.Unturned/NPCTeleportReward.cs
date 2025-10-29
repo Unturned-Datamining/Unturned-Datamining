@@ -9,7 +9,7 @@ public class NPCTeleportReward : INPCReward
 
     public override void GrantReward(Player player)
     {
-        Spawnpoint spawnpoint = SpawnpointSystemV2.Get().FindSpawnpoint(this.spawnpoint);
+        Spawnpoint spawnpoint = SpawnpointSystemV2.Get().FindFirstSpawnpoint(this.spawnpoint);
         if (spawnpoint == null)
         {
             UnturnedLog.error("Failed to find NPC teleport reward spawnpoint: " + this.spawnpoint);

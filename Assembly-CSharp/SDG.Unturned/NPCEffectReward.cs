@@ -41,7 +41,7 @@ public class NPCEffectReward : INPCReward
         }
         else
         {
-            Spawnpoint spawnpoint = SpawnpointSystemV2.Get().FindSpawnpoint(Spawnpoint);
+            Spawnpoint spawnpoint = SpawnpointSystemV2.Get().FindFirstSpawnpoint(Spawnpoint);
             if (!(spawnpoint != null))
             {
                 UnturnedLog.error("Failed to find NPC effect reward spawnpoint: " + Spawnpoint);

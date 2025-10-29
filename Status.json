@@ -46,7 +46,7 @@
 	{
 		"Major_Version": 25,
 		"Minor_Version": 10,
-		"Patch_Version": 103,
+		"Patch_Version": 104,
 		"GrantPackageIDs":
 		[
 			487
@@ -85,7 +85,7 @@
 				"Visible_In_Singleplayer_Recommendations_List": true
 			},
 			{
-				"Name": "Rio de Janeiro Remastered",
+				"Name": "Rio de Janeiro",
 				"Workshop_File_Id": 3416057692,
 				"Visible_In_Singleplayer_Recommendations_List": true
 			},
@@ -130,12 +130,17 @@
 				"Visible_In_Singleplayer_Recommendations_List": true
 			},
 			{
+				"Name": "Ireland",
+				"Workshop_File_Id": 1411633953,
+				"Visible_In_Singleplayer_Recommendations_List": true
+			},
+			{
 				"Name": "California",
 				"Workshop_File_Id": 1905768396,
 				"Visible_In_Singleplayer_Recommendations_List": true
 			},
 			{
-				"Name": "Rio de Janeiro (Classic)",
+				"Name": "Rio de Janeiro (Original)",
 				"Workshop_File_Id": 1821848824,
 				"Visible_In_Singleplayer_Recommendations_List": false
 			},
@@ -194,11 +199,6 @@
 				[
 					1767554683
 				],
-				"Visible_In_Singleplayer_Recommendations_List": false
-			},
-			{
-				"Name": "Ireland",
-				"Workshop_File_Id": 1411633953,
 				"Visible_In_Singleplayer_Recommendations_List": false
 			}
 		]

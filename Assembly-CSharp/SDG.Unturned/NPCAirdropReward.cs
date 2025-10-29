@@ -57,7 +57,7 @@ public class NPCAirdropReward : INPCReward
         }
         else
         {
-            Spawnpoint spawnpoint = SpawnpointSystemV2.Get().FindSpawnpoint(this.spawnpoint);
+            Spawnpoint spawnpoint = SpawnpointSystemV2.Get().FindFirstSpawnpoint(this.spawnpoint);
             if (spawnpoint != null)
             {
                 position = spawnpoint.transform.position;

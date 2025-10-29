@@ -316,6 +316,8 @@ public class LevelAsset : Asset
 
     public bool HasSkillsetLoadoutsOverride => DefaultSkillsetLoadouts != null;
 
+    public EZombieDifficultyAssetPrioritization ZombieDifficultyAssetPrioritization { get; set; }
+
     public DefaultLoadoutItem[] GetSkillsetLoadoutOrNull(EPlayerSkillset skillset)
     {
         if (DefaultSkillsetLoadouts == null)
@@ -561,6 +563,7 @@ public class LevelAsset : Asset
             }
         }
         UnderwaterFogDensity = p.data.ParseFloat("UnderwaterFogDensity", 0.075f);
+        ZombieDifficultyAssetPrioritization = p.data.ParseEnum("ZombieDifficultyAssetPrioritization", EZombieDifficultyAssetPrioritization.NavmeshOverridesTable);
     }
 
     public LevelAsset()

@@ -32,6 +32,7 @@ public class AirdropDevkitNode : TempNodeBase
         private void OnIdTyped(SleekBcAssetField field)
         {
             node.CargoSpawnTableRef = field.Value;
+            LevelHierarchy.MarkDirty();
         }
     }
 

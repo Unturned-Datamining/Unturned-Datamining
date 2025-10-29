@@ -39,11 +39,13 @@ public class LocationDevkitNode : TempNodeBase
         private void OnIdTyped(ISleekField field, string state)
         {
             node.locationName = state;
+            LevelHierarchy.MarkDirty();
         }
 
         private void OnVisibleOnMapToggled(ISleekToggle toggle, bool state)
         {
             node.isVisibleOnMap = state;
+            LevelHierarchy.MarkDirty();
         }
     }
 

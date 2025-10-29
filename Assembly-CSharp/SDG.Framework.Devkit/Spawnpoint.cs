@@ -29,11 +29,30 @@ public class Spawnpoint : TempNodeBase
 
         private void OnIdTyped(ISleekField field, string state)
         {
-            node.id = state;
+            node.SpawnpointID = state;
+            LevelHierarchy.MarkDirty();
         }
     }
 
+    [SerializeField]
     public string id;
+
+    public string SpawnpointID
+    {
+        get
+        {
+            return id;
+        }
+        set
+        {
+            if (!string.Equals(id, value))
+            {
+                SpawnpointSystemV2.Get().RemoveSpawnpointFromIdDictionary(this);
+                id = value;
+                SpawnpointSystemV2.Get().AddSpawnpointToIdDictionary(this);
+            }
+        }
+    }
 
     public SphereCollider sphere { get; protected set; }
 
@@ -50,13 +69,13 @@ public class Spawnpoint : TempNodeBase
     protected override void readHierarchyItem(IFormattedFileReader reader)
     {
         base.readHierarchyItem(reader);
-        id = reader.readValue<string>("ID");
+        SpawnpointID = reader.readValue<string>("ID");
     }
 
     protected override void writeHierarchyItem(IFormattedFileWriter writer)
     {
         base.writeHierarchyItem(writer);
-        writer.writeValue("ID", id);
+        writer.writeValue("ID", SpawnpointID);
     }
 
     protected void OnEnable()

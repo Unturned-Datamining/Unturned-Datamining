@@ -208,6 +208,10 @@ public class LevelObject
             UnityEngine.Object.Destroy(ownedCullingVolume.gameObject);
             ownedCullingVolume = null;
         }
+        if (_instanceID != 0)
+        {
+            LevelObjects.instanceIdToObject.Remove(_instanceID);
+        }
     }
 
     internal void ReapplyMaterialOverrides()
@@ -513,6 +517,10 @@ public class LevelObject
         this.customMaterialOverride = customMaterialOverride;
         this.materialIndexOverride = materialIndexOverride;
         this.isOwnedCullingVolumeAllowed = isOwnedCullingVolumeAllowed;
+        if (_instanceID != 0)
+        {
+            LevelObjects.instanceIdToObject[_instanceID] = this;
+        }
         LoadAsset();
         if (asset == null)
         {

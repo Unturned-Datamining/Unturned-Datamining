@@ -7,11 +7,11 @@ namespace SDG.Framework.Devkit;
 public static class SpawnpointSystem
 {
     [Obsolete("Made SpawnpointSystem no longer static")]
-    public static List<Spawnpoint> spawnpoints => SpawnpointSystemV2.Get().spawnpoints;
+    public static List<Spawnpoint> spawnpoints => SpawnpointSystemV2.Get().allSpawnpoints;
 
     [Obsolete("Made SpawnpointSystem no longer static")]
     public static Spawnpoint getSpawnpoint(string id)
     {
-        return SpawnpointSystemV2.Get().FindSpawnpoint(id);
+        return SpawnpointSystemV2.Get().FindFirstSpawnpoint(id);
     }
 }
