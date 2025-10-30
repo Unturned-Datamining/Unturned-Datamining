@@ -111,7 +111,7 @@ public class MenuPauseUI
         }
         else
         {
-            Provider.provider.browserService.open("https://forum.smartlydressedgames.com/");
+            Provider.provider.browserService.open("https://steamcommunity.com/app/304930/discussions/");
         }
     }
 

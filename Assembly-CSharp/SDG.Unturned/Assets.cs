@@ -1328,6 +1328,7 @@ public class Assets : MonoBehaviour
                 spawnTable.weight = table.weight;
                 spawnTable.normalizedWeight = table.normalizedWeight;
                 spawnTable.isLink = table.isLink;
+                spawnTable.isOverride = table.isOverride;
                 spawnAsset2.roots.Add(spawnTable);
                 num3++;
             }
@@ -1959,7 +1960,6 @@ public class Assets : MonoBehaviour
                     CommandWindow.Log(string.Empty);
                     CommandWindow.Log("https://github.com/SmartlyDressedGames/Legally-Distinct-Missile");
                     CommandWindow.Log("https://www.reddit.com/r/UnturnedLDM/");
-                    CommandWindow.Log("https://forum.smartlydressedgames.com/c/modding/ldm");
                     CommandWindow.Log("https://steamcommunity.com/app/304930/discussions/17/");
                     return;
                 }

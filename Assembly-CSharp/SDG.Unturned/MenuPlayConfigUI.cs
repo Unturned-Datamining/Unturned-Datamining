@@ -127,6 +127,11 @@ public class MenuPlayConfigUI
         string singleplayerConfigPathV = PlayConfigUtils.GetSingleplayerConfigPathV2(Characters.selected, PlaySettings.singleplayerMode);
         try
         {
+            string directoryName = Path.GetDirectoryName(singleplayerConfigPathV);
+            if (!Directory.Exists(directoryName))
+            {
+                Directory.CreateDirectory(directoryName);
+            }
             using StreamWriter output = new StreamWriter(singleplayerConfigPathV, append: false, Encoding.UTF8);
             DatWriter writer = new DatWriter(output);
             new MetadataPreservingDatWriter().WriteRootDictionary(rootDictionary, writer);

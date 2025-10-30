@@ -137,7 +137,7 @@ public class UseableDetonator : Useable
             {
                 target.select();
                 charges.Add(target);
-                if (charges.Count > 8)
+                if (charges.Count > 16)
                 {
                     if (charges[0] != null)
                     {

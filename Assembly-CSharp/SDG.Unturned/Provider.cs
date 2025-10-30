@@ -2810,6 +2810,11 @@ public class Provider : MonoBehaviour
         ReadWrite.MoveIfExistsAbsolute(writeGameplayConfigThreadState.filePath, ServerSavedata.GetBackupFilePath(writeGameplayConfigThreadState.filePath));
         try
         {
+            string directoryName = Path.GetDirectoryName(writeGameplayConfigThreadState.filePath);
+            if (!Directory.Exists(directoryName))
+            {
+                Directory.CreateDirectory(directoryName);
+            }
             using StreamWriter output = new StreamWriter(writeGameplayConfigThreadState.filePath, append: false, Encoding.UTF8);
             DatWriter writer = new DatWriter(output);
             new MetadataPreservingDatWriter().WriteRootDictionary(writeGameplayConfigThreadState.rootDictionary, writer);

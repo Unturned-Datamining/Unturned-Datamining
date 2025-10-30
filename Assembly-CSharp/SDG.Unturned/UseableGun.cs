@@ -3117,22 +3117,22 @@ public class UseableGun : Useable
                     base.player.inventory.FindAttachmentsByCaliber(magazineSearchResults, EItemType.MAGAZINE, equippedGunAsset.magazineCalibers, includeUnspecifiedCaliber);
                     if (magazineSearchResults.Count > 0)
                     {
-                        byte b = 0;
-                        byte b2 = byte.MaxValue;
-                        for (byte b3 = 0; b3 < magazineSearchResults.Count; b3++)
+                        int num = 0;
+                        int num2 = -1;
+                        for (int i = 0; i < magazineSearchResults.Count; i++)
                         {
-                            if (magazineSearchResults[b3].Jar.item.amount > b)
+                            if (magazineSearchResults[i].Jar.item.amount > num)
                             {
-                                b = magazineSearchResults[b3].Jar.item.amount;
-                                b2 = b3;
+                                num = magazineSearchResults[i].Jar.item.amount;
+                                num2 = i;
                             }
                         }
-                        if (b2 != byte.MaxValue)
+                        if (num2 >= 0)
                         {
-                            ItemAsset asset = magazineSearchResults[b2].GetAsset();
+                            ItemAsset asset = magazineSearchResults[num2].GetAsset();
                             if (asset != null)
                             {
-                                SendAttachMagazine.Invoke(GetNetId(), ENetReliability.Unreliable, magazineSearchResults[b2].Page, magazineSearchResults[b2].Jar.x, magazineSearchResults[b2].Jar.y, asset.hash);
+                                SendAttachMagazine.Invoke(GetNetId(), ENetReliability.Unreliable, magazineSearchResults[num2].Page, magazineSearchResults[num2].Jar.x, magazineSearchResults[num2].Jar.y, asset.hash);
                             }
                         }
                     }

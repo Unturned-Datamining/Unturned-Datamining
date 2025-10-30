@@ -3701,11 +3701,12 @@ public class InteractableVehicle : Interactable, IExplosionDamageable, IEquatabl
         if (asset.poweredWheelIndices != null)
         {
             float num3 = 0f;
+            bool shouldIncludeAirbornWheelsInAverageRpm = asset.ShouldIncludeAirbornWheelsInAverageRpm;
             int[] poweredWheelIndices = asset.poweredWheelIndices;
             foreach (int index in poweredWheelIndices)
             {
                 Wheel wheelAtIndex = GetWheelAtIndex(index);
-                if (wheelAtIndex != null && !(wheelAtIndex.wheel == null))
+                if (wheelAtIndex != null && !(wheelAtIndex.wheel == null) && (wheelAtIndex.isGrounded || shouldIncludeAirbornWheelsInAverageRpm))
                 {
                     num3 += Mathf.Abs(wheelAtIndex.wheel.rpm);
                     num2++;
@@ -3716,7 +3717,23 @@ public class InteractableVehicle : Interactable, IExplosionDamageable, IEquatabl
                 num = num3 / (float)num2;
             }
         }
-        float num4 = num;
+        float num4 = ReplicatedEngineRpm;
+        if (GearNumber == -1)
+        {
+            num4 = num * asset.reverseGearRatio;
+        }
+        else if (asset.UsesEngineRpmAndGears && GearNumber >= 1 && GearNumber <= asset.forwardGearRatios.Length)
+        {
+            num4 = num * asset.forwardGearRatios[GearNumber - 1];
+        }
+        float num5 = num4 - ReplicatedEngineRpm;
+        if ((bool)Wheel.clEnableWheeledVehicleGizmos)
+        {
+            string text = $"Avg pwd wheel RPM: {num:N1}";
+            text += $"\nExpected wheel RPM: {num4:N1}";
+            RuntimeGizmos.Get().Label(base.transform.position, text);
+        }
+        float num6 = num;
         if (asset.UsesEngineRpmAndGears)
         {
             timeSinceLastGearChange += deltaTime;
@@ -3732,70 +3749,101 @@ public class InteractableVehicle : Interactable, IExplosionDamageable, IEquatabl
                 }
                 else if (ReplicatedEngineRpm > asset.GearShiftUpThresholdRpm && GearNumber > 0 && GearNumber < asset.forwardGearRatios.Length)
                 {
-                    ChangeGears(GetShiftUpGearNumber(num));
+                    bool flag2 = true;
+                    if (asset.EngineRpmMismatchGearShiftPreventShifting)
+                    {
+                        flag2 = num5 >= asset.EngineRpmMismatchGearShiftUpMinThreshold && num5 <= asset.EngineRpmMismatchGearShiftUpMaxThreshold;
+                    }
+                    if (flag2)
+                    {
+                        int newGearNumber = (asset.GearShiftAllowSkippingGears ? GetShiftUpGearNumber(num) : (GearNumber + 1));
+                        ChangeGears(newGearNumber);
+                    }
                 }
                 else if (ReplicatedEngineRpm < asset.GearShiftDownThresholdRpm && GearNumber > 1)
                 {
-                    ChangeGears(GetShiftDownGearNumber(num));
+                    bool flag3 = true;
+                    if (asset.EngineRpmMismatchGearShiftPreventShifting)
+                    {
+                        flag3 = num5 >= asset.EngineRpmMismatchGearShiftDownMinThreshold && num5 <= asset.EngineRpmMismatchGearShiftDownMaxThreshold;
+                    }
+                    if (flag3)
+                    {
+                        int newGearNumber2 = (asset.GearShiftAllowSkippingGears ? GetShiftDownGearNumber(num) : (GearNumber - 1));
+                        ChangeGears(newGearNumber2);
+                    }
                 }
             }
             if (GearNumber == -1)
             {
-                num4 *= asset.reverseGearRatio;
+                num6 *= asset.reverseGearRatio;
             }
             else if (GearNumber >= 1 && GearNumber <= asset.forwardGearRatios.Length)
             {
-                num4 *= asset.forwardGearRatios[GearNumber - 1];
+                num6 *= asset.forwardGearRatios[GearNumber - 1];
             }
-            num4 = Mathf.Max(num4, asset.EngineIdleRpm);
+            num6 = Mathf.Max(num6, asset.EngineIdleRpm);
         }
-        if (num4 > ReplicatedEngineRpm)
+        if (num6 > ReplicatedEngineRpm)
         {
             if (asset.EngineRpmIncreaseRate > 0.001f)
             {
-                ReplicatedEngineRpm = Mathf.MoveTowards(ReplicatedEngineRpm, num4, asset.EngineRpmIncreaseRate * deltaTime);
+                ReplicatedEngineRpm = Mathf.MoveTowards(ReplicatedEngineRpm, num6, asset.EngineRpmIncreaseRate * deltaTime);
             }
             else
             {
-                ReplicatedEngineRpm = num4;
+                ReplicatedEngineRpm = num6;
             }
         }
-        else if (num4 < ReplicatedEngineRpm)
+        else if (num6 < ReplicatedEngineRpm)
         {
             if (asset.EngineRpmDecreaseRate > 0.001f)
             {
-                ReplicatedEngineRpm = Mathf.MoveTowards(ReplicatedEngineRpm, num4, asset.EngineRpmDecreaseRate * deltaTime);
+                ReplicatedEngineRpm = Mathf.MoveTowards(ReplicatedEngineRpm, num6, asset.EngineRpmDecreaseRate * deltaTime);
             }
             else
             {
-                ReplicatedEngineRpm = num4;
+                ReplicatedEngineRpm = num6;
             }
         }
         ReplicatedEngineRpm = Mathf.Clamp(ReplicatedEngineRpm, asset.EngineIdleRpm, asset.EngineMaxRpm);
-        float num5 = Mathf.InverseLerp(asset.EngineIdleRpm, asset.EngineMaxRpm, ReplicatedEngineRpm);
-        float num6 = ((engineCurvesComponent != null) ? engineCurvesComponent.engineRpmToTorqueCurve.Evaluate(num5) : Mathf.Lerp(0.5f, 1f, num5)) * asset.EngineMaxTorque * Mathf.Abs(latestGasInput);
+        float num7 = Mathf.InverseLerp(asset.EngineIdleRpm, asset.EngineMaxRpm, ReplicatedEngineRpm);
+        float num8 = ((engineCurvesComponent != null) ? engineCurvesComponent.engineRpmToTorqueCurve.Evaluate(num7) : Mathf.Lerp(0.5f, 1f, num7)) * asset.EngineMaxTorque;
+        if (asset.EngineRpmMismatchTorqueReductionEnabled)
+        {
+            float num9 = Mathf.Clamp(num5 / asset.EngineRpmMismatchTorqueReductionThreshold, -1f, 1f);
+            if (engineCurvesComponent != null && engineCurvesComponent.useEngineRpmMismatchTorqueReductionCurve)
+            {
+                engineCurvesComponent.engineRpmMismatchTorqueReductionCurve.Evaluate(num9);
+            }
+            else
+            {
+                Mathf.Lerp(1f, 0f, Mathf.Abs(num9));
+            }
+        }
+        float num10 = num8 * Mathf.Abs(latestGasInput);
         if (timeSinceLastGearChange < asset.GearShiftDuration)
         {
-            num6 = 0f;
+            num10 = 0f;
         }
         if (GearNumber == -1)
         {
-            num6 *= asset.reverseGearRatio;
+            num10 *= asset.reverseGearRatio;
         }
         else if (asset.UsesEngineRpmAndGears && GearNumber >= 1 && GearNumber <= asset.forwardGearRatios.Length)
         {
-            num6 *= asset.forwardGearRatios[GearNumber - 1];
+            num10 *= asset.forwardGearRatios[GearNumber - 1];
         }
         if (asset.poweredWheelIndices != null && asset.poweredWheelIndices.Length != 0)
         {
-            num6 /= (float)asset.poweredWheelIndices.Length;
+            num10 /= (float)asset.poweredWheelIndices.Length;
         }
         Wheel[] wheels = _wheels;
         foreach (Wheel wheel in wheels)
         {
             if (wheel != null)
             {
-                wheel.UpdateLocallyDriven(deltaTime, num6);
+                wheel.UpdateLocallyDriven(deltaTime, num10);
                 continue;
             }
             break;

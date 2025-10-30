@@ -24,6 +24,19 @@ public struct DamageAnimalParameters
 
     public ERagdollEffect ragdollEffect;
 
+    /// <summary>
+    /// Object responsible for creating this AnimalDamageParameters.
+    /// However, can be null if calling code didn't assign one.
+    /// Example types as of 2025-10-30:
+    /// - Kill Volume
+    /// - Bumper (vehicle impact)
+    /// - Interactable Sentry
+    /// - Interactable Trap
+    /// - Barrier (legacy per-object kill volume)
+    /// - Player Equipment (punch)
+    /// - Useable Gun
+    /// - Useable Melee
+    /// </summary>
     public object instigator;
 
     /// <summary>

@@ -104,7 +104,19 @@ public class SpawnTable
         if (isOverride)
         {
             writer.WriteKeyValue("IsOverride", isOverride);
+            if (weight != 1)
+            {
+                writer.WriteKeyValue("Weight", weight);
+            }
         }
-        writer.WriteKeyValue("Weight", weight);
+        else
+        {
+            writer.WriteKeyValue("Weight", weight);
+        }
+    }
+
+    public override string ToString()
+    {
+        return $"(Legacy Asset ID: {legacyAssetId}, Legacy Spawn ID: {legacySpawnId}, GUID: {targetGuid:N}, Weight: {weight}, Link: {isLink}, Override: {isOverride})";
     }
 }

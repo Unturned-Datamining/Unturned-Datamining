@@ -102,6 +102,8 @@ public class Wheel
 
     private static List<TireMotionEffectInstance> motionEffectInstancesPool = new List<TireMotionEffectInstance>();
 
+    internal static CommandLineFlag clEnableWheeledVehicleGizmos = new CommandLineFlag(defaultValue: false, "-EnableWheeledVehicleGizmos");
+
     private static readonly AssetReference<EffectAsset> Rubber_0_Ref = new AssetReference<EffectAsset>("a87c5007b22542dcbf3599ee3faceadd");
 
     public InteractableVehicle vehicle => _vehicle;
@@ -740,6 +742,18 @@ public class Wheel
         sidewaysFriction.stiffness *= num5;
         wheel.sidewaysFriction = sidewaysFriction;
         wheel.forwardFriction = forwardFriction;
+        if ((bool)clEnableWheeledVehicleGizmos)
+        {
+            string text = $"M: {wheel.motorTorque:N1}\nB: {wheel.brakeTorque:N1}\n";
+            text += $"RPM: {wheel.rpm:N1}\n";
+            float num11 = MathF.PI * 2f * wheel.radius * wheel.rpm * 60f / 1000f;
+            text += $"KPH: {num11:N1}";
+            if (isGrounded)
+            {
+                text += $"\nSlip: {mostRecentGroundHit.forwardSlip:N1}";
+            }
+            RuntimeGizmos.Get().Label(wheel.transform.position, text);
+        }
     }
 
     /// <summary>

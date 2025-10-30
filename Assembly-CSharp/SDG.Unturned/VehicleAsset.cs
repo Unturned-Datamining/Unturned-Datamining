@@ -596,6 +596,12 @@ public class VehicleAsset : Asset, ISkinableAsset
     }
 
     /// <summary>
+    /// If false, only grounded wheels are included when calculating wheel RPM.
+    /// </summary>
+    public bool ShouldIncludeAirbornWheelsInAverageRpm { get; set; } = true;
+
+
+    /// <summary>
     /// If this and UsesEngineRpmAndGears are true, HUD will show RPM and gear number.
     /// </summary>
     public bool AllowsEngineRpmAndGearsInHud { get; protected set; }
@@ -619,6 +625,13 @@ public class VehicleAsset : Asset, ISkinableAsset
     /// How long between changing gears to allow another automatic gear change.
     /// </summary>
     public float GearShiftInterval { get; private set; }
+
+    /// <summary>
+    /// If true, engine can skip from (for example) 1st to 3rd gear if it keeps RPM within
+    /// the acceptable range.
+    /// </summary>
+    public bool GearShiftAllowSkippingGears { get; set; } = true;
+
 
     /// <summary>
     /// Minimum engine RPM.
@@ -648,6 +661,42 @@ public class VehicleAsset : Asset, ISkinableAsset
     /// Maximum torque (multiplied by output of torque curve).
     /// </summary>
     public float EngineMaxTorque { get; private set; }
+
+    /// <summary>
+    /// If true, wheel RPM is reduced according to the difference between expected and actual
+    /// wheel RPM divided by torque reduction threshold.
+    /// </summary>
+    public bool EngineRpmMismatchTorqueReductionEnabled { get; set; }
+
+    /// <summary>
+    /// If torque reduction is enabled, torque is reduced to zero when difference between
+    /// expected and actual RPM is greater than this threshold.
+    /// </summary>
+    public float EngineRpmMismatchTorqueReductionThreshold { get; set; }
+
+    /// <summary>
+    /// If true, prevent changing gears when the difference between expected and actual
+    /// wheel RPM exceeds threshold.
+    /// </summary>
+    public bool EngineRpmMismatchGearShiftPreventShifting { get; set; }
+
+    public float EngineRpmMismatchGearShiftUpMinThreshold { get; set; }
+
+    /// <summary>
+    /// If prevent shifting is enabled, prevent changing gears up when the difference between
+    /// expected and actual wheel RPM is greater than this threshold.
+    /// I.e., if (expected - actual &gt; max) it cannot shift up.
+    /// </summary>
+    public float EngineRpmMismatchGearShiftUpMaxThreshold { get; set; }
+
+    public float EngineRpmMismatchGearShiftDownMinThreshold { get; set; }
+
+    /// <summary>
+    /// If prevent shifting is enabled, prevent changing gears down when the difference between
+    /// expected and actual wheel RPM is greater than this threshold.
+    /// I.e., if (expected - actual &gt; max) it cannot shift down.
+    /// </summary>
+    public float EngineRpmMismatchGearShiftDownMaxThreshold { get; set; }
 
     /// <summary>
     /// Was a center of mass specified in the .dat?
@@ -1607,6 +1656,7 @@ public class VehicleAsset : Asset, ISkinableAsset
         wheelBalancingForceMultiplier = p.data.ParseFloat("WheelBalancing_ForceMultiplier", -1f);
         wheelBalancingUprightExponent = p.data.ParseFloat("WheelBalancing_UprightExponent", 1.5f);
         rollAngularVelocityDamping = p.data.ParseFloat("RollAngularVelocityDamping", -1f);
+        ShouldIncludeAirbornWheelsInAverageRpm = p.data.ParseBool("Include_Airborn_Wheels_In_Average_RPM", defaultValue: true);
         if (p.data.TryGetList("WheelConfigurations", out var node5))
         {
             List<VehicleWheelConfiguration> list = new List<VehicleWheelConfiguration>();
@@ -1665,11 +1715,22 @@ public class VehicleAsset : Asset, ISkinableAsset
         GearShiftUpThresholdRpm = p.data.ParseFloat("GearShift_UpThresholdRPM", 5500f);
         GearShiftDuration = p.data.ParseFloat("GearShift_Duration", 0.5f);
         GearShiftInterval = p.data.ParseFloat("GearShift_Interval", 1f);
+        GearShiftAllowSkippingGears = p.data.ParseBool("GearShift_AllowSkippingGears", defaultValue: true);
         EngineIdleRpm = p.data.ParseFloat("EngineIdleRPM", 1000f);
         EngineMaxRpm = p.data.ParseFloat("EngineMaxRPM", 7000f);
         EngineRpmIncreaseRate = p.data.ParseFloat("EngineRPM_IncreaseRate", -1f);
         EngineRpmDecreaseRate = p.data.ParseFloat("EngineRPM_DecreaseRate", -1f);
         EngineMaxTorque = p.data.ParseFloat("EngineMaxTorque", 1f);
+        EngineRpmMismatchTorqueReductionEnabled = p.data.ParseBool("EngineRPMMismatch_TorqueReduction_Enabled");
+        EngineRpmMismatchTorqueReductionThreshold = p.data.ParseFloat("EngineRPMMismatch_TorqueReduction_Threshold");
+        EngineRpmMismatchGearShiftPreventShifting = p.data.ParseBool("EngineRPMMismatch_GearShift_PreventShifting");
+        if (EngineRpmMismatchGearShiftPreventShifting)
+        {
+            EngineRpmMismatchGearShiftUpMinThreshold = p.data.ParseFloat("EngineRpmMismatch_GearShift_UpMinThreshold");
+            EngineRpmMismatchGearShiftUpMaxThreshold = p.data.ParseFloat("EngineRpmMismatch_GearShift_UpMaxThreshold");
+            EngineRpmMismatchGearShiftDownMinThreshold = p.data.ParseFloat("EngineRpmMismatch_GearShift_DownMinThreshold");
+            EngineRpmMismatchGearShiftDownMaxThreshold = p.data.ParseFloat("EngineRpmMismatch_GearShift_DownMaxThreshold");
+        }
         engineSoundType = p.data.ParseEnum("EngineSound_Type", EVehicleEngineSoundType.Legacy);
         if (engineSoundType == EVehicleEngineSoundType.EngineRPMSimple)
         {

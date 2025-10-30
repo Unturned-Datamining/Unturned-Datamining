@@ -14,6 +14,9 @@ public class BarricadeSpawner : MonoBehaviour
     [Tooltip("Finds ownership of BarricadeSpawner (e.g., parent barricade) and assigns to spawned barricade.")]
     public bool InheritOwnership;
 
+    [Tooltip("If true and a vehicle exists in parent hierarchy, the spawned barricade will be attached to the vehicle.")]
+    public bool ShouldAttachToVehicle;
+
     public void SpawnDefault()
     {
         Spawn(DefaultAsset);
@@ -56,7 +59,19 @@ public class BarricadeSpawner : MonoBehaviour
             DamageTool.TryFindOwnership(base.transform, out ownerUser, out ownerGroup);
         }
         base.transform.GetPositionAndRotation(out var position, out var rotation);
-        BarricadeManager.dropNonPlantedBarricade(new Barricade(newAsset), position, rotation, ownerUser, ownerGroup);
+        Barricade barricade = new Barricade(newAsset);
+        if (ShouldAttachToVehicle)
+        {
+            VehicleBarricadeRegion vehicleBarricadeRegion = BarricadeManager.FindVehicleRegionByTransform(base.transform.root);
+            if (vehicleBarricadeRegion != null)
+            {
+                position = vehicleBarricadeRegion.parent.InverseTransformPoint(position);
+                rotation = vehicleBarricadeRegion.parent.InverseTransformRotation(rotation);
+                BarricadeManager.dropPlantedBarricade(vehicleBarricadeRegion.parent, barricade, position, rotation, ownerUser, ownerGroup);
+                return;
+            }
+        }
+        BarricadeManager.dropNonPlantedBarricade(barricade, position, rotation, ownerUser, ownerGroup);
     }
 
     private string OnGetSpawnErrorContext()

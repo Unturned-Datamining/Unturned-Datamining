@@ -1534,10 +1534,12 @@ public class BarricadeManager : SteamCaller
                 }
                 else
                 {
-                    gameObject2 = UnityEngine.Object.Instantiate(itemBarricadeAsset.barricade, region.parent);
+                    InstantiateParameters instantiateParameters = default(InstantiateParameters);
+                    instantiateParameters.parent = region.parent;
+                    instantiateParameters.worldSpace = false;
+                    InstantiateParameters parameters = instantiateParameters;
+                    gameObject2 = UnityEngine.Object.Instantiate(itemBarricadeAsset.barricade, point, rotation, parameters);
                     transform = gameObject2.transform;
-                    transform.localPosition = point;
-                    transform.localRotation = rotation;
                 }
                 transform.localScale = Vector3.one;
                 transform.name = itemBarricadeAsset.id.ToString();

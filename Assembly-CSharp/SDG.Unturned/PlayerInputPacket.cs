@@ -23,7 +23,7 @@ public class PlayerInputPacket
     /// <summary>
     /// Worst case scenario, maybe shotgun hit or fast spray SMG.
     /// </summary>
-    private static int MAX_CLIENTSIDE_INPUTS = 16;
+    internal const int MAX_CLIENTSIDE_INPUTS = 16;
 
     public List<ClientRaycast> clientsideInputs;
 
@@ -100,7 +100,7 @@ public class PlayerInputPacket
         {
             return;
         }
-        num = Mathf.Min(num, MAX_CLIENTSIDE_INPUTS);
+        num = Mathf.Min(num, 16);
         serversideInputs = new Queue<InputInfo>(num);
         for (int i = 0; i < num; i++)
         {
@@ -376,10 +376,10 @@ public class PlayerInputPacket
             return;
         }
         int num = clientsideInputs.Count;
-        if (num > MAX_CLIENTSIDE_INPUTS)
+        if (num > 16)
         {
-            UnturnedLog.warn("Discarding excessive hit inputs {0}/{1}", num, MAX_CLIENTSIDE_INPUTS);
-            num = MAX_CLIENTSIDE_INPUTS;
+            UnturnedLog.warn("Discarding excessive hit inputs {0}/{1}", num, 16);
+            num = 16;
         }
         writer.WriteUInt8((byte)num);
         for (int i = 0; i < num; i++)

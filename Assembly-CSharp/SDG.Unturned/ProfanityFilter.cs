@@ -16,7 +16,7 @@ public class ProfanityFilter
 
     /// <summary>
     /// 2023-04-17: suggestion is to have a hardcoded list of hate speech that gets filtered
-    /// regardless of whether profanity filter is enabled. (https://forum.smartlydressedgames.com/t/22477)
+    /// regardless of whether profanity filter is enabled.
     /// </summary>
     private static readonly string[] hardcodedBannedWords = new string[18]
     {
