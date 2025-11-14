@@ -102,6 +102,8 @@ public class Player : MonoBehaviour, IDialogueTarget, IExplosionDamageable, IEqu
 
     private static readonly ClientInstanceMethod<string, float> SendHintMessage = ClientInstanceMethod<string, float>.Get(typeof(Player), "ReceiveHintMessage");
 
+    private static readonly ClientInstanceMethod<Guid, string, float> SendTranslatedHint = ClientInstanceMethod<Guid, string, float>.Get(typeof(Player), "ReceiveTranslatedHint");
+
     private static readonly ClientInstanceMethod<uint, ushort, CSteamID, string, bool> SendRelayToServer = ClientInstanceMethod<uint, ushort, CSteamID, string, bool>.Get(typeof(Player), "ReceiveRelayToServer");
 
     private static readonly ClientInstanceMethod<uint> SendSetPluginWidgetFlags = ClientInstanceMethod<uint>.Get(typeof(Player), "ReceiveSetPluginWidgetFlags");
@@ -504,13 +506,53 @@ public class Player : MonoBehaviour, IDialogueTarget, IExplosionDamageable, IEqu
     {
         if (PlayerUI.instance != null)
         {
+            ProfanityFilter.ApplyFilter(OptionsSettings.filter, ref message);
+            message = message.Replace("<name_char>", channel.owner.playerID.characterName);
             PlayerUI.message(EPlayerMessage.NPC_CUSTOM, message, durationSeconds);
+        }
+    }
+
+    [SteamCall(ESteamCallValidation.ONLY_FROM_SERVER)]
+    public void ReceiveTranslatedHint(Guid assetGuid, string translationKey, float durationSeconds)
+    {
+        if (PlayerUI.instance == null)
+        {
+            return;
+        }
+        Asset asset = Assets.find(assetGuid);
+        if (asset == null)
+        {
+            UnturnedLog.warn($"Missing asset for replicated hint! GUID: {assetGuid:N} Translation Key: \"{translationKey}\"");
+            return;
+        }
+        if (asset.Localization == null)
+        {
+            UnturnedLog.warn("Missing translation data for replicated hint! Asset: " + asset.FriendlyNameWithFriendlyType + " Translation Key: \"" + translationKey + "\"");
+            return;
+        }
+        string text = asset.Localization.FormatOrNull(translationKey);
+        if (text == null)
+        {
+            UnturnedLog.warn("Replicated hint text is empty! Asset: " + asset.FriendlyNameWithFriendlyType + " Translation Key: \"" + translationKey + "\"");
+        }
+        else
+        {
+            text = ItemTool.filterRarityRichText(text);
+            ReceiveHintMessage(text, durationSeconds);
         }
     }
 
     public void ServerShowHint(string message, float durationSeconds)
     {
         SendHintMessage.Invoke(GetNetId(), ENetReliability.Reliable, channel.GetOwnerTransportConnection(), message, durationSeconds);
+    }
+
+    public void ServerShowTranslatedHint(Asset asset, string translationKey, float durationSeconds)
+    {
+        if (asset != null && !string.IsNullOrEmpty(translationKey))
+        {
+            SendTranslatedHint.Invoke(GetNetId(), ENetReliability.Reliable, channel.GetOwnerTransportConnection(), asset.GUID, translationKey, durationSeconds);
+        }
     }
 
     [Obsolete]
@@ -1416,7 +1458,7 @@ public class Player : MonoBehaviour, IDialogueTarget, IExplosionDamageable, IEqu
                 {
                     UnturnedLog.error("Logging destroyed player info to assist with debugging");
                     UnturnedLog.error("e.g., to correlate with other recent log lines");
-                    UnturnedLog.error("(it's likely *NOT* their fault)");
+                    UnturnedLog.error("(it's likely *NOT* the player's fault)");
                     bool flag = false;
                     if ((object)channel.owner.playerID != null)
                     {

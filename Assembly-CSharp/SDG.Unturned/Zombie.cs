@@ -2680,7 +2680,7 @@ public class Zombie : MonoBehaviour, IExplosionDamageable, IEquatable<IExplosion
                 if (!flag && (base.transform.position - lastFootstepPosition).sqrMagnitude > 2f)
                 {
                     lastFootstepPosition = base.transform.position;
-                    UodateFootsteps();
+                    UpdateFootsteps();
                 }
             }
         }
@@ -2909,7 +2909,7 @@ public class Zombie : MonoBehaviour, IExplosionDamageable, IEquatable<IExplosion
         }
     }
 
-    private void UodateFootsteps()
+    private void UpdateFootsteps()
     {
         int bLOCK_COLLISION = RayMasks.BLOCK_COLLISION;
         RaycastHit hitInfo;

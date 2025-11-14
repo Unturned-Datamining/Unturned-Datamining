@@ -72,6 +72,15 @@ public abstract class Asset : IAssetErrorContext
     public IDatDictionary OriginParsedData { get; set; }
 
     /// <summary>
+    /// Translation data associated with this asset. Only kept if per-asset property
+    /// "Keep_Localization_Loaded" is true.
+    /// (Otherwise, memory is collected after populating the asset.)
+    /// Nelson 2025-11-07: hacking this in so that NPC hints replicated from the server don't
+    /// use the server's language.
+    /// </summary>
+    public Local Localization { get; set; }
+
+    /// <summary>
     /// Master bundle this asset loaded from.
     /// </summary>
     public MasterBundleConfig originMasterBundle { get; protected set; }

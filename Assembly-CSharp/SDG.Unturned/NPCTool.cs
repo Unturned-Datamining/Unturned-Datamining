@@ -168,7 +168,7 @@ public class NPCTool
             typeof(NPCPlayerLifeStaminaCondition),
             typeof(NPCVolumeOverlapCondition)
         };
-        rewardTypes = new Type[27]
+        rewardTypes = new Type[28]
         {
             null,
             typeof(NPCExperienceReward),
@@ -196,7 +196,8 @@ public class NPCTool
             typeof(NPCPlayerLifeStaminaReward),
             typeof(NPCEffectReward),
             typeof(NPCAirdropReward),
-            typeof(NPCZombieReward)
+            typeof(NPCZombieReward),
+            typeof(NPCRemoveZombieReward)
         };
     }
 }

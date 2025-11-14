@@ -738,7 +738,7 @@ public class ObjectAsset : Asset
                 }
                 else
                 {
-                    interactabilityText = p.localization.read("Interact");
+                    interactabilityText = p.localization.FormatOrEmpty("Interact");
                     if (string.IsNullOrWhiteSpace(interactabilityText))
                     {
                         if (interactability == EObjectInteractability.QUEST)

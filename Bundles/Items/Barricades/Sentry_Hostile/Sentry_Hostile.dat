@@ -18,7 +18,9 @@ Storage_X 5
 Storage_Y 2
 Display
 Locked
+
 Mode Hostile
+React_To_Attacks true
 
 AmmoConsumptionProbability 0.25
 QualityConsumptionProbability 0.25

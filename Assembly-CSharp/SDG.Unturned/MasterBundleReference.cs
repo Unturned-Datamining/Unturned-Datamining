@@ -132,7 +132,14 @@ public struct MasterBundleReference<T> : IFormattedFileReadable, IFormattedFileW
             {
                 string text = masterBundleConfig.FormatAssetPathAndCache(path);
                 val = masterBundleConfig.assetBundle.LoadAsset<T>(text);
-                if (val == null && logWarnings)
+                if (val != null)
+                {
+                    if (val is GameObject gameObject)
+                    {
+                        Bundle.FixupGameObjectAudio(gameObject);
+                    }
+                }
+                else if (logWarnings)
                 {
                     UnturnedLog.warn("Failed to load asset '{0}' from master bundle '{1}' as {2}", text, name, typeof(T).Name);
                 }

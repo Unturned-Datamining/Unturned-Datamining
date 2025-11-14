@@ -375,7 +375,7 @@ public class ResourceAsset : Asset
         forageRewardExperience = p.data.ParseUInt32("Forage_Reward_Experience", 1u);
         if (isForage)
         {
-            interactabilityText = p.localization.read("Interact");
+            interactabilityText = p.localization.FormatOrEmpty("Interact");
             interactabilityText = ItemTool.filterRarityRichText(interactabilityText);
         }
         hasDebris = !p.data.ContainsKey("No_Debris");

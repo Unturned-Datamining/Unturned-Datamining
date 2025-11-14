@@ -64,6 +64,26 @@ public class ItemSentryAsset : ItemStorageAsset
     /// </summary>
     public bool CanTargetVehicles { get; set; }
 
+    /// <summary>
+    /// If true, sentry can damage players and vehicles in PvE mode.
+    /// </summary>
+    public bool BypassesPvEMode { get; set; }
+
+    /// <summary>
+    /// If true, sentry immediately focuses on attacking player.
+    /// </summary>
+    public bool CanReactToAttacks { get; set; }
+
+    /// <summary>
+    /// Degrees away from forward sentry yaw sweeps left/right.
+    /// </summary>
+    public float SweepHalfYaw { get; set; }
+
+    /// <summary>
+    /// Duration in seconds for sentry to complete a sweep from left to right and back again.
+    /// </summary>
+    public float SweepPeriod { get; set; }
+
     public override void BuildDescription(ItemDescriptionBuilder builder, Item itemInstance)
     {
         base.BuildDescription(builder, itemInstance);
@@ -106,6 +126,10 @@ public class ItemSentryAsset : ItemStorageAsset
         CanTargetZombies = p.data.ParseBool("Target_Zombies", defaultValue: true);
         CanTargetAnimals = p.data.ParseBool("Target_Animals", defaultValue: true);
         CanTargetVehicles = p.data.ParseBool("Target_Vehicles", defaultValue: true);
+        BypassesPvEMode = p.data.ParseBool("Sentry_Bypasses_PvE");
+        CanReactToAttacks = p.data.ParseBool("React_To_Attacks");
+        SweepHalfYaw = p.data.ParseFloat("Sweep_Yaw", 120f) * 0.5f;
+        SweepPeriod = p.data.ParseFloat("Sweep_Period", MathF.PI * 2f);
         targetAcquiredEffect = p.data.readAssetReference("Target_Acquired_Effect", in defaultTargetAcquiredEffect);
         targetLostEffect = p.data.readAssetReference("Target_Lost_Effect", in defaultTargetLostEffect);
     }

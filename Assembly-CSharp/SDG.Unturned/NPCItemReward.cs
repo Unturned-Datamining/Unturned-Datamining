@@ -78,7 +78,7 @@ public class NPCItemReward : INPCReward
     {
         if (string.IsNullOrEmpty(text))
         {
-            text = PlayerNPCQuestUI.localization.read("Reward_Item");
+            text = PlayerNPCQuestUI.localization.FormatOrEmpty("Reward_Item");
         }
         ItemAsset itemAsset = GetItemAsset();
         return Local.FormatText(arg1: (itemAsset == null) ? "?" : ("<color=" + Palette.hex(ItemTool.getRarityColorUI(itemAsset.rarity)) + ">" + itemAsset.itemName + "</color>"), text: text, arg0: amount);

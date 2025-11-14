@@ -62,7 +62,7 @@ public class INPCReward
         string @string = p.data.GetString("TextId");
         if (!string.IsNullOrEmpty(@string))
         {
-            string text = p.localization.read(@string);
+            string text = p.localization.FormatOrEmpty(@string);
             if (!string.IsNullOrEmpty(text))
             {
                 text = ItemTool.filterRarityRichText(text);
@@ -86,7 +86,7 @@ public class INPCReward
     /// </summary>
     internal virtual void PopulateLegacy(in PopulateRewardParameters p)
     {
-        string desc = p.localization.read(p.legacyPrefix);
+        string desc = p.localization.FormatOrEmpty(p.legacyPrefix);
         desc = ItemTool.filterRarityRichText(desc);
         text = desc;
         grantDelaySeconds = p.data.ParseFloat(p.legacyPrefix + "_GrantDelaySeconds", -1f);

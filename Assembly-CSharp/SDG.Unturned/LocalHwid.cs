@@ -8,8 +8,7 @@ namespace SDG.Unturned;
 /// <summary>
 /// Utility for getting local hardware ID.
 ///
-/// One option for future improvement would be using Windows Management Infrastructure (WMI) API:
-/// https://github.com/SmartlyDressedGames/Unturned-3.x/issues/1593
+/// One option for future improvement would be using Windows Management Infrastructure (WMI) API.
 /// </summary>
 public static class LocalHwid
 {

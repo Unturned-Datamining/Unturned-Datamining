@@ -2270,6 +2270,7 @@ public class LevelLighting
             result.audioSource.playOnAwake = false;
             result.audioSource.loop = true;
             result.audioSource.spatialBlend = 0f;
+            result.audioSource.dopplerLevel = 0f;
         }
         result.effect = asset;
         result.audioSource.volume = 0f;

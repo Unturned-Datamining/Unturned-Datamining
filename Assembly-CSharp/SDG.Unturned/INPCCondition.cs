@@ -100,7 +100,7 @@ public class INPCCondition
         string @string = p.data.GetString("TextId");
         if (!string.IsNullOrEmpty(@string))
         {
-            string text = p.localization.read(@string);
+            string text = p.localization.FormatOrEmpty(@string);
             if (!string.IsNullOrEmpty(text))
             {
                 text = ItemTool.filterRarityRichText(text);
@@ -124,7 +124,7 @@ public class INPCCondition
     /// </summary>
     internal virtual void PopulateLegacy(in PopulateConditionParameters p)
     {
-        string desc = p.localization.read(p.legacyPrefix);
+        string desc = p.localization.FormatOrEmpty(p.legacyPrefix);
         desc = ItemTool.filterRarityRichText(desc);
         text = desc;
         shouldReset = p.data.ContainsKey(p.legacyPrefix + "_Reset");

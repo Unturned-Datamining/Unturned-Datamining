@@ -6,10 +6,6 @@ namespace SDG.Unturned;
 
 public class Buoyancy : MonoBehaviour
 {
-    private static readonly float DAMPER = 0.1f;
-
-    private static readonly float WATER_DENSITY = 1000f;
-
     public float density = 500f;
 
     public int slicesPerAxis = 2;
@@ -22,15 +18,13 @@ public class Buoyancy : MonoBehaviour
 
     private Rigidbody rootRigidbody;
 
-    private Collider volumeCollider;
-
     public float overrideSurfaceElevation = -1f;
 
     private void FixedUpdate()
     {
-        for (int i = 0; i < voxels.Count; i++)
+        foreach (Vector3 voxel in voxels)
         {
-            Vector3 vector = base.transform.TransformPoint(voxels[i]);
+            Vector3 vector = base.transform.TransformPoint(voxel);
             bool isUnderwater;
             float surfaceElevation;
             if (overrideSurfaceElevation < 0f)
@@ -50,7 +44,7 @@ public class Buoyancy : MonoBehaviour
                 }
                 if (vector.y - voxelHalfHeight < surfaceElevation)
                 {
-                    Vector3 force = -rootRigidbody.GetPointVelocity(vector) * DAMPER * rootRigidbody.mass + Mathf.Sqrt(Mathf.Clamp01((surfaceElevation - vector.y) / (2f * voxelHalfHeight) + 0.5f)) * localArchimedesForce;
+                    Vector3 force = -rootRigidbody.GetPointVelocity(vector) * 500f * rootRigidbody.mass + Mathf.Sqrt(Mathf.Clamp01((surfaceElevation - vector.y) / (2f * voxelHalfHeight) + 0.5f)) * localArchimedesForce;
                     rootRigidbody.AddForceAtPosition(force, vector);
                 }
             }
@@ -60,17 +54,17 @@ public class Buoyancy : MonoBehaviour
     private void Start()
     {
         rootRigidbody = base.gameObject.GetComponentInParent<Rigidbody>();
-        volumeCollider = GetComponent<Collider>();
-        BoxCollider boxCollider = volumeCollider as BoxCollider;
-        if (!boxCollider)
+        BoxCollider component = GetComponent<BoxCollider>();
+        if (component == null)
         {
-            UnturnedLog.warn("Unknown volume collider for buoyancy simulation: {0}", volumeCollider);
+            UnturnedLog.warn("Missing BoxCollider for buoyancy simulation: {0}", base.transform.GetSceneHierarchyPath());
+            base.enabled = false;
             return;
         }
-        Vector3 size = boxCollider.size;
-        Vector3 vector = size / -2f;
+        Vector3 size = component.size;
+        Vector3 vector = size * -0.5f;
         Vector3 vector2 = size / slicesPerAxis;
-        voxelHalfHeight = Mathf.Min(vector2.x, Mathf.Min(vector2.y, vector2.z)) / 2f;
+        voxelHalfHeight = Mathf.Min(vector2.x, Mathf.Min(vector2.y, vector2.z)) * 0.5f;
         voxels = new List<Vector3>(slicesPerAxis * slicesPerAxis * slicesPerAxis);
         for (int i = 0; i < slicesPerAxis; i++)
         {
@@ -88,10 +82,10 @@ public class Buoyancy : MonoBehaviour
         }
         if (voxels.Count == 0)
         {
-            voxels.Add(boxCollider.center);
+            voxels.Add(component.center);
         }
         float num = rootRigidbody.mass / density;
-        float y2 = WATER_DENSITY * Mathf.Abs(Physics.gravity.y) * num;
+        float y2 = 1000f * Mathf.Abs(Physics.gravity.y) * num;
         localArchimedesForce = new Vector3(0f, y2, 0f) / voxels.Count;
     }
 }

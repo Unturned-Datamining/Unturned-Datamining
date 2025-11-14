@@ -57,7 +57,7 @@ public class DrivingPlayerInputPacket : PlayerInputPacket
             reader.ReadBits(3, out var value4);
             int value5 = (int)(value4 - 1);
             value5 = Mathf.Clamp(value5, -1, vehicle.asset.forwardGearRatios.Length);
-            vehicle.GearNumber = value5;
+            vehicle.ChangeGears(value5);
             reader.ReadUnsignedNormalizedFloat(7, out var value6);
             vehicle.ReplicatedEngineRpm = Mathf.Lerp(vehicle.asset.EngineIdleRpm, vehicle.asset.EngineMaxRpm, value6);
         }

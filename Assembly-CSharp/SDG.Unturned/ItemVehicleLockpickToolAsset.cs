@@ -21,9 +21,21 @@ public class ItemVehicleLockpickToolAsset : ItemToolAsset
     /// </summary>
     public float FailureProbability { get; set; }
 
+    public bool CanFail => FailureProbability > 1E-05f;
+
     public EffectAsset FindFailureEffect()
     {
         return _failureEffectRef.Get<EffectAsset>();
+    }
+
+    public override void BuildDescription(ItemDescriptionBuilder builder, Item itemInstance)
+    {
+        base.BuildDescription(builder, itemInstance);
+        if (builder.HasFlag(EItemDescriptionFlags.Uncategorized) && CanFail)
+        {
+            string arg = PlayerDashboardInventoryUI.FormatStatColor(FailureProbability.ToString("P0"), isBeneficial: false);
+            builder.Append(PlayerDashboardInventoryUI.localization.format("ItemDescription_LockpickFailureProbability", arg), 10000);
+        }
     }
 
     public override void PopulateAsset(in PopulateAssetParameters p)

@@ -58,23 +58,32 @@ public class Bundle
         StandardShaderUtils.maybeFixupMaterial(sharedMaterial);
     }
 
+    internal static void FixupGameObjectAudio(GameObject gameObject)
+    {
+        if (Dedicator.IsDedicatedServer)
+        {
+            return;
+        }
+        audioSources.Clear();
+        gameObject.GetComponentsInChildren(includeInactive: true, audioSources);
+        foreach (AudioSource audioSource in audioSources)
+        {
+            if (audioSource.outputAudioMixerGroup == null)
+            {
+                audioSource.outputAudioMixerGroup = UnturnedAudioMixer.GetDefaultGroup();
+            }
+            if (audioSource.dopplerLevel > 0.0001f && audioSource.GetComponent<EnableDopplerEffect>() == null)
+            {
+                audioSource.dopplerLevel = 0f;
+            }
+        }
+    }
+
     protected virtual void processLoadedGameObject(GameObject gameObject)
     {
         if (!Dedicator.IsDedicatedServer)
         {
-            audioSources.Clear();
-            gameObject.GetComponentsInChildren(includeInactive: true, audioSources);
-            foreach (AudioSource audioSource in audioSources)
-            {
-                if (audioSource.outputAudioMixerGroup == null)
-                {
-                    audioSource.outputAudioMixerGroup = UnturnedAudioMixer.GetDefaultGroup();
-                }
-                if (audioSource.dopplerLevel > 0.0001f && audioSource.GetComponent<EnableDopplerEffect>() == null)
-                {
-                    audioSource.dopplerLevel = 0f;
-                }
-            }
+            FixupGameObjectAudio(gameObject);
         }
         if ((!convertShadersToStandard && !consolidateShaders) || Dedicator.IsDedicatedServer)
         {

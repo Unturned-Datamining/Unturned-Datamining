@@ -855,13 +855,13 @@ public class VehicleManager : SteamCaller
                         reader.ReadBits(3, out var value14);
                         int value15 = (int)(value14 - 1);
                         value15 = Mathf.Clamp(value15, -1, interactableVehicle.asset.forwardGearRatios.Length);
-                        interactableVehicle.GearNumber = value15;
+                        interactableVehicle.ChangeGears(value15);
                         reader.ReadUnsignedNormalizedFloat(7, out var value16);
                         interactableVehicle.ReplicatedEngineRpm = Mathf.Lerp(interactableVehicle.asset.EngineIdleRpm, interactableVehicle.asset.EngineMaxRpm, value16);
                     }
                     else
                     {
-                        interactableVehicle.GearNumber = 1;
+                        interactableVehicle.ChangeGears(1);
                         interactableVehicle.ReplicatedEngineRpm = interactableVehicle.asset.EngineIdleRpm;
                     }
                 }

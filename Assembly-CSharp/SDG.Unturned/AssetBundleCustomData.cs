@@ -8,7 +8,7 @@ public class AssetBundleCustomData : ScriptableObject
 {
     /// <summary>
     /// If Unturned is loading this asset bundle from a Steam workshop file but the file ID does not match then
-    /// loading will be canceled. Prevents the asset bundle from being easily copied/stolen.
+    /// loading will be canceled. Makes it somewhat harder to copy/re-upload without permission.
     /// </summary>
     public ulong ownerWorkshopFileId;
 

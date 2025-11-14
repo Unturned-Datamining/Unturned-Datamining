@@ -639,11 +639,7 @@ public class ItemAsset : Asset, ISkinableAsset, IBlueprintOwner
         {
             throw new NotSupportedException("ID < 2000");
         }
-        _itemName = p.localization.read("Name");
-        if (string.IsNullOrEmpty(_itemName))
-        {
-            _itemName = string.Empty;
-        }
+        _itemName = p.localization.FormatOrEmpty("Name");
         if ((bool)Assets.shouldValidateAssets && _itemName.Trim().Length != _itemName.Length)
         {
             Assets.ReportError(this, "Display name has leading or trailing whitespace");

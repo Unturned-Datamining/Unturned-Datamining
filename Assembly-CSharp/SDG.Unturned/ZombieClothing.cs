@@ -25,6 +25,10 @@ public class ZombieClothing
 
     private static Shader clothingShader;
 
+    /// <summary>
+    /// The main reason for this silliness is older versions didn't have a layered clothing shader, rather they
+    /// pre-baked shirt/pant texture combinations according to the level's zombie configurations.
+    /// </summary>
     private static Material[][,] clothes;
 
     public static Material ghostMaterial { get; private set; }

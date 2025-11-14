@@ -9,7 +9,7 @@ public static class GameUpdateMonitor
     /// <summary>
     /// Event for plugins to be notified when a server update is detected.
     ///
-    /// Pandahut requested this because they run the game as a Windows service and need to shutdown
+    /// Some hosts requested this because they run the game as a Windows service and need to shutdown
     /// through their central management system rather than per-process.
     /// </summary>
     public static event GameUpdateDetectedHandler OnGameUpdateDetected;

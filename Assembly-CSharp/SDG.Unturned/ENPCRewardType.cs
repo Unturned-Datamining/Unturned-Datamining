@@ -28,5 +28,6 @@ public enum ENPCRewardType
     PLAYER_LIFE_STAMINA,
     EFFECT,
     AIRDROP,
-    ZOMBIE
+    ZOMBIE,
+    REMOVE_ZOMBIES
 }

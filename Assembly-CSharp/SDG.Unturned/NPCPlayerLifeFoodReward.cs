@@ -15,7 +15,7 @@ public class NPCPlayerLifeFoodReward : INPCReward
     {
         if (string.IsNullOrEmpty(text))
         {
-            text = PlayerNPCQuestUI.localization.read("Reward_Food");
+            text = PlayerNPCQuestUI.localization.FormatOrEmpty("Reward_Food");
         }
         return Local.FormatText(text, value);
     }

@@ -103,7 +103,7 @@ public class UseableCarlockpick : Useable
                 return false;
             }
             isUnlocking = true;
-            if (base.player.equipment.asset is ItemVehicleLockpickToolAsset { FailureProbability: >1E-05f } itemVehicleLockpickToolAsset)
+            if (base.player.equipment.asset is ItemVehicleLockpickToolAsset { CanFail: not false } itemVehicleLockpickToolAsset)
             {
                 isUnlockingFailure = UnityEngine.Random.value <= itemVehicleLockpickToolAsset.FailureProbability;
             }

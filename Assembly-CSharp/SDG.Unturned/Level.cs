@@ -1826,6 +1826,7 @@ public class Level : MonoBehaviour
             musicAudioSource.bypassListenerEffects = true;
             musicAudioSource.bypassReverbZones = true;
             musicAudioSource.spatialize = false;
+            musicAudioSource.dopplerLevel = 0f;
         }
         musicAudioSource.volume = OptionsSettings.volume * OptionsSettings.MusicMasterVolume * OptionsSettings.loadingScreenMusicVolume;
         if (musicAudioSource.volume > 0f)

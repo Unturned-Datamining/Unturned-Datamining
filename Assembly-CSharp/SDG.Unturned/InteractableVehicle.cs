@@ -877,6 +877,10 @@ public class InteractableVehicle : Interactable, IExplosionDamageable, IEquatabl
 
     public event VehicleSkinChangedHandler skinChanged;
 
+    public event Action<InteractableVehicle> OnGearChanged;
+
+    public event Action<InteractableVehicle> OnHealthChanged;
+
     public static event Action<InteractableVehicle> OnHealthChanged_Global;
 
     public static event Action<InteractableVehicle> OnLockChanged_Global;
@@ -1617,6 +1621,10 @@ public class InteractableVehicle : Interactable, IExplosionDamageable, IEquatabl
     {
         PaintColor = newPaintColor;
         ApplyPaintColor();
+        if (eventHook != null)
+        {
+            eventHook.OnPaintColorChanged.TryInvoke(this);
+        }
     }
 
     public void ServerSetPaintColor(Color32 newPaintColor)
@@ -1806,19 +1814,42 @@ public class InteractableVehicle : Interactable, IExplosionDamageable, IEquatabl
             }
         }
         this.onSirensUpdated?.Invoke();
+        if (eventHook != null)
+        {
+            if (_sirensOn)
+            {
+                eventHook.OnSirensActivated.TryInvoke(this);
+            }
+            else
+            {
+                eventHook.OnSirensDeactivated.TryInvoke(this);
+            }
+        }
     }
 
     public void tellBlimp(bool on)
     {
         isBlimpFloating = on;
-        if (asset.engine == EEngine.BLIMP)
+        if (asset.engine != EEngine.BLIMP)
         {
-            int childCount = buoyancy.childCount;
-            for (int i = 0; i < childCount; i++)
+            return;
+        }
+        int childCount = buoyancy.childCount;
+        for (int i = 0; i < childCount; i++)
+        {
+            buoyancy.GetChild(i).GetComponent<Buoyancy>().enabled = isBlimpFloating;
+        }
+        this.onBlimpUpdated?.Invoke();
+        if (eventHook != null)
+        {
+            if (isBlimpFloating)
             {
-                buoyancy.GetChild(i).GetComponent<Buoyancy>().enabled = isBlimpFloating;
+                eventHook.OnBlimpActivated.TryInvoke(this);
             }
-            this.onBlimpUpdated?.Invoke();
+            else
+            {
+                eventHook.OnBlimpDeactivated.TryInvoke(this);
+            }
         }
     }
 
@@ -1837,6 +1868,17 @@ public class InteractableVehicle : Interactable, IExplosionDamageable, IEquatabl
             }
         }
         this.onHeadlightsUpdated?.Invoke();
+        if (eventHook != null)
+        {
+            if (headlightsOn)
+            {
+                eventHook.OnHeadlightsActivated.TryInvoke(this);
+            }
+            else
+            {
+                eventHook.OnHeadlightsDeactivated.TryInvoke(this);
+            }
+        }
     }
 
     public void tellTaillights(bool on)
@@ -2005,6 +2047,7 @@ public class InteractableVehicle : Interactable, IExplosionDamageable, IEquatabl
         }
         updateFires();
         InteractableVehicle.OnHealthChanged_Global.TryInvoke("OnHealthChanged_Global", this);
+        this.OnHealthChanged?.TryInvoke("OnHealthChanged", this);
     }
 
     public void tellRecov(Vector3 newPosition, int newRecov)
@@ -2934,12 +2977,13 @@ public class InteractableVehicle : Interactable, IExplosionDamageable, IEquatabl
         return GearNumber - 1;
     }
 
-    private void ChangeGears(int newGearNumber)
+    internal void ChangeGears(int newGearNumber)
     {
         if (GearNumber != newGearNumber)
         {
             timeSinceLastGearChange = 0f;
             GearNumber = newGearNumber;
+            this.OnGearChanged?.TryInvoke("OnGearChanged", this);
         }
     }
 

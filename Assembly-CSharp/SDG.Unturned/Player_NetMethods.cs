@@ -1,3 +1,4 @@
+using System;
 using SDG.NetPak;
 using Steamworks;
 using UnityEngine;
@@ -127,6 +128,36 @@ public static class Player_NetMethods
     public static void ReceiveHintMessage_Write(NetPakWriter writer, string message, float durationSeconds)
     {
         writer.WriteString(message);
+        writer.WriteFloat(durationSeconds);
+    }
+
+    [NetInvokableGeneratedMethod("ReceiveTranslatedHint", ENetInvokableGeneratedMethodPurpose.Read)]
+    public static void ReceiveTranslatedHint_Read(in ClientInvocationContext context)
+    {
+        NetPakReader reader = context.reader;
+        if (!reader.ReadNetId(out var value))
+        {
+            return;
+        }
+        object obj = NetIdRegistry.Get(value);
+        if (obj != null)
+        {
+            Player player = obj as Player;
+            if (!(player == null))
+            {
+                reader.ReadGuid(out var value2);
+                reader.ReadString(out var value3);
+                reader.ReadFloat(out var value4);
+                player.ReceiveTranslatedHint(value2, value3, value4);
+            }
+        }
+    }
+
+    [NetInvokableGeneratedMethod("ReceiveTranslatedHint", ENetInvokableGeneratedMethodPurpose.Write)]
+    public static void ReceiveTranslatedHint_Write(NetPakWriter writer, Guid assetGuid, string translationKey, float durationSeconds)
+    {
+        writer.WriteGuid(assetGuid);
+        writer.WriteString(translationKey);
         writer.WriteFloat(durationSeconds);
     }
 

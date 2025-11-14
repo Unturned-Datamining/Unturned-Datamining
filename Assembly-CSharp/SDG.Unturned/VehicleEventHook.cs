@@ -58,4 +58,25 @@ public class VehicleEventHook : MonoBehaviour
     /// Invoked after explosion plays.
     /// </summary>
     public UnityEvent OnExploded;
+
+    [Tooltip("Invoked after paint color changes.")]
+    public UnityEvent OnPaintColorChanged;
+
+    [Tooltip("Invoked when sirens are turned on.")]
+    public UnityEvent OnSirensActivated;
+
+    [Tooltip("Invoked when sirens are turned off.")]
+    public UnityEvent OnSirensDeactivated;
+
+    [Tooltip("Invoked when blimp floatation mode is activated.")]
+    public UnityEvent OnBlimpActivated;
+
+    [Tooltip("Invoked when blimp floatation mode is deactivated.")]
+    public UnityEvent OnBlimpDeactivated;
+
+    [Tooltip("Invoked when headlights are turned on.")]
+    public UnityEvent OnHeadlightsActivated;
+
+    [Tooltip("Invoked when headlights are turned off.")]
+    public UnityEvent OnHeadlightsDeactivated;
 }

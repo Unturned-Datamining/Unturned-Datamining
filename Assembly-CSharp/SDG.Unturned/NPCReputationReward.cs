@@ -15,7 +15,7 @@ public class NPCReputationReward : INPCReward
     {
         if (string.IsNullOrEmpty(base.text))
         {
-            base.text = PlayerNPCQuestUI.localization.read("Reward_Reputation");
+            base.text = PlayerNPCQuestUI.localization.FormatOrEmpty("Reward_Reputation");
         }
         string text = value.ToString();
         if (value > 0)

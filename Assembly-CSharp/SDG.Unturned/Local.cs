@@ -36,6 +36,18 @@ public class Local
         return null;
     }
 
+    /// <summary>
+    /// Unlike format, this returns string.Empty if key doesn't exist.
+    /// </summary>
+    public string FormatOrEmpty(string key)
+    {
+        if (TryReadString(key, out var text))
+        {
+            return text;
+        }
+        return string.Empty;
+    }
+
     public string format(string key, object arg0)
     {
         if (TryReadString(key, out var text))

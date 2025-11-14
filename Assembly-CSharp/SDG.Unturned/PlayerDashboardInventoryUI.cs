@@ -279,7 +279,7 @@ public class PlayerDashboardInventoryUI
     }
 
     /// <summary>
-    /// Annoying frustrating workaround for IMGUI. Disable inventory headers, grids and slots while selection is open
+    /// Workaround for IMGUI. Disable inventory headers, grids and slots while selection is open
     /// to prevent them from interfering with selection menu.
     /// </summary>
     private static void setMiscButtonsEnabled(bool enabled)

@@ -362,8 +362,7 @@ public class MenuDashboardUI
                 }
                 catch (Exception e)
                 {
-                    UnturnedLog.warn("Announcement description mis-formatted! Nelson messed up.");
-                    UnturnedLog.exception(e);
+                    UnturnedLog.exception(e, "Caught exception parsing announcement BB code:");
                 }
                 SleekWebLinkButton sleekWebLinkButton = new SleekWebLinkButton();
                 sleekWebLinkButton.Text = localization.format("News_Comments_Link");
@@ -550,7 +549,6 @@ public class MenuDashboardUI
         {
             sleekElement2.IsVisible = true;
         }
-        PublishedFileId_t nPublishedFileId;
         try
         {
             string contents = pDetails.m_rgchDescription;
@@ -562,9 +560,7 @@ public class MenuDashboardUI
         }
         catch (Exception e)
         {
-            nPublishedFileId = pDetails.m_nPublishedFileId;
-            UnturnedLog.warn("Workshop description mis-formatted! If you made this item I suggest you adjust it to display in-game properly: " + nPublishedFileId.ToString());
-            UnturnedLog.exception(e);
+            UnturnedLog.exception(e, $"Caught exception parsing workshop file {pDetails.m_nPublishedFileId} description BB code:");
         }
         sleekReadMoreButton.onText = localization.format("ReadMore_Link_On");
         sleekReadMoreButton.offText = localization.format("ReadMore_Link_Off");
@@ -579,7 +575,7 @@ public class MenuDashboardUI
         SleekWebLinkButton sleekWebLinkButton = new SleekWebLinkButton();
         sleekWebLinkButton.UseManualLayout = false;
         sleekWebLinkButton.Text = localization.format("Featured_Workshop_Link");
-        nPublishedFileId = pDetails.m_nPublishedFileId;
+        PublishedFileId_t nPublishedFileId = pDetails.m_nPublishedFileId;
         sleekWebLinkButton.Url = "https://steamcommunity.com/sharedfiles/filedetails/?id=" + nPublishedFileId.ToString();
         sleekWebLinkButton.UseChildAutoLayout = ESleekChildLayout.Vertical;
         sleekWebLinkButton.ExpandChildren = true;

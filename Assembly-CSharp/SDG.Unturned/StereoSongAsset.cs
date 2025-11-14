@@ -32,10 +32,7 @@ public class StereoSongAsset : Asset
     public override void PopulateAsset(in PopulateAssetParameters p)
     {
         base.PopulateAsset(in p);
-        if (p.localization.has("Name"))
-        {
-            titleText = p.localization.read("Name");
-        }
+        titleText = p.localization.FormatOrEmpty("Name");
         if (string.IsNullOrEmpty(titleText))
         {
             titleText = p.data.GetString("Title");

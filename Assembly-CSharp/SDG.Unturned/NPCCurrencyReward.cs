@@ -24,7 +24,7 @@ public class NPCCurrencyReward : INPCReward
             }
             else
             {
-                text = PlayerNPCQuestUI.localization.read("Reward_Currency");
+                text = PlayerNPCQuestUI.localization.FormatOrEmpty("Reward_Currency");
             }
         }
         return Local.FormatText(text, value);

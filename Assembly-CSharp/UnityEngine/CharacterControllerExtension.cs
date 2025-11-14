@@ -59,10 +59,10 @@ public static class CharacterControllerExtension
     }
 
     /// <summary>
-    /// Perform a move, then do a capsule cast to determine if Unity PhysX went through a wall.
+    /// Perform a move, then do a capsule cast to determine if physics simulation went through a wall.
     ///
     /// Required when disabling overlap recovery because there are issues when walking toward slopes that bend inward.
-    /// To test if Unity works properly in the future; walk toward the inside of a barracks building in the PEI base.
+    /// To test if physics simulation handles this better in the future: walk toward the inside of a barracks building in the PEI base.
     /// </summary>
     public static void CheckedMove(this CharacterController component, Vector3 motion)
     {

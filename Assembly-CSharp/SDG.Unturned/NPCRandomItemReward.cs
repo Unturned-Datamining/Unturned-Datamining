@@ -46,7 +46,7 @@ public class NPCRandomItemReward : INPCReward
     {
         if (string.IsNullOrEmpty(text))
         {
-            text = PlayerNPCQuestUI.localization.read("Reward_Item_Random");
+            text = PlayerNPCQuestUI.localization.FormatOrEmpty("Reward_Item_Random");
         }
         return Local.FormatText(text, amount);
     }

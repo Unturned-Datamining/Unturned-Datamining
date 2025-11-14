@@ -26,7 +26,7 @@ public struct CachedUGCDetails
     public uint updateTimestamp;
 
     /// <summary>
-    /// Some workshop thieves use an empty title, in which case we show the file ID as title text.
+    /// Some workshop copyright infringers use an empty title, in which case we show the file ID as title text.
     /// </summary>
     public string GetTitle()
     {

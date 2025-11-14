@@ -1141,6 +1141,10 @@ public class Assets : MonoBehaviour
             {
                 asset.OriginParsedData = assetData;
             }
+            if (datDictionary.ParseBool("Keep_Localization_Loaded"))
+            {
+                asset.Localization = localization;
+            }
             PopulateAssetParameters populateAssetParameters = default(PopulateAssetParameters);
             populateAssetParameters.bundle = bundle;
             populateAssetParameters.data = datDictionary;

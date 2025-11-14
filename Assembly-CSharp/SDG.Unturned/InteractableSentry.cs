@@ -115,6 +115,18 @@ public class InteractableSentry : InteractableStorage
         }
     }
 
+    private bool MeetsPvPRequirement
+    {
+        get
+        {
+            if (!Provider.isPvP)
+            {
+                return sentryAsset.BypassesPvEMode;
+            }
+            return true;
+        }
+    }
+
     private void trace(Vector3 pos, Vector3 dir)
     {
         if (!(tracerEmitter == null) && (!(attachments.barrelModel != null) || !attachments.barrelAsset.isBraked || displayItem.state[16] <= 0))
@@ -282,6 +294,7 @@ public class InteractableSentry : InteractableStorage
             gunshotAudioSource.minDistance = 8f;
             gunshotAudioSource.maxDistance = 256f;
             gunshotAudioSource.playOnAwake = false;
+            gunshotAudioSource.dopplerLevel = 0f;
             gunshotAudioSource.outputAudioMixerGroup = UnturnedAudioMixer.GetDefaultGroup();
         }
         if (attachments.ejectHook != null && ((ItemGunAsset)displayAsset).action != EAction.String && ((ItemGunAsset)displayAsset).action != EAction.Rocket)
@@ -709,7 +722,10 @@ public class InteractableSentry : InteractableStorage
             }
             else
             {
-                yaw = Mathf.LerpAngle(yaw, targetYaw + Mathf.Sin((float)(Time.timeAsDouble - lastDrift)) * 60f, 4f * Time.deltaTime);
+                float num7 = (float)(Time.timeAsDouble - lastDrift);
+                num7 *= MathF.PI * 2f;
+                num7 /= sentryAsset.SweepPeriod;
+                yaw = Mathf.LerpAngle(yaw, targetYaw + Mathf.Sin(num7) * sentryAsset.SweepHalfYaw, 4f * Time.deltaTime);
             }
             pitch = Mathf.LerpAngle(pitch, targetPitch, 4f * Time.deltaTime);
             if (yawTransform != null)
@@ -868,6 +884,15 @@ public class InteractableSentry : InteractableStorage
         return Mathf.Cos(spreadAngleRadians);
     }
 
+    public void AlertDamagedBy(Player player)
+    {
+        if (!(targetPlayer != null) && !(targetZombie != null) && !(targetAnimal != null) && !(targetVehicle != null) && sentryAsset.CanReactToAttacks && sentryAsset.CanTargetPlayers && MeetsPvPRequirement)
+        {
+            targetPlayer = player;
+            lastFire = Time.timeAsDouble + 0.1;
+        }
+    }
+
     private void ScanForTargets(Vector3 fromPoint)
     {
         float num = sentryAsset.detectionRadius;
@@ -886,7 +911,7 @@ public class InteractableSentry : InteractableStorage
         Zombie zombie = null;
         Animal animal = null;
         InteractableVehicle interactableVehicle = null;
-        if (Provider.isPvP && sentryAsset.CanTargetPlayers)
+        if (MeetsPvPRequirement && sentryAsset.CanTargetPlayers)
         {
             float sqrRadius = ((targetPlayer != null) ? num4 : num5);
             playersInRadius.Clear();
@@ -1032,7 +1057,7 @@ public class InteractableSentry : InteractableStorage
                 flag = true;
             }
         }
-        if (Provider.isPvP && sentryMode == ESentryMode.HOSTILE && sentryAsset.CanTargetVehicles)
+        if (MeetsPvPRequirement && sentryMode == ESentryMode.HOSTILE && sentryAsset.CanTargetVehicles)
         {
             float sqrRadius4 = ((!flag && targetVehicle != null) ? num4 : num5);
             vehiclesInRadius.Clear();

@@ -448,6 +448,10 @@ public class UseableBarricade : Useable
         if (Dedicator.IsDedicatedServer)
         {
             boundsRotation = BarricadeManager.getRotation((ItemBarricadeAsset)base.player.equipment.asset, angle_x + rotate_x, angle_y + rotate_y, angle_z + rotate_z);
+            if (parent != null)
+            {
+                boundsRotation = parent.TransformRotation(boundsRotation);
+            }
         }
         else
         {

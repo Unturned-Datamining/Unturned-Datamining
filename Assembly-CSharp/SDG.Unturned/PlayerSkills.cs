@@ -158,7 +158,7 @@ public class PlayerSkills : PlayerCaller
     }
 
     /// <summary>
-    /// Ugly hack for the awful skills enums. Eventually skills should be replaced.
+    /// Hack to parse both the speciality enum and per-speciality skill enum given the name.
     /// </summary>
     public static bool TryParseIndices(string input, out int specialityIndex, out int skillIndex)
     {

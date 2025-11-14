@@ -17,7 +17,7 @@ public class LODGroupAdditionalData : MonoBehaviour
         None,
         /// <summary>
         /// Unturned will adjust per-LOD sizes to counteract LOD bias.
-        /// Elver has carefully tuned LOD sizes for the interior of the mall, so LOD bias affecting them is undesirable.
+        /// Some maps have very carefully tuned LOD sizes, so LOD bias affecting them is undesirable.
         /// Note that due to a Unity bug only LOD0 can be greater than 100%.
         /// </summary>
         IgnoreLODBias

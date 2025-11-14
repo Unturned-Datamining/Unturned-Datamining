@@ -22,7 +22,7 @@ public abstract class TransportBase_SteamNetworkingSockets : TransportBase
     protected static CommandLineFlag clAllowWithoutAuth = new CommandLineFlag(defaultValue: false, "-SNS_AllowWithoutAuth");
 
     /// <summary>
-    /// Thanks DiFFoZ! Ensures GC does not release the delegate.
+    /// Ensures GC does not release the delegate.
     /// </summary>
     private FSteamNetworkingSocketsDebugOutput debugOutputFunc;
 

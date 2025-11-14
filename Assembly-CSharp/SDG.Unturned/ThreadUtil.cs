@@ -23,10 +23,7 @@ public static class ThreadUtil
     }
 
     /// <summary>
-    /// Extension method for Thread class.
-    /// Plugins use this.
-    /// I might have accidentally removed it due to zero refs and Pustalorc was mad:
-    /// https://github.com/SmartlyDressedGames/Unturned-3.x-Community/discussions/4131
+    /// Extension method for Thread class. Plugins use this.
     /// </summary>
     public static bool IsGameThread(this Thread thread)
     {

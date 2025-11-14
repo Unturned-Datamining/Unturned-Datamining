@@ -9,9 +9,20 @@ public class NPCHintReward : INPCReward
     /// </summary>
     private float duration;
 
+    private CachingAssetRef hintTextAsset;
+
+    private string hintTextLocKey;
+
     public override void GrantReward(Player player)
     {
-        player.ServerShowHint(text, duration);
+        if (hintTextAsset.Get() != null && !string.IsNullOrEmpty(hintTextLocKey))
+        {
+            player.ServerShowTranslatedHint(hintTextAsset.Get(), hintTextLocKey, duration);
+        }
+        else
+        {
+            player.ServerShowHint(text, duration);
+        }
     }
 
     internal override void PopulateV2(in PopulateRewardParameters p)
@@ -20,6 +31,11 @@ public class NPCHintReward : INPCReward
         if (string.IsNullOrEmpty(text))
         {
             text = p.data.GetString("Text");
+        }
+        else if (p.errorContext is Asset { Localization: not null } asset)
+        {
+            hintTextAsset = asset;
+            hintTextLocKey = p.data.GetString("TextId");
         }
         duration = p.data.ParseFloat("Duration", 2f);
     }
@@ -30,6 +46,11 @@ public class NPCHintReward : INPCReward
         if (string.IsNullOrEmpty(text))
         {
             text = p.data.GetString(p.legacyPrefix + "_Text");
+        }
+        else if (p.errorContext is Asset { Localization: not null })
+        {
+            hintTextAsset = p.errorContext as Asset;
+            hintTextLocKey = p.legacyPrefix;
         }
         duration = p.data.ParseFloat(p.legacyPrefix + "_Duration", 2f);
     }

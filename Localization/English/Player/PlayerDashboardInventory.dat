@@ -202,6 +202,7 @@ ItemDescription_AmmoConsumptionProbability Ammo Decrease Chance: {0}
 ItemDescription_QualityConsumptionProbability Quality Decrease Chance: {0}
 ItemDescription_ProvidesCraftingTags Crafting Capabilities:
 ItemDescription_ListItem • {0}
+ItemDescription_LockpickFailureProbability Failure Chance: {0}
 
 Equip_Button Equip
 Equip_Button_Tooltip Equip in your hands.

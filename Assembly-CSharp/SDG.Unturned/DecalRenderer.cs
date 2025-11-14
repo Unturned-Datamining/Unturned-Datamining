@@ -3,6 +3,12 @@ using UnityEngine.Rendering;
 
 namespace SDG.Unturned;
 
+/// <summary>
+/// Before they became an official engine feature, I was obsessed with getting projected decals into Unturned.
+/// I remember noticing them in so many games at the time like, for example, Overwatch. Aras P at Unity wrote
+/// a blog post explaining how command buffers could be used to achieve them which set us on the right course:
+/// https://unity.com/blog/engine-platform/extending-unity-5-rendering-pipeline-command-buffers
+/// </summary>
 public class DecalRenderer : MonoBehaviour
 {
     private static readonly RenderTargetIdentifier[] DIFFUSE = new RenderTargetIdentifier[2]

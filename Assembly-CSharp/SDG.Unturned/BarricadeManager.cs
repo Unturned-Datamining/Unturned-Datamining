@@ -2038,7 +2038,7 @@ public class BarricadeManager : SteamCaller
     /// <summary>
     /// Register a new vehicle as a valid parent for barricades.
     /// Each train car is registered after the root of the train.
-    /// Note: Nobody knows why these are called plants.
+    /// Note: why they are called "plants", refer to "only god and i" meme. 
     /// </summary>
     [Obsolete("Plugins should not be calling this")]
     public static void waterPlant(Transform parent)

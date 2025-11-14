@@ -15,7 +15,7 @@ public class NPCReputationCondition : NPCLogicCondition
     {
         if (string.IsNullOrEmpty(base.text))
         {
-            base.text = PlayerNPCQuestUI.localization.read("Condition_Reputation");
+            base.text = PlayerNPCQuestUI.localization.FormatOrEmpty("Condition_Reputation");
         }
         string text = player.skills.reputation.ToString();
         if (player.skills.reputation > 0)

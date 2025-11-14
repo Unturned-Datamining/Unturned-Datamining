@@ -519,7 +519,7 @@ public class ChatManager : SteamCaller
 
     /// <summary>
     /// Allows Unity events to send text chat messages from the client, for example to execute commands.
-    /// Messenger context is logged to help track down abusive assets.
+    /// Messenger context is logged to help track down assets using it in inappropriate ways.
     /// </summary>
     public static void clientSendMessage_UnityEvent(EChatMode mode, string text, ClientTextChatMessenger messenger)
     {
@@ -533,7 +533,7 @@ public class ChatManager : SteamCaller
 
     /// <summary>
     /// Allows Unity events to broadcast text chat messages from the server.
-    /// Messenger context is logged to help track down abusive assets.
+    /// Messenger context is logged to help track down assets using it in inappropriate ways.
     /// </summary>
     public static void serverSendMessage_UnityEvent(string text, Color color, string iconURL, bool useRichTextFormatting, ServerTextChatMessenger messenger)
     {

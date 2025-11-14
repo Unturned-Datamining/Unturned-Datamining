@@ -1735,6 +1735,10 @@ public class UseableGun : Useable
                             if (asset3 != null && asset3.canBeDamaged && (asset3.isVulnerable || CanDamageInvulnerableEntities))
                             {
                                 float num2 = (CanDamageInvulnerableEntities ? Provider.modeConfigData.Barricades.Gun_Highcal_Damage_Multiplier : Provider.modeConfigData.Barricades.Gun_Lowcal_Damage_Multiplier);
+                                if (barricadeDrop2.interactable is InteractableSentry interactableSentry)
+                                {
+                                    interactableSentry.AlertDamagedBy(base.player);
+                                }
                                 DamageTool.damage(input.transform, isRepairing: false, equippedGunAsset.barricadeDamage, bulletDamageMultiplier * num2, out kill, base.channel.owner.playerID.steamID, EDamageOrigin.Useable_Gun);
                             }
                         }
@@ -2543,6 +2547,7 @@ public class UseableGun : Useable
             gunshotAudioSource.SetCustomCurve(AudioSourceCurveType.CustomRolloff, (Resources.Load("Guns/Rolloff") as GameObject).GetComponent<AudioSource>().GetCustomCurve(AudioSourceCurveType.CustomRolloff));
             gunshotAudioSource.volume = 1f;
             gunshotAudioSource.playOnAwake = false;
+            gunshotAudioSource.dopplerLevel = 0f;
             gunshotAudioSource.outputAudioMixerGroup = UnturnedAudioMixer.GetDefaultGroup();
         }
         if (base.channel.IsLocalPlayer)
@@ -2643,6 +2648,7 @@ public class UseableGun : Useable
             whir.volume = 0f;
             whir.playOnAwake = false;
             whir.loop = true;
+            whir.dopplerLevel = 0f;
             whir.outputAudioMixerGroup = UnturnedAudioMixer.GetDefaultGroup();
             whir.Play();
         }

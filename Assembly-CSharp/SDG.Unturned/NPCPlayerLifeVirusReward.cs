@@ -15,7 +15,7 @@ public class NPCPlayerLifeVirusReward : INPCReward
     {
         if (string.IsNullOrEmpty(text))
         {
-            text = PlayerNPCQuestUI.localization.read("Reward_Virus");
+            text = PlayerNPCQuestUI.localization.FormatOrEmpty("Reward_Virus");
         }
         return Local.FormatText(text, value);
     }

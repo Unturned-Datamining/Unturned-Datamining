@@ -65,7 +65,7 @@ public class NPCVehicleReward : INPCReward
     {
         if (string.IsNullOrEmpty(text))
         {
-            text = PlayerNPCQuestUI.localization.read("Reward_Vehicle");
+            text = PlayerNPCQuestUI.localization.FormatOrEmpty("Reward_Vehicle");
         }
         VehicleAsset vehicleAsset = FindVehicleAssetAndHandleRedirects();
         return Local.FormatText(arg0: (vehicleAsset == null) ? "?" : ("<color=" + Palette.hex(ItemTool.getRarityColorUI(vehicleAsset.rarity)) + ">" + vehicleAsset.vehicleName + "</color>"), text: text);

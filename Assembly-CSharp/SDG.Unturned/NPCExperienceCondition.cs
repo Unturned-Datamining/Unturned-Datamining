@@ -23,7 +23,7 @@ public class NPCExperienceCondition : NPCLogicCondition
     {
         if (string.IsNullOrEmpty(text))
         {
-            text = PlayerNPCQuestUI.localization.read("Condition_Experience");
+            text = PlayerNPCQuestUI.localization.FormatOrEmpty("Condition_Experience");
         }
         return Local.FormatText(text, player.skills.experience, experience);
     }

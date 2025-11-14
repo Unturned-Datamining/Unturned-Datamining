@@ -5963,7 +5963,7 @@ public class Provider : MonoBehaviour
         {
             return true;
         }
-        if (!isServer && isPvP && clients.Count > 1 && Player.player != null && !Player.player.movement.isSafe && Player.player.life.IsAlive)
+        if (!isServer && isPvP && clients.Count > 1 && Player.LocalPlayer != null && !Player.LocalPlayer.movement.isSafe && Player.LocalPlayer.life.IsAlive)
         {
             return false;
         }

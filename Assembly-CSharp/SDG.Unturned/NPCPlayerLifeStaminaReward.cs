@@ -15,7 +15,7 @@ public class NPCPlayerLifeStaminaReward : INPCReward
     {
         if (string.IsNullOrEmpty(text))
         {
-            text = PlayerNPCQuestUI.localization.read("Reward_Stamina");
+            text = PlayerNPCQuestUI.localization.FormatOrEmpty("Reward_Stamina");
         }
         return Local.FormatText(text, value);
     }

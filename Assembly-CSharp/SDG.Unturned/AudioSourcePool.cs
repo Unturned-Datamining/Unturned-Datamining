@@ -52,6 +52,7 @@ internal class AudioSourcePool : MonoBehaviour
             nextSourceId++;
             GameObject gameObject = new GameObject("PooledAudioSource");
             pooledAudioSource.component = gameObject.AddComponent<AudioSource>();
+            pooledAudioSource.component.dopplerLevel = 0f;
             pooledAudioSource.component.playOnAwake = false;
         }
         Transform obj = pooledAudioSource.component.transform;

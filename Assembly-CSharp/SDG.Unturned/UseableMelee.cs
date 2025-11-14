@@ -531,6 +531,10 @@ public class UseableMelee : Useable
                         }
                         else if (asset3.canBeDamaged && (asset3.isVulnerable || ((ItemWeaponAsset)base.player.equipment.asset).isInvulnerable))
                         {
+                            if (barricadeDrop2.interactable is InteractableSentry interactableSentry)
+                            {
+                                interactableSentry.AlertDamagedBy(base.player);
+                            }
                             DamageTool.damage(input.transform, isRepairing: false, equippedMeleeAsset.barricadeDamage, num2 * Provider.modeConfigData.Barricades.Melee_Damage_Multiplier, out kill, base.channel.owner.playerID.steamID, EDamageOrigin.Useable_Melee);
                         }
                     }
