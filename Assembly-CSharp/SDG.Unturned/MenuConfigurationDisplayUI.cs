@@ -175,7 +175,7 @@ public class MenuConfigurationDisplayUI
             sleekButton.SizeOffset_Y = 30f;
             sleekButton.SizeScale_X = 1f;
             sleekButton.OnClicked += onClickedResolutionButton;
-            sleekButton.Text = resolution.width + " x " + resolution.height + " [" + resolution.refreshRateRatio.value + "Hz]";
+            sleekButton.Text = resolution.width + " x " + resolution.height + " [" + resolution.refreshRateRatio.value.ToString("N2") + "Hz]";
             resolutionsBox.AddChild(sleekButton);
             buttons[b] = sleekButton;
         }

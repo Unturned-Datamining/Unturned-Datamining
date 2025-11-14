@@ -439,11 +439,13 @@ public class PlayerDashboardInventoryUI
         {
             if (Player.LocalPlayer.inventory.tryFindSpace(selectedJar.size_x, selectedJar.size_y, out var page, out var x, out var y, out var rot))
             {
+                PlayInventoryAudio(selectedJar.GetAsset());
                 Player.LocalPlayer.inventory.sendDragItem(selectedPage, selected_x, selected_y, page, x, y, rot);
             }
         }
         else if (Player.LocalPlayer.inventory.tryFindSpace(PlayerInventory.STORAGE, selectedJar.size_x, selectedJar.size_y, out x2, out y2, out rot2))
         {
+            PlayInventoryAudio(selectedJar.GetAsset());
             Player.LocalPlayer.inventory.sendDragItem(selectedPage, selected_x, selected_y, PlayerInventory.STORAGE, x2, y2, rot2);
         }
         ConsumeEvent();
@@ -764,11 +766,13 @@ public class PlayerDashboardInventoryUI
                 {
                     if (Player.LocalPlayer.inventory.tryFindSpace(item.size_x, item.size_y, out var page2, out var x2, out var y2, out var rot))
                     {
+                        PlayInventoryAudio(item.GetAsset());
                         Player.LocalPlayer.inventory.sendDragItem(page, x, y, page2, x2, y2, rot);
                     }
                 }
                 else if (Player.LocalPlayer.inventory.tryFindSpace(PlayerInventory.STORAGE, item.size_x, item.size_y, out x3, out y3, out rot2))
                 {
+                    PlayInventoryAudio(item.GetAsset());
                     Player.LocalPlayer.inventory.sendDragItem(page, x, y, PlayerInventory.STORAGE, x3, y3, rot2);
                 }
             }

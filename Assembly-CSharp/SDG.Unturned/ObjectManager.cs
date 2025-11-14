@@ -107,13 +107,25 @@ public class ObjectManager : SteamCaller
             return;
         }
         LevelObject levelObject = list[index];
-        if (levelObject != null)
+        if (levelObject == null)
         {
-            InteractableObjectRubble rubble = levelObject.rubble;
-            if (rubble != null)
+            return;
+        }
+        InteractableObjectRubble rubble = levelObject.rubble;
+        if (!(rubble != null))
+        {
+            return;
+        }
+        if (section == byte.MaxValue)
+        {
+            for (int i = 0; i < rubble.rubbleInfos.Length; i++)
             {
-                rubble.updateRubble(section, isAlive, playEffect: true, ragdoll);
+                rubble.updateRubble((byte)i, isAlive, playEffect: true, ragdoll);
             }
+        }
+        else
+        {
+            rubble.updateRubble(section, isAlive, playEffect: true, ragdoll);
         }
     }
 
@@ -582,12 +594,13 @@ public class ObjectManager : SteamCaller
                     if (levelObject.asset.RubbleRespawnAllSectionsSimultaneously)
                     {
                         state[^1] = byte.MaxValue;
+                        SendObjectRubble.InvokeAndLoopback(ENetReliability.Reliable, GatherRemoteClientConnections(updateObjects_X, updateObjects_Y), updateObjects_X, updateObjects_Y, regions[updateObjects_X, updateObjects_Y].updateObjectIndex, byte.MaxValue, arg5: true, Vector3.zero);
                     }
                     else
                     {
                         state[^1] = (byte)(state[^1] | Types.SHIFTS[b]);
+                        SendObjectRubble.InvokeAndLoopback(ENetReliability.Reliable, GatherRemoteClientConnections(updateObjects_X, updateObjects_Y), updateObjects_X, updateObjects_Y, regions[updateObjects_X, updateObjects_Y].updateObjectIndex, b, arg5: true, Vector3.zero);
                     }
-                    SendObjectRubble.InvokeAndLoopback(ENetReliability.Reliable, GatherRemoteClientConnections(updateObjects_X, updateObjects_Y), updateObjects_X, updateObjects_Y, regions[updateObjects_X, updateObjects_Y].updateObjectIndex, b, arg5: true, Vector3.zero);
                 }
             }
             return false;

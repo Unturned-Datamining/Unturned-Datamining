@@ -44,7 +44,7 @@ public class Buoyancy : MonoBehaviour
                 }
                 if (vector.y - voxelHalfHeight < surfaceElevation)
                 {
-                    Vector3 force = -rootRigidbody.GetPointVelocity(vector) * 500f * rootRigidbody.mass + Mathf.Sqrt(Mathf.Clamp01((surfaceElevation - vector.y) / (2f * voxelHalfHeight) + 0.5f)) * localArchimedesForce;
+                    Vector3 force = -rootRigidbody.GetPointVelocity(vector) * 0.1f * rootRigidbody.mass + Mathf.Sqrt(Mathf.Clamp01((surfaceElevation - vector.y) / (2f * voxelHalfHeight) + 0.5f)) * localArchimedesForce;
                     rootRigidbody.AddForceAtPosition(force, vector);
                 }
             }
