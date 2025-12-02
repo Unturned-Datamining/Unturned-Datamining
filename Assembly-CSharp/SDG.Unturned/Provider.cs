@@ -2655,6 +2655,7 @@ public class Provider : MonoBehaviour
             {
                 editableDatDictionary = MetadataPreservingDatWriter.CreateRoot();
             }
+            ConfigData configData = ConfigData.CreateDefault(singleplayer);
             if (ServerSavedata.fileExists("/Config.json"))
             {
                 if (flag)
@@ -2665,7 +2666,6 @@ public class Provider : MonoBehaviour
                 {
                     CommandWindow.Log("Not converting legacy Config.json file, using as-is");
                 }
-                ConfigData configData = ConfigData.CreateDefault(singleplayer);
                 try
                 {
                     ServerSavedata.populateJSON("/Config.json", configData);
@@ -2722,6 +2722,17 @@ public class Provider : MonoBehaviour
                     }
                 }
                 _configData = configData;
+            }
+            if ((bool)clUseLegacyJsonConfig)
+            {
+                try
+                {
+                    ServerSavedata.serializeJSON("/Config.json", configData);
+                }
+                catch (Exception e9)
+                {
+                    UnturnedLog.exception(e9, "Caught exception while serializing json gameplay config:");
+                }
             }
         }
         if ((bool)clLogGameplayConfig)

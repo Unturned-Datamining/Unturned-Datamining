@@ -14,6 +14,10 @@ public class SafezoneNode : Node
 
     public bool noWeapons;
 
+    /// <summary>
+    /// Please check CurrentlyAllowsBuilding.
+    /// Bypassed by LevelAsset's ShouldAllowBuildingInSafezonesInSingleplayer option.
+    /// </summary>
     public bool noBuildables;
 
     /// <summary>
@@ -32,6 +36,23 @@ public class SafezoneNode : Node
         set
         {
             _normalizedRadius = value;
+        }
+    }
+
+    public bool CurrentlyAllowsBuilding
+    {
+        get
+        {
+            if (noBuildables)
+            {
+                LevelAsset asset = Level.getAsset();
+                if (asset != null && asset.ShouldAllowBuildingInSafezonesInSingleplayer && Provider.isServer)
+                {
+                    return !Dedicator.IsDedicatedServer;
+                }
+                return false;
+            }
+            return true;
         }
     }
 

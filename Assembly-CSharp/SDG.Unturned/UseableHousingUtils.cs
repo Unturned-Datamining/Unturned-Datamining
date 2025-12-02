@@ -212,7 +212,7 @@ internal static class UseableHousingUtils
     public static bool IsPendingPositionValid(Player player, Vector3 pendingPlacementPosition)
     {
         SteamChannel channel = player.channel;
-        if (player.movement.isSafe && player.movement.isSafeInfo.noBuildables)
+        if (player.movement.isSafe && !player.movement.isSafeInfo.CurrentlyAllowsBuilding)
         {
             if (channel.IsLocalPlayer)
             {

@@ -23,7 +23,7 @@ public class Logs : MonoBehaviour
 
     /// <summary>
     /// If true, information like IP addresses and login tokens should be censored in vanilla logs.
-    /// Nelson 2024-11-11: Special thanks to Jdance and asineth0 in public issue #4740!
+    /// (public issue #4740)
     /// </summary>
     public static bool ShouldRedactLogs => shouldRedactLogs.value;
 

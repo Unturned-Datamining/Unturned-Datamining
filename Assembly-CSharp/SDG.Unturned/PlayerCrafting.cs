@@ -323,6 +323,26 @@ public class PlayerCrafting : PlayerCaller
         {
             return true;
         }
+        if (blueprint.RequiresStaticTags != null)
+        {
+            CachingAssetRef[] requiresStaticTags = blueprint.RequiresStaticTags;
+            if (requiresStaticTags != null)
+            {
+                for (int i = 0; i < requiresStaticTags.Length; i++)
+                {
+                    TagAsset tagAsset = requiresStaticTags[i].Get<TagAsset>();
+                    if (tagAsset == null)
+                    {
+                        return true;
+                    }
+                    if (!Level.IsTagEnabled(tagAsset))
+                    {
+                        UnturnedLog.info($"Cannot craft blueprint {blueprint} because tag {tagAsset} is unavailable");
+                        return true;
+                    }
+                }
+            }
+        }
         return false;
     }
 

@@ -261,8 +261,9 @@ public class LevelNavigation
                 {
                     flags[i].remove();
                 }
-                catch
+                catch (Exception e)
                 {
+                    UnturnedLog.exception(e, "Caught exception removing navmesh:");
                 }
                 flags.RemoveAt(i);
                 flagData.RemoveAt(i);

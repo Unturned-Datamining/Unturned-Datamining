@@ -301,7 +301,7 @@ public class UseableBarricade : Useable
 
     private bool checkClaims()
     {
-        if (base.player.movement.isSafe && base.player.movement.isSafeInfo.noBuildables)
+        if (base.player.movement.isSafe && !base.player.movement.isSafeInfo.CurrentlyAllowsBuilding)
         {
             if (base.channel.IsLocalPlayer)
             {

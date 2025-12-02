@@ -5275,6 +5275,14 @@ public class InteractableVehicle : Interactable, IExplosionDamageable, IEquatabl
         }
     }
 
+    internal void NotifyFirstSpawned()
+    {
+        if (eventHook != null)
+        {
+            eventHook.OnFirstSpawned.TryInvoke(this);
+        }
+    }
+
     [Obsolete]
     public void tellState(Vector3 newPosition, byte newAngle_X, byte newAngle_Y, byte newAngle_Z, byte newSpeed, byte newPhysicsSpeed, byte newTurn)
     {

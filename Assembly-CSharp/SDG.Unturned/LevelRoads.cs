@@ -27,9 +27,6 @@ public class LevelRoads
     /// Maps region coord to a list of sub-road renderers in that region.
     /// Unlike older "region" features, coord can be outside of the old bounds.
     /// Not used in the editor or the dedicated server.
-    ///
-    /// Nelson 2025-03-28: experimenting with this to see whether it reduces time spent culling far-away road
-    /// renderers on Rio de Janeiro Remastered. (Lots of roads on this map.)
     /// </summary>
     private static Dictionary<Vector2Int, List<MeshRenderer>> regionSegmentRenderers;
 

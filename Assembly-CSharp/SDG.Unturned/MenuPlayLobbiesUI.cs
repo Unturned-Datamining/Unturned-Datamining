@@ -191,7 +191,7 @@ public class MenuPlayLobbiesUI
         membersBox.SizeScale_Y = 1f;
         membersBox.ScaleContentToWidth = true;
         container.AddChild(membersBox);
-        inviteButton = new SleekButtonIcon(MenuDashboardUI.icons.load<Texture2D>("Invite"));
+        inviteButton = new SleekButtonIcon(MenuDashboardUI.icons.load<Texture2D>("Invite"), 40);
         inviteButton.PositionOffset_X = -200f;
         inviteButton.PositionOffset_Y = -150f;
         inviteButton.PositionScale_X = 0.5f;

@@ -408,6 +408,7 @@ public class VehicleManager : SteamCaller
         {
             return null;
         }
+        interactableVehicle.NotifyFirstSpawned();
         SendSingleVehicle.Invoke(ENetReliability.Reliable, Provider.GatherRemoteClientConnections(), WriteVehicle, interactableVehicle);
         return interactableVehicle;
     }
@@ -1788,6 +1789,7 @@ public class VehicleManager : SteamCaller
         if (interactableVehicle != null)
         {
             interactableVehicle.WasNaturallySpawned = true;
+            interactableVehicle.NotifyFirstSpawned();
         }
         return interactableVehicle;
     }
@@ -2011,6 +2013,7 @@ public class VehicleManager : SteamCaller
                     if (interactableVehicle != null)
                     {
                         interactableVehicle.WasNaturallySpawned = true;
+                        interactableVehicle.NotifyFirstSpawned();
                     }
                 }
                 else if ((bool)Assets.shouldLoadAnyAssets)
@@ -2151,7 +2154,7 @@ public class VehicleManager : SteamCaller
         if (writer.errors != 0 && Time.realtimeSinceStartup - lastSendOverflowWarning > 1f)
         {
             lastSendOverflowWarning = Time.realtimeSinceStartup;
-            CommandWindow.LogWarningFormat("Error {0} writing vehicle states. The vehicle count ({1}) is probably too high. No this is not a bug introduced in the update, rather a warning of a previously silent bug.", writer.errors, _vehicles.Count);
+            CommandWindow.LogWarningFormat("Error {0} writing vehicle states. The vehicle count ({1}) is probably too high.", writer.errors, _vehicles.Count);
         }
     }
 

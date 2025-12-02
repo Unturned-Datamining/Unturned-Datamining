@@ -44,7 +44,7 @@ internal static class ServerPrefabUtil
             }
             return true;
         });
-        workingComponents.Sort((Component lhs, Component rhs) => (lhs is TextMeshPro || lhs is TextMesh || lhs is LODGroupAdditionalData) ? (-1) : 0);
+        workingComponents.Sort((Component lhs, Component rhs) => (lhs is TextMeshPro || lhs is TextMesh || lhs is LODGroupAdditionalData || lhs is EnableDopplerEffect || lhs is MusicAudioSource) ? (-1) : 0);
         foreach (Component workingComponent in workingComponents)
         {
             UnityEngine.Object.DestroyImmediate(workingComponent, allowDestroyingAssets: true);

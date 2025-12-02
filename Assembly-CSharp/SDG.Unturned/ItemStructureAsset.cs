@@ -112,7 +112,7 @@ public class ItemStructureAsset : ItemPlaceableAsset
 
     public override bool canBeUsedInSafezone(SafezoneNode safezone, bool byAdmin)
     {
-        return !safezone.noBuildables;
+        return safezone.CurrentlyAllowsBuilding;
     }
 
     public override void BuildDescription(ItemDescriptionBuilder builder, Item itemInstance)

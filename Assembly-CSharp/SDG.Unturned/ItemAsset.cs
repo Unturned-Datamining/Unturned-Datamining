@@ -1123,6 +1123,7 @@ public class ItemAsset : Asset, ISkinableAsset, IBlueprintOwner
             blueprint.CanBeVisibleWithUnmetConditions = datDictionary.ParseBool("VisibleWithUnmetConditions");
             blueprint.Name = datDictionary.GetString("Name");
             blueprint.RequiresNearbyCraftingTags = datDictionary.ParseArrayOfStructs<CachingAssetRef>("RequiresNearbyCraftingTags");
+            blueprint.RequiresStaticTags = datDictionary.ParseArrayOfStructs<CachingAssetRef>("RequiresStaticTags");
             blueprint._operation = value2;
             blueprint.SkillSpecialityIndex = specialityIndex;
             blueprint.SkillIndex = skillIndex;
@@ -1805,6 +1806,15 @@ public class ItemAsset : Asset, ISkinableAsset, IBlueprintOwner
                 foreach (CachingAssetRef assetRef in requiresNearbyCraftingTags)
                 {
                     editableDatList6.AddValue().SetAssetRefWithInlineComment(assetRef);
+                }
+            }
+            if (blueprint.RequiresStaticTags != null && blueprint.RequiresStaticTags.Length != 0)
+            {
+                IEditableDatList editableDatList7 = editableDatDictionary2.AddList("RequiresStaticTags");
+                CachingAssetRef[] requiresNearbyCraftingTags = blueprint.RequiresStaticTags;
+                foreach (CachingAssetRef assetRef2 in requiresNearbyCraftingTags)
+                {
+                    editableDatList7.AddValue().SetAssetRefWithInlineComment(assetRef2);
                 }
             }
             if (blueprint.effectAssetRef.IsAssigned)

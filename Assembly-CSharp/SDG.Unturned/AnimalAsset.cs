@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace SDG.Unturned;
 
-public class AnimalAsset : Asset
+public class AnimalAsset : Asset, IArmorFalloff
 {
     protected string _animalName;
 
@@ -47,6 +47,12 @@ public class AnimalAsset : Asset
     /// Minimum seconds between attacks.
     /// </summary>
     public float attackInterval;
+
+    public float ArmorFalloffMaxRange { get; set; }
+
+    public float ArmorFalloffRange { get; set; }
+
+    public float ArmorFalloffMultiplier { get; set; }
 
     public string animalName => _animalName;
 
@@ -265,6 +271,7 @@ public class AnimalAsset : Asset
         shouldPlayAnimsOnDedicatedServer = p.data.ParseBool("Should_Play_Anims_On_Dedicated_Server");
         ShouldPreventMoveDuringStartle = p.data.ParseBool("Should_Prevent_Move_During_Startle");
         _rewardXP = p.data.ParseUInt32("Reward_XP");
+        this.PopulateArmorFalloff(in p);
     }
 
     internal override void BuildCargoData(CargoBuilder builder)

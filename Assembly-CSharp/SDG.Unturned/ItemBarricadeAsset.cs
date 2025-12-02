@@ -211,7 +211,7 @@ public class ItemBarricadeAsset : ItemPlaceableAsset
 
     public override bool canBeUsedInSafezone(SafezoneNode safezone, bool byAdmin)
     {
-        return !safezone.noBuildables;
+        return safezone.CurrentlyAllowsBuilding;
     }
 
     /// <summary>

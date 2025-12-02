@@ -79,4 +79,7 @@ public class VehicleEventHook : MonoBehaviour
 
     [Tooltip("Invoked when headlights are turned off.")]
     public UnityEvent OnHeadlightsDeactivated;
+
+    [Tooltip("Invoked on Authority when vehicle enters the world. (Not when loaded or replicated.)")]
+    public UnityEvent OnFirstSpawned;
 }

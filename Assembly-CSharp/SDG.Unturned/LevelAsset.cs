@@ -318,6 +318,16 @@ public class LevelAsset : Asset
 
     public EZombieDifficultyAssetPrioritization ZombieDifficultyAssetPrioritization { get; set; }
 
+    /// <summary>
+    /// If true, bypasses SafezoneNode no-buildables mode in singleplayer.
+    /// </summary>
+    public bool ShouldAllowBuildingInSafezonesInSingleplayer { get; set; }
+
+    /// <summary>
+    /// Blueprints can test for these tags. (Future extension here?)
+    /// </summary>
+    public CachingAssetRef[] Tags { get; set; }
+
     public DefaultLoadoutItem[] GetSkillsetLoadoutOrNull(EPlayerSkillset skillset)
     {
         if (DefaultSkillsetLoadouts == null)
@@ -564,6 +574,8 @@ public class LevelAsset : Asset
         }
         UnderwaterFogDensity = p.data.ParseFloat("UnderwaterFogDensity", 0.075f);
         ZombieDifficultyAssetPrioritization = p.data.ParseEnum("ZombieDifficultyAssetPrioritization", EZombieDifficultyAssetPrioritization.NavmeshOverridesTable);
+        ShouldAllowBuildingInSafezonesInSingleplayer = p.data.ParseBool("Allow_Building_In_Safezone_In_Singleplayer");
+        Tags = p.data.ParseArrayOfStructs<CachingAssetRef>("Tags");
     }
 
     public LevelAsset()

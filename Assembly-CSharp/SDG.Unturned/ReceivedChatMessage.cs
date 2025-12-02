@@ -32,7 +32,7 @@ public struct ReceivedChatMessage
 
     /// <summary>
     /// Whether this entry should enable rich text formatting.
-    /// False by default because players abuse font size and ugly colors.
+    /// False by default to prevent players including markup themselves.
     /// </summary>
     public bool useRichTextFormatting;
 

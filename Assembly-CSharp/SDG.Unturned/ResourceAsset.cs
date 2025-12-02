@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace SDG.Unturned;
 
-public class ResourceAsset : Asset
+public class ResourceAsset : Asset, IArmorFalloff
 {
     private static List<MeshFilter> meshes = new List<MeshFilter>();
 
@@ -78,6 +78,12 @@ public class ResourceAsset : Asset
     public EObjectChart chart;
 
     public bool shouldExcludeFromLevelBatching;
+
+    public float ArmorFalloffMaxRange { get; set; }
+
+    public float ArmorFalloffRange { get; set; }
+
+    public float ArmorFalloffMultiplier { get; set; }
 
     public string resourceName => holidayRestriction switch
     {
@@ -395,6 +401,7 @@ public class ResourceAsset : Asset
         halloweenRedirect = p.data.readAssetReference<ResourceAsset>("Halloween_Redirect");
         chart = p.data.ParseEnum("Chart", EObjectChart.NONE);
         shouldExcludeFromLevelBatching = p.data.ParseBool("Exclude_From_Level_Batching");
+        this.PopulateArmorFalloff(in p);
     }
 
     internal string OnGetRewardSpawnTableErrorContext()

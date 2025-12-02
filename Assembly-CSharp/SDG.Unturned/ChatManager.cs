@@ -366,12 +366,12 @@ public class ChatManager : SteamCaller
         callingPlayer.lastChat = Time.realtimeSinceStartup;
         EChatMode eChatMode = (EChatMode)(flags & 0x7F);
         bool flag = (flags & 0x80) > 0;
-        if (text.Length < 2 || (Dedicator.IsDedicatedServer && flag && !Provider.configData.UnityEvents.Allow_Client_Messages))
+        if (string.IsNullOrEmpty(text) || (Dedicator.IsDedicatedServer && flag && !Provider.configData.UnityEvents.Allow_Client_Messages))
         {
             return;
         }
         text = text.Trim();
-        if (text.Length < 2 || text.ContainsNewLine())
+        if (text.Length < 1 || text.ContainsNewLine())
         {
             return;
         }

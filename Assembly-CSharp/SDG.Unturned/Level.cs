@@ -75,6 +75,11 @@ public class Level : MonoBehaviour
 
     private static bool didResolveLevelAsset;
 
+    /// <summary>
+    /// Initialized along with level asset.
+    /// </summary>
+    private static CachingAssetRef[] cachedStaticTags;
+
     private static GameObject satelliteCaptureGameObject;
 
     private static Transform satelliteCaptureTransform;
@@ -450,6 +455,23 @@ public class Level : MonoBehaviour
     {
         cachedLevelAsset = null;
         didResolveLevelAsset = false;
+        cachedStaticTags = null;
+    }
+
+    public static bool IsTagEnabled(TagAsset tag)
+    {
+        if (cachedStaticTags == null || cachedStaticTags.Length < 1)
+        {
+            return false;
+        }
+        for (int i = 0; i < cachedStaticTags.Length; i++)
+        {
+            if (cachedStaticTags[i].Get() == tag)
+            {
+                return true;
+            }
+        }
+        return false;
     }
 
     /// <summary>
@@ -476,6 +498,24 @@ public class Level : MonoBehaviour
                     UnturnedLog.error("Unable to find default level asset");
                 }
             }
+            List<CachingAssetRef> list = new List<CachingAssetRef>();
+            if (cachedLevelAsset != null && cachedLevelAsset.Tags != null)
+            {
+                list.AddRange(cachedLevelAsset.Tags);
+            }
+            if (Provider.isServer && !Dedicator.IsDedicatedServer)
+            {
+                list.Add(CachingAssetRef.Parse("d7bd989414644b19b3299be0c6fab5f0"));
+                if (cachedLevelAsset != null && cachedLevelAsset.ShouldAllowBuildingInSafezonesInSingleplayer)
+                {
+                    list.Add(CachingAssetRef.Parse("73eb818d1aa044c7bb4e61b8f9b37a3c"));
+                }
+            }
+            else
+            {
+                list.Add(CachingAssetRef.Parse("f663677b88de40ec80ff36b0c1cae544"));
+            }
+            cachedStaticTags = list.ToArray();
         }
         return cachedLevelAsset;
     }
@@ -588,6 +628,7 @@ public class Level : MonoBehaviour
             isExiting = false;
             _info = newInfo;
             ResetCachedLevelAsset();
+            getAsset();
             LoadingUI.updateScene();
             SceneManager.LoadScene("Game");
             PlayLevelLoadingScreenMusic();
@@ -605,6 +646,7 @@ public class Level : MonoBehaviour
         isExiting = false;
         _info = newInfo;
         ResetCachedLevelAsset();
+        getAsset();
         LoadingUI.updateScene();
         SceneManager.LoadScene("Game");
         PlayLevelLoadingScreenMusic();

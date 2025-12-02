@@ -702,7 +702,7 @@ public class PlayerDashboardInventoryUI
                         continue;
                     }
                     Blueprint blueprint = action.blueprints[0].FindBlueprint(blueprintOwner);
-                    if ((blueprint.GetLegacyBlueprintSkill() == EBlueprintSkill.REPAIR && blueprint.level > Provider.modeConfigData.Gameplay.Repair_Level_Max) || (blueprint.Operation == EBlueprintOperation.RepairTargetItem && selectedJar.item.quality >= 100) || !blueprint.areConditionsMet(Player.LocalPlayer) || Player.LocalPlayer.crafting.isBlueprintBlacklisted(blueprint))
+                    if (Player.LocalPlayer.crafting.IsBlueprintPermanentlyDisabled(blueprint) || (blueprint.Operation == EBlueprintOperation.RepairTargetItem && selectedJar.item.quality >= 100) || !blueprint.areConditionsMet(Player.LocalPlayer))
                     {
                         continue;
                     }

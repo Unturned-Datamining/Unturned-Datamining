@@ -46,4 +46,5 @@ Asset
 			ValueThreshold 0.1
 		}
 	]
+	Allow_Building_In_Safezone_In_Singleplayer true
 }

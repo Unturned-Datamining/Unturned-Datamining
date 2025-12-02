@@ -7,7 +7,7 @@ using Unturned.SystemEx;
 
 namespace SDG.Unturned;
 
-public class ObjectAsset : Asset
+public class ObjectAsset : Asset, IArmorFalloff
 {
     protected string _objectName;
 
@@ -206,6 +206,12 @@ public class ObjectAsset : Asset
     private static HashSet<ushort> tempAssociatedFlags = new HashSet<ushort>();
 
     private static List<MeshCollider> navMCs = new List<MeshCollider>();
+
+    public float ArmorFalloffMaxRange { get; set; }
+
+    public float ArmorFalloffRange { get; set; }
+
+    public float ArmorFalloffMultiplier { get; set; }
 
     public string objectName => holidayRestriction switch
     {
@@ -957,6 +963,7 @@ public class ObjectAsset : Asset
         visibilityConditionsList.Parse(p.data, p.localization, this, "Conditions", "Condition_");
         conditions = visibilityConditionsList.conditions;
         IsClutter = p.data.ParseBool("Is_Clutter");
+        this.PopulateArmorFalloff(in p);
     }
 
     [Obsolete("Removed shouldSend parameter")]

@@ -23,27 +23,6 @@ public class LevelInfo
     public string name => _name;
 
     /// <summary>
-    /// Whether unity analytics should track this map's name. Don't want to burn all the analysis points!
-    /// </summary>
-    public bool canAnalyticsTrack => isSpecial;
-
-    /// <summary>
-    /// Maps included with the game only, separate from category because arena maps are misc.
-    /// Category is set as part of the config file. This is only mainly used to enable unity analytics tracking for map name.
-    /// </summary>
-    public bool isSpecial
-    {
-        get
-        {
-            if (!(name == "Alpha Valley") && !(name == "Monolith") && !(name == "Paintball_Arena_0") && !(name == "PEI") && !(name == "PEI Arena") && !(name == "Tutorial") && !(name == "Washington") && !(name == "Washington Arena") && !(name == "Yukon") && !(name == "Russia") && !(name == "Hawaii"))
-            {
-                return name == "Germany";
-            }
-            return true;
-        }
-    }
-
-    /// <summary>
     /// Only used for play menu categories at the moment.
     /// </summary>
     public bool isFromWorkshop { get; protected set; }

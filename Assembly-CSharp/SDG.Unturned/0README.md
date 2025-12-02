@@ -771,6 +771,8 @@
 - [Hurt.cs](Hurt.cs)
 - [HyperUpdated.cs](HyperUpdated.cs)
 - [IAmbianceNode.cs](IAmbianceNode.cs)
+- [IArmorFalloff.cs](IArmorFalloff.cs)
+- [IArmorFalloffEx.cs](IArmorFalloffEx.cs)
 - [IAssetErrorContext.cs](IAssetErrorContext.cs)
 - [IAssetReference.cs](IAssetReference.cs)
 - [IBarricadePlacedHandler.cs](IBarricadePlacedHandler.cs)

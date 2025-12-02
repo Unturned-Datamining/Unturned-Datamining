@@ -7,11 +7,17 @@ namespace SDG.Unturned;
 /// Common base for barricades and structures.
 /// 2023-01-16: not ideal to be adding this so late in development, but at least it is a step in the right direction.
 /// </summary>
-public class ItemPlaceableAsset : ItemAsset
+public class ItemPlaceableAsset : ItemAsset, IArmorFalloff
 {
     private CachingAssetRef _salvageItemRef;
 
     private CachingAssetRef _itemDroppedOnDestroyRef;
+
+    public float ArmorFalloffMaxRange { get; set; }
+
+    public float ArmorFalloffRange { get; set; }
+
+    public float ArmorFalloffMultiplier { get; set; }
 
     /// <summary>
     /// If true, this item is eligible for zombies to detect and attack when stuck.
@@ -251,6 +257,7 @@ public class ItemPlaceableAsset : ItemAsset
         {
             ExplosionEffectFlags |= EPlaceableExplosionEffectFlags.CopyModelRotation;
         }
+        this.PopulateArmorFalloff(in p);
     }
 
     internal override void BuildCargoData(CargoBuilder builder)

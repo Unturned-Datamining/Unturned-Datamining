@@ -84,17 +84,26 @@ public class TagAsset : Asset
     public override void PopulateAsset(in PopulateAssetParameters p)
     {
         base.PopulateAsset(in p);
-        PlainTextName = p.localization.format("Name");
-        if (p.data.TryParseColor32RGB("NameColor", out var value))
+        if (p.localization.has("Name"))
         {
-            HasNameColor = true;
-            NameColor = value;
-            RichTextName = RichTextUtil.wrapWithColor(PlainTextName, value);
+            PlainTextName = p.localization.format("Name");
+            if (p.data.TryParseColor32RGB("NameColor", out var value))
+            {
+                HasNameColor = true;
+                NameColor = value;
+                RichTextName = RichTextUtil.wrapWithColor(PlainTextName, value);
+            }
+            else
+            {
+                HasNameColor = false;
+                RichTextName = PlainTextName;
+            }
         }
         else
         {
             HasNameColor = false;
-            RichTextName = PlainTextName;
+            PlainTextName = name;
+            RichTextName = name;
         }
         if (p.data.ParseBool("HasIcon", defaultValue: true))
         {

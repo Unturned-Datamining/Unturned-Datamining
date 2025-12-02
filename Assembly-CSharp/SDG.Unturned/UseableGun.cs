@@ -1440,6 +1440,7 @@ public class UseableGun : Useable
                 Ray ray = new Ray(bulletInfo.position, bulletInfo.velocity);
                 float range = (Provider.modeConfigData.Gameplay.Ballistics ? (bulletInfo.velocity.magnitude * 0.02f) : equippedGunAsset.range);
                 RaycastInfo raycastInfo = DamageTool.raycast(ray, range, RayMasks.DAMAGE_CLIENT, base.player);
+                float distance = Vector3.Distance(bulletInfo.origin, raycastInfo.point);
                 if (raycastInfo.player != null && equippedGunAsset.playerDamageMultiplier.damage > 1f && (DamageTool.isPlayerAllowedToDamagePlayer(base.player, raycastInfo.player) || equippedGunAsset.bypassAllowedToDamagePlayer))
                 {
                     if (ePlayerHit != EPlayerHit.CRITICAL)
@@ -1463,11 +1464,14 @@ public class UseableGun : Useable
                 }
                 else if (raycastInfo.animal != null && equippedGunAsset.animalDamageMultiplier.damage > 1f)
                 {
-                    if (ePlayerHit != EPlayerHit.CRITICAL)
+                    if (raycastInfo.animal.asset.DoesArmorFalloffShowHitmarker(distance))
                     {
-                        ePlayerHit = ((raycastInfo.limb != ELimb.SKULL) ? EPlayerHit.ENTITIY : EPlayerHit.CRITICAL);
+                        if (ePlayerHit != EPlayerHit.CRITICAL)
+                        {
+                            ePlayerHit = ((raycastInfo.limb != ELimb.SKULL) ? EPlayerHit.ENTITIY : EPlayerHit.CRITICAL);
+                        }
+                        PlayerUI.hitmark(raycastInfo.point, b > 1, (raycastInfo.limb != ELimb.SKULL) ? EPlayerHit.ENTITIY : EPlayerHit.CRITICAL);
                     }
-                    PlayerUI.hitmark(raycastInfo.point, b > 1, (raycastInfo.limb != ELimb.SKULL) ? EPlayerHit.ENTITIY : EPlayerHit.CRITICAL);
                 }
                 else if (raycastInfo.transform != null && raycastInfo.transform.CompareTag("Barricade") && equippedGunAsset.barricadeDamage > 1f)
                 {
@@ -1475,7 +1479,7 @@ public class UseableGun : Useable
                     if (barricadeDrop != null)
                     {
                         ItemBarricadeAsset asset = barricadeDrop.asset;
-                        if (asset != null && asset.canBeDamaged && (asset.isVulnerable || CanDamageInvulnerableEntities))
+                        if (asset != null && asset.canBeDamaged && (asset.isVulnerable || CanDamageInvulnerableEntities) && asset.DoesArmorFalloffShowHitmarker(distance))
                         {
                             if (ePlayerHit == EPlayerHit.NONE)
                             {
@@ -1491,7 +1495,7 @@ public class UseableGun : Useable
                     if (structureDrop != null)
                     {
                         ItemStructureAsset asset2 = structureDrop.asset;
-                        if (asset2 != null && asset2.canBeDamaged && (asset2.isVulnerable || CanDamageInvulnerableEntities))
+                        if (asset2 != null && asset2.canBeDamaged && (asset2.isVulnerable || CanDamageInvulnerableEntities) && asset2.DoesArmorFalloffShowHitmarker(distance))
                         {
                             if (ePlayerHit == EPlayerHit.NONE)
                             {
@@ -1503,7 +1507,7 @@ public class UseableGun : Useable
                 }
                 else if (raycastInfo.vehicle != null && !raycastInfo.vehicle.isDead && equippedGunAsset.vehicleDamage > 1f)
                 {
-                    if (raycastInfo.vehicle.asset != null && raycastInfo.vehicle.canBeDamaged && (raycastInfo.vehicle.asset.isVulnerable || CanDamageInvulnerableEntities))
+                    if (raycastInfo.vehicle.asset != null && raycastInfo.vehicle.canBeDamaged && (raycastInfo.vehicle.asset.isVulnerable || CanDamageInvulnerableEntities) && raycastInfo.vehicle.asset.DoesArmorFalloffShowHitmarker(distance))
                     {
                         if (ePlayerHit == EPlayerHit.NONE)
                         {
@@ -1517,7 +1521,7 @@ public class UseableGun : Useable
                     if (ResourceManager.tryGetRegion(raycastInfo.transform, out var x, out var y, out var index))
                     {
                         ResourceSpawnpoint resourceSpawnpoint = ResourceManager.getResourceSpawnpoint(x, y, index);
-                        if (resourceSpawnpoint != null && !resourceSpawnpoint.isDead && equippedGunAsset.hasBladeID(resourceSpawnpoint.asset.bladeID))
+                        if (resourceSpawnpoint != null && !resourceSpawnpoint.isDead && equippedGunAsset.hasBladeID(resourceSpawnpoint.asset.bladeID) && resourceSpawnpoint.asset.DoesArmorFalloffShowHitmarker(distance))
                         {
                             if (ePlayerHit == EPlayerHit.NONE)
                             {
@@ -1534,7 +1538,7 @@ public class UseableGun : Useable
                     {
                         raycastInfo.transform = componentInParent.transform;
                         raycastInfo.section = componentInParent.getSection(raycastInfo.collider.transform);
-                        if (componentInParent.IsSectionIndexValid(raycastInfo.section) && !componentInParent.isSectionDead(raycastInfo.section) && equippedGunAsset.hasBladeID(componentInParent.asset.rubbleBladeID) && (componentInParent.asset.rubbleIsVulnerable || CanDamageInvulnerableEntities))
+                        if (componentInParent.IsSectionIndexValid(raycastInfo.section) && !componentInParent.isSectionDead(raycastInfo.section) && equippedGunAsset.hasBladeID(componentInParent.asset.rubbleBladeID) && (componentInParent.asset.rubbleIsVulnerable || CanDamageInvulnerableEntities) && componentInParent.asset.DoesArmorFalloffShowHitmarker(distance))
                         {
                             if (ePlayerHit == EPlayerHit.NONE)
                             {
@@ -1655,10 +1659,10 @@ public class UseableGun : Useable
                 EPlayerKill kill = EPlayerKill.NONE;
                 uint xp = 0u;
                 float bulletDamageMultiplier = getBulletDamageMultiplier(ref bullet);
-                float value = Vector3.Distance(bullet.origin, input.point);
+                float num = Vector3.Distance(bullet.origin, input.point);
                 float a = equippedGunAsset.range * equippedGunAsset.damageFalloffRange;
                 float b3 = equippedGunAsset.range * equippedGunAsset.damageFalloffMaxRange;
-                float t = Mathf.InverseLerp(a, b3, value);
+                float t = Mathf.InverseLerp(a, b3, num);
                 bulletDamageMultiplier *= Mathf.Lerp(1f, equippedGunAsset.damageFalloffMultiplier, t);
                 ERagdollEffect useableRagdollEffect = base.player.equipment.getUseableRagdollEffect();
                 if (input.type == ERaycastInfoType.PLAYER)
@@ -1709,7 +1713,7 @@ public class UseableGun : Useable
                         Vector3 direction3 = input.direction * Mathf.Ceil((float)(int)b2 / 2f);
                         IDamageMultiplier animalOrPlayerDamageMultiplier = equippedGunAsset.animalOrPlayerDamageMultiplier;
                         DamageAnimalParameters parameters3 = DamageAnimalParameters.make(input.animal, direction3, animalOrPlayerDamageMultiplier, input.limb);
-                        parameters3.times = bulletDamageMultiplier;
+                        parameters3.times = bulletDamageMultiplier * input.animal.asset.GetArmorFalloffMultiplier(num);
                         parameters3.instigator = base.player;
                         parameters3.ragdollEffect = useableRagdollEffect;
                         parameters3.AlertPosition = base.transform.position;
@@ -1720,8 +1724,9 @@ public class UseableGun : Useable
                 {
                     if (input.vehicle != null && input.vehicle.asset != null && input.vehicle.canBeDamaged && (input.vehicle.asset.isVulnerable || CanDamageInvulnerableEntities))
                     {
-                        float num = (CanDamageInvulnerableEntities ? Provider.modeConfigData.Vehicles.Gun_Highcal_Damage_Multiplier : Provider.modeConfigData.Vehicles.Gun_Lowcal_Damage_Multiplier);
-                        DamageTool.damage(input.vehicle, damageTires: true, input.point, isRepairing: false, equippedGunAsset.vehicleDamage, bulletDamageMultiplier * num, canRepair: true, out kill, base.channel.owner.playerID.steamID, EDamageOrigin.Useable_Gun);
+                        float num2 = (CanDamageInvulnerableEntities ? Provider.modeConfigData.Vehicles.Gun_Highcal_Damage_Multiplier : Provider.modeConfigData.Vehicles.Gun_Lowcal_Damage_Multiplier);
+                        num2 *= input.vehicle.asset.GetArmorFalloffMultiplier(num);
+                        DamageTool.damage(input.vehicle, damageTires: true, input.point, isRepairing: false, equippedGunAsset.vehicleDamage, bulletDamageMultiplier * num2, canRepair: true, out kill, base.channel.owner.playerID.steamID, EDamageOrigin.Useable_Gun);
                     }
                 }
                 else if (input.type == ERaycastInfoType.BARRICADE)
@@ -1734,12 +1739,13 @@ public class UseableGun : Useable
                             ItemBarricadeAsset asset3 = barricadeDrop2.asset;
                             if (asset3 != null && asset3.canBeDamaged && (asset3.isVulnerable || CanDamageInvulnerableEntities))
                             {
-                                float num2 = (CanDamageInvulnerableEntities ? Provider.modeConfigData.Barricades.Gun_Highcal_Damage_Multiplier : Provider.modeConfigData.Barricades.Gun_Lowcal_Damage_Multiplier);
+                                float num3 = (CanDamageInvulnerableEntities ? Provider.modeConfigData.Barricades.Gun_Highcal_Damage_Multiplier : Provider.modeConfigData.Barricades.Gun_Lowcal_Damage_Multiplier);
+                                num3 *= asset3.GetArmorFalloffMultiplier(num);
                                 if (barricadeDrop2.interactable is InteractableSentry interactableSentry)
                                 {
                                     interactableSentry.AlertDamagedBy(base.player);
                                 }
-                                DamageTool.damage(input.transform, isRepairing: false, equippedGunAsset.barricadeDamage, bulletDamageMultiplier * num2, out kill, base.channel.owner.playerID.steamID, EDamageOrigin.Useable_Gun);
+                                DamageTool.damage(input.transform, isRepairing: false, equippedGunAsset.barricadeDamage, bulletDamageMultiplier * num3, out kill, base.channel.owner.playerID.steamID, EDamageOrigin.Useable_Gun);
                             }
                         }
                     }
@@ -1754,8 +1760,9 @@ public class UseableGun : Useable
                             ItemStructureAsset asset4 = structureDrop2.asset;
                             if (asset4 != null && asset4.canBeDamaged && (asset4.isVulnerable || CanDamageInvulnerableEntities))
                             {
-                                float num3 = (CanDamageInvulnerableEntities ? Provider.modeConfigData.Structures.Gun_Highcal_Damage_Multiplier : Provider.modeConfigData.Structures.Gun_Lowcal_Damage_Multiplier);
-                                DamageTool.damage(input.transform, isRepairing: false, input.direction * Mathf.Ceil((float)(int)b2 / 2f), equippedGunAsset.structureDamage, bulletDamageMultiplier * num3, out kill, base.channel.owner.playerID.steamID, EDamageOrigin.Useable_Gun);
+                                float num4 = (CanDamageInvulnerableEntities ? Provider.modeConfigData.Structures.Gun_Highcal_Damage_Multiplier : Provider.modeConfigData.Structures.Gun_Lowcal_Damage_Multiplier);
+                                num4 *= asset4.GetArmorFalloffMultiplier(num);
+                                DamageTool.damage(input.transform, isRepairing: false, input.direction * Mathf.Ceil((float)(int)b2 / 2f), equippedGunAsset.structureDamage, bulletDamageMultiplier * num4, out kill, base.channel.owner.playerID.steamID, EDamageOrigin.Useable_Gun);
                             }
                         }
                     }
@@ -1767,7 +1774,8 @@ public class UseableGun : Useable
                         ResourceSpawnpoint resourceSpawnpoint2 = ResourceManager.getResourceSpawnpoint(x2, y3, index2);
                         if (resourceSpawnpoint2 != null && !resourceSpawnpoint2.isDead && equippedGunAsset.hasBladeID(resourceSpawnpoint2.asset.bladeID))
                         {
-                            DamageTool.damage(input.transform, input.direction * Mathf.Ceil((float)(int)b2 / 2f), equippedGunAsset.resourceDamage, bulletDamageMultiplier, 1f, out kill, out xp, base.channel.owner.playerID.steamID, EDamageOrigin.Useable_Gun);
+                            float armorFalloffMultiplier = resourceSpawnpoint2.asset.GetArmorFalloffMultiplier(num);
+                            DamageTool.damage(input.transform, input.direction * Mathf.Ceil((float)(int)b2 / 2f), equippedGunAsset.resourceDamage, bulletDamageMultiplier * armorFalloffMultiplier, 1f, out kill, out xp, base.channel.owner.playerID.steamID, EDamageOrigin.Useable_Gun);
                         }
                     }
                 }
@@ -1776,13 +1784,14 @@ public class UseableGun : Useable
                     InteractableObjectRubble componentInParent2 = input.transform.GetComponentInParent<InteractableObjectRubble>();
                     if (componentInParent2 != null && componentInParent2.IsSectionIndexValid(input.section) && !componentInParent2.isSectionDead(input.section) && equippedGunAsset.hasBladeID(componentInParent2.asset.rubbleBladeID) && (componentInParent2.asset.rubbleIsVulnerable || CanDamageInvulnerableEntities))
                     {
-                        DamageTool.damage(componentInParent2.transform, input.direction, input.section, equippedGunAsset.objectDamage, bulletDamageMultiplier, out kill, out xp, base.channel.owner.playerID.steamID, EDamageOrigin.Useable_Gun);
+                        float armorFalloffMultiplier2 = componentInParent2.asset.GetArmorFalloffMultiplier(num);
+                        DamageTool.damage(componentInParent2.transform, input.direction, input.section, equippedGunAsset.objectDamage, bulletDamageMultiplier * armorFalloffMultiplier2, out kill, out xp, base.channel.owner.playerID.steamID, EDamageOrigin.Useable_Gun);
                     }
                 }
                 if (input.type != ERaycastInfoType.PLAYER && input.type != ERaycastInfoType.ZOMBIE && input.type != ERaycastInfoType.ANIMAL && !base.player.life.isAggressor)
                 {
-                    float num4 = equippedGunAsset.range + Provider.modeConfigData.Players.Ray_Aggressor_Distance;
-                    num4 *= num4;
+                    float num5 = equippedGunAsset.range + Provider.modeConfigData.Players.Ray_Aggressor_Distance;
+                    num5 *= num5;
                     float ray_Aggressor_Distance = Provider.modeConfigData.Players.Ray_Aggressor_Distance;
                     ray_Aggressor_Distance *= ray_Aggressor_Distance;
                     Vector3 normalized = (bullet.position - base.player.look.aim.position).normalized;
@@ -1797,7 +1806,7 @@ public class UseableGun : Useable
                         {
                             Vector3 vector = player.look.aim.position - base.player.look.aim.position;
                             Vector3 vector2 = Vector3.Project(vector, normalized);
-                            if (vector2.sqrMagnitude < num4 && (vector2 - vector).sqrMagnitude < ray_Aggressor_Distance)
+                            if (vector2.sqrMagnitude < num5 && (vector2 - vector).sqrMagnitude < ray_Aggressor_Distance)
                             {
                                 base.player.life.markAggressive(force: false);
                             }
@@ -1859,13 +1868,13 @@ public class UseableGun : Useable
         }
         if (Provider.modeConfigData.Gameplay.Ballistics)
         {
-            for (int num5 = bullets.Count - 1; num5 >= 0; num5--)
+            for (int num6 = bullets.Count - 1; num6 >= 0; num6--)
             {
-                BulletInfo bulletInfo2 = bullets[num5];
+                BulletInfo bulletInfo2 = bullets[num6];
                 bulletInfo2.steps++;
                 if (bulletInfo2.steps >= equippedGunAsset.ballisticSteps)
                 {
-                    bullets.RemoveAt(num5);
+                    bullets.RemoveAt(num6);
                 }
             }
         }

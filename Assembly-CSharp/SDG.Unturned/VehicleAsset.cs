@@ -7,7 +7,7 @@ using Unturned.SystemEx;
 
 namespace SDG.Unturned;
 
-public class VehicleAsset : Asset, ISkinableAsset
+public class VehicleAsset : Asset, ISkinableAsset, IArmorFalloff
 {
     protected bool _shouldVerifyHash;
 
@@ -202,6 +202,12 @@ public class VehicleAsset : Asset, ISkinableAsset
     protected bool _hasCrawler;
 
     private static CommandLineFlag clLogWheelConfiguration = new CommandLineFlag(defaultValue: false, "-LogVehicleWheelConfigurations");
+
+    public float ArmorFalloffMaxRange { get; set; }
+
+    public float ArmorFalloffRange { get; set; }
+
+    public float ArmorFalloffMultiplier { get; set; }
 
     public bool shouldVerifyHash => _shouldVerifyHash;
 
@@ -1748,6 +1754,7 @@ public class VehicleAsset : Asset, ISkinableAsset
                 Assets.ReportError(this, "needs EngineCurvesComponent on vehicle prefab for engine RPM and gearbox to work properly");
             }
         }
+        this.PopulateArmorFalloff(in p);
     }
 
     internal override void BuildCargoData(CargoBuilder builder)

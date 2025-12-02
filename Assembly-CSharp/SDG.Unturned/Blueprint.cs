@@ -38,9 +38,7 @@ public class Blueprint
     protected NPCRewardsList questRewardsList;
 
     /// <summary>
-    /// 2023-05-27: requested by Renaxon because some Arid blueprints are debug-only and
-    /// should not be visible when players search by name. (the 3.23.7.0 update made
-    /// non-craftable blueprints searchable for Buak)
+    /// Useful for hiding developer/debug internal blueprints that should not be visible when players search by name.
     /// </summary>
     public bool canBeVisibleWhenSearchedWithoutRequiredItems = true;
 
@@ -85,6 +83,12 @@ public class Blueprint
     /// Note: this is the list as-configured. It has not been filtered according to gameplay config.
     /// </summary>
     public CachingAssetRef[] RequiresNearbyCraftingTags { get; internal set; }
+
+    /// <summary>
+    /// Not shown in the UI. These tags are checked once per-level-startup.
+    /// For example, used to check for "singleplayer" tag or a map-specific tag.
+    /// </summary>
+    public CachingAssetRef[] RequiresStaticTags { get; set; }
 
     public Guid BuildEffectGuid => effectAssetRef.Guid;
 
