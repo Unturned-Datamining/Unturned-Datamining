@@ -5275,6 +5275,9 @@ public class InteractableVehicle : Interactable, IExplosionDamageable, IEquatabl
         }
     }
 
+    /// <summary>
+    /// Should be called AFTER replication (if applicable) so that events can call methods relying on replication.
+    /// </summary>
     internal void NotifyFirstSpawned()
     {
         if (eventHook != null)

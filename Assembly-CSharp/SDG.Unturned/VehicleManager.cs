@@ -408,8 +408,8 @@ public class VehicleManager : SteamCaller
         {
             return null;
         }
-        interactableVehicle.NotifyFirstSpawned();
         SendSingleVehicle.Invoke(ENetReliability.Reliable, Provider.GatherRemoteClientConnections(), WriteVehicle, interactableVehicle);
+        interactableVehicle.NotifyFirstSpawned();
         return interactableVehicle;
     }
 
@@ -1789,7 +1789,6 @@ public class VehicleManager : SteamCaller
         if (interactableVehicle != null)
         {
             interactableVehicle.WasNaturallySpawned = true;
-            interactableVehicle.NotifyFirstSpawned();
         }
         return interactableVehicle;
     }
@@ -1804,6 +1803,7 @@ public class VehicleManager : SteamCaller
         if (interactableVehicle != null)
         {
             SendSingleVehicle.Invoke(ENetReliability.Reliable, Provider.GatherRemoteClientConnections(), WriteVehicle, interactableVehicle);
+            interactableVehicle.NotifyFirstSpawned();
         }
     }
 
@@ -1978,7 +1978,11 @@ public class VehicleManager : SteamCaller
                     list.RemoveAt(index);
                     if (canUseSpawnpoint(spawn))
                     {
-                        addVehicleAtSpawn(spawn);
+                        InteractableVehicle interactableVehicle = addVehicleAtSpawn(spawn);
+                        if (interactableVehicle != null)
+                        {
+                            interactableVehicle.NotifyFirstSpawned();
+                        }
                     }
                 }
             }
@@ -2009,11 +2013,11 @@ public class VehicleManager : SteamCaller
                 if (Assets.find(EAssetType.VEHICLE, train.VehicleID) is VehicleAsset vehicleAsset)
                 {
                     NetId netId = NetIdRegistry.ClaimBlock(21u);
-                    InteractableVehicle interactableVehicle = addVehicle(vehicleAsset.GUID, 0, 0, roadPosition, Vector3.zero, Quaternion.identity, sirens: false, blimp: false, headlights: false, taillights: false, ushort.MaxValue, isExploded: false, ushort.MaxValue, ushort.MaxValue, CSteamID.Nil, CSteamID.Nil, locked: false, null, null, allocateInstanceID(), getVehicleRandomTireAliveMask(vehicleAsset), netId, new Color32(0, 0, 0, 0));
-                    if (interactableVehicle != null)
+                    InteractableVehicle interactableVehicle2 = addVehicle(vehicleAsset.GUID, 0, 0, roadPosition, Vector3.zero, Quaternion.identity, sirens: false, blimp: false, headlights: false, taillights: false, ushort.MaxValue, isExploded: false, ushort.MaxValue, ushort.MaxValue, CSteamID.Nil, CSteamID.Nil, locked: false, null, null, allocateInstanceID(), getVehicleRandomTireAliveMask(vehicleAsset), netId, new Color32(0, 0, 0, 0));
+                    if (interactableVehicle2 != null)
                     {
-                        interactableVehicle.WasNaturallySpawned = true;
-                        interactableVehicle.NotifyFirstSpawned();
+                        interactableVehicle2.WasNaturallySpawned = true;
+                        interactableVehicle2.NotifyFirstSpawned();
                     }
                 }
                 else if ((bool)Assets.shouldLoadAnyAssets)
