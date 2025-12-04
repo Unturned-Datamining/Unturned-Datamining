@@ -265,6 +265,7 @@ public class ZombieRegion
                             type = (byte)num3;
                             zombieTable.GetSpawnClothingParameters(out shirt, out pants, out hat, out gear);
                         }
+                        num4++;
                         zombie.sendRevive(type, (byte)nPCZombieKillsCondition.zombie, shirt, pants, hat, gear, position, UnityEngine.Random.Range(0f, 360f));
                         if (usesBossInterval)
                         {

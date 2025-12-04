@@ -97,6 +97,8 @@ internal static class ServerPrefabUtil
             typeof(Toggle),
             typeof(ToggleGroup),
             typeof(VerticalLayoutGroup),
+            typeof(MusicAudioSource),
+            typeof(EnableDopplerEffect),
             typeof(AudioChorusFilter),
             typeof(AudioDistortionFilter),
             typeof(AudioEchoFilter),
