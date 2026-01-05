@@ -1,14 +1,14 @@
 MainMenuAlert
 {
 	Id 76
-	Header Community Organized Event: AMOX Winter Cup Dec. Qualifier
-	Body From the organizers: "Participate in the December Qualifier for the AMOX Winter Cup event series beginning in February. Hosted by PeekSeek."
+	Header Community Organized Event: AMOX Winter Cup Jan Qualifier
+	Body From the organizers: "Qualifier for the AMOX Winter Cup event series in January. Hosted by PeekSeek."
 	Color #ff0000
-	Link https://pksk.to/wc26dec
+	Link https://pksk.to/sdg
 	IconURL cdn.smartlydressedgames.com/Images/PeekSeek.png
 	UseTimeWindow true
-	StartTime 2025-12-07
-	EndTime 2025-12-12 23:59:59
+	StartTime 2026-01-04
+	EndTime 2026-01-09 23:59:59
 }
 MainMenuWorkshop
 {
