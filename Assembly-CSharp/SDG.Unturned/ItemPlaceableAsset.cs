@@ -11,6 +11,8 @@ public class ItemPlaceableAsset : ItemAsset, IArmorFalloff
 {
     private CachingAssetRef _salvageItemRef;
 
+    private CachingAssetRef _salvageItemFullHealthRef;
+
     private CachingAssetRef _itemDroppedOnDestroyRef;
 
     public float ArmorFalloffMaxRange { get; set; }
@@ -43,12 +45,38 @@ public class ItemPlaceableAsset : ItemAsset, IArmorFalloff
     /// <summary>
     /// Minimum number of items to recover when salvaged.
     /// </summary>
-    public int MinItemsRecoveredOnSalvage { get; protected set; }
+    public int MinItemsRecoveredOnSalvage { get; set; }
 
     /// <summary>
     /// Maximum number of items to recover when salvaged.
     /// </summary>
     public int MaxItemsRecoveredOnSalvage { get; set; }
+
+    /// <summary>
+    /// Item or spawn table recovered when picked up at 100% health.
+    /// Defaults to self.
+    /// </summary>
+    public CachingAssetRef SalvageItemFullHealthRef
+    {
+        get
+        {
+            return _salvageItemFullHealthRef;
+        }
+        set
+        {
+            _salvageItemFullHealthRef = value;
+        }
+    }
+
+    /// <summary>
+    /// Minimum number of items to recover when salvaged at full health.
+    /// </summary>
+    public int MinItemsRecoveredOnSalvageFullHealth { get; set; }
+
+    /// <summary>
+    /// Maximum number of items to recover when salvaged at full health.
+    /// </summary>
+    public int MaxItemsRecoveredOnSalvageFullHealth { get; set; }
 
     /// <summary>
     /// Minimum number of items to drop when destroyed.
@@ -115,15 +143,15 @@ public class ItemPlaceableAsset : ItemAsset, IArmorFalloff
         return null;
     }
 
-    public void GrantSalvageItems(Player player)
+    public void GrantSalvageItems(Player player, bool fullHealth)
     {
-        int value = UnityEngine.Random.Range(MinItemsRecoveredOnSalvage, MaxItemsRecoveredOnSalvage + 1);
+        int value = (fullHealth ? UnityEngine.Random.Range(MinItemsRecoveredOnSalvageFullHealth, MaxItemsRecoveredOnSalvageFullHealth + 1) : UnityEngine.Random.Range(MinItemsRecoveredOnSalvage, MaxItemsRecoveredOnSalvage + 1));
         value = Mathf.Clamp(value, 0, 100);
         if (value < 1)
         {
             return;
         }
-        Asset asset = _salvageItemRef.Get();
+        Asset asset = (fullHealth ? _salvageItemFullHealthRef.Get() : _salvageItemRef.Get());
         if (asset is SpawnAsset spawnAsset)
         {
             for (int i = 0; i < value; i++)
@@ -139,7 +167,10 @@ public class ItemPlaceableAsset : ItemAsset, IArmorFalloff
         ItemAsset itemAsset2 = asset as ItemAsset;
         if (itemAsset2 == null)
         {
-            itemAsset2 = FindDefaultSalvageItemAsset();
+            if (!fullHealth)
+            {
+                itemAsset2 = FindDefaultSalvageItemAsset();
+            }
             if (itemAsset2 == null)
             {
                 return;
@@ -234,10 +265,24 @@ public class ItemPlaceableAsset : ItemAsset, IArmorFalloff
         {
             _salvageItemRef = this;
         }
-        if (p.data.TryParseInt32("Items_Dropped_On_Destroy", out var value2))
+        if (p.data.TryParseInt32("Items_Recovered_On_Salvage_Full_Health", out var value2))
         {
-            minItemsDroppedOnDestroy = value2;
-            maxItemsDroppedOnDestroy = value2;
+            MinItemsRecoveredOnSalvageFullHealth = value2;
+            MaxItemsRecoveredOnSalvageFullHealth = value2;
+        }
+        else
+        {
+            MinItemsRecoveredOnSalvageFullHealth = p.data.ParseInt32("Min_Items_Recovered_On_Salvage_Full_Health", 1);
+            MaxItemsRecoveredOnSalvageFullHealth = p.data.ParseInt32("Max_Items_Recovered_On_Salvage_Full_Health", 1);
+        }
+        if (!p.data.TryParseAssetRef("SalvageItem_FullHealth", out _salvageItemFullHealthRef))
+        {
+            _salvageItemFullHealthRef = this;
+        }
+        if (p.data.TryParseInt32("Items_Dropped_On_Destroy", out var value3))
+        {
+            minItemsDroppedOnDestroy = value3;
+            maxItemsDroppedOnDestroy = value3;
         }
         else
         {
@@ -280,5 +325,11 @@ public class ItemPlaceableAsset : ItemAsset, IArmorFalloff
     private string OnGetItemRecoveredOnSalvageSpawnTableErrorContext()
     {
         return FriendlyName + " items recovered on salvage";
+    }
+
+    [Obsolete("Replaced by overload with fullHealth parameter (default false)")]
+    public void GrantSalvageItems(Player player)
+    {
+        GrantSalvageItems(player, fullHealth: false);
     }
 }

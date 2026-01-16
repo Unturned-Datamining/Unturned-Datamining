@@ -32,7 +32,7 @@ public abstract class Asset : IAssetErrorContext
 
     /// <summary>
     /// Should texture non-power-of-two warnings be ignored?
-    /// Unfortunately some third party assets have odd setups.
+    /// Unfortunately some already-included third-party assets have NPOT textures.
     /// </summary>
     public bool ignoreNPOT;
 

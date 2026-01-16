@@ -2858,7 +2858,7 @@ public class InteractableVehicle : Interactable, IExplosionDamageable, IEquatabl
         if (asset.engine == EEngine.TRAIN)
         {
             roadPosition = ClampEngineRoadPosition(UnpackRoadPosition(point));
-            teleportTrain();
+            TeleportTrainCars();
         }
         else
         {
@@ -3096,7 +3096,7 @@ public class InteractableVehicle : Interactable, IExplosionDamageable, IEquatabl
                 inputEngineVelocity = inputTargetVelocity * boatTraction;
                 Vector3 forward = base.transform.forward;
                 forward.y = 0f;
-                rootRigidbody.AddForce(forward.normalized * inputEngineVelocity * 2f * boatTraction);
+                rootRigidbody.AddForce(forward.normalized * inputEngineVelocity * 2f * boatTraction * asset.engineForceMultiplier);
                 rootRigidbody.AddRelativeTorque((float)input_y * -2.5f * boatTraction, (float)input_x * num4 / 8f * boatTraction, (float)input_x * -2.5f * boatTraction);
             }
             break;
@@ -3196,7 +3196,7 @@ public class InteractableVehicle : Interactable, IExplosionDamageable, IEquatabl
             inputEngineVelocity = inputTargetVelocity * boatTraction;
             Vector3 forward2 = base.transform.forward;
             forward2.y = 0f;
-            rootRigidbody.AddForce(forward2.normalized * inputEngineVelocity * 4f * boatTraction);
+            rootRigidbody.AddForce(forward2.normalized * inputEngineVelocity * 4f * boatTraction * asset.engineForceMultiplier);
             if (_wheels == null || _wheels.Length == 0 || (!_wheels[0].isGrounded && !_wheels[1].isGrounded))
             {
                 rootRigidbody.AddRelativeTorque(num * -10f * boatTraction, (float)input_x * num8 / 2f * boatTraction, (float)input_x * -5f * boatTraction);
@@ -3247,58 +3247,77 @@ public class InteractableVehicle : Interactable, IExplosionDamageable, IEquatabl
         interpTargetRotation = base.transform.rotation;
     }
 
-    private void moveTrain(Vector3 frontPosition, Vector3 frontNormal, Vector3 frontDirection, Vector3 backPosition, Vector3 backNormal, Vector3 backDirection, TrainCar car)
+    private void MoveTrainCar(Vector3 frontPosition, Vector3 frontNormal, Vector3 frontDirection, Vector3 backPosition, Vector3 backNormal, Vector3 backDirection, TrainCar car)
     {
-        Vector3 vector = (frontPosition + backPosition) / 2f;
-        Vector3 vector2 = Vector3.Lerp(backNormal, frontNormal, 0.5f);
-        Vector3 normalized = (frontPosition - backPosition).normalized;
-        Quaternion rotation = Quaternion.LookRotation(frontDirection, frontNormal);
-        Quaternion rotation2 = Quaternion.LookRotation(backDirection, backNormal);
-        Quaternion quaternion = Quaternion.LookRotation(normalized, vector2);
+        Vector3 vector = (frontPosition + backPosition) * 0.5f;
+        Vector3 normalized = Vector3.Lerp(backNormal, frontNormal, 0.5f).normalized;
+        Vector3 normalized2 = (frontPosition - backPosition).normalized;
+        Quaternion quaternion = Quaternion.LookRotation(normalized2, normalized);
+        Vector3 vector2 = vector + normalized * asset.trainTrackOffset;
         if (car.rootRigidbody != null)
         {
-            car.rootRigidbody.MovePosition(vector + vector2 * asset.trainTrackOffset);
+            car.rootRigidbody.MovePosition(vector2);
             car.rootRigidbody.MoveRotation(quaternion);
         }
-        if (car.root != null)
+        else if (car.root != null)
         {
-            car.root.position = vector + vector2 * asset.trainTrackOffset;
-            car.root.rotation = quaternion;
+            car.root.SetPositionAndRotation(vector2, quaternion);
         }
+        Matrix4x4 inverse = (Matrix4x4.TRS(vector2, quaternion, base.transform.localScale) * car.objectsToRoot).inverse;
         if (car.trackFront != null)
         {
-            car.trackFront.position = vector + normalized * asset.trainWheelOffset;
-            car.trackFront.rotation = rotation;
+            Vector3 forward = inverse.MultiplyVector(frontDirection);
+            Vector3 upwards = inverse.MultiplyVector(frontNormal);
+            Quaternion localRotation = Quaternion.LookRotation(forward, upwards);
+            Vector3 point = vector + normalized2 * asset.trainWheelOffset;
+            point = inverse.MultiplyPoint(point);
+            car.trackFront.SetLocalPositionAndRotation(point, localRotation);
         }
         if (car.trackBack != null)
         {
-            car.trackBack.position = vector - normalized * asset.trainWheelOffset;
-            car.trackBack.rotation = rotation2;
+            Vector3 forward2 = inverse.MultiplyVector(backDirection);
+            Vector3 upwards2 = inverse.MultiplyVector(backNormal);
+            Quaternion localRotation2 = Quaternion.LookRotation(forward2, upwards2);
+            Vector3 point2 = vector - normalized2 * asset.trainWheelOffset;
+            point2 = inverse.MultiplyPoint(point2);
+            car.trackBack.SetLocalPositionAndRotation(point2, localRotation2);
         }
     }
 
-    private void teleportTrain()
+    private void TeleportTrainCars()
     {
         TrainCar[] array = trainCars;
         foreach (TrainCar trainCar in array)
         {
             road.getTrackData(ClampCarRoadPosition(roadPosition + trainCar.trackPositionOffset + asset.trainWheelOffset), out var position, out var normal, out var direction);
+            trainCar.currentFrontPosition = position;
+            trainCar.currentFrontNormal = normal;
+            trainCar.currentFrontDirection = direction;
             road.getTrackData(ClampCarRoadPosition(roadPosition + trainCar.trackPositionOffset - asset.trainWheelOffset), out var position2, out var normal2, out var direction2);
-            moveTrain(position, normal, direction, position2, normal2, direction2, trainCar);
+            trainCar.currentBackPosition = position2;
+            trainCar.currentBackNormal = normal2;
+            trainCar.currentBackDirection = direction2;
+            MoveTrainCar(position, normal, direction, position2, normal2, direction2, trainCar);
         }
     }
 
     private TrainCar getTrainCar(Transform root)
     {
-        Transform trackFront = root.Find("Objects")?.Find("Track_Front");
-        Transform trackBack = root.Find("Objects")?.Find("Track_Back");
-        return new TrainCar
+        TrainCar trainCar = new TrainCar();
+        trainCar.root = root;
+        Transform transform = root.Find("Objects");
+        if (transform != null)
         {
-            root = root,
-            trackFront = trackFront,
-            trackBack = trackBack,
-            rootRigidbody = root.GetComponent<Rigidbody>()
-        };
+            trainCar.objectsToRoot = root.worldToLocalMatrix * transform.localToWorldMatrix;
+            trainCar.trackFront = transform.Find("Track_Front");
+            trainCar.trackBack = transform.Find("Track_Back");
+        }
+        trainCar.rootRigidbody = root.GetComponent<Rigidbody>();
+        if (trainCar.rootRigidbody != null)
+        {
+            trainCar.rootRigidbody.interpolation = RigidbodyInterpolation.None;
+        }
+        return trainCar;
     }
 
     private float ClampCarRoadPosition(float newRoadPosition)
@@ -3492,7 +3511,7 @@ public class InteractableVehicle : Interactable, IExplosionDamageable, IEquatabl
                 UpdateLocallyDrivenTrainPhysics(deltaTime);
             }
         }
-        if (!Dedicator.IsDedicatedServer && road != null)
+        else if (!Dedicator.IsDedicatedServer && road != null)
         {
             UpdateTrainCarTransforms(deltaTime);
         }
@@ -3899,13 +3918,7 @@ public class InteractableVehicle : Interactable, IExplosionDamageable, IEquatabl
     /// </summary>
     private void UpdateLocallyDrivenTrainPhysics(float deltaTime)
     {
-        TrainCar[] array = trainCars;
-        foreach (TrainCar trainCar in array)
-        {
-            road.getTrackData(ClampCarRoadPosition(roadPosition + trainCar.trackPositionOffset + asset.trainWheelOffset), out var position, out var normal, out var direction);
-            road.getTrackData(ClampCarRoadPosition(roadPosition + trainCar.trackPositionOffset - asset.trainWheelOffset), out var position2, out var normal2, out var direction2);
-            moveTrain(position, normal, direction, position2, normal2, direction2, trainCar);
-        }
+        TeleportTrainCars();
         float num = inputEngineVelocity * deltaTime;
         Transform transform = ((!(inputEngineVelocity > 0f)) ? overlapBack : overlapFront);
         BoxCollider boxCollider = transform?.GetComponent<BoxCollider>();
@@ -3917,12 +3930,12 @@ public class InteractableVehicle : Interactable, IExplosionDamageable, IEquatabl
             Vector3 size = boxCollider.size;
             size.z = num;
             int num2 = Physics.OverlapBoxNonAlloc(vector, size / 2f, tempCollidersArray, transform.rotation, RayMasks.BLOCK_TRAIN, QueryTriggerInteraction.Ignore);
-            for (int j = 0; j < num2; j++)
+            for (int i = 0; i < num2; i++)
             {
                 bool flag2 = false;
-                for (int k = 0; k < trainCars.Length; k++)
+                for (int j = 0; j < trainCars.Length; j++)
                 {
-                    if (tempCollidersArray[j].transform.IsChildOf(trainCars[k].root) || tempCollidersArray[j].transform == trainCars[k].root)
+                    if (tempCollidersArray[i].transform.IsChildOf(trainCars[j].root) || tempCollidersArray[i].transform == trainCars[j].root)
                     {
                         flag2 = true;
                         break;
@@ -3932,9 +3945,9 @@ public class InteractableVehicle : Interactable, IExplosionDamageable, IEquatabl
                 {
                     continue;
                 }
-                if (tempCollidersArray[j].CompareTag("Vehicle"))
+                if (tempCollidersArray[i].CompareTag("Vehicle"))
                 {
-                    Rigidbody component = tempCollidersArray[j].GetComponent<Rigidbody>();
+                    Rigidbody component = tempCollidersArray[i].GetComponent<Rigidbody>();
                     if (!component.isKinematic)
                     {
                         component.AddForce(base.transform.forward * inputEngineVelocity, ForceMode.VelocityChange);
@@ -3982,7 +3995,7 @@ public class InteractableVehicle : Interactable, IExplosionDamageable, IEquatabl
             trainCar.currentBackPosition = Vector3.Lerp(trainCar.currentBackPosition, position2, 8f * deltaTime);
             trainCar.currentBackNormal = Vector3.Lerp(trainCar.currentBackNormal, normal2, 8f * deltaTime);
             trainCar.currentBackDirection = Vector3.Lerp(trainCar.currentBackDirection, direction2, 8f * deltaTime);
-            moveTrain(trainCar.currentFrontPosition, trainCar.currentFrontNormal, trainCar.currentFrontDirection, trainCar.currentBackPosition, trainCar.currentBackNormal, trainCar.currentBackDirection, trainCar);
+            MoveTrainCar(trainCar.currentFrontPosition, trainCar.currentFrontNormal, trainCar.currentFrontDirection, trainCar.currentBackPosition, trainCar.currentBackNormal, trainCar.currentBackDirection, trainCar);
         }
     }
 
@@ -4535,7 +4548,7 @@ public class InteractableVehicle : Interactable, IExplosionDamageable, IEquatabl
             }
             road = LevelRoads.getRoad(roadIndex);
             roadPosition = ClampEngineRoadPosition(roadPosition);
-            teleportTrain();
+            TeleportTrainCars();
         }
         if (asset.physicsProfileRef.isValid)
         {

@@ -252,11 +252,11 @@ public class BarricadeDrop
         {
             if (serversideData.barricade.health >= asset.health)
             {
-                player.inventory.forceAddItem(new Item(serversideData.barricade.asset.id, EItemOrigin.NATURE), auto: true);
+                asset.GrantSalvageItems(player, fullHealth: true);
             }
             else if (asset.isSalvageable)
             {
-                asset.GrantSalvageItems(player);
+                asset.GrantSalvageItems(player, fullHealth: false);
             }
             BarricadeManager.destroyBarricade(this, x, y, plant);
         }

@@ -18,6 +18,19 @@ public class ItemStorageAsset : ItemBarricadeAsset
 
     public bool shouldCloseWhenOutsideRange { get; protected set; }
 
+    /// <summary>
+    /// If true, players can interact with the barricade to open storage.
+    /// Defaults to true.
+    /// Useful for pre-placed sentries to prevent stealing their guns.
+    /// </summary>
+    public bool CanPlayersOpen { get; set; }
+
+    /// <summary>
+    /// If true, any stored items are despawned rather than dropped when destroyed.
+    /// Defaults to false.
+    /// </summary>
+    public bool ShouldDeleteContainedItemsOnDestroy { get; set; }
+
     public LevelAsset.DefaultLoadoutItem[] DefaultContainedItems { get; set; }
 
     public void AddDefaultContainedItemsToStorage(InteractableStorage storage)
@@ -80,6 +93,8 @@ public class ItemStorageAsset : ItemBarricadeAsset
         }
         _isDisplay = p.data.ContainsKey("Display");
         shouldCloseWhenOutsideRange = p.data.ParseBool("Should_Close_When_Outside_Range");
+        CanPlayersOpen = p.data.ParseBool("Can_Players_Open", defaultValue: true);
+        ShouldDeleteContainedItemsOnDestroy = p.data.ParseBool("Delete_Contained_Items_On_Destroy");
         if (p.data.TryGetList("Default_Contained_Items", out var node))
         {
             DefaultContainedItems = node.ParseArrayOfStructs<LevelAsset.DefaultLoadoutItem>();

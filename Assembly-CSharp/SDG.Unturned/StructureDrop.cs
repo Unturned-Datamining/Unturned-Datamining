@@ -225,11 +225,11 @@ public class StructureDrop
             }
             if (serversideData.structure.health >= asset.health)
             {
-                player.inventory.forceAddItem(new Item(asset.id, EItemOrigin.NATURE), auto: true);
+                asset.GrantSalvageItems(player, fullHealth: true);
             }
             else if (asset.isSalvageable)
             {
-                asset.GrantSalvageItems(player);
+                asset.GrantSalvageItems(player, fullHealth: false);
             }
         }
         StructureManager.destroyStructure(this, x, y, (_model.position - player.transform.position).normalized * 100f, wasPickedUp: true);

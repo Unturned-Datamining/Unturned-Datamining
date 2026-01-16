@@ -45,6 +45,7 @@ Has_Clip_Prefab false
 
 Carjack_Force_Multiplier 2
 Explosion_Force_Multiplier 2
+Engine_Force_Multiplier 2
 
 PaintableSections
 [

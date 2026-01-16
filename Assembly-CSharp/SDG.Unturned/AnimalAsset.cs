@@ -132,7 +132,8 @@ public class AnimalAsset : Asset, IArmorFalloff
     public override EAssetType assetCategory => EAssetType.ANIMAL;
 
     /// <summary>
-    /// Temporary until something better makes sense? For Spyjack.
+    /// Temporary until something better makes sense?
+    /// Originally added for modded animals triggering damage from animations.
     /// </summary>
     public bool shouldPlayAnimsOnDedicatedServer { get; private set; }
 

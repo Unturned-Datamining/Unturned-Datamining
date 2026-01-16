@@ -567,7 +567,10 @@ public class InteractableSentry : InteractableStorage
                                     DamageTool.ServerSpawnBulletImpact(raycastInfo.point, raycastInfo.normal, raycastInfo.materialName, raycastInfo.collider?.transform, null, Provider.GatherClientConnectionsWithinSphere(raycastInfo.point, EffectManager.SMALL));
                                     if (raycastInfo.vehicle != null)
                                     {
-                                        DamageTool.damage(raycastInfo.vehicle, damageTires: false, Vector3.zero, isRepairing: false, ((ItemGunAsset)displayAsset).vehicleDamage, bulletDamageMultiplier, canRepair: true, out kill, default(CSteamID), EDamageOrigin.Sentry);
+                                        if (raycastInfo.vehicle.asset != null && raycastInfo.vehicle.canBeDamaged && (raycastInfo.vehicle.asset.isVulnerable || ((ItemWeaponAsset)displayAsset).isInvulnerable))
+                                        {
+                                            DamageTool.damage(raycastInfo.vehicle, damageTires: false, Vector3.zero, isRepairing: false, ((ItemGunAsset)displayAsset).vehicleDamage, bulletDamageMultiplier, canRepair: true, out kill, default(CSteamID), EDamageOrigin.Sentry);
+                                        }
                                     }
                                     else if (raycastInfo.transform != null)
                                     {
@@ -886,7 +889,20 @@ public class InteractableSentry : InteractableStorage
 
     public void AlertDamagedBy(Player player)
     {
-        if (!(targetPlayer != null) && !(targetZombie != null) && !(targetAnimal != null) && !(targetVehicle != null) && sentryAsset.CanReactToAttacks && sentryAsset.CanTargetPlayers && MeetsPvPRequirement)
+        if (targetPlayer != null || targetZombie != null || targetAnimal != null || targetVehicle != null || !sentryAsset.CanReactToAttacks || !MeetsPvPRequirement)
+        {
+            return;
+        }
+        InteractableVehicle vehicle = player.movement.getVehicle();
+        if (vehicle != null)
+        {
+            if (sentryAsset.CanTargetVehicles)
+            {
+                targetVehicle = vehicle;
+                lastFire = Time.timeAsDouble + 0.1;
+            }
+        }
+        else if (sentryAsset.CanTargetPlayers)
         {
             targetPlayer = player;
             lastFire = Time.timeAsDouble + 0.1;

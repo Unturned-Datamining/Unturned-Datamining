@@ -315,7 +315,11 @@ public class UseableConsumeable : Useable
         {
             base.player.skills.askRep(num5);
         }
-        enemy.life.serverModifyHallucination((int)asset.vision);
+        if (asset.vision != 0)
+        {
+            byte b2 = (byte)((float)(int)asset.vision * (1f - enemy.skills.mastery(1, 2)));
+            enemy.life.serverModifyHallucination((int)b2);
+        }
         enemy.life.serverModifyStamina((int)asset.energy);
         enemy.life.serverModifyWarmth(asset.warmth);
         enemy.skills.ServerModifyExperience(asset.experience);
@@ -336,9 +340,12 @@ public class UseableConsumeable : Useable
     protected void performUseOnSelf(ItemConsumeableAsset asset)
     {
         base.player.life.askRest(asset.energy);
-        byte vision = base.player.life.vision;
-        byte b = (byte)((float)(int)asset.vision * (1f - base.player.skills.mastery(1, 2)));
-        base.player.life.askView((byte)Mathf.Max(vision, b));
+        if (asset.vision != 0)
+        {
+            byte vision = base.player.life.vision;
+            byte b = (byte)((float)(int)asset.vision * (1f - base.player.skills.mastery(1, 2)));
+            base.player.life.askView((byte)Mathf.Max(vision, b));
+        }
         if (base.channel.IsLocalPlayer && asset.vision > 0 && Provider.provider.achievementsService.getAchievement("Berries", out var has) && !has)
         {
             Provider.provider.achievementsService.setAchievement("Berries");

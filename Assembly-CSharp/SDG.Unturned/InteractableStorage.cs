@@ -65,6 +65,8 @@ public class InteractableStorage : Interactable, IManualOnDestroy, IBarricadePla
     /// </summary>
     public bool shouldCloseWhenOutsideRange;
 
+    private bool canPlayersOpen = true;
+
     public RebuiltStateHandler onStateRebuilt;
 
     private static readonly ServerInstanceMethod<bool> SendInteractRequest = ServerInstanceMethod<bool>.Get(typeof(InteractableStorage), "ReceiveInteractRequest");
@@ -331,6 +333,8 @@ public class InteractableStorage : Interactable, IManualOnDestroy, IBarricadePla
         isLocked = ((ItemBarricadeAsset)asset).isLocked;
         _isDisplay = ((ItemStorageAsset)asset).isDisplay;
         shouldCloseWhenOutsideRange = ((ItemStorageAsset)asset).shouldCloseWhenOutsideRange;
+        canPlayersOpen = ((ItemStorageAsset)asset).CanPlayersOpen;
+        despawnWhenDestroyed = ((ItemStorageAsset)asset).ShouldDeleteContainedItemsOnDestroy;
         if (Provider.isServer)
         {
             Block block = new Block(state);
@@ -400,6 +404,11 @@ public class InteractableStorage : Interactable, IManualOnDestroy, IBarricadePla
                 setDisplay((ushort)array3[0], (byte)array3[1], (byte[])array3[2], (ushort)array3[3], (ushort)array3[4], (string)array3[5], (string)array3[6]);
             }
         }
+    }
+
+    public override bool checkInteractable()
+    {
+        return canPlayersOpen;
     }
 
     public override bool checkUseable()
@@ -483,7 +492,7 @@ public class InteractableStorage : Interactable, IManualOnDestroy, IBarricadePla
     public void ReceiveInteractRequest(in ServerInvocationContext context, bool quickGrab)
     {
         Player player = context.GetPlayer();
-        if (player == null || player.life.isDead || (player.inventory.isStoring && player.inventory.isStorageTrunk) || player.animator.gesture == EPlayerGesture.ARREST_START)
+        if (!canPlayersOpen || player == null || player.life.isDead || (player.inventory.isStoring && player.inventory.isStorageTrunk) || player.animator.gesture == EPlayerGesture.ARREST_START)
         {
             return;
         }

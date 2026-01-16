@@ -1137,7 +1137,7 @@ public class LevelGround : MonoBehaviour
                 river.writeGUID(saveTreesAllTrees.guid);
                 river.writeSingleVector3(saveTreesAllTrees.point);
                 river.writeSingleQuaternion(saveTreesAllTrees.angle);
-                river.writeSingleVector3(Vector3.one);
+                river.writeSingleVector3(saveTreesAllTrees.scale);
                 river.writeBoolean(saveTreesAllTrees.isGenerated);
             }
             else

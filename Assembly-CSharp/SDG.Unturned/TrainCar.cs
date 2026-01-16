@@ -25,6 +25,13 @@ public class TrainCar
     public Transform trackBack;
 
     /// <summary>
+    /// Objects transform relative to Root.
+    /// Identity in vanilla, but may be otherwise in mods.
+    /// Necessary for fix interpolation issue with front/back transform.
+    /// </summary>
+    public Matrix4x4 objectsToRoot;
+
+    /// <summary>
     /// Rigidbody component on the root game object.
     /// </summary>
     public Rigidbody rootRigidbody;

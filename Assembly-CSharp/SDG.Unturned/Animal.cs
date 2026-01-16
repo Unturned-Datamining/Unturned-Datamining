@@ -713,11 +713,9 @@ public class Animal : MonoBehaviour, IExplosionDamageable, IEquatable<IExplosion
 
     private void move(float delta)
     {
-        Vector3 vector = target - base.transform.position;
-        vector.y = 0f;
+        Vector3 horizontal = (target - base.transform.position).GetHorizontal();
+        float magnitude = horizontal.magnitude;
         bool flag = isPlayingStartleAnimation && asset.ShouldPreventMoveDuringStartle;
-        Vector3 forward = vector;
-        float magnitude = vector.magnitude;
         bool flag2 = magnitude > 0.75f && !flag;
         if ((!Dedicator.IsDedicatedServer || asset.shouldPlayAnimsOnDedicatedServer) && flag2 && !isMoving)
         {
@@ -735,14 +733,14 @@ public class Animal : MonoBehaviour, IExplosionDamageable, IEquatable<IExplosion
         isMoving = flag2;
         isRunning = isMoving && (isFleeing || isHunting);
         float num = Mathf.Clamp01(magnitude / 0.6f);
-        Vector3 forward2 = base.transform.forward;
-        float a = Vector3.Dot(vector.normalized, forward2);
+        Vector3 forward = base.transform.forward;
+        float a = Vector3.Dot(horizontal.normalized, forward);
         float num2 = (isRunning ? asset.speedRun : asset.speedWalk) * Mathf.Max(a, 0.05f) * num;
         if (Time.deltaTime > 0f)
         {
             num2 = Mathf.Clamp(num2, 0f, magnitude / (Time.deltaTime * 2f));
         }
-        vector = base.transform.forward * num2;
+        Vector3 vector = forward * num2;
         vector.y = Physics.gravity.y * 2f;
         if (!isMoving && !flag)
         {
@@ -758,7 +756,7 @@ public class Animal : MonoBehaviour, IExplosionDamageable, IEquatable<IExplosion
         else
         {
             Quaternion rotation = base.transform.rotation;
-            Quaternion b = Quaternion.LookRotation(forward);
+            Quaternion b = Quaternion.LookRotation(horizontal);
             Vector3 eulerAngles = Quaternion.Slerp(rotation, b, 8f * delta).eulerAngles;
             eulerAngles.z = 0f;
             eulerAngles.x = 0f;

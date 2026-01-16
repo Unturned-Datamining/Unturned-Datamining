@@ -295,14 +295,6 @@ public class ObjectAsset : Asset, IArmorFalloff
 
     public GameObject GetOrLoadModel(bool isEditor = false)
     {
-        if (isEditor && editorModel != null)
-        {
-            GameObject orLoad = editorModel.getOrLoad();
-            if (orLoad != null)
-            {
-                return orLoad;
-            }
-        }
         if (!hasCalledLoadModel)
         {
             hasCalledLoadModel = true;
@@ -317,6 +309,14 @@ public class ObjectAsset : Asset, IArmorFalloff
             else
             {
                 loadedModel = clientModel.getOrLoad();
+            }
+        }
+        if (isEditor && editorModel != null)
+        {
+            GameObject orLoad = editorModel.getOrLoad();
+            if (orLoad != null)
+            {
+                return orLoad;
             }
         }
         return loadedModel;
