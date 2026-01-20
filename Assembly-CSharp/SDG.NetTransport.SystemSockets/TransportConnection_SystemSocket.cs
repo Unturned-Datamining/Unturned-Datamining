@@ -12,6 +12,8 @@ internal class TransportConnection_SystemSocket : ITransportConnection, IEquatab
 
     public SocketMessageLayer messageQueue = new SocketMessageLayer();
 
+    internal bool wasClosed;
+
     public TransportConnection_SystemSocket(ServerTransport_SystemSockets serverTransport, Socket clientSocket)
     {
         this.serverTransport = serverTransport;
@@ -20,7 +22,7 @@ internal class TransportConnection_SystemSocket : ITransportConnection, IEquatab
 
     public bool TryGetIPv4Address(out uint address)
     {
-        if (clientSocket.RemoteEndPoint is IPEndPoint iPEndPoint)
+        if (!wasClosed && clientSocket.RemoteEndPoint is IPEndPoint iPEndPoint)
         {
             byte[] addressBytes = iPEndPoint.Address.GetAddressBytes();
             if (addressBytes.Length == 4)
@@ -35,7 +37,7 @@ internal class TransportConnection_SystemSocket : ITransportConnection, IEquatab
 
     public bool TryGetPort(out ushort port)
     {
-        if (clientSocket.RemoteEndPoint is IPEndPoint iPEndPoint)
+        if (!wasClosed && clientSocket.RemoteEndPoint is IPEndPoint iPEndPoint)
         {
             port = (ushort)iPEndPoint.Port;
             return true;
@@ -52,7 +54,7 @@ internal class TransportConnection_SystemSocket : ITransportConnection, IEquatab
 
     public IPAddress GetAddress()
     {
-        if (clientSocket.RemoteEndPoint is IPEndPoint iPEndPoint)
+        if (!wasClosed && clientSocket.RemoteEndPoint is IPEndPoint iPEndPoint)
         {
             return iPEndPoint.Address;
         }
@@ -61,7 +63,7 @@ internal class TransportConnection_SystemSocket : ITransportConnection, IEquatab
 
     public string GetAddressString(bool withPort)
     {
-        if (clientSocket.RemoteEndPoint is IPEndPoint iPEndPoint)
+        if (!wasClosed && clientSocket.RemoteEndPoint is IPEndPoint iPEndPoint)
         {
             string text = iPEndPoint.Address.ToString();
             if (withPort)
@@ -81,7 +83,10 @@ internal class TransportConnection_SystemSocket : ITransportConnection, IEquatab
 
     public void Send(byte[] buffer, long size, ENetReliability reliability)
     {
-        messageQueue.SendMessage(clientSocket, buffer, (int)size);
+        if (!wasClosed)
+        {
+            messageQueue.SendMessage(clientSocket, buffer, (int)size);
+        }
     }
 
     bool IEquatable<ITransportConnection>.Equals(ITransportConnection other)
@@ -96,6 +101,10 @@ internal class TransportConnection_SystemSocket : ITransportConnection, IEquatab
 
     public override string ToString()
     {
+        if (wasClosed)
+        {
+            return "Closed Socket";
+        }
         if (clientSocket.RemoteEndPoint == null)
         {
             return "Invalid Socket";

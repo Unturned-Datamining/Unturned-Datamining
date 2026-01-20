@@ -74,8 +74,12 @@ public class ServerTransport_SystemSockets : TransportBase_SystemSockets, IServe
 
     internal void CloseConnection(TransportConnection_SystemSocket connection)
     {
-        connection.clientSocket.Close();
-        connections.RemoveFast(connection);
+        if (!connection.wasClosed)
+        {
+            connection.wasClosed = true;
+            connection.clientSocket.Close();
+            connections.RemoveFast(connection);
+        }
     }
 
     private void OnUpdate()

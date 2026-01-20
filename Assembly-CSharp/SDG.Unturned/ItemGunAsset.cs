@@ -67,7 +67,7 @@ public class ItemGunAsset : ItemWeaponAsset
 
     /// <summary>
     /// Defaults to false. If true, attachments must specify at least one non-zero caliber.
-    /// Requested by Great Hero J to block vanilla attachments in VGR.
+    /// Useful for blocking vanilla attachments.
     /// </summary>
     public bool requiresNonZeroAttachmentCaliber;
 

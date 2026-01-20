@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace SDG.Unturned;
@@ -14,6 +15,8 @@ public class ItemPlaceableAsset : ItemAsset, IArmorFalloff
     private CachingAssetRef _salvageItemFullHealthRef;
 
     private CachingAssetRef _itemDroppedOnDestroyRef;
+
+    private static List<BlueprintSupply> workingSalvageableItems = new List<BlueprintSupply>();
 
     public float ArmorFalloffMaxRange { get; set; }
 
@@ -135,9 +138,22 @@ public class ItemPlaceableAsset : ItemAsset, IArmorFalloff
     {
         foreach (Blueprint blueprint in base.blueprints)
         {
-            if (blueprint.outputs.Length == 1 && blueprint.outputs[0].IsItem(this))
+            if (blueprint.outputs.Length != 1 || !blueprint.outputs[0].IsItem(this))
             {
-                return blueprint.supplies[UnityEngine.Random.Range(0, blueprint.supplies.Length)].FindItemAsset();
+                continue;
+            }
+            workingSalvageableItems.Clear();
+            for (int i = 0; i < blueprint.supplies.Length; i++)
+            {
+                BlueprintSupply blueprintSupply = blueprint.supplies[i];
+                if (blueprintSupply.ShouldConsume)
+                {
+                    workingSalvageableItems.Add(blueprintSupply);
+                }
+            }
+            if (!workingSalvageableItems.IsEmpty())
+            {
+                return workingSalvageableItems.RandomOrDefault().FindItemAsset();
             }
         }
         return null;

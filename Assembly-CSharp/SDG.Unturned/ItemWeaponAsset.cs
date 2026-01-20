@@ -90,7 +90,7 @@ public class ItemWeaponAsset : ItemAsset
 
     /// <summary>
     /// Should player/animal/zombie surface be nulled on hit?
-    /// Requested by spyjack for a chainsaw-style shield that was overboard with the blood.
+    /// May be useful for weapons going overboard with the blood splatters.
     /// </summary>
     public bool allowFleshFx { get; protected set; }
 

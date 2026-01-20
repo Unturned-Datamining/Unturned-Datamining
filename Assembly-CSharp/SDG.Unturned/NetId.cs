@@ -69,4 +69,14 @@ public struct NetId : IEquatable<NetId>
     {
         return new NetId(value.id + 1);
     }
+
+    public static NetId operator -(NetId lhs, uint rhs)
+    {
+        return new NetId(lhs.id - rhs);
+    }
+
+    public static NetId operator --(NetId value)
+    {
+        return new NetId(value.id - 1);
+    }
 }

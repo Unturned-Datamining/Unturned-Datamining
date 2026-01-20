@@ -17,6 +17,10 @@ internal class SocketMessageLayer
 
     private byte[] pendingMessage;
 
+    private int pendingMessageTotalSize;
+
+    private int pendingMessageSizeParts;
+
     private int pendingMessageOffset;
 
     public void SendMessage(Socket socket, byte[] buffer, int size)
@@ -29,42 +33,58 @@ internal class SocketMessageLayer
 
     public void ReceiveMessages(Socket socket)
     {
-        int num = ((pendingMessage != null) ? 1 : 2);
-        if (socket.Available < num)
+        if (socket.Available < 1)
         {
             return;
         }
         SocketError errorCode;
-        int num2 = socket.Receive(internalBuffer, 0, internalBuffer.Length, SocketFlags.None, out errorCode);
-        if (errorCode == SocketError.WouldBlock || errorCode != 0 || num2 < 1)
+        int num = socket.Receive(internalBuffer, 0, internalBuffer.Length, SocketFlags.None, out errorCode);
+        if (errorCode == SocketError.WouldBlock || errorCode != 0 || num < 1)
         {
             return;
         }
-        int num3 = 0;
-        while (num3 < num2)
+        int num2 = 0;
+        while (num2 < num)
         {
             if (pendingMessage == null)
             {
-                int num4 = (internalBuffer[num3] << 8) | internalBuffer[num3 + 1];
-                pendingMessage = new byte[num4];
-                pendingMessageOffset = 0;
-                num3 += 2;
-                continue;
-            }
-            int num5 = num2 - num3;
-            int num6 = pendingMessage.Length - pendingMessageOffset;
-            if (num5 < num6)
-            {
-                Array.Copy(internalBuffer, num3, pendingMessage, pendingMessageOffset, num5);
-                pendingMessageOffset += num5;
-                num3 += num5;
+                if (pendingMessageSizeParts < 2)
+                {
+                    switch (pendingMessageSizeParts)
+                    {
+                    case 0:
+                        pendingMessageTotalSize += internalBuffer[num2] << 8;
+                        break;
+                    case 1:
+                        pendingMessageTotalSize += internalBuffer[num2];
+                        break;
+                    }
+                    pendingMessageSizeParts++;
+                    num2++;
+                }
+                else
+                {
+                    pendingMessage = new byte[pendingMessageTotalSize];
+                    pendingMessageOffset = 0;
+                }
             }
             else
             {
-                Array.Copy(internalBuffer, num3, pendingMessage, pendingMessageOffset, num6);
-                num3 += num6;
+                int num3 = num - num2;
+                int num4 = pendingMessage.Length - pendingMessageOffset;
+                if (num3 < num4)
+                {
+                    Array.Copy(internalBuffer, num2, pendingMessage, pendingMessageOffset, num3);
+                    pendingMessageOffset += num3;
+                    num2 += num3;
+                    continue;
+                }
+                Array.Copy(internalBuffer, num2, pendingMessage, pendingMessageOffset, num4);
+                num2 += num4;
                 messageQueue.Enqueue(pendingMessage);
                 pendingMessage = null;
+                pendingMessageTotalSize = 0;
+                pendingMessageSizeParts = 0;
             }
         }
     }
