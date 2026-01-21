@@ -87,4 +87,3 @@
 | 85568392934832311 | HiddenFromInternetServerList      |
 | 85568392934835348 | HiddenFromInternetServerList      |
 | 85568392934936077 | HiddenFromAllServerLists, Blocked |
-| 85568392925412384 | MonetizationWarning               |
