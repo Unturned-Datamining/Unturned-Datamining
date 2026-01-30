@@ -665,6 +665,10 @@ public class Level : MonoBehaviour
             {
                 text = "Buak_Visited";
             }
+            else if (string.Equals(info.name, "california", StringComparison.InvariantCultureIgnoreCase) || string.Equals(info.name, "california2", StringComparison.InvariantCultureIgnoreCase))
+            {
+                text = "Cali2_Visited";
+            }
             else if (string.Equals(info.name, "elver", StringComparison.InvariantCultureIgnoreCase))
             {
                 text = "Elver_Visited";

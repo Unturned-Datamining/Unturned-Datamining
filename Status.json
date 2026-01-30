@@ -39,14 +39,20 @@
 			"LS_Covert",
 			"LS_Dare",
 			"LS_Concrete",
-			"LS_Widowmaker"
+			"LS_Widowmaker",
+			"Cali2_ZoneTrekker",
+			"Cali2_DiplomaticImmunity",
+			"Cali2_EmployeeOfTheCentury",
+			"Cali2_HeartOfGold",
+			"Cali2_AnOldWound",
+			"Cali2_VoidCave"
 		]
 	},
 	"Game":
 	{
 		"Major_Version": 26,
 		"Minor_Version": 1,
-		"Patch_Version": 0,
+		"Patch_Version": 1,
 		"GrantPackageIDs":
 		[
 			487

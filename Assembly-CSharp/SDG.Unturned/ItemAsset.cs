@@ -346,9 +346,9 @@ public class ItemAsset : Asset, ISkinableAsset, IBlueprintOwner
     /// <summary>
     /// Name to use when instantiating item prefab.
     /// By default the asset legacy id is used, but it can be overridden because some
-    /// modders rely on the name for Unity's legacy animation component. For example
-    /// in Toothy Deerryte's case there were a lot of duplicate animations to work
-    /// around the id naming, simplified by overriding name.
+    /// modders rely on the name for Unity's legacy animation component. Some maps
+    /// had a lot of duplicate animations to work around the id naming, in which
+    /// case overriding the name simplified animation.
     /// </summary>
     public string instantiatedItemName { get; protected set; }
 

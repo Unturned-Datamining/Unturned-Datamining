@@ -79,8 +79,6 @@ public class TempSteamworksWorkshop
 
     private static readonly PublishedFileId_t FRANCE = new PublishedFileId_t(1975500516uL);
 
-    private static readonly PublishedFileId_t RIO_CLASSIC = new PublishedFileId_t(1821848824uL);
-
     private CallResult<CreateItemResult_t> createItemResult;
 
     private CallResult<SubmitItemUpdateResult_t> submitItemUpdateResult;
@@ -274,17 +272,9 @@ public class TempSteamworksWorkshop
     /// </summary>
     public static bool shouldIgnoreFile(PublishedFileId_t fileId, out string explanation)
     {
-        if (fileId == FRANCE)
+        if (fileId == FRANCE && ReadWrite.fileExists("/Maps/France/Config.json", useCloud: false, usePath: true))
         {
-            if (ReadWrite.fileExists("/Maps/France/Config.json", useCloud: false, usePath: true))
-            {
-                explanation = "non-Workshop version of France is still installed";
-                return true;
-            }
-        }
-        else if (fileId == RIO_CLASSIC)
-        {
-            explanation = "the original version of Rio de Janeiro is temporarily blocked until it's fixed to not conflict with Rio de Janeiro Remastered";
+            explanation = "non-Workshop version of France is still installed";
             return true;
         }
         explanation = null;

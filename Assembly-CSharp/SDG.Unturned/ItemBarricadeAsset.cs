@@ -49,7 +49,7 @@ public class ItemBarricadeAsset : ItemPlaceableAsset
 
     /// <summary>
     /// Defaults to false, except for explosive charges which bypass claims.
-    /// Requested by Renaxon for collectible barricades that raiders can steal without destroying.
+    /// Useful for collectible barricades that raiders can steal without destroying.
     /// </summary>
     public bool shouldBypassPickupOwnership;
 
@@ -132,7 +132,7 @@ public class ItemBarricadeAsset : ItemPlaceableAsset
 
     /// <summary>
     /// Should door colliders remain active while animation is playing?
-    /// Enabled by modders trying to make stuff like elevators.
+    /// Useful in special cases such as modded elevators, but prone to physics exploits.
     /// </summary>
     public bool allowCollisionWhileAnimating { get; protected set; }
 

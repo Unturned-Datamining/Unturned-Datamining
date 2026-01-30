@@ -1636,7 +1636,7 @@ public class Player : MonoBehaviour, IDialogueTarget, IExplosionDamageable, IEqu
             }
             float playerExplosionArmor = DamageTool.getPlayerExplosionArmor(this);
             num *= playerExplosionArmor;
-            DamageTool.damage(this, explosionParameters.cause, ELimb.SPINE, explosionParameters.killer, vector2, explosionParameters.playerDamage, num, out var kill, applyGlobalArmorMultiplier: true, trackKill: true);
+            DamageTool.damage(this, explosionParameters.cause, ELimb.SPINE, explosionParameters.killer, vector2, explosionParameters.playerDamage, num, out var kill, applyGlobalArmorMultiplier: true, trackKill: true, explosionParameters.ragdollEffect);
             if (kill != 0 && channel.owner.playerID.steamID != explosionParameters.killer)
             {
                 damageParameters.kills.Add(kill);

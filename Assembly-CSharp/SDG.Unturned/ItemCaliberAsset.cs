@@ -79,9 +79,9 @@ public class ItemCaliberAsset : ItemAsset
     /// <summary>
     /// Name to use when instantiating attachment prefab.
     /// By default the asset guid is used, but it can be overridden because some
-    /// modders rely on the name for Unity's legacy animation component. For example
-    /// in Toothy Deerryte's case there were a lot of duplicate animations to work
-    /// around the guid naming, simplified by overriding name.
+    /// modders rely on the name for Unity's legacy animation component. Some maps
+    /// had a lot of duplicate animations to work around the guid naming, in which
+    /// case overriding the name simplified animation.
     /// </summary>
     public string instantiatedAttachmentName { get; protected set; }
 

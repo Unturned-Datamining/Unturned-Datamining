@@ -2858,7 +2858,7 @@ public class InteractableVehicle : Interactable, IExplosionDamageable, IEquatabl
         if (asset.engine == EEngine.TRAIN)
         {
             roadPosition = ClampEngineRoadPosition(UnpackRoadPosition(point));
-            TeleportTrainCars();
+            TeleportTrainCars(forceSetTransform: false);
         }
         else
         {
@@ -3247,7 +3247,7 @@ public class InteractableVehicle : Interactable, IExplosionDamageable, IEquatabl
         interpTargetRotation = base.transform.rotation;
     }
 
-    private void MoveTrainCar(Vector3 frontPosition, Vector3 frontNormal, Vector3 frontDirection, Vector3 backPosition, Vector3 backNormal, Vector3 backDirection, TrainCar car)
+    private void MoveTrainCar(Vector3 frontPosition, Vector3 frontNormal, Vector3 frontDirection, Vector3 backPosition, Vector3 backNormal, Vector3 backDirection, TrainCar car, bool forceSetTransform)
     {
         Vector3 vector = (frontPosition + backPosition) * 0.5f;
         Vector3 normalized = Vector3.Lerp(backNormal, frontNormal, 0.5f).normalized;
@@ -3259,7 +3259,7 @@ public class InteractableVehicle : Interactable, IExplosionDamageable, IEquatabl
             car.rootRigidbody.MovePosition(vector2);
             car.rootRigidbody.MoveRotation(quaternion);
         }
-        else if (car.root != null)
+        if (car.root != null && (forceSetTransform || car.rootRigidbody == null))
         {
             car.root.SetPositionAndRotation(vector2, quaternion);
         }
@@ -3284,7 +3284,13 @@ public class InteractableVehicle : Interactable, IExplosionDamageable, IEquatabl
         }
     }
 
-    private void TeleportTrainCars()
+    /// <summary>
+    /// 2026-01-30: adding forceSetTransform to work around an issue with newly-spawned trains:
+    /// It seems after Unity 2022 LTS or 3.26.1.0 the position passed to Instantiate takes
+    /// priority over the call to rigidbody SetPosition, and new trains default to zero. This
+    /// prevents players from entering the train.
+    /// </summary>
+    private void TeleportTrainCars(bool forceSetTransform)
     {
         TrainCar[] array = trainCars;
         foreach (TrainCar trainCar in array)
@@ -3297,7 +3303,7 @@ public class InteractableVehicle : Interactable, IExplosionDamageable, IEquatabl
             trainCar.currentBackPosition = position2;
             trainCar.currentBackNormal = normal2;
             trainCar.currentBackDirection = direction2;
-            MoveTrainCar(position, normal, direction, position2, normal2, direction2, trainCar);
+            MoveTrainCar(position, normal, direction, position2, normal2, direction2, trainCar, forceSetTransform);
         }
     }
 
@@ -3918,7 +3924,7 @@ public class InteractableVehicle : Interactable, IExplosionDamageable, IEquatabl
     /// </summary>
     private void UpdateLocallyDrivenTrainPhysics(float deltaTime)
     {
-        TeleportTrainCars();
+        TeleportTrainCars(forceSetTransform: false);
         float num = inputEngineVelocity * deltaTime;
         Transform transform = ((!(inputEngineVelocity > 0f)) ? overlapBack : overlapFront);
         BoxCollider boxCollider = transform?.GetComponent<BoxCollider>();
@@ -3995,7 +4001,7 @@ public class InteractableVehicle : Interactable, IExplosionDamageable, IEquatabl
             trainCar.currentBackPosition = Vector3.Lerp(trainCar.currentBackPosition, position2, 8f * deltaTime);
             trainCar.currentBackNormal = Vector3.Lerp(trainCar.currentBackNormal, normal2, 8f * deltaTime);
             trainCar.currentBackDirection = Vector3.Lerp(trainCar.currentBackDirection, direction2, 8f * deltaTime);
-            MoveTrainCar(trainCar.currentFrontPosition, trainCar.currentFrontNormal, trainCar.currentFrontDirection, trainCar.currentBackPosition, trainCar.currentBackNormal, trainCar.currentBackDirection, trainCar);
+            MoveTrainCar(trainCar.currentFrontPosition, trainCar.currentFrontNormal, trainCar.currentFrontDirection, trainCar.currentBackPosition, trainCar.currentBackNormal, trainCar.currentBackDirection, trainCar, forceSetTransform: false);
         }
     }
 
@@ -4548,7 +4554,7 @@ public class InteractableVehicle : Interactable, IExplosionDamageable, IEquatabl
             }
             road = LevelRoads.getRoad(roadIndex);
             roadPosition = ClampEngineRoadPosition(roadPosition);
-            TeleportTrainCars();
+            TeleportTrainCars(forceSetTransform: true);
         }
         if (asset.physicsProfileRef.isValid)
         {

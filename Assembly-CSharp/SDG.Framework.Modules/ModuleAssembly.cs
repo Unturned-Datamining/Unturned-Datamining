@@ -11,7 +11,7 @@ public class ModuleAssembly
     public EModuleRole Role;
 
     /// <summary>
-    /// Requested by Trojaner. LoadFile locks the file while in use which prevents OpenMod from updating itself.
+    /// Useful as a workaround enabling plugin frameworks to self-update, otherwise LoadFile locks the file while in use.
     /// </summary>
     public bool Load_As_Byte_Array;
 
