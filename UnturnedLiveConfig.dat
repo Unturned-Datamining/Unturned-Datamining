@@ -1,14 +1,14 @@
 MainMenuAlert
 {
-	Id 76
-	Header Community Organized Event: AMOX Winter Cup Jan Qualifier
-	Body From the organizers: "Qualifier for the AMOX Winter Cup event series in January. Hosted by PeekSeek."
-	Color #ff0000
-	Link https://pksk.to/sdg
-	IconURL cdn.smartlydressedgames.com/Images/PeekSeek.png
+	Id 77
+	Header Community Blog #043
+	Body Featuring tons of community-made content, in the first Community Blog of 2026! Animations, mods, screenshots, and more!
+	Link https://blog.smartlydressedgames.com/2026/02/05/community-blog-043/
+	IconURL cdn.smartlydressedgames.com/Images/blog-news.png
+	TintIcon true
 	UseTimeWindow true
-	StartTime 2026-01-04
-	EndTime 2026-01-09 23:59:59
+	StartTime 2026-02-04
+	EndTime 2026-02-18
 }
 MainMenuWorkshop
 {
