@@ -1,14 +1,14 @@
 MainMenuAlert
 {
-	Id 77
-	Header Community Blog #043
-	Body Featuring tons of community-made content, in the first Community Blog of 2026! Animations, mods, screenshots, and more!
-	Link https://blog.smartlydressedgames.com/2026/02/05/community-blog-043/
-	IconURL cdn.smartlydressedgames.com/Images/blog-news.png
-	TintIcon true
+	Id 78
+	Header Community Organized Event: Join the US 1v1 Cup with Golden Skin Prizes
+	Body From the organizers: "Join the US 1v1 Cup with golden trophy skin prizes. Only for North American players."
+	Color #ff0000
+	Link https://esports.peekseek.net/us1v1
+	IconURL cdn.smartlydressedgames.com/Images/PeekSeek.png
 	UseTimeWindow true
-	StartTime 2026-02-04
-	EndTime 2026-02-18
+	StartTime 2026-02-13 07:00:00
+	EndTime 2026-02-14 07:00:00
 }
 MainMenuWorkshop
 {
