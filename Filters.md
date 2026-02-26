@@ -13,6 +13,7 @@
 | (?i)(nigger)                                                                          | HiddenFromAllServerLists, Blocked |
 | (?i)(no\s*-*\s*lag)                                                                   | HiddenFromInternetServerList      |
 | (?i)(Hardline)                                                                        | HiddenFromInternetServerList      |
+| (?i)(Hardӏine)                                                                        | HiddenFromInternetServerList      |
 
 ## Description filters
 | Regex | BanFlags |
@@ -23,6 +24,7 @@
 | ------------------------------------- | --------------------------------------------------------------------------- | ---------------------------- |
 | (https://r.resimlink.com/GXZ0gP2.jpg) | ![https://r.resimlink.com/GXZ0gP2.jpg](https://r.resimlink.com/GXZ0gP2.jpg) | HiddenFromInternetServerList |
 | (?i)(playhardline.com)                |                                                                             | HiddenFromInternetServerList |
+| (https://i.imgur.com/3iedNHu.png)     | ![https://i.imgur.com/3iedNHu.png](https://i.imgur.com/3iedNHu.png)         | HiddenFromInternetServerList |
 
 ## SteamId filters
 | SteamId           | BanFlags                     |
@@ -31,3 +33,4 @@
 | 85568392925961914 | HiddenFromInternetServerList |
 | 85568392935880681 | HiddenFromInternetServerList |
 | 85568392935919577 | HiddenFromInternetServerList |
+| 85568392935919669 | HiddenFromInternetServerList |
