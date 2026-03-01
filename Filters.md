@@ -11,6 +11,9 @@
 | (?i)(pandahut&#124;panda hut)(?!.* )                                                  | HiddenFromAllServerLists          |
 | (?i)(Auschwitz&#124;Nazi&#124;Nazista&#124;Anti-Negro&#124;Anti-Jew&#124;Anti-Judeus) | HiddenFromAllServerLists, Blocked |
 | (?i)(nigger)                                                                          | HiddenFromAllServerLists, Blocked |
+| (?i)(cheat)                                                                           | HiddenFromAllServerLists, Blocked |
+| (?i)(hack)                                                                            | HiddenFromAllServerLists, Blocked |
+| (?i)(HypnoticClient)                                                                  | HiddenFromAllServerLists, Blocked |
 | (?i)(no\s*-*\s*lag)                                                                   | HiddenFromInternetServerList      |
 | (?i)(Hardline)                                                                        | HiddenFromInternetServerList      |
 | (?i)(Hardӏine)                                                                        | HiddenFromInternetServerList      |
