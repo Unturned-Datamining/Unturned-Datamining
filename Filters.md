@@ -4,6 +4,7 @@
 | Address        | BanFlags                     |
 | -------------- | ---------------------------- |
 | 15.204.133.203 | HiddenFromInternetServerList |
+| 155.117.255.21 | QueryPingWarning             |
 
 ## Name filters
 | Regex                                                                                 | BanFlags                          |
@@ -17,6 +18,7 @@
 | (?i)(no\s*-*\s*lag)                                                                   | HiddenFromInternetServerList      |
 | (?i)(Hardline)                                                                        | HiddenFromInternetServerList      |
 | (?i)(Hardӏine)                                                                        | HiddenFromInternetServerList      |
+| (?i)(Wasabi)                                                                          | QueryPingWarning                  |
 
 ## Description filters
 | Regex | BanFlags |
