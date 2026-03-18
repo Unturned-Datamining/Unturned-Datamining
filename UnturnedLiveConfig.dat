@@ -1,14 +1,14 @@
 MainMenuAlert
 {
-	Id 78
-	Header Community Organized Event: Join the US 1v1 Cup with Golden Skin Prizes
-	Body From the organizers: "Join the US 1v1 Cup with golden trophy skin prizes. Only for North American players."
+	Id 79
+	Header Community Organized Event: 2026 EU Winter Cup Finals
+	Body From the organizers: "Watch the best compete live, with new perspectives and new power-ups!"
 	Color #ff0000
-	Link https://esports.peekseek.net/us1v1
+	Link https://pksk.to/sdg
 	IconURL cdn.smartlydressedgames.com/Images/PeekSeek.png
 	UseTimeWindow true
-	StartTime 2026-02-13 07:00:00
-	EndTime 2026-02-14 07:00:00
+	StartTime 2026-02-27 00:00:01
+	EndTime 2026-02-27 23:59:59
 }
 MainMenuWorkshop
 {
@@ -52,9 +52,9 @@ ItemStore
 		1383
 		1394
 	]
-	SaleTitle Steam Winter Sale 2025
-	SaleStart 2025-12-18 17:55:00
-	SaleEnd 2026-01-05 18:05:00
+	SaleTitle Steam Spring Sale 2026
+	SaleStart 2026-03-19 16:55:00
+	SaleEnd 2026-03-26 17:05:00
 }
 ItemCrafting
 {
