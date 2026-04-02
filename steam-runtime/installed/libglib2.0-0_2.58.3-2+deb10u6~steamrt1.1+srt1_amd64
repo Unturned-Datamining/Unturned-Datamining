@@ -1,0 +1,34 @@
+drwxr-xr-x root/root         0 2024-06-06 20:50 ./
+drwxr-xr-x root/root         0 2024-06-06 20:50 ./usr/
+drwxr-xr-x root/root         0 2024-06-06 20:50 ./usr/lib/
+drwxr-xr-x root/root         0 2024-06-06 20:50 ./usr/lib/x86_64-linux-gnu/
+-rw-r--r-- root/root     14528 2024-06-06 20:50 ./usr/lib/x86_64-linux-gnu/libgmodule-2.0.so.0.5800.3
+-rw-r--r-- root/root      6048 2024-06-06 20:50 ./usr/lib/x86_64-linux-gnu/libgthread-2.0.so.0.5800.3
+drwxr-xr-x root/root         0 2024-06-06 20:50 ./usr/lib/x86_64-linux-gnu/gio/
+drwxr-xr-x root/root         0 2024-06-06 20:50 ./usr/lib/x86_64-linux-gnu/gio/modules/
+drwxr-xr-x root/root         0 2024-06-06 20:50 ./usr/lib/x86_64-linux-gnu/glib-2.0/
+-rwxr-xr-x root/root     10560 2024-06-06 20:50 ./usr/lib/x86_64-linux-gnu/glib-2.0/gio-querymodules
+-rwxr-xr-x root/root      6224 2024-06-06 20:50 ./usr/lib/x86_64-linux-gnu/glib-2.0/gio-launch-desktop
+-rwxr-xr-x root/root     44040 2024-06-06 20:50 ./usr/lib/x86_64-linux-gnu/glib-2.0/glib-compile-schemas
+-rw-r--r-- root/root    334928 2024-06-06 20:50 ./usr/lib/x86_64-linux-gnu/libgobject-2.0.so.0.5800.3
+-rw-r--r-- root/root   1792288 2024-06-06 20:50 ./usr/lib/x86_64-linux-gnu/libgio-2.0.so.0.5800.3
+drwxr-xr-x root/root         0 2024-06-06 20:50 ./usr/share/
+drwxr-xr-x root/root         0 2024-06-06 20:50 ./usr/share/lintian/
+drwxr-xr-x root/root         0 2024-06-06 20:50 ./usr/share/lintian/overrides/
+-rw-r--r-- root/root       502 2024-06-06 20:31 ./usr/share/lintian/overrides/libglib2.0-0
+drwxr-xr-x root/root         0 2024-06-06 20:50 ./usr/share/glib-2.0/
+drwxr-xr-x root/root         0 2024-06-06 20:50 ./usr/share/glib-2.0/schemas/
+drwxr-xr-x root/root         0 2024-06-06 20:50 ./usr/share/doc/
+drwxr-xr-x root/root         0 2024-06-06 20:50 ./usr/share/doc/libglib2.0-0/
+-rw-r--r-- root/root    139607 2019-01-21 13:38 ./usr/share/doc/libglib2.0-0/NEWS.gz
+-rw-r--r-- root/root      4874 2024-06-06 20:31 ./usr/share/doc/libglib2.0-0/copyright
+-rw-r--r-- root/root     61280 2024-06-06 20:37 ./usr/share/doc/libglib2.0-0/changelog.Debian.amd64.gz
+-rw-r--r-- root/root      6301 2019-01-21 13:38 ./usr/share/doc/libglib2.0-0/README.md.gz
+drwxr-xr-x root/root         0 2024-06-06 20:50 ./lib/
+drwxr-xr-x root/root         0 2024-06-06 20:50 ./lib/x86_64-linux-gnu/
+-rw-r--r-- root/root   1332376 2024-06-06 20:50 ./lib/x86_64-linux-gnu/libglib-2.0.so.0.5800.3
+lrwxrwxrwx root/root         0 2024-06-06 20:50 ./usr/lib/x86_64-linux-gnu/libgmodule-2.0.so.0 -> libgmodule-2.0.so.0.5800.3
+lrwxrwxrwx root/root         0 2024-06-06 20:50 ./usr/lib/x86_64-linux-gnu/libgthread-2.0.so.0 -> libgthread-2.0.so.0.5800.3
+lrwxrwxrwx root/root         0 2024-06-06 20:50 ./usr/lib/x86_64-linux-gnu/libgobject-2.0.so.0 -> libgobject-2.0.so.0.5800.3
+lrwxrwxrwx root/root         0 2024-06-06 20:50 ./usr/lib/x86_64-linux-gnu/libgio-2.0.so.0 -> libgio-2.0.so.0.5800.3
+lrwxrwxrwx root/root         0 2024-06-06 20:50 ./lib/x86_64-linux-gnu/libglib-2.0.so.0 -> libglib-2.0.so.0.5800.3

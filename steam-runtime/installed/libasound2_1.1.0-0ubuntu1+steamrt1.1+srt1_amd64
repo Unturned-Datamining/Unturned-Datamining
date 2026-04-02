@@ -1,0 +1,20 @@
+drwxr-xr-x root/root         0 2020-09-18 16:33 ./
+drwxr-xr-x root/root         0 2020-09-18 16:32 ./usr/
+drwxr-xr-x root/root         0 2020-09-18 16:32 ./usr/lib/
+drwxr-xr-x root/root         0 2020-09-18 16:33 ./usr/lib/x86_64-linux-gnu/
+-rw-r--r-- root/root   1052928 2020-09-18 16:33 ./usr/lib/x86_64-linux-gnu/libasound.so.2.0.0
+drwxr-xr-x root/root         0 2020-09-18 16:32 ./usr/lib/x86_64-linux-gnu/alsa-lib/
+drwxr-xr-x root/root         0 2020-09-18 16:33 ./usr/lib/x86_64-linux-gnu/alsa-lib/smixer/
+-rw-r--r-- root/root     10368 2020-09-18 16:33 ./usr/lib/x86_64-linux-gnu/alsa-lib/smixer/smixer-hda.so
+-rw-r--r-- root/root     14672 2020-09-18 16:33 ./usr/lib/x86_64-linux-gnu/alsa-lib/smixer/smixer-sbase.so
+-rw-r--r-- root/root     10368 2020-09-18 16:33 ./usr/lib/x86_64-linux-gnu/alsa-lib/smixer/smixer-ac97.so
+drwxr-xr-x root/root         0 2020-09-18 16:32 ./usr/share/
+drwxr-xr-x root/root         0 2020-09-18 16:32 ./usr/share/doc/
+drwxr-xr-x root/root         0 2020-09-18 16:32 ./usr/share/doc/libasound2/
+-rw-r--r-- root/root       841 2020-09-18 08:52 ./usr/share/doc/libasound2/NEWS.Debian.gz
+-rw-r--r-- root/root     24702 2020-09-18 08:52 ./usr/share/doc/libasound2/changelog.gz
+-rw-r--r-- root/root      1403 2020-09-18 08:52 ./usr/share/doc/libasound2/copyright
+-rw-r--r-- root/root     17724 2020-09-18 16:30 ./usr/share/doc/libasound2/changelog.Debian.amd64.gz
+drwxr-xr-x root/root         0 2020-09-18 16:32 ./usr/share/doc/libasound2/examples/
+-rw-r--r-- root/root      2879 2015-11-09 07:39 ./usr/share/doc/libasound2/examples/asoundrc.txt.gz
+lrwxrwxrwx root/root         0 2020-09-18 16:32 ./usr/lib/x86_64-linux-gnu/libasound.so.2 -> libasound.so.2.0.0

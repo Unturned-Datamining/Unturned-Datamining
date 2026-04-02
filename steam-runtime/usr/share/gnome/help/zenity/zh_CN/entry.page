@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<page xmlns="http://projectmallard.org/1.0/" type="topic" id="entry" xml:lang="zh_CN">
+  <info>
+    <link type="guide" xref="index#dialogs"/>
+    <desc>Use the <cmd>--entry</cmd> option.</desc>
+  </info>
+  <title>文本框</title>
+    <p>
+        Use the <cmd>--entry</cmd> option to create a text entry dialog. <app>Zenity</app> returns the contents of the text entry to standard output. 
+    </p>	
+    <p>文本框支持以下选项：</p>
+
+    <terms>
+
+      <item>
+        <title><cmd>--text</cmd>=<var>text</var></title>
+	<p>指定在文本框中显示的文本。</p>
+      </item>
+
+      <item>
+        <title><cmd>--entry-text</cmd>=<var>text</var></title>
+	<p>指定显示在文本框的文本域里的文本。</p>
+      </item>
+
+      <item>
+        <title><cmd>--hide-text</cmd></title>
+	<p>隐藏文本框中文本域中的内容。</p>
+      </item>
+
+    </terms>
+
+    <p>
+      The following example script shows how to create a text entry dialog:
+    </p>
+
+<code>
+#!/bin/sh
+
+if zenity --entry \
+--title="Add new profile" \
+--text="Enter name of new profile:" \
+--entry-text "NewProfile"
+  then echo $?
+  else echo "No name entered"
+fi
+</code>
+
+
+    <figure id="zenity-entry-screenshot">
+      <title>文本框范例</title>
+      <desc><app>Zenity</app> text entry dialog example</desc>
+      <media type="image" mime="image/png" src="figures/zenity-entry-screenshot.png"/>
+    </figure>
+</page>

@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<page xmlns="http://projectmallard.org/1.0/" type="topic" id="list" xml:lang="hu">
+  <info>
+    <link type="guide" xref="index#dialogs"/>
+    <desc>A <cmd>--list</cmd> kapcsoló használata.</desc>
+  </info>
+  <title>Lista ablak</title>
+    <p>A <cmd>--list</cmd> kapcsoló használatával lista ablakot hozhat létre. A <app>Zenity</app> a kijelölt sorok első szövegoszlopának bejegyzéseit kiírja a szabványos kimenetre.</p>
+
+    <p>Az ablak adatait oszlopról oszlopra, sorról sorra kell megadni. Az ablak adatai megadhatók a szabványos bemeneten keresztül. Minden bejegyzést új sor karakterrel kell elválasztani.</p>
+
+    <p>Ha a <cmd>--checklist</cmd> vagy <cmd>--radiolist</cmd> kapcsolókat használja, akkor minden sornak a „TRUE” vagy „FALSE” egyikével kell kezdődnie.</p>
+
+    <p>A lista ablak a következő kapcsolókat támogatja:</p>
+
+    <terms>
+
+      <item>
+        <title><cmd>--column</cmd>=<var>oszlop</var></title>
+	  <p>A lista ablakban megjelenő oszlopfejlécek megadása. Az ablakban megjelenítendő minden oszlophoz meg kell adnia egy <cmd>--column</cmd> kapcsolót.</p>
+      </item>
+
+      <item>
+        <title><cmd>--checklist</cmd></title>
+	  <p>Megadja, hogy a lista ablak első oszlopa jelölőnégyzeteket tartalmaz.</p>
+      </item>
+
+      <item>
+        <title><cmd>--radiolist</cmd></title>
+	  <p>Megadja, hogy a lista ablak első oszlopa választógombokat tartalmaz.</p>
+      </item>
+
+      <item>
+        <title><cmd>--editable</cmd></title>
+	  <p>Lehetővé teszi a megjelenített elemek szerkesztését.</p>
+      </item>
+
+      <item>
+        <title><cmd>--separator</cmd>=<var>elválasztó</var></title>
+	  <p>Megadja, hogy melyik karakterlánc kerül felhasználásra, amikor a lista ablak visszaadja a kijelölt bejegyzéseket.</p>
+      </item>
+
+      <item>
+        <title><cmd>--print-column</cmd>=<var>oszlop</var></title>
+	  <p>Megadja, hogy melyik oszlopot kell kiírni kiválasztáskor. Az alapértelmezett oszlop az „1”. A lista összes oszlopának kiírására az „ALL” érték használható.</p>
+      </item>
+
+    </terms>
+
+    <p>A következő példa parancsfájl bemutatja a lista ablak létrehozását:</p>
+<code>
+#!/bin/sh
+
+zenity --list \
+  --title="Válassza ki a megjelenítendő hibajegyeket" \
+  --column="Hiba száma" --column="Súlyosság" --column="Leírás" \
+    992383 Normal "GtkTreeView crashes on multiple selections" \
+    293823 High "GNOME Dictionary does not handle proxy" \
+    393823 Critical "Menu editing does not work in GNOME 2.0"
+</code>
+
+
+    <figure id="zenity-list-screenshot">
+      <title>Példa lista ablak</title>
+      <desc><app>Zenity</app> példa lista ablak</desc>
+      <media type="image" mime="image/png" src="figures/zenity-list-screenshot.png"/>
+    </figure>
+</page>

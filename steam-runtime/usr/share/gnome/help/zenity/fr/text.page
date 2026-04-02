@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<page xmlns="http://projectmallard.org/1.0/" type="topic" id="text" xml:lang="fr">
+  <info>
+    <link type="guide" xref="index#dialogs"/>
+    <desc>Utiliser l'option <cmd>--text-info</cmd>.</desc>
+  </info>
+  <title>Boîte de dialogue de texte d'information</title>
+    <p>L'option <cmd>--text-info</cmd> crée une boîte de dialogue de texte d'information.</p>
+	
+    <p>Options de la boîte de dialogue de texte d'information :</p>
+
+    <terms>
+
+      <item>
+        <title><cmd>--filename</cmd>=<var>nomdefichier</var></title>
+	<p>Spécifier un fichier texte à charger dans la boîte de dialogue de texte d'information.</p>
+      </item>
+
+      <item>
+        <title><cmd>--editable</cmd></title>
+        <p>Permettre l'édition du texte affiché. Le texte édité est retourné sur le flux de sortie standard à la fermeture de la boîte de dialogue.</p>
+      </item>
+
+      <item>
+        <title><cmd>--font</cmd>=<var>POLICE</var></title>
+	<p>Spécifier la police du texte.</p>
+      </item>
+
+      <item>
+        <title><cmd>--checkbox</cmd>=<var>TEXTE</var></title>
+	<p>Activer une case à cocher du style « J'ai lu et j'accepte les termes ».</p>
+      </item>
+
+      <item>
+        <title><cmd>--html</cmd></title>
+        <p>Activer la prise en charge du html.</p>
+      </item>
+
+      <item>
+        <title><cmd>--url</cmd>=<var>URL</var></title>
+	<p>Définir un URL au lieu d'un fichier. Ne fonctionne qu'avec l'option --html.</p>
+      </item>
+
+    </terms>
+
+    <p>Le script d'exemple suivant montre comment créer une boîte de dialogue de texte d'information :</p>
+
+<code>
+#!/bin/sh
+
+# Vous devez déplacer le fichier « COPYING » dans le même dossier que ce script.
+FILE=`dirname $0`/COPYING
+
+zenity --text-info \
+       --title="Licence" \
+       --filename=$FILE \
+       --checkbox="J'ai lu et j'accepte les termes."
+
+case $? in
+    0)
+        echo "Démarrage de l'installation !"
+	# next step
+	;;
+    1)
+        echo "Arrêt de l'installation !"
+	;;
+    -1)
+        echo "Une erreur inattendue est survenue."
+	;;
+esac
+</code>
+
+    <figure id="zenity-text-screenshot">
+      <title>Exemple de boîte de dialogue de texte d'information</title>
+      <desc>Exemple de boîte de dialogue de texte d'information <app>Zenity</app></desc>
+      <media type="image" mime="image/png" src="figures/zenity-text-screenshot.png"/>
+    </figure>
+</page>

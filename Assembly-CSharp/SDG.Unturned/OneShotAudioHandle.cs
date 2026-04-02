@@ -10,6 +10,18 @@ public struct OneShotAudioHandle
 
     private int playId;
 
+    public bool IsValid
+    {
+        get
+        {
+            if (audioSource != null && !audioSource.isInPool)
+            {
+                return playId == audioSource.playId;
+            }
+            return false;
+        }
+    }
+
     internal OneShotAudioHandle(PooledAudioSource audioSource)
     {
         this.audioSource = audioSource;

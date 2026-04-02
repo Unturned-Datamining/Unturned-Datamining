@@ -35,6 +35,7 @@
 - [ISleekInt32Field.cs](ISleekInt32Field.cs)
 - [ISleekLabel.cs](ISleekLabel.cs)
 - [ISleekNumericField.cs](ISleekNumericField.cs)
+- [ISleekProxyImplementation.cs](ISleekProxyImplementation.cs)
 - [ISleekScrollView.cs](ISleekScrollView.cs)
 - [ISleekSlider.cs](ISleekSlider.cs)
 - [ISleekSprite.cs](ISleekSprite.cs)

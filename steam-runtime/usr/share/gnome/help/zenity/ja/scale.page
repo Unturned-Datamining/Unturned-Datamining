@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<page xmlns="http://projectmallard.org/1.0/" type="topic" id="scale" xml:lang="ja">
+  <info>
+    <link type="guide" xref="index#dialogs"/>
+    <desc><cmd>--scale</cmd> の使用</desc>
+  </info>
+  <title>スケールダイアログ</title>
+  <p>スケールダイアログを作成するには、<cmd>--scale</cmd> というオプションを使ってください。</p>
+  <p>スケールダイアログは、以下のオプションをサポートしています。</p>
+
+  <terms>
+
+    <item>
+      <title><cmd>--text</cmd>=<var>テキスト</var></title>
+      <p>ダイアログのテキストを指定します。(既定値: スケール値の調整)</p>
+    </item>
+
+    <item>
+      <title><cmd>--value</cmd>=<var>値</var></title>
+      <p>初期値を指定します。 (既定値: 0) 最小値から最大値の間で指定しなければなりません。</p>
+    </item>
+
+    <item>
+      <title><cmd>--min-value</cmd>=<var>値</var></title>
+      <p>最小値を指定します。 (既定値: 0)</p>
+    </item>
+
+    <item>
+      <title><cmd>--max-value</cmd>=<var>値</var></title>
+      <p>最大値を指定します。 (既定値: 100)</p>
+    </item>
+
+    <item>
+      <title><cmd>--step</cmd>=<var>値</var></title>
+      <p>刻み幅を指定します。 (既定値: 1)</p>
+    </item>
+
+    <item>
+      <title><cmd>--print-partial</cmd></title>
+      <p>値が変更される度に標準出力へ値を出力します。</p>
+    </item>
+
+    <item>
+      <title><cmd>--hide-value</cmd></title>
+      <p>ダイアログで値を非表示にします。</p>
+    </item>
+
+  </terms>
+
+  <p>以下のスクリプトの例でスケールダイアログの作成方法を示します。</p>
+
+<code>
+#!/bin/sh
+
+VALUE=`zenity --scale --text="ウィンドウの透過率を指定してください。" --value=50`
+
+case $? in
+         0)
+		echo "$VALUE% が指定されました。";;
+         1)
+                echo "値が指定されませんでした。";;
+        -1)
+                echo "予期せぬエラーが発生しました。";;
+esac
+</code>
+
+  <figure id="zenity-scale-screenshot">
+    <title>スケールダイアログの例</title>
+    <desc><app>Zenity</app> スケールダイアログの例</desc>
+    <media type="image" mime="image/png" src="figures/zenity-scale-screenshot.png"/>
+  </figure>
+
+</page>

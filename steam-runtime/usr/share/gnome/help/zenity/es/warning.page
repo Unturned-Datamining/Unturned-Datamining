@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<page xmlns="http://projectmallard.org/1.0/" type="topic" id="warning" xml:lang="es">
+  <info>
+    <link type="guide" xref="message"/>
+    <desc>Use la opción <cmd>--warning</cmd>.</desc>
+  </info>
+  <title>Diálogo de advertencia</title>
+      <p>Use la opción <cmd>--warning</cmd> para crear un diálogo de advertencia.</p>
+
+      <p>El siguiente script de ejemplo muestra cómo crear un diálogo de advertencia:</p>
+
+<code>
+#!/bin/bash
+
+zenity --warning \
+--text="Desconecte el cable de eléctrico para evitar un shock eléctrico."
+</code>
+
+
+      <figure id="zenity-warning-screenshot">
+        <title>Ejemplo del diálogo de advertencia</title>
+	<desc>Ejemplo del diálogo de advertencia de <app>Zenity</app></desc>
+        <media type="image" mime="image/png" src="figures/zenity-warning-screenshot.png"/>
+      </figure>
+</page>

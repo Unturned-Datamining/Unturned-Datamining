@@ -1,0 +1,26 @@
+libgstapp-0.10.so.0 libgstreamer-plugins-base0.10-0 #MINVER#
+# No symbols listed here yet
+libgstaudio-0.10.so.0 libgstreamer-plugins-base0.10-0 #MINVER#
+# No symbols listed here yet
+libgstcdda-0.10.so.0 libgstreamer-plugins-base0.10-0 #MINVER#
+# No symbols listed here yet
+libgstfft-0.10.so.0 libgstreamer-plugins-base0.10-0 #MINVER#
+# No symbols listed here yet
+libgstinterfaces-0.10.so.0 libgstreamer-plugins-base0.10-0 #MINVER#
+# No symbols listed here yet
+libgstnetbuffer-0.10.so.0 libgstreamer-plugins-base0.10-0 #MINVER#
+# No symbols listed here yet
+libgstpbutils-0.10.so.0 libgstreamer-plugins-base0.10-0 #MINVER#
+# No symbols listed here yet
+libgstriff-0.10.so.0 libgstreamer-plugins-base0.10-0 #MINVER#
+# No symbols listed here yet
+libgstrtp-0.10.so.0 libgstreamer-plugins-base0.10-0 #MINVER#
+# No symbols listed here yet
+libgstrtsp-0.10.so.0 libgstreamer-plugins-base0.10-0 #MINVER#
+# No symbols listed here yet
+libgstsdp-0.10.so.0 libgstreamer-plugins-base0.10-0 #MINVER#
+# No symbols listed here yet
+libgsttag-0.10.so.0 libgstreamer-plugins-base0.10-0 #MINVER#
+# No symbols listed here yet
+libgstvideo-0.10.so.0 libgstreamer-plugins-base0.10-0 #MINVER#
+# No symbols listed here yet

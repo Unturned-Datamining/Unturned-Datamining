@@ -8,4 +8,7 @@ Size_Y 1
 Size_Z 0.3
 
 Food 20
-ConsumeAudioClip Sounds/EatCrunchy.mp3
+
+ConsumeAudioClip Sounds/EatBar.mp3
+Procedurally_Animate_Inertia false
+EquipablePrefab Items/Food/Bar_Chocolate/Equipable.prefab

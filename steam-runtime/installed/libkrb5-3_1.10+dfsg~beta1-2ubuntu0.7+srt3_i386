@@ -1,0 +1,20 @@
+drwxr-xr-x root/root         0 2019-04-03 13:40 ./
+drwxr-xr-x root/root         0 2019-04-03 13:40 ./usr/
+drwxr-xr-x root/root         0 2019-04-03 13:39 ./usr/lib/
+drwxr-xr-x root/root         0 2019-04-03 13:40 ./usr/lib/i386-linux-gnu/
+drwxr-xr-x root/root         0 2019-04-03 13:39 ./usr/lib/i386-linux-gnu/krb5/
+drwxr-xr-x root/root         0 2019-04-03 13:39 ./usr/lib/i386-linux-gnu/krb5/plugins/
+drwxr-xr-x root/root         0 2019-04-03 13:39 ./usr/lib/i386-linux-gnu/krb5/plugins/krb5/
+-rw-r--r-- root/root    852380 2019-04-03 13:40 ./usr/lib/i386-linux-gnu/libkrb5.so.3.3
+drwxr-xr-x root/root         0 2019-04-03 13:40 ./usr/share/
+drwxr-xr-x root/root         0 2019-04-03 13:40 ./usr/share/lintian/
+drwxr-xr-x root/root         0 2019-04-03 13:40 ./usr/share/lintian/overrides/
+-rw-r--r-- root/root        60 2012-07-18 21:02 ./usr/share/lintian/overrides/libkrb5-3
+drwxr-xr-x root/root         0 2019-04-03 13:40 ./usr/share/doc/
+drwxr-xr-x root/root         0 2019-04-03 13:40 ./usr/share/doc/libkrb5-3/
+-rw-r--r-- root/root     17869 2012-07-18 21:02 ./usr/share/doc/libkrb5-3/copyright
+-rw-r--r-- root/root      2255 2012-07-18 21:02 ./usr/share/doc/libkrb5-3/README.Debian.gz
+-rw-r--r-- root/root      6861 2012-01-13 21:38 ./usr/share/doc/libkrb5-3/README.gz
+-rw-r--r-- root/root      1200 2012-07-18 21:02 ./usr/share/doc/libkrb5-3/NEWS.Debian.gz
+-rw-r--r-- root/root     26983 2019-04-03 13:38 ./usr/share/doc/libkrb5-3/changelog.Debian.i386.gz
+lrwxrwxrwx root/root         0 2019-04-03 13:40 ./usr/lib/i386-linux-gnu/libkrb5.so.3 -> libkrb5.so.3.3

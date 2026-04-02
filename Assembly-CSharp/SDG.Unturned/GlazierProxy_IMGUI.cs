@@ -1,8 +1,13 @@
 namespace SDG.Unturned;
 
-internal class GlazierProxy_IMGUI : GlazierElementBase_IMGUI
+internal class GlazierProxy_IMGUI : GlazierElementBase_IMGUI, ISleekProxyImplementation, ISleekElement
 {
     private SleekWrapper owner;
+
+    public SleekWrapper GetWrapper()
+    {
+        return owner;
+    }
 
     public GlazierProxy_IMGUI(SleekWrapper owner)
     {

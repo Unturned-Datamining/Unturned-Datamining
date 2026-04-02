@@ -1,0 +1,14 @@
+drwxr-xr-x root/root         0 2024-09-16 14:59 ./
+drwxr-xr-x root/root         0 2024-09-16 14:59 ./usr/
+drwxr-xr-x root/root         0 2024-09-16 14:59 ./usr/lib/
+drwxr-xr-x root/root         0 2024-09-16 14:59 ./usr/lib/libcapsule/
+drwxr-xr-x root/root         0 2024-09-16 14:59 ./usr/lib/libcapsule/relocatable/
+-rwxr-xr-x root/root     35504 2024-09-16 14:59 ./usr/lib/libcapsule/relocatable/x86_64-linux-gnu-capsule-version
+-rwxr-xr-x root/root     27040 2024-09-16 14:59 ./usr/lib/libcapsule/relocatable/x86_64-linux-gnu-capsule-elf-dump
+-rwxr-xr-x root/root     35504 2024-09-16 14:59 ./usr/lib/libcapsule/relocatable/x86_64-linux-gnu-capsule-symbols
+-rwxr-xr-x root/root     77248 2024-09-16 14:59 ./usr/lib/libcapsule/relocatable/x86_64-linux-gnu-capsule-capture-libs
+drwxr-xr-x root/root         0 2024-09-16 14:59 ./usr/share/
+drwxr-xr-x root/root         0 2024-09-16 14:59 ./usr/share/doc/
+drwxr-xr-x root/root         0 2024-09-16 14:59 ./usr/share/doc/libcapsule-tools-relocatable/
+-rw-r--r-- root/root      3293 2024-04-08 18:58 ./usr/share/doc/libcapsule-tools-relocatable/copyright
+-rw-r--r-- root/root      6579 2024-09-16 14:56 ./usr/share/doc/libcapsule-tools-relocatable/changelog.Debian.amd64.gz

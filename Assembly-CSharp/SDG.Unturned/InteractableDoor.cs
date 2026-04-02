@@ -78,7 +78,11 @@ public class InteractableDoor : Interactable
         }
         if (!Dedicator.IsDedicatedServer)
         {
-            GetComponent<AudioSource>().Play();
+            AudioSource component2 = GetComponent<AudioSource>();
+            if (component2 != null)
+            {
+                component2.Play();
+            }
         }
         if (Provider.isServer)
         {

@@ -1,0 +1,258 @@
+<?xml version="1.0" encoding="utf-8"?>
+<page xmlns="http://projectmallard.org/1.0/" type="topic" id="usage" xml:lang="de">
+<info>
+  <link type="guide" xref="index"/>
+  <desc>Wenn Sie Skripte schreiben, können Sie <app>Zenity</app> zur Erzeugung einfacher Dialoge zur Interaktion mit dem Benutzer verwenden.</desc>
+</info>
+<title>Benutzung</title>
+    <p>Wenn Sie Skripte schreiben, können Sie <app>Zenity</app> zur Erzeugung einfacher Dialoge zur Interaktion mit dem Benutzer verwenden, wie folgende:</p>
+    <list>
+      <item>
+        <p>Sie können einen Dialog erzeugen, der die Eingabe von Informationen durch den Benutzer erfordert. Beispielsweise können Sie den Benutzer anweisen, ein Datum aus einem Kalenderdialog oder eine Datei aus einem Dateiauswahldialog zu wählen.</p>
+      </item>
+      <item>
+        <p>Sie können einen Dialog erzeugen, um dem Benutzer Informationen zur Verfügung zu stellen. Beispielsweise können Sie einen Fortschrittsanzeige-Dialog erzeugen, um auf den aktuellen Status eines Vorgangs hinzuweisen, oder einen Warndialog, um den Benutzer zu warnen.</p>
+      </item>
+    </list>
+    <p>Wenn der Benutzer den Dialog schließt, schreibt <app>Zenity</app> den vom Dialog ausgegebenen Text in die Standardausgabe.</p>
+
+    <note>
+      <p>Wenn Sie <app>Zenity</app>-Befehle schreiben, stellen Sie bitte sicher, dass Sie jedes Argument stets in Anführungszeichen einschließen.</p>
+      <p>Benutzen Sie beispielsweise:</p>
+      <screen>zenity --calendar --title="Urlaubsplaner"</screen>
+      <p>Benutzen Sie nicht:</p>
+      <screen>zenity --calendar --title=Urlaubsplaner</screen>
+      <p>Wenn Sie keine Anführungszeichen verwenden, könnten Sie unerwartete Ergebnisse erhalten.</p>
+    </note>
+
+    <section id="zenity-usage-mnemonics">
+      <title>Zugriffstasten</title>
+	<p>Eine Zugriffstaste ist eine Taste, die Ihnen die Ausführung einer Aktion mit der Tastatur zur Auswahl eines Befehls aus einem Menü oder einem Dialog erlaubt, anstatt dafür die Maus zu benutzen.</p>
+	<p>Einige <app>Zenity</app>-Dialoge unterstützen die Verwendung von Zugriffstasten. Um das Zeichen für den Tastaturzugriff festzulegen, setzen Sie einen Unterstrich vor das Zeichen im Dialogtext. Das folgende Beispiel zeigt, wie Sie den Buchstaben »W« als Zugriffstaste festlegen.</p>
+	<screen><input>"_Wählen Sie einen Namen"</input></screen>
+    </section>
+
+    <section id="zenity-usage-exitcodes">
+      <title>Rückgabewerte</title>
+    <p>Zenity erzeugt die folgenden Rückgabewerte:</p>
+
+    <table frame="all" rules="all">
+        <thead>
+          <tr valign="top">
+            <td colname="COLSPEC0">
+              <p>Rückgabewert</p></td>
+            <td colname="COLSPEC1">
+              <p>Beschreibung</p></td>
+          </tr>
+        </thead>
+        <tbody>
+          <tr valign="top">
+            <td>
+              <p><var>0</var></p>
+            </td>
+            <td>
+              <p>Der Benutzer hat entweder <gui style="button">OK</gui> oder <gui style="button">Schließen</gui> angeklickt.</p>
+            </td>
+          </tr>
+          <tr valign="top">
+            <td>
+              <p><var>1</var></p>
+            </td>
+            <td>
+              <p>Der Benutzer hat entweder <gui style="button">Abbrechenbutton&gt; angeklickt oder die Fensterfunktionen zum Schlie</gui></p>
+            </td>
+          </tr>
+          <tr valign="top">
+            <td>
+              <p><var>-1</var></p>
+            </td>
+            <td>
+              <p>Es ist ein unerwarteter Fehler aufgetreten.</p>
+            </td>
+          </tr>
+          <tr valign="top">
+            <td>
+              <p><var>5</var></p>
+            </td>
+            <td>
+              <p>Der Dialog wurde geschlossen, weil die Wartezeit verstrichen ist.</p>
+            </td>
+          </tr>
+        </tbody>
+    </table>
+
+    </section>
+
+
+  <!-- ==== General Options ====== -->
+
+  <section id="zenity-usage-general-options">
+    <title>Allgemeine Einstellungen</title>
+
+    <p>Alle Zenity-Dialoge unterstützen die folgenden allgemeinen Optionen:</p>
+
+    <terms>
+
+      <item>
+        <title><cmd>--title</cmd>=<var>Titel</var></title>
+	<p>Damit legen Sie den Titel des Dialogs fest.</p>
+      </item>
+
+      <item>
+        <title><cmd>--window-icon</cmd>=<var>Symbolpfad</var></title>
+	<p>Damit legen Sie das Symbol fest, das im Fensterrahmen des Dialogs angezeigt wird. Es gibt 4 Standardsymbole, die auch über die Schlüsselwörter »info«, »warning«, »question« und »error« bereitgestellt werden.</p>
+      </item>
+
+      <item>
+        <title><cmd>--width</cmd>=<var>Breite</var></title>
+	<p>Damit legen Sie die Breite des Dialogs fest.</p>
+      </item>
+
+      <item>
+        <title><cmd>--height</cmd>=<var>Höhe</var></title>
+	<p>Damit legen Sie die Höhe des Dialogs fest.</p>
+      </item>
+
+      <item>
+        <title><cmd>--timeout</cmd>=<var>timeout</var></title>
+	<p>Damit legen Sie die Wartezeit in Sekunden bis zum Schließen des Dialogs fest.</p>
+      </item>
+
+    </terms>
+
+  </section>
+
+<!-- ==== Miscellaneous Options ====== -->
+
+  <section id="zenity-help-options">
+    <title>Hilfeoptionen</title>
+
+    <p>Zenity stellt die folgenden Hilfeoptionen bereit:</p>
+
+    <terms>
+
+      <item>
+        <title><cmd>--help</cmd></title>
+	<p>Damit zeigen Sie einen Hilfetext in Kurzform an.</p>
+      </item>
+
+      <item>
+        <title><cmd>--help-all</cmd></title>
+	<p>Damit zeigen Sie den kompletten Hilfetext für alle Dialoge an.</p>
+      </item>
+ 
+      <item>
+        <title><cmd>--help-general</cmd></title>
+	<p>Damit zeigen Sie den Hilfetext für allgemeine Dialogoptionen an.</p>
+      </item>
+ 
+      <item>
+        <title><cmd>--help-calendar</cmd></title>
+	<p>Damit zeigen Sie den Hilfetext für Kalenderdialogoptionen an.</p>
+      </item>
+ 
+      <item>
+        <title><cmd>--help-entry</cmd></title>
+	<p>Damit zeigen Sie den Hilfetext für Optionen des Texteingabedialogs an.</p>
+      </item>
+ 
+      <item>
+        <title><cmd>--help-error</cmd></title>
+	<p>Damit zeigen Sie den Hilfetext für Optionen des Fehlerdialogs an.</p>
+      </item>
+ 
+      <item>
+        <title><cmd>--help-info</cmd></title>
+	<p>Damit zeigen Sie den Hilfetext für Informationsdialogoptionen an.</p>
+      </item>
+ 
+      <item>
+        <title><cmd>--help-file-selection</cmd></title>
+	<p>Damit zeigen Sie den Hilfetext für Optionen des Dateiauswahldialogs.</p>
+      </item>
+ 
+      <item>
+        <title><cmd>--help-list</cmd></title>
+	<p>Damit zeigen Sie den Hilfetext für Optionen des Listendialogs an.</p>
+      </item>
+ 
+      <item>
+        <title><cmd>--help-notification</cmd></title>
+	<p>Damit zeigen Sie den Hilfetext für Optionen des Benachrichtigungsymbols an.</p>
+      </item>
+ 
+      <item>
+        <title><cmd>--help-progress</cmd></title>
+	<p>Damit zeigen Sie den Hilfetext für Optionen des Fortschrittsanzeige-Dialogs an.</p>
+      </item>
+ 
+      <item>
+        <title><cmd>--help-question</cmd></title>
+	<p>Damit zeigen Sie den Hilfetext für Optionen des Fragedialogs an.</p>
+      </item>
+ 
+      <item>
+        <title><cmd>--help-warning</cmd></title>
+	<p>Damit zeigen Sie den Hilfetext für die Optionen des Warndialogs an.</p>
+      </item>
+ 
+      <item>
+	<title><cmd>--help-text-info</cmd></title>
+	<p>Damit zeigen Sie den Hilfetext für Optionen des Informationsdialogs an.</p>
+      </item>
+ 
+      <item>
+        <title><cmd>--help-misc</cmd></title>
+	<p>Damit zeigen Sie den Hilfetext für nicht auf einen bestimmten Dialog bezogene Optionen an.</p>
+      </item>
+ 
+      <item>
+        <title><cmd>--help-gtk</cmd></title>
+	<p>Damit zeigen Sie den Hilfetext für die GTK+-Optionen an.</p>
+      </item>
+ 
+    </terms>
+
+  </section>
+
+<!-- ==== Miscellaneous Options ====== -->
+
+  <section id="zenity-miscellaneous-options">
+    <title>Verschiedene Optionen</title>
+
+    <p>Zenity stellt außerdem die folgenden weiteren Optionen zur Verfügung:</p>
+
+    <terms>
+
+      <item>
+        <title><cmd>--about</cmd></title>
+	<p>Damit zeigen Sie den <gui>Info zu Zenity</gui>-Dialog an, der Versionsinformationen, Copyright-Informationen und Entwicklerinformationen über <app>Zenity</app> enthält.</p>
+      </item>
+
+      <item>
+        <title><cmd>--version</cmd></title>
+	<p>Damit zeigen Sie die Versionsnummer von Zenity an.</p>
+      </item>
+
+    </terms>
+
+  </section>
+
+<!-- ==== GTK+ Options ====== -->
+
+  <section id="zenity-gtk-options">
+    <title>GTK+-Optionen</title>
+
+    <p>Zenity unterstützt die Standardoptionen von GTK+. Um weitere Informationen über die GTK+-Optionen anzuzeigen, führen Sie den Befehl <cmd>zenity --help-gtk</cmd> aus.</p>
+
+  </section>
+
+<!-- ==== Environment variables ==== -->
+
+  <section id="zenity-environment-variables">
+    <title>Umgebungsvariablen</title>
+
+    <p>Normalerweise erkennt Zenity das Terminalfenster, aus dem es gestartet wurde und hält sein eigenes Fenster im Vordergrund dieses Fensters. Dieses Verhalten kann deaktiviert werden, wenn Sie das Setzen der Umgebungsvariable <var>WINDOWID deaktivieren.</var></p>
+
+  </section>
+</page>

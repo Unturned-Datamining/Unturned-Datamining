@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<page xmlns="http://projectmallard.org/1.0/" type="topic" id="list" xml:lang="fr">
+  <info>
+    <link type="guide" xref="index#dialogs"/>
+    <desc>Utiliser l'option <cmd>--list</cmd>.</desc>
+  </info>
+  <title>Boîte de dialogue de liste</title>
+    <p>L'option <cmd>--list</cmd> crée une boîte de dialogue de liste. <app>Zenity</app> retourne les entrées de la première colonne de texte des lignes sélectionnées sur le flux de sortie standard.</p>
+
+    <p>Spécifiez les données de la boîte de dialogue colonne par colonne, ligne par ligne. Ces données peuvent être transmises par le flux d'entrée standard. Utilisez un retour chariot pour séparer chaque ligne de données.</p>
+
+    <p>Si vous utilisez les options <cmd>--checklist</cmd> ou <cmd>--radiolist</cmd>, chaque ligne doit commencer par « TRUE » ou « FALSE ».</p>
+
+    <p>Options de la boîte de dialogue de liste :</p>
+
+    <terms>
+
+      <item>
+        <title><cmd>--column</cmd>=<var>colonne</var></title>
+	  <p>Spécifier le titre de colonne affiché dans la boîte de dialogue de liste. Vous devez utiliser une option <cmd>--column</cmd> pour chaque colonne que vous voulez afficher dans la boîte de dialogue.</p>
+      </item>
+
+      <item>
+        <title><cmd>--checklist</cmd></title>
+	  <p>Utiliser des cases à cocher pour la première colonne de la liste.</p>
+      </item>
+
+      <item>
+        <title><cmd>--radiolist</cmd></title>
+	  <p>Utiliser des boutons radio pour la première colonne de la liste.</p>
+      </item>
+
+      <item>
+        <title><cmd>--editable</cmd></title>
+	  <p>Permettre l'édition des éléments affichés.</p>
+      </item>
+
+      <item>
+        <title><cmd>--separator</cmd>=<var>séparateur</var></title>
+	  <p>Spécifier le texte utilisé comme séparateur pour diviser la liste des entrées sélectionnées que la boîte de dialogue retourne.</p>
+      </item>
+
+      <item>
+        <title><cmd>--print-column</cmd>=<var>colonne</var></title>
+	  <p>Spécifier de quelle colonne afficher le contenu après sélection. La colonne par défaut est « 1 ». « ALL » peut être utilisé pour afficher le contenu de toutes les colonnes de la liste.</p>
+      </item>
+
+    </terms>
+
+    <p>Le script d'exemple suivant montre comment créer une boîte de dialogue de liste :</p>
+<code>
+#!/bin/sh
+
+zenity --list \
+  --title="Choisissez les bogues à afficher" \
+  --column="N° de bogue" --column="Gravité" --column="Description" \
+    992383 Normal "GtkTreeView plante lors de sélections multiples" \
+    293823 Grave "Le dictionnaire GNOME ne prend pas de proxy en charge" \
+    393823 Critique "L'édition de menu ne fonctionne pas avec GNOME 2.0"
+</code>
+
+
+    <figure id="zenity-list-screenshot">
+      <title>Exemple de boîte de dialogue de liste</title>
+      <desc>Exemple de boîte de dialogue de liste <app>Zenity</app></desc>
+      <media type="image" mime="image/png" src="figures/zenity-list-screenshot.png"/>
+    </figure>
+</page>

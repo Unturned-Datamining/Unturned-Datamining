@@ -1,0 +1,3593 @@
+gtk+2.0 (2.24.10-0ubuntu6.3+steamrt1.4+srt1) scout; urgency=medium
+
+  * OBS build +srt1
+
+ -- OBS Build <obs@buildd>  Thu, 16 May 2024 17:06:29 +0100
+
+gtk+2.0 (2.24.10-0ubuntu6.3+steamrt1.4) scout; urgency=medium
+
+  * Reinstate deprecated dh_gtkmodules script.
+    This is required by a couple of gtk2-engines* packages in scout.
+    Instead of deleting it completely, delete the parts that are not
+    multiarch-compatible (which were already dead code since 2.21.5-1).
+    (steamrt/tasks#112)
+
+ -- Simon McVittie <smcv@collabora.com>  Thu, 16 May 2024 17:06:29 +0100
+
+gtk+2.0 (2.24.10-0ubuntu6.3+steamrt1.3) scout; urgency=medium
+
+  * Make libgtk2.0-dev Multi-Arch: same (steamrt/tasks#264).
+    Backported from 2.24.32-3 in Debian, thanks to Hugh McMaster.
+      * debian/control.in:
+        - Mark libgtk2.0-dev Multi-Arch: same (Closes: #689097).
+        - Mark gir1.2-gtk-2.0 Multi-Arch: same.
+      * gir1.2-gtk-2.0:
+        - Install the typelibs into an arch-specific libdir (Closes: #898111).
+      * libgtk2.0-dev:
+        - Add multi-arch support by no longer packaging the deprecated
+          dh_gtkmodules script (Closes: #875728).
+
+ -- Simon McVittie <smcv@collabora.com>  Thu, 23 Mar 2023 17:27:20 +0000
+
+gtk+2.0 (2.24.10-0ubuntu6.3+steamrt1.2) scout; urgency=medium
+
+  * Don't install ChangeLog.gz as a duplicate of changelog.gz.
+    This is a waste of space, and causes problems when unpacking the
+    Steam Runtime onto a case-insensitive location like a Steampipe depot.
+  * Reduce duplication among documentation files
+  * d/gbp.conf, d/git-version-gen.control: Add
+
+ -- Simon McVittie <smcv@collabora.com>  Tue, 04 Jan 2022 15:39:06 +0000
+
+gtk+2.0 (2.24.10-0ubuntu6.3+steamrt1.1) scout; urgency=medium
+
+  * Merge from Ubuntu precise-security (CVE-2013-7447)
+  * Remaining changes:
+    - d/p/steam-runtime-paths.patch:
+      If $STEAM_RUNTIME is an absolute path, load GTK modules from there,
+      ignoring $GTK_PATH, $GTK_EXE_PREFIX and OS-level directories.
+      (1657661, T23624)
+
+ -- Simon McVittie <smcv@collabora.com>  Tue, 08 Jun 2021 13:26:16 +0100
+
+gtk+2.0 (2.24.10-0ubuntu6.3) precise-security; urgency=low
+
+  * gdkcairo-Avoid-integer-overflow.patch: new patch. Cherry-pick upstream
+    commit from GTK+3 to avoid integer overflow when allocating a large block
+    of memory in gdk_cairo_set_source_pixbuf. (LP: #1540811)
+    - CVE-2013-7447
+
+ -- Vlad Orlov <monsta@inbox.ru>  Tue, 22 Sep 2015 09:51:11 +0300
+
+gtk+2.0 (2.24.10-0ubuntu6.2) precise; urgency=low
+
+  * fix_gdk_event_apply_filters.patch: new patch. Makes gdk_event_apply_filters
+    function safe against changes in the filter list, prevents weird crashes in
+    various apps. (LP: #1351890)
+  * gdk-Fix-GdkWindowFilter-internal-refcounting.patch,
+    gdkwindow-Fix-event-unref-iteration.patch: new patches. Fix refcounting
+    errors after fix_gdk_event_apply_filters.patch, prevent crashes in some
+    applications like Spotify.
+
+ -- Vlad Orlov <monsta@inbox.ru>  Tue, 28 Jul 2015 10:11:37 +0100
+
+gtk+2.0 (2.24.10-0ubuntu6.1) precise; urgency=low
+
+  * debian/patches/backport_search_printer_location.patch:
+    -  The list of printers should be searchable/sortable (lp: #1188571) 
+
+ -- Ritesh Khadgaray <ritesh@canonical.com>  Thu, 06 Feb 2014 11:39:01 +0000
+
+gtk+2.0 (2.24.10-0ubuntu6+steamrt2) scout; urgency=medium
+
+  [ Ludovico de Nittis ]
+  * Fix GTK search path when STEAM_RUNTIME env is set
+    `$STEAM_RUNTIME/{amd64,i386}/usr/lib/**` does not exists when we are in
+    a scout container runtime.
+    With this fix we use the correct `$STEAM_RUNTIME/usr/lib/**` instead.
+    (Fixes: T23624)
+
+ -- Ludovico de Nittis <ludovico.denittis@collabora.com>  Fri, 18 Sep 2020 10:52:47 +0000
+
+gtk+2.0 (2.24.10-0ubuntu6+steamrt1) scout; urgency=low
+
+  * Support steam-runtime paths (1657661)
+
+ -- Sam Lantinga <saml@valvesoftware>  Mon, 28 Apr 2014 10:02:31 -0700
+
+gtk+2.0 (2.24.10-0ubuntu6) precise-proposed; urgency=low
+
+  * debian/control.in: Add an extra Breaks: gir1.0-gtk-2.0, to nudge apt to
+    remove this instead of keeping that obsolete and non-existing package
+    during upgrades. (LP: #963069)
+
+ -- Martin Pitt <martin.pitt@ubuntu.com>  Mon, 26 Mar 2012 13:25:39 +0200
+
+gtk+2.0 (2.24.10-0ubuntu5) precise; urgency=low
+
+  * debian/control.in:
+    - breaks on the binaries which were using the grip function backported
+  * debian/libgtk2.0-0.symbols:
+    debian/patches/044_grips.patch:
+    - dropped the feature is only in gtk3 upstream, the backport had 
+      issues and most upstream softwares are not made to deal with it.
+      the grips will be also dropped from the default gtk3 theme since unity
+      has resize borders (lp: #744993)
+    - will fix issues with libreoffice (lp: #749986) and splash screens 
+      in other softwares (lp: #704105, #734381)
+
+ -- Sebastien Bacher <seb128@ubuntu.com>  Fri, 24 Feb 2012 18:39:56 +0100
+
+gtk+2.0 (2.24.10-0ubuntu4) precise; urgency=low
+
+  * debian/patches/044_grips.patch:
+    - revert dropping, there is a public api in there and we need to fix the
+      rdepends before dropping it
+
+ -- Sebastien Bacher <seb128@ubuntu.com>  Thu, 23 Feb 2012 22:24:09 +0100
+
+gtk+2.0 (2.24.10-0ubuntu3) precise; urgency=low
+
+  * debian/patches/044_grips.patch:
+    - dropped, our default theme has no grip and the patch leaded to issues
+      with some applications like libreoffice lp: #749986
+  * debian/control.in: update gir depends
+
+  [ Martin Pitt ]
+  * debian/rules: Revert forced non-compression of doc files, gzip has been
+    fixed now. (LP: #871083)
+
+ -- Sebastien Bacher <seb128@ubuntu.com>  Thu, 23 Feb 2012 21:53:41 +0100
+
+gtk+2.0 (2.24.10-0ubuntu1) precise; urgency=low
+
+  * New upstream version, dropped patches included in the new version
+  * debian/patches/090_logging_file_saves.patch:
+    - improve the logging of saved filed, thanks Siegfried Gevatter 
+      (lp: #920961)
+
+ -- Sebastien Bacher <seb128@ubuntu.com>  Mon, 06 Feb 2012 22:03:26 +0100
+
+gtk+2.0 (2.24.8-2ubuntu4) precise; urgency=low
+
+  * debian/patches/git_dnd_on_vnc.patch: git patch to fix dnd on severs not 
+    supporting "shape", i.e some vnc servers (lp: #587856) 
+  * debian/patches/043_ubuntu_menu_proxy.patch:
+    - updated patch from Cimi, should fix some visual issue (lp: #915241)
+
+ -- Sebastien Bacher <seb128@ubuntu.com>  Mon, 16 Jan 2012 18:19:28 +0100
+
+gtk+2.0 (2.24.8-2ubuntu3) precise; urgency=low
+
+  * debian/patches/gailitemaccessible-set-alt-name.patch: Drop, as the
+    existing code already does what we want it to do. I misunderstood the call
+    to the get_name method in the parent class, in this case, the AtkObject
+    class. This means that apps can set alternative accessible names for menu items
+    without any extra code needed in GTK at all.
+
+ -- Luke Yelavich <themuso@ubuntu.com>  Fri, 06 Jan 2012 20:54:23 +1100
+
+gtk+2.0 (2.24.8-2ubuntu2) precise; urgency=low
+
+  * debian/patches/099_printer_filename_fix.patch
+    - Fix to the print dialog for print to file, make sure a non-hidden filename 
+      is the default (LP: #488857)
+
+ -- Ken VanDine <ken.vandine@canonical.com>  Wed, 14 Dec 2011 13:46:18 -0500
+
+gtk+2.0 (2.24.8-2ubuntu1) precise; urgency=low
+
+  * debian/patches/git_buggy_icon_view_update.patch:
+    - git commit reverting a buggy icon view patch leading to 
+      segfaults in lxappearance (lp: #899322)
+  * Resynchronize on Debian
+  * debian/libgtk2.0-0.symbols:
+    - Add Ubuntu specific symbols
+  * debian/rules:
+    - Use dh_autoreconf
+    - Use -XNEWS -Xchangelog.Debian -XREADME to dh_compress calls to 
+      workaround a gzip issue leading to different md5sum between builds
+  * debian/patches/012_ubuntu-set-grab-add.patch
+    - Added ubuntu_gtk_widget_set_has_grab so we can grab sliders and 
+      things in menus, needed by ido
+  * debian/patches/043_menu_proxy.patch
+    - Add GtkMenuProxy support for remoting menus.
+  * debian/patches/044_grips.patch:
+    - Backport from the gtk3 resize grips to the natty gtk2 version
+  * debian/patches/061_use_pdf_as_default_printing_standard.patch:
+    - dropped, the issue has been fixed upstream differently since
+  * debian/patches/062_dnd_menubar.patch:
+    - Allow click on menubars for dnd
+  * debian/patches/063_treeview_almost_fixed.patch:
+    - Add an ubuntu-almost-fixed-height-mode property, (required for
+      software-center)
+  * debian/patches/065_gir_set_packages.patch
+    - Added _gir_PACKAGES for each gir created, to match gir to pkg which is
+      needed by vapigen-0.12
+  * debian/patches/070_mandatory-relibtoolize.patch:
+    - Dropped, we are using dh-autoreconf instead
+  * debian/patches/071_no_offscreen_widgets_grabbing.patch:
+    - Don't let offscreen widgets do grabbing
+  * debian/patches/072_indicator_menu_update.patch:
+    - change by Cody Russell to send an update event on menu changes,
+      should make the bluetooth indicator refresh correctly
+  * debian/patches/091_bugzilla_tooltip_refresh.patch:
+    - Upstream bugzilla change to have better looking tooltips the gtk theme
+      need to set "new-tooltip-style" to use those
+  * debian/patches/092_default_to_xdg_document_dir.patch:
+    - Use $XDG_DOCUMENTS_DIR as default directory rather than the home
+      directory for the 'Print to File' function.
+  * debian/patches/093_gtk3_gtkimage_fallbacks_use.patch:
+    - Backported gtk3 patch to add a "use-fallback" property to GtkImage, using 
+      it "icon-name and GIcon type of GtkImages can use automatic fallback 
+      names.", it will be useful for the indicator stack
+  * debian/patches/095_git_menus_scrolling.patch:
+    - backported gtk3 commit to fix menu scrolling issues
+  * debian/patches/096_git_gtkprintsettings.patch:
+    - upstream git commit backported from the gtk3 serie, don't ignore the 
+      gtkprintsettings resolution settings 
+  * debian/patches/097_statusicon_image_fallback.patch: Make GtkStatusIcon
+    images use fallbacks by default if the property is available.
+  * debian/patches/100_overlay_scrollbar_loading.patch
+    - support for dynamically loading overlay scrollbars
+  * debian/patches/gailitem-set-alt-name.patch: Extend the GailItem object
+    so applications can set an alternative textual description for a menu
+    item that has an icon, where the icon is used to give the user more
+    information about the item in question. This textual description is
+    used by assistive technologies such as Orca to label the menu item.
+  * Dropped changes:
+  * debian/control.in:
+    - don't keep an old conflicts on appmenu-gtk, it was a transitional thing   
+  
+
+ -- Sebastien Bacher <seb128@ubuntu.com>  Tue, 13 Dec 2011 19:29:04 +0100
+
+gtk+2.0 (2.24.8-2) unstable; urgency=low
+
+  * Move /etc/gtk-2.0 to libgtk2.0-common.
+  * Add appropriate Breaks/Replaces to handle it.
+  * Remove gtk-query-immodules-2.0 from libgtk2.0-bin since it is 
+    clearly not Multi-Arch compatible. It should not be needed anyway, 
+    everything is handled by triggers from the private directory.
+  * Remove incorrect M-A: same statement for the debug package.
+  * gtk2-engines-pixbuf is M-A: same.
+  * libgail-common is M-A: same and not foreign.
+
+ -- Josselin Mouette <joss@debian.org>  Sun, 13 Nov 2011 18:16:43 +0100
+
+gtk+2.0 (2.24.8-1) unstable; urgency=low
+
+  * New upstream release.
+  * Remove debian/patches/070_tracker.patch, fixed upstream by using the
+    Tracker D-Bus interface.
+  * Refresh debian/patches/015_default-fallback-icon-theme.patch-
+
+ -- Michael Biebl <biebl@debian.org>  Sat, 12 Nov 2011 01:58:12 +0100
+
+gtk+2.0 (2.24.7-1) unstable; urgency=low
+
+  [ Laurent Bigonville ]
+  * libgtk2.0-0.postrm.in: fix broken check again. (Closes: #639574)
+
+  [ Michael Biebl ]
+  * New upstream release.
+    - Fixes crash in gtk_entry_completion_default_completion_func () for
+      non UTF-8 strings. Closes: #616150
+  * debian/watch:
+    - Track .xz tarballs.
+  * debian/patches/066_filechooser-recent-folders.patch
+    - Removed, merged upstream.
+  * debian/patches/009_gtk-export-filechooser.patch
+    - Removed, with maemo being dead upstream and no package using the private
+      filechooser API, this patch has become obsolete. Drop
+      hildon_gtk_file_chooser_install_properties from the symbols file
+      accordingly.
+  * debian/patches/064_gir_build_workaround.patch
+    - Removed, this workaround is no longer required with newer gir versions.
+  * debian/patches/065_gir_set_packages.patch
+    - Specify packages when generating GIR. Closes: #622759
+
+ -- Michael Biebl <biebl@debian.org>  Tue, 18 Oct 2011 18:00:14 +0200
+
+gtk+2.0 (2.24.6-2) unstable; urgency=low
+
+  * debian/control.in
+    - Set pkg-gnome-maintainers@lists.alioth.debian.org as Maintainer.
+    - Suggest devhelp instead of depending on lynx | www-browser.
+    - Add Breaks: libgnome2-0 (<< 2.32.1-2) to libgail-common to ensure
+      we have a recent enough version of libgnome2-0 which can read the
+      accessibility module from the new multiarch location. Closes: #636536
+  * Refresh patches.
+  * Add support for tracker 0.12 and prefer it over 0.10. Closes: #643943
+  * debian/patches/066_filechooser-recent-folders.patch
+    - Cherry-pick fixes from the upstream filechooser-recent-folder-2-24
+      branch. Closes: #640544, #640466, #644222
+  * debian/libgail-doc.install, debian/libgtk2.0-doc.install.in: Install
+    documentation from the source tree, as it's not being installed any more.
+
+ -- Michael Biebl <biebl@debian.org>  Wed, 05 Oct 2011 21:29:48 +0200
+
+gtk+2.0 (2.24.6-1) unstable; urgency=low
+
+  * New upstream release.
+    + Contains patch from Michal Suchanek to allow entering non-local 
+      URIs in the file chooser. Closes: #629423.
+  * 003_gdk.pc_privates.patch: updated for the new version.
+  * 009_gtk-export-filechooser.patch: refreshed.
+  * 066_Revert-gdk-Make-background-changes-queue-a-repaint.patch: 
+    dropped, merged upstream.
+  * rules: force update of gtk-doc.make.
+
+ -- Josselin Mouette <joss@debian.org>  Fri, 02 Sep 2011 17:17:47 +0200
+
+gtk+2.0 (2.24.5-4) unstable; urgency=low
+
+  [ Steve Langasek ]
+  * Build for multiarch. Closes: #634118
+  * Bump gobject-introspection build-dependency for multiarch tuple support.
+  * debian/patches/098_multiarch_module_path.patch: Fall back to the
+    hard-coded pre-multiarch module directory.
+  * Build-depend on debhelper 8.1.3 and add Pre-Depends: ${misc:Pre-Depends}
+    for multiarch-support.
+  * Make the -dev packages depend on a multiarch-capable version of
+    pkg-config.
+
+  [ Martin Pitt ]
+  * debian/control.in: Make libgtk2.0-bin Architecture: any, as the symlinks
+    now point to multiarch directories, and the /i386-* links are broken on
+    other architectures.
+
+  [ Mathieu Trudel-Lapierre ]
+  * debian/rules: ensure libgtk2.0-bin is also taken into account as an
+    arch:any package now. (LP: #810747)
+
+  [ Michael Biebl ]
+  * debian/libgtk2.0-dev.install.in: Stop installing libtool .la files.
+  * debian/rules: Stop cleaning the dependency_libs in the .la files.
+  * debian/libgtk2.0-0.postinst.in: If the non-multiarch immodules directory
+    does not exist or is empty handle this case more gracefully and don't
+    print an error message.
+
+ -- Michael Biebl <biebl@debian.org>  Thu, 28 Jul 2011 16:24:33 +0200
+
+gtk+2.0 (2.24.5-3) unstable; urgency=low
+
+  * Revert "gdk: Make background changes queue a repaint" which causes
+    excessive CPU usage in gnome-panel. Closes: #633864
+
+ -- Michael Biebl <biebl@debian.org>  Tue, 19 Jul 2011 19:42:18 +0200
+
+gtk+2.0 (2.24.5-2) unstable; urgency=low
+
+  * debian/control.in:
+    - Move gtk-doc-tools from Build-Depends-Indep to Build-Depends. The
+      upstream tarball is missing the m4 macro directory and gtk-doc.m4 is
+      needed for autoreconf. Closes: #633013
+
+ -- Michael Biebl <biebl@debian.org>  Thu, 14 Jul 2011 13:22:26 +0200
+
+gtk+2.0 (2.24.5-1) unstable; urgency=low
+
+  * New upstream release.
+  * Refresh patches.
+  * debian/control:
+    - Update package descriptions, remove unnecessary articles.
+    - Bump Standards-Version to 3.9.2. No further changes.
+  * debian/patches/065_tracker-0-10.patch
+    - Use libtracker-sparql to add support for Tracker 0.10. Code has been
+      taken from the gtk-3-0 branch with FTS enabled. Closes: #629427
+  * debian/watch:
+    - Switch to .bz2 tarballs.
+    - Don't track 3.0 pre-releases.
+  * Use dh-autoreconf to update the build system:
+    - Drop debian/patches/070_mandatory-relibtoolize.patch.
+    - Add Build-Depends on dh-autoreconf.
+    - Call dh_autoreconf in patch-stamp and dh_autoreconf_clean in clean.
+
+ -- Michael Biebl <biebl@debian.org>  Wed, 06 Jul 2011 00:43:06 +0200
+
+gtk+2.0 (2.24.4-3) unstable; urgency=low
+
+  * Re-enable shared-mime-info as build-dependency, since it is also 
+    used in the tests.
+  * libgtk2.0-0.postrm.in: fix broken check. Closes: #621060.
+  * watch: only monitor 2.x versions.
+
+ -- Josselin Mouette <joss@debian.org>  Sun, 10 Apr 2011 22:12:30 +0200
+
+gtk+2.0 (2.24.4-2) unstable; urgency=low
+
+  * Drop the mimeinfo.cache from the udeb, it’s been moved to 
+    gdk-pixbuf.
+  * Drop shared-mime-info and xsltproc build-deps accordingly.
+
+ -- Josselin Mouette <joss@debian.org>  Sun, 10 Apr 2011 18:21:55 +0200
+
+gtk+2.0 (2.24.4-1) unstable; urgency=low
+
+  [ Laurent Bigonville ]
+  * debian/copyright: Update FSF address to fix
+    old-fsf-address-in-copyright-file lintian warning
+
+  [ Josselin Mouette ]
+  * Re-enable introspection support.
+  * New upstream release.
+  * 070_mandatory-relibtoolize.patch: regenerated for the new version.
+  * Drop manual quilt patching; the 3.0 format does it for us.
+
+ -- Josselin Mouette <joss@debian.org>  Sun, 10 Apr 2011 16:00:37 +0200
+
+gtk+2.0 (2.24.3-1~sid1) unstable; urgency=low
+
+  * Temporarily disable the gir package build.
+  * Upload to unstable.
+
+ -- Emilio Pozuelo Monfort <pochu@debian.org>  Sun, 20 Mar 2011 18:33:28 +0000
+
+gtk+2.0 (2.24.3-1) experimental; urgency=low
+
+  * New upstream release.
+    + debian/control.in:
+      - Bump the libpango1.0-dev build dependency to make sure we get
+        a version from experimental.
+    + debian/patches/070_mandatory-relibtoolize.patch:
+      - Regenerated.
+
+ -- Emilio Pozuelo Monfort <pochu@debian.org>  Tue, 15 Mar 2011 20:55:21 +0000
+
+gtk+2.0 (2.24.1-1) experimental; urgency=low
+
+  * New upstream release.
+    + debian/patches/070_mandatory-relibtoolize.patch:
+      - Regenerated.
+
+ -- Emilio Pozuelo Monfort <pochu@debian.org>  Tue, 22 Feb 2011 20:38:44 +0000
+
+gtk+2.0 (2.24.0-1) experimental; urgency=low
+
+  * New upstream stable release.
+    + debian/libgtk2.0-0.symbols:
+      - Updated.
+    + debian/patches/070_mandatory-relibtoolize.patch:
+      - Regenerated.
+
+ -- Emilio Pozuelo Monfort <pochu@debian.org>  Tue, 01 Feb 2011 17:59:15 +0000
+
+gtk+2.0 (2.23.90-1) experimental; urgency=low
+
+  * New upstream release.
+    + 006-Reinstate-the-implementation-of-gdk_window_foreign_n.patch,
+      007-Revert-some-over-eager-deprecation-removal.patch,
+      008-Don-t-use-deprecated-API.patch:
+      - Removed, included upstream.
+    + debian/patches/*:
+      - Refreshed.
+    + debian/libgtk2.0-0.symbols:
+      - Updated.
+    + debian/rules:
+      - Bumped the shver.
+
+ -- Emilio Pozuelo Monfort <pochu@debian.org>  Fri, 07 Jan 2011 02:09:44 +0000
+
+gtk+2.0 (2.23.3-3) experimental; urgency=low
+
+  * debian/patches/007-Revert-some-over-eager-deprecation-removal.patch,
+    debian/patches/008-Don-t-use-deprecated-API.patch:
+    + Two more patches from upstream git, fix more regressions in 2.23.3.
+      Closes: #608028, 608009.
+
+ -- Emilio Pozuelo Monfort <pochu@debian.org>  Tue, 28 Dec 2010 14:30:44 +0000
+
+gtk+2.0 (2.23.3-2) experimental; urgency=low
+
+  * 006-Reinstate-the-implementation-of-gdk_window_foreign_n.patch:
+    + Patch from upstream git, make gdk_window_foreign_new_for_display
+      not a nop.
+
+ -- Emilio Pozuelo Monfort <pochu@debian.org>  Thu, 23 Dec 2010 18:35:43 +0000
+
+gtk+2.0 (2.23.3-1) experimental; urgency=low
+
+  * New upstream release.
+    + debian/control.in:
+      - Bump the libglib2.0-dev build requirement.
+    + debian/patches/070_mandatory-relibtoolize.patch:
+      - Refreshed.
+    + debian/libgtk2.0-0.symbols:
+      - Updated for the new symbols.
+    + debian/rules:
+      - Bump the shver.
+
+ -- Emilio Pozuelo Monfort <pochu@debian.org>  Thu, 23 Dec 2010 03:09:40 +0000
+
+gtk+2.0 (2.23.2-1) experimental; urgency=low
+
+  [ Laurent Bigonville ]
+  * New upstream version
+    - Refresh debian/patches/009_gtk-export-filechooser.patch and
+      debian/patches/070_mandatory-relibtoolize.patch
+    - Add new symbols to debian/libgtk2.0-0.symbols
+  * Enable GObject introspection support, thanks to Didier Roche and Sebastien
+    Bacher (Closes: #584235)
+    - debian/rules:
+      - toogle configure option
+      - add new package to BINARY_ARCH_PKGS
+      - add dh_girepository call
+    - debian/control.in:
+      - add gobject-introspection, libgirepository1.0-dev, gir1.2-atk-1.0,
+        gir1.2-pango-1.0, gir1.2-glib-2.0 and gir1.2-freedesktop build-dep
+      - Bump libpango1.0-dev, libgdk-pixbuf2.0-dev and libatk1.0-dev
+        build-dependencies to be sure we have .gir files
+      - add gir package (gir1.2-gtk-2.0)
+    - debian/libgtk2.0-dev.install.in: add gir files
+    - add debian/gir1.2-gtk-2.0.install
+  * Add debian/patches/064_gir_build_workaround.patch: Fix build with
+    introspection enabled
+  * debian/patches/070_mandatory-relibtoolize.patch: Refresh
+  * Switch to dpkg-source 3.0 (quilt) format
+  * debian/watch: Bump version to 3
+
+  [ Emilio Pozuelo Monfort ]
+  * debian/control.in,
+    debian/rules:
+    + Remove the chrpath hack, it's been fixed in libtool.
+  * debian/control.in:
+    + Bump gobject-introspection build dependency.
+  * debian/copyright:
+    + Updated.
+
+ -- Emilio Pozuelo Monfort <pochu@debian.org>  Sun, 12 Dec 2010 22:01:17 +0100
+
+gtk+2.0 (2.22.0-1) experimental; urgency=low
+
+  [ Sebastian Dröge ]
+  * New upstream stable release:
+    + debian/rules,
+      debian/libgtk2.0-0.symbols:
+      - Update for new API symbols.
+    + debian/patches/070_mandatory-relibtoolize.patch:
+      - Refreshed.
+    + debian/patches/062_udeb-no-composite.patch:
+      - Dropped, merged upstream.
+
+  [ Sjoerd Simons ]
+  * Update the faq/tutorial index files names
+  * debian/control.in:
+    + Add dependency on docbook-utils for db2html to generate the documentation
+      html during build
+
+ -- Sjoerd Simons <sjoerd@debian.org>  Sat, 02 Oct 2010 15:52:39 +0100
+
+gtk+2.0 (2.21.8-1) experimental; urgency=low
+
+  * New upstream development release:
+    + debian/rules,
+      debian/libgtk2.0-0.symbols:
+      - Update for new API symbols.
+    + debian/patches/070_mandatory-relibtoolize.patch:
+      - Refreshed.
+  * debian/patches/062_udeb-no-composite.patch:
+    + Fix build of the udeb variant without XComposite.
+
+ -- Sebastian Dröge <slomo@debian.org>  Wed, 15 Sep 2010 11:32:17 +0200
+
+gtk+2.0 (2.21.7-1) experimental; urgency=low
+
+  * New upstream development release:
+    + debian/rules,
+      debian/libgtk2.0-0.symbols:
+      - Update for new API symbols.
+    + debian/patches/070_mandatory-relibtoolize.patch:
+      - Refreshed.
+
+ -- Sebastian Dröge <slomo@debian.org>  Mon, 30 Aug 2010 21:45:01 +0200
+
+gtk+2.0 (2.21.6-1) experimental; urgency=low
+
+  * debian/rules:
+    + Remove obsolete configure parameter.
+  * New upstream development release:
+    + debian/rules,
+      debian/libgtk2.0-0.symbols:
+      - Update for new API symbols.
+    + debian/patches/009_gtk-export-filechooser.patch,
+      debian/patches/042_treeview_single-focus.patch,
+      debian/patches/070_mandatory-relibtoolize.patch:
+      - Refreshed.
+
+ -- Sebastian Dröge <slomo@debian.org>  Tue, 17 Aug 2010 11:44:53 +0200
+
+gtk+2.0 (2.21.5-1) experimental; urgency=low
+
+  * New upstream development release:
+    + debian/control.in,
+      debian/rules,
+      debian/*:
+      - Remove all mentions of gdk-pixbuf and (build-) depend on it.
+    + debian/libgtk2.0-0.postinst.in,
+      debian/libgtk2.0-0.postrm.in,
+      debian/libgtk2.0-0.triggers.in,
+      debian/dh_gtkmodules.in:
+      - Handle immodules by triggers and deprecate dh_gtkmodules.
+    + debian/patches/*:
+      - Refreshed.
+      - Remove gdk-pixbuf and immodule patches.
+    + debian/rules,
+      debian/libgtk2.0-0.symbols:
+      - Update for new API symbols.
+    + debian/update-gdkpixbuf-loaders*,
+      debian/update-gtk-immodules*:
+      - Drop module update scripts which are no-ops since 2.10.1.
+
+ -- Sebastian Dröge <slomo@debian.org>  Thu, 22 Jul 2010 21:01:09 +0200
+
+gtk+2.0 (2.21.2-1) experimental; urgency=low
+
+  * New upstream development release:
+    + debian/rules,
+      debian/libgtk2.0-0.symbols:
+      - Update for new API symbols.
+    + debian/patches/070_mandatory-relibtoolize.patch:
+      - Regenerated for the new version.
+    + debian/control.in:
+      - Update GLib (build-) dependency to >= 2.25.8.
+
+ -- Sebastian Dröge <slomo@debian.org>  Fri, 11 Jun 2010 12:19:30 +0200
+
+gtk+2.0 (2.21.1-1) experimental; urgency=low
+
+  * New upstream development release:
+    + debian/rules,
+      debian/libgtk2.0-0.symbols:
+      - Update for new API symbols.
+    + debian/patches/070_mandatory-relibtoolize.patch:
+      - Regenerated for the new version.
+
+ -- Sebastian Dröge <slomo@debian.org>  Mon, 31 May 2010 09:45:32 +0200
+
+gtk+2.0 (2.21.0-1) experimental; urgency=low
+
+  * New upstream development release:
+    + debian/rules,
+      debian/libgtk2.0-0.symbols:
+      - Update for new API symbols.
+    + debian/patches/002_static-linking-dont-build-perf.patch:
+      - Refreshed.
+    + debian/patches/070_mandatory-relibtoolize.patch:
+      - Regenerated for the new version.
+
+ -- Sebastian Dröge <slomo@debian.org>  Sat, 08 May 2010 08:20:19 +0200
+
+gtk+2.0 (2.20.1-1) unstable; urgency=low
+
+  * New upstream bugfix release:
+    + debian/patches/006_support-for-tracker-0.8-stable-releases.patch:
+      - Dropped, merged upstream.
+    + debian/patches/003_gdk.pc_privates.patch:
+      - Updated to apply cleanly again.
+    + debian/patches/070_mandatory-relibtoolize.patch:
+      - Regenerated for the new version.
+
+ -- Sebastian Dröge <slomo@debian.org>  Mon, 03 May 2010 07:26:14 +0200
+
+gtk+2.0 (2.20.0-3) unstable; urgency=low
+
+  * debian/control.in
+    - Add Vcs-* fields.
+    - Add Homepage field.
+  * debian/patches/006_support-for-tracker-0.8-stable-releases.patch
+    - Add support for tracker 0.8 stable and future 0.9 releases. Also add
+      support for loading the search engines on demand until they are actually
+      needed. Patch is backported from upstream Git branch "tracker-0.8".
+  * Refresh patches to apply cleanly.
+
+ -- Michael Biebl <biebl@debian.org>  Wed, 14 Apr 2010 20:39:28 +0200
+
+gtk+2.0 (2.20.0-2) unstable; urgency=low
+
+  * Upload to unstable.
+
+ -- Sebastian Dröge <slomo@debian.org>  Wed, 31 Mar 2010 09:16:00 +0200
+
+gtk+2.0 (2.20.0-1) experimental; urgency=low
+
+  [ Emilio Pozuelo Monfort ]
+  * debian/rules,
+    debian/control.in,
+    debian/libgtk-directfb-2.0-0.*,
+    debian/libgtk-directfb-2.0-dev.*,
+    debian/patches/090_directfb-map-virtual-modifiers.patch,
+    debian/patches/series:
+    - Drop the DirectFB enabled GTK+ packages. They were needed for the
+      graphical installer but it's now switching to X11 so we don't need
+      them anymore.
+  * debian/rules:
+    - Move --with-xinput=yes and --with-libjasper to configure_flags
+      since they are common to all of our flavours.
+
+  [ Sebastian Dröge ]
+  * New upstream stable release:
+    + debian/patches/070_mandatory-relibtoolize.patch:
+      - Regenerated for the new version.
+    + debian/rules,
+      debian/libgtk2.0-0.symbols:
+      - Update SHVER to 2.20.0 for the new API to force dependencies
+        on the stable version.
+    + debian/control.in:
+      - Update GLib build dependency and tighten some -dev package dependencies.
+    + debian/patches/003_gdk.pc_privates.patch:
+      - Updated to apply cleanly again.
+
+ -- Sebastian Dröge <slomo@debian.org>  Tue, 23 Mar 2010 15:55:56 +0100
+
+gtk+2.0 (2.19.7-3) experimental; urgency=low
+
+  * debian/control.in:
+    - Build depend on xsltproc, needed to generate the mime cache.
+      It was brought indirectly by gtk-doc-tools, but that's on
+      Build-Depends-Indep which isn't enough.
+
+ -- Emilio Pozuelo Monfort <pochu@debian.org>  Tue, 16 Mar 2010 15:30:32 +0100
+
+gtk+2.0 (2.19.7-2) experimental; urgency=low
+
+  [ Cyril Brulebois ]
+  * Switch udeb from DirectFB to Xlib to prepare the move to an X11-based
+    graphical installer. Closes: #573872.
+     - Replace libgtk-directfb-2.0-0-udeb with libgtk-x11-udeb in control
+       file.
+     - Update description accordingly.
+     - Update .install.in accordingly, using the “shared_udeb” flavour,
+       based on the “shared” one, but with a few X11 extensions disabled.
+     - Update package name and file paths accordingly in rules file.
+  * Version/Bump some B-D to make sure the udeb gets proper dependencies
+    on the recently reworked/added udebs:
+     - libx11-dev
+     - libxcursor-dev
+     - libxext-dev
+     - libxi-dev
+     - libxinerama-dev
+     - libxrender-dev
+  * Add one patch to make it possible to disable X11 extensions, and
+    refresh the other one accordingly:
+     - 005_support_disabling_x11_extensions.patch
+     - 070_mandatory-relibtoolize.patch
+  * Ship a minimal MIME database in the udeb, since the loaders mechanism
+    isn’t sufficient to get proper PNG support:
+     - Add shared-mime-info to Build-Depends to ensure that the
+       update-mime-database tool is available at build-time, as well as
+       the source freedesktop.org.xml file.
+     - Add debian/keep-png-only.xsl to only keep the mime-type matching
+       type="image/png". Matching with namespaces is tricky, see the
+       comments in the XSL file for the details.
+     - Build a MIME cache, and only ship the resulting mime.cache file
+       under /usr/share/mime in the udeb.
+     - While this is dirty, that should do the trick until it is needed
+       for shared-mime-info to ship its own udeb.
+
+  [ Emilio Pozuelo Monfort ]
+  * Rename the udeb to libgtk2.0-0-udeb.
+  * Standards-Version is 3.8.4, no changes needed.
+
+ -- Emilio Pozuelo Monfort <pochu@debian.org>  Tue, 16 Mar 2010 01:01:48 +0100
+
+gtk+2.0 (2.19.7-1) experimental; urgency=low
+
+  * New upstream development release:
+    + debian/patches/070_mandatory-relibtoolize.patch:
+      - Regenerated for the new version.
+
+ -- Sebastian Dröge <slomo@debian.org>  Fri, 12 Mar 2010 15:59:27 +0100
+
+gtk+2.0 (2.19.6-1) experimental; urgency=low
+
+  * New upstream development release:
+    + debian/patches/070_mandatory-relibtoolize.patch:
+      - Regenerated for the new version.
+    + debian/rules,
+      debian/libgtk-directfb-2.0-0.symbols,
+      debian/libgtk2.0-0.symbols:
+      - Update SHVER to 2.19.6 for the new API and add new symbols.
+  * debian/patches/090_directfb-map-virtual-modifiers.patch:
+    + Update to add just another stub to fix the build.
+
+ -- Sebastian Dröge <slomo@debian.org>  Wed, 24 Feb 2010 10:01:31 +0100
+
+gtk+2.0 (2.19.5-1) experimental; urgency=low
+
+  * New upstream development release:
+    + debian/patches/070_mandatory-relibtoolize.patch:
+      - Regenerated for the new version.
+    + debian/rules,
+      debian/libgtk-directfb-2.0-0.symbols,
+      debian/libgtk2.0-0.symbols:
+      - Update SHVER to 2.19.5 for the new API and add new symbols.
+
+ -- Sebastian Dröge <slomo@debian.org>  Wed, 10 Feb 2010 09:38:52 +0100
+
+gtk+2.0 (2.19.4-1) experimental; urgency=low
+
+  * New upstream development release:
+    + debian/patches/070_mandatory-relibtoolize.patch:
+      - Regenerated for the new version.
+    + debian/rules,
+      debian/libgtk-directfb-2.0-0.symbols,
+      debian/libgtk2.0-0.symbols:
+      - Update SHVER to 2.19.4 for the new API and add new symbols.
+
+ -- Sebastian Dröge <slomo@debian.org>  Tue, 26 Jan 2010 08:25:41 +0100
+
+gtk+2.0 (2.19.3-1) experimental; urgency=low
+
+  * New upstream development release:
+    + debian/patches/070_mandatory-relibtoolize.patch:
+      - Regenerated for the new version.
+    + debian/rules,
+      debian/libgtk-directfb-2.0-0.symbols,
+      debian/libgtk2.0-0.symbols:
+      - Update SHVER to 2.19.3 for the new API and add new symbols.
+    + debian/patches/091_size_allocate_crash.patch:
+      - Dropped, merged upstream.
+
+ -- Sebastian Dröge <slomo@debian.org>  Mon, 11 Jan 2010 20:36:25 +0100
+
+gtk+2.0 (2.19.2-2) experimental; urgency=low
+
+  * debian/patches/091_size_allocate_crash.patch:
+    + Patch from upstream GIT to fix a crash on size allocations.
+      Thanks to Sebastien Bacher.
+
+ -- Sebastian Dröge <slomo@debian.org>  Wed, 06 Jan 2010 11:42:07 +0100
+
+gtk+2.0 (2.19.2-1) experimental; urgency=low
+
+  [ Emilio Pozuelo Monfort ]
+  * debian/patches/000_gtk+-2.0.6-exportsymbols.patch:
+    + Removed, it wasn't being applied and hasn't been relevant for a
+      long time.
+
+  [ Sebastian Dröge ]
+  * New upstream development release:
+    + debian/patches/070_mandatory-relibtoolize.patch:
+      - Regenerated for the new version.
+    + debian/rules,
+      debian/libgtk-directfb-2.0-0.symbols,
+      debian/libgtk2.0-0.symbols:
+      - Update SHVER to 2.19.2 for the new API and add new symbols.
+  * debian/patches/090_directfb-map-virtual-modifiers.patch:
+    + Fix compilation of the DirectFB backend, patch adapted from
+      upstream commit to fix the Quartz backend.
+
+ -- Sebastian Dröge <slomo@debian.org>  Mon, 04 Jan 2010 10:43:48 +0100
+
+gtk+2.0 (2.19.1-1) experimental; urgency=low
+
+  * New upstream development release:
+    + debian/rules:
+      - Include check-dist.mk to prevent accidental uploads to unstable.
+    + debian/control.in:
+      - Update ATK build dependency.
+    + debian/rules,
+      debian/libgtk-directfb-2.0-0.symbols,
+      debian/libgtk2.0-0.symbols:
+      - Update SHVER to 2.19.1 for the new API and add new symbols.
+    + debian/patches/009_gtk-export-filechooser.patch,
+      debian/patches/021_loader-files-d.patch:
+      - Updated to apply cleanly again.
+    + debian/patches/070_mandatory-relibtoolize.patch:
+      - Regenerated for the new version.
+
+ -- Sebastian Dröge <slomo@debian.org>  Tue, 01 Dec 2009 15:28:10 +0100
+
+gtk+2.0 (2.18.4-1) unstable; urgency=low
+
+  * New upstream bugfix release:
+    + debian/patches/070_mandatory-relibtoolize.patch:
+      - Updated for the new version.
+    + debian/patches/091_dont-omit-gtk-icon-size-dialog.patch,
+      debian/patches/092_gtk-image-size-allocation.patch:
+      - Dropped, merged upstream.
+
+ -- Sebastian Dröge <slomo@debian.org>  Tue, 01 Dec 2009 07:46:18 +0100
+
+gtk+2.0 (2.18.3-1) unstable; urgency=low
+
+  * New upstream bugfix release:
+    + debian/patches/070_mandatory-relibtoolize.patch:
+      - Updated for the new version.
+  * debian/patches/091_dont-omit-gtk-icon-size-dialog.patch:
+    + Patch from upstream GIT to not omit GTk_ICON_SIZE_DIALOG
+      when searching for an appropiate icon size.
+  * debian/patches/092_gtk-image-size-allocation.patch:
+    + Patch from upstream GIT to fix size allocation of GtkImage.
+
+ -- Sebastian Dröge <slomo@debian.org>  Sun, 18 Oct 2009 13:23:44 +0200
+
+gtk+2.0 (2.18.2-1) unstable; urgency=low
+
+  * New upstream bugfix release:
+    + debian/patches/070_mandatory-relibtoolize.patch:
+      - Updated for the new version.
+    + 090_directfb-backend-compilation-fix.patch:
+      - Dropped, merged upstream.
+
+ -- Sebastian Dröge <slomo@debian.org>  Tue, 06 Oct 2009 07:41:45 +0200
+
+gtk+2.0 (2.18.1-1) unstable; urgency=low
+
+  * New upstream bugfix release:
+    + debian/patches/070_mandatory-relibtoolize.patch:
+      - Updated for the new version.
+    + 090_directfb-backend-compilation-fix.patch:
+      - Fix compilation of the DirectFB backend, see
+        https://bugzilla.gnome.org/show_bug.cgi?id=596959
+
+ -- Sebastian Dröge <slomo@debian.org>  Thu, 01 Oct 2009 07:20:43 +0200
+
+gtk+2.0 (2.18.0-1) unstable; urgency=low
+
+  * New upstream stable release:
+    + debian/rules,
+      debian/*.symbols:
+      - Updated for the new version. 
+    + debian/patches/005_gdk_directfb_window_new.patch:
+      - Dropped, merged upstream.
+    + debian/patches/070_mandatory-relibtoolize.patch:
+      - Updated for the new version.
+
+ -- Sebastian Dröge <slomo@debian.org>  Wed, 23 Sep 2009 06:36:41 +0200
+
+gtk+2.0 (2.17.11-1) experimental; urgency=low
+
+  * New upstream development release:
+    + debian/patches/070_mandatory-relibtoolize.patch:
+      - Updated for the new version.
+    + debian/rules,
+      debian/*.symbols:
+      - Updated for the new version. 
+
+ -- Sebastian Dröge <slomo@debian.org>  Sat, 05 Sep 2009 07:16:24 +0200
+
+gtk+2.0 (2.17.10-1) experimental; urgency=low
+
+  * New upstream development release:
+    + debian/patches/070_mandatory-relibtoolize.patch:
+      - Updated for the new version.
+    + debian/rules,
+      debian/*.symbols:
+      - Updated for the new version. 
+  * -
+
+ -- Sebastian Dröge <slomo@debian.org>  Sat, 05 Sep 2009 07:16:21 +0200
+
+gtk+2.0 (2.17.9-1) experimental; urgency=low
+
+  [ Josselin Mouette ]
+  * Clean up the .la files in all -dev packages, not only in the main 
+    one.
+
+  [ Sebastian Dröge ]
+  * New upstream development release:
+    + debian/patches/070_mandatory-relibtoolize.patch:
+      - Updated for the new version.
+    + debian/rules,
+      debian/*.symbols:
+      - Updated for the new version.
+
+ -- Sebastian Dröge <slomo@debian.org>  Tue, 25 Aug 2009 18:37:11 +0200
+
+gtk+2.0 (2.17.8-1) experimental; urgency=low
+
+  [ Emilio Pozuelo Monfort ]
+  * New upstream development release.
+    - Handle printers needing authentication. Closes: #499759.
+    - Update libglib2.0-dev requirement.
+  * debian/watch:
+    - Don't uupdate.
+  * debian/rules:
+    - Configure with --with-libjasper, it's disabled by default now.
+  * debian/control.in:
+    - Remove conflicts and replaces no longer needed for packages in stable.
+    - Standards-Version is 3.8.3, no changes needed.
+  * debian/patches/005_xpmico.patch:
+    - Removed, this check is not needed as HeaderSize can't overflow because
+      IconCount will be at most 16 bits, and that multiplied by 16 is not
+      enough to overflow an integer. (Checked with upstream)
+  * debian/patches/001_static-linking-dont-query-immodules.patch,
+    debian/patches/002_static-linking-dont-build-perf.patch:
+    - Add headers.
+  * debian/patches/005_gdk_directfb_window_new.patch:
+    - New patch. Readd gdk_directfb_window_new(), which is exported in the
+      public API and was removed by mistake.
+  * debian/patches/*
+    - Refreshed.
+  * debian/libgtk-directfb-2.0-0.symbols,
+    debian/libgtk2.0-0.symbols:
+    - Updated for the new symbols. There's one symbol removed from the
+      directfb backend, gdk_display_pointer_grab(). It wasn't exported in
+      the headers, nor was supposed to be public, so if something out there
+      is using it, they are doing it wrong.
+  * debian/rules:
+    - Remove a trailing backslash that prevented -c4 to be passed to
+      dh_makeshlibs.
+
+ -- Josselin Mouette <joss@debian.org>  Thu, 20 Aug 2009 18:29:04 +0200
+
+gtk+2.0 (2.16.5-1) unstable; urgency=low
+
+  * New upstream bugfix release:
+    + debian/patches/070_mandatory-relibtoolize.patch:
+      - Regenerated for the new version.
+
+ -- Sebastian Dröge <slomo@debian.org>  Tue, 21 Jul 2009 08:09:50 +0200
+
+gtk+2.0 (2.16.4-1) unstable; urgency=low
+
+  * New upstream bugfix release:
+    + debian/patches/070_mandatory-relibtoolize.patch:
+      - Regenerated for the new version.
+
+ -- Sebastian Dröge <slomo@debian.org>  Thu, 02 Jul 2009 06:09:04 +0200
+
+gtk+2.0 (2.16.3-1) unstable; urgency=low
+
+  * New upstream bugfix release:
+    + debian/patches/070_mandatory-relibtoolize.patch:
+      - Regenerated for the new version.
+  * debian/control.in:
+    + Update Standards-Version to 3.8.2.
+
+ -- Sebastian Dröge <slomo@debian.org>  Mon, 29 Jun 2009 11:39:01 +0200
+
+gtk+2.0 (2.16.2-1) unstable; urgency=low
+
+  [ Loic Minier ]
+  * Fix string concat in dh_gtkmodules; thanks Kanru Chen; closes: #528782.
+
+  [ Sebastian Dröge ]
+  * New upstream bugfix release:
+    + debian/patches/091_workaround_no_gtk_init_incorrect_display.patch:
+      - Dropped, merged upstream.
+    + debian/patches/070_mandatory-relibtoolize.patch:
+      - Regenerated for the new version.
+    + debian/*.install:
+      - Install the manpages from their source locations as
+        they're not installed anymore for some reason.
+  * debian/control.in:
+    + Updated Standards-Version to 3.8.1, no additional changes needed.
+
+ -- Sebastian Dröge <slomo@debian.org>  Tue, 02 Jun 2009 07:44:43 +0200
+
+gtk+2.0 (2.16.1-2) unstable; urgency=low
+
+  [ Loic Minier ]
+  * Fix test-print-backend configure flag addition.
+  * Set opt_configure_flags to $(shared_configure_flags) in the sample opt
+    flavor for armel and move the opt flavor and check flavors below the
+    definition of other flags.
+
+ -- Josselin Mouette <joss@debian.org>  Thu, 16 Apr 2009 18:08:02 +0200
+
+gtk+2.0 (2.16.1-1) experimental; urgency=low
+
+  [ Loic Minier ]
+  * Clarify dh_gtkmodules doc slightly.
+
+  [ Gustavo Noronha Silva ]
+  * debian/series:
+  - forgot to add 022_disable-viqr-im-for-vi-locale.patch and
+    061_use_pdf_as_default_printing_standard.patch to the series file
+    (thanks to seb128 for noticing)
+  * debian/control.in:
+  - sync Replaces with ubuntu's package for easier migration from Ubuntu
+    to Debian ;)
+
+  [ Josselin Mouette ]
+  * Make update-icon-caches always generate the cache, now that dh_icons
+    is widespread.
+
+  [ Sebastian Dröge ]
+  * debian/libgtk-directfb-2.0-0.symbols,
+    debian/libgtk2.0-0.symbols,
+    debian/libgail18.symbols,
+    debian/rules:
+    + Add symbol files for GTK.
+
+  [ Loic Minier ]
+  * Merge the following changes by Emmet Hikory:
+
+  [ Emmet Hikory ]
+  * Port optimised flavor work by Loic Minier from pango1.0:
+    - Rework flavor-specific vars.
+      + Introduce $(flavor) which is set to $* to clarify implicit rules
+      + Rename common_configure_flags to configure_flags
+      + Introduce the flavor_get macro to use a flavor specific override or
+        fallback to the common defaults for make vars.
+      + Use $(call flavor_get, ) to retrieve configure_flags, CFLAGS, and
+        LDFLAGS allowing to override these per flavor.
+    - Add support for an optimised pass, implemented as a flavor
+      + Define a default OPTLIBDIR and replace it in the sed foo for %.in
+        files; this is like LIBDIR, but with some hwcaps extension, e.g.
+        usr/lib/vfp.
+      + Add vars to build an optimised vfp flavour for armel with
+        additional CFLAGS
+      + Add the "opt" special flavor to flavors to run the testuites on,
+        CHECK_FLAVORS
+      + Also sed and append %.opt after %.in when generating $ files from
+        %.in; the %.opt file is optional and only included if the opt flavor
+        is included.
+      + Add a debian/libgtk2.0-0.install.opt which lists files from the
+        optimised flavor to install in libgtk2.0-0.
+      + Add a debian/libgail18.install.opt which lists files from the
+        optimised flavor to install in libgail18.
+
+  [ Loic Minier ]
+  * Only pass -j to the main make call, do not parallelize the debian/rules
+    themselves as it seems to be racy for an unidentified reason which is hard
+    to reproduce.
+  * Merge patch below from Ubuntu.
+
+  [ Sebastien Bacher ]
+  * debian/patches/093_git_change_fix_focus_issue.patch:
+    - upstream git change to fix a timestamp issue leading to get nautilus.
+      dialog opening sometime unfocussed for example (lp: #333366)
+
+  [ Loic Minier ]
+  * Build-dep on autotools-dev for the config.guess / .sub updates to work.
+  * Drop duplicate Section/Priority fields.
+  * ppc64: use DEB_HOST_GNU_CPU instead of BUILD; drop TODOs, the current
+    implementation is correct.
+
+  [ Sebastian Dröge ]
+  * New upstream bugfix release:
+    + debian/patches/070_mandatory-relibtoolize.patch:
+      - Regenerated for the new version.
+    + debian/patches/072_workaround_directfb_build.patch,
+      debian/patches/092_fix_printtest_include.patch,
+      debian/patches/093_git_change_fix_focus_issue.patch:
+      - Dropped, merged upstream.
+
+ -- Sebastian Dröge <slomo@debian.org>  Sun, 12 Apr 2009 11:21:58 +0200
+
+gtk+2.0 (2.16.0-1) experimental; urgency=low
+
+  [ Emilio Pozuelo Monfort ]
+  * Let libgtk2.0-0 suggest gvfs, as it's needed for some APIs like
+    gtk_show_uri.
+
+  [ Josselin Mouette ]
+  * libgtk2.0-0 depends on shared-mime-info. Closes: #518090.
+  * Add dependent doc packages to b-d-i to ensure proper xrefs.
+
+  [ Loic Minier ]
+  * Clean up dh_gtkmodules output:
+    - Demote warnings when skipping non-existent GtkPixbuf loaders and Gtk IM
+      modules dirs to verbose_print(); use -v to see them.
+    - Always print the number of GdkPixbuf loaders and Gtk IM modules found in
+      each package.
+
+  [ Emilio Pozuelo Monfort ]
+  * New upstream stable release.
+    - Bump shlibs.
+    - debian/patches/070_mandatory-relibtoolize.patch: regenerated.
+  * Ship the gtk-builder-convert manpage in libgtk2.0-dev.
+  * Section of dbg packages is debug.
+
+ -- Emilio Pozuelo Monfort <pochu@ubuntu.com>  Sun, 15 Mar 2009 20:10:34 +0100
+
+gtk+2.0 (2.15.5-2) experimental; urgency=low
+
+  [ Emilio Pozuelo Monfort ]
+  * debian/control.in:
+  - bump libglib2.0-dev build-dep requirement to >= 2.19.7
+  - bump libxrandr-dev build-dep requirement to >= 1:1.2.99
+  - also bump libgtk2.0-dev dependecies accordingly
+    (Closes: #518078)
+
+  [ Gustavo Noronha Silva ]
+  * 042_treeview_single-focus.patch:
+  - removed FIXME note, since it was explained to me that the patch is
+    still necessary
+  * debian/rules:
+  - bumped SHVER to 2.15.5
+
+  [ Imported from Ubuntu ]
+  * 022_disable-viqr-im-for-vi-locale.patch,
+    061_use_pdf_as_default_printing_standard.patch:
+  - for the rationale for the PDF for printing one see:
+    https://wiki.ubuntu.com/PDFasStandardPrintJobFormat
+
+ -- Gustavo Noronha Silva <kov@debian.org>  Tue, 03 Mar 2009 21:58:20 -0300
+
+gtk+2.0 (2.15.5-1) experimental; urgency=low
+
+  * New upstream development release
+  * 070_mandatory-relibtoolize.patch: refreshed.
+  * 031_directfb_dead-keys.patch, 032_gdkwindowimpl_directfb.patch,
+    033_directfb_client-message.patch, 034_directfb_memleak.patch,
+    071_jasper_link_fix.patch, 092_fix_printtest_include.patch:
+  - dropped; already featured in this release
+  * 030_gtkentry_password-char-circle.patch:
+  - dropped; upstream provides a different solution to setting the default
+    invisible char now, that takes the font being used into consideration
+  * 003_gdk.pc_privates.patch:
+  - refreshed
+
+ -- Gustavo Noronha Silva <kov@debian.org>  Mon, 02 Mar 2009 22:01:03 -0300
+
+gtk+2.0 (2.14.7-3) experimental; urgency=low
+
+  * 032_gdkwindowimpl_directfb.patch: new version of the patch. This 
+    should restore the basic functionality of the backend, but there is 
+    still work underway.
+  * 033_directfb_client-message.patch: stolen from the upstream SVN. Fix 
+    the DirectFB client_message API.
+  * 034_directfb_memleak.patch: stolen from the upstream SVN. Fix memory 
+    leak in the DirectFB code.
+  * Require DirectFB 1.0.0 for the 034 patch.
+  * 070_mandatory-relibtoolize.patch: updated accordingly.
+
+ -- Josselin Mouette <joss@debian.org>  Sat, 21 Feb 2009 14:59:45 +0100
+
+gtk+2.0 (2.14.7-2) experimental; urgency=low
+
+  * 008_implicit_pointer_conversion_gdkgc_directfb.patch: removed, it’s 
+    obsolete and just defines the same macro a second time.
+  * 007_implicit_pointer_conversion_gdkdrawable_directfb.patch: removed, 
+    it’s not needed anymore with the latest directfb.
+  * 006_proper-directfb-modules.patch: removed from the package, it 
+    won’t be necessary anymore.
+  * 001_static-linking-dont-query-immodules.patch,
+    002_static-linking-dont-build-perf.patch,
+    003_gdk.pc_privates.patch,
+    004_gtk+-ximian-gtk2-filesel-navbutton-5.patch: refreshed.
+  * Remove 071_correct_directfb_declarations.patch, and replace it by 
+    032_gdkwindowimpl_directfb.patch, a patch from Sven Neumann to 
+    (hopefully) fix DirectFB support for GTK+ 2.14.
+
+ -- Josselin Mouette <joss@debian.org>  Tue, 17 Feb 2009 23:17:56 +0100
+
+gtk+2.0 (2.14.7-1) experimental; urgency=low
+
+  [ Loic Minier ]
+  * Don't purge /etc/gtk-2.0/gdk-pixbuf.loaders and /etc/gtk-2.0/gtk.immodules
+    during first configuration.
+
+  [ Sebastian Dröge ]
+  * New upstream bugfix release:
+    + debian/patches/070_mandatory-relibtoolize.patch:
+      - Regenerated for the new version.
+
+ -- Sebastian Dröge <slomo@debian.org>  Thu, 08 Jan 2009 08:06:02 +0100
+
+gtk+2.0 (2.14.5-1) experimental; urgency=low
+
+  [ Josselin Mouette ]
+  * Really install the faq and tutorial files correctly so that the 
+    devhelp file is read.
+  * Update doc-base files accordingly.
+  * gruik2devhelp.awk: new script to generate the devhelp files 
+    automatically for the FAQ and tutorial, based on the HTML doc.
+  * Build-depend on gawk, run the script appropriately.
+
+  [ Sebastian Dröge ]
+  * New upstream bugfix release:
+    + debian/patches/070_mandatory-relibtoolize.patch:
+      - Regenerated for the new version.
+
+ -- Sebastian Dröge <slomo@debian.org>  Tue, 25 Nov 2008 11:00:35 +0100
+
+gtk+2.0 (2.14.4-3) experimental; urgency=low
+
+  * libgail*.install: fix installation paths. Closes: #505105.
+  * Do not ship .la files for gail modules.
+  * Generate shlibs for libgail.
+  * Bump shlibs version to 2.14.0.
+  * Do not install libgailutil in libgtk2.0-0.
+  * Do not install gtk libs in libgail-dev.
+  * Rework docs installation.
+  * Add doc links where needed.
+  * Install .devhelp files at the correct places. Closes: #504807.
+  * Bump dependencies for the development package.
+  * Fix dependencies of gail packages.
+  * Don’t install libgail in the udeb.
+  * Stop shipping /usr/lib/pkgconfig/libgtk-directfb-2.0-0/, nobody uses 
+    it.
+  * Remove versioned conflicts with libgail packages.
+  * Remove libgail18.shlibs.
+  * Put debugging symbols of libgail modules in libgail-dbg.
+  * dh_gtkmodules.in: fix a pod2man error.
+  * Disable 006_proper-directfb-modules.patch.
+  * Update 070_mandatory_relibtoolize.patch accordingly.
+
+ -- Josselin Mouette <joss@debian.org>  Tue, 11 Nov 2008 14:44:21 +0100
+
+gtk+2.0 (2.14.4-2) experimental; urgency=low
+
+  * debian/control, debian/rules, debian/libgail*:
+  - split libgail packages
+
+ -- Gustavo Noronha Silva <kov@debian.org>  Wed, 05 Nov 2008 14:54:08 -0200
+
+gtk+2.0 (2.14.4-1) experimental; urgency=low
+
+  [ Gustavo Noronha Silva ]
+  * New upstream release
+  * debian/patches/006_proper-directfb-modules.patch:
+  - refreshed
+  * debian/patches/008_implicit_pointer_conversion_gdkgc_directfb.patch,
+    debian/patches/009_gtk-export-filechooser.patch,
+    debian/patches/020_immodules-files-d.patch,
+    debian/patches/021_loader-files-d.patch,
+  - update borrowed from Ubuntu's package
+  * debian/patches/071_correct_directfb_declarations.patch,
+    debian/patches/072_workaround_directfb_build.patch:
+  - borrowed from ubuntu
+  * debian/patches/033_treeview_resizing.patch,
+    debian/patches/095_gtk-im-module-setting.patch:
+  - removed; fixed upstream
+  * debian/patches/070_mandatory-relibtoolize.patch:
+  - refreshed
+  * debian/control.in:
+  - added libjasper-dev to the Build-Depends, as GTK+ now supports
+    JPEG2000
+  - make GTK+ packages conflict/replace with gail ones, since they are now
+    included in GTK+
+  * debian/patches/092_fix_printtest_include.patch:
+  - new patch, to fix build problem in print test
+  * debian/patches/071_jasper_link_fix.patch:
+  - make gdk-pixbuf-csource link correctly with libjasper
+  * debian/rules, debian/control:
+  - newer libcairo2-dev contains everything needed to build the directfb
+    target, so disable building with the dummy libcairo-directfb2-dev
+  - this makes us have to build depend on libcairo2-dev >= 1.6.4-6.1
+
+  [ Loic Minier ]
+  * Let libgtk2.0-dev recommend debhelper for dh_gtkmodules.
+  * Let libgtk2.0-dev depend on libxml2-utils as it's required for
+    gtk-builder-convert to work and might be relied upon by packages bdeping
+    on libgtk2.0-dev.
+
+  [ Emilio Pozuelo Monfort ]
+  * Update build-dependencies for the new version:
+    - libglib2.0-dev >= 2.17.6
+    - libpango1.0-dev >= 1.20
+    - libatk1.0-dev >= 1.13.0
+    - libcairo2-dev >= 1.6.0
+
+ -- Gustavo Noronha Silva <kov@debian.org>  Wed, 24 Sep 2008 21:38:58 -0300
+
+gtk+2.0 (2.12.11-3) unstable; urgency=low
+
+  * 031_directfb_dead-keys.patch: patch from Jérémy Bobbio to fix dead
+    keys in the DirectFB backend. Closes: #394871.
+  * Now require DirectFB 0.9.26.
+  * 070_mandatory_relibtoolize: updated to match the dependency bump.
+  * 033_treeview_resizing.patch:
+    + Fix crasher introduced by the patch. Closes: #491611.
+    + Add references.
+
+ -- Josselin Mouette <joss@debian.org>  Mon, 21 Jul 2008 15:22:38 +0200
+
+gtk+2.0 (2.12.11-2) unstable; urgency=low
+
+  * 033_treeview_resizing.patch:
+    + Enable again, it was disabled by mistake.
+    + Update to new version provided by Kristian Rietveld.
+      Closes: #471073.
+  * libgtk2.0-doc.doc-base.gtk2-tutorial: fix spelling of GTK+.
+  * *.doc-base.*: fix doc-base sections.
+
+ -- Josselin Mouette <joss@debian.org>  Fri, 18 Jul 2008 14:53:17 +0200
+
+gtk+2.0 (2.12.11-1) unstable; urgency=low
+
+  [ Emilio Pozuelo Monfort ]
+  * Build-depend on libcups2-dev instead of libcupsys2-dev, as cups
+    is transitioning to that new name.
+
+  [ Sebastian Dröge ]
+  * New upstream bugfix release:
+    + debian/patches/070_mandatory-relibtoolize.patch:
+      - Regenerated for the new version.
+    + debian/patches/092_openoffice-menus.patch:
+      - Dropped, merged upstream.
+  * debian/control.in:
+    + Updated Standards-Version to 3.8.0, no additional changes needed.
+
+ -- Sebastian Dröge <slomo@debian.org>  Wed, 02 Jul 2008 06:37:51 +0200
+
+gtk+2.0 (2.12.10-2) unstable; urgency=low
+
+  * debian/patches/092_openoffice-menus.patch:
+    + Patch from upstream SVN to fix regression in menu placement
+      in openoffice.org (Closes: #484580).
+
+ -- Sebastian Dröge <slomo@debian.org>  Sat, 07 Jun 2008 10:27:50 +0200
+
+gtk+2.0 (2.12.10-1) unstable; urgency=low
+
+  * New upstream bugfix release:
+    + debian/patches/009_gtk-export-filechooser.patch:
+      - Updated to apply cleanly again.
+    + debian/patches/031_gtksearchenginetracker_fixes.patch,
+      debian/patches/061_foreign_colormaps.patch,
+      debian/patches/092_implicit-g-fopen.patch:
+      - Dropped, merged upstream.
+    + debian/patches/070_mandatory-relibtoolize.patch:
+      - Regenerated for the new version.
+
+ -- Sebastian Dröge <slomo@debian.org>  Wed, 04 Jun 2008 08:14:08 +0200
+
+gtk+2.0 (2.12.9-4) unstable; urgency=low
+
+  [ Loic Minier ]
+  * Flip back gdkpixbuf_module_files_d_str after gdkpixbuf_module_file_str in
+    patch 021_loader-files-d; this fixes config of gdk loaders and hence the
+    current ia32-libs implementation; the change in 2.12.0-3 was incorrect in
+    that it flipped the order for im modules and pixbuf loaders, but only im
+    modules had to be flipped; the reason im modules had to be flipped is that
+    the first list of modules wins for im modules as there is some duplicate
+    checking, while in the case of gdk pixbufs, the last file wins.  What
+    remains to be done here is:
+    - biarch support, similar to pango, by loading /usr/lib32 and /usr/lib64
+      stuff before /usr/lib; allows dropping the config file hack in
+      ia32-libs.
+    - loading of modules from multiarch locations (not multiarch); allows
+      dropping the config file hack in ia32-libs.
+  * Bump build-deps and libgtk2.0-dev's deps to ensure we get Xorg dev
+    packages with .pc files, see list below; thanks Anon Sricharoenchai;
+    closes: #370693.
+        libxext-dev >= 1:1.0.1-2, libxinerama-dev >= 1:1.0.1-4.1, libxi-dev >=
+        1:1.0.1-4, libxrandr-dev >= 1:1.0.2-2, libxfixes-dev >= 1:3.0.0-3,
+        libxcomposite-dev >= 1:0.2.0-3, libxdamage-dev >= 1:1.0.1-3.
+
+  [ Josselin Mouette ]
+  * 061_foreign_colormaps.patch: stolen from upstream SVN. Don't call
+    XFreeColormap on foreign colormaps, this causes crashes in e.g.
+    vinagre. Closes: #477199.
+  * Apply multiarch patch by Javier Serrano Polo, replacing all
+    occurrences of usr/lib by $(LIBDIR). Closes: #468100.
+  * rules: don't compress .sgml and .devhelp files.
+
+  [ Loic Minier ]
+  * Fix broken second dh_strip invocation which was not only acting on the
+    udeb but also on binary packages (-s -pUDEB should have been -pUDEB).
+  * Update patch 021_loader-files-d to use PIXBUF_FILES_LIBDIR which is
+    defined in gdk-pixbuf/Makefile.am, similarly to PIXBUF_LIBDIR, and based
+    on the newly defined loaderfilesdir, similar to loaderdir; update
+    070_mandatory-relibtoolize.
+  * New patch, 022_module-files-append-compat-module-files-d, prefer
+    /usr/lib32/gtk-2.0/<gtk-binary-version>/loader-files.d and
+    /immodule-files.d over the /usr/lib/.../*.d pathnames added in
+    020_immodules-files-d and 021_loader-files-d when available; this is
+    useful for ia32-libs support; other modules might need additional support
+    depending on how they are loaded, for example GTK_MODULES will probably
+    still be looked up below libdir, as well as engines, printbackends,
+    filesystems, and generic modules.  See also Ubuntu #205223 and #190227 for
+    examples.
+
+ -- Loic Minier <lool@dooz.org>  Sun, 11 May 2008 00:47:26 +0200
+
+gtk+2.0 (2.12.9-3) unstable; urgency=low
+
+  [ Loic Minier ]
+  * Refresh patches 009_gtk-export-filechooser,
+    030_gtkentry_password-char-circle, 033_treeview_resizing,
+    042_treeview_single-focus, 060_ignore-random-icons
+  * Fix offsets in patch 095_gtk-im-module-setting; thanks Akira TAGOH;
+    closes: #473699.
+
+  [ Sebastian Dröge ]
+  * debian/rules:
+    + Don't include the udeb in the debug package to get a working debug
+      package in case the udeb libraries differ from the real ones.
+
+ -- Sebastian Dröge <slomo@debian.org>  Sat, 12 Apr 2008 14:00:22 +0200
+
+gtk+2.0 (2.12.9-2) unstable; urgency=low
+
+  * debian/patches/092_implicit-g-fopen.patch:
+    + Include glib/gstdio.h for g_fopen to prevent crashes on 64 bit
+      architectures. Thanks to Dann Frazier for the patch (Closes: #470665).
+
+ -- Sebastian Dröge <slomo@debian.org>  Wed, 12 Mar 2008 18:52:53 +0100
+
+gtk+2.0 (2.12.9-1) unstable; urgency=low
+
+  [ Josselin Mouette ]
+  * update-icon-caches: always exit with a 0 code to avoid breaking
+    upgrades when a cache is corrupt. Display a big fat warning instead.
+    Closes: #466083.
+
+  [ Sebastian Dröge ]
+  * New upstream bugfix release:
+    + 092_recentfiles-recursion-fix, dropped merged upstream.
+    + 070_mandatory-relibtoolize.patch, regenerated for the new version.
+  * debian/rules,
+    debian/*.links.in:
+    + Don't ship very old upstream changelogs and news as they're quite large.
+
+ -- Sebastian Dröge <slomo@debian.org>  Wed, 12 Mar 2008 09:41:23 +0100
+
+gtk+2.0 (2.12.8-1) unstable; urgency=low
+
+  * New upstream bugfix release:
+    + debian/patches/040_filechooser_single-click.patch,
+      debian/patches/093_directfb-type-changes.patch,
+      debian/patches/094_directfb-deprecation-fixes.patch:
+      - Dropped, merged upstream.
+    + debian/patches/070_mandatory-relibtoolize.patch:
+      - Regenerated for the new version.
+
+ -- Sebastian Dröge <slomo@debian.org>  Wed, 13 Feb 2008 09:11:50 +0100
+
+gtk+2.0 (2.12.7-1) unstable; urgency=low
+
+  * Fix GNOME casing in gtk-faq and gtk doc base descriptions.
+  * Drop cruft trying to convert /usr/share/doc/libgtk2.0-0 directory into a
+    symlink in libgtk2.0-0.postinst; thanks Sven Joachim; closes: #462057.
+  * New upstream stable release; no API change; bug fixes and translation
+    updates.
+    - Refresh patches 033_treeview_resizing, 042_treeview_single-focus to
+      apply cleanly.
+    - Update relibtoolizing patch, 070_mandatory-relibtoolize
+    - New patch, 094_directfb-deprecation-fixes, fixes directfb build with
+      GLib 2.15 deprecation of G_GNUC_FUNCTION in favor of G_STRLOC.
+  * Fix ordering in series.
+  * New patch, 095_gtk-im-module-setting, adds XSETTINGS support for immodule;
+    from GNOME 502446.
+  * New upstream release; no change tarball update.
+
+ -- Loic Minier <lool@dooz.org>  Mon, 21 Jan 2008 18:42:28 +0100
+
+gtk+2.0 (2.12.5-2) unstable; urgency=medium
+
+  * Add ${shlibs:Depends} to libgtk2.0-dev.
+  * Rework /usr/share/doc symlinks completely; closes: #461440.
+    - Use a real directory for all packages using a symlink previously:
+      libgtk2.0-bin, libgtk-directfb-2.0-dev, libgtk2.0-dev, libgtk2.0-0-dbg,
+      libgtk-directfb-2.0-0, libgtk2.0-0; add a preinst snippet removing the
+      path on upgrade if it's a symlink and points to the proper directory;
+      add a prerm snippet removing the path on upgrade (for downgrades) if
+      it's a directory (and not a symlink).
+    - Create symlinks for changelog.gz, NEWS.gz, NEWS.pre-1-0.gz, and
+      README.gz in the /usr/share/doc dirs of these packages as well as for
+      gtk2-engines-pixbuf; add a libgtk2.0-common unversionned dependency for
+      all these packages.
+    - Split dh_installdocs and dh_installchangelogs calls on multiple packages
+      and use one call per package as the intent was to install in all the
+      specified packages; also call dh_installdocs and dh_installchangelogs
+      without any extra file for all packages to install copyright and Debian
+      changelog.
+    - Factor the list of dh_installdocs files in DH_INSTALLDOCS_FILES in
+      rules.
+
+ -- Loic Minier <lool@dooz.org>  Fri, 18 Jan 2008 10:38:43 +0100
+
+gtk+2.0 (2.12.5-1) unstable; urgency=low
+
+  [ Loic Minier ]
+  * Drop the version in the libgtk2.0-0 -> libgtk2.0-common dependency; the
+    translations and gtkrc files aren't critical to libgtk's working and have
+    been compatible with other libgtk versions since years.
+  * New patch, 094_fix-jpeg-loader-big-buffers, fixes spinguard logic for big
+    buffers in the JPEG pixbuf loader; GNOME #494667; from SVN r19135.
+  * New upstream stable releases; no API change; bug fixes and translation
+    updates.
+    - Drop patches 092_notebook-critical-warnings,
+      094_fix-jpeg-loader-big-buffers, merged upstream.
+    - Refresh patches 040_filechooser_single-click, 093_directfb-type-changes
+      to apply cleanly.
+    - Update relibtoolizing patch, 070_mandatory-relibtoolize.
+
+  [ Sebastian Dröge ]
+  * Upload to unstable.
+  * Fixes FTBFS caused by not installing the png pixbuf loader correctly
+    (Closes: #461037).
+  * Update Standards-Version to 3.7.3, no additional changes needed.
+  * 092_recentfiles-recursion-fix.patch: Guard against recursion in
+    gtk_recent_files_menu_populate(). Patch from upstream SVN by
+    William Pitcock (Closes: #459393).
+  * Drop duplicated ${misc:Depends} from Recommends.
+
+ -- Sebastian Dröge <slomo@debian.org>  Thu, 17 Jan 2008 10:49:09 +0100
+
+gtk+2.0 (2.12.3-2) unstable; urgency=low
+
+  * 092_notebook-critical-warnings.patch: Fix removal of tab labels to not
+    ref and unref a NULL pointer. Patch from upstream SVN, see BGO #388321.
+  * 093_directfb-type-changes.patch: Define __u32 and __u8 to fix compilation
+    with latest directfb from unstable while still supporting older versions.
+    Patch from BGO #503190.
+
+ -- Sebastian Dröge <slomo@debian.org>  Wed, 12 Dec 2007 05:36:40 +0100
+
+gtk+2.0 (2.12.3-1) unstable; urgency=low
+
+  * Let update-icon-caches skip args which are not dirs or don't exist; fixes
+    postrm behavior of packages with an icon cache.
+  * New upstream stable release; no API change; bug fixes and translation
+    updates.
+    - Refresh patch 042_treeview_single-focus to apply cleanly.
+    - Update relibtoolizing patch, 070_mandatory-relibtoolize.
+
+ -- Loic Minier <lool@dooz.org>  Tue, 04 Dec 2007 22:39:07 +0100
+
+gtk+2.0 (2.12.2-1) unstable; urgency=low
+
+  * New upstream stable release; no API change; bug fixes and translation
+    updated.
+    - Drop patches 034_gtkcupsutils_type_fix, 071_fix_gdk_window_null_crasher
+      fixed upstream.
+    - Update relibtoolizing patch, 070_mandatory-relibtoolize.
+
+ -- Sebastian Dröge <slomo@debian.org>  Tue, 27 Nov 2007 05:15:01 +0100
+
+gtk+2.0 (2.12.1-3) unstable; urgency=low
+
+  * Conflict against metacity < 1:2.20.0-1. Closes: #450693.
+  * Suggest librsvg2-common for SVG pixbuf support.
+  * 033_treeview_resizing.patch: fix segmentation fault introduced by
+    an API inconsistency.
+  * 003_gdk.pc_privates.patch: generate correct Requires.private for
+    gdk-2.0.pc containing all necessary dependencies for static linking.
+  * 006_proper-directfb-modules.patch: refreshed.
+  * 010_gdkpixbuf_-lm.patch: fix gdk-pixbuf-2.0.pc by adding back -lm,
+    which is required by some macros. Closes: #451512.
+  * 070_mandatory-relibtoolize.patch: regenerated.
+  * rules: copy the extraneous libraries generated in the static build
+    to the Libs.private of the shared build.
+
+ -- Josselin Mouette <joss@debian.org>  Sun, 18 Nov 2007 01:30:52 +0100
+
+gtk+2.0 (2.12.1-2) unstable; urgency=low
+
+  * Stop suggesting gtk-engines-pixmap.
+  * Remove the --enable-explicit-deps flag. Closes: #343711, thanks Tom
+    Parker. If some other packages still rely on having explicit X11
+    dependencies, they are buggy and need to be fixed anyway.
+  * Keep --enable-explicit-deps in the directfb build; otherwise this
+    breaks any binary linking against it because the rpath isn't passed.
+  * 033_treeview_resizing.patch: updated patch from Kristian Rietveld.
+    + Add a new sizing fix for the case where there is a scrollbar.
+  * 031_gtksearchenginetracker_fixes.patch: added back, only the name
+    change was fixed upstream.
+  * 034_gtkcupsutils_type_fix.patch: type-casting fix from Herbert
+    Valerio Riedel that allows remote printing. Closes: #448071.
+  * 040_filechooser_single-click.patch: allow a situation where no
+    shortcut is selected, to avoid issues for keyboard users.
+    Closes: #448674.
+  * 042_treeview_single_focus.patch: don't select the focused item for
+    GTK_SELECTION_SINGLE type treeviews. Allows the fix in
+    040_filechooser_single-click.patch to work.
+  * Conflict against libeel2-2.18. Closes: #443701, #499070.
+  * Conflict against xfwm4 < 4.4.1-3 (previous versions freeze on
+    startup).
+  * 021_loader-files-d.patch: enclose process_module_file in correct
+    #ifdef's.
+  * 040_filechooser_single-click.patch: filter out duplicate entries in
+    bookmarks. This avoids a situation where the selection is changed to
+    the duplicate during DnD, causing an assertion error.
+    Closes: #447279.
+
+ -- Josselin Mouette <joss@debian.org>  Sun, 04 Nov 2007 16:22:31 +0100
+
+gtk+2.0 (2.12.1-1) unstable; urgency=low
+
+  * New upstream stable release; no API change; bug fixes and translation
+    updates.
+    - Drop patches 031_gtksearchenginetracker_fixes,
+      080_from_bugzilla_workaround_eclipse_crash, 081_icon-cache-validate
+      fixed upstream.
+    - Refresh patches 033_treeview_resizing, 040_filechooser_single-click to
+      apply cleanly.
+    - Drop patches 060_opening-display-by-env-error-message,
+      065_gtk-filechooser-locale-time merged upstream.
+    - Update relibtoolizing patch, 070_mandatory-relibtoolize.
+  * Chech the exit status of close() in dh_gtkmodules; closes: #427654.
+  * New patch, 060_ignore-random-icons, don't list images from unknown
+    directories in icon cache; closes: #443571, #443574, #444285, #446188.
+
+ -- Loic Minier <lool@dooz.org>  Sun, 21 Oct 2007 22:05:42 +0200
+
+gtk+2.0 (2.12.0-3) unstable; urgency=low
+
+  [ Josselin Mouette ]
+  * 031_gtksearchenginetracker_fixes.patch: new patch.
+    + Use libtrackerclient.so.0 (closes: #443403).
+    + Check that tracker actually works before using it.
+
+  [ Loic Minier ]
+  * Conflict with libwxgtk2.6-0 << 2.6.3.2.2-1 to prevent the migration of gtk
+    to testing until the wxwidgets2.6 fix is there too; see #441766 and
+    friends.
+
+  [ Josselin Mouette ]
+  * Conflict with glabels << 2.1.3-3 to prevent a segmentation fault
+    from showing up.
+
+  [ Loic Minier ]
+  * Cleanup whitespace.
+  * Add comments to relibtoolizing patch, 070_mandatody-relibtoolize, to
+    mention the age of the upstream libtool in released tarballs which make
+    relibtoolizing important for hurd-i386; GNOME #484426; Debian #445001.
+
+  [ Josselin Mouette ]
+  * 020_immodules-files-d.patch, 021_loader-files-d.patch: read the
+    GDK_PIXBUF_MODULE_FILE and GTK_IM_MODULE_FILE variables before the
+    Debian directories. Thanks Thadeu Lima de Souza Cascardo.
+    Closes: #439004.
+
+  [ Loic Minier ]
+  * New patch, 080_from_bugzilla_workaround_eclipse_crash, fixes crash when
+    displaying tooltips in SWT apps such as Eclipse; GNOME #410194; LP
+    #128232; closes: #445613.
+  * New patch, 060_opening-display-by-env-error-message, fixes error message
+    on opening of display to include the display when it was set via the
+    DISPLAY env var; GNOME #486636; closes: #283076.
+  * New patch, 065_gtk-filechooser-locale-time, fixes conversion of localized
+    week days in non-UTF-8 locales in the file chooser; GNOME #482504;
+    closes: #444927.
+  * Enable 091_workaround_no_gtk_init_incorrect_display to allow the non-free
+    Flash plugin to work for users of non-Gtk browsers; please do bug Adobe
+    about this; closes: #443661, #440165.
+  * New patch, 071_fix_gdk_window_null_crasher, fixes potential crashes in
+    IceWeasel's print preview dialog; GNOME #482531; LP #144326; found in the
+    Ubuntu package.
+
+ -- Loic Minier <lool@dooz.org>  Sun, 14 Oct 2007 20:46:29 +0200
+
+gtk+2.0 (2.12.0-2) unstable; urgency=low
+
+  [ Josselin Mouette ]
+  * Add a conflict against openoffice.org-core (<< 2.2.1-8).
+    Closes: #439256.
+
+  [ Loic Minier ]
+  * Upload to unstable; drop check-dist include.
+
+ -- Loic Minier <lool@dooz.org>  Thu, 20 Sep 2007 11:59:26 +0200
+
+gtk+2.0 (2.12.0-1) experimental; urgency=low
+
+  [ Alan Baghumian ]
+  * New upstream stable release
+    - Regenerated 070_mandatory-relibtoolize.patch
+  * Added 081_icon-cache-validate.patch, GNOME #476342
+
+  [ Loic Minier ]
+  * Refresh patches 033_treeview_resizing and 040_filechooser_single-click to
+    apply cleanly.
+  * Drop patch 080_from_svn_fix_dangling_tooltip, merged upstream.
+  * Bump shlibs to 2.12.0 in the new upstream release for the addition of
+    gdk_window_thaw_toplevel_updates_libgtk_only() and
+    gdk_window_freeze_toplevel_updates_libgtk_only() to the ABI.
+  * Add disabled patch 091_workaround_no_gtk_init_incorrect_display, taken
+    from the Ubuntu package; it works around broken applications missing a
+    call to gtk_init() but the breakage should better be exposed now so that
+    applications can be fixed in time for release.
+
+ -- Loic Minier <lool@dooz.org>  Tue, 18 Sep 2007 22:30:39 +0200
+
+gtk+2.0 (2.11.6-1) experimental; urgency=low
+
+  [ Loic Minier ]
+  * Don't run the directfb testsuite on kfreebsd as it hangs; proposed patch
+    by Petr Salinger; closes: #431477.
+
+  [ Josselin Mouette ]
+  * Move manual pages of binaries in /usr/sbin to section 8.
+  * update-icon-caches: new script, updates the icon caches in a given
+    list of directories. It is meant to be used by packages shipping
+    icons, in the postinst/postrm.
+    For transition purposes, icon caches are currently updated but not
+    created if they don't already exist.
+  * Install this script and its manual page in libgtk2.0-bin.
+
+  [ Loic Minier ]
+  * Call dh_shlibdeps separately for the udeb and add a
+    -l/usr/lib/libcairo-directfb/lib/ flag to ensure libcairo-directfb2 is
+    found.
+  * New upstream development release, with API additions.
+    - Bump up shlibs to >= 2.11.6.
+    - Refresh patches 006_proper-directfb-modules,
+      015_default-fallback-icon-theme, 040_filechooser_single-click to apply
+      cleanly.
+    - Update patches 009_gtk-export-filechooser, 033_treeview_resizing to
+      apply; update relibtoolizing patch, 070_mandatory-relibtoolize.
+  * Update patch 009_gtk-export-filechooser:
+    - gtk/Makefile.am (gtk_private_h_sources, gtk_semi_private_h_sources):
+      export gtkquery.h and gtksearchengine.h as semi-private.
+    - gtk/gtkquery.h: add GTK_FILE_CHOOSER_ENABLE_UNSUPPORTED #ifdef guard.
+    - gtk/gtksearchengine.h: add GTK_FILE_CHOOSER_ENABLE_UNSUPPORTED #ifdef
+      guard.
+
+ -- Loic Minier <lool@dooz.org>  Tue, 24 Jul 2007 10:43:23 +0200
+
+gtk+2.0 (2.11.5-1) experimental; urgency=low
+
+  * New upstream development release, with API additions; the new API may
+    still change incompatibly, especially the tooltips API.
+    - Bump shlibs to >= 2.11.5.
+    - Bump up libpango1.0-dev build-dep to >= 1.17.3.
+    - Ship the new gtk-builder-convert Python script to convert Glade files to
+      GtkBuilder syntax in libgtk2.0-dev; don't call dh_py* to generate a
+      ${python:Depends} but Recommend python (>= 2.4) to avoid pulling python
+      on buildds; the script requires python >= 2.4, but this is not enforced
+      in the dependencies.
+    - Refresh patches 001_static-linking-dont-query-immodules,
+      006_proper-directfb-modules, 040_filechooser_single-click to apply
+      cleanly.
+    - Update relibtoolizing patch, 070_mandatory-relibtoolize.
+  * Use -s instead of -a in arch-specific dh_* calls.
+
+ -- Loic Minier <lool@dooz.org>  Tue, 03 Jul 2007 13:01:25 +0200
+
+gtk+2.0 (2.11.4-1) experimental; urgency=low
+
+  [ Josselin Mouette ]
+  * 040_filechooser_single-click.patch: fix the patch to apply cleanly
+    again, and enable it.
+
+  [ Loic Minier ]
+  * Pass -mminimal-toc in CFLAGS for ppc64 support; thanks Andreas Jochens;
+    closes: #386815.
+  * New upstream development release, with API additions; the new API may
+    still change incompatibly.
+    - Bump shlibs to >= 2.11.3.
+    - Refresh patches 006_proper-directfb-modules,
+      008_implicit_pointer_conversion_gdkgc_directfb,
+      009_gtk-export-filechooser, 030_gtkentry_password-char-circle,
+      033_treeview_resizing, 040_filechooser_single-click, and 041_ia32-libs
+      to apply cleanly.
+    - Update relibtoolizing patch, 070_mandatory-relibtoolize.
+  * Add a debian/dh_listmissing.pl script based on dh_install snippets but
+    customized to handle multiple source installation dirs which can report
+    files which were not installed to a package.
+  * New list-missing rule to list files which were not installed to a package
+    calling debian/dh_listmissing.pl.
+  * Also depend on libxcomposite-dev, libxdamage-dev; thanks Sébastien Bacher.
+  * Ship etc/gtk-2.0/im-multipress.conf in the shared library.
+  * New upstream development release, with incompatible API changes; the new
+    API may still change incompatibly.
+    - Bump shlibs to >= 2.11.4.
+    - Refresh relibtoolizing patch, 070_mandatory-relibtoolize.
+    - Bump up libglib2.0-dev build-dep to >= 2.11.5.
+
+ -- Loic Minier <lool@dooz.org>  Wed, 20 Jun 2007 10:47:42 +0200
+
+gtk+2.0 (2.11.2-1) experimental; urgency=low
+
+  * New upstream release series; these are development releases, the new API
+    may still change incompatibly.
+    - Target at experimental; include check-dist.
+    - Bump shlibs to >= 2.11.2.
+    - Refresh patches 001_static-linking-dont-query-immodules, 005_xpmico,
+      009_gtk-export-filechooser, 015_default-fallback-icon-theme,
+      033_treeview_resizing, 041_ia32-libs to apply cleanly.
+    - Update patch 021_loader-files-d to apply with the upstream G_MODULE
+      changes and the support for included modules.
+    - Update patch 030_gtkentry_password-char-circle to apply.
+    - Drop patch 031_cursor-blinking-timeout, merged upstream.
+    - Disable 040_filechooser_single-click for now as it doesn't apply cleanly
+      and doesn't seem critical; add a description and cross-refs.
+    - Update relibtoolizing patch, 070_mandatory-relibtoolize.
+    - Bump up build-deps to libglib2.0-dev >= 2.13.1, libpango1.0-dev >=
+      1.15.3, gtk-doc-tools >= 1.6.
+    - Build-dep on libxcomposite-dev for composite support.
+    - Build-dep on libxdamage-dev for damage support.
+    - Enable test print backend by passing --enable-test-print-backend to
+      configure.
+  * Update 007_implicit_pointer_conversion_gdkdrawable_directfb to include
+    cairo.h instead of defining the directfb feature manually.
+  * New patch, 006_proper-directfb-modules, fixes pkg-config modules included
+    to build directfb stuff, uncovered by the change in
+    007_implicit_pointer_conversion_gdkdrawable_directfb; refresh
+    relibtoolizing patch.
+  * Add cross-refs to patch headers.
+  * Clean up CFLAGS.
+  * Prepare passing -z defs via LDFLAGS in the future.
+
+ -- Loic Minier <lool@dooz.org>  Wed, 13 Jun 2007 16:57:47 +0200
+
+gtk+2.0 (2.10.13-1) unstable; urgency=low
+
+  * Bump Conflicts to iiimf-client-gtk << 12.3.91-4.
+  * Upload to unstable; drop check-dist include.
+  * New upstream release; no API change.
+    - Drop patches 011_directfb-build-fixes-from-head,
+      013_gdkproperty-directfb-strdup, 032_filechooser-sizing,
+      090_capslock-numlock-im-thai merged upstream.
+    - Update relibtoolizing patch, 070_mandatory-relibtoolize.
+
+ -- Loic Minier <lool@dooz.org>  Wed, 13 Jun 2007 10:06:49 +0200
+
+gtk+2.0 (2.10.12-3) experimental; urgency=low
+
+  * Use printf instead of echo in dh_gtkmodules to write to write data to
+    files in complex_doit() calls as dash's echo will always honor escape
+    sequences.
+  * Conflict with gtk2-engines-ubuntulooks (<= 0.9.11-1).
+  * New patch, 009_gtk-export-filechooser, exports some filechooser API for
+    use in maemo / Hildon; from Nokia, taken from the Ubuntu package; update
+    patch 032_filechooser-sizing to apply cleanly; bump shlibs to 2.10.12-3;
+    update patch 070_mandatory-relibtoolize.
+  * Kill patch 025_dfb-window-destroy-leak from source tree as well now.
+  * Include check-dist to prevent accidental uploads to unstable.
+
+ -- Loic Minier <lool@dooz.org>  Thu, 07 Jun 2007 00:13:00 +0200
+
+gtk+2.0 (2.10.12-2) unstable; urgency=low
+
+  [ Loic Minier ]
+  * New patch, 15_default-fallback-icon-theme, sets the default
+    gtk-fallback-icon-theme to "gnome"; closes: #421353.
+  * Also honor parallel=n in DEB_BUILD_OPTIONS.
+
+  [ Josselin Mouette ]
+  * 032_filechooser-sizing.patch: patch from Carlos Garnacho in bugzilla
+    #420285, committed in trunk. Fixes (among many other things) infinite
+    flickering with some window managers (closes: #420021).
+  * Refresh other patches.
+
+  [ Loic Minier ]
+  * New patch 090_capslock-numlock-im-thai, fixes Thai input method when
+    NumLock/CapsLock is on; thanks Theppitak Karoonboonyanan; GNOME #438261;
+    closes: #414698.
+  * Re-add patch 031_cursor-blinking-timeout to patch series.
+
+  [ Josselin Mouette ]
+  * 033_treeview_resizing.patch: fix column resizing in GtkTreeView when
+    there is an expander column. See bugzilla #316087.
+
+ -- Josselin Mouette <joss@debian.org>  Fri, 18 May 2007 19:02:20 +0200
+
+gtk+2.0 (2.10.12-1) unstable; urgency=low
+
+  * Bump Conflicts to gtk-im-libthai <= 0.1.4-2.
+  * Document that 2.10.11-2 bumped the conflict on scim-gtk2-immodule to <=
+    1.4.4-7.
+  * Post-transition bump of conflicts to gtk2-engines-wonderland << 1.0-4,
+    imhangul (<< 0.9.13-5), gcin (<< 1.3.4-2), gtk-im-libthai (<< 0.1.4-3),
+    scim-gtk2-immodule (<< 1.4.4-8), uim-gtk2.0 (<< 1:1.4.1-3),
+    gtk2-engines-cleanice (<< 2.4.0-1.1), gtk2-engines-magicchicken
+    (<< 1.1.1-7.1), gtk2-engines-qtpixmap (<< 0.28-1.2), libginspx0
+    (<< 20050529-1.1), tamil-gtk2im (<< 2.2-4.4), gtk2-engines-xfce
+    (<< 2.4.0-1), scim-bridge-client-gtk (<< 0.4.10-1.1), swf-player
+    (<< 0.3.6-2.3), gtk-qt-engine (<< 1:0.8~svn-rev36-1).
+  * Let the udeb provide the Gtk+ module ABI (binver); closes: #419592.
+  * Add a -k flag to dh_gtkmodules, matching the change in dh_pangomodules.
+  * Use this new flag for the udeb and the shared library packages.
+  * Add ${misc:Depends}.
+  * Drop "libtool_is_fool" snippet patching hardcode_libdir_flag_spec and
+    archive_cmds which is probably dangerous with newer libtools.
+  * Drop patch 000_gtk+-2.0.6-exportsymbols which made all libs export way too
+    many symbols and hence was dangerous; closes: #327652.
+    - Update patch 070_mandatory-relibtoolize.
+  * Fix description of the -dbg package.
+  * New upstream release; no ABI change.
+    - Refresh patches 011_directfb-build-fixes-from-head and
+      040_filechooser_single-click.
+    - Update relibtoolizing patch.
+
+ -- Loic Minier <lool@dooz.org>  Thu, 03 May 2007 15:13:54 +0200
+
+gtk+2.0 (2.10.11-2) unstable; urgency=low
+
+  [ Loic Minier ]
+  * Bump libwmf conflicts to << 0.2.8.4-5.
+  * Fix control generation.
+  * Include the new uploaders.mk from gnome-pkg-tools instead of duplicating
+    its logic; build-dep on gnome-pkg-tools >= 0.11.
+  * Run "make check" test suite for all flavors except if DEB_BUILD_OPTIONS
+    contains the "nocheck" keyword; ignore failures.
+  * Add support for DEB_BUILD_OPTIONS_PARALLEL.
+  * Re-enable FAQ and Tutorial which were fixed upstream at some point; update
+    installation dirs.
+  * Call dh_installman -a.
+
+  [ Josselin Mouette ]
+  * 040_filechooser_single-click.patch: remove shortcut-related actions
+    in the response callback. This fixes the annoying bug where you need
+    to click twice on "save" after clicking on a shortcut.
+
+  [ Loic Minier ]
+  * Initialize CFLAGS to -Wall -g; pass debian/rules' CFLAGS and LDFLAGS to
+    configure, doh!
+  * Document that 2.10.8 (and 2.10.9) fixed CVE-2007-0010.
+  * Stop shipping engines in the udeb again.
+  * New patch, 040_ia32-libs.patch, for ia32-libs support via ia32-libs-gtk;
+    based on a patch by Goswin von Brederlow with the following changes: a)
+    use .32 and .64 suffixes in all cases (compatible with Ubuntu), b) fix
+    typo, c) use g_file_test() instead of g_access(); does not cover module
+    loading via env vars; closes: #406453.
+  * Upload to unstable; drop check-dist include.
+  * Wrap build-deps and deps.
+  * Add Conflicts on gcin (<= 1.3.4-1), gtk-qt-engine (<= 1:0.8~svn-rev31-3),
+    iiimf-client-gtk (<= 12.3.91-3), libginspx0 (<= 20050529-1),
+    scim-bridge-client-gtk (<= 0.4.10-1), iiimgcf (<= 11.4.1870-7).
+  * Bump Conflicts to gtk2-engines-gtk-qt << 1:0.7-2, imhangul <=
+    0.9.13-3.1, libgnomeui-0 <= 2.14.1-3, swf-player <= 0.3.6-2.2,
+    tamil-gtk2im <= 2.2-4.3, uim-gtk2.0 <= 1:1.2.1-9, scim-gtk2-immodule (<=
+    1.4.4-7).
+  * Drop docbook-utils and linuxdoc-tools-text from the build-deps.
+
+ -- Loic Minier <lool@dooz.org>  Fri, 13 Apr 2007 22:25:49 +0200
+
+gtk+2.0 (2.10.11-1) experimental; urgency=low
+
+  * Move build and install base dirs to debian/build and debian/install
+    instead of debian/tmp/build and debian/tmp/install.
+  * Cleanup rules.
+  * Make debian/control PHONY.
+  * Use @DOC_PKG@ to point at the HTML doc as well.
+  * Tune udeb description.
+  * New upstream releases.
+    - Drop patch 003_default_fallback_icon_theme, upstream added a fallback on
+      hicolor.
+    - Drop patch 015_gdkmain-x11_button-mask.patch, merged upstream.
+    - Refresh patches.
+    - Relibtoolize.
+  * Remove 031_cursor-blinking-timeout from patch series as it causes a
+    regression in the Thai IM; closes: #414698.
+
+ -- Loic Minier <lool@dooz.org>  Wed, 14 Mar 2007 14:11:58 +0100
+
+gtk+2.0 (2.10.9-1) experimental; urgency=low
+
+  [ Josselin Mouette ]
+  * 024_filechooser_single-click.patch:
+    + Monitor selection changes instead of monitoring the cursor.
+    + Miscellaneous fixes.
+  * 015_gdkmain-x11_button-mask.patch, stolen from upstream SVN: fix the
+    issue of resizing columns needing two tries in some cases
+    (closes: #406906).
+
+  [ Loic Minier ]
+  * Add a get-orig-source target to retrieve the upstream tarball.
+  * Rename patch 023_gtkentry_password-char-circle to
+    030_gtkentry_password-char-circle.
+  * Rename patch 024_filechooser_single-click to 040_filechooser_single-click.
+  * New patch, 031_cursor-blinking-timeout.patch, to stop blinking the cursor
+    after a configurable timeout; helps saving energy by not waking up all Gtk
+    processes with a cursor continuously; from upstream SVN r16366 (trunk);
+    GNOME #353670, #352442.
+  * Include the new check-dist Makefile to prevent accidental uploads to
+    unstable; bump build-dep on gnome-pkg-tools to >= 0.10.
+  * Bump up libglib2.0-dev of libgtk2.0-dev dep to >= 2.12.0 as well; thanks
+    Marc Brockschmidt.
+
+  [ Josselin Mouette ]
+  * New upstream release.
+    - Fixes CVE-2007-0010; RedHat #218755, #218932.
+  * Remove patches integrated upstream:
+    + 009_directfb_build.patch
+    + 010_fix-stuc-vs-stub-typo.patch
+    + 012_missing-stub-files.patch
+    + 014_gtktreeview_missing-icons.patch
+  * Refresh patches:
+    + 020_immodules-files-d.patch
+    + 031_cursor-blinking-timeout.patch
+    + 040_filechooser_single-click.patch
+    + 070_mandatory-relibtoolize.patch
+
+ -- Josselin Mouette <joss@debian.org>  Thu,  1 Mar 2007 21:50:34 +0100
+
+gtk+2.0 (2.10.7-1) experimental; urgency=low
+
+  * New upstream release.
+  * Refresh patches.
+  * 022_gtkcupsutils_multipage.patch: removed, integrated upstream.
+  * Regenerate 070_mandatory-relibtoolize.patch.
+  * 014_gtktreeview_missing-icons.patch: update patch with the upstream
+    fix that was committed.
+  * 009_directfb_build.patch: new patch, fix typo in configure.in for
+    the directfb build.
+
+ -- Josselin Mouette <joss@debian.org>  Wed, 10 Jan 2007 00:03:03 +0100
+
+gtk+2.0 (2.10.6-5) experimental; urgency=low
+
+  [ Loic Minier ]
+  * Really update gtk2-engines conflict to << 2.8.2-2.
+
+  [ Josselin Mouette ]
+  * 022_gtkcupsutils_multipage.patch: new patch, stolen upstream.
+    Properly pass multi-value options to cups (closes: #404867).
+  * 023_gtkentry_password-char-circle.patch: new patch to replace stars by
+    black circles in password fields; thanks Sven Arvidsson; found in Fedora
+    and OpenSuse (closes: #401568).
+  * 024_filechooser_single-click.patch: patch from UHU-Linux to make the
+    side pane in the filechooser usable with a single click
+    (closes: #405296).
+
+ -- Josselin Mouette <joss@debian.org>  Wed,  3 Jan 2007 00:14:28 +0100
+
+gtk+2.0 (2.10.6-4) experimental; urgency=low
+
+  [ Loic Minier ]
+  * Update gtk2-engines conflict to << 2.8.2-2.
+
+  [ Josselin Mouette ]
+  * 014_gtktreeview_missing-icons.patch, stolen from bugzilla: fix
+    missing icon in "save as" filechooser dialogs.
+
+ -- Josselin Mouette <joss@debian.org>  Thu, 30 Nov 2006 20:42:44 +0100
+
+gtk+2.0 (2.10.6-3) experimental; urgency=low
+
+  [ Loic Minier ]
+  * Update gtk2-engines conflict to <= 2.8.1-4.
+  * Update gtk2-engines-pixbuf conflict to <= 2.10.
+  * Bump up libcairo-directfb2-dev build-dep to 1.2.4-4.
+
+  [ Josselin Mouette ]
+  * 070_mandatory-relibtoolize.patch: recreate with autoconf 2.59, to
+    avoid the AM_GLIB_DEFINE_LOCALEDIR bug (making GTK+ applications
+    untranslated).
+  * Make gtk2-engines conflict less strict.
+
+ -- Josselin Mouette <joss@debian.org>  Sat, 11 Nov 2006 00:04:46 +0100
+
+gtk+2.0 (2.10.6-2) experimental; urgency=medium
+
+  * New patch, 013_gdkproperty-directfb-strdup, to g_strdup() strings returned
+    by gdk_atom_name(); GNOME #357611; thanks Attilio Fiandrotti.
+
+ -- Loic Minier <lool@dooz.org>  Sun,  8 Oct 2006 16:03:08 +0200
+
+gtk+2.0 (2.10.6-1) experimental; urgency=low
+
+  * New upstream release.
+    - Drop patch 013_stock-icons-typo-in-rm, merged upstream.
+    - Relibtoolize: update patch 070_mandatory-relibtoolize.
+
+ -- Loic Minier <lool@dooz.org>  Wed,  4 Oct 2006 11:41:37 +0200
+
+gtk+2.0 (2.10.5-1) experimental; urgency=low
+
+  * Fail if dh_gtkmodules called query helpers on module files, but no module
+    could be written to the module file.
+  * Parse stderr as well as the stdout of query helpers and bail out if
+    g_module_open(); suggest adjusting LD_LIBRARY_PATH.
+  * Fix some probably harmless typos.
+  * New patch, 030_gtkfilechooserbutton-update-combo-box-null-base-path, to
+    avoid a segfault when opening some filechoosers; thanks Sam Morris for
+    reporting and testing; from CVS HEAD; GNOME #358405; closes: #390231.
+  * New upstream release; no API change.
+    - Drop patch 030_gtkfilechooserbutton-update-combo-box-null-base-path,
+      merged upstream.
+    - New patch, 013_stock-icons-typo-in-rm, to fix a typo in gtk/Makefile.am;
+      GNOME #358931.
+    - Relibtoolize: update patch 070_mandatory-relibtoolize.
+
+ -- Loic Minier <lool@dooz.org>  Mon,  2 Oct 2006 16:59:18 +0200
+
+gtk+2.0 (2.10.4-1) experimental; urgency=low
+
+  * New upstream release; no API change.
+    - Switch from tar-in-tar and sys-build to regular source and quilt
+      patching; build-depend on quilt; remove occurrences of $(TOP_SRC_DIR)
+      and @TOP_SRC_DIR@ which isn't needed anymore.
+    - Refresh patch 021_loader-files-d.
+    - New patch, 010_fix-stuc-vs-stub-typo, to replace "stuc" with "stub" in
+      gtk/Makefile.am; from HEAD, not commited in the gtk-2-10 branch.
+    - New patch, 011_directfb-build-fixes-from-head, to backport directfb
+      build fixes; from HEAD not commited in the gtk-2-10 branch.  Thanks
+      Attilio Fiandrotti for pointing me at the actual log entry.
+    - New patch, 012_missing-stub-files, to add gtk/gtkplug-stub.c and
+      gtksocket-stub.c missing from the tarball; from the gtk-2-10 branch.
+    - Relibtoolize: update patch 070_mandatory-relibtoolize.
+
+ -- Loic Minier <lool@dooz.org>  Sun, 24 Sep 2006 12:24:31 +0200
+
+gtk+2.0 (2.10.3-3) experimental; urgency=medium
+
+  * Update patch 021_loader-files-d to not warn about missing module files or
+    unreadable files as is already the case for immodules; see #388450 for
+    more background.
+  * Fix awful typo which broke generation of the udeb shlibs and which I
+    didn't notice with debdiff; thanks Frans Pop.
+  * Drop debian/docs.in and pass the list of files to dh_installdocs instead;
+    should fix the missing README and NEWS files.
+
+ -- Loic Minier <lool@dooz.org>  Thu, 21 Sep 2006 17:35:16 +0200
+
+gtk+2.0 (2.10.3-2) experimental; urgency=low
+
+  * Drop obsolete --with-cairo-backend configure flag.
+  * Make update-gtk-immodules and update-gtk-immodules no-ops, to avoid
+    modules to recreate the /etc modules files on upgrades or by mistake;
+    remove the generated module files in /etc on upgrades. closes: #388450
+  * Merge 2.8.20-2; drop patch 009_revert-gdkdrawable-directfb, merged
+    upstream.
+
+ -- Loic Minier <lool@dooz.org>  Wed, 20 Sep 2006 22:17:30 +0200
+
+gtk+2.0 (2.10.3-1) experimental; urgency=low
+
+  * New upstream releases; with API additions in the filesystem modules API,
+    probably only used by gtk-demo, and in the quartz gdk backend, not used in
+    Debian.
+    - Bump shlibs to >= 2.10.3.
+    - Drop patch 009_configurable-cairo-backend-module, it was not really
+      required to select a cairo backend dynamically as the backend is always
+      cairo-directfb for a directfb gdk.
+    - Drop patch 010_gdk-require-cairo-module, merged upstream.
+    - Drop patch 011_gdk-directfb-cvs-changes, this release includes the
+      changes that were pulled back then.
+    - Relibtoolize: update patch 070_mandatory-relibtoolize.
+
+ -- Loic Minier <lool@dooz.org>  Tue, 19 Sep 2006 20:42:38 +0200
+
+gtk+2.0 (2.10.1-2) experimental; urgency=low
+
+  * Drop obsolete scary warning in 2.10.1-1.
+  * Drop update-gtk-immodules and update-gdkpixbuf-loaders calls from
+    libgtk2.0-0's postinst, this isn't needed for backwards compatibility.
+  * Use /usr/lib/libgtk2.0-0/gdk-pixbuf-query-loaders and
+    /usr/lib/libgtk2.0-0/gtk-query-immodules-2.0 instead of
+    /usr/bin/gdk-pixbuf-query-loaders and /usr/bin/gtk-query-immodules-2.0 in
+    dh_gtkmodules.
+
+ -- Loic Minier <lool@dooz.org>  Tue, 19 Sep 2006 16:40:22 +0200
+
+gtk+2.0 (2.10.1-1) experimental; urgency=low
+
+  * Add a missing x11proto-xext-dev build-dep for X SYNC checks.
+  * Add a missing libatk1.0-dev (>= 1.9.0) build-dep for ATK.
+  * Replace GTK_BINARY_VERSION in debian/*.in to set the binary version of
+    binary modules; it is set via debian/scripts/vars and currently in use in
+    update-gdkpixbuf-loaders.in and update-gtk-immodules.in.
+  * Remove fake support for version argument from update-gdkpixbuf-loaders and
+    update-gtk-immodules.
+  * New upstream development releases with API additions, and non-public API
+    changes and removals.
+    - Target at experimental.
+    - Update copyright from AUTHORS.
+    - Update upstream URL.
+    - Bump up libglib2.0-dev build-dep to >= 2.12.0.
+    - Add a libdirectfb-dev (>= 0.9.24) build-dep for DirectFB.
+    - Add a libcupsys2-dev (>= 1.2) build-dep for CUPS printing backend.
+    - Bump shlibs to >= 2.10.0.
+    - Update list of docs to ship; now includes NEWS. (Closes: #384225)
+    - Update watch file to track stable releases and use HTTP.
+    - Set GTK_BINARY_VERSION to 2.10.0.
+    - Add or bump Conflicts with packages shipping modules for the 2.4.0
+      binary version of Gtk: gtk2-engines-wonderland <= 1.0-3,
+      gtk2-engines-cleanice <= 2.4.0-1, gtk2-engines <= 1:2.6.10-2,
+      gtk2-engines-magicchicken <= 1.1.1-7, gtk2-engines-pixbuf <= 2.8.20-1,
+      gtk2-engines-gtk-qt <= 1:0.7-1, gtk2-engines-qtpixmap <= 0.28-1.1,
+      librsvg2-common <= 2.14.4-2, gtk2-engines-xfce <= 2.3.90.2-1,
+      libgnomeui-0 <= 2.14.1-2, tamil-gtk2im <= 2.2-4.2, imhangul <= 0.9.13-3,
+      iiimgcf <= 11.4.1870-7.3, scim-bridge <= 0.2.4-1, scim-gtk2-immodule <=
+      1.4.4-4, gtk-im-libthai <= 0.1.4-1, uim-gtk2.0 <= 1:1.2.1-3, libwmf-dev
+      <= 0.2.8.4-2, libwmf0.2-7 <= 0.2.8.4-2, swf-player <= 0.3.6-2.1.
+    - Replace 001_gtk+-2.2.0-buildfix-immodule patch with
+      001_static-linking-dont-query-immodules which has more chances to be
+      merged upstream; see GNOME #346531.
+    - Drop 006_gtk+-2.8.17-directfb patch, merged upstream.
+    - Refresh patches: 000_gtk+-2.0.6-exportsymbols,
+      003_default_fallback_icon_theme,
+      004_gtk+-ximian-gtk2-filesel-navbutton-5,
+      007_implicit_pointer_conversion_gdkdrawable_directfb.
+    - Update 070_mandatory-relibtoolize with libtoolize --force --copy &&
+      aclocal-1.7 -I m4macros && autoconf && automake-1.7.
+    - New patch, 002_static-linking-dont-build-perf, to avoid building the
+      perf measurement tools in static builds; see GNOME #346559; needs
+      the 001_gtk+-2.2.0-buildfix-immodule patch.
+    - New patch, 009_configurable-cairo-backend-module, to add a new
+      --with-cairo-backend flag which will select a cairo-$backend.pc
+      pkg-config module instead of the default of cairo.pc; see GNOME #351509.
+    - Configure with --with-cairo-backend=directfb for the dfb build.
+    - New patch, 010_gdk-require-cairo-module, to require the Cflags and Libs
+      from the cairo-directfb module (as $cairo_module); see GNOME #351519.
+    - New patch, 011_gdk-directfb-cvs-changes, backport of CVS only build
+      fixes to permit compilation against directfb 0.9.25.1.
+  * Fix bashishms in debian/rules. (Closes: #385473)
+  * Generate a Provides: gtk2.0-binver-@BINVER@ in libgtk2.0-@SONAME@ to track
+    the binary version of Gtk and to permit Gtk modules to depend on it.
+  * Define the flags for each flavor (shared, static, and udeb) in Makefile
+    vars and share the common flags.
+  * Only pass --host to configure if DEB_HOST_GNU_TYPE and DEB_BUILD_GNU_TYPE
+    differ.
+  * Stop shipping *.la and *.a files of modules (all module types).
+  * Move GTK_BINARY_VERSION back to rules.
+  * Use GTK_BINVER_DEP instead of BINVER.
+  * Build flavors out-of-tree; saves 25% of required build space (315 MB) and
+    some build time / IO load; this clutters the headers a little (full build
+    path is mentionned instead of ".") though.
+  * Rewrite and cleanup the build process completely.
+  * Install the full set of pkg-config files from the dfb flavor in
+    /usr/lib/pkgconfig/libgtk-directfb-2.0; to use this feature, set
+    PKG_CONFIG_PATH while invoking pkg-config (or configure); the
+    /usr/lib/pkgconfig/*directfb*.pc files will be removed when Debian sources
+    have been converted.
+  * In the same spirit, gdkconfig.h is in /usr/lib/gtk-2.0/include/directfb;
+    to use it, prepend -I/usr/lib/gtk-2.0/include/directfb to CFLAGS.
+  * Fix generation of /etc/gtk-2.0/gdk-pixbuf.loaders for the udeb.
+    (Closes: #382435)
+  * Build-depend on libcairo-directfb2-dev >= 1.2.4-2 to get PDF/PS support in
+    the directfb flavor of libcairo.
+  * Recommend the linked source packages in libgtk2.0-doc instead of simply
+    suggesting them.
+  * Rewrite update-gdkpixbuf-loaders and update-gtk-immodules.
+  * Drop double libatk1.0-dev build-dep.
+  * Empty the dependency_libs in the *.la files of libgtk2.0-dev.
+  * New immodule files handling with *.immodules files below
+    /usr/lib/gtk-2.0/<BINARY_VERSION>/immodule-files.d.
+    - New patch, 020_immodules-files-d, to split the module search path on
+      ":", as is done in Pango, prepend
+      /usr/lib/gtk-2.0/<BINARY_VERSION>/immodule-files.d to the search path,
+      and to read all *.immodules files when a directory is encountered in the
+      search path.
+    - Pre-generate
+      /usr/lib/gtk-2.0/<BINARY_VERSION>/immodule-files.d/libgtk2.0-0.immodules
+      for the shared library.
+    - Continue generating /etc/gtk-2.0/gtk.immodules until packages are
+      updated.
+  * Add the libpixmap engine to the udeb for the new Bladr GTK theme for g-i.
+  * New loader files handling with *.loaders files below
+    /usr/lib/gtk-2.0/<BINARY_VERSION>/loaders-files.d.
+    - New patch, 021_loader-files-d, to split the module search path on
+      ":", as is done in Pango, prepend
+      /usr/lib/gtk-2.0/<BINARY_VERSION>/loader-files.d to the search path,
+      and to read all *.loaders files when a directory is encountered in the
+      search path.
+    - Pre-generate
+      /usr/lib/gtk-2.0/<BINARY_VERSION>/loader-files.d/libgtk2.0-0.loaders
+      for the shared library and libgtk-directfb-2.0-0-udeb.loaders for the
+      udeb.
+    - Continue generating /etc/gtk-2.0/gdk-pixbuf.loaders until packages are
+      updated.
+    - This particular patch uses two ugly workarounds and needs work before
+      being sent upstream.
+  * New Debhelper-based command, dh_gtkmodules, to create module files for IM
+    modules and GdkPixbuf loaders; it will still add a dependency on the
+    binary version of Gtk for other modules.
+  * Make use of the new dh_gtkmodules during the build (override the path to
+    gtk-query-immodules-2.0 and gdk-pixbuf-query-loaders.
+  * Add ${misc:Depends} to gtk2-engines-pixbuf.
+
+ -- Loic Minier <lool@dooz.org>  Tue, 19 Sep 2006 15:13:38 +0200
+
+gtk+2.0 (2.8.20-2) unstable; urgency=low
+
+  * New patch, 009_revert-gdkdrawable-directfb, to revert a fix for Italic
+    letters which caused ugly unneeded horizontal/vertical lines; thanks
+    Davide Viti. (Closes: #386860)
+  * Fix typo, install-dfb depends on build-dfb, not build-shared.
+  * Fix typo (DFB_PKGFIR versus DFB_PKGDIR), use the BUILD_DFB_DIR version of
+    gdk-pixbuf-query-loaders, and set LD_LIBRARY_PATH to the udeb's /usr/lib;
+    should fix the empty /etc/gtk-2.0/gdk-pixbuf.loaders. (Closes: #382435)
+  * Ship all engines of the DirectFB build in the udeb, that is
+    engines/libpixmap.so.
+
+ -- Loic Minier <lool@dooz.org>  Wed, 20 Sep 2006 21:36:04 +0200
+
+gtk+2.0 (2.8.20-1) unstable; urgency=low
+
+  * New upstream releases; no API changes.
+
+ -- Loic Minier <lool@dooz.org>  Mon, 14 Aug 2006 16:52:04 +0200
+
+gtk+2.0 (2.8.18-7) unstable; urgency=medium
+
+  * Rename patches to reflect the order in which they are applied:
+    - 000_gtk+-2.2.0-buildfix-immodule to 001_gtk+-2.2.0-buildfix-immodule
+    - 001_default_fallback_icon_theme to 003_default_fallback_icon_theme
+    - 001_gtk+-ximian-gtk2-filesel-navbutton-5 to
+      004_gtk+-ximian-gtk2-filesel-navbutton-5
+    - 002_xpmico to 005_xpmico
+    - 003_gtk+-2.8.17-directfb to 006_gtk+-2.8.17-directfb
+    - 005_implicit_pointer_conversion to
+      007_implicit_pointer_conversion_gdkdrawable_directfb
+    - 006_implicit_pointer_conversion to
+      008_implicit_pointer_conversion_gdkgc_directfb
+  * Change the 000_gtk+-2.0.6-exportsymbols, and
+    001_gtk+-2.2.0-buildfix-immodule patches to only patch the
+    non-autogenerated files.
+  * Rename 004_reautoconf to 070_mandatory-relibtoolize; update it for the
+    previous changes; use an older autoconf version to work around a bug
+    in the glib-gettext macro which broke localization in dialog boxes; thanks
+    Mike Hommey.
+
+ -- Loic Minier <lool@dooz.org>  Sun,  6 Aug 2006 11:49:48 +0200
+
+gtk+2.0 (2.8.18-6) unstable; urgency=low
+
+  * 005_implicit_pointer_conversion.patch: patch from Dann Frazier to
+    fix an implicit pointer conversion error on 64-bit architectures
+    (closes: #381081).
+  * 006_implicit_pointer_conversion.patch: fix another implicit
+    conversion by allowing deprecated functions in the necessary header
+    file (closes: #381082).
+
+ -- Josselin Mouette <joss@debian.org>  Wed,  2 Aug 2006 14:48:54 +0200
+
+gtk+2.0 (2.8.18-5) unstable; urgency=low
+
+  [ Loic Minier ]
+  * Set Priority to extra to sync with overrides.
+
+  [ Josselin Mouette ]
+  * Set priority to extra for the udeb.
+  * Bump build dependencies for libcairo to the stable version.
+  * Lots of cleanup in debian/rules.
+  * Rename directfb packages to libgtk-directfb-2.0-*.
+  * Move .a and .la files from the engine package to the development
+    package.
+    + Add appropriate Replaces: field.
+
+ -- Josselin Mouette <joss@debian.org>  Sun, 30 Jul 2006 18:21:37 +0200
+
+gtk+2.0 (2.8.18-4) experimental; urgency=low
+
+  * Bump libcairo build dependencies.
+  * Only install the PNG loader in the udeb.
+  * Rebuild against a fixed glib.
+
+ -- Josselin Mouette <joss@debian.org>  Mon, 26 Jun 2006 22:34:27 +0200
+
+gtk+2.0 (2.8.18-3) experimental; urgency=low
+
+  [ Loïc Minier ]
+  * Bump libgtk2.0-dev dependency and build-dep on libx11-dev to >= 2:1.0.0-6
+    as it ships x11.pc which ends up in the Requires of gdk-x11-2.0.pc.
+    (Closes: #326199, #370693)
+    [debian/control, debian/control.in]
+
+  [ Josselin Mouette ]
+  * 003_gtk+-2.8.17-directfb.patch: new patch, bringing a new directfb
+    backend.
+  * 004_reautoconf.patch: new patch, result of "libtoolize --force
+    --copy; aclocal; autoheader; automake -acf; autoconf; rm -rf
+    autom4te.cache" with the previous patches applied.
+  * Make 3 new packages: libgtk+2.0-directfb0-udeb,
+    libgtk+2.0-directfb-dev and  libgtk+2.0-directfb0.
+  * Add a new build flavour for directfb (only the shared version).
+  * Use chrpath to remove the rpath in the udeb.
+  * Generate a fake shlibs.local to handle all intra-gtk dependencies by
+    hand.
+  * Switch to debhelper compatibility mode 5 and require 5.0.22.
+  * Standards-version is 3.7.2.
+  * Break the circular dependency between libgtk2.0-0, libgtk2.0-bin and
+    libgtk2.0-common (closes: #309604).
+    + Remove libgtk2.0-common dependency on libgtk2.0-0.
+    + Remove libgtk2.0-0 dependency on libgtk2.0-bin.
+    + Use ${binary:Version} and ${source:Version} to ensure strict
+      dependencies.
+    + Build-depend on dpkg-dev 1.13.19.
+    + Invert the libgtk2.0-common -> libgtk2.0-0 symbolic link.
+    + libgtk2.0-common.preinst, libgtk2.0-0.postinst: dance the symbolic
+      link samba.
+    + Move support binaries and scripts to libgtk2.0-0 and make
+      libgtk2.0-bin a binary-all package containing only scripts.
+    + Move /usr/sbin/update-* calls to libgtk2.0-0.
+    + update-*: call binaries at their new location.
+
+ -- Josselin Mouette <joss@debian.org>  Mon, 26 Jun 2006 22:31:14 +0200
+
+gtk+2.0 (2.8.18-1) unstable; urgency=low
+
+  * New upstream version:
+    Bugs fixed:
+    - search box positioning has some bugs
+    - Gdk does not translate VK_NUMPADx to GDK_KP_x
+    - sanely handle late (re)setting of dnd image
+    - Text is shifted off-by-one in Add to panel
+    - gtk_widget_create_pango_layout docs typo
+    - GtkLayout In GtkScrolledWindow does not receive the scroll_event
+    - gtktreeview has RTL problems with toggle buttons if using gtktreestore
+      as a model
+    - Wrong drop location in GtkEntry
+    - GtkImage animation CRITICALS on switching themes
+    - DnD: Conditional jump or move depends on uninitialised value
+    - cursor blocked to dnd mode after using shift and dnd on a GtkCalendar
+    - Crashes while creating source code w/GtkFontSelection
+    - the right edge tab does not appear when switching tab
+    - Warning in gtk_paned_compute_position
+    - gdk should set resolution on PangoCairoFontmap, not PangoCairoContext
+    - GtkTreeView does not resize correctly
+    - gtk_tree_view_get_cell_area() forgets depth-one expander
+    - expander animation not working in RTL mode
+    - Multiple issues discovered by Coverity
+    - Make gtk_file_chooser_button_new() friendlier for language bindings
+
+ -- Sebastien Bacher <seb128@debian.org>  Tue, 30 May 2006 17:02:26 +0200
+
+gtk+2.0 (2.8.17-1) unstable; urgency=low
+
+  * New upstream version:
+    Bugs fixed:
+    - Expander disclosure button is too small
+    - gtk_image_clear doesn't cause redraw
+    - typo in configure.in yields suspicious warning
+    - gtk_icon_view_set_cursor causes Segmentation fault
+    - garbage output of --help in non UTF-8 locale
+    - GtkNotebook does not destroy its children on destroy()
+    - TreeView DnD between-row highlight colo
+    - Gtk-Criticals occur when scrolling a text_view that is not realized
+    - Hidden menubar still activates submenus with kbd
+    - GtkTreeItem broken
+    -  Clean up button press handling (use one-grab-op-at-a-time pattern)
+    - broken scrolling when selecting
+    - GTK+ File-chooser dialog crashes
+    - Nautilus crashes when dragging icons to another screen
+    - mixed line separators confuse gtk_text_iter_ends_line
+    - Textview child is covered by window border
+    - gdk_pixbuf_loader_new_with_type(): What image types are allowed?
+    - Missing progress bar label
+    - Fix a problem which caused grab-notify signal to be missed in some cases
+  * debian/control.in:
+    - clear the Build-Depends on xlibs-static-pic | xlibs-pic, not required
+    - updated the Build-Depends on libpango1.0-dev so it build with
+      the xorg transitioned version
+  * * debian/patches/001_default_fallback_icon_theme.patch:
+    - set the default fallback icon theme to "gnome", fixes the issues with
+      the moves of icons from hicolor to gnome
+
+ -- Sebastien Bacher <seb128@debian.org>  Sun,  9 Apr 2006 21:54:11 +0200
+
+gtk+2.0 (2.8.16-1) unstable; urgency=low
+
+  * New upstream version
+
+ -- Sebastien Bacher <seb128@debian.org>  Wed, 15 Mar 2006 19:26:46 +0100
+
+gtk+2.0 (2.8.15-1) unstable; urgency=low
+
+  * New upstream version:
+    * Bugs fixed:
+      - Keys P and N in "open file" dialog have special meaning
+      - MS-Windows theme (GTK-Wimp) shows all funky characters
+      - Optimize gdk on win32
+      - Hollow polygons have wrong linecaps
+      - panel crash with a11y enabled
+    * Updated translations (bg,bn,cs,eu,ro)
+
+ -- Sebastien Bacher <seb128@debian.org>  Tue, 14 Mar 2006 15:41:56 +0100
+
+gtk+2.0 (2.8.13-1) unstable; urgency=low
+
+  * New upstream version:
+    * Bugs fixed:
+    - Can't select some items in GtkIconView
+    - gtk_icon_theme_list_icons: example contexts don't work
+    - gnopernicus crashes on changing display screen source for magnifier
+    - evince crashes in gdk_region_union_with_rect
+    - Small error in _gdk_gc_update_context
+    - gtk.Notebook.get_current_page() returns incorrect page number
+      when pages hidden
+    - GtkAboutDialog not responsive to Escape key
+    - GtkNotebook popup menu not keynavigatable
+    - GtkRadioButton does not issue notify::active
+    - Make more use of G_DISABLE_ASSERT in TextView code
+    * Updated translations
+
+ -- Sebastien Bacher <seb128@debian.org>  Sat, 25 Feb 2006 23:56:58 +0100
+
+gtk+2.0 (2.8.12-1) unstable; urgency=low
+
+  * New upstream bugfix release.
+  * [debian/copyright] Updated FSF's address.
+
+ -- J.H.M. Dassen (Ray) <jdassen@debian.org>  Sun, 12 Feb 2006 14:11:11 +0100
+
+gtk+2.0 (2.8.11-1) unstable; urgency=low
+
+  * New upstream version
+    * Avoid memory overruns in the pixbuf theme engine with nonsensical
+      gradient specifications.  [Matthias]
+    * Bugs fixed:
+    - Cursor doesn't move as expected
+    - Segfault from combination of gtk_container_set_resize_mode()
+      and GtkComboBox
+    - segfault in update_cursor on amd64
+    - eog crashes at launch under AIX
+    - "~" should bring up the location dialog
+    - gtk_text_layout_get_cursor_locations() chokes on layout=0x0
+    * Documentation improvements [Federico Mena Quintero]
+    * Translation updates (es,pt_BR,zh_HK,zh_TW)
+
+ -- Sebastien Bacher <seb128@debian.org>  Fri, 27 Jan 2006 22:28:05 +0100
+
+gtk+2.0 (2.8.10-1) unstable; urgency=low
+
+  * New upstream version
+  * debian/control.in:
+    - updated the glib requirement
+  * debian/patches/001_fs_documents.patch:
+    - dropped, stick with upstream behaviour rather
+
+ -- Sebastien Bacher <seb128@debian.org>  Thu, 12 Jan 2006 13:34:37 +0100
+
+gtk+2.0 (2.8.9-2) unstable; urgency=low
+
+  * Upload to unstable
+
+ -- Sebastien Bacher <seb128@debian.org>  Thu, 15 Dec 2005 15:13:32 +0100
+
+gtk+2.0 (2.8.9-1) experimental; urgency=low
+
+  * New upstream version:
+    Bugs fixed:
+    - File chooser filter behaves weird
+    - 2.8.4 to 2.8.6: sound-juicer crash, fileselector assertions
+    - On unsetting the Model, GtkTreeView does not clear
+      it's associated TreeSelection
+    - Crash on selecting a file of null mime-type
+    - gtktoolbutton leaks a pixbuf
+    - GdkEvent leaked in gtktreeview.c / gtk_tree_view_key_press
+    - Typo in trap_activate_cb()
+    - gtkcalendar.c: The identifier is already declared.
+    - gtk_menu_attach_to_widget() does not take NULL detacher
+    - Unhinted fonts are measured incorrectly and drawing
+      problems occur as a result
+    - unwanted scrolling in recent gtk
+    - Toolbars without icons are invisible in icon-only mode
+    - Search-entry in the TreeView not working properly
+    - gtktoolbutton.c:562: warning: 'image' is used
+      uninitialized in this function
+    - reference count of textbuffer increases with each paste
+    - gtk_selection_data_get_uris leaks memory
+    Other changes:
+    - Remove GMemChunk from public header files to
+      support building against GLib 2.10
+    - Report errors in option parsing
+    - Merge upstream xdgmime changes to handle duplicate glob patterns
+
+ -- Sebastien Bacher <seb128@debian.org>  Sat, 10 Dec 2005 18:22:50 +0100
+
+gtk+2.0 (2.8.8-1) experimental; urgency=low
+
+  * New upstream version:
+    GtkFileChooser:
+     - Make F2 work for renaming bookmarks
+    GtkEntry:
+     - Turn off input methods in password entries
+    - Other fixes * Documentation improvements
+    - Updated translations
+
+ -- Sebastien Bacher <seb128@debian.org>  Tue, 29 Nov 2005 16:00:32 +0100
+
+gtk+2.0 (2.8.7-1) experimental; urgency=low
+
+  * New upstream version.
+  * Security fixes:
+    - Add check to XPM reader to prevent integer overflow for specially crafted
+      number of colors (CVE-2005-3186) (Closes: #339431).
+    - Fix endless loop with specially crafted number of colors (CVE-2005-2975).
+  * debian/patches/001_fs_documents.patch:
+    - updated.
+  * debian/rules:
+    - fix confusing cp usage.
+
+  [ Loic Minier ]
+  * Drop xlibs-dev deps and build-deps.
+    [debian/control, debian/control.in]
+
+ -- Sebastien Bacher <seb128@debian.org>  Wed, 16 Nov 2005 11:54:11 +0100
+
+gtk+2.0 (2.8.3-1) experimental; urgency=low
+
+  * New upstream version:
+    - Fix problems with the handling of initial settings
+      for font options and cursor themes.
+    - Add a --ignore-theme-index option to gtk-update-icon-cache.
+
+ -- Jordi Mallach <jordi@debian.org>  Thu,  1 Sep 2005 19:45:50 +0200
+
+gtk+2.0 (2.8.2-1) experimental; urgency=low
+
+  * New upstream version:
+    - Fix a crash with custom icon themes, which affected
+      the gnome-theme-manager.
+    - Make sure font and cursor settings are propaged down
+      to the screen initially.
+  * debian/control.in:
+    - require the current pango.
+
+ -- Sebastien Bacher <seb128@debian.org>  Thu, 25 Aug 2005 00:36:18 +0200
+
+gtk+2.0 (2.8.1-1) experimental; urgency=low
+
+  * New upstream version:
+    - gtk-update-icon-cache no longer stores copies of symlinked icons,
+      and it has a --index-only option to omit image data from the cache.
+    - Make large GtkSizeGroups more efficient.
+    - Improve positioning of menus in GtkToolbar.
+    - Make scrolling work on unrealized icon views.
+    - Avoid unnecessary redraws on range widgets.
+    - Make sure that all GTK+ applications reload icon themes promptly.
+    - Ensure that gdk_pango_get_context() and gtk_widget_get_pango_context()
+      use the same font options and dpi value.
+    - Multiple memory leak fixes.
+  * debian/control.in:
+    - updated the libgtk2.0-dev Depends according to the changes.
+  * debian/rules:
+    Add --enable-explicit-deps=yes to make sure stuff like x11 gets listed as a
+    Requires: in gdk(-x11)-2.0.pc, because otherwise linkage against -lX11 and
+    friends doesn't get carried through.  Whether or not this is correct is
+    arguable, since libgdk-x11-2.0.so.0* ends up linked against it anyway, but
+    stuff like gnome-panel seems to be relying on this transience.
+    Change by Daniel Stone.
+
+ -- Sebastien Bacher <seb128@debian.org>  Wed, 24 Aug 2005 11:24:16 +0200
+
+gtk+2.0 (2.8.0-1) experimental; urgency=low
+
+  * New upstream version.
+  * debian/control.in:
+    - build with the new cairo (Closes: #323705).
+    - updated the Build-Depends for xorg (Closes: #323080).
+  * debian/copyright:
+    - use License instead of Copyright (Closes: #323209).
+  * debian/patches/001_fs_documents.patch:
+    - default to Documents.
+  * debian/rules:
+    - updated the shlibs.
+  * debian/watch:
+    - updated.
+
+ -- Sebastien Bacher <seb128@debian.org>  Thu, 18 Aug 2005 12:19:41 +0200
+
+gtk+2.0 (2.7.2-1) experimental; urgency=low
+
+  * New upstream version.
+  * debian/control.in:
+    - updated the Build-Depends.
+  * debian/rules:
+    - updated the shlibs.
+    - use cairo.
+  * debian/watch:
+    - updated.
+
+ -- Sebastien Bacher <seb128@debian.org>  Tue, 12 Jul 2005 01:06:55 +0200
+
+gtk+2.0 (2.6.8-1) unstable; urgency=low
+
+  * New upstream version.
+  * debian/patches/003_focus_issues.patch:
+    - fixed with the new version.
+
+ -- Sebastien Bacher <seb128@debian.org>  Thu, 16 Jun 2005 12:52:35 +0200
+
+gtk+2.0 (2.6.7-2) unstable; urgency=low
+
+  * Upload to unstable.
+  * Forward patches from 2.6.4 branch:
+    + 003_focus_issues.patch: stolen from CVS HEAD to fix focus issues.
+    + debian/gtk-tutorial.devhelp: updated to reflect the reality of the
+      html files.
+  * Loïc Minier:
+    + Document the configuration of Emacs-style key bindings in README.Debian,
+      with additional instructions for GNOME users. [debian/README.Debian]
+      (Closes: #309530)
+
+ -- Josselin Mouette <joss@debian.org>  Mon,  6 Jun 2005 22:39:27 +0200
+
+gtk+2.0 (2.6.7-1) experimental; urgency=low
+
+  * New upstream version:
+    - Fix compilation with gcc 4.0 (Closes: #303646).
+  * debian/rules:
+    - clean from the mips changes.
+  * debian/patches/002_bmp.patch:
+    - the new version fixes that.
+  * debian/patches/004_fs_newdir.patch:
+    - the new version fixes that.
+
+ -- Sebastien Bacher <seb128@debian.org>  Thu, 14 Apr 2005 22:06:53 +0200
+
+gtk+2.0 (2.6.4-1) unstable; urgency=medium
+
+  * New upstream release.
+  * debian/patches/004_fs_newdir.patch:
+    - fix a crash in the fileselector when creating a directory.
+  * debian/patches/003_iconcache.patch:
+    - this bug is fixed in the new version.
+  * debian/patches/004_mipsbuild.patch:
+    - dropped, this change is not required.
+  * debian/patches/002_bmp.patch:
+     - fix CAN-2005-0891: BMP double free Dos (Closes: #303141).
+
+ -- Sebastien Bacher <seb128@debian.org>  Tue,  5 Apr 2005 21:09:01 +0200
+
+gtk+2.0 (2.6.2-4) unstable; urgency=high
+
+  * Sjoerd Simons:
+    - debian/patches/003_iconcache.patch
+      + Updated. Let updateiconcache.c include config.h so it's correctly build
+        with large file support (Closes: #295777).
+  * Sebastien Bacher:
+    - debian/shlibs.local:
+      + dropped, fix the self depends (Closes: #296175).
+  * Loic Minier:
+    - debian/control*
+      + added gtk2-engines-pixbuf subsection and priority to sync with
+        the override.
+  * Use high urgency so that icon themes can propagate to testing.
+
+ -- Josselin Mouette <joss@debian.org>  Wed,  2 Mar 2005 22:28:38 +0100
+
+gtk+2.0 (2.6.2-3) unstable; urgency=low
+
+  * Patch from Steve Langasek <vorlon@debian.org>:
+    Add a --disable-testsuite argument to upstream configure, to permit
+    skipping the testsuite on architectures where large static binaries
+    are currently problematic (i.e., mips).  Closes: #295048.
+
+ -- Sebastien Bacher <seb128@debian.org>  Sun, 13 Feb 2005 19:23:39 +0100
+
+gtk+2.0 (2.6.2-2) unstable; urgency=low
+
+  * debian/libgtk2.0-bin.postinst:
+    - don't run gtk-update-icon-cache, the themes should do that
+      (Closes: #293568).
+  * debian/patches/003_iconcache.patch:
+    - should fix the gtk-update-icon-cache issue on sparc.
+
+ -- Sebastien Bacher <seb128@debian.org>  Sun,  6 Feb 2005 19:57:57 +0100
+
+gtk+2.0 (2.6.2-1) unstable; urgency=low
+
+  * New upstream release:
+    - fix the loop in gtkdialog (Closes: #291051).
+    - should fix the issue on sparc (Closes: #293711).
+
+ -- Sebastien Bacher <seb128@debian.org>  Sun,  6 Feb 2005 00:16:52 +0100
+
+gtk+2.0 (2.6.1-2) unstable; urgency=low
+
+  * Upload to unstable.
+  * debian/patches/004_gtkmodules.patch:
+    - don't reverse the order of modules, that fix a crash with the modules.
+
+ -- Sebastien Bacher <seb128@debian.org>  Wed,  2 Feb 2005 18:28:09 +0100
+
+gtk+2.0 (2.6.1-1) experimental; urgency=low
+
+  * New upstream release.
+
+ -- Sebastien Bacher <seb128@debian.org>  Sun,  9 Jan 2005 14:23:07 +0100
+
+gtk+2.0 (2.6.0-1) experimental; urgency=low
+
+  * New upstream release (Closes: #275239).
+  * debian/control.in:
+    - create a gtk2-engines-pixbuf package.
+    - recommends hicolor-icon-theme (Closes: #287334).
+    - rename libgtk2.0-dbg to libgtk2.0-0-dbg.
+    - updated the Build-Depends.
+  * debian/gtk2-engines-pixbuf.files:
+    - added.
+  * debian/libgtk2.0-bin.files:
+    - install gtk-update-icon-cache here.
+  * debian/libgtk2.0-bin.postinst:
+    - call gtk-update-icon-cache.
+  * debian/patches/001_gtk+-debian-aclocal-pass_all.patch:
+    - removed, should not be needed with the new version.
+  * debian/patches/003_treeview-typeahead.patch,
+    debian/patches/003_filechooser-search.patch,
+    debian/patches/004_treeview-activate.patch,
+    debian/patches/005_modifiers.patch:
+    - removed, these changes are in the new version.
+  * debian/rules:
+    - updated the shlibs.
+    - use dh_strip to make the debug package.
+  * update-gtk-immodules.in:
+  * update-gdkpixbuf-loaders.in:
+    - module version is 2.4.0.
+  * debian/watch:
+    - updated.
+
+ -- Sebastien Bacher <seb128@debian.org>  Wed, 29 Dec 2004 18:55:11 +0100
+
+gtk+2.0 (2.4.14-2) unstable; urgency=low
+
+  * debian/patches/003_filechooser-search.patch:
+    - open the path entry if "/" is enter in the file-selector.
+  * debian/patches/004_treeview-activate.patch:
+    - typeahead active the row.
+  * debian/patches/005_modifiers.patch:
+    - accept shift-/ for bringing up the location popup.
+
+ -- Sebastien Bacher <seb128@debian.org>  Tue, 21 Dec 2004 16:21:15 +0100
+
+gtk+2.0 (2.4.14-1) unstable; urgency=low
+
+  * New upstream release (Closes: #286021).
+  * debian/control.in:
+    - set myself as maintainer.
+  * debian/patches/003_treeview-typeahead.patch:
+    - backport of the typeahead feature for the treeviews.
+
+ -- Sebastien Bacher <seb128@debian.org>  Sun, 19 Dec 2004 14:55:07 +0100
+
+gtk+2.0 (2.4.13-1) unstable; urgency=low
+
+  * New upstream release:
+    - make new notebook tabs appear again (Closes: #276266).
+
+ -- Sebastien Bacher <seb128@debian.org>  Wed, 13 Oct 2004 16:48:13 +0200
+
+gtk+2.0 (2.4.11-1) unstable; urgency=low
+
+  * New upstream release.
+
+ -- Sebastien Bacher <seb128@debian.org>  Mon, 11 Oct 2004 19:48:52 +0200
+
+gtk+2.0 (2.4.10-1) unstable; urgency=low
+
+  * New upstream release.
+  * debian/patches/002_xpmico.patch:
+    - updated, the two xpm fixes are in the new version.
+
+ -- Sebastien Bacher <seb128@debian.org>  Sun, 19 Sep 2004 00:19:27 +0200
+
+gtk+2.0 (2.4.9-2) unstable; urgency=high
+
+  * debian/patches/002_xpmico.patch:
+    - fix CAN-2004-0782 Heap-based overflow in pixbuf_create_from_xpm.
+    - fix CAN-2004-0783 Stack-based overflow in xpm_extract_color.
+    - fix CAN-2004-0788 ico loader integer overflow.
+
+ -- Sebastien Bacher <seb128@debian.org>  Fri, 17 Sep 2004 12:23:02 +0200
+
+gtk+2.0 (2.4.9-1) unstable; urgency=medium
+
+  * GNOME team upload.
+  * New upstream release.
+  * debian/patches/002_gtk+-pixbuf-breakage.patch: removed, included in
+    upstream version 2.4.8.
+
+ -- Jordi Mallach <jordi@debian.org>  Thu, 26 Aug 2004 14:41:17 +0200
+
+gtk+2.0 (2.4.7-1) unstable; urgency=medium
+
+  * GNOME team upload.
+  * New upstream release.
+  * debian/patches/002_gtk+-pixbuf-breakage.patch: new, apply patch
+    from CVS to fix thumbnail corruption in nautilus.
+
+ -- Jordi Mallach <jordi@debian.org>  Wed, 25 Aug 2004 20:12:28 +0200
+
+gtk+2.0 (2.4.4-2) unstable; urgency=medium
+
+  * Rebuilt with libtiff4.
+  * debian/control.in:
+    - Build-Depends on libtiff4-dev.
+
+ -- Sebastien Bacher <seb128@debian.org>  Wed, 28 Jul 2004 23:11:54 +0200
+
+gtk+2.0 (2.4.4-1) unstable; urgency=low
+
+  * New upstream release
+    - fix the problem with directories displayed twice in the file chooser
+      (Closes: #249057).
+  * debian/control.in:
+    - libgtk2.0-bin Conflicts with old libgtk2.0-dev.
+
+ -- Sebastien Bacher <seb128@debian.org>  Sun, 11 Jul 2004 00:33:45 +0200
+
+gtk+2.0 (2.4.3-3) unstable; urgency=low
+
+  * debian/control.in:
+    - since manpages have moved from libgtk2.0-dev to libgtk2.0-bin we need
+      to update the Replaces.
+
+ -- Sebastien Bacher <seb128@debian.org>  Mon,  5 Jul 2004 21:15:25 +0200
+
+gtk+2.0 (2.4.3-2) unstable; urgency=low
+
+  * debian/libgtk2.0-bin.files:
+    - moved gdk-pixbuf-query-loader and gtk-query-immodules-2.0 manpages
+      to libgtk2.0-bin. (Closes: #257399).
+  * debian/libgtk2.0-doc.doc-base.gtk-faq,
+    debian/libgtk2.0-doc.doc-base.gtk-tutorial:
+    - changed index.html with book1.html.
+  * Included devehelp files from Richard Cohen <richard@daijobu.co.uk>
+    for the faq and the tutorial (Closes: #256844).
+
+ -- Sebastien Bacher <seb128@debian.org>  Sat,  3 Jul 2004 12:14:38 +0200
+
+gtk+2.0 (2.4.3-1) unstable; urgency=medium
+
+  * New upstream release
+    - fix the button size allocation logic (Closes: #253971, #253974).
+  * debian/rules
+    - updated the shlibs.
+
+ -- Sebastien Bacher <seb128@debian.org>  Tue, 15 Jun 2004 11:29:13 +0200
+
+gtk+2.0 (2.4.2-1) unstable; urgency=low
+
+  * New upstream release (Closes: #252690).
+
+ -- Sebastien Bacher <seb128@debian.org>  Sat,  5 Jun 2004 17:23:57 +0200
+
+gtk+2.0 (2.4.1-4) unstable; urgency=low
+
+  * Conflict with librsvg2-common << 2.6.3-1 (closes: #250714, #250647).
+
+ -- Josselin Mouette <joss@debian.org>  Tue, 25 May 2004 14:15:22 +0200
+
+gtk+2.0 (2.4.1-3) unstable; urgency=low
+
+  * GNOME Team Upload.
+  * Upload to unstable
+    + close bug fixed in experimental uploads
+      (Closes: #161244, #201429, #201507, #203677, #208744, #223316, #228603)
+      (Closes: #232081, #234902, #238479, #241860)
+  * Marc Brockschmidt <he@debian.org>
+   + debian/rules: Really, *really* surpress warnings when removing directories
+     (using >/dev/null 2>&1 instead of 2>&1 >/dev/null)
+
+ -- Sebastien Bacher <seb128@debian.org>  Sat, 22 May 2004 15:23:21 +0200
+
+gtk+2.0 (2.4.1-2) experimental; urgency=low
+
+  * debian/control.in:
+    + Conflict with old versions of packages that need a rebuild to work with
+      gtk+2.4 to force the updates.
+
+ -- Sebastien Bacher <seb128@debian.org>  Sat, 15 May 2004 23:24:07 +0200
+
+gtk+2.0 (2.4.1-1) experimental; urgency=low
+
+  * New upstream release.
+  * Akira TAGOH <tagoh@debian.org>
+  + debian/control:
+    - added libgtk2.0-0 to Depends for libgtk2.0-common. (from 2.2.4-6).
+    - libgtk2.0-dev requires libxext-dev. (Closes: #247469)
+  * Sebastien Bacher <seb128@debian.org>
+  + debian/rules:
+    - updated shlib to 2.4.1.
+
+ -- Sebastien Bacher <seb128@debian.org>  Wed,  5 May 2004 23:32:54 +0200
+
+gtk+2.0 (2.4.0-4) experimental; urgency=low
+
+  * Akira TAGOH <tagoh@debian.org>
+  + debian/control:
+    - moved arch-independent files to libgtk2.0-common again.
+    - separated arch-dependent files to libgtk2.0-bin.
+
+ -- Akira TAGOH <tagoh@debian.org>  Sat, 24 Apr 2004 02:11:52 +0900
+
+gtk+2.0 (2.4.0-3) experimental; urgency=low
+
+  * Akira TAGOH <tagoh@debian.org>
+  + debian/rules:
+    - modified the sed script to strip the version properly.
+      (closes: Bug#241860)
+    - clean up.
+  + debian/control:
+    - updated the dependencies for the separated xlibs-dev. (from 2.2.4-4)
+    - separated arch-independent data to libgtk2.0-data package.
+      (from 2.2.4-4)
+
+ -- Akira TAGOH <tagoh@debian.org>  Fri, 23 Apr 2004 22:43:58 +0900
+
+gtk+2.0 (2.4.0-2) experimental; urgency=low
+
+  * debian/control.in:
+    + Added build dependency on libxcursor-dev. (Closes: #239886)
+
+  Sebastien Bacher <seb128@debian.org>:
+  * debian/rules:
+    + Updated shver.
+  * debian/control.in:
+    + Added again Build-Depends removed in 2.4.0-1.
+
+ -- J.H.M. Dassen (Ray) <jdassen@debian.org>  Thu, 25 Mar 2004 11:18:48 +0100
+
+gtk+2.0 (2.4.0-1) experimental; urgency=low
+
+  * First upload of new GTK+ branch in experimental (Closes: #238479):
+    + back out locale-dependent interpretation of KP_Decimal (Closes: #234902).
+    + change scrolling method (Closes: #161244).
+    + first day of the week depends of the locale (Closes: #228603).
+    + fix fileselector multiple selection handling after keyboard validation
+      (Closes: #208744).
+    + fix gtktreeview crash when expanding nodes (Closes: #232081).
+    + fix quotes missing in gtk-2.0.m4 (Closes: #223316).
+    + use the new file selector (Closes: #203677, #201429, #201507).
+    + and probably a lot of other bug fixes and improvements ...
+  * Sebastien Bacher <seb128@debian.org>:
+    * debian/control.in:
+      - removed Build-Depends on docbook-utils and linuxdoc-tools-text.
+    * patches/001_gtk+-debian-docfix-dtds.patch:
+      - removed since we have a xml catalog now.
+  * Rob Taylor <robtaylor@fastmail.fm>:
+    * debian/control.in, debian/sources, debian/scripts/vars, debian/watch:
+      - updated for 2.4.0.
+    * debian/patches/:
+      - 002_gtk+-debian-freetype.patch:
+        + removed, not needed any more, configure already has the changes.
+      - 000_gtk+-2.2.4-non-weak-symbols.patch:
+        + removed, fixed in upstream source.
+      - 000_gtk+-2.2.4-socketfocus.patch:
+        + removed, fixed in upstream source.
+      - 001_gtk+-debian-aclocal-pass_all.patch :
+        + updated.
+      - 000_gtk+-2.2.0-buildfix-immodule.patch
+        + updated.
+      - 000_gtk+-debian-xinerama-pic.patch
+        + updated.
+
+ -- Sebastien Bacher <seb128@debian.org>  Mon, 22 Mar 2004 22:00:09 +0100
+
+gtk+2.0 (2.2.4-6) unstable; urgency=low
+
+  * Akira TAGOH <tagoh@debian.org>
+  + debian/control:
+    - added libxt-dev to fix FTBFS. (closes: Bug#246450)
+    - added libgtk2.0-0 to Depends for libgtk2.0-common.
+
+ -- Akira TAGOH <tagoh@debian.org>  Tue,  4 May 2004 11:30:56 +0900
+
+gtk+2.0 (2.2.4-5) unstable; urgency=low
+
+  * Akira TAGOH <tagoh@debian.org>
+  + debian/control:
+    - moved arch-independent files to libgtk2.0-common again.
+    - separated arch-dependent files to libgtk2.0-bin.
+
+ -- Akira TAGOH <tagoh@debian.org>  Sat, 24 Apr 2004 01:12:08 +0900
+
+gtk+2.0 (2.2.4-4) unstable; urgency=low
+
+  * Akira TAGOH <tagoh@debian.org>
+  + debian/rules:
+    - bumped the shlib version to 2.2.1-3. (closes: Bug#208671)
+  + debian/control:
+    - separated arch-independent data to libgtk2.0-data package.
+      (closes: Bug#233396)
+    - fixed the dependencies for the separated xlibs-dev.
+      (closes: Bug#241782, Bug#241522)
+  + debian/libgtk2.0-data.{dir,files}:
+    - added.
+
+ -- Akira TAGOH <tagoh@debian.org>  Thu, 22 Apr 2004 00:42:02 +0900
+
+gtk+2.0 (2.2.4-3) unstable; urgency=low
+
+  * debian/patches/:
+    - 002_gtk+-debian-freetype.patch: patch from Daniel Schepler to fix the
+      build failure due to freetype (Closes: #225129).
+
+ -- Sebastien Bacher <seb128@debian.org>  Sat, 27 Dec 2003 13:00:17 +0100
+
+gtk+2.0 (2.2.4-2) unstable; urgency=low
+
+  * debian/control:
+    - added Uploaders to maintain as team.
+    - added gnome-pkg-tools to Build-Depends.
+  * debian/gtk-options.7:
+    - included a manpage with the help on the options (Closes: Bug#216897).
+  * debian/libgtk2.0-doc.doc-base.gtk-faq
+  * debian/libgtk2.0-doc.doc-base.gtk-tutorial:
+    - replaced book1.html by index.html (closes: Bug#215382).
+  * debian/patches/:
+    - 000_gtk+-2.2.4-socketfocus.patch: new patch to fix a GtkSocket focus
+      problem that hang the system tray applet.
+      (closes: Bug#210813, Bug#212772).
+    - 001_gtk+-ximian-gtk2-filesel-navbutton-5.patch: updated
+      (closes: Bug#216660).
+  * debian/rules:
+    - modified to generate debian/control using gnome-pkg-tools.
+
+ -- Sebastien Bacher <seb128@debian.org>  Fri, 31 Oct 2003 21:32:29 +0100
+
+gtk+2.0 (2.2.4-1) unstable; urgency=low
+
+  * New upstream release.
+    - implemented the im module that produces C_WITH_CEDILLA rather than
+      C_WITH_ACUTE for dead_acute+c combinations. it will be used as default
+      im module for fr and pt. (closes: Bug#168557)
+    - reworked the handling of XIM's status window. (closes: Bug#203009)
+  * debian/control:
+    - removed libgtk2.0-0png3 which is unnecessary anymore.
+    - added non-versioned Conflicts: libgtk2.0-0png3.
+    - bumped Standards-Version to 3.6.1.0.
+  * debian/patches/: removed the backported patches.
+    - 000_gtk+-2.2.2-docfix-gtk2compliant.patch
+    - 000_gtk+-2.2.2-docfix-gtktreemodel.patch
+    - 000_gtk+-2.2.2-gtkwidget-viewable.patch
+    - 000_gtk+-2.2.2-imxim-reconnect.patch
+
+ -- Akira TAGOH <tagoh@debian.org>  Mon,  8 Sep 2003 03:42:18 +0900
+
+gtk+2.0 (2.2.2-3) unstable; urgency=low
+
+  * debian/patches/:
+    - 000_gtk+-2.2.2-docfix-gtk2compliant.patch: applied a backported patch
+      from CVS to fix the old documentation. (closes: Bug#146723)
+    - 000_gtk+-2.2.2-docfix-gtktreemodel.patch: applied a backported patch
+      from CVS to fix the sample code. (closes: Bug#201322)
+    - 000_gtk+-2.2.2-gtkwidget-viewable.patch: applied a backported patch from
+      CVS to fix the garbled pixmaps. (closes: Bug#201808, Bug#202486)
+    - 000_gtk+-2.2.2-imxim-reconnect.patch: applied a backported patch from
+      CVS to fix the segfaults if the XIM server is killed during running gtk2
+      applications.
+    - 001_gtk+-debian-docfix-dtds.patch: applied to use the local DTD.
+  * debian/control:
+    - added Build-Depends-Indep: gtk-doc-tools, docbook-xml to re-generate the
+      fixed documents.
+
+ -- Akira TAGOH <tagoh@debian.org>  Thu,  7 Aug 2003 01:42:46 +0900
+
+gtk+2.0 (2.2.2-2) unstable; urgency=low
+
+  * debian/patches/:
+    - 001_gtk+-debian-aclocal-pass_all.patch: re-applied a patch to fix FTBFS
+      on arm. (closes: Bug#201443)
+
+ -- Akira TAGOH <tagoh@debian.org>  Thu, 24 Jul 2003 03:14:10 +0900
+
+gtk+2.0 (2.2.2-1) unstable; urgency=low
+
+  * New upstream release. (closes: Bug#200350)
+    - Fixed threadlocks on GtkTreeView. (closes: Bug#192136)
+    - Fixed the crash on moving the cursor when the cursor is invisible.
+      (closes: Bug#187858)
+    - Fixed the compose table for ascending order. (closes: Bug#182073)
+  * debian/control:
+    - fix the FTBFS. Thanks to Daniel Baeyens.
+    - bumped Standards-Version to 3.6.0.
+  * debian/rules:
+    - removed dh_undocumented.
+    - don't claim the newer shlibs.
+  * debian/patches/:
+    - 000_gtk+-2.2.1-gdk_event_copy_for_xinput.patch: removed.
+    - 000_gtk+-2.2.1-gdk_visual_get_best_with_depth.patch: removed.
+    - 000_gtk+-2.2.1-gtk_text_line_previous_could_contain_tag.patch: removed.
+    - 000_gtk+-2.2.1-gtktreeview-scroll.patch: removed.
+    - 000_gtk+-debian-xinerama-pic.patch: updated.
+    - 001_gtk+-debian-aclocal.patch: removed.
+    - 001_gtk+-ximian-gtk2-filesel-navbutton-5.patch: applied a Ximian patch
+      to improve the GtkFileSel UI. Requested from Ross Burton.
+    - 000_gtk+-2.2.2-non-weak-symbols.patch: applied to fix the undefined non
+      weak symbols. (closes: Bug#193774)
+
+ -- Akira TAGOH <tagoh@debian.org>  Sun, 13 Jul 2003 21:26:49 +0900
+
+gtk+2.0 (2.2.1-6) unstable; urgency=low
+
+  * debian/patches/001_gtk+-debian-aclocal.patch:
+    - damn. forgot to re-run automake and autoconf. fix again.
+      (closes: Bug#190569)
+
+ -- Akira TAGOH <tagoh@debian.org>  Sat,  3 May 2003 16:56:18 +0900
+
+gtk+2.0 (2.2.1-5) unstable; urgency=low
+
+  * debian/control:
+    - changed a section for libgtk2.0-dbg to libdevel.
+  * debian/patches/000_gtk+-debian-aclocal.patch:
+    - applied to fix Xinerama library linkage broken on arm and m68k.
+      (closes: Bug#190569)
+      Thanks to James Troup and Phil Blundell.
+
+ -- Akira TAGOH <tagoh@debian.org>  Sat,  3 May 2003 01:50:52 +0900
+
+gtk+2.0 (2.2.1-4) unstable; urgency=low
+
+  * debian/patches/:
+    - 000_gtk+-2.2.1-gtk_text_line_previous_could_contain_tag.patch:
+      applied a backported patch from CVS. (closes: Bug#185066)
+    - 000_gtk+-2.2.1-gtktreeview-scroll.patch:
+      applied a patch from Red Hat to fix infinite expose loops in TreeView.
+      (closes: Bug#187312)
+  * debian/control:
+    - bumped Standards-Version to 3.5.9.
+    - changed a section for libgtk2.0-dev to libdevel.
+  * debian/rules:
+    - fixed the symlinks on /usr/share/gtk-doc/html. (closes: Bug#183377)
+  * debian/compat:
+    - use it instead of DH_COMPAT.
+
+ -- Akira TAGOH <tagoh@debian.org>  Fri,  4 Apr 2003 01:55:35 +0900
+
+gtk+2.0 (2.2.1-3) unstable; urgency=low
+
+  * build against the latest xlibs and xlibs-pic. so now correct
+    libXinerama_pic.a is linked and supporting xinarama is re-enabled.
+    (closes: Bug#177318)
+  * debian/control:
+    - depend on xlibs-pic (>= 4.2.1-6)
+  * debian/README.Debian:
+    - improve description of static libraries issue. (closes: Bug#181879)
+      Thanks to Marcelo E. Magallon <mmagallo@debian.org>
+    - mention gtk-key-theme-name and gnome-settings-daemon.
+  * debian/rules:
+    - create the symlinks in /usr/share/gtk-doc
+
+ -- Akira TAGOH <tagoh@debian.org>  Mon,  3 Mar 2003 01:35:04 +0900
+
+gtk+2.0 (2.2.1-2) unstable; urgency=low
+
+  * debian/patches/:
+    - 000_gtk+-2.2.1-gdk_visual_get_best_with_depth.patch:
+      backport from CVS to fix wrong pointer returned. (closes: Bug#180786)
+    - 000_gtk+-2.2.1-gdk_event_copy_for_xinput.patch:
+      applied to fix a crash when using xinput. (closes: Bug#178908)
+
+ -- Akira TAGOH <tagoh@debian.org>  Wed, 19 Feb 2003 03:10:55 +0900
+
+gtk+2.0 (2.2.1-1) unstable; urgency=low
+
+  * New upstream release.
+  * debian/patches/: removed patches. they were fixed in this release.
+    - 000_gtk+-2.2.0-buildfix-modules.patch
+    - 000_gtk+-2.2.0-fix-es.po.patch
+    - 000_gtk+-2.2.0-fnmatch-undef.patch
+    - 002_gtk+-2.2.0-fixtypo-xinput.patch
+  * debian/patches/000_gtk+-debian-xinerama-pic.patch: update.
+
+ -- Akira TAGOH <tagoh@debian.org>  Fri,  7 Feb 2003 03:37:44 +0900
+
+gtk+2.0 (2.2.0-3) unstable; urgency=low
+
+  * debian/: clean the unnecessary files up. (closes: Bug#177809)
+  * debian/rules:
+    remove the old debug libraries on install process if exists. (closes:
+    Bug#177376)
+  * debian/patches/:
+    - 002_gtk+-2.2.0-fixtypo-xinput.patch:
+      fix to enable XFree86 xinput extension. (closes: Bug#176104)
+    - 000_gtk+-2.2.0-fix-es.po.patch:
+      applied to fix es.po. (closes: Bug#178870)
+
+ -- Akira TAGOH <tagoh@debian.org>  Wed, 29 Jan 2003 23:01:43 +0900
+
+gtk+2.0 (2.2.0-2) unstable; urgency=low
+
+  * debian/control:
+    - add Conflicts libgnomeui-0 (<< 2.0.6-2) to avoid the gtk+ 2.2 breakage.
+      (closes: Bug#175946)
+    - add Conflicts gtk2.0-examples (<< 2.2.0) (closes: Bug#175868)
+    - add dependency of libgtk2.0-common. (closes: Bug#175873)
+    - removed libgtk-common package. it's no longer needed. I hope the loop
+      dependency will be disappeared.
+    - used libpng12-0-dev instead of libpng3-dev for Build-Depends.
+  * debian/patches/001_gtk+-2.2.0-xinerama-pic.patch:
+    disabled Xinerama support until xlibs-pic has libXinerama_pic.a.
+    (closes: Bug#175923)
+
+ -- Akira TAGOH <tagoh@debian.org>  Sat, 11 Jan 2003 05:09:12 +0900
+
+gtk+2.0 (2.2.0-1) unstable; urgency=low
+
+  * New upstream release.
+    - upstream bug were closed. so it should be fixed. (closes: Bug#147697)
+  * debian/control:
+    - updated Build-Depends.
+    - bumped Standards-Version to 3.5.8.
+    - fix description-synopsis-ends-with-full-stop stuff.
+  * debian/update-gdkpixbuf-loaders: add brand-new wrapper script.
+  * debian/update-gdkpixbuf-loaders.1: add manpage.
+  * debian/rules:
+    modified to build the static libraries. (closes: Bug#161938)
+  * debian/README.Debian: updated.
+  * debian/patches/:
+    - 000_gtk+-2.0.6-extranotify.patch: removed.
+    - 000_gtk+-2.0.6-scroll_to.patch: removed.
+    - 000_gtk+-2.2.0-fnmatch-undef.patch:
+      applied to fix having main() in the library.
+    - 000_gtk+-2.2.0-buildfix-immodule.patch:
+      applied to build the static libraries.
+    - 000_gtk+-2.2.0-buildfix-modules.patch:
+      applied to fix a typo in configure.in.
+
+ -- Akira TAGOH <tagoh@debian.org>  Mon,  6 Jan 2003 18:34:31 +0900
+
+gtk+2.0 (2.0.9-1) unstable; urgency=low
+
+  * New upstream release.
+  * debian/patches/000_gtk+-2.0.8-refcolormap.patch: this release contains it.
+    removed.
+
+ -- Akira TAGOH <tagoh@debian.org>  Sun, 24 Nov 2002 00:08:42 +0900
+
+gtk+2.0 (2.0.8-2) unstable; urgency=low
+
+  * debian/patches/000_gtk+-2.0.8-refcolormap.patch: applied to fix the crash
+    problem with close. For solve your problem, I recommend you restart all
+    processes related gtk+2.0. (closes: Bug#169005)
+
+ -- Akira TAGOH <tagoh@debian.org>  Fri, 15 Nov 2002 09:16:40 +0900
+
+gtk+2.0 (2.0.8-1) unstable; urgency=low
+
+  * New upstream release.
+  * debian/patches/000_gtk+-2.0.7-gifsymbol.patch: it's no longer needed.
+  * debian/rules: fix twice called ldconfig. (closes: Bug#168071)
+
+ -- Akira TAGOH <tagoh@debian.org>  Sun, 10 Nov 2002 16:36:45 +0900
+
+gtk+2.0 (2.0.7-1) unstable; urgency=low
+
+  * New upstream release.
+  * debian/rules:
+    - support noopt option for DEB_BUILD_OPTIONS.
+    - add symlink for gobject. (closes: Bug#167755)
+  * Hm, closed a bug which is marked as NMU due to mis-upload. (closes:
+    Bug#166442)
+  * debian/patches: these patches are no longer needed, so removed.
+    - 000_gtk+-2.0.6-64bitfix.patch
+    - 000_gtk+-2.0.6-imenvvar.patch
+    - 000_gtk+-2.0.6-keycode.patch
+    - 000_gtk+-2.0.6-usintl.patch
+  * debian/patches/000_gtk+-2.0.7-gifsymbol.patch: applied to fix the
+    undefined symbol issue on libpixbufloader-gif.so.
+
+ -- Akira TAGOH <tagoh@debian.org>  Wed,  6 Nov 2002 01:42:22 +0900
+
+gtk+2.0 (2.0.6-4) unstable; urgency=low
+
+  * debian/patches/000_gtk+-2.0.6-64bitfix.patch: applied to fix a segfault on
+    IA64. (closes: Bug#166442)
+
+ -- Akira TAGOH <tagoh@debian.org>  Sun, 27 Oct 2002 03:07:59 +0900
+
+gtk+2.0 (2.0.6-3) unstable; urgency=low
+
+  * debian/control: moved libgtk2.0-0png3 to the last entry.
+  * debian/rule: fix invalid symlink.
+
+ -- Akira TAGOH <tagoh@debian.org>  Sat, 31 Aug 2002 09:46:36 +0900
+
+gtk+2.0 (2.0.6-2) unstable; urgency=low
+
+  * debian/control:
+    - bumped Standards-Version and depends debhelper (>> 4).
+    - revert to libgtk2.0-0 and remove Conflicts libgtk2.0-0, then add
+      versioned conflict to work eog2, gnome-panel2, celestia, gimp1.3 and
+      metatheme. (closes: Bug#155689, Bug#155854)
+    - add libgtk2.0-0png3 to Conflicts, Replaces.
+    - add a dummy package for libgtk2.0-0png3.
+    - remove the image libraries dependency. (closes: Bug#158858)
+    - clean up -dev's Depends.
+    - add libglib2.0-doc, libatk1.0-doc and libpango1.0-doc to Suggests.
+  * debian/patches/: from Red Hat.
+    - 000_gtk+-2.0.6-exportsymbols.patch:
+      applied to fix stripping the wrong symbols due to libtool's bug. but
+      it's not affected about the symbols used by ld and ld.so. mainly for nm,
+      gdb and etc.
+    - 000_gtk+-2.0.6-extranotify.patch:
+      applied to fix extra settings notifies on startup that were causing
+      significant performance problems as fonts were reloaded.
+    - 000_gtk+-2.0.6-imenvvar.patch:
+      applied to fix a bug with GTK_IM_MODULE environment variable.
+    - 000_gtk+-2.0.6-keycode.patch: applied to fix a problem with keycodes
+      passed to GtkIMContextXIM.
+    - 000_gtk+-2.0.6-usintl.patch:
+      applied to fix to GtkIMContextSimple compose for us-intl keyboards.
+      should be fixed. (closes: Bug#149515)
+    - 000_gtk+-2.0.6-scroll_to.patch:
+      applied to fix gtk_tree_view_scroll_to_cell.
+  * debian/rules: add symlink to fix the missing symlink for glib, atk and
+    pango. (closes: Bug#158107)
+  * debian/update-gtk-immodules.fr.1: added. Thanks Julien Louis. (closes:
+    Bug#156985)
+
+ -- Akira TAGOH <tagoh@debian.org>  Sat, 31 Aug 2002 05:22:33 +0900
+
+gtk+2.0 (2.0.6-1) unstable; urgency=low
+
+  * New upstream release.
+  * Build against libpng3 (closes: 147852)
+
+ -- Akira TAGOH <tagoh@debian.org>  Sun,  4 Aug 2002 18:31:53 +0900
+
+gtk+2.0 (2.0.5-2) unstable; urgency=low
+
+  * debian/rules: add --with-xinput=xfree. (closes: Bug#151668)
+  * debian/control:
+    - add Conflicts: libgdkxft0 to avoid some problem. (closes: Bug#151439).
+    - changed a summary from 'Dummy' to 'Empty'.
+
+ -- Akira TAGOH <tagoh@debian.org>  Thu,  4 Jul 2002 00:18:53 +0900
+
+gtk+2.0 (2.0.5-1) unstable; urgency=low
+
+  * New upstream release.
+  * debian/control: fix typo (closes: Bug#150147)
+
+ -- Akira TAGOH <tagoh@debian.org>  Mon, 17 Jun 2002 01:07:20 +0900
+
+gtk+2.0 (2.0.4-1) unstable; urgency=low
+
+  * New upstream release.
+    - should be fixed in this release. (closes: Bug#149667)
+    - now it's not linked to the Pango docs (closes: Bug#149143)
+  * debian/libgtk2.0-doc.doc-base.{gdk,gdk-pixbuf,gtk,gtk-faq,gtk-tutorial}:
+    add a new line before Format: (closes: Bug#149548, Bug#150043)
+
+ -- Akira TAGOH <tagoh@debian.org>  Sun, 16 Jun 2002 05:16:29 +0900
+
+gtk+2.0 (2.0.3-1) unstable; urgency=low
+
+  * New upstream release.
+  * debian/libgtk2.0-doc.doc-base.{gtk-faq,gtk-tutorial}:
+    changed an index file.
+
+ -- Akira TAGOH <tagoh@debian.org>  Thu, 30 May 2002 23:35:52 +0900
+
+gtk+2.0 (2.0.2-5) unstable; urgency=high
+
+  * debian/control: add libtiff3g-dev, libpng2-dev and libjpeg62-dev to
+    Depends for -dev.
+  * set urgency=high because previous version violated our policy 2.3.4.
+    it should be into woody as far as possible.
+
+ -- Akira TAGOH <tagoh@debian.org>  Thu, 23 May 2002 00:31:52 +0900
+
+gtk+2.0 (2.0.2-4) unstable; urgency=high
+
+  * debian/patches/000_gtk+2.0-2.0.2-bigendian.patch: applied to fix a problem
+    for big endian machines. (closes: Bug#145285)
+  * set urgency=high because it should be in woody.
+
+ -- Akira TAGOH <tagoh@debian.org>  Wed,  1 May 2002 02:46:12 +0900
+
+gtk+2.0 (2.0.2-3) unstable; urgency=low
+
+  * debian/update-gtk-immodules: create /etc/gtk-2.0 directory for workaround,
+    if it's not found. oh, why didn't you have it? (closes: Bug#143508,
+    Bug#144673)
+
+ -- Akira TAGOH <tagoh@debian.org>  Sun, 28 Apr 2002 04:46:30 +0900
+
+gtk+2.0 (2.0.2-2) unstable; urgency=low
+
+  * debian/libgtk2.0-doc.doc-base.{gtk-faq,gtk-tutorial}:
+    Grr, fix again... (closes: Bug#141069)
+  * debian/scripts/vars.build: fix bashism.
+
+ -- Akira TAGOH <tagoh@debian.org>  Sat,  6 Apr 2002 04:26:14 +0900
+
+gtk+2.0 (2.0.2-1) unstable; urgency=low
+
+  * New upstream release.
+    - this release has bug fix only.
+  * debian/control: forgot to update versioned dependency for -dev.
+  * debian/libgtk2.0-doc.doc-base.gtk-faq,
+    debian/libgtk2.0-doc.doc-base.gtk-tutorial:
+    fix wrong index. (closes: Bug#141069)
+
+ -- Akira TAGOH <tagoh@debian.org>  Thu,  4 Apr 2002 02:49:49 +0900
+
+gtk+2.0 (2.0.1-1) unstable; urgency=low
+
+  * New upstream release.
+  * debian/update-gtk-immodules: check the immodules directory.
+
+ -- Akira TAGOH <tagoh@debian.org>  Sun, 31 Mar 2002 00:59:03 +0900
+
+gtk+2.0 (2.0.0-3) unstable; urgency=low
+
+  * debian/rules: removed regenerate shlibs. all packages no longer needs to
+    depend on -common.
+
+ -- Akira TAGOH <tagoh@debian.org>  Sat, 16 Mar 2002 21:51:08 +0900
+
+gtk+2.0 (2.0.0-2) unstable; urgency=low
+
+  * debian/control: changed Build-Depends to libpango1.0-dev (>= 1.0.0-3)
+  * debian/{control,rules}: add libgtk-common as dummy package for upgrading.
+  * debian/rules: fix the missing directory.
+  * debian/update-gtk-immodules: fix file attribute for gtk.immodules.
+
+ -- Akira TAGOH <tagoh@debian.org>  Sat, 16 Mar 2002 04:34:39 +0900
+
+gtk+2.0 (2.0.0-1) unstable; urgency=low
+
+  * Initial Release.
+
+ -- Akira TAGOH <tagoh@debian.org>  Wed, 13 Mar 2002 00:07:25 +0900
+

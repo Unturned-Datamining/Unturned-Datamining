@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<page xmlns="http://projectmallard.org/1.0/" type="topic" id="info" xml:lang="fr">
+  <info>
+    <link type="guide" xref="message"/>
+    <desc>Utiliser l'option <cmd>--info</cmd>.</desc>
+  </info>
+  <title>Boîte de dialogue d'information</title>
+      <p>Utilisez l'option <cmd>--info</cmd> pour créer une boîte de dialogue d'information.</p>
+
+      <p>Le script d'exemple suivant montre comment créer une boîte de dialogue d'information :</p>
+
+<code>
+#!/bin/bash
+
+zenity --info \
+  --text="Fusion effectuée. 3 fichiers sur 10 mis à jour."
+</code>
+
+
+      <figure id="zenity-information-screenshot">
+        <title>Exemple de boîte de dialogue d'information</title>
+        <desc>Exemple de boîte de dialogue d'information <app>Zenity</app></desc>
+        <media type="image" mime="image/png" src="figures/zenity-information-screenshot.png"/>
+      </figure>
+</page>

@@ -1,0 +1,13 @@
+drwxr-xr-x root/root         0 2023-03-23 18:00 ./
+drwxr-xr-x root/root         0 2023-03-23 18:00 ./usr/
+drwxr-xr-x root/root         0 2023-03-23 18:00 ./usr/lib/
+drwxr-xr-x root/root         0 2023-03-23 18:00 ./usr/lib/i386-linux-gnu/
+-rw-r--r-- root/root     55244 2023-03-23 18:00 ./usr/lib/i386-linux-gnu/libindicator.so.7.0.0
+drwxr-xr-x root/root         0 2023-03-23 18:00 ./usr/share/
+drwxr-xr-x root/root         0 2023-03-23 18:00 ./usr/share/doc/
+drwxr-xr-x root/root         0 2023-03-23 18:00 ./usr/share/doc/libindicator7/
+-rw-r--r-- root/root     26004 2012-04-11 15:42 ./usr/share/doc/libindicator7/changelog.gz
+-rw-r--r-- root/root      5954 2023-03-23 17:58 ./usr/share/doc/libindicator7/changelog.Debian.i386.gz
+-rw-r--r-- root/root       587 2023-03-23 17:58 ./usr/share/doc/libindicator7/copyright
+-rw-r--r-- root/root       429 2012-04-11 15:42 ./usr/share/doc/libindicator7/AUTHORS
+lrwxrwxrwx root/root         0 2023-03-23 18:00 ./usr/lib/i386-linux-gnu/libindicator.so.7 -> libindicator.so.7.0.0

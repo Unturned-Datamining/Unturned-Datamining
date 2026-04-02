@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<engine schema_version="0.1" module_name="redmond95" long_name="Redmond">
+
+  <metainfo>
+    <version>2.20.2</version>
+    <website>http://www.gnome.org</website>
+    <author>
+      <name>Owen Taylor</name>
+      <email>otaylor@redhat.com</email>
+    </author>
+    <author>
+      <name>Andrew Johnson</name>
+      <email>ajgenius@ajgenius.us</email>
+    </author>
+  </metainfo>
+
+</engine>

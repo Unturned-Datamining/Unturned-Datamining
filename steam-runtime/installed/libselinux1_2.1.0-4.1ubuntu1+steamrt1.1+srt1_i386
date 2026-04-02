@@ -1,0 +1,14 @@
+drwxr-xr-x root/root         0 2022-10-04 17:09 ./
+drwxr-xr-x root/root         0 2022-10-04 17:08 ./usr/
+drwxr-xr-x root/root         0 2022-10-04 17:08 ./usr/share/
+drwxr-xr-x root/root         0 2022-10-04 17:08 ./usr/share/lintian/
+drwxr-xr-x root/root         0 2022-10-04 17:08 ./usr/share/lintian/overrides/
+-rw-r--r-- root/root       103 2022-10-04 15:19 ./usr/share/lintian/overrides/libselinux1
+drwxr-xr-x root/root         0 2022-10-04 17:08 ./usr/share/doc/
+drwxr-xr-x root/root         0 2022-10-04 17:08 ./usr/share/doc/libselinux1/
+-rw-r--r-- root/root     15779 2022-10-04 17:07 ./usr/share/doc/libselinux1/changelog.Debian.i386.gz
+-rw-r--r-- root/root      3131 2022-10-04 15:19 ./usr/share/doc/libselinux1/copyright
+drwxr-xr-x root/root         0 2022-10-04 17:08 ./selinux/
+drwxr-xr-x root/root         0 2022-10-04 17:08 ./lib/
+drwxr-xr-x root/root         0 2022-10-04 17:09 ./lib/i386-linux-gnu/
+-rw-r--r-- root/root    120908 2022-10-04 17:09 ./lib/i386-linux-gnu/libselinux.so.1

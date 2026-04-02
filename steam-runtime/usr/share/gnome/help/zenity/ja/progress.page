@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<page xmlns="http://projectmallard.org/1.0/" type="topic" id="progress" xml:lang="ja">
+  <info>
+    <link type="guide" xref="index#dialogs"/>
+    <desc><cmd>--progress</cmd> オプションの使用</desc>
+  </info>
+  <title>進捗表示ダイアログ</title>
+    <p>進捗表示ダイアログを作成するには、<cmd>--progress</cmd> というオプションを使ってください。</p>
+
+    <p><app>Zenity</app> は、標準入力から 1 行ごとにデータを読み込みます。行が # で始まっている場合、進捗表示ダイアログに表示しているテキストを更新します。行が数値のみを含んでいる場合、進捗状況のパーセンテージをその数値で更新します。</p>
+	
+    <p>進捗表示ダイアログは、以下のオプションをサポートしています。</p>
+
+    <terms>
+
+      <item>
+        <title><cmd>--text</cmd>=<var>テキスト</var></title>
+	  <p>進捗表示ダイアログに表示するテキストを指定します。</p>
+      </item>
+
+      <item>
+        <title><cmd>--percentage</cmd>=<var>パーセンテージ</var></title>
+	  <p>進捗表示ダイアログに設定する初期のパーセンテージを指定します。</p>
+      </item>
+
+      <item>
+	<title><cmd>--auto-close</cmd></title>
+	  <p>100% に到達した際に進捗表示ダイアログを閉じます。</p>
+      </item>
+
+      <item>
+        <title><cmd>--pulsate</cmd></title>
+	  <p>標準入力から EOF 文字を読み込むまで進捗表示バーを振動させたい場合に指定します。</p>
+      </item>
+
+    </terms>
+
+    <p>以下のスクリプトの例で進捗表示ダイアログの作成方法を示します。</p>
+
+<code>
+#!/bin/sh
+(
+echo "10" ; sleep 1
+echo "# メールログの更新" ; sleep 1
+echo "20" ; sleep 1
+echo "# cron ジョブの再設定" ; sleep 1
+echo "50" ; sleep 1
+echo "この行は無視されます" ; sleep 1
+echo "75" ; sleep 1
+echo "# システムの再起動" ; sleep 1
+echo "100" ; sleep 1
+) |
+zenity --progress \
+  --title="システムログの更新" \
+  --text="メールログを走査中..." \
+  --percentage=0
+
+if [ "$?" = -1 ] ; then
+        zenity --error \
+          --text="更新がキャンセルされました。"
+fi
+
+</code>
+
+
+    <figure id="zenity-progress-screenshot">
+      <title>進捗表示ダイアログの例</title>
+      <desc><app>Zenity</app> 進捗表示ダイアログの例</desc>
+      <media type="image" mime="image/png" src="figures/zenity-progress-screenshot.png"/>
+    </figure>
+</page>

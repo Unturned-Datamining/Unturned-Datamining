@@ -1,0 +1,11 @@
+drwxr-xr-x root/root         0 2021-05-18 10:56 ./
+drwxr-xr-x root/root         0 2021-05-18 10:56 ./usr/
+drwxr-xr-x root/root         0 2021-05-18 10:56 ./usr/lib/
+drwxr-xr-x root/root         0 2021-05-18 10:56 ./usr/lib/i386-linux-gnu/
+-rw-r--r-- root/root     26056 2021-05-18 10:56 ./usr/lib/i386-linux-gnu/libffi.so.6.0.0
+drwxr-xr-x root/root         0 2021-05-18 10:56 ./usr/share/
+drwxr-xr-x root/root         0 2021-05-18 10:56 ./usr/share/doc/
+drwxr-xr-x root/root         0 2021-05-18 10:56 ./usr/share/doc/libffi6/
+-rw-r--r-- root/root      2304 2021-05-18 10:53 ./usr/share/doc/libffi6/changelog.Debian.i386.gz
+-rw-r--r-- root/root      3440 2021-05-18 10:03 ./usr/share/doc/libffi6/copyright
+lrwxrwxrwx root/root         0 2021-05-18 10:56 ./usr/lib/i386-linux-gnu/libffi.so.6 -> libffi.so.6.0.0

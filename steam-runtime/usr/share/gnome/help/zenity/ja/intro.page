@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<page xmlns="http://projectmallard.org/1.0/" type="topic" id="introduction" xml:lang="ja">
+<info>
+  <link type="guide" xref="index"/>
+  <desc><app>Zenity</app> を使えば、様々な種類の簡単なダイアログを作成できます。</desc>
+</info>
+<title>はじめに</title>
+<p><app>Zenity</app> を使えば、以下の種類の簡単なダイアログを作成できます。</p>
+
+<list>
+    <item><p>カレンダー</p></item>
+    <item><p>ファイル選択</p></item>
+    <item><p>フォーム</p></item>
+    <item><p>一覧</p></item>
+    <item><p>通知アイコン</p></item>
+    <item><p>メッセージ</p>
+        <list>
+            <item><p>エラー</p></item>
+    	<item><p>情報</p></item>
+    	<item><p>質問</p></item>
+    	<item><p>警告</p></item>
+        </list>
+    </item>
+    <item><p>パスワード入力</p></item>
+    <item><p>進捗表示</p></item>
+    <item><p>テキスト入力</p></item>
+    <item><p>テキスト情報</p></item>
+    <item><p>スケール</p></item>
+    <item><p>色選択</p></item>
+</list>
+</page>

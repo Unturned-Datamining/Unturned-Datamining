@@ -1,0 +1,38 @@
+﻿GUID eb122677bf1143c2945e46af485e86aa
+Type Food
+Rarity Rare
+Useable Consumeable
+ID 1970
+
+Size_X 1
+Size_Y 1
+Size_Z 0.3
+
+Food 70
+Water 15
+
+Blueprints
+[
+	{
+		CategoryTag "d089feb7e43f40c5a7dfcefc36998cfb" // Supplies
+		InputItems
+		[
+			"4880f590a948465891188c5f96559340 x 2" // Bread
+			"e7436e608f1b472b8f01fc6d0c330108" // Cooked Northern Pike
+		]
+		OutputItems this
+		Skill Cook
+		Skill_Level 2
+		RequiresNearbyCraftingTags
+		[
+			"68816064e2ce44839c3f35da55033cba" // Cooking Table
+		]
+		Effect "84347b13028340b8976033c08675d458" // Wrench
+	}
+]
+
+ConsumeAudioClip Sounds/EatSandwich.mp3
+Randomize_Consume_Audio_Pitch false
+Procedurally_Animate_Inertia false
+Instantiated_Item_Name_Override 467
+EquipablePrefab Items/Food/Sandwich_NorthernPike/Equipable.prefab

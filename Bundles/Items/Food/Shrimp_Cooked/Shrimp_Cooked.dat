@@ -1,0 +1,29 @@
+﻿GUID e33481d4439344e7ba8a110a4bbb98ea
+Type Food
+Useable Consumeable
+ID 1953
+
+Size_X 1
+Size_Y 1
+Size_Z 0.25
+
+Food 10
+Water 3
+
+Blueprints
+[
+	{
+		CategoryTag "d089feb7e43f40c5a7dfcefc36998cfb" // Supplies
+		InputItems "a99f5713bb9f44f2b513b918e50b7f94" // Raw Shrimp
+		OutputItems this
+		Skill Cook
+		Skill_Level 1
+		RequiresNearbyCraftingTags
+		[
+			"20f30322bbcc4b01a4f116d22b24c21a" // Heat Source
+		]
+		Effect "84347b13028340b8976033c08675d458" // Wrench
+	}
+]
+
+ConsumeAudioClip Sounds/EatCrunchy.mp3

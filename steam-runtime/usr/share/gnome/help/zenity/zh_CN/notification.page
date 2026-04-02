@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<page xmlns="http://projectmallard.org/1.0/" type="topic" id="notification" xml:lang="zh_CN">
+  <info>
+    <link type="guide" xref="index#dialogs"/>
+    <desc>Use the <cmd>--notification</cmd> option.</desc>
+  </info>
+  <title>通知区域图标</title>
+    <p>
+	Use the <cmd>--notification</cmd> option to create a notification icon.
+    </p>
+
+    <terms>
+
+      <item>
+        <title><cmd>--text</cmd>=<var>text</var></title>
+	  <p>指定显示在通知区域的文本。</p>
+      </item>
+
+    </terms>
+
+    <p>
+      The following example script shows how to create a notification icon:
+    </p>
+<code>
+#!/bin/sh
+
+zenity --notification\
+  --window-icon="info" \
+  --text="There are system updates necessary!"
+</code>
+
+
+    <figure id="zenity-notification-screenshot">
+      <title>通知区域图标范例</title>
+      <desc><app>Zenity</app> notification icon example</desc>
+      <media type="image" mime="image/png" src="figures/zenity-notification-screenshot.png"/>
+   </figure>
+</page>

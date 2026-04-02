@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<page xmlns="http://projectmallard.org/1.0/" type="topic" id="entry" xml:lang="de">
+  <info>
+    <link type="guide" xref="index#dialogs"/>
+    <desc>Die Option <cmd>--entry</cmd> verwenden.</desc>
+  </info>
+  <title>Texteingabe-Dialog</title>
+    <p>Verwenden Sie die Option <cmd>--entry</cmd>, um einen Texteingabedialog zu erzeugen. <app>Zenity</app> gibt den Inhalt des Texts an die Standardausgabe zurück.</p>	
+    <p>Der Texteingabedialog unterstützt die folgenden Optionen:</p>
+
+    <terms>
+
+      <item>
+        <title><cmd>--text</cmd>=<var>Text</var></title>
+	<p>Legt den Text fest, der im Texteingabedialog angezeigt wird.</p>
+      </item>
+
+      <item>
+        <title><cmd>--entry-text</cmd>=<var>Text</var></title>
+	<p>Legt den Text fest, der im Eingabefeld des Texteingabedialogs angezeigt wird.</p>
+      </item>
+
+      <item>
+        <title><cmd>--hide-text</cmd></title>
+	<p>Dadurch wird der Text im Eingabefeld des Textreingabedialogs verborgen.</p>
+      </item>
+
+    </terms>
+
+    <p>Das folgende Beispielskript zeigt, wie Sie einen Texteingabedialog erzeugen:</p>
+
+<code>
+#!/bin/sh
+
+if zenity --entry \
+--title="Neues Profil hinzufügen" \
+--text="Geben Sie den Namen des neuen Profils ein:" \
+--entry-text "Neues Profil"
+  then echo $?
+  else echo "Es wurde kein Name eingegeben"
+fi
+</code>
+
+
+    <figure id="zenity-entry-screenshot">
+      <title>Beispiel für einen Texteingabe-Dialog</title>
+      <desc>Beispiel für einen Texteingabedialog in <app>Zenity</app></desc>
+      <media type="image" mime="image/png" src="figures/zenity-entry-screenshot.png"/>
+    </figure>
+</page>

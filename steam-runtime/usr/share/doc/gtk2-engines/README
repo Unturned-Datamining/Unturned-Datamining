@@ -1,0 +1,127 @@
+gtk-engines
+===========
+
+gtk-engines provides a central location for commonly used GTK+ engines.
+
+It currently supplies several engines and default themes for those which have one.
+
+Clearlooks
+  The clearlooks engine was originally written by Richard Stellingwerff and
+  Daniel Borgmann based on the Bluecurve engine. It became very popular and
+  was adopted as the default theme in GNOME 2.12.
+  Since then a lot of people have worked on it, and today it is a modular
+  engine providing multiple styles such as glossy and gummy.
+  There are some popular forks out there, the largest is probably the
+  UbuntuLooks engine currently used for the default Ubuntu theme.
+
+Crux
+  The engine created for the once popular theme by Eazel, Inc. Unfortunately
+  long without maintenance it is no longer as popular or considered as
+  usable as it once was.
+  It has been rewritten by Thomas Wood and now provides a more modern style
+  featuring the Tango colors.
+
+Glide
+  A new engine written by Andrew Johnson for the Glider theme.
+
+HC
+  The High Contrast engine which is targeted for usability themes, such as
+  the GNOME HighContrast theme.
+
+Industrial
+  Originally developed by Ximian, Inc. as the default engine for its desktop.
+  Industrial provides a simple and consistent appearance for applications.
+  
+LUA
+  The LUA engine is an experimental engine that loads lua scripts to draw
+  the interface. Because of its experimental status the engine is not
+  compiled by default.
+
+Mist
+  A minimalist engine designed to provide a simple UI experience.
+
+Redmond
+  An engine and theme designed to mimic the appearance of another well
+  known OS.
+
+Thinice
+  A once highly popular engine with thin edges and theme of Icy Colors,
+  providing a simple mostly clean appearance many find satisfying.
+
+
+Requirements
+============
+
+To compile this package, you must have:
+
+ GTK+, version 2.12.0 or later
+
+   http://www.gtk.org/
+   ftp://ftp.gtk.org/pub/gtk/
+
+
+Sources
+=======
+
+The source code of gtk-engines is available from:
+  http://ftp.acc.umu.se/pub/GNOME/sources/gtk-engines/
+
+The development version is available from gtk-engines module of the GNOME
+subversion repository:
+  http://svn.gnome.org
+
+
+Bugs
+====
+
+GTK+ engines are a vital part of the desktop and should be very stable. A
+bug in the engine can easily cause random application crashes and users may
+lose work.
+
+Because of this gtk-engines has a test suite which torture tests the engines
+and checks for some other issues. While we strive to create very stable
+software, bugs do crop up regularly. Should you find any problem, whether it is
+a visual or a more serious issue please fill them in the GNOME bugzilla in the
+gtk-engines product.
+
+  http://bugzilla.gnome.org/enter_bug.cgi?product=gtk-engines
+
+
+Installation
+============
+
+ ./configure 
+ make
+ [ become root ]
+ make install
+
+
+If you configured GTK+ in a non-default prefix, you should configure this
+package the same way. For instance:
+
+ ./configure --prefix=/opt/gtk+
+
+If you need to install this package in a different prefix from GTK+, then
+you'll have to set your GTK_PATH environment variable to point to the
+installed prefix. For instance, if this package was configured with:
+
+ ./configure --prefix=/home/john.doe/gtk-engines/
+
+Then you'd set:
+
+ GTK_PATH=/home/john.doe/gtk-engines/lib/gtk-2.0/
+ export GTK_PATH
+
+This will allow GTK+ to find the newly installed theme engines. To use the
+default themes (installed into $prefix/share/themes), you'll need to copy or
+link them into your  ~/.themes directory.
+
+If you need to skip an engine/theme configure with --disable-<engine>. A
+--disable-all option is included so that it is possible to enable building
+of engines selectively with --enable-<engine>.
+
+
+====
+Andrew Johnson <ajgenius@ajgenius.us>
+Benjamin Berg <benjamin@sipsolutions.net>
+Thomas Wood <thos@gnome.org>

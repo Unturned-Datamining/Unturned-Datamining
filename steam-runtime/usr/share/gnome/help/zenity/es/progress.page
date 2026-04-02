@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<page xmlns="http://projectmallard.org/1.0/" type="topic" id="progress" xml:lang="es">
+  <info>
+    <link type="guide" xref="index#dialogs"/>
+    <desc>Use la opción <cmd>--progress</cmd>.</desc>
+  </info>
+  <title>Diálogo de progreso</title>
+    <p>Use la opción <cmd>--progress</cmd> para crear un diálogo de progreso.</p>
+
+    <p><app>Zenity</app> lee línea por línea los datos desde la entrada estándar. Si una línea se antepone con #, el texto se actualiza con el texto en esa línea. Si una línea contiene solamente un número, el porcentaje se actualiza con ese número.</p>
+	
+    <p>El diálogo de progreso soporta las siguientes opciones:</p>
+
+    <terms>
+
+      <item>
+        <title><cmd>--text</cmd>=<var>texto</var></title>
+	  <p>Especifica el texto que se muestra en el diálogo de progreso.</p>
+      </item>
+
+      <item>
+        <title><cmd>--percentage</cmd>=<var>porcentaje</var></title>
+	  <p>Especifica el porcentaje inicial que se establece en el diálogo de progreso.</p>
+      </item>
+
+      <item>
+	<title><cmd>--auto-close</cmd></title>
+	  <p>Cierra el diálogo de progreso cuando se ha alcanzado 100%.</p>
+      </item>
+
+      <item>
+        <title><cmd>--pulsate</cmd></title>
+	  <p>Especifica que la barra de progreso pulse hasta que se lea un carácter EOF desde la entrada estándar.</p>
+      </item>
+
+    </terms>
+
+    <p>El siguiente script de ejemplo muestra cómo crear un diálogo de progreso:</p>
+
+<code>
+#!/bin/sh
+(
+echo "10" ; sleep 1
+echo "# Actualizando los registros de los correos" ; sleep 1
+echo "20" ; sleep 1
+echo "# Reiniciando las tareas de cron" ; sleep 1
+echo "50" ; sleep 1
+echo "Esta linea se ignorará" ; sleep 1
+echo "75" ; sleep 1
+echo "# Reiniciando el sistema" ; sleep 1
+echo "100" ; sleep 1
+) |
+zenity --progress \
+  title="Actualizando los registros del sistema" \
+  text="Rastreando los registros de los correos..." \
+  percentage=0
+
+if [ "$?" = -1 ] ; then
+zenity --error \
+text="Actualización cancelada."
+fi
+
+</code>
+
+
+    <figure id="zenity-progress-screenshot">
+      <title>Ejemplo de diálogo de progreso</title>
+      <desc>Ejemplo del diálogo de progreso de <app>Zenity</app></desc>
+      <media type="image" mime="image/png" src="figures/zenity-progress-screenshot.png"/>
+    </figure>
+</page>

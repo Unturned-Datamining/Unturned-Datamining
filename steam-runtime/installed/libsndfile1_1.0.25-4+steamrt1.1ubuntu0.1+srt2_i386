@@ -1,0 +1,12 @@
+drwxr-xr-x root/root         0 2019-04-03 15:34 ./
+drwxr-xr-x root/root         0 2019-04-03 15:34 ./usr/
+drwxr-xr-x root/root         0 2019-04-03 15:34 ./usr/lib/
+drwxr-xr-x root/root         0 2019-04-03 15:34 ./usr/lib/i386-linux-gnu/
+-rw-r--r-- root/root    449124 2019-04-03 15:34 ./usr/lib/i386-linux-gnu/libsndfile.so.1.0.25
+drwxr-xr-x root/root         0 2019-04-03 15:34 ./usr/share/
+drwxr-xr-x root/root         0 2019-04-03 15:34 ./usr/share/doc/
+drwxr-xr-x root/root         0 2019-04-03 15:34 ./usr/share/doc/libsndfile1/
+-rw-r--r-- root/root     72289 2011-07-13 11:20 ./usr/share/doc/libsndfile1/changelog.gz
+-rw-r--r-- root/root      4657 2018-10-15 16:49 ./usr/share/doc/libsndfile1/copyright
+-rw-r--r-- root/root      4562 2019-04-03 15:32 ./usr/share/doc/libsndfile1/changelog.Debian.i386.gz
+lrwxrwxrwx root/root         0 2019-04-03 15:34 ./usr/lib/i386-linux-gnu/libsndfile.so.1 -> libsndfile.so.1.0.25

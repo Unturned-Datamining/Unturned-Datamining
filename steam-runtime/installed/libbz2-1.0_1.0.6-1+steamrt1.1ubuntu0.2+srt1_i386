@@ -1,0 +1,13 @@
+drwxr-xr-x root/root         0 2021-05-17 18:49 ./
+drwxr-xr-x root/root         0 2021-05-17 18:49 ./usr/
+drwxr-xr-x root/root         0 2021-05-17 18:49 ./usr/share/
+drwxr-xr-x root/root         0 2021-05-17 18:49 ./usr/share/doc/
+drwxr-xr-x root/root         0 2021-05-17 18:49 ./usr/share/doc/libbz2-1.0/
+-rw-r--r-- root/root      8212 2021-05-17 18:49 ./usr/share/doc/libbz2-1.0/changelog.Debian.gz
+-rw-r--r-- root/root      5271 2021-05-17 18:49 ./usr/share/doc/libbz2-1.0/changelog.gz
+-rw-r--r-- root/root      2497 2021-05-17 18:49 ./usr/share/doc/libbz2-1.0/copyright
+drwxr-xr-x root/root         0 2021-05-17 18:49 ./lib/
+drwxr-xr-x root/root         0 2021-05-17 18:49 ./lib/i386-linux-gnu/
+-rw-r--r-- root/root     65996 2021-05-17 18:49 ./lib/i386-linux-gnu/libbz2.so.1.0.4
+lrwxrwxrwx root/root         0 2021-05-17 18:48 ./lib/i386-linux-gnu/libbz2.so.1.0 -> libbz2.so.1.0.4
+lrwxrwxrwx root/root         0 2021-05-17 18:49 ./lib/i386-linux-gnu/libbz2.so.1 -> libbz2.so.1.0.4

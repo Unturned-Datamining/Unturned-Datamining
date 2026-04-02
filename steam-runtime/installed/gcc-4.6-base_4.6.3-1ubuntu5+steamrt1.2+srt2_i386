@@ -1,0 +1,15 @@
+drwxr-xr-x root/root         0 2019-04-03 13:40 ./
+drwxr-xr-x root/root         0 2019-04-03 13:40 ./usr/
+drwxr-xr-x root/root         0 2019-04-03 13:40 ./usr/lib/
+drwxr-xr-x root/root         0 2019-04-03 13:40 ./usr/lib/gcc/
+drwxr-xr-x root/root         0 2019-04-03 13:40 ./usr/lib/gcc/i686-linux-gnu/
+drwxr-xr-x root/root         0 2019-04-03 13:40 ./usr/lib/gcc/i686-linux-gnu/4.6/
+drwxr-xr-x root/root         0 2019-04-03 13:40 ./usr/share/
+drwxr-xr-x root/root         0 2019-04-03 13:40 ./usr/share/doc/
+drwxr-xr-x root/root         0 2019-04-03 13:40 ./usr/share/doc/gcc-4.6-base/
+-rw-r--r-- root/root      1716 2019-04-03 11:32 ./usr/share/doc/gcc-4.6-base/TODO.Debian
+-rw-r--r-- root/root     25503 2019-04-03 13:36 ./usr/share/doc/gcc-4.6-base/copyright
+-rw-r--r-- root/root      1509 2019-04-03 11:32 ./usr/share/doc/gcc-4.6-base/README.Debian
+-rw-r--r-- root/root      2664 2019-04-03 11:33 ./usr/share/doc/gcc-4.6-base/README.Debian.i386.gz
+-rw-r--r-- root/root    125834 2019-04-03 11:32 ./usr/share/doc/gcc-4.6-base/changelog.Debian.i386.gz
+lrwxrwxrwx root/root         0 2019-04-03 13:40 ./usr/lib/gcc/i686-linux-gnu/4.6.3 -> 4.6

@@ -1,0 +1,1385 @@
+{
+ "  GENERATED FILE, DO NOT EDIT": true, 
+ "architectures": {
+  "i386-linux-gnu": {
+   "dpkg_name": "i386"
+  }, 
+  "x86_64-linux-gnu": {
+   "dpkg_name": "amd64"
+  }
+ }, 
+ "extra_debs": {
+  "libs": [
+   "dconf-gsettings-backend", 
+   "gtk2-engines", 
+   "gtk2-engines-murrine", 
+   "gtk2-engines-pixbuf", 
+   "libasound2-plugins", 
+   "libcanberra-gtk-module", 
+   "libcapsule-tools-relocatable", 
+   "libgl1-mesa-dri", 
+   "libgtk2.0-common", 
+   "libpipewire-0.3-modules", 
+   "libspa-0.2-modules", 
+   "libsteam-runtime-shim-libcurl4", 
+   "libsteam-runtime-tools-0-helpers", 
+   "libtxc-dxtn-s2tc0", 
+   "vainfo-1-multiarch", 
+   "vainfo-multiarch", 
+   "vulkan-tools-multiarch", 
+   "waffle-utils-multiarch"
+  ]
+ }, 
+ "private_libraries": [
+  {
+   "libinproctrace.so": {
+    "deb": "gdbserver"
+   }
+  }, 
+  {
+   "libVkLayer_*.so": {
+    "deb": "libvulkan1"
+   }
+  }, 
+  {
+   "libpulsecommon-*.so": {
+    "deb": "libpulse0"
+   }
+  }, 
+  {
+   "libsteam-runtime-shim-libcurl*.so.4": {
+    "deb": "libsteam-runtime-shim-libcurl4"
+   }
+  }, 
+  {
+   "libtxc_dxtn_s2tc.so.0": {
+    "deb": "libtxc-dxtn-s2tc0"
+   }
+  }, 
+  {
+   "libnss_*.so.2": {
+    "deb": "libc6"
+   }
+  }
+ ], 
+ "shared_libraries": [
+  {
+   "libglut.so.3": {
+    "deb": "freeglut3"
+   }
+  }, 
+  "libacl.so.1", 
+  "libappindicator.so.1", 
+  {
+   "libasn1.so.8": {
+    "deb": "libasn1-8-heimdal"
+   }
+  }, 
+  "libasound.so.2", 
+  "libasyncns.so.0", 
+  {
+   "libatk-1.0.so.0": {
+    "deb": "libatk1.0-0"
+   }
+  }, 
+  "libatomic.so.1", 
+  "libattr.so.1", 
+  "libavahi-client.so.3", 
+  "libavahi-common.so.3", 
+  "libavcodec.so.53", 
+  "libavfilter.so.2", 
+  "libavformat.so.53", 
+  "libavutil.so.51", 
+  {
+   "libbz2.so.1.0": {
+    "aliases": [
+     "libbz2.so.1"
+    ], 
+    "deb": "libbz2-1.0"
+   }
+  }, 
+  "libcairo.so.2", 
+  "libcanberra-gtk.so.0", 
+  "libcanberra.so.0", 
+  "libcap.so.2", 
+  "libCg.so", 
+  {
+   "libCgGL.so": {
+    "deb": "libcg", 
+    "hidden_dependencies": [
+     "libGL.so.1"
+    ]
+   }
+  }, 
+  {
+   "libc.so.6": {
+    "compare_by": [
+     "versions", 
+     "symbols", 
+     "name"
+    ], 
+    "deb": "libc6", 
+    "from_host_system": true, 
+    "generate_dependency": false, 
+    "public_symbol_versions": [
+     "!GLIBC_PRIVATE", 
+     "GLIBC_*", 
+     "!GCC_*", 
+     "!", 
+     "!*"
+    ], 
+    "public_symbols": [
+     "!*@GLIBC_PRIVATE", 
+     "!malloc_get_state@*", 
+     "!malloc_set_state@*", 
+     "*@GLIBC_*", 
+     "!*@GCC_*", 
+     "!", 
+     "!*"
+    ]
+   }
+  }, 
+  {
+   "libBrokenLocale.so.1": {
+    "compare_by": [
+     "versions", 
+     "symbols", 
+     "name"
+    ], 
+    "deb": "libc6", 
+    "from_host_system": true, 
+    "generate_dependency": false, 
+    "public_symbol_versions": [
+     "!GLIBC_PRIVATE", 
+     "GLIBC_*", 
+     "!GCC_*", 
+     "!", 
+     "!*"
+    ], 
+    "public_symbols": [
+     "!*@GLIBC_PRIVATE", 
+     "!malloc_get_state@*", 
+     "!malloc_set_state@*", 
+     "*@GLIBC_*", 
+     "!*@GCC_*", 
+     "!", 
+     "!*"
+    ]
+   }
+  }, 
+  {
+   "libanl.so.1": {
+    "compare_by": [
+     "versions", 
+     "symbols", 
+     "name"
+    ], 
+    "deb": "libc6", 
+    "from_host_system": true, 
+    "generate_dependency": false, 
+    "public_symbol_versions": [
+     "!GLIBC_PRIVATE", 
+     "GLIBC_*", 
+     "!GCC_*", 
+     "!", 
+     "!*"
+    ], 
+    "public_symbols": [
+     "!*@GLIBC_PRIVATE", 
+     "!malloc_get_state@*", 
+     "!malloc_set_state@*", 
+     "*@GLIBC_*", 
+     "!*@GCC_*", 
+     "!", 
+     "!*"
+    ]
+   }
+  }, 
+  {
+   "libdl.so.2": {
+    "compare_by": [
+     "versions", 
+     "symbols", 
+     "name"
+    ], 
+    "deb": "libc6", 
+    "from_host_system": true, 
+    "generate_dependency": false, 
+    "public_symbol_versions": [
+     "!GLIBC_PRIVATE", 
+     "GLIBC_*", 
+     "!GCC_*", 
+     "!", 
+     "!*"
+    ], 
+    "public_symbols": [
+     "!*@GLIBC_PRIVATE", 
+     "!malloc_get_state@*", 
+     "!malloc_set_state@*", 
+     "*@GLIBC_*", 
+     "!*@GCC_*", 
+     "!", 
+     "!*"
+    ]
+   }
+  }, 
+  {
+   "libm.so.6": {
+    "compare_by": [
+     "versions", 
+     "symbols", 
+     "name"
+    ], 
+    "deb": "libc6", 
+    "from_host_system": true, 
+    "generate_dependency": false, 
+    "public_symbol_versions": [
+     "!GLIBC_PRIVATE", 
+     "GLIBC_*", 
+     "!GCC_*", 
+     "!", 
+     "!*"
+    ], 
+    "public_symbols": [
+     "!*@GLIBC_PRIVATE", 
+     "!malloc_get_state@*", 
+     "!malloc_set_state@*", 
+     "*@GLIBC_*", 
+     "!*@GCC_*", 
+     "!", 
+     "!*"
+    ]
+   }
+  }, 
+  {
+   "libnsl.so.1": {
+    "compare_by": [
+     "versions", 
+     "symbols", 
+     "name"
+    ], 
+    "deb": "libc6", 
+    "from_host_system": true, 
+    "generate_dependency": false, 
+    "public_symbol_versions": [
+     "!GLIBC_PRIVATE", 
+     "GLIBC_*", 
+     "!GCC_*", 
+     "!", 
+     "!*"
+    ], 
+    "public_symbols": [
+     "!*@GLIBC_PRIVATE", 
+     "!malloc_get_state@*", 
+     "!malloc_set_state@*", 
+     "*@GLIBC_*", 
+     "!*@GCC_*", 
+     "!", 
+     "!*"
+    ]
+   }
+  }, 
+  {
+   "libpthread.so.0": {
+    "compare_by": [
+     "versions", 
+     "symbols", 
+     "name"
+    ], 
+    "deb": "libc6", 
+    "from_host_system": true, 
+    "generate_dependency": false, 
+    "public_symbol_versions": [
+     "!GLIBC_PRIVATE", 
+     "GLIBC_*", 
+     "!GCC_*", 
+     "!", 
+     "!*"
+    ], 
+    "public_symbols": [
+     "!*@GLIBC_PRIVATE", 
+     "!malloc_get_state@*", 
+     "!malloc_set_state@*", 
+     "*@GLIBC_*", 
+     "!*@GCC_*", 
+     "!", 
+     "!*"
+    ]
+   }
+  }, 
+  {
+   "libresolv.so.2": {
+    "compare_by": [
+     "versions", 
+     "symbols", 
+     "name"
+    ], 
+    "deb": "libc6", 
+    "from_host_system": true, 
+    "generate_dependency": false, 
+    "public_symbol_versions": [
+     "!GLIBC_PRIVATE", 
+     "GLIBC_*", 
+     "!GCC_*", 
+     "!", 
+     "!*"
+    ], 
+    "public_symbols": [
+     "!*@GLIBC_PRIVATE", 
+     "!malloc_get_state@*", 
+     "!malloc_set_state@*", 
+     "*@GLIBC_*", 
+     "!*@GCC_*", 
+     "!", 
+     "!*"
+    ]
+   }
+  }, 
+  {
+   "librt.so.1": {
+    "compare_by": [
+     "versions", 
+     "symbols", 
+     "name"
+    ], 
+    "deb": "libc6", 
+    "from_host_system": true, 
+    "generate_dependency": false, 
+    "public_symbol_versions": [
+     "!GLIBC_PRIVATE", 
+     "GLIBC_*", 
+     "!GCC_*", 
+     "!", 
+     "!*"
+    ], 
+    "public_symbols": [
+     "!*@GLIBC_PRIVATE", 
+     "!malloc_get_state@*", 
+     "!malloc_set_state@*", 
+     "*@GLIBC_*", 
+     "!*@GCC_*", 
+     "!", 
+     "!*"
+    ]
+   }
+  }, 
+  {
+   "libthread_db.so.1": {
+    "check_loadable": false, 
+    "deb": "libc6", 
+    "from_host_system": true, 
+    "generate_dependency": false
+   }
+  }, 
+  {
+   "libutil.so.1": {
+    "compare_by": [
+     "versions", 
+     "symbols", 
+     "name"
+    ], 
+    "deb": "libc6", 
+    "from_host_system": true, 
+    "generate_dependency": false, 
+    "public_symbol_versions": [
+     "!GLIBC_PRIVATE", 
+     "GLIBC_*", 
+     "!GCC_*", 
+     "!", 
+     "!*"
+    ], 
+    "public_symbols": [
+     "!*@GLIBC_PRIVATE", 
+     "!malloc_get_state@*", 
+     "!malloc_set_state@*", 
+     "*@GLIBC_*", 
+     "!*@GCC_*", 
+     "!", 
+     "!*"
+    ]
+   }
+  }, 
+  {
+   "libcom_err.so.2": {
+    "deb": "libcomerr2"
+   }
+  }, 
+  {
+   "libcrypt.so.1": {
+    "compare_by": [
+     "versions", 
+     "symbols", 
+     "name"
+    ], 
+    "deb": "libcrypt1", 
+    "public_symbol_versions": [
+     "XCRYPT_*", 
+     "!GLIBC_PRIVATE", 
+     "GLIBC_*", 
+     "!", 
+     "!*"
+    ], 
+    "public_symbols": [
+     "*"
+    ]
+   }
+  }, 
+  "libcups.so.2", 
+  {
+   "libcurl.so.4": {
+    "aliases": [
+     "libcurl.so.3"
+    ], 
+    "deb": "libcurl3", 
+    "public_symbol_versions": [
+     "CURL_OPENSSL_3", 
+     "!HIDDEN", 
+     "!", 
+     "!*"
+    ], 
+    "public_symbols": [
+     "!curl_jmpenv", 
+     "curl_*", 
+     "!Curl_*", 
+     "!", 
+     "!*"
+    ]
+   }
+  }, 
+  {
+   "libcurl-gnutls.so.4": {
+    "aliases": [
+     "libcurl-gnutls.so.3"
+    ], 
+    "deb": "libcurl3-gnutls", 
+    "public_symbol_versions": [
+     "CURL_GNUTLS_3", 
+     "!HIDDEN", 
+     "!", 
+     "!*"
+    ], 
+    "public_symbols": [
+     "!curl_jmpenv", 
+     "curl_*", 
+     "!Curl_*", 
+     "!", 
+     "!*"
+    ]
+   }
+  }, 
+  {
+   "libdbus-1.so.3": {
+    "public_symbols": [
+     "!_dbus_*", 
+     "!dbus_internal_*", 
+     "dbus_*", 
+     "!", 
+     "!*"
+    ]
+   }
+  }, 
+  "libdbus-glib-1.so.2", 
+  "libdbusmenu-glib.so.4", 
+  "libdbusmenu-gtk.so.4", 
+  {
+   "libdrm_intel.so.1": {
+    "check_loadable": false, 
+    "compare_by": [
+     "name", 
+     "symbols"
+    ], 
+    "from_host_system": true, 
+    "generate_dependency": false, 
+    "public_symbols": [
+     "!drm_mm*", 
+     "drm_intel_*", 
+     "!", 
+     "*"
+    ]
+   }
+  }, 
+  {
+   "libdrm_nouveau.so.2": {
+    "check_loadable": false, 
+    "compare_by": [
+     "name", 
+     "symbols"
+    ], 
+    "from_host_system": true, 
+    "generate_dependency": false, 
+    "public_symbols": [
+     "!abi16_*", 
+     "!nouveau_debug", 
+     "!nouveau_object_find", 
+     "nouveau_*", 
+     "!", 
+     "*"
+    ]
+   }
+  }, 
+  {
+   "libdrm_radeon.so.1": {
+    "check_loadable": false, 
+    "compare_by": [
+     "name", 
+     "symbols"
+    ], 
+    "from_host_system": true, 
+    "generate_dependency": false, 
+    "public_symbols": [
+     "!bof_*", 
+     "radeon_*", 
+     "!", 
+     "*"
+    ]
+   }
+  }, 
+  {
+   "libedit.so.2": {
+    "check_loadable": false, 
+    "compare_by": [
+     "symbols"
+    ], 
+    "from_host_system": true, 
+    "generate_dependency": false, 
+    "public_symbols": [
+     "!__ct*", 
+     "!c_*", 
+     "!ce_*", 
+     "!ch_*", 
+     "!ct_*", 
+     "!cv_*", 
+     "!ed_*", 
+     "!el_editmode", 
+     "!el_match", 
+     "!el_read*", 
+     "!em_*", 
+     "!fgetln", 
+     "!fn_complete2", 
+     "!func__get", 
+     "!help__get", 
+     "!hist_*", 
+     "!keymacro_*", 
+     "!libedit_*", 
+     "!map_*", 
+     "!nvis", 
+     "!parse_*", 
+     "!prompt_*", 
+     "!re_*", 
+     "!read_finish", 
+     "!read_init", 
+     "!read_prepare", 
+     "!search_*", 
+     "!sig_*", 
+     "!snvis", 
+     "!str*", 
+     "!svis", 
+     "!terminal_*", 
+     "!tty_*", 
+     "!unvis", 
+     "!vi_*", 
+     "!vis", 
+     "!wcsdup", 
+     "_el_fn_complete", 
+     "_rl_*", 
+     "add_history", 
+     "append_history", 
+     "clear_history", 
+     "completion_matches", 
+     "current_history", 
+     "el_*", 
+     "emacs_*", 
+     "filename_completion_function", 
+     "fn_*", 
+     "get_history_event", 
+     "history", 
+     "history_*", 
+     "max_input_history", 
+     "next_history", 
+     "previous_history", 
+     "read_history", 
+     "readline", 
+     "readline_echoing_p", 
+     "remove_history", 
+     "replace_history_entry", 
+     "rl_*", 
+     "stifle_history", 
+     "tilde_expand", 
+     "tok_*", 
+     "unstifle_history", 
+     "username_completion_function", 
+     "using_history", 
+     "where_history", 
+     "write_history", 
+     "!", 
+     "!*"
+    ]
+   }
+  }, 
+  "libelf.so.1", 
+  "libexif.so.12", 
+  "libexpat.so.1", 
+  {
+   "libexpatw.so.1": {
+    "deb": "libexpat1"
+   }
+  }, 
+  "libffi.so.6", 
+  "libFLAC.so.8", 
+  "libfltk.so.1.1", 
+  {
+   "libfltk_forms.so.1.1": {
+    "deb": "libfltk1.1"
+   }
+  }, 
+  {
+   "libfltk_gl.so.1.1": {
+    "deb": "libfltk1.1"
+   }
+  }, 
+  {
+   "libfltk_images.so.1.1": {
+    "deb": "libfltk1.1"
+   }
+  }, 
+  "libfontconfig.so.1", 
+  "libfreetype.so.6", 
+  {
+   "libgcc_s.so.1": {
+    "compare_by": [
+     "versions", 
+     "symbols"
+    ], 
+    "deb": "libgcc1", 
+    "public_symbol_versions": [
+     "*"
+    ], 
+    "public_symbols": [
+     "*"
+    ]
+   }
+  }, 
+  "libgconf-2.so.4", 
+  "libgcrypt.so.11", 
+  {
+   "libgdk_pixbuf-2.0.so.0": {
+    "deb": "libgdk-pixbuf2.0-0"
+   }
+  }, 
+  {
+   "libgdk_pixbuf_xlib-2.0.so.0": {
+    "deb": "libgdk-pixbuf2.0-0"
+   }
+  }, 
+  {
+   "libGL.so.1": {
+    "deb": "libgl1-mesa-glx", 
+    "from_host_system": true
+   }
+  }, 
+  "libGLEW.so.1.10", 
+  "libGLEW.so.1.6", 
+  {
+   "libgio-2.0.so.0": {
+    "deb": "libglib2.0-0"
+   }
+  }, 
+  {
+   "libglib-2.0.so.0": {
+    "deb": "libglib2.0-0", 
+    "public_symbols": [
+     "!glib__private__", 
+     "!glib_gettext", 
+     "!g_set_user_dirs", 
+     "!__glib_*", 
+     "g_*", 
+     "glib_*", 
+     "!", 
+     "!*"
+    ]
+   }
+  }, 
+  {
+   "libgmodule-2.0.so.0": {
+    "deb": "libglib2.0-0", 
+    "public_symbols": [
+     "g_*", 
+     "!", 
+     "!*"
+    ]
+   }
+  }, 
+  {
+   "libgobject-2.0.so.0": {
+    "deb": "libglib2.0-0", 
+    "public_symbols": [
+     "g_*", 
+     "!", 
+     "!*"
+    ]
+   }
+  }, 
+  {
+   "libgthread-2.0.so.0": {
+    "deb": "libglib2.0-0", 
+    "public_symbols": [
+     "g_*", 
+     "!", 
+     "!*"
+    ]
+   }
+  }, 
+  {
+   "libGLU.so.1": {
+    "deb": "libglu1-mesa"
+   }
+  }, 
+  "libgmp.so.10", 
+  "libgnutls.so.26", 
+  {
+   "libgnutls-extra.so.26": {
+    "deb": "libgnutls26"
+   }
+  }, 
+  "libgnutls.so.30", 
+  "libgomp.so.1", 
+  "libgpg-error.so.0", 
+  "libgssapi_krb5.so.2", 
+  {
+   "libgssapi.so.3": {
+    "deb": "libgssapi3-heimdal"
+   }
+  }, 
+  {
+   "libgstapp-0.10.so.0": {
+    "deb": "libgstreamer-plugins-base0.10-0"
+   }
+  }, 
+  {
+   "libgstaudio-0.10.so.0": {
+    "deb": "libgstreamer-plugins-base0.10-0"
+   }
+  }, 
+  {
+   "libgstcdda-0.10.so.0": {
+    "deb": "libgstreamer-plugins-base0.10-0"
+   }
+  }, 
+  {
+   "libgstfft-0.10.so.0": {
+    "deb": "libgstreamer-plugins-base0.10-0"
+   }
+  }, 
+  {
+   "libgstinterfaces-0.10.so.0": {
+    "deb": "libgstreamer-plugins-base0.10-0"
+   }
+  }, 
+  {
+   "libgstnetbuffer-0.10.so.0": {
+    "deb": "libgstreamer-plugins-base0.10-0"
+   }
+  }, 
+  {
+   "libgstpbutils-0.10.so.0": {
+    "deb": "libgstreamer-plugins-base0.10-0"
+   }
+  }, 
+  {
+   "libgstriff-0.10.so.0": {
+    "deb": "libgstreamer-plugins-base0.10-0"
+   }
+  }, 
+  {
+   "libgstrtp-0.10.so.0": {
+    "deb": "libgstreamer-plugins-base0.10-0"
+   }
+  }, 
+  {
+   "libgstrtsp-0.10.so.0": {
+    "deb": "libgstreamer-plugins-base0.10-0"
+   }
+  }, 
+  {
+   "libgstsdp-0.10.so.0": {
+    "deb": "libgstreamer-plugins-base0.10-0"
+   }
+  }, 
+  {
+   "libgsttag-0.10.so.0": {
+    "deb": "libgstreamer-plugins-base0.10-0"
+   }
+  }, 
+  {
+   "libgstvideo-0.10.so.0": {
+    "deb": "libgstreamer-plugins-base0.10-0"
+   }
+  }, 
+  {
+   "libgstbase-0.10.so.0": {
+    "deb": "libgstreamer0.10-0"
+   }
+  }, 
+  {
+   "libgstcheck-0.10.so.0": {
+    "deb": "libgstreamer0.10-0"
+   }
+  }, 
+  {
+   "libgstcontroller-0.10.so.0": {
+    "deb": "libgstreamer0.10-0"
+   }
+  }, 
+  {
+   "libgstdataprotocol-0.10.so.0": {
+    "deb": "libgstreamer0.10-0"
+   }
+  }, 
+  {
+   "libgstnet-0.10.so.0": {
+    "deb": "libgstreamer0.10-0"
+   }
+  }, 
+  {
+   "libgstreamer-0.10.so.0": {
+    "deb": "libgstreamer0.10-0"
+   }
+  }, 
+  {
+   "libgdk-x11-2.0.so.0": {
+    "deb": "libgtk2.0-0"
+   }
+  }, 
+  {
+   "libgtk-x11-2.0.so.0": {
+    "deb": "libgtk2.0-0"
+   }
+  }, 
+  "libgudev-1.0.so.0", 
+  {
+   "libhcrypto.so.4": {
+    "deb": "libhcrypto4-heimdal"
+   }
+  }, 
+  {
+   "libheimbase.so.1": {
+    "deb": "libheimbase1-heimdal"
+   }
+  }, 
+  {
+   "libheimntlm.so.0": {
+    "deb": "libheimntlm0-heimdal"
+   }
+  }, 
+  "libhogweed.so.4", 
+  {
+   "libhx509.so.5": {
+    "deb": "libhx509-5-heimdal"
+   }
+  }, 
+  "libICE.so.6", 
+  "libidn.so.11", 
+  "libindicator.so.7", 
+  {
+   "libitm.so.1": {
+    "hidden_dependencies": [
+     "libstdc++.so.6"
+    ]
+   }
+  }, 
+  {
+   "libjack.so.0": {
+    "deb": "libjack-jackd2-0"
+   }
+  }, 
+  {
+   "libjacknet.so.0": {
+    "deb": "libjack-jackd2-0"
+   }
+  }, 
+  {
+   "libjpeg.so.8": {
+    "deb": "libjpeg-turbo8"
+   }
+  }, 
+  "libjpeg.so.62", 
+  "libjson-glib-1.0.so.0", 
+  "libjson.so.0", 
+  "libk5crypto.so.3", 
+  "libkeyutils.so.1", 
+  {
+   "libkrb5.so.26": {
+    "deb": "libkrb5-26-heimdal"
+   }
+  }, 
+  "libkrb5.so.3", 
+  "libkrb5support.so.0", 
+  "liblcms2.so.2", 
+  {
+   "liblber-2.4.so.2": {
+    "deb": "libldap-2.4-2"
+   }
+  }, 
+  {
+   "libldap_r-2.4.so.2": {
+    "aliases": [
+     "libldap-2.4.so.2"
+    ], 
+    "deb": "libldap-2.4-2"
+   }
+  }, 
+  "libltdl.so.7", 
+  "libmikmod.so.2", 
+  "libmpg123.so.0", 
+  "libncurses.so.5", 
+  {
+   "libform.so.5": {
+    "deb": "libncurses5"
+   }
+  }, 
+  {
+   "libpanel.so.5": {
+    "deb": "libncurses5"
+   }
+  }, 
+  {
+   "libmenu.so.5": {
+    "deb": "libncurses5"
+   }
+  }, 
+  "libncursesw.so.5", 
+  {
+   "libformw.so.5": {
+    "deb": "libncursesw5"
+   }
+  }, 
+  {
+   "libpanelw.so.5": {
+    "deb": "libncursesw5"
+   }
+  }, 
+  {
+   "libmenuw.so.5": {
+    "deb": "libncursesw5"
+   }
+  }, 
+  "libnettle.so.6", 
+  "libnm.so.0", 
+  "libnm-glib.so.4", 
+  "libnm-util.so.2", 
+  "libnotify.so.4", 
+  {
+   "libplc4.so": {
+    "deb": "libnspr4"
+   }
+  }, 
+  {
+   "libplds4.so": {
+    "deb": "libnspr4"
+   }
+  }, 
+  "libnspr4.so", 
+  "libnss3.so", 
+  {
+   "libssl3.so": {
+    "deb": "libnss3"
+   }
+  }, 
+  {
+   "libsmime3.so": {
+    "deb": "libnss3"
+   }
+  }, 
+  {
+   "libnssutil3.so": {
+    "deb": "libnss3"
+   }
+  }, 
+  "libogg.so.0", 
+  "libopenal.so.1", 
+  "libopus.so.0", 
+  "libopusfile.so.0", 
+  {
+   "libopusurl.so.0": {
+    "deb": "libopusfile0"
+   }
+  }, 
+  "liborc-0.4.so.0", 
+  {
+   "liborc-test-0.4.so.0": {
+    "deb": "liborc-0.4-0"
+   }
+  }, 
+  "libp11-kit.so.0", 
+  {
+   "libpango-1.0.so.0": {
+    "deb": "libpango1.0-0"
+   }
+  }, 
+  {
+   "libpangocairo-1.0.so.0": {
+    "deb": "libpango1.0-0"
+   }
+  }, 
+  {
+   "libpangoft2-1.0.so.0": {
+    "deb": "libpango1.0-0"
+   }
+  }, 
+  {
+   "libpangox-1.0.so.0": {
+    "deb": "libpango1.0-0"
+   }
+  }, 
+  {
+   "libpangoxft-1.0.so.0": {
+    "deb": "libpango1.0-0"
+   }
+  }, 
+  "libpci.so.3", 
+  "libpcre.so.3", 
+  {
+   "libpcreposix.so.3": {
+    "deb": "libpcre3"
+   }
+  }, 
+  "libpcrecpp.so.0", 
+  "libpipewire-0.3.so.0", 
+  "libpixman-1.so.0", 
+  "libpng12.so.0", 
+  "libpulse.so.0", 
+  "libpulse-mainloop-glib.so.0", 
+  {
+   "libpulse-simple.so.0": {
+    "deb": "libpulse0"
+   }
+  }, 
+  {
+   "libroken.so.18": {
+    "deb": "libroken18-heimdal"
+   }
+  }, 
+  "libquadmath.so.0", 
+  "librtmp.so.0", 
+  "libsamplerate.so.0", 
+  "libsasl2.so.2", 
+  {
+   "libSDL_image-1.2.so.0": {
+    "deb": "libsdl-image1.2"
+   }
+  }, 
+  {
+   "libSDL_mixer-1.2.so.0": {
+    "deb": "libsdl-mixer1.2"
+   }
+  }, 
+  {
+   "libSDL_ttf-2.0.so.0": {
+    "deb": "libsdl-ttf2.0-0"
+   }
+  }, 
+  {
+   "libSDL-1.2.so.0": {
+    "deb": "libsdl1.2debian"
+   }
+  }, 
+  {
+   "libSDL2-2.0.so.0": {
+    "public_symbols": [
+     "SDL_*", 
+     "!org_kde_kwin_*", 
+     "!qt_*", 
+     "!wl_*", 
+     "!xdg_*", 
+     "!zwp_*", 
+     "!zxdg_*", 
+     "!", 
+     "!*"
+    ]
+   }
+  }, 
+  "libSDL2_image-2.0.so.0", 
+  "libSDL2_mixer-2.0.so.0", 
+  "libSDL2_net-2.0.so.0", 
+  "libSDL2_ttf-2.0.so.0", 
+  "libselinux.so.1", 
+  "libSM.so.6", 
+  "libsndfile.so.1", 
+  "libspeex.so.1", 
+  "libspeexdsp.so.1", 
+  "libsqlite3.so.0", 
+  {
+   "libcrypto.so.1.0.0": {
+    "deb": "libssl1.0.0"
+   }
+  }, 
+  "libssl.so.1.0.0", 
+  {
+   "libstdc++.so.6": {
+    "compare_by": [
+     "versions"
+    ]
+   }
+  }, 
+  "libsteam-runtime-tools-0.so.0", 
+  "libswscale.so.2", 
+  "libtasn1.so.3", 
+  "libtasn1.so.6", 
+  "libtbb.so.2", 
+  {
+   "libtbbmalloc.so.2": {
+    "deb": "libtbb2"
+   }
+  }, 
+  {
+   "libtbbmalloc_proxy.so.2": {
+    "deb": "libtbb2"
+   }
+  }, 
+  "libtdb.so.1", 
+  "libtheora.so.0", 
+  {
+   "libtheoradec.so.1": {
+    "deb": "libtheora0"
+   }
+  }, 
+  {
+   "libtheoraenc.so.1": {
+    "deb": "libtheora0", 
+    "hidden_dependencies": [
+     "libtheoradec.so.1"
+    ]
+   }
+  }, 
+  "libtiff.so.4", 
+  {
+   "libtinfo.so.5": {
+    "compare_by": [
+     "versions"
+    ]
+   }
+  }, 
+  {
+   "libtic.so.5": {
+    "deb": "libtinfo5"
+   }
+  }, 
+  {
+   "libudev.so.0": {
+    "public_symbols": [
+     "udev_*", 
+     "!", 
+     "!*"
+    ]
+   }
+  }, 
+  {
+   "libudev.so.1": {
+    "compare_by": [
+     "versions"
+    ], 
+    "public_symbol_versions": [
+     "LIBUDEV_*", 
+     "!", 
+     "!*"
+    ], 
+    "public_symbols": [
+     "udev_*", 
+     "!", 
+     "!*"
+    ]
+   }
+  }, 
+  "libusb-1.0.so.0", 
+  "libuuid.so.1", 
+  "libva-drm.so.1", 
+  "libva-drm.so.2", 
+  "libva-glx.so.1", 
+  "libva-glx.so.2", 
+  "libva-x11.so.1", 
+  "libva-x11.so.2", 
+  "libva.so.1", 
+  "libva.so.2", 
+  "libvdpau.so.1", 
+  {
+   "libvorbis.so.0": {
+    "deb": "libvorbis0a"
+   }
+  }, 
+  "libvorbisenc.so.2", 
+  "libvorbisfile.so.3", 
+  {
+   "libvpx.so.1": {
+    "aliases": [
+     "libvpx.so.1.0"
+    ]
+   }
+  }, 
+  "libvulkan.so.1", 
+  "libwaffle-1.so.0", 
+  {
+   "libwebp.so.6": {
+    "compare_by": [
+     "name", 
+     "symbols"
+    ], 
+    "public_symbols": [
+     "VP8*", 
+     "WebP*", 
+     "!", 
+     "!*"
+    ]
+   }
+  }, 
+  {
+   "libwind.so.0": {
+    "deb": "libwind0-heimdal"
+   }
+  }, 
+  "libwrap.so.0", 
+  "libX11.so.6", 
+  "libX11-xcb.so.1", 
+  "libXau.so.6", 
+  {
+   "libXaw.so.7": {
+    "aliases": [
+     "libXaw7.so.7"
+    ]
+   }
+  }, 
+  "libxcb-composite.so.0", 
+  "libxcb-damage.so.0", 
+  "libxcb-dpms.so.0", 
+  "libxcb-dri2.so.0", 
+  {
+   "libxcb-dri3.so.0": {
+    "compare_by": [
+     "symbols"
+    ], 
+    "public_symbols": [
+     "*"
+    ]
+   }
+  }, 
+  {
+   "libxcb-glx.so.0": {
+    "compare_by": [
+     "symbols"
+    ], 
+    "public_symbols": [
+     "*"
+    ]
+   }
+  }, 
+  {
+   "libxcb-present.so.0": {
+    "compare_by": [
+     "symbols"
+    ], 
+    "public_symbols": [
+     "*"
+    ]
+   }
+  }, 
+  {
+   "libxcb-randr.so.0": {
+    "compare_by": [
+     "symbols"
+    ], 
+    "public_symbols": [
+     "*"
+    ]
+   }
+  }, 
+  "libxcb-record.so.0", 
+  {
+   "libxcb-render.so.0": {
+    "compare_by": [
+     "symbols"
+    ], 
+    "public_symbols": [
+     "*"
+    ]
+   }
+  }, 
+  "libxcb-res.so.0", 
+  "libxcb-screensaver.so.0", 
+  {
+   "libxcb-shape.so.0": {
+    "compare_by": [
+     "symbols"
+    ], 
+    "public_symbols": [
+     "*"
+    ]
+   }
+  }, 
+  "libxcb-shm.so.0", 
+  {
+   "libxcb-sync.so.1": {
+    "compare_by": [
+     "symbols"
+    ], 
+    "public_symbols": [
+     "*"
+    ]
+   }
+  }, 
+  "libxcb-xevie.so.0", 
+  "libxcb-xf86dri.so.0", 
+  {
+   "libxcb-xfixes.so.0": {
+    "compare_by": [
+     "symbols"
+    ], 
+    "public_symbols": [
+     "*"
+    ]
+   }
+  }, 
+  "libxcb-xinerama.so.0", 
+  "libxcb-xkb.so.1", 
+  "libxcb-xprint.so.0", 
+  "libxcb-xtest.so.0", 
+  "libxcb-xv.so.0", 
+  "libxcb-xvmc.so.0", 
+  {
+   "libxcb.so.1": {
+    "compare_by": [
+     "symbols"
+    ], 
+    "public_symbols": [
+     "*"
+    ]
+   }
+  }, 
+  "libXcomposite.so.1", 
+  "libXcursor.so.1", 
+  "libXdamage.so.1", 
+  "libXdmcp.so.6", 
+  "libXext.so.6", 
+  "libXfixes.so.3", 
+  "libXft.so.2", 
+  "libXi.so.6", 
+  "libXinerama.so.1", 
+  {
+   "libxml2.so.2": {
+    "deb": "libxml2"
+   }
+  }, 
+  "libXmu.so.6", 
+  "libXpm.so.4", 
+  "libXrandr.so.2", 
+  "libXrender.so.1", 
+  "libXss.so.1", 
+  "libXt.so.6", 
+  "libXtst.so.6", 
+  "libXv.so.1", 
+  "libXxf86vm.so.1", 
+  {
+   "libz.so.1": {
+    "deb": "zlib1g"
+   }
+  }
+ ]
+}

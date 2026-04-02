@@ -1,0 +1,11 @@
+drwxr-xr-x root/root         0 2020-04-09 17:48 ./
+drwxr-xr-x root/root         0 2020-04-09 17:48 ./usr/
+drwxr-xr-x root/root         0 2020-04-09 17:48 ./usr/lib/
+drwxr-xr-x root/root         0 2020-04-09 17:48 ./usr/lib/x86_64-linux-gnu/
+-rw-r--r-- root/root     60024 2020-04-09 17:48 ./usr/lib/x86_64-linux-gnu/libwaffle-1.so.0.6.1
+drwxr-xr-x root/root         0 2020-04-09 17:48 ./usr/share/
+drwxr-xr-x root/root         0 2020-04-09 17:48 ./usr/share/doc/
+drwxr-xr-x root/root         0 2020-04-09 17:48 ./usr/share/doc/libwaffle-1-0/
+-rw-r--r-- root/root      3431 2020-03-16 14:10 ./usr/share/doc/libwaffle-1-0/copyright
+-rw-r--r-- root/root      2216 2020-04-09 17:45 ./usr/share/doc/libwaffle-1-0/changelog.Debian.amd64.gz
+lrwxrwxrwx root/root         0 2020-04-09 17:48 ./usr/lib/x86_64-linux-gnu/libwaffle-1.so.0 -> libwaffle-1.so.0.6.1

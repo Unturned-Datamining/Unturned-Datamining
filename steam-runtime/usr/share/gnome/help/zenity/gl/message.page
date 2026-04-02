@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<page xmlns="http://projectmallard.org/1.0/" type="guide" id="message" xml:lang="gl">
+  <info>
+    <link type="guide" xref="index#dialogs" group="message"/>
+    <desc><link xref="error">Erro</link>, <link xref="info">Información</link>, <link xref="question">Pregunta</link>, <link xref="warning">Advertencia</link></desc>
+  </info>
+  <title>Diálogo de mensaxe</title>
+  <p>
+For each type, use the <cmd>--text</cmd> option to specify the text that is displayed in the dialog.
+  </p>
+  <links type="topic" style="2column"/>
+</page>

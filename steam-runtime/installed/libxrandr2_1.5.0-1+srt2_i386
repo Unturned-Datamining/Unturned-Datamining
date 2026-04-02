@@ -1,0 +1,11 @@
+drwxr-xr-x root/root         0 2019-04-03 15:10 ./
+drwxr-xr-x root/root         0 2019-04-03 15:10 ./usr/
+drwxr-xr-x root/root         0 2019-04-03 15:10 ./usr/lib/
+drwxr-xr-x root/root         0 2019-04-03 15:10 ./usr/lib/i386-linux-gnu/
+-rw-r--r-- root/root     38380 2019-04-03 15:10 ./usr/lib/i386-linux-gnu/libXrandr.so.2.2.0
+drwxr-xr-x root/root         0 2019-04-03 15:10 ./usr/share/
+drwxr-xr-x root/root         0 2019-04-03 15:10 ./usr/share/doc/
+drwxr-xr-x root/root         0 2019-04-03 15:10 ./usr/share/doc/libxrandr2/
+-rw-r--r-- root/root      3129 2019-04-03 15:09 ./usr/share/doc/libxrandr2/changelog.Debian.i386.gz
+-rw-r--r-- root/root      3732 2019-04-03 15:09 ./usr/share/doc/libxrandr2/copyright
+lrwxrwxrwx root/root         0 2019-04-03 15:10 ./usr/lib/i386-linux-gnu/libXrandr.so.2 -> libXrandr.so.2.2.0

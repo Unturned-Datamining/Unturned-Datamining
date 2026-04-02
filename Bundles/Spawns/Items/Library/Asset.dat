@@ -1,0 +1,36 @@
+GUID 77ff744369f54242b16c206da6827de0
+Type Spawn
+
+Tables
+[
+	{
+		// Library_Supply (Spawn)
+		Guid 51c80ffaecb249338f9ff3f41f6954d6
+		Weight 33
+	}
+	{
+		// Library_Tools (Spawn)
+		Guid 73997a9a41b94e1e95b09fe622591b8c
+		Weight 30
+	}
+	{
+		// Seed (Spawn)
+		Guid 3a21ec8e5fd94d0cbd56ecdaa6338e7a
+		Weight 14
+	}
+	{
+		// Daypack (Spawn)
+		Guid 6cc22952f91c4ef28439b88d745f2c0d
+		Weight 9
+	}
+	{
+		// Umbrella (Spawn)
+		Guid 01e9e142f14a4aba9dac4a02b83067f2
+		Weight 9
+	}
+	{
+		// Library_Misc (Spawn)
+		Guid e442e746377447abb9b81547daa432c0
+		Weight 5
+	}
+]

@@ -203,6 +203,9 @@ ItemDescription_QualityConsumptionProbability Quality Decrease Chance: {0}
 ItemDescription_ProvidesCraftingTags Crafting Capabilities:
 ItemDescription_ListItem • {0}
 ItemDescription_LockpickFailureProbability Failure Chance: {0}
+ItemDescription_FishingRod_BiteIntervalMultiplier Fish Luring Speed: {0}
+ItemDescription_FishingRod_CaptureSpeedMultiplier Fish Capture Speed: {0}
+ItemDescription_FishingRod_EscapeSpeedMultiplier Fish Escape Speed: {0}
 
 Equip_Button Equip
 Equip_Button_Tooltip Equip in your hands.

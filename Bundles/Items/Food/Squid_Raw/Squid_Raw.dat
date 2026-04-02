@@ -1,6 +1,6 @@
 ﻿GUID aca1f2285fd54ba99bfdeb2d4e75155b
 Type Food
-Rarity Epic
+Rarity Legendary
 Useable Consumeable
 ID 1434
 
@@ -9,5 +9,26 @@ Size_Y 2
 Size_Z 0.4
 
 Food 50
+Water 30
 Virus 30
 ConsumeAudioClip Sounds/EatCrunchy.mp3
+
+Fishing_Catchable
+{
+	Min_Relocate_Interval 1.5
+	Max_Relocate_Interval 3
+	Max_Upward_Acceleration 4.5
+	Max_Downward_Acceleration 5
+	Max_Upward_Speed 3
+	Max_Downward_Speed 3
+	Upper_Restitution 0.7
+	Lower_Restitution 1
+	Min_Target_Delta 0.3
+	Max_Target_Delta 1
+	Min_Target_Position 0
+	Max_Target_Position 0.95
+	Capture_Duration 4.75
+	Escape_Duration 1
+	Spring_Stiffness 20
+	Spring_Damping 1.33
+}

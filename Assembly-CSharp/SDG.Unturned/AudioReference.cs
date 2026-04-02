@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 namespace SDG.Unturned;
@@ -46,7 +47,7 @@ public struct AudioReference
             else
             {
                 string text = masterBundleConfig.FormatAssetPathAndCache(path);
-                if (text.EndsWith(".asset"))
+                if (text.EndsWith(".asset", StringComparison.Ordinal))
                 {
                     OneShotAudioDefinition oneShotAudioDefinition = masterBundleConfig.assetBundle.LoadAsset<OneShotAudioDefinition>(text);
                     if (oneShotAudioDefinition == null)
@@ -57,7 +58,7 @@ public struct AudioReference
                     else
                     {
                         volumeMultiplier = oneShotAudioDefinition.volumeMultiplier;
-                        pitchMultiplier = Random.Range(oneShotAudioDefinition.minPitch, oneShotAudioDefinition.maxPitch);
+                        pitchMultiplier = UnityEngine.Random.Range(oneShotAudioDefinition.minPitch, oneShotAudioDefinition.maxPitch);
                         audioClip = oneShotAudioDefinition.GetRandomClip();
                     }
                 }
@@ -72,5 +73,12 @@ public struct AudioReference
             }
         }
         return audioClip;
+    }
+
+    public AudioClip LoadAudioClip()
+    {
+        float volumeMultiplier;
+        float pitchMultiplier;
+        return LoadAudioClip(out volumeMultiplier, out pitchMultiplier);
     }
 }

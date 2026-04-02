@@ -1,0 +1,12 @@
+drwxr-xr-x root/root         0 2019-04-03 19:29 ./
+drwxr-xr-x root/root         0 2019-04-03 19:29 ./usr/
+drwxr-xr-x root/root         0 2019-04-03 19:29 ./usr/lib/
+drwxr-xr-x root/root         0 2019-04-03 19:29 ./usr/lib/i386-linux-gnu/
+-rw-r--r-- root/root    207172 2019-04-03 19:29 ./usr/lib/i386-linux-gnu/libSDL_mixer-1.2.so.0.10.1
+drwxr-xr-x root/root         0 2019-04-03 19:29 ./usr/share/
+drwxr-xr-x root/root         0 2019-04-03 19:29 ./usr/share/doc/
+drwxr-xr-x root/root         0 2019-04-03 19:29 ./usr/share/doc/libsdl-mixer1.2/
+-rw-r--r-- root/root      6789 2019-04-03 19:28 ./usr/share/doc/libsdl-mixer1.2/changelog.Debian.i386.gz
+-rw-r--r-- root/root      1880 2009-10-12 23:06 ./usr/share/doc/libsdl-mixer1.2/README
+-rw-r--r-- root/root      3252 2011-12-18 23:55 ./usr/share/doc/libsdl-mixer1.2/copyright
+lrwxrwxrwx root/root         0 2019-04-03 19:29 ./usr/lib/i386-linux-gnu/libSDL_mixer-1.2.so.0 -> libSDL_mixer-1.2.so.0.10.1

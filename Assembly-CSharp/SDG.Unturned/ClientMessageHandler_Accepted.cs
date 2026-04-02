@@ -105,9 +105,11 @@ internal static class ClientMessageHandler_Accepted
             }
         }
         bool valueOrDefault = (Provider._modeConfigData?.Gameplay?.Use_2D_Scope_Overlay).GetValueOrDefault();
+        bool valueOrDefault2 = (Provider._modeConfigData?.Gameplay?.Disable_Foliage_Off).GetValueOrDefault();
         Provider._modeConfigData = new ModeConfigData(Provider.mode);
         reader.ReadUInt8(out var value3);
         Provider._modeConfigData.Gameplay.Repair_Level_Max = value3;
+        reader.ReadFloat(out Provider._modeConfigData.Players.Skill_Cost_Multiplier);
         reader.ReadBit(out Provider._modeConfigData.Players.Skillset_Reduces_Skill_Cost);
         reader.ReadBit(out Provider._modeConfigData.Gameplay.Hitmarkers);
         reader.ReadBit(out Provider._modeConfigData.Gameplay.Crosshair);
@@ -124,16 +126,24 @@ internal static class ClientMessageHandler_Accepted
         reader.ReadBit(out Provider._modeConfigData.Gameplay.Can_Suicide);
         reader.ReadBit(out Provider._modeConfigData.Gameplay.Friendly_Fire);
         reader.ReadBit(out Provider._modeConfigData.Gameplay.Bypass_Buildable_Mobility);
+        reader.ReadBit(out Provider._modeConfigData.Gameplay.Bypass_Building_In_Safezones);
+        reader.ReadBit(out Provider._modeConfigData.Gameplay.Bypass_No_Building_Zones);
         reader.ReadBit(out Provider._modeConfigData.Gameplay.Allow_Freeform_Buildables);
         reader.ReadBit(out Provider._modeConfigData.Gameplay.Allow_Freeform_Buildables_On_Vehicles);
         reader.ReadBit(out Provider._modeConfigData.Gameplay.Enable_Damage_Flinch);
         reader.ReadBit(out Provider._modeConfigData.Gameplay.Enable_Explosion_Camera_Shake);
         reader.ReadBit(out Provider._modeConfigData.Gameplay.Enable_Workstation_Requirements);
         reader.ReadBit(out Provider._modeConfigData.Gameplay.Disable_Motion_Sickness_Options);
+        reader.ReadBit(out Provider._modeConfigData.Gameplay.Disable_Foliage_Off);
         reader.ReadBit(out Provider._modeConfigData.Gameplay.Use_2D_Scope_Overlay);
+        reader.ReadBit(out Provider._modeConfigData.Gameplay.Enable_Fishing_Catch_Challenge);
         if (Provider._modeConfigData.Gameplay.Use_2D_Scope_Overlay != valueOrDefault && Player.LocalPlayer != null)
         {
             Player.LocalPlayer.look.updateScope(GraphicsSettings.scopeQuality);
+        }
+        if (Provider._modeConfigData.Gameplay.Disable_Foliage_Off != valueOrDefault2)
+        {
+            GraphicsSettings.ApplyFoliageQuality();
         }
         reader.ReadUInt16(out var value4);
         Provider._modeConfigData.Gameplay.Timer_Exit = MathfEx.Min(value4, 60u);
@@ -156,6 +166,9 @@ internal static class ClientMessageHandler_Accepted
         reader.ReadFloat(out Provider._modeConfigData.Gameplay.ThirdPerson_SpreadMultiplier);
         reader.ReadFloat(out Provider._modeConfigData.Gameplay.Viewmodel_AimingJumpLandMultiplier);
         reader.ReadFloat(out Provider._modeConfigData.Gameplay.Viewmodel_AimingMisalignmentMultiplier);
+        reader.ReadFloat(out Provider._modeConfigData.Gameplay.Min_Fishing_Bite_Interval);
+        reader.ReadFloat(out Provider._modeConfigData.Gameplay.Max_Fishing_Bite_Interval);
+        reader.ReadFloat(out Provider._modeConfigData.Gameplay.Fishing_MaxStrength_Bite_Interval_Multiplier);
         RichPresenceConnectionTarget = Provider.server.ToString();
         if (flag)
         {

@@ -1,0 +1,19 @@
+Reporting Bugs
+==============
+
+** PLEASE DO NOT REPORT BUGS OF THE NVIDIA CG TOOLKIT TO THE BTS **
+
+This package is just an *INSTALLER* for the NVIDIA Cg Toolkit. The NVIDIA Cg
+Toolkit is not free software. Please report any problem with the NVIDIA Cg
+Toolkit directly to NVIDIA. Their contact information is located at:
+
+    http://developer.nvidia.com/object/contact_us.html
+
+Report any bugs with the nvidia-cg-toolkit package or the installer to the Debian
+BTS.
+
+The Cg Tutorial
+===============
+
+The book "The Cg Tutorial" is now available online for free. Visit the book's
+homepage at http://developer.nvidia.com/object/cg_tutorial_home.html.

@@ -1,0 +1,11 @@
+drwxr-xr-x root/root         0 2023-03-23 18:26 ./
+drwxr-xr-x root/root         0 2023-03-23 18:26 ./usr/
+drwxr-xr-x root/root         0 2023-03-23 18:26 ./usr/lib/
+drwxr-xr-x root/root         0 2023-03-23 18:26 ./usr/lib/x86_64-linux-gnu/
+-rw-r--r-- root/root    413088 2023-03-23 18:26 ./usr/lib/x86_64-linux-gnu/libXt.so.6.0.0
+drwxr-xr-x root/root         0 2023-03-23 18:26 ./usr/share/
+drwxr-xr-x root/root         0 2023-03-23 18:26 ./usr/share/doc/
+drwxr-xr-x root/root         0 2023-03-23 18:26 ./usr/share/doc/libxt6/
+-rw-r--r-- root/root      4483 2023-03-23 18:24 ./usr/share/doc/libxt6/copyright
+-rw-r--r-- root/root      4274 2023-03-23 18:24 ./usr/share/doc/libxt6/changelog.Debian.amd64.gz
+lrwxrwxrwx root/root         0 2023-03-23 18:26 ./usr/lib/x86_64-linux-gnu/libXt.so.6 -> libXt.so.6.0.0

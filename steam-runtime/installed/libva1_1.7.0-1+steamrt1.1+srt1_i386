@@ -1,0 +1,14 @@
+drwxr-xr-x root/root         0 2019-10-23 17:21 ./
+drwxr-xr-x root/root         0 2019-10-23 17:20 ./usr/
+drwxr-xr-x root/root         0 2019-10-23 17:20 ./usr/lib/
+drwxr-xr-x root/root         0 2019-10-23 17:21 ./usr/lib/i386-linux-gnu/
+-rw-r--r-- root/root    112192 2019-10-23 17:21 ./usr/lib/i386-linux-gnu/libva.so.1.3900.0
+drwxr-xr-x root/root         0 2019-10-23 17:21 ./usr/lib/i386-linux-gnu/dri/
+-rw-r--r-- root/root     17752 2019-10-23 17:21 ./usr/lib/i386-linux-gnu/dri/dummy_drv_video.so
+drwxr-xr-x root/root         0 2019-10-23 17:20 ./usr/share/
+drwxr-xr-x root/root         0 2019-10-23 17:20 ./usr/share/doc/
+drwxr-xr-x root/root         0 2019-10-23 17:20 ./usr/share/doc/libva1/
+-rw-r--r-- root/root      2446 2016-03-15 07:04 ./usr/share/doc/libva1/changelog.gz
+-rw-r--r-- root/root      4631 2019-10-23 17:17 ./usr/share/doc/libva1/changelog.Debian.i386.gz
+-rw-r--r-- root/root      7256 2019-10-22 15:42 ./usr/share/doc/libva1/copyright
+lrwxrwxrwx root/root         0 2019-10-23 17:20 ./usr/lib/i386-linux-gnu/libva.so.1 -> libva.so.1.3900.0

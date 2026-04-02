@@ -1,4 +1,4 @@
-"Available_Instance_ID" "215"
+"Available_Instance_ID" "218"
 "Items"
 [
 	{
@@ -461225,7 +461225,7 @@
 			"No_Water" "true"
 			"No_Lighting" "false"
 			"Weather_Mask" "4294967295"
-			"Override_Fog" "false"
+			"Override_Fog_Mode" "None"
 			"Fog_Color"
 			{
 				"R" "255"
@@ -461236,92 +461236,13 @@
 			"Fog_Intensity" "0"
 			"Override_Atmospheric_Fog" "false"
 			"Enable_Falloff" "false"
-		}
-	}
-	{
-		"Type" "SDG.Framework.Devkit.AmbianceVolume, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null"
-		"Instance_ID" "13"
-		"Item"
-		{
-			"Position"
-			{
-				"X" "-140.348"
-				"Y" "27.55434"
-				"Z" "1382.112"
-			}
-			"Rotation"
-			{
-				"X" "0"
-				"Y" "0"
-				"Z" "0"
-				"W" "1"
-			}
-			"Scale"
-			{
-				"X" "146.88"
-				"Y" "146.88"
-				"Z" "146.88"
-			}
-			"Shape" "Sphere"
-			"Falloff" "0"
-			"Ambiance_ID" "0"
-			"No_Water" "true"
-			"No_Lighting" "false"
-			"Weather_Mask" "4294967295"
-			"Override_Fog" "false"
-			"Fog_Color"
-			{
-				"R" "255"
-				"G" "255"
-				"B" "255"
-				"A" "255"
-			}
-			"Fog_Intensity" "0"
-			"Override_Atmospheric_Fog" "false"
-			"Enable_Falloff" "false"
-		}
-	}
-	{
-		"Type" "SDG.Framework.Devkit.AmbianceVolume, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null"
-		"Instance_ID" "14"
-		"Item"
-		{
-			"Position"
-			{
-				"X" "-60.28687"
-				"Y" "30.59913"
-				"Z" "1361.675"
-			}
-			"Rotation"
-			{
-				"X" "0"
-				"Y" "0"
-				"Z" "0"
-				"W" "1"
-			}
-			"Scale"
-			{
-				"X" "117.12"
-				"Y" "117.12"
-				"Z" "117.12"
-			}
-			"Shape" "Sphere"
-			"Falloff" "0"
-			"Ambiance_ID" "0"
-			"No_Water" "true"
-			"No_Lighting" "false"
-			"Weather_Mask" "4294967295"
-			"Override_Fog" "false"
-			"Fog_Color"
-			{
-				"R" "255"
-				"G" "255"
-				"B" "255"
-				"A" "255"
-			}
-			"Fog_Intensity" "0"
-			"Override_Atmospheric_Fog" "false"
-			"Enable_Falloff" "false"
+			"Priority" "0"
+			"Audio_FadeIn" "2"
+			"Audio_FadeOut" "2"
+			"Fog_FadeIn" "20"
+			"Fog_FadeOut" "8"
+			"Lighting_FadeIn" "4"
+			"Lighting_FadeOut" "4"
 		}
 	}
 	{
@@ -461354,7 +461275,7 @@
 			"No_Water" "false"
 			"No_Lighting" "true"
 			"Weather_Mask" "4294967295"
-			"Override_Fog" "false"
+			"Override_Fog_Mode" "None"
 			"Fog_Color"
 			{
 				"R" "255"
@@ -461365,6 +461286,13 @@
 			"Fog_Intensity" "0"
 			"Override_Atmospheric_Fog" "false"
 			"Enable_Falloff" "true"
+			"Priority" "0"
+			"Audio_FadeIn" "2"
+			"Audio_FadeOut" "2"
+			"Fog_FadeIn" "20"
+			"Fog_FadeOut" "8"
+			"Lighting_FadeIn" "4"
+			"Lighting_FadeOut" "4"
 		}
 	}
 	{
@@ -461397,7 +461325,7 @@
 			"No_Water" "false"
 			"No_Lighting" "true"
 			"Weather_Mask" "4294967295"
-			"Override_Fog" "false"
+			"Override_Fog_Mode" "None"
 			"Fog_Color"
 			{
 				"R" "255"
@@ -461408,6 +461336,13 @@
 			"Fog_Intensity" "0"
 			"Override_Atmospheric_Fog" "false"
 			"Enable_Falloff" "true"
+			"Priority" "0"
+			"Audio_FadeIn" "2"
+			"Audio_FadeOut" "2"
+			"Fog_FadeIn" "20"
+			"Fog_FadeOut" "8"
+			"Lighting_FadeIn" "4"
+			"Lighting_FadeOut" "4"
 		}
 	}
 	{
@@ -461469,7 +461404,7 @@
 			"No_Water" "false"
 			"No_Lighting" "true"
 			"Weather_Mask" "4294967295"
-			"Override_Fog" "false"
+			"Override_Fog_Mode" "None"
 			"Fog_Color"
 			{
 				"R" "255"
@@ -461480,6 +461415,13 @@
 			"Fog_Intensity" "0"
 			"Override_Atmospheric_Fog" "false"
 			"Enable_Falloff" "true"
+			"Priority" "0"
+			"Audio_FadeIn" "2"
+			"Audio_FadeOut" "2"
+			"Fog_FadeIn" "20"
+			"Fog_FadeOut" "8"
+			"Lighting_FadeIn" "4"
+			"Lighting_FadeOut" "4"
 		}
 	}
 	{
@@ -464268,7 +464210,7 @@
 			"No_Water" "false"
 			"No_Lighting" "true"
 			"Weather_Mask" "4294967295"
-			"Override_Fog" "false"
+			"Override_Fog_Mode" "None"
 			"Fog_Color"
 			{
 				"R" "255"
@@ -464279,6 +464221,13 @@
 			"Fog_Intensity" "0"
 			"Override_Atmospheric_Fog" "false"
 			"Enable_Falloff" "true"
+			"Priority" "0"
+			"Audio_FadeIn" "2"
+			"Audio_FadeOut" "2"
+			"Fog_FadeIn" "20"
+			"Fog_FadeOut" "8"
+			"Lighting_FadeIn" "4"
+			"Lighting_FadeOut" "4"
 		}
 	}
 	{
@@ -464311,7 +464260,7 @@
 			"No_Water" "false"
 			"No_Lighting" "true"
 			"Weather_Mask" "4294967295"
-			"Override_Fog" "false"
+			"Override_Fog_Mode" "None"
 			"Fog_Color"
 			{
 				"R" "255"
@@ -464322,6 +464271,13 @@
 			"Fog_Intensity" "0"
 			"Override_Atmospheric_Fog" "false"
 			"Enable_Falloff" "true"
+			"Priority" "0"
+			"Audio_FadeIn" "2"
+			"Audio_FadeOut" "2"
+			"Fog_FadeIn" "20"
+			"Fog_FadeOut" "8"
+			"Lighting_FadeIn" "4"
+			"Lighting_FadeOut" "4"
 		}
 	}
 	{
@@ -464354,7 +464310,7 @@
 			"No_Water" "false"
 			"No_Lighting" "true"
 			"Weather_Mask" "4294967295"
-			"Override_Fog" "false"
+			"Override_Fog_Mode" "None"
 			"Fog_Color"
 			{
 				"R" "255"
@@ -464365,6 +464321,13 @@
 			"Fog_Intensity" "0"
 			"Override_Atmospheric_Fog" "false"
 			"Enable_Falloff" "true"
+			"Priority" "0"
+			"Audio_FadeIn" "2"
+			"Audio_FadeOut" "2"
+			"Fog_FadeIn" "20"
+			"Fog_FadeOut" "8"
+			"Lighting_FadeIn" "4"
+			"Lighting_FadeOut" "4"
 		}
 	}
 	{
@@ -464397,7 +464360,7 @@
 			"No_Water" "false"
 			"No_Lighting" "true"
 			"Weather_Mask" "4294967295"
-			"Override_Fog" "false"
+			"Override_Fog_Mode" "None"
 			"Fog_Color"
 			{
 				"R" "255"
@@ -464408,6 +464371,13 @@
 			"Fog_Intensity" "0"
 			"Override_Atmospheric_Fog" "false"
 			"Enable_Falloff" "true"
+			"Priority" "0"
+			"Audio_FadeIn" "2"
+			"Audio_FadeOut" "2"
+			"Fog_FadeIn" "20"
+			"Fog_FadeOut" "8"
+			"Lighting_FadeIn" "4"
+			"Lighting_FadeOut" "4"
 		}
 	}
 	{
@@ -464440,7 +464410,7 @@
 			"No_Water" "false"
 			"No_Lighting" "true"
 			"Weather_Mask" "4294967295"
-			"Override_Fog" "false"
+			"Override_Fog_Mode" "None"
 			"Fog_Color"
 			{
 				"R" "255"
@@ -464451,6 +464421,13 @@
 			"Fog_Intensity" "0"
 			"Override_Atmospheric_Fog" "false"
 			"Enable_Falloff" "true"
+			"Priority" "0"
+			"Audio_FadeIn" "2"
+			"Audio_FadeOut" "2"
+			"Fog_FadeIn" "20"
+			"Fog_FadeOut" "8"
+			"Lighting_FadeIn" "4"
+			"Lighting_FadeOut" "4"
 		}
 	}
 	{
@@ -464483,7 +464460,7 @@
 			"No_Water" "false"
 			"No_Lighting" "true"
 			"Weather_Mask" "4294967295"
-			"Override_Fog" "false"
+			"Override_Fog_Mode" "None"
 			"Fog_Color"
 			{
 				"R" "255"
@@ -464494,6 +464471,13 @@
 			"Fog_Intensity" "0"
 			"Override_Atmospheric_Fog" "false"
 			"Enable_Falloff" "true"
+			"Priority" "0"
+			"Audio_FadeIn" "2"
+			"Audio_FadeOut" "2"
+			"Fog_FadeIn" "20"
+			"Fog_FadeOut" "8"
+			"Lighting_FadeIn" "4"
+			"Lighting_FadeOut" "4"
 		}
 	}
 	{
@@ -464526,7 +464510,7 @@
 			"No_Water" "false"
 			"No_Lighting" "true"
 			"Weather_Mask" "4294967295"
-			"Override_Fog" "false"
+			"Override_Fog_Mode" "None"
 			"Fog_Color"
 			{
 				"R" "255"
@@ -464537,6 +464521,13 @@
 			"Fog_Intensity" "0"
 			"Override_Atmospheric_Fog" "false"
 			"Enable_Falloff" "true"
+			"Priority" "0"
+			"Audio_FadeIn" "2"
+			"Audio_FadeOut" "2"
+			"Fog_FadeIn" "20"
+			"Fog_FadeOut" "8"
+			"Lighting_FadeIn" "4"
+			"Lighting_FadeOut" "4"
 		}
 	}
 	{
@@ -464569,7 +464560,7 @@
 			"No_Water" "false"
 			"No_Lighting" "true"
 			"Weather_Mask" "4294967295"
-			"Override_Fog" "false"
+			"Override_Fog_Mode" "None"
 			"Fog_Color"
 			{
 				"R" "255"
@@ -464580,6 +464571,13 @@
 			"Fog_Intensity" "0"
 			"Override_Atmospheric_Fog" "false"
 			"Enable_Falloff" "true"
+			"Priority" "0"
+			"Audio_FadeIn" "2"
+			"Audio_FadeOut" "2"
+			"Fog_FadeIn" "20"
+			"Fog_FadeOut" "8"
+			"Lighting_FadeIn" "4"
+			"Lighting_FadeOut" "4"
 		}
 	}
 	{
@@ -465156,6 +465154,38 @@
 			"Kill_Animals" "true"
 			"Kill_Vehicles" "false"
 			"Death_Cause" "BURNING"
+		}
+	}
+	{
+		"Type" "SDG.Framework.Water.WaterVolume, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null"
+		"Instance_ID" "216"
+		"Item"
+		{
+			"Position"
+			{
+				"X" "-425.5236"
+				"Y" "12.24765"
+				"Z" "-1482.052"
+			}
+			"Rotation"
+			{
+				"X" "0"
+				"Y" "0"
+				"Z" "0"
+				"W" "1"
+			}
+			"Scale"
+			{
+				"X" "7344.343"
+				"Y" "26.70581"
+				"Z" "5235.209"
+			}
+			"Shape" "Box"
+			"Is_Surface_Visible" "true"
+			"Is_Reflection_Visible" "true"
+			"Is_Sea_Level" "true"
+			"Water_Type" "SALTY"
+			"Fish_Spawn_Table" "00000000000000000000000000000000"
 		}
 	}
 ]

@@ -1,0 +1,16 @@
+drwxr-xr-x root/root         0 2019-04-03 16:27 ./
+drwxr-xr-x root/root         0 2019-04-03 16:27 ./usr/
+drwxr-xr-x root/root         0 2019-04-03 16:27 ./usr/lib/
+drwxr-xr-x root/root         0 2019-04-03 16:27 ./usr/lib/i386-linux-gnu/
+-rw-r--r-- root/root    320076 2019-04-03 16:27 ./usr/lib/i386-linux-gnu/libmikmod.so.2.0.4
+drwxr-xr-x root/root         0 2019-04-03 16:27 ./usr/share/
+drwxr-xr-x root/root         0 2019-04-03 16:27 ./usr/share/lintian/
+drwxr-xr-x root/root         0 2019-04-03 16:27 ./usr/share/lintian/overrides/
+-rw-r--r-- root/root       165 2012-12-21 15:48 ./usr/share/lintian/overrides/libmikmod2
+drwxr-xr-x root/root         0 2019-04-03 16:27 ./usr/share/doc/
+drwxr-xr-x root/root         0 2019-04-03 16:27 ./usr/share/doc/libmikmod2/
+-rw-r--r-- root/root      7832 2011-10-31 20:01 ./usr/share/doc/libmikmod2/changelog.gz
+-rw-r--r-- root/root      1835 2012-10-20 08:38 ./usr/share/doc/libmikmod2/copyright
+-rw-r--r-- root/root      6532 2011-10-31 20:01 ./usr/share/doc/libmikmod2/README.gz
+-rw-r--r-- root/root      4272 2019-04-03 16:26 ./usr/share/doc/libmikmod2/changelog.Debian.i386.gz
+lrwxrwxrwx root/root         0 2019-04-03 16:27 ./usr/lib/i386-linux-gnu/libmikmod.so.2 -> libmikmod.so.2.0.4

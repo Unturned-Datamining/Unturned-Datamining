@@ -42,6 +42,9 @@ public enum ELoadingTip
     WORKSTATION_MEDICINE,
     WORKSTATION_DYE,
     WORKSTATION_CLOTHES,
+    WORKSTATION_POTTERY,
+    MINING_CLAY,
+    FISHING,
     /// <summary>
     /// Marker for counting number of tips.
     /// </summary>

@@ -1,0 +1,46 @@
+﻿GUID 03e87f8cf1c44ff7831c072e9d788f49
+Type Food
+Rarity Epic
+Useable Consumeable
+ID 1947
+
+Size_X 1
+Size_Y 1
+Size_Z 0.3
+
+Food 85
+Water 65
+Disinfectant 20
+
+
+Blueprints
+[
+	{
+		CategoryTag "d089feb7e43f40c5a7dfcefc36998cfb" // Supplies
+		InputItems
+		[
+			"3a79165167674d0f8d7d850b5363c9fd" // Steamed Taro
+			"2f1cdef00efc4208b1f4f95ca09724ca" // Cooked Rice
+			"e33481d4439344e7ba8a110a4bbb98ea" // Cooked Shrimp
+			"a974348e439e45de91fa44b5b6da20b8 x 2" // Roasted Brown Cap Mushroom
+		]
+		OutputItems
+		[
+			"03e87f8cf1c44ff7831c072e9d788f49" // Taro Rice Cake
+			"7bc206a6790b4494a44957867871146e x 2" // Clay Bowl
+		]
+		Skill Cook
+		Skill_Level 3
+		RequiresNearbyCraftingTags
+		[
+			"20f30322bbcc4b01a4f116d22b24c21a" // Heat Source
+			"68816064e2ce44839c3f35da55033cba" // Cooking Table
+		]
+		Effect "84347b13028340b8976033c08675d458" // Wrench
+		Searchable false
+	}
+]
+
+ConsumeAudioClip Sounds/EatTaroRicecake.mp3
+Procedurally_Animate_Inertia false
+EquipablePrefab Items/Food/Taro_Ricecake/Equipable.prefab

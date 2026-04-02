@@ -1,0 +1,21 @@
+GUID 6d535d1033584b6abfd1df670bb371e1
+Type Spawn
+
+Tables
+[
+	{
+		// Rain Pants (Pants Item)
+		Guid bdb2c27b56f040d29a292f9463bff41e
+		Weight 33
+	}
+	{
+		// Rain Hat (Hat Item)
+		Guid c88cc2394c46482dadbb7d1a36a0e50c
+		Weight 33
+	}
+	{
+		// Rain Jacket (Shirt Item)
+		Guid 30ee68c9398541da897ad8055c1cba7c
+		Weight 33
+	}
+]

@@ -1,0 +1,34 @@
+﻿GUID 255ac00ff41d43439522e243e5f0a0ed
+Type Food
+Rarity Rare
+Useable Consumeable
+ID 1965
+
+Size_X 3
+Size_Y 2
+Size_Z 0.225
+
+Food 35
+Water 25
+Virus 30
+ConsumeAudioClip Sounds/EatCrunchy.mp3
+
+Fishing_Catchable
+{
+	Min_Relocate_Interval 0.3
+	Max_Relocate_Interval 1
+	Max_Upward_Acceleration 1.3
+	Max_Downward_Acceleration 1.75
+	Max_Upward_Speed 0.5
+	Max_Downward_Speed 1.2
+	Upper_Restitution 0
+	Lower_Restitution 2
+	Min_Target_Delta 0.35
+	Max_Target_Delta 0.4
+	Min_Target_Position 0
+	Max_Target_Position 0.4
+	Capture_Duration 2.75
+	Escape_Duration 1.25
+	Spring_Stiffness 20
+	Spring_Damping 4
+}

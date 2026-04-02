@@ -1,0 +1,12 @@
+drwxr-xr-x root/root         0 2019-09-24 16:35 ./
+drwxr-xr-x root/root         0 2019-09-24 16:35 ./usr/
+drwxr-xr-x root/root         0 2019-09-24 16:35 ./usr/lib/
+drwxr-xr-x root/root         0 2019-09-24 16:35 ./usr/lib/x86_64-linux-gnu/
+-rw-r--r-- root/root     18584 2019-09-24 16:35 ./usr/lib/x86_64-linux-gnu/libSDL2_net-2.0.so.0.0.1
+drwxr-xr-x root/root         0 2019-09-24 16:35 ./usr/share/
+drwxr-xr-x root/root         0 2019-09-24 16:35 ./usr/share/doc/
+drwxr-xr-x root/root         0 2019-09-24 16:35 ./usr/share/doc/libsdl2-net-2.0-0/
+-rw-r--r-- root/root      1812 2019-09-24 11:41 ./usr/share/doc/libsdl2-net-2.0-0/copyright
+-rw-r--r-- root/root      3417 2019-09-24 16:33 ./usr/share/doc/libsdl2-net-2.0-0/changelog.Debian.amd64.gz
+-rw-r--r-- root/root       979 2016-01-03 07:57 ./usr/share/doc/libsdl2-net-2.0-0/README.txt
+lrwxrwxrwx root/root         0 2019-09-24 16:35 ./usr/lib/x86_64-linux-gnu/libSDL2_net-2.0.so.0 -> libSDL2_net-2.0.so.0.0.1

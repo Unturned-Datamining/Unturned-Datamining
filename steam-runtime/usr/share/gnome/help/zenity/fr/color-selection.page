@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<page xmlns="http://projectmallard.org/1.0/" type="topic" id="color-selection" xml:lang="fr">
+  <info>
+    <link type="guide" xref="index#dialogs"/>
+    <desc>Utiliser l'option <cmd>--color-selection</cmd>.</desc>
+  </info>
+  <title>Boîte de dialogue de sélection de couleur</title>
+  <p>Utilisez l'option <cmd>--color-selection</cmd> pour créer une boîte de dialogue de sélection de couleur.</p>
+  <p>Options de la boîte de dialogue de sélection de couleur :</p>
+
+  <terms>
+
+    <item>
+      <title><cmd>--color</cmd>=<var>VALEUR</var></title>
+      <p>Définir la couleur initiale (ex. : #FF0000).</p>
+    </item>
+
+    <item>
+      <title><cmd>--show-palette</cmd></title>
+      <p>Afficher la palette.</p>
+    </item>
+
+  </terms>
+
+  <p>Le script d'exemple suivant montre comment créer une boîte de dialogue de sélection de couleur :</p>
+
+<code>
+#!/bin/sh
+
+COLOR=`zenity --color-selection --show-palette`
+
+case $? in
+         0)
+		echo "Vous avez sélectionné $COLOR.";;
+         1)
+                echo "Aucune couleur sélectionnée.";;
+        -1)
+                echo "Une erreur inattendue est survenue.";;
+esac
+</code>
+
+  <figure id="zenity-colorselection-screenshot">
+    <title>Exemple de boîte de dialogue de sélection de couleur</title>
+    <desc>Exemple de boîte de dialogue de sélection de couleur <app>Zenity</app></desc>
+    <media type="image" mime="image/png" src="figures/zenity-colorselection-screenshot.png"/>
+  </figure>
+
+</page>

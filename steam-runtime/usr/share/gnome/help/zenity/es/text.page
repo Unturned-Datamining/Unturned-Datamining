@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<page xmlns="http://projectmallard.org/1.0/" type="topic" id="text" xml:lang="es">
+  <info>
+    <link type="guide" xref="index#dialogs"/>
+    <desc>Use la opción <cmd>--text-info</cmd>.</desc>
+  </info>
+  <title>Diálogo para la texto de información</title>
+    <p>Use la opción <cmd>--text-info</cmd> para crear un diálogo de texto de información.</p>
+	
+    <p>El diálogo de texto de información soporta las siguientes opciones:</p>
+
+    <terms>
+
+      <item>
+        <title><cmd>--filename</cmd>=<var>nombre_de_archivo</var></title>
+	<p>Especifica un archivo que se carga en el diálogo de texto de información.</p>
+      </item>
+
+      <item>
+        <title><cmd>--editable</cmd></title>
+        <p>Permite que el texto mostrado sea editado. El texto editado se devuelve por la salida estándar cuando el diálogo se cierra.</p>
+      </item>
+
+      <item>
+        <title><cmd>--font</cmd>=<var>TIPOGRAFÍA</var></title>
+	<p>Especifica la tipografía del texto.</p>
+      </item>
+
+      <item>
+        <title><cmd>--checkbox</cmd>=<var>TEXTO</var></title>
+	<p>Activar una casilla para usarla como «He leído y acepto los términos».</p>
+      </item>
+
+      <item>
+        <title><cmd>--html</cmd></title>
+        <p>Activar el soporte de HTML.</p>
+      </item>
+
+      <item>
+        <title><cmd>--url</cmd>=<var>URL</var></title>
+	<p>Establecer un URL en vez de un archivo. Sólo funciona si usa la opción «--html».</p>
+      </item>
+
+    </terms>
+
+    <p>El siguiente script de ejemplo muestra cómo crear un diálogo de texto de información:</p>
+
+<code>
+#!/bin/sh
+
+# Debe copiar el archivo "COPYING" en la misma carpeta que este script.
+FILE=`dirname $0`/COPYING
+
+zenity --text-info \
+       --title="Licencia" \
+       --filename=$FILE \
+       --checkbox="He leído y acepto los términos."
+
+case $? in
+    0)
+        echo "Comenzar instalación"
+	# siguiente paso
+	;;
+    1)
+        echo "Detener instalación"
+	;;
+    -1)
+        echo "Ha ocurrido un error inesperado."
+	;;
+esac
+</code>
+
+    <figure id="zenity-text-screenshot">
+      <title>Ejemplo del diálogo de texto de información</title>
+      <desc>Ejemplo del diálogo de texto de información de <app>Zenity</app></desc>
+      <media type="image" mime="image/png" src="figures/zenity-text-screenshot.png"/>
+    </figure>
+</page>

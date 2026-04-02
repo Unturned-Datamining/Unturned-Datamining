@@ -1,0 +1,9 @@
+drwxr-xr-x root/root         0 2019-04-03 21:28 ./
+drwxr-xr-x root/root         0 2019-04-03 21:28 ./usr/
+drwxr-xr-x root/root         0 2019-04-03 21:28 ./usr/lib/
+drwxr-xr-x root/root         0 2019-04-03 21:28 ./usr/lib/i386-linux-gnu/
+-rw-r--r-- root/root     25976 2019-04-03 21:28 ./usr/lib/i386-linux-gnu/libatomic.so.1.1.0
+drwxr-xr-x root/root         0 2019-04-03 21:28 ./usr/share/
+drwxr-xr-x root/root         0 2019-04-03 21:28 ./usr/share/doc/
+lrwxrwxrwx root/root         0 2019-04-03 21:24 ./usr/lib/i386-linux-gnu/libatomic.so.1 -> libatomic.so.1.1.0
+lrwxrwxrwx root/root         0 2019-04-03 21:28 ./usr/share/doc/libatomic1 -> gcc-5-base

@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<page xmlns="http://projectmallard.org/1.0/" type="topic" id="question" xml:lang="de">
+  <info>
+    <link type="guide" xref="message"/>
+    <desc>Die Option <cmd>--question</cmd> verwenden.</desc>
+  </info>
+  <title>Fragedialog</title>
+      <p>Verwenden Sie die Option <cmd>--question</cmd>, um einen Fragedialog zu erzeugen.</p>
+
+      <p>Das folgende Beispielskript zeigt, wie Sie einen Fragedialog erzeugen:</p>
+
+<code>
+#!/bin/bash
+
+zenity --question \
+--text="Wollen Sie wirklich fortsetzen?"
+</code>
+
+
+      <figure id="zenity-question-screenshot">
+        <title>Beispiel für einen Fragedialog</title>
+	<desc>Beispiel für einen Fragedialog in <app>Zenity</app></desc>
+        <media type="image" mime="image/png" src="figures/zenity-question-screenshot.png"/>
+      </figure>
+</page>

@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<page xmlns="http://projectmallard.org/1.0/" type="guide" id="message" xml:lang="fr">
+  <info>
+    <link type="guide" xref="index#dialogs" group="message"/>
+    <desc><link xref="error">Erreur</link>, <link xref="info">Informations</link>, <link xref="question">Question</link>, <link xref="warning">Avertissement</link></desc>
+  </info>
+  <title>Boîte de dialogue de message</title>
+  <p>Pour chaque type, utilisez l'option <cmd>--text</cmd> pour spécifier le texte affiché dans la boîte de dialogue.</p>
+  <links type="topic" style="2column"/>
+</page>

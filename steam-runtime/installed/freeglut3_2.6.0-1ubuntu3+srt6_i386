@@ -1,0 +1,12 @@
+drwxr-xr-x root/root         0 2019-04-03 16:40 ./
+drwxr-xr-x root/root         0 2019-04-03 16:40 ./usr/
+drwxr-xr-x root/root         0 2019-04-03 16:40 ./usr/lib/
+drwxr-xr-x root/root         0 2019-04-03 16:40 ./usr/lib/i386-linux-gnu/
+-rw-r--r-- root/root    229212 2019-04-03 16:40 ./usr/lib/i386-linux-gnu/libglut.so.3.9.0
+drwxr-xr-x root/root         0 2019-04-03 16:40 ./usr/share/
+drwxr-xr-x root/root         0 2019-04-03 16:40 ./usr/share/doc/
+drwxr-xr-x root/root         0 2019-04-03 16:40 ./usr/share/doc/freeglut3/
+-rw-r--r-- root/root     46961 2009-08-10 18:39 ./usr/share/doc/freeglut3/changelog.gz
+-rw-r--r-- root/root      2099 2010-03-27 12:02 ./usr/share/doc/freeglut3/copyright
+-rw-r--r-- root/root      2674 2019-04-03 16:39 ./usr/share/doc/freeglut3/changelog.Debian.i386.gz
+lrwxrwxrwx root/root         0 2019-04-03 16:40 ./usr/lib/i386-linux-gnu/libglut.so.3 -> libglut.so.3.9.0

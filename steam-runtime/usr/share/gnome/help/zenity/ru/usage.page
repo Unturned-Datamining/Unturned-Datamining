@@ -1,0 +1,280 @@
+<?xml version="1.0" encoding="utf-8"?>
+<page xmlns="http://projectmallard.org/1.0/" type="topic" id="usage" xml:lang="ru">
+<info>
+  <link type="guide" xref="index"/>
+  <desc>You can use <app>Zenity</app> to create simple dialogs that interact graphically with the user.</desc>
+</info>
+<title>Использование</title>
+    <p>
+	When you write scripts, you can use <app>Zenity</app> to create simple dialogs that interact graphically with the user, as follows:
+    </p>
+    <list>
+      <item>
+        <p>Вы можете создать диалоговое окно, чтобы получить информацию от пользователя. Например, вы можете попросить пользователя выбрать дату из календаря или выбрать файл из окна выбора файла.</p>
+      </item>
+      <item>
+        <p>Вы можете создать диалоговое окно, чтобы предоставить информацию пользователю. Например, вы можете использовать окно с ходом выполнения, чтобы указать текущее состояние операции или использовать окно предупреждения, чтобы оповестить пользователя.</p>
+      </item>
+    </list>
+    <p>
+	When the user closes the dialog, <app>Zenity</app> prints the text produced by the dialog to standard output.
+    </p>
+
+    <note>
+      <p>
+        When you write <app>Zenity</app> commands, ensure that you place quotation marks around each argument. 
+      </p>
+      <p>For example, use:</p>
+      <screen>zenity --calendar --title="Holiday Planner"</screen>
+      <p>Do not use:</p>
+      <screen>zenity --calendar --title=Holiday Planner</screen>
+      <p>Если не использовать кавычки, то можно получить неожиданные результаты.</p>
+    </note>
+
+    <section id="zenity-usage-mnemonics">
+      <title>Клавиши доступа</title>
+	<p>Клавиша доступа это клавиша, которая позволяет вам выполнять действие с клавиатуры, нежели используя мышь, для выбора команды из меню или диалогового окна. Каждая клавиша доступа назначается с помощью подчёркнутой буквы в параметре, задающем текст меню или диалогового окна.</p>
+	<p>
+          Some <app>Zenity</app> dialogs support the use of access keys. To specify the character to use as the access key, place an underscore before that character in the text of the dialog. The following example shows how to specify the letter 'C' as the access key:
+	</p>
+	<screen><input>"_Выберите имя".</input></screen>
+    </section>
+
+    <section id="zenity-usage-exitcodes">
+      <title>Коды Выхода</title>
+    <p>
+        Zenity returns the following exit codes:
+    </p>
+
+    <table frame="all" rules="all">
+        <thead>
+          <tr valign="top">
+            <td colname="COLSPEC0">
+              <p>Код выхода</p></td>
+            <td colname="COLSPEC1">
+              <p>Описание</p></td>
+          </tr>
+        </thead>
+        <tbody>
+          <tr valign="top">
+            <td>
+              <p><var>0</var></p>
+            </td>
+            <td>
+              <p>The user has pressed either <gui style="button">OK</gui> or <gui style="button">Close</gui>.</p>
+            </td>
+          </tr>
+          <tr valign="top">
+            <td>
+              <p><var>1</var></p>
+            </td>
+            <td>
+              <p>The user has either pressed <gui style="button">Cancel</gui>, or used the window functions to close the dialog.</p>
+            </td>
+          </tr>
+          <tr valign="top">
+            <td>
+              <p><var>-1</var></p>
+            </td>
+            <td>
+              <p>Произошла неожиданная ошибка.</p>
+            </td>
+          </tr>
+          <tr valign="top">
+            <td>
+              <p><var>5</var></p>
+            </td>
+            <td>
+              <p>Окно диалога закрыто из-за завершения времени ожидания.</p>
+            </td>
+          </tr>
+        </tbody>
+    </table>
+
+    </section>
+
+
+  <!-- ==== General Options ====== -->
+
+  <section id="zenity-usage-general-options">
+    <title>Общие параметры</title>
+
+    <p>
+	All Zenity dialogs support the following general options:
+    </p>
+
+    <terms>
+
+      <item>
+        <title><cmd>--title</cmd>=<var>title</var></title>
+	<p>Указывает заголовок диалогового окна.</p>
+      </item>
+
+      <item>
+        <title><cmd>--window-icon</cmd>=<var>icon_path</var></title>
+	<p>Указывает значок, который изображается в рамке диалогового окна. Существуют 4 запасных значка, доступных по следующим ключевым словам: info, warning, question и error.</p>
+      </item>
+
+      <item>
+        <title><cmd>--width</cmd>=<var>width</var></title>
+	<p>Указывает ширину диалогового окна.</p>
+      </item>
+
+      <item>
+        <title><cmd>--height</cmd>=<var>height</var></title>
+	<p>Указывает высоту диалогового окна.</p>
+      </item>
+
+      <item>
+        <title><cmd>--timeout</cmd>=<var>timeout</var></title>
+	<p>Указывает время ожидания в секундах, по истечении которого диалоговое окно закрывается.</p>
+      </item>
+
+    </terms>
+
+  </section>
+
+<!-- ==== Miscellaneous Options ====== -->
+
+  <section id="zenity-help-options">
+    <title>Параметры вызова справки</title>
+
+    <p>
+	Zenity provides the following help options:
+    </p>
+
+    <terms>
+
+      <item>
+        <title><cmd>--help</cmd></title>
+	<p>Показывает сокращённый текст справки.</p>
+      </item>
+
+      <item>
+        <title><cmd>--help-all</cmd></title>
+	<p>Показывает полный текст справки для всех диалоговых окон.</p>
+      </item>
+ 
+      <item>
+        <title><cmd>--help-general</cmd></title>
+	<p>Показывает текст справки по общим параметрам диалоговых окон.</p>
+      </item>
+ 
+      <item>
+        <title><cmd>--help-calendar</cmd></title>
+	<p>Показывает текст справки по параметрам диалогового окна календаря.</p>
+      </item>
+ 
+      <item>
+        <title><cmd>--help-entry</cmd></title>
+	<p>Показывает текст справки по параметрам диалогового окна ввода текста.</p>
+      </item>
+ 
+      <item>
+        <title><cmd>--help-error</cmd></title>
+	<p>Показывает текст справки по параметрам диалогового окна сообщения об ошибке.</p>
+      </item>
+ 
+      <item>
+        <title><cmd>--help-info</cmd></title>
+	<p>Показывает текст справки по параметрам информационного диалогового окна.</p>
+      </item>
+ 
+      <item>
+        <title><cmd>--help-file-selection</cmd></title>
+	<p>Показывает текст справки по параметрам диалогового окна выбора файла.</p>
+      </item>
+ 
+      <item>
+        <title><cmd>--help-list</cmd></title>
+	<p>Показывает текст справки по параметрам диалогового окна списка.</p>
+      </item>
+ 
+      <item>
+        <title><cmd>--help-notification</cmd></title>
+	<p>Показывает текст справки по параметрам значка уведомлений.</p>
+      </item>
+ 
+      <item>
+        <title><cmd>--help-progress</cmd></title>
+	<p>Показывает текст справки по параметрам диалогового окна хода выполнения.</p>
+      </item>
+ 
+      <item>
+        <title><cmd>--help-question</cmd></title>
+	<p>Показывает текст справки по параметрам диалогового окна вопроса.</p>
+      </item>
+ 
+      <item>
+        <title><cmd>--help-warning</cmd></title>
+	<p>Показывает текст справки по параметрам диалогового окна предупреждения.</p>
+      </item>
+ 
+      <item>
+	<title><cmd>--help-text-info</cmd></title>
+	<p>Показывает текст справки по параметрам диалогового окна текстовой информации.</p>
+      </item>
+ 
+      <item>
+        <title><cmd>--help-misc</cmd></title>
+	<p>Показывает справки по разнообразным параметрам.</p>
+      </item>
+ 
+      <item>
+        <title><cmd>--help-gtk</cmd></title>
+	<p>Показывает справку по параметрам GTK+.</p>
+      </item>
+ 
+    </terms>
+
+  </section>
+
+<!-- ==== Miscellaneous Options ====== -->
+
+  <section id="zenity-miscellaneous-options">
+    <title>Разнообразные параметры</title>
+
+    <p>
+	Zenity also provides the following miscellaneous options:
+    </p>
+
+    <terms>
+
+      <item>
+        <title><cmd>--about</cmd></title>
+	<p>Displays the <gui>About Zenity</gui> dialog, which contains Zenity version information, copyright information, and developer information.</p>
+      </item>
+
+      <item>
+        <title><cmd>--version</cmd></title>
+	<p>Displays the version number of Zenity.</p>
+      </item>
+
+    </terms>
+
+  </section>
+
+<!-- ==== GTK+ Options ====== -->
+
+  <section id="zenity-gtk-options">
+    <title>Параметры GTK+</title>
+
+    <p>
+	Zenity supports the standard GTK+ options. For more information about the GTK+ options, execute the <cmd>zenity --help-gtk</cmd> command.
+    </p>
+
+  </section>
+
+<!-- ==== Environment variables ==== -->
+
+  <section id="zenity-environment-variables">
+    <title>Переменные окружения</title>
+
+    <p>
+      Normally, Zenity detects the terminal window from which it was launched
+      and keeps itself above that window.  This behavior can be disabled by
+      unsetting the <var>WINDOWID</var> environment variable.
+    </p>
+
+  </section>
+</page>

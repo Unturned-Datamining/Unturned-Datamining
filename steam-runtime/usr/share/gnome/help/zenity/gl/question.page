@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<page xmlns="http://projectmallard.org/1.0/" type="topic" id="question" xml:lang="gl">
+  <info>
+    <link type="guide" xref="message"/>
+    <desc>Use a opción <cmd>--question</cmd>.</desc>
+  </info>
+  <title>Diálogo de pregunta</title>
+      <p>Use a opción <cmd>--question</cmd> para crear un diálogo de pregunta.</p>
+
+      <p>O seguinte script de exemplo mostra como crear un diálogo de pregunta:</p>
+
+<code>
+#!/bin/bash
+
+zenity --question \
+--text="Está seguro de que quere continuar?"
+</code>
+
+
+      <figure id="zenity-question-screenshot">
+        <title>Exemplo do diálogo de pregunta</title>
+	<desc>Exemplo do diálogo de pregunta de <app>Zenity</app></desc>
+        <media type="image" mime="image/png" src="figures/zenity-question-screenshot.png"/>
+      </figure>
+</page>

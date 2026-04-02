@@ -1,0 +1,18 @@
+drwxr-xr-x root/root         0 2024-09-16 14:59 ./
+drwxr-xr-x root/root         0 2024-09-16 14:59 ./usr/
+drwxr-xr-x root/root         0 2024-09-16 14:59 ./usr/lib/
+drwxr-xr-x root/root         0 2024-09-16 14:59 ./usr/lib/libcapsule/
+drwxr-xr-x root/root         0 2024-09-16 14:59 ./usr/lib/libcapsule/relocatable/
+-rwxr-xr-x root/root     34524 2024-09-16 14:59 ./usr/lib/libcapsule/relocatable/i386-linux-gnu-capsule-symbols
+-rwxr-xr-x root/root     26184 2024-09-16 14:59 ./usr/lib/libcapsule/relocatable/i386-linux-gnu-capsule-elf-dump
+-rwxr-xr-x root/root     71796 2024-09-16 14:59 ./usr/lib/libcapsule/relocatable/i386-linux-gnu-capsule-capture-libs
+-rwxr-xr-x root/root     34524 2024-09-16 14:59 ./usr/lib/libcapsule/relocatable/i386-linux-gnu-capsule-version
+drwxr-xr-x root/root         0 2024-09-16 14:59 ./usr/share/
+drwxr-xr-x root/root         0 2024-09-16 14:59 ./usr/share/doc/
+drwxr-xr-x root/root         0 2024-09-16 14:59 ./usr/share/doc/libcapsule-tools-relocatable/
+-rw-r--r-- root/root      6579 2024-09-16 14:56 ./usr/share/doc/libcapsule-tools-relocatable/changelog.Debian.i386.gz
+-rw-r--r-- root/root      3293 2024-04-08 18:58 ./usr/share/doc/libcapsule-tools-relocatable/copyright
+lrwxrwxrwx root/root         0 2024-09-16 14:59 ./usr/lib/libcapsule/relocatable/i686-linux-gnu-capsule-elf-dump -> i386-linux-gnu-capsule-elf-dump
+lrwxrwxrwx root/root         0 2024-09-16 14:59 ./usr/lib/libcapsule/relocatable/i686-linux-gnu-capsule-capture-libs -> i386-linux-gnu-capsule-capture-libs
+lrwxrwxrwx root/root         0 2024-09-16 14:59 ./usr/lib/libcapsule/relocatable/i686-linux-gnu-capsule-version -> i386-linux-gnu-capsule-version
+lrwxrwxrwx root/root         0 2024-09-16 14:59 ./usr/lib/libcapsule/relocatable/i686-linux-gnu-capsule-symbols -> i386-linux-gnu-capsule-symbols

@@ -12,6 +12,16 @@ public class Useable : PlayerCaller
     /// </summary>
     public virtual bool isUseableShowingMenu => false;
 
+    public ItemAsset GetEquippedAsset()
+    {
+        return base.player.equipment.asset;
+    }
+
+    public T GetEquippedAsset<T>() where T : ItemAsset
+    {
+        return base.player.equipment.asset as T;
+    }
+
     /// <returns>True if primary action was started and stopPrimary should be called in the future.
     /// Useful to allow input to be held until action executes.</returns>
     public virtual bool startPrimary()

@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<page xmlns="http://projectmallard.org/1.0/" type="topic" id="introduction" xml:lang="fr">
+<info>
+  <link type="guide" xref="index"/>
+  <desc><app>Zenity</app> vous permet de créer divers types de boîte de dialogue </desc>
+</info>
+<title>Introduction</title>
+<p>Vous trouverez ci-dessous les différents types de boîte de dialogue que <app>Zenity</app> peut créer :</p>
+
+<list>
+    <item><p>Calendrier</p></item>
+    <item><p>Sélection de fichiers</p></item>
+    <item><p>Formulaires</p></item>
+    <item><p>Liste</p></item>
+    <item><p>Icône de notification</p></item>
+    <item><p>Message</p>
+        <list>
+            <item><p>Erreur</p></item>
+    	<item><p>Information</p></item>
+    	<item><p>Question</p></item>
+    	<item><p>Avertissement</p></item>
+        </list>
+    </item>
+    <item><p>Saisie de mot de passe</p></item>
+    <item><p>Barre de progression</p></item>
+    <item><p>Saisie de texte</p></item>
+    <item><p>Texte d'information</p></item>
+    <item><p>Glissière</p></item>
+    <item><p>Sélecteur de couleur</p></item>
+</list>
+</page>

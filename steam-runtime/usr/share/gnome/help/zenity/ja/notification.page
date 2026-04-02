@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<page xmlns="http://projectmallard.org/1.0/" type="topic" id="notification" xml:lang="ja">
+  <info>
+    <link type="guide" xref="index#dialogs"/>
+    <desc><cmd>--notification</cmd> オプションの使用</desc>
+  </info>
+  <title>通知アイコン</title>
+    <p>通知アイコンを作成するには、<cmd>--notification</cmd> というオプションを使ってください。</p>
+
+    <terms>
+
+      <item>
+        <title><cmd>--text</cmd>=<var>テキスト</var></title>
+	  <p>通知領域に表示するテキストを指定します。</p>
+      </item>
+
+    </terms>
+
+    <p>以下のスクリプトの例で通知アイコンの作成方法を示します。</p>
+<code>
+#!/bin/sh
+
+zenity --notification\
+  --window-icon="info" \
+  --text="システムの更新が必要です!"
+</code>
+
+
+    <figure id="zenity-notification-screenshot">
+      <title>通知アイコンの例</title>
+      <desc><app>Zenity</app> 通知アイコンの例</desc>
+      <media type="image" mime="image/png" src="figures/zenity-notification-screenshot.png"/>
+   </figure>
+</page>

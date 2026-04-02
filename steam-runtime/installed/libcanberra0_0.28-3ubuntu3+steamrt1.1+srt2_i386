@@ -1,0 +1,18 @@
+drwxr-xr-x root/root         0 2019-04-03 18:13 ./
+drwxr-xr-x root/root         0 2019-04-03 18:13 ./usr/
+drwxr-xr-x root/root         0 2019-04-03 18:13 ./usr/lib/
+drwxr-xr-x root/root         0 2019-04-03 18:13 ./usr/lib/i386-linux-gnu/
+drwxr-xr-x root/root         0 2019-04-03 18:13 ./usr/lib/i386-linux-gnu/libcanberra-0.28/
+-rw-r--r-- root/root     13792 2019-04-03 18:13 ./usr/lib/i386-linux-gnu/libcanberra-0.28/libcanberra-alsa.so
+-rw-r--r-- root/root     67544 2019-04-03 18:13 ./usr/lib/i386-linux-gnu/libcanberra.so.0.2.5
+drwxr-xr-x root/root         0 2019-04-03 18:13 ./usr/share/
+drwxr-xr-x root/root         0 2019-04-03 18:13 ./usr/share/lintian/
+drwxr-xr-x root/root         0 2019-04-03 18:13 ./usr/share/lintian/overrides/
+-rw-r--r-- root/root        54 2018-09-18 17:23 ./usr/share/lintian/overrides/libcanberra0
+drwxr-xr-x root/root         0 2019-04-03 18:13 ./usr/share/doc/
+drwxr-xr-x root/root         0 2019-04-03 18:13 ./usr/share/doc/libcanberra0/
+-rw-r--r-- root/root       921 2018-09-18 17:23 ./usr/share/doc/libcanberra0/copyright
+-rw-r--r-- root/root       993 2018-09-18 17:23 ./usr/share/doc/libcanberra0/README.Debian
+-rw-r--r-- root/root      3613 2011-02-24 22:07 ./usr/share/doc/libcanberra0/README.gz
+-rw-r--r-- root/root      3600 2019-04-03 18:09 ./usr/share/doc/libcanberra0/changelog.Debian.i386.gz
+lrwxrwxrwx root/root         0 2019-04-03 18:13 ./usr/lib/i386-linux-gnu/libcanberra.so.0 -> libcanberra.so.0.2.5

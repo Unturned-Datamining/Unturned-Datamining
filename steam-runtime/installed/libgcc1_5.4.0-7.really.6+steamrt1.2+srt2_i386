@@ -1,0 +1,11 @@
+drwxr-xr-x root/root         0 2019-04-03 21:27 ./
+drwxr-xr-x root/root         0 2019-04-03 21:27 ./lib/
+drwxr-xr-x root/root         0 2019-04-03 21:27 ./lib/i386-linux-gnu/
+-rw-r--r-- root/root    116236 2019-04-03 21:27 ./lib/i386-linux-gnu/libgcc_s.so.1
+drwxr-xr-x root/root         0 2019-04-03 21:27 ./usr/
+drwxr-xr-x root/root         0 2019-04-03 21:27 ./usr/share/
+drwxr-xr-x root/root         0 2019-04-03 21:27 ./usr/share/doc/
+drwxr-xr-x root/root         0 2019-04-03 21:27 ./usr/share/lintian/
+drwxr-xr-x root/root         0 2019-04-03 21:27 ./usr/share/lintian/overrides/
+-rw-r--r-- root/root        43 2019-04-03 21:27 ./usr/share/lintian/overrides/libgcc1
+lrwxrwxrwx root/root         0 2019-04-03 21:27 ./usr/share/doc/libgcc1 -> gcc-5-base

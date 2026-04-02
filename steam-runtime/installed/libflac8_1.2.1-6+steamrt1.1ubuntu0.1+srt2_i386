@@ -1,0 +1,11 @@
+drwxr-xr-x root/root         0 2019-04-03 15:31 ./
+drwxr-xr-x root/root         0 2019-04-03 15:31 ./usr/
+drwxr-xr-x root/root         0 2019-04-03 15:31 ./usr/lib/
+drwxr-xr-x root/root         0 2019-04-03 15:31 ./usr/lib/i386-linux-gnu/
+-rw-r--r-- root/root    318792 2019-04-03 15:31 ./usr/lib/i386-linux-gnu/libFLAC.so.8.2.0
+drwxr-xr-x root/root         0 2019-04-03 15:31 ./usr/share/
+drwxr-xr-x root/root         0 2019-04-03 15:31 ./usr/share/doc/
+drwxr-xr-x root/root         0 2019-04-03 15:31 ./usr/share/doc/libflac8/
+-rw-r--r-- root/root      3028 2019-04-03 15:30 ./usr/share/doc/libflac8/copyright
+-rw-r--r-- root/root      8803 2019-04-03 15:30 ./usr/share/doc/libflac8/changelog.Debian.i386.gz
+lrwxrwxrwx root/root         0 2019-04-03 15:31 ./usr/lib/i386-linux-gnu/libFLAC.so.8 -> libFLAC.so.8.2.0

@@ -7,6 +7,26 @@ Size_X 1
 Size_Y 1
 Size_Z 0.25
 
-Food 15
-Virus 15
+Food 10
+Virus 10
 ConsumeAudioClip Sounds/EatCrunchy.mp3
+
+Fishing_Catchable
+{
+	Min_Relocate_Interval 0.65
+	Max_Relocate_Interval 1.75
+	Max_Upward_Acceleration 1
+	Max_Downward_Acceleration 0.7
+	Max_Upward_Speed 0.37
+	Max_Downward_Speed 0.2
+	Upper_Restitution 0.6
+	Lower_Restitution 0.4
+	Min_Target_Delta 0.15
+	Max_Target_Delta 0.35
+	Min_Target_Position 0.3
+	Max_Target_Position 0.9
+	Capture_Duration 1.5
+	Escape_Duration 3.5
+	Spring_Stiffness 16
+	Spring_Damping 4
+}

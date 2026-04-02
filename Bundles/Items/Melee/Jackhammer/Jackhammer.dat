@@ -62,6 +62,7 @@ Blueprints
 
 Repeated
 
-BladeIDs 2
+BladeIDs 3
 BladeID_0 0
-BladeID_1 2
+BladeID_1 1
+BladeID_2 2

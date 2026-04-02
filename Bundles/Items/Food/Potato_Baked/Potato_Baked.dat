@@ -1,0 +1,38 @@
+﻿GUID 5071c2a9ad0747e7bbdaf00d3f991da9
+Type Food
+Rarity Rare
+Useable Consumeable
+ID 1929
+
+Size_X 1
+Size_Y 1
+Size_Z 0.25
+
+Health 5
+Food 40
+Water 15
+
+Blueprints
+[
+	{
+		CategoryTag "d089feb7e43f40c5a7dfcefc36998cfb" // Supplies
+		InputItems
+		[
+			"2a3bd550485f43b9ac91ae5f78916d97" // Potato
+			"a51c979f42b34359bc7df4974ccb8b92" // Cheese
+		]
+		OutputItems this
+		Skill Cook
+		Skill_Level 1
+		RequiresNearbyCraftingTags
+		[
+			"20f30322bbcc4b01a4f116d22b24c21a" // Heat Source
+		]
+		Effect "84347b13028340b8976033c08675d458" // Wrench
+	}
+]
+
+ConsumeAudioClip Sounds/EatBakedpotato.mp3
+Randomize_Consume_Audio_Pitch false
+Procedurally_Animate_Inertia false
+EquipablePrefab Items/Food/Potato_Baked/Equipable.prefab

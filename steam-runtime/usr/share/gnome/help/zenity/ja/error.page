@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<page xmlns="http://projectmallard.org/1.0/" type="topic" id="error" xml:lang="ja">
+  <info>
+    <link type="guide" xref="message"/>
+    <desc><cmd>--error</cmd> オプションの使用</desc>
+  </info>
+  <title>エラーダイアログ</title>
+      <p>エラーダイアログを作成するには、<cmd>--error</cmd> というオプションを使ってください。</p>
+
+      <p>以下のスクリプトの例でエラーダイアログの作成方法を示します。</p>
+
+<code>
+#!/bin/bash
+
+zenity --error \
+--text="/var/log/syslog が見つかりません。"
+</code>
+
+
+      <figure id="zenity-error-screenshot">
+        <title>エラーダイアログの例</title>
+        <desc><app>Zenity</app> エラーダイアログの例</desc>
+        <media type="image" mime="image/png" src="figures/zenity-error-screenshot.png"/>
+      </figure>
+</page>

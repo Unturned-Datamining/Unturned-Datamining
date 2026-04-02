@@ -35,32 +35,32 @@ public struct DynamicEconDetails
             if (num < tags.Length - 1)
             {
                 ReadOnlySpan<char> span = tags.AsSpan(num, tags.Length - num);
-                if (span.StartsWith("zero_kelvin"))
+                if (span.StartsWith("zero_kelvin", StringComparison.Ordinal))
                 {
                     effect = ERagdollEffect.ZERO_KELVIN;
                     return true;
                 }
-                if (span.StartsWith("jaded"))
+                if (span.StartsWith("jaded", StringComparison.Ordinal))
                 {
                     effect = ERagdollEffect.JADED;
                     return true;
                 }
-                if (span.StartsWith("soulcrystal_green"))
+                if (span.StartsWith("soulcrystal_green", StringComparison.Ordinal))
                 {
                     effect = ERagdollEffect.SOUL_CRYSTAL_GREEN;
                     return true;
                 }
-                if (span.StartsWith("soulcrystal_magenta"))
+                if (span.StartsWith("soulcrystal_magenta", StringComparison.Ordinal))
                 {
                     effect = ERagdollEffect.SOUL_CRYSTAL_MAGENTA;
                     return true;
                 }
-                if (span.StartsWith("soulcrystal_red"))
+                if (span.StartsWith("soulcrystal_red", StringComparison.Ordinal))
                 {
                     effect = ERagdollEffect.SOUL_CRYSTAL_RED;
                     return true;
                 }
-                if (span.StartsWith("soulcrystal_yellow"))
+                if (span.StartsWith("soulcrystal_yellow", StringComparison.Ordinal))
                 {
                     effect = ERagdollEffect.SOUL_CRYSTAL_YELLOW;
                     return true;

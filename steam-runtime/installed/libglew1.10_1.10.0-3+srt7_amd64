@@ -1,0 +1,11 @@
+drwxr-xr-x root/root         0 2019-04-03 17:01 ./
+drwxr-xr-x root/root         0 2019-04-03 17:01 ./usr/
+drwxr-xr-x root/root         0 2019-04-03 17:01 ./usr/lib/
+drwxr-xr-x root/root         0 2019-04-03 17:01 ./usr/lib/x86_64-linux-gnu/
+-rw-r--r-- root/root    464920 2019-04-03 17:01 ./usr/lib/x86_64-linux-gnu/libGLEW.so.1.10.0
+drwxr-xr-x root/root         0 2019-04-03 17:01 ./usr/share/
+drwxr-xr-x root/root         0 2019-04-03 17:01 ./usr/share/doc/
+drwxr-xr-x root/root         0 2019-04-03 17:01 ./usr/share/doc/libglew1.10/
+-rw-r--r-- root/root      6298 2013-11-15 15:27 ./usr/share/doc/libglew1.10/copyright
+-rw-r--r-- root/root      4864 2019-04-03 17:00 ./usr/share/doc/libglew1.10/changelog.Debian.amd64.gz
+lrwxrwxrwx root/root         0 2019-04-03 17:01 ./usr/lib/x86_64-linux-gnu/libGLEW.so.1.10 -> libGLEW.so.1.10.0

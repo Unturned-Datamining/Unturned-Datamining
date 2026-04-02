@@ -1,0 +1,280 @@
+<?xml version="1.0" encoding="utf-8"?>
+<page xmlns="http://projectmallard.org/1.0/" type="topic" id="usage" xml:lang="fi">
+<info>
+  <link type="guide" xref="index"/>
+  <desc>You can use <app>Zenity</app> to create simple dialogs that interact graphically with the user.</desc>
+</info>
+<title>Käyttö</title>
+    <p>
+	When you write scripts, you can use <app>Zenity</app> to create simple dialogs that interact graphically with the user, as follows:
+    </p>
+    <list>
+      <item>
+        <p>Voit luoda valintaikkunan keräämään tietoa käyttäjältä. Voit esimerkiksi pyytää käyttäjää valitsemaan päivän kalenteri-ikkunasta tai valitsemaan tiedoston tiedoston valintaikkunalla.</p>
+      </item>
+      <item>
+        <p>Voit luoda ikkunan, joka kertoo käyttäjälle tietoa. Voit esimerkiksi näyttää edistymisikkunassa operaation edistymisen tilanteen tai varoitusviesti-ikkunassa varoittaa käyttäjää.</p>
+      </item>
+    </list>
+    <p>
+	When the user closes the dialog, <app>Zenity</app> prints the text produced by the dialog to standard output.
+    </p>
+
+    <note>
+      <p>
+        When you write <app>Zenity</app> commands, ensure that you place quotation marks around each argument. 
+      </p>
+      <p>For example, use:</p>
+      <screen>zenity --calendar --title="Holiday Planner"</screen>
+      <p>Do not use:</p>
+      <screen>zenity --calendar --title=Holiday Planner</screen>
+      <p>Mikäli et käytä lainausmerkkejä, saatat saada odottamattomia tuloksia.</p>
+    </note>
+
+    <section id="zenity-usage-mnemonics">
+      <title>Valintanäppäimet</title>
+	<p>Valintanäppäin on näppäin, joka antaa mahdollisuuden suorittaa toiminto näppäimistöltä sen sijaan, että komento valittaisiin hiirellä valikosta tai ikkunasta. Jokainen valintanäppäin identifioidaan alleviivaamalla kirjain valikossa tai ikkunan kohdassa.</p>
+	<p>
+          Some <app>Zenity</app> dialogs support the use of access keys. To specify the character to use as the access key, place an underscore before that character in the text of the dialog. The following example shows how to specify the letter 'C' as the access key:
+	</p>
+	<screen><input>"_Valitse nimi".</input></screen>
+    </section>
+
+    <section id="zenity-usage-exitcodes">
+      <title>Päättymiskoodit</title>
+    <p>
+        Zenity returns the following exit codes:
+    </p>
+
+    <table frame="all" rules="all">
+        <thead>
+          <tr valign="top">
+            <td colname="COLSPEC0">
+              <p>Päättymiskoodi</p></td>
+            <td colname="COLSPEC1">
+              <p>Kuvaus</p></td>
+          </tr>
+        </thead>
+        <tbody>
+          <tr valign="top">
+            <td>
+              <p><var>0</var></p>
+            </td>
+            <td>
+              <p>The user has pressed either <gui style="button">OK</gui> or <gui style="button">Close</gui>.</p>
+            </td>
+          </tr>
+          <tr valign="top">
+            <td>
+              <p><var>1</var></p>
+            </td>
+            <td>
+              <p>The user has either pressed <gui style="button">Cancel</gui>, or used the window functions to close the dialog.</p>
+            </td>
+          </tr>
+          <tr valign="top">
+            <td>
+              <p><var>-1</var></p>
+            </td>
+            <td>
+              <p>Tapahtui odottamaton virhe.</p>
+            </td>
+          </tr>
+          <tr valign="top">
+            <td>
+              <p><var>5</var></p>
+            </td>
+            <td>
+              <p>Ikkuna suljettiin aikarajan päätyttyä.</p>
+            </td>
+          </tr>
+        </tbody>
+    </table>
+
+    </section>
+
+
+  <!-- ==== General Options ====== -->
+
+  <section id="zenity-usage-general-options">
+    <title>Yleiset valitsimet</title>
+
+    <p>
+	All Zenity dialogs support the following general options:
+    </p>
+
+    <terms>
+
+      <item>
+        <title><cmd>--title</cmd>=<var>title</var></title>
+	<p>Määrittää ikkunan otsikon.</p>
+      </item>
+
+      <item>
+        <title><cmd>--window-icon</cmd>=<var>icon_path</var></title>
+	<p>Määrittää kuvakkeen, joka näytetään ikkunan kehyksessä. Saatavilla on myös neljä valmista kuvaketta, jotka saa käyttöön seuraavilla avainsanoilla - "info" (tietoa), "warning" (varoitus), "question" (kysymys) ja "error" (virhe).</p>
+      </item>
+
+      <item>
+        <title><cmd>--width</cmd>=<var>width</var></title>
+	<p>Määrittää ikkunan leveyden.</p>
+      </item>
+
+      <item>
+        <title><cmd>--height</cmd>=<var>height</var></title>
+	<p>Määrittää ikkunan korkeuden.</p>
+      </item>
+
+      <item>
+        <title><cmd>--timeout</cmd>=<var>timeout</var></title>
+	<p>Määrittää aikarajan sekunteina, jonka jälkeen ikkuna suljetaan.</p>
+      </item>
+
+    </terms>
+
+  </section>
+
+<!-- ==== Miscellaneous Options ====== -->
+
+  <section id="zenity-help-options">
+    <title>Ohjevalitsimet</title>
+
+    <p>
+	Zenity provides the following help options:
+    </p>
+
+    <terms>
+
+      <item>
+        <title><cmd>--help</cmd></title>
+	<p>Näyttää lyhennetyn ohjetekstin.</p>
+      </item>
+
+      <item>
+        <title><cmd>--help-all</cmd></title>
+	<p>Näyttää täyden ohjetekstin kaikista ikkunatyypeistä.</p>
+      </item>
+ 
+      <item>
+        <title><cmd>--help-general</cmd></title>
+	<p>Näyttää ohjetekstin yleisistä ikkunavalitsimista.</p>
+      </item>
+ 
+      <item>
+        <title><cmd>--help-calendar</cmd></title>
+	<p>Näyttää ohjetekstin kalenteri-ikkunan valitsimista.</p>
+      </item>
+ 
+      <item>
+        <title><cmd>--help-entry</cmd></title>
+	<p>Näyttää ohjetekstin tekstisyöttöikkunan valitsimista.</p>
+      </item>
+ 
+      <item>
+        <title><cmd>--help-error</cmd></title>
+	<p>Näyttää ohjetekstin virheikkunan valitsimista.</p>
+      </item>
+ 
+      <item>
+        <title><cmd>--help-info</cmd></title>
+	<p>Näyttää ohjetekstin tietoikkunan valitsimista.</p>
+      </item>
+ 
+      <item>
+        <title><cmd>--help-file-selection</cmd></title>
+	<p>Näyttää ohjetekstin tiedoston valintaikkunan valitsimista.</p>
+      </item>
+ 
+      <item>
+        <title><cmd>--help-list</cmd></title>
+	<p>Näyttää ohjetekstin luetteloikkunan valitsimista.</p>
+      </item>
+ 
+      <item>
+        <title><cmd>--help-notification</cmd></title>
+	<p>Näyttää ohjetekstin ilmoituskuvakkeiden valitsimista.</p>
+      </item>
+ 
+      <item>
+        <title><cmd>--help-progress</cmd></title>
+	<p>Näyttää ohjetekstin edistymisikkunan valitsimista.</p>
+      </item>
+ 
+      <item>
+        <title><cmd>--help-question</cmd></title>
+	<p>Näyttää ohjetekstin kysymysikkunan valitsimista.</p>
+      </item>
+ 
+      <item>
+        <title><cmd>--help-warning</cmd></title>
+	<p>Näyttää ohjetekstin varoitusikkunan valitsimista.</p>
+      </item>
+ 
+      <item>
+	<title><cmd>--help-text-info</cmd></title>
+	<p>Näyttää ohjeen tietoikkunan valitsimista.</p>
+      </item>
+ 
+      <item>
+        <title><cmd>--help-misc</cmd></title>
+	<p>Näyttää ohjeen sekalaisista valitsimista.</p>
+      </item>
+ 
+      <item>
+        <title><cmd>--help-gtk</cmd></title>
+	<p>Näyttää ohjeen GTK+-valitsimista.</p>
+      </item>
+ 
+    </terms>
+
+  </section>
+
+<!-- ==== Miscellaneous Options ====== -->
+
+  <section id="zenity-miscellaneous-options">
+    <title>Sekalaisia valitsimia</title>
+
+    <p>
+	Zenity also provides the following miscellaneous options:
+    </p>
+
+    <terms>
+
+      <item>
+        <title><cmd>--about</cmd></title>
+	<p>Displays the <gui>About Zenity</gui> dialog, which contains Zenity version information, copyright information, and developer information.</p>
+      </item>
+
+      <item>
+        <title><cmd>--version</cmd></title>
+	<p>Displays the version number of Zenity.</p>
+      </item>
+
+    </terms>
+
+  </section>
+
+<!-- ==== GTK+ Options ====== -->
+
+  <section id="zenity-gtk-options">
+    <title>GTK+-valitsimet</title>
+
+    <p>
+	Zenity supports the standard GTK+ options. For more information about the GTK+ options, execute the <cmd>zenity --help-gtk</cmd> command.
+    </p>
+
+  </section>
+
+<!-- ==== Environment variables ==== -->
+
+  <section id="zenity-environment-variables">
+    <title>Ympäristömuuttujat</title>
+
+    <p>
+      Normally, Zenity detects the terminal window from which it was launched
+      and keeps itself above that window.  This behavior can be disabled by
+      unsetting the <var>WINDOWID</var> environment variable.
+    </p>
+
+  </section>
+</page>

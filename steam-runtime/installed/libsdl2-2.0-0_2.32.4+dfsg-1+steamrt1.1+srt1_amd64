@@ -1,0 +1,16 @@
+drwxr-xr-x root/root         0 2025-05-16 17:42 ./
+drwxr-xr-x root/root         0 2025-05-16 17:42 ./usr/
+drwxr-xr-x root/root         0 2025-05-16 17:42 ./usr/share/
+drwxr-xr-x root/root         0 2025-05-16 17:42 ./usr/share/doc/
+drwxr-xr-x root/root         0 2025-05-16 17:42 ./usr/share/doc/libsdl2-2.0-0/
+-rw-r--r-- root/root       486 2021-02-12 19:46 ./usr/share/doc/libsdl2-2.0-0/BUGS.txt
+-rw-r--r-- root/root       546 2021-03-20 22:46 ./usr/share/doc/libsdl2-2.0-0/README.md
+-rw-r--r-- root/root     32037 2025-05-16 17:34 ./usr/share/doc/libsdl2-2.0-0/changelog.Debian.amd64.gz
+-rw-r--r-- root/root     26481 2025-04-01 16:31 ./usr/share/doc/libsdl2-2.0-0/copyright
+-rw-r--r-- root/root      1920 2015-06-21 15:33 ./usr/share/doc/libsdl2-2.0-0/CREDITS.txt
+-rw-r--r-- root/root     16736 2024-01-28 03:46 ./usr/share/doc/libsdl2-2.0-0/changelog.gz
+-rw-r--r-- root/root       433 2017-02-16 21:52 ./usr/share/doc/libsdl2-2.0-0/README-SDL.txt
+drwxr-xr-x root/root         0 2025-05-16 17:42 ./usr/lib/
+drwxr-xr-x root/root         0 2025-05-16 17:42 ./usr/lib/x86_64-linux-gnu/
+-rw-r--r-- root/root   1725280 2025-05-16 17:42 ./usr/lib/x86_64-linux-gnu/libSDL2-2.0.so.0.3200.4
+lrwxrwxrwx root/root         0 2025-05-16 17:42 ./usr/lib/x86_64-linux-gnu/libSDL2-2.0.so.0 -> libSDL2-2.0.so.0.3200.4

@@ -1,0 +1,18 @@
+drwxr-xr-x root/root         0 2023-03-23 17:26 ./
+drwxr-xr-x root/root         0 2023-03-23 17:26 ./usr/
+drwxr-xr-x root/root         0 2023-03-23 17:26 ./usr/lib/
+drwxr-xr-x root/root         0 2023-03-23 17:26 ./usr/lib/x86_64-linux-gnu/
+-rw-r--r-- root/root    646744 2023-03-23 17:26 ./usr/lib/x86_64-linux-gnu/libfreetype.so.6.8.0
+drwxr-xr-x root/root         0 2023-03-23 17:26 ./usr/share/
+drwxr-xr-x root/root         0 2023-03-23 17:26 ./usr/share/doc/
+drwxr-xr-x root/root         0 2023-03-23 17:26 ./usr/share/doc/libfreetype6/
+-rw-r--r-- root/root     30895 2011-11-14 19:22 ./usr/share/doc/libfreetype6/changelog.gz
+-rw-r--r-- root/root     24697 2011-02-25 05:16 ./usr/share/doc/libfreetype6/ft2faq.html
+-rw-r--r-- root/root      2872 2009-03-14 13:45 ./usr/share/doc/libfreetype6/FTL.TXT.gz
+drwxr-xr-x root/root         0 2023-03-23 17:26 ./usr/share/doc/libfreetype6/pcf/
+-rw-r--r-- root/root      3311 2010-12-31 16:42 ./usr/share/doc/libfreetype6/pcf/README
+-rw-r--r-- root/root     14358 2023-03-23 17:25 ./usr/share/doc/libfreetype6/copyright
+-rw-r--r-- root/root     22504 2023-03-23 17:25 ./usr/share/doc/libfreetype6/changelog.Debian.amd64.gz
+-rw-r--r-- root/root      1391 2009-03-14 13:45 ./usr/share/doc/libfreetype6/TODO
+-rw-r--r-- root/root     45586 2011-11-14 17:58 ./usr/share/doc/libfreetype6/CHANGES.gz
+lrwxrwxrwx root/root         0 2023-03-23 17:26 ./usr/lib/x86_64-linux-gnu/libfreetype.so.6 -> libfreetype.so.6.8.0

@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<page xmlns="http://projectmallard.org/1.0/" type="topic" id="list" xml:lang="zh_CN">
+  <info>
+    <link type="guide" xref="index#dialogs"/>
+    <desc>Use the <cmd>--list</cmd> option.</desc>
+  </info>
+  <title>列表框</title>
+    <p>
+	Use the <cmd>--list</cmd> option to create a list dialog. <app>Zenity</app> returns the entries in the first column of text of selected rows to standard output.
+    </p>
+
+    <p>对话框里的数据必须指定行和列，可以由标准输入提供，每一项都必须由换行符分隔。</p>
+
+    <p>
+	If you use the <cmd>--checklist</cmd> or <cmd>--radiolist</cmd> options, each row must start with either 'TRUE' or 'FALSE'.
+    </p>
+
+    <p>列表框支持以下选项：</p>
+
+    <terms>
+
+      <item>
+        <title><cmd>--column</cmd>=<var>column</var></title>
+	  <p>Specifies the column headers that are displayed in the list dialog. You must specify a <cmd>--column</cmd> option for each column that you want to display in the dialog.
+	  </p>
+      </item>
+
+      <item>
+        <title><cmd>--checklist</cmd></title>
+	  <p>指定列表框的第一列包含一个复选框。</p>
+      </item>
+
+      <item>
+        <title><cmd>--radiolist</cmd></title>
+	  <p>指定列表框的第一列包含单选按钮。</p>
+      </item>
+
+      <item>
+        <title><cmd>--editable</cmd></title>
+	  <p>指定显示的项可以编辑。</p>
+      </item>
+
+      <item>
+        <title><cmd>--separator</cmd>=<var>separator</var></title>
+	  <p>指定当列表框返回选中项时，使用什么字符。</p>
+      </item>
+
+      <item>
+        <title><cmd>--print-column</cmd>=<var>column</var></title>
+	  <p>指定选择列上显示什么，默认是“1”，“ALL”用于在列表上显示所有列。</p>
+      </item>
+
+    </terms>
+
+    <p>
+      The following example script shows how to create a list dialog:
+    </p>
+<code>
+#!/bin/sh
+
+zenity --list \
+  --title="Choose the Bugs You Wish to View" \
+  --column="Bug Number" --column="Severity" --column="Description" \
+    992383 Normal "GtkTreeView crashes on multiple selections" \
+    293823 High "GNOME Dictionary does not handle proxy" \
+    393823 Critical "Menu editing does not work in GNOME 2.0"
+</code>
+
+
+    <figure id="zenity-list-screenshot">
+      <title>列表框范例</title>
+      <desc><app>Zenity</app> list dialog example</desc>
+      <media type="image" mime="image/png" src="figures/zenity-list-screenshot.png"/>
+    </figure>
+</page>

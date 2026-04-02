@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<page xmlns="http://projectmallard.org/1.0/" type="topic" id="info" xml:lang="ja">
+  <info>
+    <link type="guide" xref="message"/>
+    <desc><cmd>--info</cmd> オプションの使用</desc>
+  </info>
+  <title>情報ダイアログ</title>
+      <p>情報ダイアログを作成するには、<cmd>--info</cmd> というオプションを使ってください。</p>
+
+      <p>以下のスクリプトの例で情報ダイアログの作成方法を示します。</p>
+
+<code>
+#!/bin/bash
+
+zenity --info \
+--text="マージが完了しました。10 個中 3 個のファイルが更新されました。"
+</code>
+
+
+      <figure id="zenity-information-screenshot">
+        <title>情報ダイアログの例</title>
+        <desc><app>Zenity</app> 情報ダイアログの例</desc>
+        <media type="image" mime="image/png" src="figures/zenity-information-screenshot.png"/>
+      </figure>
+</page>

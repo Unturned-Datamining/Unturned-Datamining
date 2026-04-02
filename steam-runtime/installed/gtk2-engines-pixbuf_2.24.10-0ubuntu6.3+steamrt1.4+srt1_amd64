@@ -1,0 +1,16 @@
+drwxr-xr-x root/root         0 2024-05-16 16:28 ./
+drwxr-xr-x root/root         0 2024-05-16 16:28 ./usr/
+drwxr-xr-x root/root         0 2024-05-16 16:28 ./usr/lib/
+drwxr-xr-x root/root         0 2024-05-16 16:28 ./usr/lib/x86_64-linux-gnu/
+drwxr-xr-x root/root         0 2024-05-16 16:28 ./usr/lib/x86_64-linux-gnu/gtk-2.0/
+drwxr-xr-x root/root         0 2024-05-16 16:28 ./usr/lib/x86_64-linux-gnu/gtk-2.0/2.10.0/
+drwxr-xr-x root/root         0 2024-05-16 16:28 ./usr/lib/x86_64-linux-gnu/gtk-2.0/2.10.0/engines/
+-rw-r--r-- root/root     43472 2024-05-16 16:28 ./usr/lib/x86_64-linux-gnu/gtk-2.0/2.10.0/engines/libpixmap.so
+drwxr-xr-x root/root         0 2024-05-16 16:28 ./usr/share/
+drwxr-xr-x root/root         0 2024-05-16 16:28 ./usr/share/doc/
+drwxr-xr-x root/root         0 2024-05-16 16:28 ./usr/share/doc/gtk2-engines-pixbuf/
+-rw-r--r-- root/root     12310 2024-05-15 16:20 ./usr/share/doc/gtk2-engines-pixbuf/copyright
+-rw-r--r-- root/root    143857 2024-05-16 16:10 ./usr/share/doc/gtk2-engines-pixbuf/changelog.Debian.amd64
+lrwxrwxrwx root/root         0 2024-05-16 16:28 ./usr/share/doc/gtk2-engines-pixbuf/NEWS.gz -> ../libgtk2.0-common/NEWS.gz
+lrwxrwxrwx root/root         0 2024-05-16 16:28 ./usr/share/doc/gtk2-engines-pixbuf/changelog.gz -> ../libgtk2.0-common/changelog.gz
+lrwxrwxrwx root/root         0 2024-05-16 16:28 ./usr/share/doc/gtk2-engines-pixbuf/README.gz -> ../libgtk2.0-common/README.gz

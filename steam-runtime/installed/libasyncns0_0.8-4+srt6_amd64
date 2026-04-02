@@ -1,0 +1,12 @@
+drwxr-xr-x root/root         0 2019-04-03 15:33 ./
+drwxr-xr-x root/root         0 2019-04-03 15:33 ./usr/
+drwxr-xr-x root/root         0 2019-04-03 15:33 ./usr/lib/
+drwxr-xr-x root/root         0 2019-04-03 15:33 ./usr/lib/x86_64-linux-gnu/
+-rw-r--r-- root/root     22672 2019-04-03 15:33 ./usr/lib/x86_64-linux-gnu/libasyncns.so.0.3.1
+drwxr-xr-x root/root         0 2019-04-03 15:33 ./usr/share/
+drwxr-xr-x root/root         0 2019-04-03 15:33 ./usr/share/doc/
+drwxr-xr-x root/root         0 2019-04-03 15:33 ./usr/share/doc/libasyncns0/
+-rw-r--r-- root/root       431 2011-02-27 22:31 ./usr/share/doc/libasyncns0/changelog.gz
+-rw-r--r-- root/root      1360 2011-02-27 12:00 ./usr/share/doc/libasyncns0/copyright
+-rw-r--r-- root/root      1391 2019-04-03 15:33 ./usr/share/doc/libasyncns0/changelog.Debian.amd64.gz
+lrwxrwxrwx root/root         0 2019-04-03 15:33 ./usr/lib/x86_64-linux-gnu/libasyncns.so.0 -> libasyncns.so.0.3.1

@@ -1,0 +1,34 @@
+﻿GUID d981b3ab4958448cb03256d59e7e7756
+Type Farm
+Useable Barricade
+Build Farm
+ID 1941
+
+Size_X 1
+Size_Y 1
+Size_Z 0.2
+
+Health 1
+Range 4
+Radius 0.25
+Offset 0.375
+
+Growth 14400
+Grow 1940
+
+Explosion 43
+Vulnerable
+
+Blueprints
+[
+	{
+		CategoryTag "bfac6026305f4737a95fd275ebff65a6" // Utilities
+		InputItems "2204f86aa81a4f58b5ecf896704dffd8" // Taro
+		OutputItems this
+		Effect "84347b13028340b8976033c08675d458" // Wrench
+		Searchable false
+	}
+]
+
+PlacementAudioClip Sounds/FoliagePlacement.mp3
+Has_Clip_Prefab false

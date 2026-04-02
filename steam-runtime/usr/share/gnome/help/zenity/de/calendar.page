@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<page xmlns="http://projectmallard.org/1.0/" type="topic" id="calendar" xml:lang="de">
+  <info>
+    <link type="guide" xref="index#dialogs"/>
+    <desc>Die Option <cmd>--calendar</cmd> verwenden.</desc>
+  </info>
+  <title>Kalenderdialog</title>
+    <p>Benutzen Sie die Option <cmd>--calendar</cmd> zur Erzeugung eines Kalenderdialogs. <app>Zenity</app> gibt das gewählte Datum an die Standardausgabe zurück. Wenn kein Datum auf der Befehlszeile angegeben wird, verwendet der Dialog das aktuelle Datum.</p>
+    <p>Der Kalenderdialog unterstützt die folgenden Optionen:</p>
+
+    <terms>
+
+      <item>
+        <title><cmd>--text</cmd>=<var>Text</var></title>
+	<p>Damit legen Sie den Text fest, der im Kalenderdialog angezeigt wird.</p>
+      </item>
+     	
+      <item>
+        <title><cmd>--day</cmd>=<var>Tag</var></title>
+	<p>Damit legen Sie den im Kalenderdialog ausgewählten Tag fest. <var>Tag</var> muss eine Zahl von 1 bis 31 sein.</p>
+      </item>
+
+      <item>
+        <title><cmd>--month</cmd>=<var>Monat</var></title>
+	<p>Damit legen Sie den im Kalenderdialog ausgewählten Monat fest. <var>Monat</var> muss eine Zahl zwischen 1 und 12 sein.</p>
+      </item>
+
+      <item>
+        <title><cmd>--year</cmd>=<var>Jahr</var></title>
+	<p>Damit legen Sie das im Kalenderdialog ausgewählte Jahr fest.</p>
+      </item>
+
+      <item>
+        <title><cmd>--date-format</cmd>=<var>Format</var></title>
+	<p>Damit legen Sie das Format fest, das vom Kalenderdialog nach der Auswahl des Datums zurückgegeben wird. Das Standardformat ist abhängig von Ihren Spracheinstellungen. »Format« muss ein Format sein, das von der <cmd>strftime</cmd>-Funktion unterstützt wird, zum Beispiel <var>%A %d/%m/%y</var>.</p>
+      </item>
+
+    </terms>
+
+    <p>Das folgende Beispielskript zeigt, wie Sie einen Kalenderdialog erzeugen können:</p>
+
+<code>
+#!/bin/sh
+
+
+if zenity --calendar \
+--title="Select a Date" \
+--text="Click on a date to select that date." \
+--day=10 --month=8 --year=2004
+  then echo $?
+  else echo "No date selected"
+fi
+</code>
+
+
+    <figure id="zenity-calendar-screenshot">
+      <title>Beispiel für einen Kalenderdialog</title>
+      <desc>Beispiel für einen Kalenderdialog in <app>Zenity</app></desc>
+      <media type="image" mime="image/png" src="figures/zenity-calendar-screenshot.png"/>
+   </figure>
+</page>

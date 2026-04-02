@@ -1,0 +1,258 @@
+<?xml version="1.0" encoding="utf-8"?>
+<page xmlns="http://projectmallard.org/1.0/" type="topic" id="usage" xml:lang="gl">
+<info>
+  <link type="guide" xref="index"/>
+  <desc>Pode usar <app>Zenity</app> para crear diálogos simples que interactúen graficamente co usuario.</desc>
+</info>
+<title>Uso</title>
+    <p>Cando escriba scripts, pode usar <app>Zenity</app> para crear diálogos simples que interactúen graficamente co usuario, como por exemplo:</p>
+    <list>
+      <item>
+        <p>Pode crear un diálogo para obter información do usuario. Por exemplo, pode pedir ao usuario seleccionar unha data dun diálogo do calendario. ou seleccionar un ficheiro dun diálogo de selección de ficheiro.</p>
+      </item>
+      <item>
+        <p>Vostede pode crear un diálogo para fornecer información ao usuario. Por exemplo, pode usar un diálogo de progreso para indicar o estado actual dunha operación, ou usar un diálogo de advertencia para alertar ao usuario.</p>
+      </item>
+    </list>
+    <p>Cando o usuario pecha o diálogo, <app>Zenity</app> imprime o texto producido polo diálogo á saída estándar de erro.</p>
+
+    <note>
+      <p>Cando vostede escriba ordes de <app>Zenity</app>, asgúrese de poñer comiñas ao redor de cada argumento.</p>
+      <p>Por exemplo, use:</p>
+      <screen>zenity --calendar --title="Calendario de vacacións"</screen>
+      <p>Non use:</p>
+      <screen>zenity --calendar --title=Calendario de vacacións</screen>
+      <p>Se non usa comi;as, pode que consiga resultados non esperados.</p>
+    </note>
+
+    <section id="zenity-usage-mnemonics">
+      <title>Combinacións de teclas</title>
+	<p>Unha combinación de teclas permítelle realizar unha acción desde o teclado no lugar de empregar o rato para elixir unha orde dun menú ou un diálogo. Cada combinación de teclas identifícase por unha tecla subliñadad nunha opción do menú ou dun diálogo.</p>
+	<p>Algúns diálogos de <app>Zenity</app> admiten o uso de combinacións de teclas. Para especificar o carácter que se empregará como combinación de teclas, poña un guión baixo precedendo ese carácter no texto do diálogo. O seguinte exemplo mostra como especificar a letra «E» como combinación de teclas:</p>
+	<screen><input>"_Seleccione un nome".</input></screen>
+    </section>
+
+    <section id="zenity-usage-exitcodes">
+      <title>Códigos de saída</title>
+    <p>Zenity retorna os seguintes códigos de erro:</p>
+
+    <table frame="all" rules="all">
+        <thead>
+          <tr valign="top">
+            <td colname="COLSPEC0">
+              <p>Código de saída</p></td>
+            <td colname="COLSPEC1">
+              <p>Descrición</p></td>
+          </tr>
+        </thead>
+        <tbody>
+          <tr valign="top">
+            <td>
+              <p><var>0</var></p>
+            </td>
+            <td>
+              <p>O usuario premeu <gui style="button">Aceptar</gui> ou <gui style="button">Pechar</gui>.</p>
+            </td>
+          </tr>
+          <tr valign="top">
+            <td>
+              <p><var>1</var></p>
+            </td>
+            <td>
+              <p>O usuario presionou <gui style="button">Cancelar</gui>, ou usou a función da xanela para pechar o diálogo.</p>
+            </td>
+          </tr>
+          <tr valign="top">
+            <td>
+              <p><var>-1</var></p>
+            </td>
+            <td>
+              <p>Produciuse un erro inesperado.</p>
+            </td>
+          </tr>
+          <tr valign="top">
+            <td>
+              <p><var>5</var></p>
+            </td>
+            <td>
+              <p>O diálogo pechouse porque o tempo de espera alcanzouse.</p>
+            </td>
+          </tr>
+        </tbody>
+    </table>
+
+    </section>
+
+
+  <!-- ==== General Options ====== -->
+
+  <section id="zenity-usage-general-options">
+    <title>Opcións xerais</title>
+
+    <p>Tódolos diálogos de Zenity son compatíbeis coas seguintes opcións xerais:</p>
+
+    <terms>
+
+      <item>
+        <title><cmd>--title</cmd>=<var>título</var></title>
+	<p>Especifica o título dun diálogo.</p>
+      </item>
+
+      <item>
+        <title><option>--window-icon</option>=<var>ruta_de_icona</var></title>
+	<p>Especifica a icona que se mostra no marco da xanela do diálogo. Hai 4 iconas dispoñíbeis, fornecendo as palabras chave seguintes - «info», «warning», «question» e «erro».</p>
+      </item>
+
+      <item>
+        <title><cmd>--width</cmd>=<var>anchura</var></title>
+	<p>Especifica o ancho dun diálogo</p>
+      </item>
+
+      <item>
+        <title><cmd>--height</cmd>=<var>altura</var></title>
+	<p>Especifica o alto dun diálogo</p>
+      </item>
+
+      <item>
+        <title><cmd>--timeout</cmd>=<var>tempo_de_expiración</var></title>
+	<p>Especifica o tempo de espera en segundos despois do cal o diálogo se pechará.</p>
+      </item>
+
+    </terms>
+
+  </section>
+
+<!-- ==== Miscellaneous Options ====== -->
+
+  <section id="zenity-help-options">
+    <title>Opcións de axuda</title>
+
+    <p>Zenity fornece as seguintes opcións de axuda</p>
+
+    <terms>
+
+      <item>
+        <title><cmd>--help</cmd></title>
+	<p>Mostra un texto de axuda abreviado.</p>
+      </item>
+
+      <item>
+        <title><cmd>--help-all</cmd></title>
+	<p>Mostra o texto de axuda para os diálogos</p>
+      </item>
+ 
+      <item>
+        <title><cmd>--help-general</cmd></title>
+	<p>Mostra o texto de axuda para as opcións de diálogo xerais.</p>
+      </item>
+ 
+      <item>
+        <title><cmd>--help-calendar</cmd></title>
+	<p>Mostra o texto de axuda para as opcións do diálogo do calendario.</p>
+      </item>
+ 
+      <item>
+        <title><cmd>--help-entry</cmd></title>
+	<p>Mostra o texto de axuda para as opcións do diálogo de entrada de texto.</p>
+      </item>
+ 
+      <item>
+        <title><cmd>--help-error</cmd></title>
+	<p>Mostra o texto de axuda para as opcións do diálogo de erro.</p>
+      </item>
+ 
+      <item>
+        <title><cmd>--help-info</cmd></title>
+	<p>Mostra o texto de axuda para as opcións do diálogo de información.</p>
+      </item>
+ 
+      <item>
+        <title><cmd>--help-file-selection</cmd></title>
+	<p>Mostra o texto de axuda para as opcións do diálogo de selección de ficheiros.</p>
+      </item>
+ 
+      <item>
+        <title><cmd>--help-list</cmd></title>
+	<p>Mostra o texto de axuda para as opcións do diálogo de lista.</p>
+      </item>
+ 
+      <item>
+        <title><cmd>--help-notification</cmd></title>
+	<p>Mostra o texto de axuda para as opcións de iconas de notificación.</p>
+      </item>
+ 
+      <item>
+        <title><cmd>--help-progress</cmd></title>
+	<p>Mostra o texto de axuda para as opcións do diálogo de progreso.</p>
+      </item>
+ 
+      <item>
+        <title><cmd>--help-question</cmd></title>
+	<p>Mostra o texto de axuda para as opcións do diálogo de pregunta.</p>
+      </item>
+ 
+      <item>
+        <title><cmd>--help-warning</cmd></title>
+	<p>Mostra o texto de axuda para as opcións do diálogo de avisos.</p>
+      </item>
+ 
+      <item>
+	<title><cmd>--help-text-info</cmd></title>
+	<p>Mostra o texto de axuda para as opcións de diálogo de información.</p>
+      </item>
+ 
+      <item>
+        <title><cmd>--help-misc</cmd></title>
+	<p>Mostra axuda para opcións varias.</p>
+      </item>
+ 
+      <item>
+        <title><cmd>--help-gtk</cmd></title>
+	<p>Mostra axuda para as opcóns de GTK+</p>
+      </item>
+ 
+    </terms>
+
+  </section>
+
+<!-- ==== Miscellaneous Options ====== -->
+
+  <section id="zenity-miscellaneous-options">
+    <title>Opcións varias</title>
+
+    <p>Zenity tamén fornece as seguintes opcións varias:</p>
+
+    <terms>
+
+      <item>
+        <title><cmd>--about</cmd></title>
+	<p>Mostra o diálogo <guilabel>Sobre Zenity</guilabel>, que contén información da versión de Zenity, información de copyright e información do desenvolvedor.</p>
+      </item>
+
+      <item>
+        <title><cmd>--version</cmd></title>
+	<p>Mostra o número de versión de Zenity.</p>
+      </item>
+
+    </terms>
+
+  </section>
+
+<!-- ==== GTK+ Options ====== -->
+
+  <section id="zenity-gtk-options">
+    <title>Opcións de GTK+</title>
+
+    <p>Zenity admite as opcións GTK+ estándar. Para obter máis información sobre as opcións de GTK+, execute a orde <command>zenity -?</command>.</p>
+
+  </section>
+
+<!-- ==== Environment variables ==== -->
+
+  <section id="zenity-environment-variables">
+    <title>Variábeis de contorno</title>
+
+    <p>Xeralmente Zenity detecta a xanela do terminal desde a que se iniciou e se mantén por enriba desa xanela. Ese comportamento pódese desactivar coa variábel de entorno <var>WINDOWID</var>.</p>
+
+  </section>
+</page>

@@ -1,0 +1,19 @@
+drwxr-xr-x root/root         0 2026-02-18 19:35 ./
+drwxr-xr-x root/root         0 2026-02-18 19:35 ./usr/
+drwxr-xr-x root/root         0 2026-02-18 19:34 ./usr/share/
+drwxr-xr-x root/root         0 2026-02-18 19:34 ./usr/share/doc/
+drwxr-xr-x root/root         0 2026-02-18 19:35 ./usr/share/doc/libsteam-runtime-tools-0-relocatable-libs/
+-rw-r--r-- root/root      8738 2026-02-18 19:09 ./usr/share/doc/libsteam-runtime-tools-0-relocatable-libs/copyright
+-rw-r--r-- root/root     56933 2026-02-18 19:29 ./usr/share/doc/libsteam-runtime-tools-0-relocatable-libs/changelog.i386.gz
+drwxr-xr-x root/root         0 2026-02-18 19:35 ./usr/lib/
+drwxr-xr-x root/root         0 2026-02-18 19:35 ./usr/lib/i386-linux-gnu/
+drwxr-xr-x root/root         0 2026-02-18 19:35 ./usr/lib/i386-linux-gnu/steam-runtime-tools-0/
+lrwxrwxrwx root/root         0 2026-02-18 19:35 ./usr/lib/i386-linux-gnu/steam-runtime-tools-0/libgio-2.0.so.0 -> ../../../../usr/lib/i386-linux-gnu/libgio-2.0.so.0
+lrwxrwxrwx root/root         0 2026-02-18 19:35 ./usr/lib/i386-linux-gnu/steam-runtime-tools-0/libffi.so.6 -> ../../../../usr/lib/i386-linux-gnu/libffi.so.6
+lrwxrwxrwx root/root         0 2026-02-18 19:35 ./usr/lib/i386-linux-gnu/steam-runtime-tools-0/libelf.so.1 -> ../../../../usr/lib/i386-linux-gnu/libelf.so.1
+lrwxrwxrwx root/root         0 2026-02-18 19:35 ./usr/lib/i386-linux-gnu/steam-runtime-tools-0/libz.so.1 -> ../../../../lib/i386-linux-gnu/libz.so.1
+lrwxrwxrwx root/root         0 2026-02-18 19:35 ./usr/lib/i386-linux-gnu/steam-runtime-tools-0/libgmodule-2.0.so.0 -> ../../../../usr/lib/i386-linux-gnu/libgmodule-2.0.so.0
+lrwxrwxrwx root/root         0 2026-02-18 19:35 ./usr/lib/i386-linux-gnu/steam-runtime-tools-0/libglib-2.0.so.0 -> ../../../../lib/i386-linux-gnu/libglib-2.0.so.0
+lrwxrwxrwx root/root         0 2026-02-18 19:35 ./usr/lib/i386-linux-gnu/steam-runtime-tools-0/libgobject-2.0.so.0 -> ../../../../usr/lib/i386-linux-gnu/libgobject-2.0.so.0
+lrwxrwxrwx root/root         0 2026-02-18 19:35 ./usr/lib/i386-linux-gnu/steam-runtime-tools-0/libjson-glib-1.0.so.0 -> ../../../../usr/lib/i386-linux-gnu/libjson-glib-1.0.so.0
+lrwxrwxrwx root/root         0 2026-02-18 19:35 ./usr/lib/i386-linux-gnu/steam-runtime-tools-0/libsteam-runtime-tools-0.so.0 -> ../libsteam-runtime-tools-0.so.0

@@ -1,0 +1,14 @@
+drwxr-xr-x root/root         0 2019-04-03 21:06 ./
+drwxr-xr-x root/root         0 2019-04-03 21:06 ./usr/
+drwxr-xr-x root/root         0 2019-04-03 21:06 ./usr/lib/
+drwxr-xr-x root/root         0 2019-04-03 21:06 ./usr/lib/gcc/
+drwxr-xr-x root/root         0 2019-04-03 21:06 ./usr/lib/gcc/x86_64-linux-gnu/
+drwxr-xr-x root/root         0 2019-04-03 21:06 ./usr/lib/gcc/x86_64-linux-gnu/5/
+drwxr-xr-x root/root         0 2019-04-03 21:06 ./usr/share/
+drwxr-xr-x root/root         0 2019-04-03 21:06 ./usr/share/doc/
+drwxr-xr-x root/root         0 2019-04-03 21:06 ./usr/share/doc/gcc-5-base/
+-rw-r--r-- root/root      1716 2019-04-03 16:59 ./usr/share/doc/gcc-5-base/TODO.Debian
+-rw-r--r-- root/root     31223 2019-04-03 17:00 ./usr/share/doc/gcc-5-base/copyright
+-rw-r--r-- root/root    156252 2019-04-03 16:59 ./usr/share/doc/gcc-5-base/changelog.Debian.amd64.gz
+-rw-r--r-- root/root      4239 2019-04-03 17:00 ./usr/share/doc/gcc-5-base/README.Debian.amd64.gz
+lrwxrwxrwx root/root         0 2019-04-03 21:06 ./usr/lib/gcc/x86_64-linux-gnu/5.4.1 -> 5

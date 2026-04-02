@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<page xmlns="http://projectmallard.org/1.0/" type="topic" id="color-selection" xml:lang="hu">
+  <info>
+    <link type="guide" xref="index#dialogs"/>
+    <desc>A <cmd>--color-selection</cmd> kapcsoló használata.</desc>
+  </info>
+  <title>Színválasztó ablak</title>
+  <p>A <cmd>--color-selection</cmd> kapcsoló használatával színválasztó ablakot hozhat létre.</p>
+  <p>A színválasztó ablak a következő kapcsolókat támogatja:</p>
+
+  <terms>
+
+    <item>
+      <title><cmd>--color</cmd>=<var>érték</var></title>
+      <p>A kiinduló szín beállítása (például: #FF0000)</p>
+    </item>
+
+    <item>
+      <title><cmd>--show-palette</cmd></title>
+      <p>A paletta megjelenítése.</p>
+    </item>
+
+  </terms>
+
+  <p>A következő példa parancsfájl bemutatja a színválasztó ablak létrehozását:</p>
+
+<code>
+#!/bin/sh
+
+COLOR=`zenity --color-selection --show-palette`
+
+case $? in
+         0)
+		echo "Ezt a színt választotta: $COLOR.";;
+         1)
+                echo "Nem választott színt.";;
+        -1)
+                echo "Váratlan hiba történt.";;
+esac
+</code>
+
+  <figure id="zenity-colorselection-screenshot">
+    <title>Példa színválasztó ablak</title>
+    <desc><app>Zenity</app> példa színválasztó ablak</desc>
+    <media type="image" mime="image/png" src="figures/zenity-colorselection-screenshot.png"/>
+  </figure>
+
+</page>

@@ -1,4 +1,4 @@
-"Available_Instance_ID" "73"
+"Available_Instance_ID" "76"
 "Items"
 [
 	{
@@ -117116,7 +117116,7 @@
 				"X" "0"
 				"Y" "0"
 				"Z" "0.3826834"
-				"W" "0.9238795"
+				"W" "0.9238796"
 			}
 			"Scale"
 			{
@@ -117258,6 +117258,92 @@
 			"Kill_Animals" "true"
 			"Kill_Vehicles" "false"
 			"Death_Cause" "BURNING"
+		}
+	}
+	{
+		"Type" "SDG.Framework.Devkit.UndergroundWhitelistVolume, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null"
+		"Instance_ID" "73"
+		"Item"
+		{
+			"Position"
+			{
+				"X" "259.5056"
+				"Y" "40.45668"
+				"Z" "772.4139"
+			}
+			"Rotation"
+			{
+				"X" "0"
+				"Y" "0.2343208"
+				"Z" "0"
+				"W" "0.9721594"
+			}
+			"Scale"
+			{
+				"X" "29.21474"
+				"Y" "16.46304"
+				"Z" "35.71407"
+			}
+			"Shape" "Box"
+		}
+	}
+	{
+		"Type" "SDG.Framework.Devkit.UndergroundWhitelistVolume, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null"
+		"Instance_ID" "74"
+		"Item"
+		{
+			"Position"
+			{
+				"X" "277.9109"
+				"Y" "40.26699"
+				"Z" "766.4461"
+			}
+			"Rotation"
+			{
+				"X" "0"
+				"Y" "0.2343208"
+				"Z" "0"
+				"W" "0.9721593"
+			}
+			"Scale"
+			{
+				"X" "9.051153"
+				"Y" "15.99242"
+				"Z" "17.46428"
+			}
+			"Shape" "Box"
+		}
+	}
+	{
+		"Type" "SDG.Framework.Water.WaterVolume, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null"
+		"Instance_ID" "75"
+		"Item"
+		{
+			"Position"
+			{
+				"X" "155.5792"
+				"Y" "10.30869"
+				"Z" "-0.5679925"
+			}
+			"Rotation"
+			{
+				"X" "0"
+				"Y" "0"
+				"Z" "0"
+				"W" "1"
+			}
+			"Scale"
+			{
+				"X" "3796.209"
+				"Y" "30.58416"
+				"Z" "4098.23"
+			}
+			"Shape" "Box"
+			"Is_Surface_Visible" "true"
+			"Is_Reflection_Visible" "true"
+			"Is_Sea_Level" "true"
+			"Water_Type" "SALTY"
+			"Fish_Spawn_Table" "00000000000000000000000000000000"
 		}
 	}
 ]

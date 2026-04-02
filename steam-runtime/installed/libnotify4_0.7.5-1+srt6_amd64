@@ -1,0 +1,14 @@
+drwxr-xr-x root/root         0 2019-04-03 16:01 ./
+drwxr-xr-x root/root         0 2019-04-03 16:01 ./usr/
+drwxr-xr-x root/root         0 2019-04-03 16:01 ./usr/lib/
+drwxr-xr-x root/root         0 2019-04-03 16:01 ./usr/lib/x86_64-linux-gnu/
+-rw-r--r-- root/root     31328 2019-04-03 16:01 ./usr/lib/x86_64-linux-gnu/libnotify.so.4.0.0
+drwxr-xr-x root/root         0 2019-04-03 16:01 ./usr/share/
+drwxr-xr-x root/root         0 2019-04-03 16:01 ./usr/share/doc/
+drwxr-xr-x root/root         0 2019-04-03 16:01 ./usr/share/doc/libnotify4/
+-rw-r--r-- root/root      7923 2011-08-16 11:52 ./usr/share/doc/libnotify4/changelog.gz
+-rw-r--r-- root/root      3010 2012-03-27 01:58 ./usr/share/doc/libnotify4/NEWS.gz
+-rw-r--r-- root/root      1327 2011-07-30 21:41 ./usr/share/doc/libnotify4/copyright
+-rw-r--r-- root/root       325 2011-08-16 11:52 ./usr/share/doc/libnotify4/AUTHORS
+-rw-r--r-- root/root      4499 2019-04-03 15:59 ./usr/share/doc/libnotify4/changelog.Debian.amd64.gz
+lrwxrwxrwx root/root         0 2019-04-03 16:01 ./usr/lib/x86_64-linux-gnu/libnotify.so.4 -> libnotify.so.4.0.0

@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<page xmlns="http://projectmallard.org/1.0/" type="topic" id="text" xml:lang="gl">
+  <info>
+    <link type="guide" xref="index#dialogs"/>
+    <desc>Use a opción <cmd>--text-info</cmd>.</desc>
+  </info>
+  <title>Diálogo para o texto de información</title>
+    <p>Use a opción <cmd>--warning</cmd> para crear un diálogo de pregunta.</p>
+	
+    <p>O diálogo de texto de información admite as seguintes opcións:</p>
+
+    <terms>
+
+      <item>
+        <title><cmd>--filename</cmd>=<var>nome_de_ficheiro</var></title>
+	<p>Especifica un ficheiro que se carga no diálogo de texto de información.</p>
+      </item>
+
+      <item>
+        <title><cmd>--editable</cmd></title>
+        <p>Permite que o texto mostrado sexa editado. O texto editado devólvese pola saída estándar cando o diálogo se pecha.</p>
+      </item>
+
+      <item>
+        <title><cmd>--font</cmd>=<var>TIPO_DE_LETRA</var></title>
+	<p>Especifica o tipo de letra do texto.</p>
+      </item>
+
+      <item>
+        <title><cmd>--checkbox</cmd>=<var>TEXTO</var></title>
+	<p>Activar unha casilla para usala como «Lin e acepto os termos.»</p>
+      </item>
+
+      <item>
+        <title><cmd>--html</cmd></title>
+        <p>Activar a compatibilidade de HTML.</p>
+      </item>
+
+      <item>
+        <title><cmd>--url</cmd>=<var>URL</var></title>
+	<p>Configura unha URL no lugar dun ficheiro. Só funciona se usa a opción «--html»</p>
+      </item>
+
+    </terms>
+
+    <p>O seguinte script de exemplo mostra como crear un diálogo de selección de ficheiro:</p>
+
+<code>
+#!/bin/sh
+
+# Debe copiar o archivo "COPYING" no mesmo cartafol que este script.
+FILE=`dirname $0`/COPYING
+
+zenity --text-info \
+       --title="Licenza" \
+       --filename=$FILE \
+       --checkbox="Lin e acepto os termos."
+
+case $? in
+    0)
+        echo "Comenzar instalación"
+	# seguinte paso
+	;;
+    1)
+        echo "Deter instalación"
+	;;
+    -1)
+        echo "Produciuse un error non esperado."
+	;;
+esac
+</code>
+
+    <figure id="zenity-text-screenshot">
+      <title>Exemplo do diálogo de texto de información</title>
+      <desc>Exemplo do diálogo de texto de información de <app>Zenity</app></desc>
+      <media type="image" mime="image/png" src="figures/zenity-text-screenshot.png"/>
+    </figure>
+</page>

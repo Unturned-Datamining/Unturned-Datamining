@@ -1,0 +1,81 @@
+GUID 814793db2bea43aa924078c96364885d
+Type Spawn
+
+Tables
+[
+	{
+		// Energy Bar (Food Item)
+		Guid e3d11c5882d3407496c264d272acf886
+		Weight 15
+	}
+	{
+		// Granola Bar (Food Item)
+		Guid a829ea9d0ccb4766a4c761e8a1193361
+		Weight 15
+	}
+	{
+		// Chips (Food Item)
+		Guid 2a1350f9ca41402fa0f10297b878cc3c
+		Weight 15
+	}
+	{
+		// Bottled Water (Water Item)
+		Guid f81d68ebb2a8490dbe1545d432b9c099
+		Weight 10
+	}
+	{
+		// Apple Juice (Water Item)
+		Guid 4714142193e64af2ae6b5f3f69e3c0ae
+		Weight 15
+	}
+	{
+		// Grape Juice (Water Item)
+		Guid 51dc7aaf89d34ebf9b4df35b4ab01d33
+		Weight 15
+	}
+	{
+		// Canned Soda (Water Item)
+		Guid 2c66de826a964b189e34c8e2a56ccb04
+		Weight 10
+	}
+	{
+		// Canned Cola (Water Item)
+		Guid fe920a1d4bd6426eb279e5f860927118
+		Weight 10
+	}
+	{
+		// Bottled Soda (Water Item)
+		Guid c83390665c6546b8befbf6f15ef202c4
+		Weight 5
+	}
+	{
+		// Bottled Cola (Water Item)
+		Guid f1fdcb83248b40a8aab68d70911d5a37
+		Weight 5
+	}
+	{
+		// Raw Bass
+		Guid 00f066e5a3a24ae5b9a07d184266f78c
+		Weight 5
+	}
+	{
+		// Raw Minnow
+		Guid 1b7034184634492c9f78e11b42c651db
+		Weight 5
+	}
+	{
+		// Raw Salmon
+		Guid 7c09233d7e2c4ccfa59cf24f602d6ee9
+		Weight 5
+	}
+	{
+		// Raw Trout
+		Guid d228c0a89be74844a367760972689567
+		Weight 5
+	}
+	{
+		// Raw Goldfish
+		Guid 0b12b6e13f6349b9a9925f08f1576548
+		Weight 10
+	}
+]

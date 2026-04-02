@@ -1,0 +1,14 @@
+drwxr-xr-x root/root         0 2021-06-08 12:27 ./
+drwxr-xr-x root/root         0 2021-06-08 12:27 ./usr/
+drwxr-xr-x root/root         0 2021-06-08 12:27 ./usr/share/
+drwxr-xr-x root/root         0 2021-06-08 12:27 ./usr/share/doc/
+drwxr-xr-x root/root         0 2021-06-08 12:27 ./usr/share/doc/libdbusmenu-glib4/
+-rw-r--r-- root/root      1503 2021-06-08 12:24 ./usr/share/doc/libdbusmenu-glib4/copyright
+-rw-r--r-- root/root     12555 2021-06-08 12:24 ./usr/share/doc/libdbusmenu-glib4/changelog.Debian.i386.gz
+-rw-r--r-- root/root       181 2012-06-07 15:45 ./usr/share/doc/libdbusmenu-glib4/README
+-rw-r--r-- root/root       498 2012-06-13 19:16 ./usr/share/doc/libdbusmenu-glib4/AUTHORS
+-rw-r--r-- root/root     48231 2012-06-13 19:16 ./usr/share/doc/libdbusmenu-glib4/changelog.gz
+drwxr-xr-x root/root         0 2021-06-08 12:27 ./usr/lib/
+drwxr-xr-x root/root         0 2021-06-08 12:27 ./usr/lib/i386-linux-gnu/
+-rw-r--r-- root/root    112880 2021-06-08 12:27 ./usr/lib/i386-linux-gnu/libdbusmenu-glib.so.4.0.13
+lrwxrwxrwx root/root         0 2021-06-08 12:27 ./usr/lib/i386-linux-gnu/libdbusmenu-glib.so.4 -> libdbusmenu-glib.so.4.0.13

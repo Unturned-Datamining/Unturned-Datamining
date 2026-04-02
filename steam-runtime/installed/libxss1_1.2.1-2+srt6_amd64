@@ -1,0 +1,12 @@
+drwxr-xr-x root/root         0 2019-04-03 16:00 ./
+drwxr-xr-x root/root         0 2019-04-03 16:00 ./usr/
+drwxr-xr-x root/root         0 2019-04-03 16:00 ./usr/lib/
+drwxr-xr-x root/root         0 2019-04-03 16:00 ./usr/lib/x86_64-linux-gnu/
+-rw-r--r-- root/root     10384 2019-04-03 16:00 ./usr/lib/x86_64-linux-gnu/libXss.so.1.0.0
+drwxr-xr-x root/root         0 2019-04-03 16:00 ./usr/share/
+drwxr-xr-x root/root         0 2019-04-03 16:00 ./usr/share/doc/
+drwxr-xr-x root/root         0 2019-04-03 16:00 ./usr/share/doc/libxss1/
+-rw-r--r-- root/root      7646 2010-10-30 05:21 ./usr/share/doc/libxss1/changelog.gz
+-rw-r--r-- root/root      2678 2019-04-03 15:59 ./usr/share/doc/libxss1/copyright
+-rw-r--r-- root/root      1709 2019-04-03 15:59 ./usr/share/doc/libxss1/changelog.Debian.amd64.gz
+lrwxrwxrwx root/root         0 2019-04-03 16:00 ./usr/lib/x86_64-linux-gnu/libXss.so.1 -> libXss.so.1.0.0

@@ -375,6 +375,8 @@ public class Provider : MonoBehaviour
     /// </summary>
     public static LoginSpawningHandler onLoginSpawning;
 
+    internal static bool hasSentReadyToLoginNotification;
+
     /// <summary>
     /// Is client waiting for response to ESteamPacket.CONNECT request?
     /// </summary>
@@ -2176,6 +2178,7 @@ public class Provider : MonoBehaviour
             }
         }
         UnturnedLog.info("Ready to connect");
+        hasSentReadyToLoginNotification = true;
         isWaitingForConnectResponse = true;
         sentConnectRequestTime = Time.realtimeSinceStartup;
         NetMessages.SendMessageToServer(EServerMessage.ReadyToConnect, ENetReliability.Reliable, delegate(NetPakWriter writer)
@@ -2263,6 +2266,7 @@ public class Provider : MonoBehaviour
         lag((_currentServerAdvertisement != null) ? ((float)_currentServerAdvertisement.PingMs / 1000f) : 0f);
         isLoadingUGC = true;
         LoadingUI.updateScene();
+        hasSentReadyToLoginNotification = false;
         isWaitingForConnectResponse = false;
         isWaitingForWorkshopResponse = true;
         waitingForExpectedWorkshopItems = expectedWorkshopItems;
@@ -2970,6 +2974,7 @@ public class Provider : MonoBehaviour
         Assets.ClearServerAssetMapping();
         unloadGameMode();
         _isConnected = false;
+        hasSentReadyToLoginNotification = false;
         isWaitingForConnectResponse = false;
         isWaitingForWorkshopResponse = false;
         isLoadingUGC = false;
@@ -3823,6 +3828,14 @@ public class Provider : MonoBehaviour
             }
             return;
         }
+        if (hasSentReadyToLoginNotification && Time.realtimeSinceStartup - lastPingRequestTime > PING_REQUEST_INTERVAL && (Time.realtimeSinceStartup - timeLastPingRequestWasSentToServer > 1f || timeLastPingRequestWasSentToServer < 0f))
+        {
+            lastPingRequestTime = Time.realtimeSinceStartup;
+            timeLastPingRequestWasSentToServer = Time.realtimeSinceStartup;
+            NetMessages.SendMessageToServer(EServerMessage.PingRequest, ENetReliability.Unreliable, delegate
+            {
+            });
+        }
         if (Level.isLoading)
         {
             float num2 = Time.realtimeSinceStartup - timeLastPacketWasReceivedFromServer;
@@ -3844,14 +3857,6 @@ public class Provider : MonoBehaviour
             }
             timeLastPacketWasReceivedFromServer = Time.realtimeSinceStartup;
             return;
-        }
-        if (Time.realtimeSinceStartup - lastPingRequestTime > PING_REQUEST_INTERVAL && (Time.realtimeSinceStartup - timeLastPingRequestWasSentToServer > 1f || timeLastPingRequestWasSentToServer < 0f))
-        {
-            lastPingRequestTime = Time.realtimeSinceStartup;
-            timeLastPingRequestWasSentToServer = Time.realtimeSinceStartup;
-            NetMessages.SendMessageToServer(EServerMessage.PingRequest, ENetReliability.Unreliable, delegate
-            {
-            });
         }
         float num4 = Time.realtimeSinceStartup - timeLastPacketWasReceivedFromServer;
         if (num4 > (float)CLIENT_TIMEOUT)
@@ -4257,32 +4262,33 @@ public class Provider : MonoBehaviour
         Dictionary<string, object> perDifficultyConfigOverrides = Level.info.configData.GetPerDifficultyConfigOverrides(mode);
         if (perDifficultyConfigOverrides != null && perDifficultyConfigOverrides.Count > 0)
         {
+            UnturnedLog.info($"Level has {perDifficultyConfigOverrides.Count} override(s) specific to {mode}:");
             ApplyLevelModeConfigOverrides(perDifficultyConfigOverrides);
         }
     }
 
     private static void ApplyLevelModeConfigOverrides(Dictionary<string, object> levelOverrides)
     {
-        foreach (KeyValuePair<string, object> mode_Config_Override in Level.info.configData.Mode_Config_Overrides)
+        foreach (KeyValuePair<string, object> levelOverride in levelOverrides)
         {
-            if (string.IsNullOrEmpty(mode_Config_Override.Key))
+            if (string.IsNullOrEmpty(levelOverride.Key))
             {
                 CommandWindow.LogError("Level mode config overrides contains an empty key");
                 break;
             }
-            if (mode_Config_Override.Value == null)
+            if (levelOverride.Value == null)
             {
                 CommandWindow.LogError("Level mode config overrides contains a null value");
                 break;
             }
-            if (mode_Config_Override.Key == "Gameplay.Disable_Motion_Sickness_Options")
+            if (levelOverride.Key == "Gameplay.Disable_Motion_Sickness_Options")
             {
-                CommandWindow.LogWarning("Level cannot override " + mode_Config_Override.Key);
+                CommandWindow.LogWarning("Level cannot override " + levelOverride.Key);
                 continue;
             }
             Type type = typeof(ModeConfigData);
             object value = modeConfigData;
-            string[] array = mode_Config_Override.Key.Split('.');
+            string[] array = levelOverride.Key.Split('.');
             for (int i = 0; i < array.Length; i++)
             {
                 string text = array[i];
@@ -4296,16 +4302,16 @@ public class Provider : MonoBehaviour
                 {
                     if (_modeConfigDataOverrides.ContainsKey(field))
                     {
-                        CommandWindow.Log("Skipping level config override " + mode_Config_Override.Key + " because it's overridden in server config");
+                        CommandWindow.Log("Skipping level config override " + levelOverride.Key + " because it's overridden in server config");
                         break;
                     }
                     try
                     {
-                        applyLevelConfigOverride(field, value, mode_Config_Override);
+                        applyLevelConfigOverride(field, value, levelOverride);
                     }
                     catch (Exception e)
                     {
-                        CommandWindow.LogError("Exception when applying level config override: " + mode_Config_Override.Key);
+                        CommandWindow.LogError("Exception when applying level config override: " + levelOverride.Key);
                         UnturnedLog.exception(e);
                         break;
                     }
@@ -4499,6 +4505,7 @@ public class Provider : MonoBehaviour
             writer.WriteUInt32(ipForClient);
             writer.WriteUInt16(queryPortForClient);
             writer.WriteUInt8((byte)modeConfigData.Gameplay.Repair_Level_Max);
+            writer.WriteFloat(modeConfigData.Players.Skill_Cost_Multiplier);
             writer.WriteBit(modeConfigData.Players.Skillset_Reduces_Skill_Cost);
             writer.WriteBit(modeConfigData.Gameplay.Hitmarkers);
             writer.WriteBit(modeConfigData.Gameplay.Crosshair);
@@ -4515,13 +4522,17 @@ public class Provider : MonoBehaviour
             writer.WriteBit(modeConfigData.Gameplay.Can_Suicide);
             writer.WriteBit(modeConfigData.Gameplay.Friendly_Fire);
             writer.WriteBit(modeConfigData.Gameplay.Bypass_Buildable_Mobility);
+            writer.WriteBit(modeConfigData.Gameplay.Bypass_Building_In_Safezones);
+            writer.WriteBit(modeConfigData.Gameplay.Bypass_No_Building_Zones);
             writer.WriteBit(modeConfigData.Gameplay.Allow_Freeform_Buildables);
             writer.WriteBit(modeConfigData.Gameplay.Allow_Freeform_Buildables_On_Vehicles);
             writer.WriteBit(modeConfigData.Gameplay.Enable_Damage_Flinch);
             writer.WriteBit(modeConfigData.Gameplay.Enable_Explosion_Camera_Shake);
             writer.WriteBit(modeConfigData.Gameplay.Enable_Workstation_Requirements);
             writer.WriteBit(modeConfigData.Gameplay.Disable_Motion_Sickness_Options);
+            writer.WriteBit(modeConfigData.Gameplay.Disable_Foliage_Off);
             writer.WriteBit(modeConfigData.Gameplay.Use_2D_Scope_Overlay);
+            writer.WriteBit(modeConfigData.Gameplay.Enable_Fishing_Catch_Challenge);
             writer.WriteUInt16((ushort)modeConfigData.Gameplay.Timer_Exit);
             writer.WriteUInt16((ushort)modeConfigData.Gameplay.Timer_Respawn);
             writer.WriteUInt16((ushort)modeConfigData.Gameplay.Timer_Home);
@@ -4539,6 +4550,9 @@ public class Provider : MonoBehaviour
             writer.WriteFloat(modeConfigData.Gameplay.ThirdPerson_SpreadMultiplier);
             writer.WriteFloat(modeConfigData.Gameplay.Viewmodel_AimingJumpLandMultiplier);
             writer.WriteFloat(modeConfigData.Gameplay.Viewmodel_AimingMisalignmentMultiplier);
+            writer.WriteFloat(modeConfigData.Gameplay.Min_Fishing_Bite_Interval);
+            writer.WriteFloat(modeConfigData.Gameplay.Max_Fishing_Bite_Interval);
+            writer.WriteFloat(modeConfigData.Gameplay.Fishing_MaxStrength_Bite_Interval_Multiplier);
         });
         if (battlEyeServerHandle != IntPtr.Zero && battlEyeServerRunData != null && battlEyeServerRunData.pfnAddPlayer != null && battlEyeServerRunData.pfnReceivedPlayerGUID != null)
         {

@@ -1,0 +1,59 @@
+﻿GUID 4b7a1c90124944bbac39ebf8aaa85e9b
+Type Food
+Rarity Epic
+Useable Consumeable
+ID 1976
+
+Size_X 2
+Size_Y 2
+Size_Z 0.45
+
+Health 25
+Food 90
+Water 30
+
+Blueprints
+[
+	{
+		CategoryTag "d089feb7e43f40c5a7dfcefc36998cfb" // Supplies
+		InputItems
+		[
+			"0cb79578847f4d26a17b55d31f44402c x 5" // Cooked Minnow
+			"72ca2f3c6d2f41dab406d09c1253a3da" // Milk Box
+			"67d687f8e6974d0290343d21294940f9" // Eggs
+			"2a3bd550485f43b9ac91ae5f78916d97" // Potato
+		]
+		OutputItems this
+		Skill Cook
+		Skill_Level 3
+		RequiresNearbyCraftingTags
+		[
+			"d2cc65b749e5477f95103601df89cdbc" // Enclosed Heat Source
+		]
+		Effect "84347b13028340b8976033c08675d458" // Wrench
+	}
+	{
+		CategoryTag "d089feb7e43f40c5a7dfcefc36998cfb" // Supplies
+		InputItems
+		[
+			"0cb79578847f4d26a17b55d31f44402c x 5" // Cooked Minnow
+			"72ca2f3c6d2f41dab406d09c1253a3da" // Milk Box
+			"67d687f8e6974d0290343d21294940f9" // Eggs
+			"775dd3dc88e04529a4a98d63e3b0df3e" // Carrot
+		]
+		OutputItems this
+		Skill Cook
+		Skill_Level 3
+		RequiresNearbyCraftingTags
+		[
+			"d2cc65b749e5477f95103601df89cdbc" // Enclosed Heat Source
+		]
+		Effect "84347b13028340b8976033c08675d458" // Wrench
+	}
+]
+
+ConsumeAudioClip Sounds/EatCake.mp3
+Randomize_Consume_Audio_Pitch false
+Procedurally_Animate_Inertia false
+Instantiated_Item_Name_Override 1076
+EquipablePrefab Items/Food/Pie_Fish/Equipable.prefab

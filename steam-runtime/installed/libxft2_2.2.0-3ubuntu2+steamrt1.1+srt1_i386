@@ -1,0 +1,12 @@
+drwxr-xr-x root/root         0 2023-03-23 16:08 ./
+drwxr-xr-x root/root         0 2023-03-23 16:08 ./usr/
+drwxr-xr-x root/root         0 2023-03-23 16:08 ./usr/lib/
+drwxr-xr-x root/root         0 2023-03-23 16:08 ./usr/lib/i386-linux-gnu/
+-rw-r--r-- root/root     84064 2023-03-23 16:08 ./usr/lib/i386-linux-gnu/libXft.so.2.2.0
+drwxr-xr-x root/root         0 2023-03-23 16:08 ./usr/share/
+drwxr-xr-x root/root         0 2023-03-23 16:08 ./usr/share/doc/
+drwxr-xr-x root/root         0 2023-03-23 16:08 ./usr/share/doc/libxft2/
+-rw-r--r-- root/root      8442 2010-10-29 23:22 ./usr/share/doc/libxft2/changelog.gz
+-rw-r--r-- root/root      9280 2023-03-23 16:07 ./usr/share/doc/libxft2/changelog.Debian.i386.gz
+-rw-r--r-- root/root      1438 2023-03-23 16:07 ./usr/share/doc/libxft2/copyright
+lrwxrwxrwx root/root         0 2023-03-23 16:08 ./usr/lib/i386-linux-gnu/libXft.so.2 -> libXft.so.2.2.0

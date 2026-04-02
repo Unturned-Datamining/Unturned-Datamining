@@ -1,0 +1,14 @@
+drwxr-xr-x root/root         0 2023-03-23 17:22 ./
+drwxr-xr-x root/root         0 2023-03-23 17:22 ./usr/
+drwxr-xr-x root/root         0 2023-03-23 17:22 ./usr/share/
+drwxr-xr-x root/root         0 2023-03-23 17:22 ./usr/share/doc/
+drwxr-xr-x root/root         0 2023-03-23 17:22 ./usr/share/doc/libfontconfig1/
+-rw-r--r-- root/root     15427 2009-11-18 23:49 ./usr/share/doc/libfontconfig1/README.gz
+-rw-r--r-- root/root      1301 2023-03-23 17:20 ./usr/share/doc/libfontconfig1/copyright
+-rw-r--r-- root/root     17654 2023-03-23 17:20 ./usr/share/doc/libfontconfig1/changelog.Debian.amd64.gz
+-rw-r--r-- root/root        62 2006-09-07 16:33 ./usr/share/doc/libfontconfig1/AUTHORS
+-rw-r--r-- root/root    147122 2009-11-18 23:49 ./usr/share/doc/libfontconfig1/changelog.gz
+drwxr-xr-x root/root         0 2023-03-23 17:22 ./usr/lib/
+drwxr-xr-x root/root         0 2023-03-23 17:22 ./usr/lib/x86_64-linux-gnu/
+-rw-r--r-- root/root    220896 2023-03-23 17:22 ./usr/lib/x86_64-linux-gnu/libfontconfig.so.1.4.4
+lrwxrwxrwx root/root         0 2023-03-23 17:22 ./usr/lib/x86_64-linux-gnu/libfontconfig.so.1 -> libfontconfig.so.1.4.4

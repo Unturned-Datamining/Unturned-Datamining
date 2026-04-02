@@ -124,7 +124,7 @@ internal static class NetMessages
         reader = new NetPakReader();
         writer = new NetPakWriter();
         writer.buffer = Block.buffer;
-        clientReadCallbacks = new ClientReadHandler[18];
+        clientReadCallbacks = new ClientReadHandler[Enum.GetNames(typeof(EClientMessage)).Length];
         clientReadCallbacks[2] = ClientMessageHandler_PingRequest.ReadMessage;
         clientReadCallbacks[3] = ClientMessageHandler_PingResponse.ReadMessage;
         clientReadCallbacks[4] = ClientMessageHandler_Shutdown.ReadMessage;
@@ -141,7 +141,7 @@ internal static class NetMessages
         clientReadCallbacks[15] = ClientMessageHandler_BattlEye.ReadMessage;
         clientReadCallbacks[16] = ClientMessageHandler_QueuePositionChanged.ReadMessage;
         clientReadCallbacks[17] = ClientMessageHandler_InvokeMethod.ReadMessage;
-        serverReadCallbacks = new ServerReadHandler[9];
+        serverReadCallbacks = new ServerReadHandler[Enum.GetNames(typeof(EServerMessage)).Length];
         serverReadCallbacks[0] = ServerMessageHandler_GetWorkshopFiles.ReadMessage;
         serverReadCallbacks[1] = ServerMessageHandler_ReadyToConnect.ReadMessage;
         serverReadCallbacks[2] = ServerMessageHandler_Authenticate.ReadMessage;

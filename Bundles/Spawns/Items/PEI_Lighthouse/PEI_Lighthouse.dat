@@ -1,0 +1,12 @@
+GUID 459ac2d2a9e64b608ae999544a29b727
+Type Spawn
+ID 830
+
+Tables
+[
+	{
+		// Lighthouse (Spawn)
+		Guid 1522c8065d804246864d59094df891b2
+		Weight 100
+	}
+]

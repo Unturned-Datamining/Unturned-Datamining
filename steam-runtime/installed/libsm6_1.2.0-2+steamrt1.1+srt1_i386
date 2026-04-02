@@ -1,0 +1,12 @@
+drwxr-xr-x root/root         0 2023-03-23 18:14 ./
+drwxr-xr-x root/root         0 2023-03-23 18:14 ./usr/
+drwxr-xr-x root/root         0 2023-03-23 18:14 ./usr/share/
+drwxr-xr-x root/root         0 2023-03-23 18:14 ./usr/share/doc/
+drwxr-xr-x root/root         0 2023-03-23 18:14 ./usr/share/doc/libsm6/
+-rw-r--r-- root/root      1223 2023-03-23 18:12 ./usr/share/doc/libsm6/copyright
+-rw-r--r-- root/root      2506 2023-03-23 18:12 ./usr/share/doc/libsm6/changelog.Debian.i386.gz
+-rw-r--r-- root/root     10694 2010-10-28 05:27 ./usr/share/doc/libsm6/changelog.gz
+drwxr-xr-x root/root         0 2023-03-23 18:14 ./usr/lib/
+drwxr-xr-x root/root         0 2023-03-23 18:14 ./usr/lib/i386-linux-gnu/
+-rw-r--r-- root/root     30108 2023-03-23 18:14 ./usr/lib/i386-linux-gnu/libSM.so.6.0.1
+lrwxrwxrwx root/root         0 2023-03-23 18:14 ./usr/lib/i386-linux-gnu/libSM.so.6 -> libSM.so.6.0.1

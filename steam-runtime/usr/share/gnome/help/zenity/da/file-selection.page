@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<page xmlns="http://projectmallard.org/1.0/" type="topic" id="file-selection" xml:lang="da">
+  <info>
+    <link type="guide" xref="index#dialogs"/>
+    <desc>Use the <cmd>--file-selection</cmd> option.</desc>
+  </info>
+  <title>Filvælgerdialogvindue</title>
+    <p>
+	Use the <cmd>--file-selection</cmd> option to create a file selection dialog. <app>Zenity</app> returns the selected files or directories to standard 
+        output. The default mode of the file selection dialog is open.
+    </p>
+    <p>Filvælgerdialogvinduer understøtter følgende tilvalg:</p>
+
+    <terms>
+
+      <item>
+        <title><cmd>--filename</cmd>=<var>filename</var></title>
+	<p>Angiver den fil eller mappe, som er valgt i filvælgeren, når dialogvinduet først vises.</p>
+      </item>
+
+      <item>
+	<title><cmd>--multiple</cmd></title>
+	<p>Tillader valg af flere filnavne i filvælgeren.</p>
+      </item>
+
+      <item>
+	<title><cmd>--directory</cmd></title>
+	<p>Tillader kun valg af mapper i filvælgeren.</p>
+      </item>
+
+      <item>
+	<title><cmd>--save</cmd></title>
+	<p>Sæt filvælgerdialogen til gemmetilstand.</p>
+      </item>
+
+      <item>
+	<title><cmd>--separator</cmd>=<var>separator</var></title>
+	<p>Angiver strengen, der bruges til at dele listen af returnerede filnavne.</p>
+      </item>
+
+    </terms>
+
+    <p>
+      The following example script shows how to create a file selection dialog:
+    </p>
+
+<code>
+#!/bin/sh
+
+FILE=`zenity --file-selection --title="Select a File"`
+
+case $? in
+         0)
+                echo "\"$FILE\" selected.";;
+         1)
+                echo "No file selected.";;
+        -1)
+                echo "An unexpected error has occurred.";;
+esac
+</code>
+
+    <figure id="zenity-fileselection-screenshot">
+      <title>Eksempel med filvælgerdialogvindue</title>
+      <desc><app>Zenity</app> file selection dialog example</desc>
+      <media type="image" mime="image/png" src="figures/zenity-fileselection-screenshot.png"/>
+    </figure>
+</page>

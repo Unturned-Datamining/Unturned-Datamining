@@ -1,0 +1,43 @@
+﻿GUID 3a79165167674d0f8d7d850b5363c9fd
+Type Food
+Useable Consumeable
+ID 1942
+
+Size_X 2
+Size_Y 2
+Size_Z 0.3
+
+Food 25
+Water 15
+
+Blueprints
+[
+	{
+		CategoryTag "d089feb7e43f40c5a7dfcefc36998cfb" // Supplies
+		InputItems
+		[
+			"7bc206a6790b4494a44957867871146e" // Clay Bowl
+			"2204f86aa81a4f58b5ecf896704dffd8 x 2" // Taro
+		]
+		OutputItems this
+		Skill Cook
+		Skill_Level 1
+		RequiresNearbyCraftingTags
+		[
+			"20f30322bbcc4b01a4f116d22b24c21a" // Heat Source
+		]
+		Effect "84347b13028340b8976033c08675d458" // Wrench
+		Searchable false
+	}
+]
+
+Quest_Rewards 1
+Quest_Reward_0_Type Item
+Quest_Reward_0_ID 7bc206a6790b4494a44957867871146e
+Quest_Reward_0_Amount 1
+
+ConsumeAudioClip Sounds/EatTaroSteamed.mp3
+Randomize_Consume_Audio_Pitch false
+EquipableModelParent LeftHook
+Procedurally_Animate_Inertia false
+EquipablePrefab Items/Food/Taro_Steamed/Equipable.prefab

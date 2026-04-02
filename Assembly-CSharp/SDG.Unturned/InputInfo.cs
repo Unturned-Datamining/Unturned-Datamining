@@ -41,4 +41,9 @@ public class InputInfo
     public Transform colliderTransform;
 
     public byte section;
+
+    public override string ToString()
+    {
+        return $"(Type: {type}, Usage: {usage}, Point: {point}, Direction: {direction}, Normal: {normal}, Player: {player}, Zombie: {zombie}, Animal: {animal}, Limb: {limb}, Material: {materialName}, Vehicle: {vehicle}, Transform: {transform?.GetSceneHierarchyPath()}, Collider: {colliderTransform?.GetSceneHierarchyPath()}, Section: {section})";
+    }
 }

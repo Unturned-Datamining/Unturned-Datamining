@@ -1,0 +1,9 @@
+drwxr-xr-x root/root         0 2019-04-03 14:07 ./
+drwxr-xr-x root/root         0 2019-04-03 14:07 ./usr/
+drwxr-xr-x root/root         0 2019-04-03 14:07 ./usr/lib/
+drwxr-xr-x root/root         0 2019-04-03 14:07 ./usr/lib/i386-linux-gnu/
+-rw-r--r-- root/root    202916 2019-04-03 14:07 ./usr/lib/i386-linux-gnu/libhogweed.so.4.2
+drwxr-xr-x root/root         0 2019-04-03 14:07 ./usr/share/
+drwxr-xr-x root/root         0 2019-04-03 14:07 ./usr/share/doc/
+lrwxrwxrwx root/root         0 2019-04-03 14:07 ./usr/lib/i386-linux-gnu/libhogweed.so.4 -> libhogweed.so.4.2
+lrwxrwxrwx root/root         0 2019-04-03 14:07 ./usr/share/doc/libhogweed4 -> libnettle6

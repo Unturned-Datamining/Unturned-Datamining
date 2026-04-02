@@ -1,4 +1,4 @@
-"Available_Instance_ID" "13"
+"Available_Instance_ID" "15"
 "Items"
 [
 	{
@@ -115539,6 +115539,33 @@
 			}
 			"LocationName" "Off Limits"
 			"IsVisibleOnMap" "true"
+		}
+	}
+	{
+		"Type" "SDG.Framework.Devkit.UndergroundWhitelistVolume, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null"
+		"Instance_ID" "14"
+		"Item"
+		{
+			"Position"
+			{
+				"X" "-83.91171"
+				"Y" "110.3566"
+				"Z" "-766.0694"
+			}
+			"Rotation"
+			{
+				"X" "0"
+				"Y" "-0.1305261"
+				"Z" "0"
+				"W" "0.9914449"
+			}
+			"Scale"
+			{
+				"X" "91.22565"
+				"Y" "41.40336"
+				"Z" "87.53786"
+			}
+			"Shape" "Box"
 		}
 	}
 ]

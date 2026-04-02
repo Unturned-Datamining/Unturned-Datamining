@@ -1,0 +1,14 @@
+This package was debianized by Jerome Marant <jerome@debian.org> on
+Sat,  1 Mar 2003 12:17:58 +0100.
+
+It was downloaded from:
+  http://www.libsdl.org/projects/SDL_ttf/release
+
+Upstream Author: Sam Lantinga <slouken@libsdl.org>
+
+Copyright (C) 2000-2005 Sam Lantinga <slouken@libsdl.org>
+
+This library is available under the GNU Library General Public License.
+
+On Debian GNU/Linux systems, the complete text of the GNU LGPL is found
+in /usr/share/common-licenses/LGPL-2.

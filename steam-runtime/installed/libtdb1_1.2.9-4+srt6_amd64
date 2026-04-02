@@ -1,0 +1,11 @@
+drwxr-xr-x root/root         0 2019-04-03 15:57 ./
+drwxr-xr-x root/root         0 2019-04-03 15:57 ./usr/
+drwxr-xr-x root/root         0 2019-04-03 15:57 ./usr/lib/
+drwxr-xr-x root/root         0 2019-04-03 15:57 ./usr/lib/x86_64-linux-gnu/
+-rw-r--r-- root/root     68120 2019-04-03 15:57 ./usr/lib/x86_64-linux-gnu/libtdb.so.1.2.9
+drwxr-xr-x root/root         0 2019-04-03 15:57 ./usr/share/
+drwxr-xr-x root/root         0 2019-04-03 15:57 ./usr/share/doc/
+drwxr-xr-x root/root         0 2019-04-03 15:57 ./usr/share/doc/libtdb1/
+-rw-r--r-- root/root      4848 2011-09-27 14:51 ./usr/share/doc/libtdb1/copyright
+-rw-r--r-- root/root      3499 2019-04-03 15:55 ./usr/share/doc/libtdb1/changelog.Debian.amd64.gz
+lrwxrwxrwx root/root         0 2019-04-03 15:57 ./usr/lib/x86_64-linux-gnu/libtdb.so.1 -> libtdb.so.1.2.9

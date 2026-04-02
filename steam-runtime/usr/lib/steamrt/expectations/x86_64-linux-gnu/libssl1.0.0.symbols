@@ -1,0 +1,4 @@
+libcrypto.so.1.0.0 libssl1.0.0 #MINVER#
+# No symbols listed here yet
+libssl.so.1.0.0 libssl1.0.0 #MINVER#
+# No symbols listed here yet

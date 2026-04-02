@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<page xmlns="http://projectmallard.org/1.0/" type="topic" id="list" xml:lang="es">
+  <info>
+    <link type="guide" xref="index#dialogs"/>
+    <desc>Use la opción <cmd>--list</cmd>.</desc>
+  </info>
+  <title>Diálogo de lista</title>
+    <p>Use la opción <cmd>--list</cmd> para crear un diálogo de lista. <app>Zenity</app> devuelve las entradas en la primera columna de texto de las filas seleccionadas a la salida estándar.</p>
+
+    <p>Los datos para el diálogo deben especificarse columna por columna, fila por fila. Puede proporcionar datos al diálogo a través de la entrada estándar. Cada entrada se debe separar por un carácter de línea nueva.</p>
+
+    <p>Si usa la opción <cmd>--checklist</cmd> o <cmd>--radiolist</cmd>, cada fila debe comenzar con «TRUE» o «FALSE».</p>
+
+    <p>El diálogo de lista soporta las siguientes opciones:</p>
+
+    <terms>
+
+      <item>
+        <title><cmd>--column</cmd>=<var>columna</var></title>
+	  <p>Especifica el encabezado de la columna mostrada en el diálogo de lista. Debe especificar una opción <cmd>--column</cmd> por cada columna que quiera mostrar en el diálogo.</p>
+      </item>
+
+      <item>
+        <title><cmd>--checklist</cmd></title>
+	  <p>Especifica que la primera columna en el diálogo de lista contiene casillas de marcado.</p>
+      </item>
+
+      <item>
+        <title><cmd>--radiolist</cmd></title>
+	  <p>Especifica que la primera columna en el diálogo de lista contiene casillas de opción.</p>
+      </item>
+
+      <item>
+        <title><cmd>--editable</cmd></title>
+	  <p>Permite editar los elementos mostrados.</p>
+      </item>
+
+      <item>
+        <title><cmd>--separator</cmd>=<var>separador</var></title>
+	  <p>Especifica qué cadena de caracteres se utilizará cuando el diálogo de lista devuelva las entradas seleccionadas.</p>
+      </item>
+
+      <item>
+        <title><cmd>--print-column</cmd>=<var>columna</var></title>
+	  <p>Especifica qué columna debería imprimirse hasta la selección. La columna predeterminada es '1', 'ALL' puede usarse para imprimir todas las columnas.</p>
+      </item>
+
+    </terms>
+
+    <p>El siguiente script de ejemplo muestra cómo crear un diálogo de lista:</p>
+<code>
+  bin/sh
+
+zenity --list \
+  title="Elija los fallos que quiere ver" \
+  column="Número del fallo" --column="Severidad" --column="Descripción" \
+  992383 Normal "GtkTreeView se cuelga con selecciones múltiples" \
+  293823 Alto "El diccionario de GNOME no manera proxys" \
+  393823 Crítico "El editor de menú no funciona en GNOME 2.0"
+</code>
+
+
+    <figure id="zenity-list-screenshot">
+      <title>Ejemplo del diálogo de lista</title>
+      <desc>Ejemplo del diálogo de lista de <app>Zenity</app></desc>
+      <media type="image" mime="image/png" src="figures/zenity-list-screenshot.png"/>
+    </figure>
+</page>

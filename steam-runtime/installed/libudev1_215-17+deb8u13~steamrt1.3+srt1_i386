@@ -1,0 +1,12 @@
+drwxr-xr-x root/root         0 2023-08-01 18:27 ./
+drwxr-xr-x root/root         0 2023-08-01 18:26 ./usr/
+drwxr-xr-x root/root         0 2023-08-01 18:26 ./usr/share/
+drwxr-xr-x root/root         0 2023-08-01 18:26 ./usr/share/doc/
+drwxr-xr-x root/root         0 2023-08-01 18:27 ./usr/share/doc/libudev1/
+-rw-r--r-- root/root     29583 2023-08-01 18:12 ./usr/share/doc/libudev1/changelog.Debian.i386.gz
+-rw-r--r-- root/root      8003 2023-07-27 14:54 ./usr/share/doc/libudev1/copyright
+-rw-r--r-- root/root      2188 2023-08-01 18:26 ./usr/share/doc/libudev1/README.Debian
+drwxr-xr-x root/root         0 2023-08-01 18:26 ./lib/
+drwxr-xr-x root/root         0 2023-08-01 18:27 ./lib/i386-linux-gnu/
+-rw-r--r-- root/root     66924 2023-08-01 18:27 ./lib/i386-linux-gnu/libudev.so.1.5.0
+lrwxrwxrwx root/root         0 2023-08-01 18:27 ./lib/i386-linux-gnu/libudev.so.1 -> libudev.so.1.5.0

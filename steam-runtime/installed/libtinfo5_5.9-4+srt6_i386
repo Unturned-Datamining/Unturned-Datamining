@@ -1,0 +1,16 @@
+drwxr-xr-x root/root         0 2019-04-03 11:39 ./
+drwxr-xr-x root/root         0 2019-04-03 11:38 ./lib/
+drwxr-xr-x root/root         0 2019-04-03 11:39 ./lib/i386-linux-gnu/
+-rw-r--r-- root/root    125376 2019-04-03 11:38 ./lib/i386-linux-gnu/libtinfo.so.5.9
+drwxr-xr-x root/root         0 2019-04-03 11:38 ./usr/
+drwxr-xr-x root/root         0 2019-04-03 11:38 ./usr/lib/
+drwxr-xr-x root/root         0 2019-04-03 11:39 ./usr/lib/i386-linux-gnu/
+-rw-r--r-- root/root     54988 2019-04-03 11:38 ./usr/lib/i386-linux-gnu/libtic.so.5.9
+drwxr-xr-x root/root         0 2019-04-03 11:38 ./usr/share/
+drwxr-xr-x root/root         0 2019-04-03 11:38 ./usr/share/doc/
+drwxr-xr-x root/root         0 2019-04-03 11:39 ./usr/share/doc/libtinfo5/
+-rw-r--r-- root/root     18091 2019-04-03 11:33 ./usr/share/doc/libtinfo5/changelog.Debian.i386.gz
+-rw-r--r-- root/root    160818 2011-04-05 18:31 ./usr/share/doc/libtinfo5/changelog.gz
+-rw-r--r-- root/root      6366 2011-10-31 23:13 ./usr/share/doc/libtinfo5/copyright
+lrwxrwxrwx root/root         0 2019-04-03 11:39 ./lib/i386-linux-gnu/libtinfo.so.5 -> libtinfo.so.5.9
+lrwxrwxrwx root/root         0 2019-04-03 11:39 ./usr/lib/i386-linux-gnu/libtic.so.5 -> libtic.so.5.9

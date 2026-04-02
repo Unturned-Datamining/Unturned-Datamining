@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<page xmlns="http://projectmallard.org/1.0/" type="topic" id="entry" xml:lang="ja">
+  <info>
+    <link type="guide" xref="index#dialogs"/>
+    <desc><cmd>--entry</cmd> オプションの使用</desc>
+  </info>
+  <title>テキスト入力ダイアログ</title>
+    <p>テキスト入力ダイアログを作成するには、<cmd>--entry</cmd> というオプションを使ってください。<app>Zenity</app> は、テキスト入力の内容を標準出力へ返却します。</p>	
+    <p>テキスト入力ダイアログは、以下のオプションをサポートしています。</p>
+
+    <terms>
+
+      <item>
+        <title><cmd>--text</cmd>=<var>テキスト</var></title>
+	<p>テキスト入力ダイアログに表示するテキストを指定します。</p>
+      </item>
+
+      <item>
+        <title><cmd>--entry-text</cmd>=<var>テキスト</var></title>
+	<p>テキスト入力ダイアログの入力欄に表示されるテキストを指定します。</p>
+      </item>
+
+      <item>
+        <title><cmd>--hide-text</cmd></title>
+	<p>テキスト入力ダイアログの入力欄にあるテキストを隠します。</p>
+      </item>
+
+    </terms>
+
+    <p>以下のスクリプトの例でテキスト入力ダイアログの作成方法を示します。</p>
+
+<code>
+#!/bin/sh
+
+if zenity --entry \
+--title="新しいプロファイルの追加" \
+--text="新しいプロファイルの名前を入力してください:" \
+--entry-text "新しいプロファイル"
+  then echo $?
+  else echo "名前が入力されませんでした。"
+fi
+</code>
+
+
+    <figure id="zenity-entry-screenshot">
+      <title>テキスト入力ダイアログの例</title>
+      <desc><app>Zenity</app> テキスト入力ダイアログの例</desc>
+      <media type="image" mime="image/png" src="figures/zenity-entry-screenshot.png"/>
+    </figure>
+</page>

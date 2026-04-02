@@ -1,0 +1,14 @@
+drwxr-xr-x root/root         0 2023-03-23 16:44 ./
+drwxr-xr-x root/root         0 2023-03-23 16:44 ./usr/
+drwxr-xr-x root/root         0 2023-03-23 16:44 ./usr/lib/
+drwxr-xr-x root/root         0 2023-03-23 16:44 ./usr/lib/x86_64-linux-gnu/
+-rw-r--r-- root/root    621376 2023-03-23 16:44 ./usr/lib/x86_64-linux-gnu/libpixman-1.so.0.30.2
+drwxr-xr-x root/root         0 2023-03-23 16:44 ./usr/share/
+drwxr-xr-x root/root         0 2023-03-23 16:44 ./usr/share/lintian/
+drwxr-xr-x root/root         0 2023-03-23 16:44 ./usr/share/lintian/overrides/
+-rw-r--r-- root/root        83 2023-03-23 16:41 ./usr/share/lintian/overrides/libpixman-1-0
+drwxr-xr-x root/root         0 2023-03-23 16:44 ./usr/share/doc/
+drwxr-xr-x root/root         0 2023-03-23 16:44 ./usr/share/doc/libpixman-1-0/
+-rw-r--r-- root/root      2246 2023-03-23 16:41 ./usr/share/doc/libpixman-1-0/copyright
+-rw-r--r-- root/root      5403 2023-03-23 16:41 ./usr/share/doc/libpixman-1-0/changelog.Debian.amd64.gz
+lrwxrwxrwx root/root         0 2023-03-23 16:44 ./usr/lib/x86_64-linux-gnu/libpixman-1.so.0 -> libpixman-1.so.0.30.2

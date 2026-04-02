@@ -188,11 +188,11 @@ public class INPCCondition
     public virtual string GetTypeFriendlyName()
     {
         string text = GetType().Name;
-        if (text.StartsWith("NPC"))
+        if (text.StartsWith("NPC", StringComparison.Ordinal))
         {
             text = text.Substring("NPC".Length);
         }
-        if (text.EndsWith("Condition"))
+        if (text.EndsWith("Condition", StringComparison.Ordinal))
         {
             text = text.Substring(0, text.Length - "Condition".Length);
         }

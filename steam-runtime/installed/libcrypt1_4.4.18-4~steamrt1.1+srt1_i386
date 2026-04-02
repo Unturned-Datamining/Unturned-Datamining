@@ -1,0 +1,12 @@
+drwxr-xr-x root/root         0 2023-09-28 16:24 ./
+drwxr-xr-x root/root         0 2023-09-28 16:24 ./usr/
+drwxr-xr-x root/root         0 2023-09-28 16:24 ./usr/share/
+drwxr-xr-x root/root         0 2023-09-28 16:24 ./usr/share/doc/
+drwxr-xr-x root/root         0 2023-09-28 16:24 ./usr/share/doc/libcrypt1/
+-rw-r--r-- root/root      7594 2021-02-20 20:34 ./usr/share/doc/libcrypt1/changelog.gz
+-rw-r--r-- root/root      2445 2023-09-28 16:20 ./usr/share/doc/libcrypt1/changelog.Debian.i386.gz
+-rw-r--r-- root/root      5827 2023-09-28 16:24 ./usr/share/doc/libcrypt1/copyright
+drwxr-xr-x root/root         0 2023-09-28 16:24 ./lib/
+drwxr-xr-x root/root         0 2023-09-28 16:24 ./lib/i386-linux-gnu/
+-rw-r--r-- root/root    234820 2023-09-28 16:24 ./lib/i386-linux-gnu/libcrypt.so.1.1.0
+lrwxrwxrwx root/root         0 2023-09-28 16:24 ./lib/i386-linux-gnu/libcrypt.so.1 -> libcrypt.so.1.1.0

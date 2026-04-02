@@ -1,0 +1,30 @@
+﻿GUID e7436e608f1b472b8f01fc6d0c330108
+Type Food
+Rarity Rare
+Useable Consumeable
+ID 1960
+
+Size_X 3
+Size_Y 1
+Size_Z 0.225
+
+Food 30
+Water 15
+
+Blueprints
+[
+	{
+		CategoryTag "d089feb7e43f40c5a7dfcefc36998cfb" // Supplies
+		InputItems "19bcff41cf5b4e6ab3149884f0f9fe3b" // Raw Northern Pike
+		OutputItems this
+		Skill Cook
+		Skill_Level 1
+		RequiresNearbyCraftingTags
+		[
+			"20f30322bbcc4b01a4f116d22b24c21a" // Heat Source
+		]
+		Effect "84347b13028340b8976033c08675d458" // Wrench
+	}
+]
+
+ConsumeAudioClip Sounds/EatCrunchy.mp3

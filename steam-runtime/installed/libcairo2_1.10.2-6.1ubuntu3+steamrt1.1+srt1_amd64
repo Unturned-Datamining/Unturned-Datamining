@@ -1,0 +1,15 @@
+drwxr-xr-x root/root         0 2023-03-23 17:11 ./
+drwxr-xr-x root/root         0 2023-03-23 17:11 ./usr/
+drwxr-xr-x root/root         0 2023-03-23 17:11 ./usr/lib/
+drwxr-xr-x root/root         0 2023-03-23 17:11 ./usr/lib/x86_64-linux-gnu/
+-rw-r--r-- root/root    979312 2023-03-23 17:11 ./usr/lib/x86_64-linux-gnu/libcairo.so.2.11000.2
+drwxr-xr-x root/root         0 2023-03-23 17:11 ./usr/share/
+drwxr-xr-x root/root         0 2023-03-23 17:11 ./usr/share/doc/
+drwxr-xr-x root/root         0 2023-03-23 17:11 ./usr/share/doc/libcairo2/
+-rw-r--r-- root/root     81486 2010-12-25 14:21 ./usr/share/doc/libcairo2/NEWS.gz
+-rw-r--r-- root/root    468201 2010-12-25 22:49 ./usr/share/doc/libcairo2/changelog.gz
+-rw-r--r-- root/root      3816 2010-12-25 14:21 ./usr/share/doc/libcairo2/AUTHORS.gz
+-rw-r--r-- root/root     28461 2023-03-21 19:59 ./usr/share/doc/libcairo2/copyright
+-rw-r--r-- root/root     11617 2023-03-23 17:08 ./usr/share/doc/libcairo2/changelog.Debian.amd64.gz
+-rw-r--r-- root/root      2721 2010-09-09 15:56 ./usr/share/doc/libcairo2/README.gz
+lrwxrwxrwx root/root         0 2023-03-23 17:11 ./usr/lib/x86_64-linux-gnu/libcairo.so.2 -> libcairo.so.2.11000.2

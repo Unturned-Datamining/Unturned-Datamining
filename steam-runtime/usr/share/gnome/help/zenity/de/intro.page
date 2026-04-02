@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<page xmlns="http://projectmallard.org/1.0/" type="topic" id="introduction" xml:lang="de">
+<info>
+  <link type="guide" xref="index"/>
+  <desc><app>Zenity</app> erlaubt Ihnen die Erzeugung verschiedener Typen simpler Dialoge.</desc>
+</info>
+<title>Einführung</title>
+<p><app>Zenity</app> erlaubt Ihnen die Erzeugung der folgenden Typen simpler Dialoge:</p>
+
+<list>
+    <item><p>Kalender</p></item>
+    <item><p>Dateiauswahl</p></item>
+    <item><p>Formulare</p></item>
+    <item><p>Liste</p></item>
+    <item><p>Benachrichtigungssymbol</p></item>
+    <item><p>Meldung</p>
+        <list>
+            <item><p>Fehler</p></item>
+    	<item><p>Information</p></item>
+    	<item><p>Frage</p></item>
+    	<item><p>Warnung</p></item>
+        </list>
+    </item>
+    <item><p>Passworteintrag</p></item>
+    <item><p>Fortschritt</p></item>
+    <item><p>Textfeld</p></item>
+    <item><p>Textinformation</p></item>
+    <item><p>Schieberegler</p></item>
+    <item><p>Farbauswahl</p></item>
+</list>
+</page>

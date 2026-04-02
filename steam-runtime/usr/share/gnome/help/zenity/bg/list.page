@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<page xmlns="http://projectmallard.org/1.0/" type="topic" id="list" xml:lang="bg">
+  <info>
+    <link type="guide" xref="index#dialogs"/>
+    <desc>Use the <cmd>--list</cmd> option.</desc>
+  </info>
+  <title>Списъчен прозорец</title>
+    <p>
+	Use the <cmd>--list</cmd> option to create a list dialog. <app>Zenity</app> returns the entries in the first column of text of selected rows to standard output.
+    </p>
+
+    <p>Данните за прозореца трябва да бъдат определени колона по колона, ред по ред. Данните могат да бъдат предоставени на прозореца през стандартния вход. Всеки запис трябва да бъде разделен от символ за нов ред.</p>
+
+    <p>
+	If you use the <cmd>--checklist</cmd> or <cmd>--radiolist</cmd> options, each row must start with either 'TRUE' or 'FALSE'.
+    </p>
+
+    <p>Прозорецът със списък поддържа следните настройки:</p>
+
+    <terms>
+
+      <item>
+        <title><cmd>--column</cmd>=<var>column</var></title>
+	  <p>Specifies the column headers that are displayed in the list dialog. You must specify a <cmd>--column</cmd> option for each column that you want to display in the dialog.
+	  </p>
+      </item>
+
+      <item>
+        <title><cmd>--checklist</cmd></title>
+	  <p>Определя, че първата колона в първия прозорец със списък съдържа полета за отметки.</p>
+      </item>
+
+      <item>
+        <title><cmd>--radiolist</cmd></title>
+	  <p>Определя това, че първата колона в прозореца със списък съдържа радио бутони.</p>
+      </item>
+
+      <item>
+        <title><cmd>--editable</cmd></title>
+	  <p>Позволява показаните елементи да бъдат редактирани.</p>
+      </item>
+
+      <item>
+        <title><cmd>--separator</cmd>=<var>separator</var></title>
+	  <p>Определя кой низ е използван, когато прозореца със списък връща избраните записи.</p>
+      </item>
+
+      <item>
+        <title><cmd>--print-column</cmd>=<var>column</var></title>
+	  <p>Определя кои колони да бъдат изведени след избора. Стандартната колона е "1". "ALL" може да се използва, за да се изведат всички колони в списъка.</p>
+      </item>
+
+    </terms>
+
+    <p>
+      The following example script shows how to create a list dialog:
+    </p>
+<code>
+#!/bin/sh
+
+zenity --list \
+  --title="Choose the Bugs You Wish to View" \
+  --column="Bug Number" --column="Severity" --column="Description" \
+    992383 Normal "GtkTreeView crashes on multiple selections" \
+    293823 High "GNOME Dictionary does not handle proxy" \
+    393823 Critical "Menu editing does not work in GNOME 2.0"
+</code>
+
+
+    <figure id="zenity-list-screenshot">
+      <title>Пример за прозорец със списък</title>
+      <desc><app>Zenity</app> list dialog example</desc>
+      <media type="image" mime="image/png" src="figures/zenity-list-screenshot.png"/>
+    </figure>
+</page>

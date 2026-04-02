@@ -1,0 +1,22 @@
+drwxr-xr-x root/root         0 2019-04-03 12:06 ./
+drwxr-xr-x root/root         0 2019-04-03 12:06 ./lib/
+drwxr-xr-x root/root         0 2019-04-03 12:06 ./lib/x86_64-linux-gnu/
+-rw-r--r-- root/root    138800 2019-04-03 12:06 ./lib/x86_64-linux-gnu/libncurses.so.5.9
+drwxr-xr-x root/root         0 2019-04-03 12:06 ./usr/
+drwxr-xr-x root/root         0 2019-04-03 12:06 ./usr/lib/
+drwxr-xr-x root/root         0 2019-04-03 12:06 ./usr/lib/x86_64-linux-gnu/
+-rw-r--r-- root/root     61080 2019-04-03 12:06 ./usr/lib/x86_64-linux-gnu/libform.so.5.9
+-rw-r--r-- root/root     31400 2019-04-03 12:06 ./usr/lib/x86_64-linux-gnu/libmenu.so.5.9
+-rw-r--r-- root/root     14208 2019-04-03 12:06 ./usr/lib/x86_64-linux-gnu/libpanel.so.5.9
+drwxr-xr-x root/root         0 2019-04-03 12:06 ./usr/share/
+drwxr-xr-x root/root         0 2019-04-03 12:06 ./usr/share/doc/
+drwxr-xr-x root/root         0 2019-04-03 12:06 ./usr/share/doc/libncurses5/
+-rw-r--r-- root/root    160818 2011-04-05 18:31 ./usr/share/doc/libncurses5/changelog.gz
+-rw-r--r-- root/root      2371 2010-01-09 05:34 ./usr/share/doc/libncurses5/FAQ
+-rw-r--r-- root/root      6366 2011-10-31 23:13 ./usr/share/doc/libncurses5/copyright
+-rw-r--r-- root/root     18091 2019-04-03 11:59 ./usr/share/doc/libncurses5/changelog.Debian.amd64.gz
+-rw-r--r-- root/root       530 2010-01-09 05:34 ./usr/share/doc/libncurses5/TODO.Debian
+lrwxrwxrwx root/root         0 2019-04-03 12:06 ./lib/x86_64-linux-gnu/libncurses.so.5 -> libncurses.so.5.9
+lrwxrwxrwx root/root         0 2019-04-03 12:06 ./usr/lib/x86_64-linux-gnu/libform.so.5 -> libform.so.5.9
+lrwxrwxrwx root/root         0 2019-04-03 12:06 ./usr/lib/x86_64-linux-gnu/libpanel.so.5 -> libpanel.so.5.9
+lrwxrwxrwx root/root         0 2019-04-03 12:06 ./usr/lib/x86_64-linux-gnu/libmenu.so.5 -> libmenu.so.5.9

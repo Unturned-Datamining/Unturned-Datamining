@@ -1,0 +1,12 @@
+drwxr-xr-x root/root         0 2019-08-13 15:56 ./
+drwxr-xr-x root/root         0 2019-08-13 15:56 ./usr/
+drwxr-xr-x root/root         0 2019-08-13 15:56 ./usr/lib/
+drwxr-xr-x root/root         0 2019-08-13 15:56 ./usr/lib/i386-linux-gnu/
+-rw-r--r-- root/root     17956 2019-08-13 15:56 ./usr/lib/i386-linux-gnu/libXv.so.1.0.0
+drwxr-xr-x root/root         0 2019-08-13 15:56 ./usr/share/
+drwxr-xr-x root/root         0 2019-08-13 15:56 ./usr/share/doc/
+drwxr-xr-x root/root         0 2019-08-13 15:56 ./usr/share/doc/libxv1/
+-rw-r--r-- root/root      7839 2010-10-30 00:53 ./usr/share/doc/libxv1/changelog.gz
+-rw-r--r-- root/root      2529 2019-08-13 15:55 ./usr/share/doc/libxv1/changelog.Debian.i386.gz
+-rw-r--r-- root/root      2667 2019-08-13 15:55 ./usr/share/doc/libxv1/copyright
+lrwxrwxrwx root/root         0 2019-08-13 15:56 ./usr/lib/i386-linux-gnu/libXv.so.1 -> libXv.so.1.0.0

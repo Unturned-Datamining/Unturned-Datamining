@@ -364,9 +364,12 @@ public class FoliageSystem : DevkitHierarchyItemBase
     private static void drawTiles(Vector3 position, int drawDistance, Camera camera, Plane[] frustumPlanes)
     {
         batches.Clear();
-        Stack<Matrix4x4[]> stack = activeMatrixLists;
-        activeMatrixLists = matrixListPool;
-        matrixListPool = stack;
+        if (activeMatrixLists.Count > matrixListPool.Count)
+        {
+            Stack<Matrix4x4[]> stack = activeMatrixLists;
+            activeMatrixLists = matrixListPool;
+            matrixListPool = stack;
+        }
         FoliageCoord foliageCoord = new FoliageCoord(position);
         FoliageCoord[] array = DRAW_OFFSETS[drawDistance];
         for (int i = 0; i < array.Length; i++)
@@ -656,10 +659,12 @@ public class FoliageSystem : DevkitHierarchyItemBase
     protected void OnEnable()
     {
         LevelHierarchy.addItem(this);
+        CommandLogMemoryUsage.OnExecuted = (Action<List<string>>)Delegate.Combine(CommandLogMemoryUsage.OnExecuted, new Action<List<string>>(OnLogMemoryUsage));
     }
 
     protected void OnDisable()
     {
+        CommandLogMemoryUsage.OnExecuted = (Action<List<string>>)Delegate.Remove(CommandLogMemoryUsage.OnExecuted, new Action<List<string>>(OnLogMemoryUsage));
         LevelHierarchy.removeItem(this);
     }
 
@@ -694,6 +699,14 @@ public class FoliageSystem : DevkitHierarchyItemBase
             matrixListPool.Clear();
             shutdownStorage();
             clearAndReleaseTiles();
+        }
+    }
+
+    private void OnLogMemoryUsage(List<string> results)
+    {
+        if (!(instance != this))
+        {
+            results.Add($"Foliage active instance lists: {activeMatrixLists.Count} Matrix list pool: {matrixListPool.Count}");
         }
     }
 

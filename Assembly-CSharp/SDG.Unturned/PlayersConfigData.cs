@@ -153,6 +153,11 @@ public class PlayersConfigData
     public float Lose_Experience_PvE;
 
     /// <summary>
+    /// Scales XP cost to purchase/upgrade skills.
+    /// </summary>
+    public float Skill_Cost_Multiplier;
+
+    /// <summary>
     /// Percentage [0 to 1] chance to lose each inventory item when killed by another player.
     /// Depends on Lose_Clothes_PvP because losing storage will drop contained items.
     /// </summary>
@@ -319,6 +324,7 @@ public class PlayersConfigData
         Lose_Skill_Levels_PvE = 1u;
         Lose_Experience_PvP = 0.5f;
         Lose_Experience_PvE = 0.5f;
+        Skill_Cost_Multiplier = 1f;
         Lose_Items_PvP = 1f;
         Lose_Items_PvE = 1f;
         Lose_Clothes_PvP = true;

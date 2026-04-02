@@ -21,9 +21,8 @@ public class SleekBoxIcon : SleekWrapper
             {
                 iconImage.SizeOffset_X = iconImage.Texture.width;
                 iconImage.SizeOffset_Y = iconImage.Texture.height;
-                label.PositionOffset_X = iconImage.SizeOffset_X + iconImage.PositionOffset_X * 2f;
-                label.SizeOffset_X = 0f - label.PositionOffset_X - 5f;
             }
+            UpdateLabelAlignment();
         }
     }
 
@@ -103,13 +102,26 @@ public class SleekBoxIcon : SleekWrapper
         label = Glazier.Get().CreateLabel();
         label.SizeScale_X = 1f;
         label.SizeScale_Y = 1f;
-        label.PositionOffset_X = iconImage.SizeOffset_X + iconImage.PositionOffset_X * 2f;
-        label.SizeOffset_X = 0f - label.PositionOffset_X - 5f;
+        UpdateLabelAlignment();
         AddChild(label);
     }
 
     public SleekBoxIcon(Texture2D newIcon)
         : this(newIcon, 0)
     {
+    }
+
+    private void UpdateLabelAlignment()
+    {
+        if (iconImage.Texture != null)
+        {
+            label.PositionOffset_X = iconImage.SizeOffset_X + iconImage.PositionOffset_X * 2f;
+            label.SizeOffset_X = 0f - label.PositionOffset_X - iconImage.PositionOffset_X;
+        }
+        else
+        {
+            label.PositionOffset_X = 5f;
+            label.SizeOffset_X = -10f;
+        }
     }
 }

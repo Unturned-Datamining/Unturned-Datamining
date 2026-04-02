@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<page xmlns="http://projectmallard.org/1.0/" type="topic" id="progress" xml:lang="uk">
+  <info>
+    <link type="guide" xref="index#dialogs"/>
+    <desc>Use the <cmd>--progress</cmd> option.</desc>
+  </info>
+  <title>Діалог поступу</title>
+    <p>
+	Use the <cmd>--progress</cmd> option to create a progress dialog. 
+    </p>
+
+    <p>
+      <app>Zenity</app> reads data from standard input line by line. If a line is prefixed with #, the text is updated with the text on that line. If a line contains only a number, the percentage is updated with that number.
+    </p>
+	
+    <p>Діалог поступу підтримує наступні параметри:</p>
+
+    <terms>
+
+      <item>
+        <title><cmd>--text</cmd>=<var>text</var></title>
+	  <p>Вказує текст, який відображається у діалозі поступу.</p>
+      </item>
+
+      <item>
+        <title><cmd>--percentage</cmd>=<var>percentage</var></title>
+	  <p>Вказує початковий відсоток, який виставляється у діалозі поступу.</p>
+      </item>
+
+      <item>
+	<title><cmd>--auto-close</cmd></title>
+	  <p>Закриває діалог поступу при досяганні 100%</p>
+      </item>
+
+      <item>
+        <title><cmd>--pulsate</cmd></title>
+	  <p>Вказує, що індикатор поступу пульсує доки зі стандартного вводу не буде прочитано символ EOF.</p>
+      </item>
+
+    </terms>
+
+    <p>
+      The following example script shows how to create a progress dialog:
+    </p>
+
+<code>
+#!/bin/sh
+(
+echo "10" ; sleep 1
+echo "# Updating mail logs" ; sleep 1
+echo "20" ; sleep 1
+echo "# Resetting cron jobs" ; sleep 1
+echo "50" ; sleep 1
+echo "This line will just be ignored" ; sleep 1
+echo "75" ; sleep 1
+echo "# Rebooting system" ; sleep 1
+echo "100" ; sleep 1
+) |
+zenity --progress \
+  --title="Update System Logs" \
+  --text="Scanning mail logs..." \
+  --percentage=0
+
+if [ "$?" = -1 ] ; then
+        zenity --error \
+          --text="Update canceled."
+fi
+</code>
+
+
+    <figure id="zenity-progress-screenshot">
+      <title>Приклад діалогу поступу</title>
+      <desc><app>Zenity</app> progress dialog example</desc>
+      <media type="image" mime="image/png" src="figures/zenity-progress-screenshot.png"/>
+    </figure>
+</page>

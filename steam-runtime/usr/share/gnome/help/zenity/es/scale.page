@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<page xmlns="http://projectmallard.org/1.0/" type="topic" id="scale" xml:lang="es">
+  <info>
+    <link type="guide" xref="index#dialogs"/>
+    <desc>Use la opción <cmd>--scale</cmd>.</desc>
+  </info>
+  <title>Diálogo de escala</title>
+  <p>Use la opción <cmd>--scale</cmd> para crear un diálogo de escala.</p>
+  <p>El diálogo de escala soporta las siguientes opciones:</p>
+
+  <terms>
+
+    <item>
+      <title><cmd>--text</cmd>=<var>TEXTO</var></title>
+      <p>Establezca el texto del diálogo. (Predeterminado: «Ajustar el valor de la escala»)</p>
+    </item>
+
+    <item>
+      <title><cmd>--value</cmd>=<var>VALOR</var></title>
+      <p>Establezca el valor inicial. (Predeterminado: 0) Debe especificar un valor que esté entre los valores mínimo y máximo.</p>
+    </item>
+
+    <item>
+      <title><cmd>--min-value</cmd>=<var>VALOR</var></title>
+      <p>Establezca el valor mínimo. (Predeteminado: 0)</p>
+    </item>
+
+    <item>
+      <title><cmd>--max-value</cmd>=<var>VALOR</var></title>
+      <p>Establezca el valor máximo. (Predeteminado: 100)</p>
+    </item>
+
+    <item>
+      <title><cmd>--step</cmd>=<var>VALOR</var></title>
+      <p>Establezca el tamaño del paso. (Predeterminado: 1)</p>
+    </item>
+
+    <item>
+      <title><cmd>--print-partial</cmd></title>
+      <p>Imprimir el valor a la salida estandar cuando se cambie el valor.</p>
+    </item>
+
+    <item>
+      <title><cmd>--hide-value</cmd></title>
+      <p>Ocultar valor en un diálogo.</p>
+    </item>
+
+  </terms>
+
+  <p>El siguiente script de ejemplo muestra cómo crear un diálogo de escala:</p>
+
+<code>
+#!/bin/sh
+
+VALUE=`zenity --scale --text="Select window transparency." --value=50`
+
+case $? in
+         0)
+		echo "Ha seleccionado $VALUE%.";;
+         1)
+                echo "No ha seleccionado ningún valor.";;
+        -1)
+                echo "An unexpected error has occurred.";;
+esac
+</code>
+
+  <figure id="zenity-scale-screenshot">
+    <title>Ejemplo de diálogo de escala</title>
+    <desc>Ejemplo del diálogo de escala de <app>Zenity</app></desc>
+    <media type="image" mime="image/png" src="figures/zenity-scale-screenshot.png"/>
+  </figure>
+
+</page>

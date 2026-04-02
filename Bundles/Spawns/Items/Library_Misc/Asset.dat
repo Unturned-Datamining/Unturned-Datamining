@@ -1,0 +1,31 @@
+GUID e442e746377447abb9b81547daa432c0
+Type Spawn
+
+Tables
+[
+	{
+		// Book (Barricade Item)
+		Guid 0b20822f17774ad3a0827ad5313ce7b3
+		Weight 25
+	}
+	{
+		// Note (Barricade Item)
+		Guid 62a748bf40be48719fe79b8c3e065a79
+		Weight 25
+	}
+	{
+		// Dressing Blueprint (Supply Item)
+		Guid 8d840f701cc645789d4dc0765b461a2a
+		Weight 20
+	}
+	{
+		// Sewing Workstations Blueprint (Supply Item)
+		Guid 1e884b3e38d04dbf8d5a65bd85c61130
+		Weight 20
+	}
+	{
+		// Boombox (Barricade Item)
+		Guid db4346abc6a040d2ae51987dac2a4dc5
+		Weight 10
+	}
+]

@@ -1,0 +1,12 @@
+drwxr-xr-x root/root         0 2021-11-02 15:04 ./
+drwxr-xr-x root/root         0 2021-11-02 15:04 ./usr/
+drwxr-xr-x root/root         0 2021-11-02 15:04 ./usr/lib/
+drwxr-xr-x root/root         0 2021-11-02 15:04 ./usr/lib/x86_64-linux-gnu/
+-rw-r--r-- root/root    799072 2021-11-02 15:04 ./usr/lib/x86_64-linux-gnu/libpipewire-0.3.so.0.327.0
+drwxr-xr-x root/root         0 2021-11-02 15:04 ./usr/share/
+drwxr-xr-x root/root         0 2021-11-02 15:04 ./usr/share/doc/
+drwxr-xr-x root/root         0 2021-11-02 15:04 ./usr/share/doc/libpipewire-0.3-0/
+-rw-r--r-- root/root     23051 2021-05-06 08:22 ./usr/share/doc/libpipewire-0.3-0/NEWS.gz
+-rw-r--r-- root/root      4241 2021-11-02 14:03 ./usr/share/doc/libpipewire-0.3-0/copyright
+-rw-r--r-- root/root      6448 2021-11-02 15:02 ./usr/share/doc/libpipewire-0.3-0/changelog.Debian.amd64.gz
+lrwxrwxrwx root/root         0 2021-11-02 15:04 ./usr/lib/x86_64-linux-gnu/libpipewire-0.3.so.0 -> libpipewire-0.3.so.0.327.0

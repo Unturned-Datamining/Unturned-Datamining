@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<page xmlns="http://projectmallard.org/1.0/" type="topic" id="scale" xml:lang="fr">
+  <info>
+    <link type="guide" xref="index#dialogs"/>
+    <desc>Utiliser l'option <cmd>--scale</cmd>.</desc>
+  </info>
+  <title>Boîte de dialogue de glissière</title>
+  <p>Utilisez l'option <cmd>--scale</cmd> pour créer une boîte de dialogue de glissière.</p>
+  <p>Options de la boîte de dialogue de glissière :</p>
+
+  <terms>
+
+    <item>
+      <title><cmd>--text</cmd>=<var>TEXTE</var></title>
+      <p>Définir le texte du dialogue (par défaut : « Ajustez la valeur de la glissière »).</p>
+    </item>
+
+    <item>
+      <title><cmd>--value</cmd>=<var>VALEUR</var></title>
+      <p>Définir la valeur initiale (par défaut : 0). Vous devez spécifier une valeur comprise entre les valeurs minimale et maximale.</p>
+    </item>
+
+    <item>
+      <title><cmd>--min-value</cmd>=<var>VALEUR</var></title>
+      <p>Définir la valeur minimale (par défaut : 0).</p>
+    </item>
+
+    <item>
+      <title><cmd>--max-value</cmd>=<var>VALEUR</var></title>
+      <p>Définir la valeur maximale (par défaut : 100).</p>
+    </item>
+
+    <item>
+      <title><cmd>--step</cmd>=<var>VALEUR</var></title>
+      <p>Définir le pas (par défaut : 1).</p>
+    </item>
+
+    <item>
+      <title><cmd>--print-partial</cmd></title>
+      <p>Afficher la valeur sur la sortie standard, à chaque fois qu'elle change.</p>
+    </item>
+
+    <item>
+      <title><cmd>--hide-value</cmd></title>
+      <p>Masquer la valeur dans la boîte de dialogue.</p>
+    </item>
+
+  </terms>
+
+  <p>Le script d'exemple suivant montre comment créer une boîte de dialogue de glissière :</p>
+
+<code>
+#!/bin/sh
+
+VALUE=`zenity --scale --text="Sélectionnez la transparence de la fenêtre." --value=50`
+
+case $? in
+         0)
+		echo "Vous avez choisi $VALUE%.";;
+         1)
+                echo "Aucune valeur sélectionnée.";;
+        -1)
+                echo "Une erreur inattendue est survenue.";;
+esac
+</code>
+
+  <figure id="zenity-scale-screenshot">
+    <title>Exemple de boîte de dialogue de glissière</title>
+    <desc>Exemple de boîte de dialogue de glissière <app>Zenity</app></desc>
+    <media type="image" mime="image/png" src="figures/zenity-scale-screenshot.png"/>
+  </figure>
+
+</page>

@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<page xmlns="http://projectmallard.org/1.0/" type="topic" id="notification" xml:lang="gl">
+  <info>
+    <link type="guide" xref="index#dialogs"/>
+    <desc>Use a opción <cmd>--notification</cmd>.</desc>
+  </info>
+  <title>Icona de notificación</title>
+    <p>Use a opción <option>--notification</option> para crear un diálogo de notificación.</p>
+
+    <terms>
+
+      <item>
+        <title><cmd>--text</cmd>=<var>text</var></title>
+	  <p>Especifica o texto que se mostra na área de notificación.</p>
+      </item>
+
+    </terms>
+
+    <p>O seguinte script de exemplo mostra como crear un diálogo de selección de notificación:</p>
+<code>
+#!/bin/sh
+
+zenity --notification\
+  --window-icon="info" \
+  --text="Hai actualizacións necesarias para o seu sistema"
+</code>
+
+
+    <figure id="zenity-notification-screenshot">
+      <title>Exemplo de icona de notificación</title>
+      <desc>Exemplo da icona de notificación de <app>Zenity</app></desc>
+      <media type="image" mime="image/png" src="figures/zenity-notification-screenshot.png"/>
+   </figure>
+</page>

@@ -1,0 +1,11 @@
+drwxr-xr-x root/root         0 2026-02-18 19:35 ./
+drwxr-xr-x root/root         0 2026-02-18 19:34 ./usr/
+drwxr-xr-x root/root         0 2026-02-18 19:34 ./usr/share/
+drwxr-xr-x root/root         0 2026-02-18 19:34 ./usr/share/doc/
+drwxr-xr-x root/root         0 2026-02-18 19:35 ./usr/share/doc/libsteam-runtime-tools-0-0/
+-rw-r--r-- root/root      8738 2026-02-18 19:09 ./usr/share/doc/libsteam-runtime-tools-0-0/copyright
+-rw-r--r-- root/root     56933 2026-02-18 19:29 ./usr/share/doc/libsteam-runtime-tools-0-0/changelog.i386.gz
+drwxr-xr-x root/root         0 2026-02-18 19:34 ./usr/lib/
+drwxr-xr-x root/root         0 2026-02-18 19:35 ./usr/lib/i386-linux-gnu/
+-rw-r--r-- root/root    556664 2026-02-18 19:35 ./usr/lib/i386-linux-gnu/libsteam-runtime-tools-0.so.0.20260218.0
+lrwxrwxrwx root/root         0 2026-02-18 19:35 ./usr/lib/i386-linux-gnu/libsteam-runtime-tools-0.so.0 -> libsteam-runtime-tools-0.so.0.20260218.0

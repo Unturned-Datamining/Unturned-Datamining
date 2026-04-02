@@ -71,11 +71,15 @@ internal class AudioSourcePool : MonoBehaviour
         pooledAudioSource.component.rolloffMode = parameters.rolloffMode;
         pooledAudioSource.component.minDistance = parameters.minDistance;
         pooledAudioSource.component.maxDistance = parameters.maxDistance;
+        pooledAudioSource.component.loop = parameters.looping;
         pooledAudioSource.component.Play();
         pooledAudioSource.isInPool = false;
         pooledAudioSource.playId = nextPlayId;
         nextPlayId++;
-        StartCoroutine(PlayCoroutine(pooledAudioSource, pooledAudioSource.playId, parameters.clip.length / parameters.pitch + 0.1f));
+        if (!parameters.looping)
+        {
+            StartCoroutine(PlayCoroutine(pooledAudioSource, pooledAudioSource.playId, parameters.clip.length / parameters.pitch + 0.1f));
+        }
         return new OneShotAudioHandle(pooledAudioSource);
     }
 

@@ -1,0 +1,15 @@
+drwxr-xr-x root/root         0 2019-04-03 15:03 ./
+drwxr-xr-x root/root         0 2019-04-03 15:03 ./usr/
+drwxr-xr-x root/root         0 2019-04-03 15:03 ./usr/lib/
+drwxr-xr-x root/root         0 2019-04-03 15:03 ./usr/lib/i386-linux-gnu/
+-rw-r--r-- root/root    169652 2019-04-03 15:03 ./usr/lib/i386-linux-gnu/libvorbis.so.0.4.8
+drwxr-xr-x root/root         0 2019-04-03 15:03 ./usr/share/
+drwxr-xr-x root/root         0 2019-04-03 15:03 ./usr/share/doc/
+drwxr-xr-x root/root         0 2019-04-03 15:03 ./usr/share/doc/libvorbis0a/
+-rw-r--r-- root/root      5630 2019-04-03 15:01 ./usr/share/doc/libvorbis0a/changelog.Debian.i386.gz
+-rw-r--r-- root/root      2598 2015-03-03 00:05 ./usr/share/doc/libvorbis0a/changelog.gz
+-rw-r--r-- root/root      2222 2018-03-16 21:26 ./usr/share/doc/libvorbis0a/copyright
+drwxr-xr-x root/root         0 2019-04-03 15:03 ./usr/share/lintian/
+drwxr-xr-x root/root         0 2019-04-03 15:03 ./usr/share/lintian/overrides/
+-rw-r--r-- root/root        98 2018-03-16 21:26 ./usr/share/lintian/overrides/libvorbis0a
+lrwxrwxrwx root/root         0 2019-04-03 15:03 ./usr/lib/i386-linux-gnu/libvorbis.so.0 -> libvorbis.so.0.4.8

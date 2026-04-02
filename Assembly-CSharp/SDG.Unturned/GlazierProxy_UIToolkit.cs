@@ -2,9 +2,14 @@ using UnityEngine.UIElements;
 
 namespace SDG.Unturned;
 
-internal class GlazierProxy_UIToolkit : GlazierElementBase_UIToolkit
+internal class GlazierProxy_UIToolkit : GlazierElementBase_UIToolkit, ISleekProxyImplementation, ISleekElement
 {
     private SleekWrapper owner;
+
+    public SleekWrapper GetWrapper()
+    {
+        return owner;
+    }
 
     public GlazierProxy_UIToolkit(Glazier_UIToolkit glazier, SleekWrapper owner)
         : base(glazier)

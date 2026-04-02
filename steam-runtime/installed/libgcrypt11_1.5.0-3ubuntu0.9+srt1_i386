@@ -1,0 +1,17 @@
+drwxr-xr-x root/root         0 2021-05-17 19:31 ./
+drwxr-xr-x root/root         0 2021-05-17 19:31 ./usr/
+drwxr-xr-x root/root         0 2021-05-17 19:31 ./usr/share/
+drwxr-xr-x root/root         0 2021-05-17 19:31 ./usr/share/doc/
+drwxr-xr-x root/root         0 2021-05-17 19:31 ./usr/share/doc/libgcrypt11/
+-rw-r--r-- root/root      7255 2011-06-29 08:25 ./usr/share/doc/libgcrypt11/NEWS.gz
+-rw-r--r-- root/root     11676 2011-06-29 08:55 ./usr/share/doc/libgcrypt11/changelog.gz
+-rw-r--r-- root/root      2104 2011-06-29 08:16 ./usr/share/doc/libgcrypt11/AUTHORS.gz
+-rw-r--r-- root/root      3592 2011-06-29 08:16 ./usr/share/doc/libgcrypt11/THANKS.gz
+-rw-r--r-- root/root      9476 2021-05-17 19:28 ./usr/share/doc/libgcrypt11/changelog.Debian.i386.gz
+-rw-r--r-- root/root      3585 2012-05-16 18:07 ./usr/share/doc/libgcrypt11/copyright
+-rw-r--r-- root/root      2076 2011-05-14 09:38 ./usr/share/doc/libgcrypt11/TODO
+-rw-r--r-- root/root      4169 2011-06-29 08:14 ./usr/share/doc/libgcrypt11/README.gz
+drwxr-xr-x root/root         0 2021-05-17 19:31 ./lib/
+drwxr-xr-x root/root         0 2021-05-17 19:31 ./lib/i386-linux-gnu/
+-rw-r--r-- root/root    545196 2021-05-17 19:31 ./lib/i386-linux-gnu/libgcrypt.so.11.7.0
+lrwxrwxrwx root/root         0 2021-05-17 19:31 ./lib/i386-linux-gnu/libgcrypt.so.11 -> libgcrypt.so.11.7.0

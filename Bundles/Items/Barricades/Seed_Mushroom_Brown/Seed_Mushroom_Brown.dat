@@ -1,0 +1,33 @@
+﻿GUID 8a8b457be97841fa82315e81b575e634
+Type Farm
+Useable Barricade
+Build Farm
+ID 1933
+
+Size_X 1
+Size_Y 1
+Size_Z 0.2
+
+Health 1
+Range 4
+Radius 0.25
+Offset 0.375
+
+Growth 10800
+Grow 1932
+
+Explosion 43
+Vulnerable
+
+Blueprints
+[
+	{
+		CategoryTag "bfac6026305f4737a95fd275ebff65a6" // Utilities
+		InputItems "04f7ef338b154440b80bb566913fb4cc" // Brown Cap Mushroom
+		OutputItems this
+		Effect "84347b13028340b8976033c08675d458" // Wrench
+	}
+]
+
+PlacementAudioClip Sounds/FoliagePlacement.mp3
+Has_Clip_Prefab false

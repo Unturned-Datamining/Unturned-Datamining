@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<page xmlns="http://projectmallard.org/1.0/" type="topic" id="file-selection" xml:lang="de">
+  <info>
+    <link type="guide" xref="index#dialogs"/>
+    <desc>Die Option <cmd>--file-selection</cmd> verwenden.</desc>
+  </info>
+  <title>Dateiauswahldialog</title>
+    <p>Verwenden Sie die Option <cmd>--file-selection</cmd> zur Erzeugung eines Dateiauswahldialogs. <app>Zenity</app> gibt die ausgewählten Dateien oder Ordner an die Standardausgabe zurück. Der Standardmodus für den Dateiauswahldialog ist »Öffnen«. </p>
+    <p>Der Dateiauswahldialog unterstützt die folgenden Optionen:</p>
+
+    <terms>
+
+      <item>
+        <title><cmd>--filename</cmd>=<var>Dateiname</var></title>
+	<p>Legt die Datei oder den Ordner fest, die oder der bei der ersten Anzeige des Dateiauswahldialogs angezeigt wird.</p>
+      </item>
+
+      <item>
+	<title><cmd>--multiple</cmd></title>
+	<p>Erlaubt die Mehrfachauswahl von Dateien im Dateiauswahldialog.</p>
+      </item>
+
+      <item>
+	<title><cmd>--directory</cmd></title>
+	<p>Erlaubt nur die Auswahl von Ordnern im Dateiauswahldialog.</p>
+      </item>
+
+      <item>
+	<title><cmd>--save</cmd></title>
+	<p>Setzt den Dateiauswahldialog in den Modus »Speichern«.</p>
+      </item>
+
+      <item>
+	<title><cmd>--separator</cmd>=<var>Trenner</var></title>
+	<p>Legt die Zeichenkette fest, die für die Trennung der zurückgegebenen Liste der Dateinamen verwendet wird.</p>
+      </item>
+
+    </terms>
+
+    <p>Das folgende Beispielskript zeigt, wie Sie einen Dateiauswahldialog erzeugen können:</p>
+
+<code>
+#!/bin/sh
+
+FILE=`zenity --file-selection --title="Select a File"`
+
+case $? in
+         0)
+                echo "\"$FILE\" selected.";;
+         1)
+                echo "No file selected.";;
+        -1)
+                echo "An unexpected error has occurred.";;
+esac
+</code>
+
+    <figure id="zenity-fileselection-screenshot">
+      <title>Beispiel für einen Dateiauswahldialog</title>
+      <desc>Beispiel für einen Dateiauswahldialog in <app>Zenity</app></desc>
+      <media type="image" mime="image/png" src="figures/zenity-fileselection-screenshot.png"/>
+    </figure>
+</page>

@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<page xmlns="http://projectmallard.org/1.0/" type="topic" id="introduction" xml:lang="el">
+<info>
+  <link type="guide" xref="index"/>
+  <desc><app>Zenity</app> enables you to create the various types of simple dialog.</desc>
+</info>
+<title>Εισαγωγή</title>
+<p>
+    <app>Zenity</app> enables you to create the following types of simple dialog:
+</p>
+
+<list>
+    <item><p>Ημερολογίου</p></item>
+    <item><p>Επιλογής αρχείου</p></item>
+    <item><p>Forms</p></item>
+    <item><p>Λίστας</p></item>
+    <item><p>Εικονίδιο ειδοποίησης</p></item>
+    <item><p>Μηνυμάτων</p>
+        <list>
+            <item><p>Σφάλματος</p></item>
+    	<item><p>Πληροφόρησης</p></item>
+    	<item><p>Ερώτησης</p></item>
+    	<item><p>Προειδοποίησης</p></item>
+        </list>
+    </item>
+    <item><p>Password entry</p></item>
+    <item><p>Ένδειξης προόδου</p></item>
+    <item><p>Καταχώρησης κειμένου</p></item>
+    <item><p>Πληροφοριών κειμένου</p></item>
+    <item><p>Scale</p></item>
+    <item><p>Color selection</p></item>
+</list>
+</page>

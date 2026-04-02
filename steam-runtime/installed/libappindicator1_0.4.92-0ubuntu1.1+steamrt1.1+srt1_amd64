@@ -1,0 +1,14 @@
+drwxr-xr-x root/root         0 2023-03-23 17:48 ./
+drwxr-xr-x root/root         0 2023-03-23 17:48 ./usr/
+drwxr-xr-x root/root         0 2023-03-23 17:48 ./usr/share/
+drwxr-xr-x root/root         0 2023-03-23 17:48 ./usr/share/doc/
+drwxr-xr-x root/root         0 2023-03-23 17:48 ./usr/share/doc/libappindicator1/
+-rw-r--r-- root/root       675 2023-03-23 17:44 ./usr/share/doc/libappindicator1/copyright
+-rw-r--r-- root/root       135 2012-03-21 18:11 ./usr/share/doc/libappindicator1/README
+-rw-r--r-- root/root      8324 2023-03-23 17:44 ./usr/share/doc/libappindicator1/changelog.Debian.amd64.gz
+-rw-r--r-- root/root       517 2012-03-21 18:12 ./usr/share/doc/libappindicator1/AUTHORS
+-rw-r--r-- root/root     25239 2012-03-21 18:12 ./usr/share/doc/libappindicator1/changelog.gz
+drwxr-xr-x root/root         0 2023-03-23 17:48 ./usr/lib/
+drwxr-xr-x root/root         0 2023-03-23 17:49 ./usr/lib/x86_64-linux-gnu/
+-rw-r--r-- root/root     52152 2023-03-23 17:49 ./usr/lib/x86_64-linux-gnu/libappindicator.so.1.0.0
+lrwxrwxrwx root/root         0 2023-03-23 17:48 ./usr/lib/x86_64-linux-gnu/libappindicator.so.1 -> libappindicator.so.1.0.0

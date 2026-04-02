@@ -563,7 +563,7 @@ internal class LevelBatching
             }
             return null;
         }
-        if (material.name.EndsWith(" (Instance)"))
+        if (material.name.EndsWith(" (Instance)", StringComparison.Ordinal))
         {
             if ((bool)shouldLogTextureAtlasExclusions && loggedMaterials.Add(material))
             {

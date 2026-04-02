@@ -1,0 +1,13 @@
+drwxr-xr-x root/root         0 2023-03-23 17:08 ./
+drwxr-xr-x root/root         0 2023-03-23 17:08 ./usr/
+drwxr-xr-x root/root         0 2023-03-23 17:08 ./usr/share/
+drwxr-xr-x root/root         0 2023-03-23 17:08 ./usr/share/doc/
+drwxr-xr-x root/root         0 2023-03-23 17:08 ./usr/share/doc/libavahi-common3/
+-rw-r--r-- root/root      5440 2023-03-21 12:01 ./usr/share/doc/libavahi-common3/copyright
+-rw-r--r-- root/root     17190 2023-03-23 17:06 ./usr/share/doc/libavahi-common3/changelog.Debian.i386.gz
+-rw-r--r-- root/root      1518 2009-04-14 02:27 ./usr/share/doc/libavahi-common3/README
+-rw-r--r-- root/root     10650 2011-04-03 22:09 ./usr/share/doc/libavahi-common3/NEWS.gz
+drwxr-xr-x root/root         0 2023-03-23 17:08 ./usr/lib/
+drwxr-xr-x root/root         0 2023-03-23 17:08 ./usr/lib/i386-linux-gnu/
+-rw-r--r-- root/root     51096 2023-03-23 17:08 ./usr/lib/i386-linux-gnu/libavahi-common.so.3.5.3
+lrwxrwxrwx root/root         0 2023-03-23 17:08 ./usr/lib/i386-linux-gnu/libavahi-common.so.3 -> libavahi-common.so.3.5.3

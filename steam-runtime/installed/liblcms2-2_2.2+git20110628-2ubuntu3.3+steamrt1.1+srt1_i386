@@ -1,0 +1,11 @@
+drwxr-xr-x root/root         0 2021-06-08 12:31 ./
+drwxr-xr-x root/root         0 2021-06-08 12:31 ./usr/
+drwxr-xr-x root/root         0 2021-06-08 12:31 ./usr/share/
+drwxr-xr-x root/root         0 2021-06-08 12:31 ./usr/share/doc/
+drwxr-xr-x root/root         0 2021-06-08 12:31 ./usr/share/doc/liblcms2-2/
+-rw-r--r-- root/root      2084 2021-05-25 17:52 ./usr/share/doc/liblcms2-2/copyright
+-rw-r--r-- root/root      1195 2021-06-08 12:29 ./usr/share/doc/liblcms2-2/changelog.Debian.i386.gz
+drwxr-xr-x root/root         0 2021-06-08 12:31 ./usr/lib/
+drwxr-xr-x root/root         0 2021-06-08 12:31 ./usr/lib/i386-linux-gnu/
+-rw-r--r-- root/root    313436 2021-06-08 12:31 ./usr/lib/i386-linux-gnu/liblcms2.so.2.0.2
+lrwxrwxrwx root/root         0 2021-06-08 12:31 ./usr/lib/i386-linux-gnu/liblcms2.so.2 -> liblcms2.so.2.0.2

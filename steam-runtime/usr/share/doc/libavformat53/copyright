@@ -1,0 +1,94 @@
+This package was downloaded from http://libav.org
+
+Upstream Authors: Fabrice Bellard
+                  Alex Beregszaszi
+                  BERO
+                  Mario Brito
+                  Ronald Bultje
+                  Tim Ferguson
+                  Brian Foley
+                  Arpad Gereoffy
+                  Philip Gladstone
+                  Vladimir Gneushev
+                  Wolfgang Hesseler
+                  Falk Hueffner
+                  Zdenek Kabelac
+                  Robin Kay
+                  Todd Kirby
+                  Nick Kurshev
+                  Mike Melanson
+                  Michael Niedermayer
+                  François Revol
+                  Roman Shaposhnik
+                  Dieter Shirley
+                  Juan J. Sierralta
+                  Ewald Snel
+                  Leon van Stuivenberg
+                  Roberto Togni
+                  Lionel Ulmer
+
+Copyright (c) 2000-2004 Fabrice Bellard et al.
+
+The following files are licensed under the GNU GPL, as clarified below:
+
+ * ffmpeg.c
+ * libavcodec:
+   + dtsdec.c
+   + i386/idct_mmx.c
+   + liba52/*.[ch]
+ * libavformat:
+   + x11grab.c
+   + gxfenc.c
+ * libpostproc:
+   + postprocess_internal.h
+   + postprocess_altivec_template.c
+   + postprocess.h
+   + postprocess_template.c
+   + postprocess.c
+   + mangle.h
+ * libswscale:
+   + swscale.c
+   + swscale-example.c
+   + yuv2rgb_template.c
+   + swscale_altivec_template.c
+   + yuv2rgb_altivec.c
+   + swscale_template.c
+   + rgb2rgb_template.c
+   + rgb2rgb.c
+   + cs_test.c
+   + yuv2rgb_mlib.c
+   + yuv2rgb.c
+
+ | This library is free software; you can redistribute it and/or
+ | modify it under the terms of the GNU General Public License as
+ | published by the Free Software Foundation; either version 2 of
+ | the License, or (at your option) any later version.
+ |
+ | This library is distributed in the hope that it will be useful,
+ | but WITHOUT ANY WARRANTY; without even the implied warranty of
+ | MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ | Lesser General Public License for more details.
+ |
+ | You should have received a copy of the GNU General Public License
+ | along with this program; if not, write to the Free Software
+ | Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
+
+The rest of the code is licensed under the GNU LGPL:
+
+ | This library is free software; you can redistribute it and/or
+ | modify it under the terms of the GNU Lesser General Public License as
+ | published by the Free Software Foundation; either version 2.1 of
+ | the License, or (at your option) any later version.
+ |
+ | This library is distributed in the hope that it will be useful,
+ | but WITHOUT ANY WARRANTY; without even the implied warranty of
+ | MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ | Lesser General Public License for more details.
+ |
+ | You should have received a copy of the GNU General Public License
+ | along with this program; if not, write to the Free Software
+ | Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
+
+On Debian GNU/Linux systems, the complete text of the GNU General Public
+License can be found in `/usr/share/common-licenses/GPL' and the text of the
+GNU Lesser General Public License is in `/usr/share/common-licenses/LGPL'.

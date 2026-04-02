@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<page xmlns="http://projectmallard.org/1.0/" type="topic" id="error" xml:lang="fr">
+  <info>
+    <link type="guide" xref="message"/>
+    <desc>Utiliser l'option <cmd>--error</cmd>.</desc>
+  </info>
+  <title>Boîte de dialogue d'erreur</title>
+      <p>Utilisez l'option <cmd>--error</cmd> pour créer une boîte de dialogue d'erreur.</p>
+
+      <p>Le script d'exemple suivant montre comment créer une boîte de dialogue d'erreur :</p>
+
+<code>
+#!/bin/bash
+
+zenity --error \
+--text="Impossible de trouver /var/log/syslog."
+</code>
+
+
+      <figure id="zenity-error-screenshot">
+        <title>Exemple de boîte de dialogue d'erreur</title>
+        <desc>Exemple de boîte de dialogue d'erreur <app>Zenity</app></desc>
+        <media type="image" mime="image/png" src="figures/zenity-error-screenshot.png"/>
+      </figure>
+</page>

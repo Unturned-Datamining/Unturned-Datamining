@@ -1,0 +1,14 @@
+drwxr-xr-x root/root         0 2019-04-03 16:37 ./
+drwxr-xr-x root/root         0 2019-04-03 16:37 ./usr/
+drwxr-xr-x root/root         0 2019-04-03 16:37 ./usr/lib/
+drwxr-xr-x root/root         0 2019-04-03 16:37 ./usr/lib/i386-linux-gnu/
+-rw-r--r-- root/root    371956 2019-04-03 16:37 ./usr/lib/i386-linux-gnu/libmpg123.so.0.44.8
+drwxr-xr-x root/root         0 2019-04-03 16:37 ./usr/share/
+drwxr-xr-x root/root         0 2019-04-03 16:37 ./usr/share/doc/
+drwxr-xr-x root/root         0 2019-04-03 16:37 ./usr/share/doc/libmpg123-0/
+-rw-r--r-- root/root     15272 2019-04-03 16:36 ./usr/share/doc/libmpg123-0/changelog.Debian.i386.gz
+-rw-r--r-- root/root      1468 2018-11-03 06:54 ./usr/share/doc/libmpg123-0/copyright
+drwxr-xr-x root/root         0 2019-04-03 16:37 ./usr/share/lintian/
+drwxr-xr-x root/root         0 2019-04-03 16:37 ./usr/share/lintian/overrides/
+-rw-r--r-- root/root       109 2018-11-03 06:54 ./usr/share/lintian/overrides/libmpg123-0
+lrwxrwxrwx root/root         0 2019-04-03 16:37 ./usr/lib/i386-linux-gnu/libmpg123.so.0 -> libmpg123.so.0.44.8

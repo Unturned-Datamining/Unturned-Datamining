@@ -1,0 +1,32 @@
+﻿Metadata
+{
+	GUID c8c0a176453b40018fbea2d4703af223
+	Type SDG.Unturned.LevelAsset, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+}
+Asset
+{
+	Weather_Types
+	[
+		{
+			// Default Rain
+			Asset d73923f4416c43dfa5bc8b6234cf0257
+			Min_Frequency 2.3
+			Max_Frequency 5.6
+			Min_Duration 0.05
+			Max_Duration 0.15
+		}
+		{
+			// Heavy Rain
+			Asset 6c850687bdb947a689fa8de8a8d99afb
+			Min_Frequency 2.3
+			Max_Frequency 5.6
+			Min_Duration 0.05
+			Max_Duration 0.15
+		}
+	]
+	Should_Animate_Background_Image true
+	Allow_Building_In_Safezone_In_Singleplayer true
+
+	Supports_Fishing_Volumes true
+	Default_Fish_Spawn_Table 7c556ce406a34bec87132b953194647e
+}

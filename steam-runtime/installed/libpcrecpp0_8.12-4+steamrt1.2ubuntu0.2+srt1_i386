@@ -1,0 +1,15 @@
+drwxr-xr-x root/root         0 2020-08-17 16:50 ./
+drwxr-xr-x root/root         0 2020-08-17 16:50 ./usr/
+drwxr-xr-x root/root         0 2020-08-17 16:50 ./usr/share/
+drwxr-xr-x root/root         0 2020-08-17 16:50 ./usr/share/doc/
+drwxr-xr-x root/root         0 2020-08-17 16:50 ./usr/share/doc/libpcrecpp0/
+-rw-r--r-- root/root     11781 2010-01-19 16:39 ./usr/share/doc/libpcrecpp0/README.gz
+-rw-r--r-- root/root      2765 2020-08-17 16:48 ./usr/share/doc/libpcrecpp0/copyright
+-rw-r--r-- root/root      6562 2020-08-17 16:48 ./usr/share/doc/libpcrecpp0/changelog.Debian.i386.gz
+-rw-r--r-- root/root      7551 2011-01-15 11:25 ./usr/share/doc/libpcrecpp0/NEWS.gz
+-rw-r--r-- root/root       403 2010-01-19 15:53 ./usr/share/doc/libpcrecpp0/AUTHORS
+-rw-r--r-- root/root     70055 2011-01-15 17:26 ./usr/share/doc/libpcrecpp0/changelog.gz
+drwxr-xr-x root/root         0 2020-08-17 16:50 ./usr/lib/
+drwxr-xr-x root/root         0 2020-08-17 16:50 ./usr/lib/i386-linux-gnu/
+-rw-r--r-- root/root     34420 2020-08-17 16:50 ./usr/lib/i386-linux-gnu/libpcrecpp.so.0.0.0
+lrwxrwxrwx root/root         0 2020-08-17 16:50 ./usr/lib/i386-linux-gnu/libpcrecpp.so.0 -> libpcrecpp.so.0.0.0

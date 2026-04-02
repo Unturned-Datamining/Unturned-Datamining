@@ -1,0 +1,9 @@
+drwxr-xr-x root/root         0 2019-04-03 21:06 ./
+drwxr-xr-x root/root         0 2019-04-03 21:06 ./usr/
+drwxr-xr-x root/root         0 2019-04-03 21:06 ./usr/lib/
+drwxr-xr-x root/root         0 2019-04-03 21:06 ./usr/lib/x86_64-linux-gnu/
+-rw-r--r-- root/root    257112 2019-04-03 21:06 ./usr/lib/x86_64-linux-gnu/libquadmath.so.0.0.0
+drwxr-xr-x root/root         0 2019-04-03 21:06 ./usr/share/
+drwxr-xr-x root/root         0 2019-04-03 21:06 ./usr/share/doc/
+lrwxrwxrwx root/root         0 2019-04-03 21:03 ./usr/lib/x86_64-linux-gnu/libquadmath.so.0 -> libquadmath.so.0.0.0
+lrwxrwxrwx root/root         0 2019-04-03 21:06 ./usr/share/doc/libquadmath0 -> gcc-5-base

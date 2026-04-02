@@ -1,0 +1,48 @@
+﻿GUID 0cff4736d61f4496aad16e6f8932c524
+Type Food
+Rarity Epic
+Useable Consumeable
+ID 1975
+
+Size_X 2
+Size_Y 2
+Size_Z 0.3
+
+Health 10
+Food 80
+Water 40
+
+Blueprints
+[
+	{
+		CategoryTag "d089feb7e43f40c5a7dfcefc36998cfb" // Supplies
+		InputItems
+		[
+			"de4c1d984045427a9a88dbacddf25787" // Ceramic Plate
+			"2d6c74d430524040955e60f04e1399f2" // Cooked Salmon
+			"375ee1fb16a848ff8bc5be5d4fafb4fc" // Wheat
+			"97c48e1bffaa48339e42e788396df94a" // Lettuce
+			"fc32f1577f094c8f88f18a10c101edfc" // Tomato
+		]
+		OutputItems this
+		Skill Cook
+		Skill_Level 2
+		RequiresNearbyCraftingTags
+		[
+			"20f30322bbcc4b01a4f116d22b24c21a" // Heat Source
+			"68816064e2ce44839c3f35da55033cba" // Cooking Table
+		]
+		Effect "84347b13028340b8976033c08675d458" // Wrench
+	}
+]
+
+Quest_Rewards 1
+Quest_Reward_0_Type Item
+Quest_Reward_0_ID de4c1d984045427a9a88dbacddf25787
+Quest_Reward_0_Amount 1
+
+ConsumeAudioClip Sounds/EatMeuniere.mp3
+Randomize_Consume_Audio_Pitch false
+EquipableModelParent LeftHook
+Procedurally_Animate_Inertia false
+EquipablePrefab Items/Food/Salmon_Meuniere/Equipable.prefab

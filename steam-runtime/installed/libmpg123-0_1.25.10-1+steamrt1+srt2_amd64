@@ -1,0 +1,11 @@
+drwxr-xr-x root/root         0 2019-04-03 16:19 ./
+drwxr-xr-x root/root         0 2019-04-03 16:19 ./usr/
+drwxr-xr-x root/root         0 2019-04-03 16:19 ./usr/lib/
+drwxr-xr-x root/root         0 2019-04-03 16:19 ./usr/lib/x86_64-linux-gnu/
+-rw-r--r-- root/root    340016 2019-04-03 16:19 ./usr/lib/x86_64-linux-gnu/libmpg123.so.0.44.8
+drwxr-xr-x root/root         0 2019-04-03 16:19 ./usr/share/
+drwxr-xr-x root/root         0 2019-04-03 16:19 ./usr/share/doc/
+drwxr-xr-x root/root         0 2019-04-03 16:19 ./usr/share/doc/libmpg123-0/
+-rw-r--r-- root/root      1468 2018-11-03 06:54 ./usr/share/doc/libmpg123-0/copyright
+-rw-r--r-- root/root     15272 2019-04-03 16:17 ./usr/share/doc/libmpg123-0/changelog.Debian.amd64.gz
+lrwxrwxrwx root/root         0 2019-04-03 16:19 ./usr/lib/x86_64-linux-gnu/libmpg123.so.0 -> libmpg123.so.0.44.8

@@ -1,0 +1,13 @@
+drwxr-xr-x root/root         0 2019-04-03 19:32 ./
+drwxr-xr-x root/root         0 2019-04-03 19:32 ./usr/
+drwxr-xr-x root/root         0 2019-04-03 19:32 ./usr/lib/
+drwxr-xr-x root/root         0 2019-04-03 19:32 ./usr/lib/x86_64-linux-gnu/
+-rw-r--r-- root/root     10264 2019-04-03 19:32 ./usr/lib/x86_64-linux-gnu/libtbbmalloc_proxy.so.2
+-rw-r--r-- root/root    184128 2019-04-03 19:32 ./usr/lib/x86_64-linux-gnu/libtbb.so.2
+-rw-r--r-- root/root     69280 2019-04-03 19:32 ./usr/lib/x86_64-linux-gnu/libtbbmalloc.so.2
+drwxr-xr-x root/root         0 2019-04-03 19:32 ./usr/share/
+drwxr-xr-x root/root         0 2019-04-03 19:32 ./usr/share/doc/
+drwxr-xr-x root/root         0 2019-04-03 19:32 ./usr/share/doc/libtbb2/
+-rw-r--r-- root/root      1807 2017-08-29 17:43 ./usr/share/doc/libtbb2/copyright
+-rw-r--r-- root/root      1782 2011-08-24 13:55 ./usr/share/doc/libtbb2/Release_Notes.txt.gz
+-rw-r--r-- root/root      1806 2019-04-03 19:11 ./usr/share/doc/libtbb2/changelog.Debian.amd64.gz

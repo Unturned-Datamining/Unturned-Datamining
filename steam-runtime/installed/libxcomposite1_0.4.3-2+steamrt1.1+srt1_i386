@@ -1,0 +1,12 @@
+drwxr-xr-x root/root         0 2023-03-23 18:29 ./
+drwxr-xr-x root/root         0 2023-03-23 18:29 ./usr/
+drwxr-xr-x root/root         0 2023-03-23 18:29 ./usr/lib/
+drwxr-xr-x root/root         0 2023-03-23 18:29 ./usr/lib/i386-linux-gnu/
+-rw-r--r-- root/root      9528 2023-03-23 18:29 ./usr/lib/i386-linux-gnu/libXcomposite.so.1.0.0
+drwxr-xr-x root/root         0 2023-03-23 18:29 ./usr/share/
+drwxr-xr-x root/root         0 2023-03-23 18:29 ./usr/share/doc/
+drwxr-xr-x root/root         0 2023-03-23 18:29 ./usr/share/doc/libxcomposite1/
+-rw-r--r-- root/root      7505 2010-10-28 05:40 ./usr/share/doc/libxcomposite1/changelog.gz
+-rw-r--r-- root/root      2588 2023-03-23 18:28 ./usr/share/doc/libxcomposite1/changelog.Debian.i386.gz
+-rw-r--r-- root/root      2324 2023-03-23 18:28 ./usr/share/doc/libxcomposite1/copyright
+lrwxrwxrwx root/root         0 2023-03-23 18:29 ./usr/lib/i386-linux-gnu/libXcomposite.so.1 -> libXcomposite.so.1.0.0

@@ -1,0 +1,12 @@
+drwxr-xr-x root/root         0 2023-03-23 18:24 ./
+drwxr-xr-x root/root         0 2023-03-23 18:24 ./usr/
+drwxr-xr-x root/root         0 2023-03-23 18:24 ./usr/share/
+drwxr-xr-x root/root         0 2023-03-23 18:24 ./usr/share/doc/
+drwxr-xr-x root/root         0 2023-03-23 18:24 ./usr/share/doc/libxrender1/
+-rw-r--r-- root/root      2251 2023-03-23 18:23 ./usr/share/doc/libxrender1/copyright
+-rw-r--r-- root/root      6307 2023-03-23 18:23 ./usr/share/doc/libxrender1/changelog.Debian.amd64.gz
+-rw-r--r-- root/root      5932 2023-03-23 18:23 ./usr/share/doc/libxrender1/changelog.gz
+drwxr-xr-x root/root         0 2023-03-23 18:24 ./usr/lib/
+drwxr-xr-x root/root         0 2023-03-23 18:24 ./usr/lib/x86_64-linux-gnu/
+-rw-r--r-- root/root     39368 2023-03-23 18:24 ./usr/lib/x86_64-linux-gnu/libXrender.so.1.3.0
+lrwxrwxrwx root/root         0 2023-03-23 18:24 ./usr/lib/x86_64-linux-gnu/libXrender.so.1 -> libXrender.so.1.3.0

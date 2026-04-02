@@ -52,7 +52,7 @@ public class Carepackage : MonoBehaviour
 
     private void OnCollisionEnter(Collision collision)
     {
-        if (isExploded || collision.collider.isTrigger || !Level.isLoaded)
+        if (isExploded || collision.collider.isTrigger || !Level.isLoaded || DamageTool.getVehicle(collision.transform) != null)
         {
             return;
         }

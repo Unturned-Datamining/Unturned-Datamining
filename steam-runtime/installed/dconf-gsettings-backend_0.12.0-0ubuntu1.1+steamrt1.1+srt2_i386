@@ -1,0 +1,13 @@
+drwxr-xr-x root/root         0 2019-04-03 15:28 ./
+drwxr-xr-x root/root         0 2019-04-03 15:28 ./usr/
+drwxr-xr-x root/root         0 2019-04-03 15:28 ./usr/lib/
+drwxr-xr-x root/root         0 2019-04-03 15:28 ./usr/lib/i386-linux-gnu/
+drwxr-xr-x root/root         0 2019-04-03 15:28 ./usr/lib/i386-linux-gnu/gio/
+drwxr-xr-x root/root         0 2019-04-03 15:28 ./usr/lib/i386-linux-gnu/gio/modules/
+-rw-r--r-- root/root     30408 2019-04-03 15:28 ./usr/lib/i386-linux-gnu/gio/modules/libdconfsettings.so
+drwxr-xr-x root/root         0 2019-04-03 15:28 ./usr/share/
+drwxr-xr-x root/root         0 2019-04-03 15:28 ./usr/share/doc/
+drwxr-xr-x root/root         0 2019-04-03 15:28 ./usr/share/doc/dconf-gsettings-backend/
+-rw-r--r-- root/root      3376 2012-03-26 14:33 ./usr/share/doc/dconf-gsettings-backend/NEWS.gz
+-rw-r--r-- root/root      2783 2018-12-17 18:07 ./usr/share/doc/dconf-gsettings-backend/copyright
+-rw-r--r-- root/root      3917 2019-04-03 15:27 ./usr/share/doc/dconf-gsettings-backend/changelog.Debian.i386.gz

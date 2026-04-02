@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<page xmlns="http://projectmallard.org/1.0/" type="topic" id="warning" xml:lang="fr">
+  <info>
+    <link type="guide" xref="message"/>
+    <desc>Utiliser l'option <cmd>--warning</cmd>.</desc>
+  </info>
+  <title>Boîte de dialogue d'avertissement</title>
+      <p>Utilisez l'option <cmd>--warning</cmd> pour créer une boîte de dialogue d'avertissement.</p>
+
+      <p>Le script d'exemple suivant montre comment créer une boîte de dialogue d'avertissement :</p>
+
+<code>
+#!/bin/bash
+
+zenity --warning \
+--text="Débranchez le câble pour éviter tout choc électrique."
+</code>
+
+
+      <figure id="zenity-warning-screenshot">
+        <title>Exemple de boîte de dialogue d'avertissement</title>
+	<desc>Exemple de boîte de dialogue d'avertissement <app>Zenity</app></desc>
+        <media type="image" mime="image/png" src="figures/zenity-warning-screenshot.png"/>
+      </figure>
+</page>

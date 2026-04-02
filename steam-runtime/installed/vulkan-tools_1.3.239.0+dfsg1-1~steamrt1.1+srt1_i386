@@ -1,0 +1,13 @@
+drwxr-xr-x root/root         0 2023-02-17 17:11 ./
+drwxr-xr-x root/root         0 2023-02-17 17:11 ./usr/
+drwxr-xr-x root/root         0 2023-02-17 17:11 ./usr/bin/
+-rwxr-xr-x root/root    259960 2023-02-17 17:11 ./usr/bin/vkcube
+drwxr-xr-x root/root         0 2023-02-17 17:11 ./usr/share/
+drwxr-xr-x root/root         0 2023-02-17 17:11 ./usr/share/man/
+drwxr-xr-x root/root         0 2023-02-17 17:11 ./usr/share/man/man1/
+-rw-r--r-- root/root       338 2023-02-17 17:11 ./usr/share/man/man1/vulkaninfo.1.gz
+drwxr-xr-x root/root         0 2023-02-17 17:11 ./usr/share/doc/
+drwxr-xr-x root/root         0 2023-02-17 17:11 ./usr/share/doc/vulkan-tools/
+-rw-r--r-- root/root      1775 2023-02-14 11:15 ./usr/share/doc/vulkan-tools/copyright
+-rw-r--r-- root/root      2286 2023-02-17 17:09 ./usr/share/doc/vulkan-tools/changelog.Debian.i386.gz
+lrwxrwxrwx root/root         0 2023-02-17 17:11 ./usr/bin/vulkaninfo -> i386-linux-gnu-vulkaninfo

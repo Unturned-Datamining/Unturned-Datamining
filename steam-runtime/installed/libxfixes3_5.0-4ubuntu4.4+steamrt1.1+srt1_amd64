@@ -1,0 +1,11 @@
+drwxr-xr-x root/root         0 2023-03-23 18:20 ./
+drwxr-xr-x root/root         0 2023-03-23 18:20 ./usr/
+drwxr-xr-x root/root         0 2023-03-23 18:20 ./usr/share/
+drwxr-xr-x root/root         0 2023-03-23 18:20 ./usr/share/doc/
+drwxr-xr-x root/root         0 2023-03-23 18:20 ./usr/share/doc/libxfixes3/
+-rw-r--r-- root/root      2319 2023-03-23 18:18 ./usr/share/doc/libxfixes3/copyright
+-rw-r--r-- root/root      3562 2023-03-23 18:18 ./usr/share/doc/libxfixes3/changelog.Debian.amd64.gz
+drwxr-xr-x root/root         0 2023-03-23 18:20 ./usr/lib/
+drwxr-xr-x root/root         0 2023-03-23 18:20 ./usr/lib/x86_64-linux-gnu/
+-rw-r--r-- root/root     22560 2023-03-23 18:20 ./usr/lib/x86_64-linux-gnu/libXfixes.so.3.1.0
+lrwxrwxrwx root/root         0 2023-03-23 18:20 ./usr/lib/x86_64-linux-gnu/libXfixes.so.3 -> libXfixes.so.3.1.0

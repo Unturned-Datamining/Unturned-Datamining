@@ -1,0 +1,14 @@
+drwxr-xr-x root/root         0 2021-05-18 11:05 ./
+drwxr-xr-x root/root         0 2021-05-18 11:05 ./usr/
+drwxr-xr-x root/root         0 2021-05-18 11:05 ./usr/share/
+drwxr-xr-x root/root         0 2021-05-18 11:05 ./usr/share/lintian/
+drwxr-xr-x root/root         0 2021-05-18 11:05 ./usr/share/lintian/overrides/
+-rw-r--r-- root/root        34 2021-05-17 18:11 ./usr/share/lintian/overrides/libwind0-heimdal
+drwxr-xr-x root/root         0 2021-05-18 11:05 ./usr/share/doc/
+drwxr-xr-x root/root         0 2021-05-18 11:05 ./usr/share/doc/libwind0-heimdal/
+-rw-r--r-- root/root      8191 2021-05-18 09:47 ./usr/share/doc/libwind0-heimdal/copyright
+-rw-r--r-- root/root     17155 2021-05-18 10:56 ./usr/share/doc/libwind0-heimdal/changelog.Debian.amd64.gz
+drwxr-xr-x root/root         0 2021-05-18 11:05 ./usr/lib/
+drwxr-xr-x root/root         0 2021-05-18 11:05 ./usr/lib/x86_64-linux-gnu/
+-rw-r--r-- root/root    166096 2021-05-18 11:05 ./usr/lib/x86_64-linux-gnu/libwind.so.0.0.0
+lrwxrwxrwx root/root         0 2021-05-18 11:05 ./usr/lib/x86_64-linux-gnu/libwind.so.0 -> libwind.so.0.0.0

@@ -1,0 +1,39 @@
+﻿Metadata
+{
+	GUID bec64405ab2445f2b5960ba63a0b133f
+	Type SDG.Framework.Foliage.FoliageResourceInfoAsset, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+}
+Asset
+{
+	ID 0
+	Density 1500
+	Legacy_Rotation_and_Scale false
+	Min_Weight 0.5
+	Max_Weight 1
+	Min_Angle 0
+	Max_Angle 60
+	Min_Rotation 0
+	Max_Rotation
+	{
+		X 10
+		Y 360
+		Z 10
+	}
+	Min_Scale
+	{
+		X 0.9
+		Y 0.9
+		Z 0.9
+	}
+	Max_Scale
+	{
+		X 1.2
+		Y 1.2
+		Z 1.2
+	}
+	Resource
+	{
+		GUID 4def378848484654ac8ac97560d59fd2
+	}
+	Obstruction_Radius 4
+}

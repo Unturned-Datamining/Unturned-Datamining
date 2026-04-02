@@ -1,0 +1,12 @@
+GUID 03a8441ddc4c4da98339351271dacb1c
+Type Spawn
+ID 838
+
+Tables
+[
+	{
+		// Library (Spawn)
+		Guid 77ff744369f54242b16c206da6827de0
+		Weight 20
+	}
+]

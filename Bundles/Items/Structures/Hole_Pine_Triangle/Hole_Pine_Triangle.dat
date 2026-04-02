@@ -1,0 +1,40 @@
+GUID 568dd36b8af24ae8ac02a391b74e7bf4
+Type Structure
+Rarity Rare
+Useable Structure
+Construct Roof_Poly
+ID 1989
+
+Size_X 2
+Size_Y 2
+Size_Z 0.325
+
+Health 550
+Range 8
+
+Explosion 29
+
+Blueprints
+[
+	{
+		CategoryTag "71d9e182c18b4aad8e87778e4f621995" // Structures
+		InputItems "86bf08032a5147f9871e362e40812771 x 2" // Pine Log
+		OutputItems this
+		Effect "84347b13028340b8976033c08675d458" // Wrench
+	}
+	{
+		CategoryTag "71d9e182c18b4aad8e87778e4f621995" // Structures
+		InputItems "1d9fa8ad36504d9ab63ad574c6675cf3" // Stacked Pine Logs
+		InputItems_Critical true
+		OutputItems
+		[
+			this
+			"86bf08032a5147f9871e362e40812771 x 10" // Pine Log
+		]
+		Effect "84347b13028340b8976033c08675d458" // Wrench
+	}
+]
+
+PlacementAudioClip Sounds/WoodenPlacement.mp3
+
+Has_Clip_Prefab false

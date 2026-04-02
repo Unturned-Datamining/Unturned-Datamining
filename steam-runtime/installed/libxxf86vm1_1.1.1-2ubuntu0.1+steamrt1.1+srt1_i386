@@ -1,0 +1,11 @@
+drwxr-xr-x root/root         0 2023-03-23 18:32 ./
+drwxr-xr-x root/root         0 2023-03-23 18:32 ./usr/
+drwxr-xr-x root/root         0 2023-03-23 18:32 ./usr/lib/
+drwxr-xr-x root/root         0 2023-03-23 18:32 ./usr/lib/i386-linux-gnu/
+-rw-r--r-- root/root     17900 2023-03-23 18:32 ./usr/lib/i386-linux-gnu/libXxf86vm.so.1.0.0
+drwxr-xr-x root/root         0 2023-03-23 18:32 ./usr/share/
+drwxr-xr-x root/root         0 2023-03-23 18:32 ./usr/share/doc/
+drwxr-xr-x root/root         0 2023-03-23 18:32 ./usr/share/doc/libxxf86vm1/
+-rw-r--r-- root/root      2575 2023-03-23 18:31 ./usr/share/doc/libxxf86vm1/changelog.Debian.i386.gz
+-rw-r--r-- root/root      1370 2023-03-23 18:31 ./usr/share/doc/libxxf86vm1/copyright
+lrwxrwxrwx root/root         0 2023-03-23 18:32 ./usr/lib/i386-linux-gnu/libXxf86vm.so.1 -> libXxf86vm.so.1.0.0

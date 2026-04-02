@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<page xmlns="http://projectmallard.org/1.0/" type="topic" id="question" xml:lang="hu">
+  <info>
+    <link type="guide" xref="message"/>
+    <desc>A <cmd>--question</cmd> kapcsoló használata.</desc>
+  </info>
+  <title>Kérdés ablak</title>
+      <p>A <cmd>--question</cmd> kapcsoló használatával kérdés ablakot hozhat létre.</p>
+
+      <p>A következő példa parancsfájl bemutatja a kérdés ablak létrehozását:</p>
+
+<code>
+#!/bin/bash
+
+zenity --question \
+--text="Biztos, hogy folytatni szeretné?"
+</code>
+
+
+      <figure id="zenity-question-screenshot">
+        <title>Példa kérdés ablak</title>
+	<desc><app>Zenity</app> példa kérdés ablak</desc>
+        <media type="image" mime="image/png" src="figures/zenity-question-screenshot.png"/>
+      </figure>
+</page>

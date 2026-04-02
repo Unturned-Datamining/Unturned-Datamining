@@ -1,0 +1,15 @@
+drwxr-xr-x root/root         0 2019-04-03 17:50 ./
+drwxr-xr-x root/root         0 2019-04-03 17:50 ./usr/
+drwxr-xr-x root/root         0 2019-04-03 17:50 ./usr/lib/
+drwxr-xr-x root/root         0 2019-04-03 17:50 ./usr/lib/i386-linux-gnu/
+drwxr-xr-x root/root         0 2019-04-03 17:50 ./usr/lib/i386-linux-gnu/gtk-2.0/
+drwxr-xr-x root/root         0 2019-04-03 17:50 ./usr/lib/i386-linux-gnu/gtk-2.0/2.10.0/
+drwxr-xr-x root/root         0 2019-04-03 17:50 ./usr/lib/i386-linux-gnu/gtk-2.0/2.10.0/engines/
+-rw-r--r-- root/root    219300 2019-04-03 17:50 ./usr/lib/i386-linux-gnu/gtk-2.0/2.10.0/engines/libmurrine.so
+drwxr-xr-x root/root         0 2019-04-03 17:50 ./usr/share/
+drwxr-xr-x root/root         0 2019-04-03 17:50 ./usr/share/gtk-engines/
+-rw-r--r-- root/root     63967 2019-04-03 17:50 ./usr/share/gtk-engines/murrine.xml
+drwxr-xr-x root/root         0 2019-04-03 17:50 ./usr/share/doc/
+drwxr-xr-x root/root         0 2019-04-03 17:50 ./usr/share/doc/gtk2-engines-murrine/
+-rw-r--r-- root/root      2735 2019-04-03 17:44 ./usr/share/doc/gtk2-engines-murrine/changelog.Debian.i386.gz
+-rw-r--r-- root/root      2697 2012-01-25 20:26 ./usr/share/doc/gtk2-engines-murrine/copyright

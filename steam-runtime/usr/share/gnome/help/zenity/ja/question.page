@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<page xmlns="http://projectmallard.org/1.0/" type="topic" id="question" xml:lang="ja">
+  <info>
+    <link type="guide" xref="message"/>
+    <desc><cmd>--question</cmd> オプションの使用</desc>
+  </info>
+  <title>質問ダイアログ</title>
+      <p>質問ダイアログを作成するには、<cmd>--question</cmd> というオプションを使ってください。</p>
+
+      <p>以下のスクリプトの例で質問ダイアログの作成方法を示します。</p>
+
+<code>
+#!/bin/bash
+
+zenity --question \
+--text="続行しますか?"
+</code>
+
+
+      <figure id="zenity-question-screenshot">
+        <title>質問ダイアログの例</title>
+	<desc><app>Zenity</app> 質問ダイアログの例</desc>
+        <media type="image" mime="image/png" src="figures/zenity-question-screenshot.png"/>
+      </figure>
+</page>

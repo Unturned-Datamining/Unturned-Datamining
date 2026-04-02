@@ -1,0 +1,11 @@
+drwxr-xr-x root/root         0 2022-02-25 19:18 ./
+drwxr-xr-x root/root         0 2022-02-25 19:18 ./usr/
+drwxr-xr-x root/root         0 2022-02-25 19:18 ./usr/share/
+drwxr-xr-x root/root         0 2022-02-25 19:18 ./usr/share/doc/
+drwxr-xr-x root/root         0 2022-02-25 19:18 ./usr/share/doc/libcap2/
+-rw-r--r-- root/root      2843 2022-02-25 19:18 ./usr/share/doc/libcap2/changelog.Debian.i386.gz
+-rw-r--r-- root/root      2495 2022-02-25 18:35 ./usr/share/doc/libcap2/copyright
+drwxr-xr-x root/root         0 2022-02-25 19:18 ./lib/
+drwxr-xr-x root/root         0 2022-02-25 19:18 ./lib/i386-linux-gnu/
+-rw-r--r-- root/root     17964 2022-02-25 19:18 ./lib/i386-linux-gnu/libcap.so.2.22
+lrwxrwxrwx root/root         0 2022-02-25 19:18 ./lib/i386-linux-gnu/libcap.so.2 -> libcap.so.2.22

@@ -1,0 +1,12 @@
+drwxr-xr-x root/root         0 2019-10-23 18:35 ./
+drwxr-xr-x root/root         0 2019-10-23 18:35 ./usr/
+drwxr-xr-x root/root         0 2019-10-23 18:35 ./usr/share/
+drwxr-xr-x root/root         0 2019-10-23 18:35 ./usr/share/doc/
+drwxr-xr-x root/root         0 2019-10-23 18:35 ./usr/share/doc/libva-drm2/
+-rw-r--r-- root/root      5484 2019-10-22 15:28 ./usr/share/doc/libva-drm2/copyright
+-rw-r--r-- root/root      6083 2019-10-23 18:33 ./usr/share/doc/libva-drm2/changelog.Debian.amd64.gz
+-rw-r--r-- root/root      3463 2018-02-12 07:14 ./usr/share/doc/libva-drm2/changelog.gz
+drwxr-xr-x root/root         0 2019-10-23 18:35 ./usr/lib/
+drwxr-xr-x root/root         0 2019-10-23 18:35 ./usr/lib/x86_64-linux-gnu/
+-rw-r--r-- root/root     10360 2019-10-23 18:35 ./usr/lib/x86_64-linux-gnu/libva-drm.so.2.100.0
+lrwxrwxrwx root/root         0 2019-10-23 18:35 ./usr/lib/x86_64-linux-gnu/libva-drm.so.2 -> libva-drm.so.2.100.0

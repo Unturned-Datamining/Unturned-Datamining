@@ -1,0 +1,15 @@
+drwxr-xr-x root/root         0 2019-04-03 17:16 ./
+drwxr-xr-x root/root         0 2019-04-03 17:16 ./usr/
+drwxr-xr-x root/root         0 2019-04-03 17:16 ./usr/lib/
+drwxr-xr-x root/root         0 2019-04-03 17:16 ./usr/lib/i386-linux-gnu/
+-rw-r--r-- root/root     51768 2019-04-03 17:16 ./usr/lib/i386-linux-gnu/libfltk_images.so.1.1
+-rw-r--r-- root/root     22132 2019-04-03 17:16 ./usr/lib/i386-linux-gnu/libfltk_forms.so.1.1
+-rw-r--r-- root/root    678548 2019-04-03 17:16 ./usr/lib/i386-linux-gnu/libfltk.so.1.1
+-rw-r--r-- root/root     98936 2019-04-03 17:16 ./usr/lib/i386-linux-gnu/libfltk_gl.so.1.1
+drwxr-xr-x root/root         0 2019-04-03 17:16 ./usr/share/
+drwxr-xr-x root/root         0 2019-04-03 17:16 ./usr/share/doc/
+drwxr-xr-x root/root         0 2019-04-03 17:16 ./usr/share/doc/libfltk1.1/
+-rw-r--r-- root/root      3021 2009-07-02 09:42 ./usr/share/doc/libfltk1.1/README.gz
+-rw-r--r-- root/root     11392 2019-04-03 17:14 ./usr/share/doc/libfltk1.1/changelog.Debian.i386.gz
+-rw-r--r-- root/root      1404 2008-03-27 17:59 ./usr/share/doc/libfltk1.1/CREDITS
+-rw-r--r-- root/root      3641 2010-09-24 05:37 ./usr/share/doc/libfltk1.1/copyright

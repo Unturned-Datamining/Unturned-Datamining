@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<page xmlns="http://projectmallard.org/1.0/" type="topic" id="calendar" xml:lang="fr">
+  <info>
+    <link type="guide" xref="index#dialogs"/>
+    <desc>Utiliser l'option <cmd>--calendar</cmd>.</desc>
+  </info>
+  <title>Boîte de dialogue de calendrier</title>
+    <p>L'option <cmd>--calendar</cmd> crée une boîte de dialogue de calendrier. <app>Zenity</app> retourne la date sélectionnée sur le flux de sortie standard. Si aucune date n'est indiquée en ligne de commande, la boîte de dialogue utilise la date actuelle.</p>
+    <p>Options de la boîte de dialogue de calendrier :</p>
+
+    <terms>
+
+      <item>
+        <title><cmd>--text</cmd>=<var>texte</var></title>
+	<p>Spécifier le texte affiché dans la boîte de dialogue de calendrier.</p>
+      </item>
+     	
+      <item>
+        <title><cmd>--day</cmd>=<var>jour</var></title>
+	<p>Spécifier le jour sélectionné dans la boîte de dialogue de calendrier. <var>jour</var> doit être un nombre compris entre 1 et 31 inclus.</p>
+      </item>
+
+      <item>
+        <title><cmd>--month</cmd>=<var>mois</var></title>
+	<p>Spécifier le mois sélectionné dans la boîte de dialogue de calendrier. <var>mois</var> doit être un nombre compris entre 1 et 12 inclus.</p>
+      </item>
+
+      <item>
+        <title><cmd>--year</cmd>=<var>année</var></title>
+	<p>Spécifier l'année sélectionnée dans la boîte de dialogue de calendrier.</p>
+      </item>
+
+      <item>
+        <title><cmd>--date-format</cmd>=<var>format</var></title>
+	<p>Spécifier sous quel format la boîte de dialogue de calendrier retourne la date sélectionnée. Le format par défaut dépend de votre localisation. <var>format</var> doit être un format que la fonction <cmd>strftime</cmd> accepte, par exemple <var>%A %d/%m/%y</var>.</p>
+      </item>
+
+    </terms>
+
+    <p>Le script d'exemple suivant montre comment créer une boîte de dialogue de calendrier :</p>
+
+<code>
+#!/bin/sh
+
+
+if zenity --calendar \
+--title="Choisissez une date" \
+--text="Cliquez sur une date pour la sélectionner." \
+--day=10 --month=8 --year=2004
+  then echo $?
+  else echo "Aucune date sélectionnée"
+fi
+</code>
+
+
+    <figure id="zenity-calendar-screenshot">
+      <title>Exemple de boîte de dialogue de calendrier</title>
+      <desc>Exemple de boîte de dialogue de calendrier <app>Zenity</app></desc>
+      <media type="image" mime="image/png" src="figures/zenity-calendar-screenshot.png"/>
+   </figure>
+</page>
