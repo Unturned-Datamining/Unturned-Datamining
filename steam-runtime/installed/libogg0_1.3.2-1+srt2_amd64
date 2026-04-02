@@ -1,0 +1,12 @@
+drwxr-xr-x root/root         0 2019-04-03 15:14 ./
+drwxr-xr-x root/root         0 2019-04-03 15:14 ./usr/
+drwxr-xr-x root/root         0 2019-04-03 15:14 ./usr/lib/
+drwxr-xr-x root/root         0 2019-04-03 15:14 ./usr/lib/x86_64-linux-gnu/
+-rw-r--r-- root/root     26424 2019-04-03 15:14 ./usr/lib/x86_64-linux-gnu/libogg.so.0.8.2
+drwxr-xr-x root/root         0 2019-04-03 15:14 ./usr/share/
+drwxr-xr-x root/root         0 2019-04-03 15:14 ./usr/share/doc/
+drwxr-xr-x root/root         0 2019-04-03 15:14 ./usr/share/doc/libogg0/
+-rw-r--r-- root/root      1277 2014-05-28 18:38 ./usr/share/doc/libogg0/changelog.gz
+-rw-r--r-- root/root      3649 2019-04-03 15:13 ./usr/share/doc/libogg0/copyright
+-rw-r--r-- root/root      3070 2019-04-03 15:13 ./usr/share/doc/libogg0/changelog.Debian.amd64.gz
+lrwxrwxrwx root/root         0 2019-04-03 15:14 ./usr/lib/x86_64-linux-gnu/libogg.so.0 -> libogg.so.0.8.2

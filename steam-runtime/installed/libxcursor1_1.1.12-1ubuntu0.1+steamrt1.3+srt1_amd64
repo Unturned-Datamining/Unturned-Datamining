@@ -1,0 +1,11 @@
+drwxr-xr-x root/root         0 2024-09-24 18:22 ./
+drwxr-xr-x root/root         0 2024-09-24 18:22 ./usr/
+drwxr-xr-x root/root         0 2024-09-24 18:22 ./usr/lib/
+drwxr-xr-x root/root         0 2024-09-24 18:22 ./usr/lib/x86_64-linux-gnu/
+-rw-r--r-- root/root     39520 2024-09-24 18:22 ./usr/lib/x86_64-linux-gnu/libXcursor.so.1.0.2
+drwxr-xr-x root/root         0 2024-09-24 18:22 ./usr/share/
+drwxr-xr-x root/root         0 2024-09-24 18:22 ./usr/share/doc/
+drwxr-xr-x root/root         0 2024-09-24 18:22 ./usr/share/doc/libxcursor1/
+-rw-r--r-- root/root      2774 2024-09-24 18:20 ./usr/share/doc/libxcursor1/copyright
+-rw-r--r-- root/root      5233 2024-09-24 18:20 ./usr/share/doc/libxcursor1/changelog.Debian.amd64.gz
+lrwxrwxrwx root/root         0 2024-09-24 18:22 ./usr/lib/x86_64-linux-gnu/libXcursor.so.1 -> libXcursor.so.1.0.2

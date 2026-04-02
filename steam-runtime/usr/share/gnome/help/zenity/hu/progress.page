@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<page xmlns="http://projectmallard.org/1.0/" type="topic" id="progress" xml:lang="hu">
+  <info>
+    <link type="guide" xref="index#dialogs"/>
+    <desc>A <cmd>--progress</cmd> kapcsoló használata.</desc>
+  </info>
+  <title>Folyamatjelző ablak</title>
+    <p>A <cmd>--progress</cmd> kapcsoló használatával folyamatjelző ablakot hozhat létre.</p>
+
+    <p>A <app>Zenity</app> az adatokat a szabványos bemenetről soronként olvassa. Ha egy sor #-tel kezdődik, akkor a szöveg frissítésre kerül ezen sor szövegével. Ha a sor csak egy számot tartalmaz, akkor a százalékérték azzal a számmal kerül frissítésre.</p>
+	
+    <p>A folyamatjelző ablak a következő kapcsolókat támogatja:</p>
+
+    <terms>
+
+      <item>
+        <title><cmd>--text</cmd>=<var>szöveg</var></title>
+	  <p>A folyamatjelző ablakban megjelenítendő szöveg megadása.</p>
+      </item>
+
+      <item>
+        <title><cmd>--percentage</cmd>=<var>százalék</var></title>
+	  <p>A folyamatjelző ablakban megjelenítendő kiinduló százalékérték megadása.</p>
+      </item>
+
+      <item>
+	<title><cmd>--auto-close</cmd></title>
+	  <p>Folyamatjelző ablak bezárása amikor a 100%-ot elérte.</p>
+      </item>
+
+      <item>
+        <title><cmd>--pulsate</cmd></title>
+	  <p>A folyamatjelző sáv pulzál, amíg nem olvas EOF karaktert a szabványos bemenetről.</p>
+      </item>
+
+    </terms>
+
+    <p>A következő példa parancsfájl bemutatja a folyamatjelző ablak létrehozását:</p>
+
+<code>
+#!/bin/sh
+(
+echo "10" ; sleep 1
+echo "# Levelezőnaplók frissítése" ; sleep 1
+echo "20" ; sleep 1
+echo "# cron feladatok visszaállítása" ; sleep 1
+echo "50" ; sleep 1
+echo "Ez a sor figyelmen kívül marad" ; sleep 1
+echo "75" ; sleep 1
+echo "# Rendszer újraindítása" ; sleep 1
+echo "100" ; sleep 1
+) |
+zenity --progress \
+  --title="Rendszernaplók frissítése" \
+  --text="Levelezőnaplók vizsgálata..." \
+  --percentage=0
+
+if [ "$?" = -1 ] ; then
+        zenity --error \
+          --text="Frissítés megszakítva."
+fi
+</code>
+
+
+    <figure id="zenity-progress-screenshot">
+      <title>Példa folyamatjelző ablak</title>
+      <desc><app>Zenity</app> példa folyamatjelző ablak</desc>
+      <media type="image" mime="image/png" src="figures/zenity-progress-screenshot.png"/>
+    </figure>
+</page>

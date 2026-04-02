@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<page xmlns="http://projectmallard.org/1.0/" type="topic" id="list" xml:lang="ja">
+  <info>
+    <link type="guide" xref="index#dialogs"/>
+    <desc><cmd>--list</cmd> オプションの使用</desc>
+  </info>
+  <title>一覧ダイアログ</title>
+    <p>一覧ダイアログを作成するには、<cmd>--list</cmd> というオプションを使ってください。<app>Zenity</app> は、選択された行の最初の列のテキストを標準出力へ返却します。</p>
+
+    <p>一覧ダイアログ向けのデータは、列ごと、行ごとに指定しなければなりません。データは、標準入力を通してダイアログに提供することができます。各項目は、改行文字によって分割されている必要があります。</p>
+
+    <p><cmd>--checklist</cmd> や <cmd>--radiolist</cmd> というオプションを使用する場合、各行は 'TRUE' か 'FALSE' で始める必要があります。</p>
+
+    <p>一覧ダイアログは、以下のオプションをサポートしています。</p>
+
+    <terms>
+
+      <item>
+        <title><cmd>--column</cmd>=<var>列</var></title>
+	  <p>一覧ダイアログに表示される列の見出しを指定します。ダイアログに表示したい各列ごとに <cmd>--column</cmd> オプションを指定しなければなりません。</p>
+      </item>
+
+      <item>
+        <title><cmd>--checklist</cmd></title>
+	  <p>このオプションを指定すると一覧ダイアログの最初の列がチェックボックスになります。</p>
+      </item>
+
+      <item>
+        <title><cmd>--radiolist</cmd></title>
+	  <p>このオプションを指定すると一覧ダイアログの最初の列がラジオボックスになります。</p>
+      </item>
+
+      <item>
+        <title><cmd>--editable</cmd></title>
+	  <p>表示した項目の編集を許可します。</p>
+      </item>
+
+      <item>
+        <title><cmd>--separator</cmd>=<var>セパレーター</var></title>
+	  <p>一覧ダイアログが選択した項目を返却する際に使用する文字を指定します。</p>
+      </item>
+
+      <item>
+        <title><cmd>--print-column</cmd>=<var>列</var></title>
+	  <p>選択した項目を出力する列を指定します。デフォルトの列は、'1' です。'ALL' を使えば、一覧のすべての列を出力できます。</p>
+      </item>
+
+    </terms>
+
+    <p>以下のスクリプトの例で一覧ダイアログの作成方法を示します。</p>
+<code>
+#!/bin/sh
+
+zenity --list \
+  --title="閲覧したいバグを選択してください" \
+  --column="バグ番号" --column="重大度" --column="説明" \
+    992383 通常 "GtkTreeView が複数選択時にクラッシュする" \
+    293823 高い "GNOME 辞書がプロキシを操作できない" \
+    393823 重大 "GNOME 2.0 でメニュー編集が動作しない"
+</code>
+
+
+    <figure id="zenity-list-screenshot">
+      <title>一覧ダイアログの例</title>
+      <desc><app>Zenity</app> 一覧ダイアログの例</desc>
+      <media type="image" mime="image/png" src="figures/zenity-list-screenshot.png"/>
+    </figure>
+</page>

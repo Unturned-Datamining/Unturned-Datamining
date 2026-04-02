@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<page xmlns="http://projectmallard.org/1.0/" type="guide" id="message" xml:lang="ja">
+  <info>
+    <link type="guide" xref="index#dialogs" group="message"/>
+    <desc><link xref="error">エラー</link>, <link xref="info">情報</link>, <link xref="question">質問</link>, <link xref="warning">警告</link></desc>
+  </info>
+  <title>メッセージダイアログ</title>
+  <p>各種類ともダイアログに表示するテキストを指定するには、<cmd>--text</cmd> というオプションを使ってください。</p>
+  <links type="topic" style="2column"/>
+</page>

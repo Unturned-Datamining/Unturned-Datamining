@@ -1,0 +1,25 @@
+drwxr-xr-x root/root         0 2021-05-17 20:25 ./
+drwxr-xr-x root/root         0 2021-05-17 20:25 ./usr/
+drwxr-xr-x root/root         0 2021-05-17 20:25 ./usr/lib/
+drwxr-xr-x root/root         0 2021-05-17 20:25 ./usr/lib/i386-linux-gnu/
+-rw-r--r-- root/root    380568 2021-05-17 20:25 ./usr/lib/i386-linux-gnu/libcurl.so.4.2.0
+drwxr-xr-x root/root         0 2021-05-17 20:25 ./usr/share/
+drwxr-xr-x root/root         0 2021-05-17 20:25 ./usr/share/lintian/
+drwxr-xr-x root/root         0 2021-05-17 20:25 ./usr/share/lintian/overrides/
+-rw-r--r-- root/root        53 2021-05-07 14:43 ./usr/share/lintian/overrides/libcurl3
+drwxr-xr-x root/root         0 2021-05-17 20:25 ./usr/share/doc/
+drwxr-xr-x root/root         0 2021-05-17 20:25 ./usr/share/doc/libcurl3/
+-rw-r--r-- root/root      5205 2011-03-19 15:17 ./usr/share/doc/libcurl3/KNOWN_BUGS.gz
+-rw-r--r-- root/root     55104 2011-09-13 16:55 ./usr/share/doc/libcurl3/changelog.gz
+-rw-r--r-- root/root      3893 2011-03-19 15:17 ./usr/share/doc/libcurl3/FEATURES
+-rw-r--r-- root/root      6450 2011-06-29 18:41 ./usr/share/doc/libcurl3/THANKS.gz
+-rw-r--r-- root/root     17721 2021-05-17 20:03 ./usr/share/doc/libcurl3/changelog.Debian.i386.gz
+-rw-r--r-- root/root     11146 2021-05-07 14:43 ./usr/share/doc/libcurl3/copyright
+-rw-r--r-- root/root      1795 2011-03-19 15:16 ./usr/share/doc/libcurl3/BINDINGS.gz
+-rw-r--r-- root/root      2615 2011-09-13 11:03 ./usr/share/doc/libcurl3/BUGS.gz
+-rw-r--r-- root/root     22712 2011-06-21 06:45 ./usr/share/doc/libcurl3/FAQ.gz
+-rw-r--r-- root/root      1607 2011-03-19 15:16 ./usr/share/doc/libcurl3/README
+-rw-r--r-- root/root      2542 2011-08-09 11:21 ./usr/share/doc/libcurl3/VERSIONS
+-rw-r--r-- root/root      7391 2011-09-11 17:26 ./usr/share/doc/libcurl3/TODO.gz
+lrwxrwxrwx root/root         0 2021-05-17 20:25 ./usr/lib/i386-linux-gnu/libcurl.so.3 -> libcurl.so.4
+lrwxrwxrwx root/root         0 2021-05-17 20:25 ./usr/lib/i386-linux-gnu/libcurl.so.4 -> libcurl.so.4.2.0

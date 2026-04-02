@@ -1,0 +1,280 @@
+<?xml version="1.0" encoding="utf-8"?>
+<page xmlns="http://projectmallard.org/1.0/" type="topic" id="usage" xml:lang="zh_CN">
+<info>
+  <link type="guide" xref="index"/>
+  <desc>You can use <app>Zenity</app> to create simple dialogs that interact graphically with the user.</desc>
+</info>
+<title>用法</title>
+    <p>
+	When you write scripts, you can use <app>Zenity</app> to create simple dialogs that interact graphically with the user, as follows:
+    </p>
+    <list>
+      <item>
+        <p>您可以创建从用户那儿获得信息的对话框。例如，您可以提示用户从日历对话框中选择日期，或者从文件选择框里选择一个文件。</p>
+      </item>
+      <item>
+        <p>您可以创建向用户提供信息的对话框。例如，您可以用进度条来显示一个操作的当前运行状态，或者用一个警告框提醒用户。</p>
+      </item>
+    </list>
+    <p>
+	When the user closes the dialog, <app>Zenity</app> prints the text produced by the dialog to standard output.
+    </p>
+
+    <note>
+      <p>
+        When you write <app>Zenity</app> commands, ensure that you place quotation marks around each argument. 
+      </p>
+      <p>For example, use:</p>
+      <screen>zenity --calendar --title="Holiday Planner"</screen>
+      <p>Do not use:</p>
+      <screen>zenity --calendar --title=Holiday Planner</screen>
+      <p>如果您没有使用双引号，可能会产生不可预料的结果。</p>
+    </note>
+
+    <section id="zenity-usage-mnemonics">
+      <title>访问键</title>
+	<p>访问键允许您用键盘来执行一个操作，而不是用鼠标点击菜单命令或对话框按钮。每个访问键有一个标识符，是一个在菜单或对话框选项上的带下划线的字母。</p>
+	<p>
+          Some <app>Zenity</app> dialogs support the use of access keys. To specify the character to use as the access key, place an underscore before that character in the text of the dialog. The following example shows how to specify the letter 'C' as the access key:
+	</p>
+	<screen><input>"选择(_C)".</input></screen>
+    </section>
+
+    <section id="zenity-usage-exitcodes">
+      <title>退出代码</title>
+    <p>
+        Zenity returns the following exit codes:
+    </p>
+
+    <table frame="all" rules="all">
+        <thead>
+          <tr valign="top">
+            <td colname="COLSPEC0">
+              <p>退出代码</p></td>
+            <td colname="COLSPEC1">
+              <p>描述</p></td>
+          </tr>
+        </thead>
+        <tbody>
+          <tr valign="top">
+            <td>
+              <p><var>0</var></p>
+            </td>
+            <td>
+              <p>The user has pressed either <gui style="button">OK</gui> or <gui style="button">Close</gui>.</p>
+            </td>
+          </tr>
+          <tr valign="top">
+            <td>
+              <p><var>1</var></p>
+            </td>
+            <td>
+              <p>The user has either pressed <gui style="button">Cancel</gui>, or used the window functions to close the dialog.</p>
+            </td>
+          </tr>
+          <tr valign="top">
+            <td>
+              <p><var>-1</var></p>
+            </td>
+            <td>
+              <p>发生了一个有异常。</p>
+            </td>
+          </tr>
+          <tr valign="top">
+            <td>
+              <p><var>5</var></p>
+            </td>
+            <td>
+              <p>对话框因超时而关闭。</p>
+            </td>
+          </tr>
+        </tbody>
+    </table>
+
+    </section>
+
+
+  <!-- ==== General Options ====== -->
+
+  <section id="zenity-usage-general-options">
+    <title>常规选项</title>
+
+    <p>
+	All Zenity dialogs support the following general options:
+    </p>
+
+    <terms>
+
+      <item>
+        <title><cmd>--title</cmd>=<var>title</var></title>
+	<p>指定对话框的标题。</p>
+      </item>
+
+      <item>
+        <title><cmd>--window-icon</cmd>=<var>icon_path</var></title>
+	<p>指定显示在窗口框架上的图标，有四个图标也可以用下列关键字 - 'info'， 'warning'， 'question' 和 'error'。</p>
+      </item>
+
+      <item>
+        <title><cmd>--width</cmd>=<var>width</var></title>
+	<p>指定对话框的宽度。</p>
+      </item>
+
+      <item>
+        <title><cmd>--height</cmd>=<var>height</var></title>
+	<p>指定对话框的高度。</p>
+      </item>
+
+      <item>
+        <title><cmd>--timeout</cmd>=<var>timeout</var></title>
+	<p>指定超出时间(秒)后对话框自动关闭。</p>
+      </item>
+
+    </terms>
+
+  </section>
+
+<!-- ==== Miscellaneous Options ====== -->
+
+  <section id="zenity-help-options">
+    <title>帮助选项</title>
+
+    <p>
+	Zenity provides the following help options:
+    </p>
+
+    <terms>
+
+      <item>
+        <title><cmd>--help</cmd></title>
+	<p>显示简短的帮助文本。</p>
+      </item>
+
+      <item>
+        <title><cmd>--help-all</cmd></title>
+	<p>显示所有对话框的完整帮助。</p>
+      </item>
+ 
+      <item>
+        <title><cmd>--help-general</cmd></title>
+	<p>显示常规对话框选项的帮助文本。</p>
+      </item>
+ 
+      <item>
+        <title><cmd>--help-calendar</cmd></title>
+	<p>显示日历对话框选项的帮助文本。</p>
+      </item>
+ 
+      <item>
+        <title><cmd>--help-entry</cmd></title>
+	<p>显示文本输入框选项的帮助文本。</p>
+      </item>
+ 
+      <item>
+        <title><cmd>--help-error</cmd></title>
+	<p>显示错误框选项的帮助文本。</p>
+      </item>
+ 
+      <item>
+        <title><cmd>--help-info</cmd></title>
+	<p>显示信息框选项的帮助文本。</p>
+      </item>
+ 
+      <item>
+        <title><cmd>--help-file-selection</cmd></title>
+	<p>显示文件打开框选项的帮助文本。</p>
+      </item>
+ 
+      <item>
+        <title><cmd>--help-list</cmd></title>
+	<p>显示列表框选项的帮助文本。</p>
+      </item>
+ 
+      <item>
+        <title><cmd>--help-notification</cmd></title>
+	<p>显示提示框选项的帮助文本。</p>
+      </item>
+ 
+      <item>
+        <title><cmd>--help-progress</cmd></title>
+	<p>显示进度框选项的帮助文本。</p>
+      </item>
+ 
+      <item>
+        <title><cmd>--help-question</cmd></title>
+	<p>显示询问框选项的帮助文本。</p>
+      </item>
+ 
+      <item>
+        <title><cmd>--help-warning</cmd></title>
+	<p>显示警告框选项的帮助文本。</p>
+      </item>
+ 
+      <item>
+	<title><cmd>--help-text-info</cmd></title>
+	<p>显示信息框选项的帮助文本。</p>
+      </item>
+ 
+      <item>
+        <title><cmd>--help-misc</cmd></title>
+	<p>显示其他杂项的帮助文本。</p>
+      </item>
+ 
+      <item>
+        <title><cmd>--help-gtk</cmd></title>
+	<p>显示 GTK+ 选项的帮助文本。</p>
+      </item>
+ 
+    </terms>
+
+  </section>
+
+<!-- ==== Miscellaneous Options ====== -->
+
+  <section id="zenity-miscellaneous-options">
+    <title>杂项</title>
+
+    <p>
+	Zenity also provides the following miscellaneous options:
+    </p>
+
+    <terms>
+
+      <item>
+        <title><cmd>--about</cmd></title>
+	<p>Displays the <gui>About Zenity</gui> dialog, which contains Zenity version information, copyright information, and developer information.</p>
+      </item>
+
+      <item>
+        <title><cmd>--version</cmd></title>
+	<p>Displays the version number of Zenity.</p>
+      </item>
+
+    </terms>
+
+  </section>
+
+<!-- ==== GTK+ Options ====== -->
+
+  <section id="zenity-gtk-options">
+    <title>GTK+ 选项</title>
+
+    <p>
+	Zenity supports the standard GTK+ options. For more information about the GTK+ options, execute the <cmd>zenity --help-gtk</cmd> command.
+    </p>
+
+  </section>
+
+<!-- ==== Environment variables ==== -->
+
+  <section id="zenity-environment-variables">
+    <title>环境变量</title>
+
+    <p>
+      Normally, Zenity detects the terminal window from which it was launched
+      and keeps itself above that window.  This behavior can be disabled by
+      unsetting the <var>WINDOWID</var> environment variable.
+    </p>
+
+  </section>
+</page>

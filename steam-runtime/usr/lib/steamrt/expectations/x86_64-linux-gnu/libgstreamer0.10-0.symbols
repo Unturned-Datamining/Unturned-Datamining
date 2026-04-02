@@ -1,0 +1,12 @@
+libgstbase-0.10.so.0 libgstreamer0.10-0 #MINVER#
+# No symbols listed here yet
+libgstcheck-0.10.so.0 libgstreamer0.10-0 #MINVER#
+# No symbols listed here yet
+libgstcontroller-0.10.so.0 libgstreamer0.10-0 #MINVER#
+# No symbols listed here yet
+libgstdataprotocol-0.10.so.0 libgstreamer0.10-0 #MINVER#
+# No symbols listed here yet
+libgstnet-0.10.so.0 libgstreamer0.10-0 #MINVER#
+# No symbols listed here yet
+libgstreamer-0.10.so.0 libgstreamer0.10-0 #MINVER#
+# No symbols listed here yet

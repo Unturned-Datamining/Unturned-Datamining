@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<page xmlns="http://projectmallard.org/1.0/" type="topic" id="calendar" xml:lang="hu">
+  <info>
+    <link type="guide" xref="index#dialogs"/>
+    <desc>A <cmd>--calendar</cmd> kapcsoló használata.</desc>
+  </info>
+  <title>Naptár ablak</title>
+    <p>A <cmd>--calendar</cmd> kapcsoló használatával naptár ablakot hozhat létre. A Zenity a kiválasztott dátumot a szabványos kimenetre írja. Ha nincs megadva dátum a parancssorban, akkor az ablak az aktuális dátumot használja.</p>
+    <p>A naptár ablak a következő kapcsolókat támogatja:</p>
+
+    <terms>
+
+      <item>
+        <title><cmd>--text</cmd>=<var>szöveg</var></title>
+	<p>A naptár ablakban megjelenítendő szöveg megadása.</p>
+      </item>
+     	
+      <item>
+        <title><cmd>--day</cmd>=<var>nap</var></title>
+	<p>Megadja a naptár ablakban kiválasztott napot. A napnak 1 és 31 között kell lennie, ezeket is beleértve.</p>
+      </item>
+
+      <item>
+        <title><cmd>--month</cmd>=<var>hónap</var></title>
+	<p>Megadja a naptár ablakban kiválasztott hónapot. A hónapnak 1 és 12 között kell lennie, ezeket is beleértve.</p>
+      </item>
+
+      <item>
+        <title><cmd>--year</cmd>=<var>év</var></title>
+	<p>Megadja a naptár ablakban kiválasztott évet.</p>
+      </item>
+
+      <item>
+        <title><cmd>--date-format</cmd>=<var>formátum</var></title>
+	<p>A naptár ablakból a dátum választása után visszaadott dátum formátumát adja meg. Az alapértelmezett formátum függ a területi beállítástól. A formátumnak az <cmd>strftime</cmd> függvény által elfogadhatónak kell lennie, például: <var>%A %d/%m/%y</var>.</p>
+      </item>
+
+    </terms>
+
+    <p>A következő példa parancsfájl bemutatja a naptár ablak létrehozását:</p>
+
+<code>
+#!/bin/sh
+
+
+if zenity --calendar \
+--title="Válasszon egy dátumot" \
+--text="Kattintson egy dátumra annak kiválasztásához." \
+--day=10 --month=8 --year=2004
+  then echo $?
+  else echo "Nincs kiválasztva dátum"
+fi
+</code>
+
+
+    <figure id="zenity-calendar-screenshot">
+      <title>Példa naptár ablak</title>
+      <desc>Zenity példa naptár ablak</desc>
+      <media type="image" mime="image/png" src="figures/zenity-calendar-screenshot.png"/>
+   </figure>
+</page>

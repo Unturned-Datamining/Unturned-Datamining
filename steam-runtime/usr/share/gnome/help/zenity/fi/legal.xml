@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<legalnotice id="legalnotice">
+	<para>
+	  Permission is granted to copy, distribute and/or modify this
+	  document under the terms of the GNU Free Documentation
+	  License (GFDL), Version 1.1 or any later version published
+	  by the Free Software Foundation with no Invariant Sections,
+	  no Front-Cover Texts, and no Back-Cover Texts.  You can find
+	  a copy of the GFDL at this <ulink type="help" url="ghelp:fdl">link</ulink> or in the file COPYING-DOCS
+	  distributed with this manual.
+         </para>
+         <para>Tämä käyttöohje on osa Gnomen käyttöohjekokoelmaa, jota levitetään GFDL-lisenssin alaisena. Jos haluat levittää tätä käyttöohjetta erillään kokoelmasta, voit tehdä sen liittämällä lisenssin kopion ohjeen mukaan, kuten lisenssin luku 6 sanelee.</para>
+
+	<para>Monet nimistä, joita yhtiöt käyttävät tuotteistansa ja palveluistansa, ovat tuotemerkkejä. Gnomen dokumentointiprojektissa nämä nimet pyritään kirjoittamaan suuraakkosin tai isolla alkukirjaimella, sikäli kun projektin jäsenet tietävät kyseisistä tuotemerkeistä.</para>
+
+	<para>
+	  DOCUMENT AND MODIFIED VERSIONS OF THE DOCUMENT ARE PROVIDED
+	  UNDER  THE TERMS OF THE GNU FREE DOCUMENTATION LICENSE
+	  WITH THE FURTHER UNDERSTANDING THAT:
+
+	  <orderedlist>
+		<listitem>
+		  <para>ASIAKIRJA TARJOTAAN "SELLAISENAAN", ILMAN MINKÄÄN LAISTA TAKUUTA, NIIN ILMAISTUA KUIN IMPLISIITTISTÄ, SISÄLTÄEN ILMAN RAJOITUKSIA TAKUUTA SIITÄ, ETTÄ ASIAKIRJA TAI SEN MUOKATTU VERSIO OLISI ILMAN VIRHEITÄ, MYYNTIKELPOINEN, SOVELTUVAT JOHONKIN TARKOITUKSEEN TAI EI-LOUKKAAVA. TÄYSI RISKI ASIAKIRJAN TAI SEN MUOKATUN VERSION LAADUSTA, TARKKUUDESTA TAI HYÖDYLLISYYDESTÄ ON SINULLA. MIKÄLI ASIAKIRJA TAI SEN MUOKATTU VERSIO OSOITTAUTUU VIALLISEKSI MISSÄÄN MIELESSÄ, SINÄ (EI ALKUPERÄINEN KIRJOITTAJA, TEKIJÄ TAI MUU MYÖTÄVAIKUTTAJA) VASTAAT KAIKKIEN TARPEELLISTEN PALVELUIDEN, KORJAUSTEN TAI OIKAISUJEN KULUISTA. TÄMÄ VASTUUVAPAUSLAUSEKE MUODOSTAA OLEELLISEN OSAN TÄSTÄ LISENSSISTÄ. MIHINKÄÄN ASIAKIRJAN TAI SEN MUOKATUN VERSION KÄYTTÖÖN EI OLE MYÖNNETTY LUPAA TÄSSÄ PAITSI TÄMÄN VASTUUVAPAUSLAUSEKKEEN MUKAISESTI; JA</para>
+		</listitem>
+		<listitem>
+		  <para>EI MISSÄÄN OLOSUHTEISSA TAI MINKÄÄN LAKITEORIAN ALAISUUDESSA, OIKEUDENLOUKKAUKSEN (SISÄLTÄEN HUOLIMATTOMUUDEN), SOPIMUKSEN TAI MUUTOIN, ASIAKIRJAN TAI SEN MUOKATUN VERSION ALKUPERÄISTÄ KIRJOITTAJAA, KETÄÄN MYÖTÄVAIKUTTAJAA TAI KETÄÄN JAKELIJAA, TAI KETÄÄN MINKÄÄN NÄISTÄ OSAPUOLISTA TOIMITTAJAA, OLE VASTUUSSA KENELLEKÄÄN HENKILÖLLE MISTÄÄN SUORASTA, EPÄSUORASTA, ERITYISESTÄ, VÄLITTÖMISTÄ TAI VÄLILLISISTÄ MINKÄÄN SORTIN VAHINGOISTA SISÄLTÄEN ILMAN RAJOITUSTA VAHINGOT MAINEEN MENETYKSESTÄ, TYÖN SEISAUKSISTA, TIETOKONEVAHINGOISTA TAI -VIRHEISTÄ, TAI MISTÄÄN  MUUSTAKAAN VAHINGOSTA TAI TAPPIOISTA, JOTKA LIITTYVÄT ASIAKIRJAN JA SEN MUOKATTUJEN VERSIOIDEN KÄYTTÖÖN, EI EDES SILLOIN KUN OSAPUOLELLE ON KERROTTU TÄLLAISTEN VAHINKOJEN MAHDOLLISUUDESTA.</para>
+		</listitem>
+	  </orderedlist>
+	</para>
+  </legalnotice>

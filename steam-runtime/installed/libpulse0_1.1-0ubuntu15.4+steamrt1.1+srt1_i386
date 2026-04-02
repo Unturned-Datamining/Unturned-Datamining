@@ -1,0 +1,18 @@
+drwxr-xr-x root/root         0 2021-05-18 11:06 ./
+drwxr-xr-x root/root         0 2021-05-18 11:06 ./usr/
+drwxr-xr-x root/root         0 2021-05-18 11:06 ./usr/lib/
+drwxr-xr-x root/root         0 2021-05-18 11:06 ./usr/lib/i386-linux-gnu/
+-rw-r--r-- root/root    318140 2021-05-18 11:06 ./usr/lib/i386-linux-gnu/libpulse.so.0.13.5
+-rw-r--r-- root/root     13820 2021-05-18 11:06 ./usr/lib/i386-linux-gnu/libpulse-simple.so.0.0.3
+-rw-r--r-- root/root    417612 2021-05-18 11:06 ./usr/lib/i386-linux-gnu/libpulsecommon-1.1.so
+drwxr-xr-x root/root         0 2021-05-18 11:06 ./usr/share/
+drwxr-xr-x root/root         0 2021-05-18 11:06 ./usr/share/doc/
+drwxr-xr-x root/root         0 2021-05-18 11:06 ./usr/share/doc/libpulse0/
+-rw-r--r-- root/root     45786 2021-05-18 11:01 ./usr/share/doc/libpulse0/changelog.Debian.i386.gz
+-rw-r--r-- root/root     21450 2021-05-18 11:01 ./usr/share/doc/libpulse0/copyright
+-rw-r--r-- root/root      1028 2011-10-20 12:54 ./usr/share/doc/libpulse0/README
+drwxr-xr-x root/root         0 2021-05-18 11:06 ./etc/
+drwxr-xr-x root/root         0 2021-05-18 11:06 ./etc/pulse/
+-rw-r--r-- root/root      1269 2021-05-18 11:05 ./etc/pulse/client.conf
+lrwxrwxrwx root/root         0 2021-05-18 11:06 ./usr/lib/i386-linux-gnu/libpulse.so.0 -> libpulse.so.0.13.5
+lrwxrwxrwx root/root         0 2021-05-18 11:06 ./usr/lib/i386-linux-gnu/libpulse-simple.so.0 -> libpulse-simple.so.0.0.3

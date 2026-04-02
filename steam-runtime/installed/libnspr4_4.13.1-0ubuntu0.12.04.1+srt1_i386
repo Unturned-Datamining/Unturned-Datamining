@@ -1,0 +1,15 @@
+drwxr-xr-x root/root         0 2021-06-08 12:28 ./
+drwxr-xr-x root/root         0 2021-06-08 12:28 ./usr/
+drwxr-xr-x root/root         0 2021-06-08 12:28 ./usr/lib/
+drwxr-xr-x root/root         0 2021-06-08 12:28 ./usr/lib/i386-linux-gnu/
+-rw-r--r-- root/root    245752 2021-06-08 12:28 ./usr/lib/i386-linux-gnu/libnspr4.so
+-rw-r--r-- root/root     17876 2021-06-08 12:28 ./usr/lib/i386-linux-gnu/libplc4.so
+-rw-r--r-- root/root     13716 2021-06-08 12:28 ./usr/lib/i386-linux-gnu/libplds4.so
+drwxr-xr-x root/root         0 2021-06-08 12:28 ./usr/share/
+drwxr-xr-x root/root         0 2021-06-08 12:28 ./usr/share/lintian/
+drwxr-xr-x root/root         0 2021-06-08 12:28 ./usr/share/lintian/overrides/
+-rw-r--r-- root/root       213 2021-06-08 12:27 ./usr/share/lintian/overrides/libnspr4
+drwxr-xr-x root/root         0 2021-06-08 12:28 ./usr/share/doc/
+drwxr-xr-x root/root         0 2021-06-08 12:28 ./usr/share/doc/libnspr4/
+-rw-r--r-- root/root      7245 2021-06-08 12:26 ./usr/share/doc/libnspr4/changelog.Debian.i386.gz
+-rw-r--r-- root/root     31746 2017-07-26 15:01 ./usr/share/doc/libnspr4/copyright

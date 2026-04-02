@@ -1,0 +1,16 @@
+drwxr-xr-x root/root         0 2023-02-17 17:08 ./
+drwxr-xr-x root/root         0 2023-02-17 17:08 ./etc/
+drwxr-xr-x root/root         0 2023-02-17 17:08 ./etc/vulkan/
+drwxr-xr-x root/root         0 2023-02-17 17:08 ./etc/vulkan/icd.d/
+drwxr-xr-x root/root         0 2023-02-17 17:08 ./etc/vulkan/implicit_layer.d/
+drwxr-xr-x root/root         0 2023-02-17 17:08 ./etc/vulkan/explicit_layer.d/
+drwxr-xr-x root/root         0 2023-02-17 17:08 ./usr/
+drwxr-xr-x root/root         0 2023-02-17 17:08 ./usr/share/
+drwxr-xr-x root/root         0 2023-02-17 17:08 ./usr/share/doc/
+drwxr-xr-x root/root         0 2023-02-17 17:08 ./usr/share/doc/libvulkan1/
+-rw-r--r-- root/root      1964 2023-01-11 18:47 ./usr/share/doc/libvulkan1/copyright
+-rw-r--r-- root/root      5587 2023-02-17 17:06 ./usr/share/doc/libvulkan1/changelog.Debian.amd64.gz
+drwxr-xr-x root/root         0 2023-02-17 17:08 ./usr/lib/
+drwxr-xr-x root/root         0 2023-02-17 17:08 ./usr/lib/x86_64-linux-gnu/
+-rw-r--r-- root/root    494224 2023-02-17 17:08 ./usr/lib/x86_64-linux-gnu/libvulkan.so.1.3.239
+lrwxrwxrwx root/root         0 2023-02-17 17:08 ./usr/lib/x86_64-linux-gnu/libvulkan.so.1 -> libvulkan.so.1.3.239

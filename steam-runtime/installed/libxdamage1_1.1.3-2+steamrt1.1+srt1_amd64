@@ -1,0 +1,12 @@
+drwxr-xr-x root/root         0 2023-03-23 18:26 ./
+drwxr-xr-x root/root         0 2023-03-23 18:26 ./usr/
+drwxr-xr-x root/root         0 2023-03-23 18:26 ./usr/share/
+drwxr-xr-x root/root         0 2023-03-23 18:26 ./usr/share/doc/
+drwxr-xr-x root/root         0 2023-03-23 18:26 ./usr/share/doc/libxdamage1/
+-rw-r--r-- root/root      1221 2023-03-23 18:25 ./usr/share/doc/libxdamage1/copyright
+-rw-r--r-- root/root      2273 2023-03-23 18:25 ./usr/share/doc/libxdamage1/changelog.Debian.amd64.gz
+-rw-r--r-- root/root      5755 2010-06-09 01:54 ./usr/share/doc/libxdamage1/changelog.gz
+drwxr-xr-x root/root         0 2023-03-23 18:26 ./usr/lib/
+drwxr-xr-x root/root         0 2023-03-23 18:26 ./usr/lib/x86_64-linux-gnu/
+-rw-r--r-- root/root     10216 2023-03-23 18:26 ./usr/lib/x86_64-linux-gnu/libXdamage.so.1.1.0
+lrwxrwxrwx root/root         0 2023-03-23 18:26 ./usr/lib/x86_64-linux-gnu/libXdamage.so.1 -> libXdamage.so.1.1.0

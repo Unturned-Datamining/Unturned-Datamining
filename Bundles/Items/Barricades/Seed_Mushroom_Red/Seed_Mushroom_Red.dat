@@ -1,0 +1,33 @@
+﻿GUID 6ed4fcb1d3f04b19b9a81c904100673c
+Type Farm
+Useable Barricade
+Build Farm
+ID 1935
+
+Size_X 1
+Size_Y 1
+Size_Z 0.2
+
+Health 1
+Range 4
+Radius 0.25
+Offset 0.375
+
+Growth 10800
+Grow 1934
+
+Explosion 43
+Vulnerable
+
+Blueprints
+[
+	{
+		CategoryTag "bfac6026305f4737a95fd275ebff65a6" // Utilities
+		InputItems "1a0dadc7e4274ca3891fa8681fcb7b39" // Red Spotted Mushroom
+		OutputItems this
+		Effect "84347b13028340b8976033c08675d458" // Wrench
+	}
+]
+
+PlacementAudioClip Sounds/FoliagePlacement.mp3
+Has_Clip_Prefab false

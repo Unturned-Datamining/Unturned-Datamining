@@ -1,4 +1,5 @@
 using System;
+using System.Runtime.CompilerServices;
 using UnityEngine;
 
 namespace SDG.Unturned;
@@ -59,11 +60,13 @@ public static class MathfEx
         return false;
     }
 
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static float Square(float x)
     {
         return x * x;
     }
 
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static float Cube(float x)
     {
         return x * x * x;

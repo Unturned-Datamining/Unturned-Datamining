@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<page xmlns="http://projectmallard.org/1.0/" type="topic" id="forms" xml:lang="de">
+  <info>
+    <link type="guide" xref="index#dialogs"/>
+    <desc>Die Option <cmd>--forms</cmd> verwenden.</desc>
+  </info>
+  <title>Formulardialog</title>
+    <p>Verwenden Sie die Option <cmd>--forms</cmd>, um einen Formulardialog zu erzeugen.</p>
+	
+    <p>Der Formulardialog unterstützt die folgenden Optionen:</p>
+
+    <terms>
+
+      <item>
+        <title><cmd>--add-entry</cmd>=<var>Feldname</var></title>
+	<p>Einen neuen Eintrag im Formulardialog hinzufügen.</p>
+      </item>
+
+      <item>
+        <title>--add-password<cmd/>=<var>Feldname</var></title>
+	<p>Einen neuen Passworteintrag im Formulardialog hinzufügen (Text verbergen).</p>
+      </item>
+
+      <item>
+        <title><cmd>--add-calendar</cmd>=<var>Feldname</var></title>
+	<p>Einen neuen Kalender im Formulardialog hinzufügen.</p>
+      </item>
+
+      <item>
+        <title><cmd>--text</cmd>=<var>TEXT</var></title>
+	<p>Den Dialogtext festlegen.</p>
+      </item>
+
+      <item>
+        <title><cmd>--separator</cmd>=<var>TRENNER</var></title>
+	<p>Das Trennungszeichen für die Ausgabe festlegen (Vorgabe: |).</p>
+      </item>
+
+      <item>
+        <title><cmd>--forms-date-format</cmd>=<var>MUSTER</var></title>
+	<p>Set the format for the returned date. The default format depends on your locale. format must be a Format that is acceptable to the <cmd>strftime</cmd> function, for example <var>%A %d/%m/%y</var>.</p>
+      </item>
+
+    </terms>
+
+    <p>Das folgende Beispielskript zeigt, wie Sie einen Formulardialog erzeugen:</p>
+
+<code>
+#!/bin/sh
+
+zenity --forms --title="Add Friend" \
+	--text="Enter information about your friend." \
+	--separator="," \
+	--add-entry="First Name" \
+	--add-entry="Family Name" \
+	--add-entry="Email" \
+	--add-calendar="Birthday" &gt;&gt; addr.csv
+
+case $? in
+    0)
+        echo "Friend added.";;
+    1)
+        echo "No friend added."
+	;;
+    -1)
+        echo "An unexpected error has occurred."
+	;;
+esac
+</code>
+
+    <figure id="zenity-forms-screenshot">
+      <title>Beispiel für einen Formulardialog</title>
+      <desc>Beispiel für einen Formulardialog in <app>Zenity</app></desc>
+      <media type="image" mime="image/png" src="figures/zenity-forms-screenshot.png"/>
+    </figure>
+</page>

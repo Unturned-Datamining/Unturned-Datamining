@@ -1,0 +1,61 @@
+GUID e86a54301132497eaede8fdf0b516302
+Type Spawn
+
+Tables
+[
+	{
+		// Raw Bass (Food Item)
+		Guid 00f066e5a3a24ae5b9a07d184266f78c
+		Weight 15
+	}
+	{
+		// Raw Goatfish (Food Item)
+		Guid 55a38a85f2d4407480c3335a2cbd07fc
+		Weight 15
+	}
+	{
+		// Raw Minnow (Food Item)
+		Guid 1b7034184634492c9f78e11b42c651db
+		Weight 15
+	}
+	{
+		// Raw Shrimp (Food Item)
+		Guid a99f5713bb9f44f2b513b918e50b7f94
+		Weight 12
+	}
+	{
+		// Raw Salmon (Food Item)
+		Guid 7c09233d7e2c4ccfa59cf24f602d6ee9
+		Weight 15
+	}
+	{
+		// Raw Dolphinfish (Food Item)
+		Guid 3f439b755a1b4249bae6c1967fcebccf
+		Weight 10
+	}
+	{
+		// Raw Lobster (Food Item)
+		Guid 255ac00ff41d43439522e243e5f0a0ed
+		Weight 8
+	}
+	{
+		// Seaweed (Food Item)
+		Guid dd657a9ca0944deb9764b093d98f40fd
+		Weight 5
+	}
+	{
+		// Metal Can (Supply Item)
+		Guid c0b0f4a9f46c49a59f4558210bf36da5
+		Weight 2
+	}
+	{
+		// Maple Stick (Supply Item)
+		Guid 46218740c256475b87dbc6a2e9a1fb19
+		Weight 2
+	}
+	{
+		// Raw Giant Trevally (Food Item)
+		Guid 4918281260ad40008732f26199eae291
+		Weight 1
+	}
+]

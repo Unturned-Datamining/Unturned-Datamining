@@ -1,0 +1,19 @@
+drwxr-xr-x root/root         0 2021-05-17 19:50 ./
+drwxr-xr-x root/root         0 2021-05-17 19:50 ./usr/
+drwxr-xr-x root/root         0 2021-05-17 19:50 ./usr/lib/
+drwxr-xr-x root/root         0 2021-05-17 19:50 ./usr/lib/i386-linux-gnu/
+-rw-r--r-- root/root    108348 2021-05-17 19:50 ./usr/lib/i386-linux-gnu/libsasl2.so.2.0.25
+drwxr-xr-x root/root         0 2021-05-17 19:50 ./usr/lib/i386-linux-gnu/sasl2/
+-rw-r--r-- root/root     21776 2021-05-17 19:50 ./usr/lib/i386-linux-gnu/sasl2/libsasldb.so.2.0.25
+drwxr-xr-x root/root         0 2021-05-17 19:50 ./usr/lib/sasl2/
+-rw-r--r-- root/root         4 2021-05-17 19:50 ./usr/lib/sasl2/berkeley_db.txt
+drwxr-xr-x root/root         0 2021-05-17 19:50 ./usr/share/
+drwxr-xr-x root/root         0 2021-05-17 19:50 ./usr/share/doc/
+drwxr-xr-x root/root         0 2021-05-17 19:50 ./usr/share/doc/libsasl2-2/
+-rw-r--r-- root/root     16063 2021-05-17 19:46 ./usr/share/doc/libsasl2-2/changelog.Debian.i386.gz
+-rw-r--r-- root/root      3093 2012-01-18 07:47 ./usr/share/doc/libsasl2-2/copyright
+-rw-r--r-- root/root      3189 2012-01-18 07:47 ./usr/share/doc/libsasl2-2/README.Debian
+-rw-r--r-- root/root        80 2021-05-17 19:49 ./usr/share/doc/libsasl2-2/README.configure-options
+lrwxrwxrwx root/root         0 2021-05-17 19:50 ./usr/lib/i386-linux-gnu/sasl2/libsasldb.so -> libsasldb.so.2.0.25
+lrwxrwxrwx root/root         0 2021-05-17 19:50 ./usr/lib/i386-linux-gnu/sasl2/libsasldb.so.2 -> libsasldb.so.2.0.25
+lrwxrwxrwx root/root         0 2021-05-17 19:50 ./usr/lib/i386-linux-gnu/libsasl2.so.2 -> libsasl2.so.2.0.25

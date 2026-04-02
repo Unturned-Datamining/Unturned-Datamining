@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<page xmlns="http://projectmallard.org/1.0/" type="topic" id="entry" xml:lang="fr">
+  <info>
+    <link type="guide" xref="index#dialogs"/>
+    <desc>Utiliser l'option <cmd>--entry</cmd>.</desc>
+  </info>
+  <title>Boîte de dialogue de saisie</title>
+    <p>L'option <cmd>--entry</cmd> crée une boîte de dialogue de saisie. <app>Zenity</app> retourne le texte saisi sur le flux de sortie standard.</p>	
+    <p>Options de la boîte de dialogue de saisie :</p>
+
+    <terms>
+
+      <item>
+        <title><cmd>--text</cmd>=<var>texte</var></title>
+	<p>Spécifier le texte affiché dans la boîte de dialogue de saisie.</p>
+      </item>
+
+      <item>
+        <title><cmd>--entry-text</cmd>=<var>texte</var></title>
+	<p>Spécifier le texte affiché dans le champ de saisie de la boîte de dialogue.</p>
+      </item>
+
+      <item>
+        <title><cmd>--hide-text</cmd></title>
+	<p>Cacher le texte dans le champ de saisie de la boîte de dialogue.</p>
+      </item>
+
+    </terms>
+
+    <p>Le script d'exemple suivant montre comment créer une boîte de dialogue de saisie :</p>
+
+<code>
+#!/bin/sh
+
+if zenity --entry \
+--title="Ajout d'un nouveau profil" \
+--text="Saisissez le nom du nouveau profil :" \
+--entry-text "NouveauProfil"
+  then echo $?
+  else echo "Pas de nom saisi"
+fi
+</code>
+
+
+    <figure id="zenity-entry-screenshot">
+      <title>Exemple de boîte de dialogue de saisie</title>
+      <desc>Exemple de boîte de dialogue de saisie <app>Zenity</app></desc>
+      <media type="image" mime="image/png" src="figures/zenity-entry-screenshot.png"/>
+    </figure>
+</page>

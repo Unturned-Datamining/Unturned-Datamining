@@ -1,0 +1,14 @@
+GUID 5d6a152aa47a4052b33c930dc298050b
+Type SDG.Framework.Foliage.FoliageInfoCollectionAsset, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+
+Foliage
+[
+	{
+		Asset "f107dff6a87b422c8eb4a4d630d360d6" // Brown
+		Weight 1
+	}
+	{
+		Asset "83f8db4a843843fda255eb97f0a35f1b" // Red
+		Weight 1
+	}
+]

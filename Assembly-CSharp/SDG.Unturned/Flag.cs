@@ -1,7 +1,3 @@
-using System;
-using System.Collections.Generic;
-using Pathfinding;
-using Pathfinding.Graphs.Navmesh;
 using SDG.Framework.Landscapes;
 using UnityEngine;
 
@@ -21,13 +17,9 @@ public class Flag
 
     private Transform _model;
 
-    private MeshFilter navmesh;
-
     private LineRenderer _area;
 
     private LineRenderer _bounds;
-
-    private RecastGraph _graph;
 
     public bool needsNavigationSave;
 
@@ -35,11 +27,15 @@ public class Flag
 
     public Transform model => _model;
 
+    public MeshFilter VisualizationMeshFilter { get; private set; }
+
     public LineRenderer area => _area;
 
     public LineRenderer bounds => _bounds;
 
-    public RecastGraph graph => _graph;
+    public IUnturnedNavmeshInterface navmeshInterface { get; private set; }
+
+    public IUnturnedPerNavmeshEditorInterface EditorFlagInterface { get; private set; }
 
     public FlagData data { get; private set; }
 
@@ -47,7 +43,7 @@ public class Flag
     {
         _point = newPoint;
         model.position = point;
-        navmesh.transform.position = Vector3.zero;
+        VisualizationMeshFilter.transform.position = Vector3.zero;
     }
 
     public void setEnabled(bool isEnabled)
@@ -75,8 +71,27 @@ public class Flag
 
     public void remove()
     {
-        AstarPath.active.data.RemoveGraph(graph);
-        UnityEngine.Object.Destroy(model.gameObject);
+        EditorFlagInterface.OnDestroy();
+        Object.Destroy(model.gameObject);
+    }
+
+    public Bounds CalculateBakingBounds()
+    {
+        float x = MIN_SIZE + width * (MAX_SIZE - MIN_SIZE);
+        float z = MIN_SIZE + height * (MAX_SIZE - MIN_SIZE);
+        Vector3 center;
+        Vector3 size;
+        if (Level.info.configData.Use_Legacy_Water && LevelLighting.seaLevel < 0.99f && !Level.info.configData.Allow_Underwater_Features)
+        {
+            center = new Vector3(point.x, LevelLighting.seaLevel * Level.TERRAIN + (Level.TERRAIN - LevelLighting.seaLevel * Level.TERRAIN) / 2f - 0.625f, point.z);
+            size = new Vector3(x, Level.TERRAIN - LevelLighting.seaLevel * Level.TERRAIN + 1.25f, z);
+        }
+        else
+        {
+            center = new Vector3(point.x, 0f, point.z);
+            size = new Vector3(x, Landscape.TILE_HEIGHT, z);
+        }
+        return new Bounds(center, size);
     }
 
     public void bakeNavigation()
@@ -84,109 +99,41 @@ public class Flag
         VolumeManager<CullingVolume, CullingVolumeManager>.Get().ImmediatelySyncAllVolumes();
         LevelObjects.ImmediatelySyncRegionalVisibility();
         LevelRoads.ImmediatelySyncRegionalVisibility();
-        float x = MIN_SIZE + width * (MAX_SIZE - MIN_SIZE);
-        float z = MIN_SIZE + height * (MAX_SIZE - MIN_SIZE);
-        if (Level.info.configData.Use_Legacy_Water && LevelLighting.seaLevel < 0.99f && !Level.info.configData.Allow_Underwater_Features)
-        {
-            graph.forcedBoundsCenter = new Vector3(point.x, LevelLighting.seaLevel * Level.TERRAIN + (Level.TERRAIN - LevelLighting.seaLevel * Level.TERRAIN) / 2f - 0.625f, point.z);
-            graph.forcedBoundsSize = new Vector3(x, Level.TERRAIN - LevelLighting.seaLevel * Level.TERRAIN + 1.25f, z);
-        }
-        else
-        {
-            graph.forcedBoundsCenter = new Vector3(point.x, 0f, point.z);
-            graph.forcedBoundsSize = new Vector3(x, Landscape.TILE_HEIGHT, z);
-        }
-        AstarPath.active.Scan(graph);
+        EditorFlagInterface.Bake();
         LevelNavigation.updateBounds();
     }
 
-    private void updateNavmesh()
-    {
-        if (!Level.isEditor || graph == null)
-        {
-            return;
-        }
-        List<Vector3> list = new List<Vector3>();
-        List<int> list2 = new List<int>();
-        List<Vector2> list3 = new List<Vector2>();
-        NavmeshTile[] tiles = graph.GetTiles();
-        int num = 0;
-        if (tiles == null)
-        {
-            return;
-        }
-        NavmeshTile[] array = tiles;
-        foreach (NavmeshTile navmeshTile in array)
-        {
-            for (int j = 0; j < navmeshTile.verts.Length; j++)
-            {
-                Vector3 item = (Vector3)navmeshTile.verts[j];
-                item.y += 0.1f;
-                list.Add(item);
-                list3.Add(new Vector2(item.x, item.z));
-            }
-            for (int k = 0; k < navmeshTile.tris.Length; k++)
-            {
-                list2.Add(navmeshTile.tris[k] + num);
-            }
-            num += navmeshTile.verts.Length;
-        }
-        Mesh mesh = new Mesh();
-        mesh.name = "Navmesh";
-        mesh.vertices = list.ToArray();
-        mesh.triangles = list2.ToArray();
-        mesh.normals = new Vector3[list.Count];
-        mesh.uv = list3.ToArray();
-        navmesh.transform.position = Vector3.zero;
-        navmesh.sharedMesh = mesh;
-    }
-
-    private void OnGraphPostScan(NavGraph updated)
-    {
-        if (updated == graph)
-        {
-            needsNavigationSave = true;
-            updateNavmesh();
-        }
-    }
-
-    private void setupGraph()
-    {
-        AstarPath.OnGraphPostScan = (OnGraphDelegate)Delegate.Combine(AstarPath.OnGraphPostScan, new OnGraphDelegate(OnGraphPostScan));
-    }
-
-    public Flag(Vector3 newPoint, RecastGraph newGraph, FlagData newData)
+    public Flag(Vector3 newPoint, IUnturnedNavmeshInterface newNavmesh, FlagData newData)
     {
         _point = newPoint;
-        _model = UnityEngine.Object.Instantiate(Resources.Load<GameObject>("Edit/Flag")).transform;
+        _model = Object.Instantiate(Resources.Load<GameObject>("Edit/Flag")).transform;
         model.name = "Flag";
         model.position = point;
         _area = model.Find("Area").GetComponent<LineRenderer>();
         _bounds = model.Find("Bounds").GetComponent<LineRenderer>();
-        navmesh = model.Find("Navmesh").GetComponent<MeshFilter>();
+        VisualizationMeshFilter = model.Find("Navmesh").GetComponent<MeshFilter>();
         width = 0f;
         height = 0f;
-        _graph = newGraph;
+        navmeshInterface = newNavmesh;
         data = newData;
-        setupGraph();
         buildMesh();
+        EditorFlagInterface = UnturnedPathfinding.Get().CreateFlag(this);
     }
 
-    public Flag(Vector3 newPoint, float newWidth, float newHeight, RecastGraph newGraph, FlagData newData)
+    public Flag(Vector3 newPoint, float newWidth, float newHeight, IUnturnedNavmeshInterface newNavmesh, FlagData newData)
     {
         _point = newPoint;
-        _model = UnityEngine.Object.Instantiate(Resources.Load<GameObject>("Edit/Flag")).transform;
+        _model = Object.Instantiate(Resources.Load<GameObject>("Edit/Flag")).transform;
         model.name = "Flag";
         model.position = point;
         _area = model.Find("Area").GetComponent<LineRenderer>();
         _bounds = model.Find("Bounds").GetComponent<LineRenderer>();
-        navmesh = model.Find("Navmesh").GetComponent<MeshFilter>();
+        VisualizationMeshFilter = model.Find("Navmesh").GetComponent<MeshFilter>();
         width = newWidth;
         height = newHeight;
-        _graph = newGraph;
+        navmeshInterface = newNavmesh;
         data = newData;
-        setupGraph();
         buildMesh();
-        updateNavmesh();
+        EditorFlagInterface = UnturnedPathfinding.Get().CreateFlag(this);
     }
 }

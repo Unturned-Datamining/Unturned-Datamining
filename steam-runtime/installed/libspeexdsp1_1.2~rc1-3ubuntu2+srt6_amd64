@@ -1,0 +1,11 @@
+drwxr-xr-x root/root         0 2019-04-03 15:46 ./
+drwxr-xr-x root/root         0 2019-04-03 15:46 ./usr/
+drwxr-xr-x root/root         0 2019-04-03 15:46 ./usr/lib/
+drwxr-xr-x root/root         0 2019-04-03 15:46 ./usr/lib/x86_64-linux-gnu/
+-rw-r--r-- root/root     73416 2019-04-03 15:46 ./usr/lib/x86_64-linux-gnu/libspeexdsp.so.1.5.0
+drwxr-xr-x root/root         0 2019-04-03 15:46 ./usr/share/
+drwxr-xr-x root/root         0 2019-04-03 15:46 ./usr/share/doc/
+drwxr-xr-x root/root         0 2019-04-03 15:46 ./usr/share/doc/libspeexdsp1/
+-rw-r--r-- root/root      2045 2019-04-03 15:45 ./usr/share/doc/libspeexdsp1/copyright
+-rw-r--r-- root/root      4433 2019-04-03 15:45 ./usr/share/doc/libspeexdsp1/changelog.Debian.amd64.gz
+lrwxrwxrwx root/root         0 2019-04-03 15:46 ./usr/lib/x86_64-linux-gnu/libspeexdsp.so.1 -> libspeexdsp.so.1.5.0

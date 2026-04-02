@@ -1,0 +1,9 @@
+drwxr-xr-x root/root         0 2019-04-03 21:28 ./
+drwxr-xr-x root/root         0 2019-04-03 21:27 ./usr/
+drwxr-xr-x root/root         0 2019-04-03 21:27 ./usr/lib/
+drwxr-xr-x root/root         0 2019-04-03 21:28 ./usr/lib/i386-linux-gnu/
+-rw-r--r-- root/root    137188 2019-04-03 21:28 ./usr/lib/i386-linux-gnu/libgomp.so.1.0.0
+drwxr-xr-x root/root         0 2019-04-03 21:27 ./usr/share/
+drwxr-xr-x root/root         0 2019-04-03 21:27 ./usr/share/doc/
+lrwxrwxrwx root/root         0 2019-04-03 21:24 ./usr/lib/i386-linux-gnu/libgomp.so.1 -> libgomp.so.1.0.0
+lrwxrwxrwx root/root         0 2019-04-03 21:27 ./usr/share/doc/libgomp1 -> gcc-5-base

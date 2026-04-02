@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<page xmlns="http://projectmallard.org/1.0/" type="topic" id="file-selection" xml:lang="el">
+  <info>
+    <link type="guide" xref="index#dialogs"/>
+    <desc>Use the <cmd>--file-selection</cmd> option.</desc>
+  </info>
+  <title>Διάλογος επιλογής αρχείου</title>
+    <p>
+	Use the <cmd>--file-selection</cmd> option to create a file selection dialog. <app>Zenity</app> returns the selected files or directories to standard 
+        output. The default mode of the file selection dialog is open.
+    </p>
+    <p>Ο διάλογος επιλογής αρχείου υποστηρίζει τις παρακάτω επιλογές:</p>
+
+    <terms>
+
+      <item>
+        <title><cmd>--filename</cmd>=<var>filename</var></title>
+	<p>Καθορίζει το αρχείο ή τον κατάλογο που είναι επιλεγμένος στον διάλογο επιλογής αρχείου όταν ανοίγει.</p>
+      </item>
+
+      <item>
+	<title><cmd>--multiple</cmd></title>
+	<p>Επιτρέπει την επιλογή πολλών ονομάτων αρχείου στον διάλογο επιλογής αρχείου.</p>
+      </item>
+
+      <item>
+	<title><cmd>--directory</cmd></title>
+	<p>Επιτρέπει μόνο την επιλογή καταλόγων στον διάλογο επιλογής αρχείου.</p>
+      </item>
+
+      <item>
+	<title><cmd>--save</cmd></title>
+	<p>Ρύθμιση του διαλόγου επιλογής αρχείου σε κατάσταση λειτουργίας αποθήκευσης.</p>
+      </item>
+
+      <item>
+	<title><cmd>--separator</cmd>=<var>separator</var></title>
+	<p>Καθορίζει την συμβολοσειρά που χρησιμοποιείται για να διαχωρίσει την αποδοθείσα λίστα ονομάτων.</p>
+      </item>
+
+    </terms>
+
+    <p>
+      The following example script shows how to create a file selection dialog:
+    </p>
+
+<code>
+#!/bin/sh
+
+FILE=`zenity --file-selection --title="Select a File"`
+
+case $? in
+         0)
+                echo "\"$FILE\" selected.";;
+         1)
+                echo "No file selected.";;
+        -1)
+                echo "An unexpected error has occurred.";;
+esac
+</code>
+
+    <figure id="zenity-fileselection-screenshot">
+      <title>Παράδειγμα διαλόγου επιλογής αρχείου</title>
+      <desc><app>Zenity</app> file selection dialog example</desc>
+      <media type="image" mime="image/png" src="figures/zenity-fileselection-screenshot.png"/>
+    </figure>
+</page>

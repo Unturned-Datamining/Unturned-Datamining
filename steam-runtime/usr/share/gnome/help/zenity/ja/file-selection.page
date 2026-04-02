@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<page xmlns="http://projectmallard.org/1.0/" type="topic" id="file-selection" xml:lang="ja">
+  <info>
+    <link type="guide" xref="index#dialogs"/>
+    <desc><cmd>--file-selection</cmd> オプションの使用</desc>
+  </info>
+  <title>ファイル選択ダイアログ</title>
+    <p>ファイル選択ダイアログを作成するには、<cmd>--file-selection</cmd> というオプションを使ってください。<app>Zenity</app> は、選択されたファイルあるいはフォルダーを標準出力へ返却します。ファイル選択ダイアログのデフォルトのモードは、開くです。</p>
+    <p>ファイル選択ダイアログは、以下のオプションをサポートしています。</p>
+
+    <terms>
+
+      <item>
+        <title><cmd>--filename</cmd>=<var>ファイル名</var></title>
+	<p>ファイル選択ダイアログが最初に表示された時に選択されているファイルまたはフォルダーを指定します。</p>
+      </item>
+
+      <item>
+	<title><cmd>--multiple</cmd></title>
+	<p>ファイル選択ダイアログで複数ファイルの選択を可能にします。</p>
+      </item>
+
+      <item>
+	<title><cmd>--directory</cmd></title>
+	<p>ファイル選択ダイアログでフォルダーのみを選択可能にします。</p>
+      </item>
+
+      <item>
+	<title><cmd>--save</cmd></title>
+	<p>ファイル選択ダイアログを保存モードに設定します。</p>
+      </item>
+
+      <item>
+	<title><cmd>--separator</cmd>=<var>セパレーター</var></title>
+	<p>返却するファイル名の一覧を区切るのに使う文字を指定します。</p>
+      </item>
+
+    </terms>
+
+    <p>以下のスクリプトの例でファイル選択ダイアログの作成方法を示します。</p>
+
+<code>
+#!/bin/sh
+
+FILE=`zenity --file-selection --title="ファイルの選択"`
+
+case $? in
+         0)
+                echo "\"$FILE\" が選択されました。";;
+         1)
+                echo "ファイルが選択されませんでした。";;
+        -1)
+                echo "予期せぬエラーが発生しました。";;
+esac
+</code>
+
+    <figure id="zenity-fileselection-screenshot">
+      <title>ファイル選択ダイアログの例</title>
+      <desc><app>Zenity</app> ファイル選択ダイアログの例</desc>
+      <media type="image" mime="image/png" src="figures/zenity-fileselection-screenshot.png"/>
+    </figure>
+</page>

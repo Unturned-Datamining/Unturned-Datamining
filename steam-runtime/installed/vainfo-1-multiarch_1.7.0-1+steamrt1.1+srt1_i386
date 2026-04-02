@@ -1,0 +1,10 @@
+drwxr-xr-x root/root         0 2019-10-23 17:21 ./
+drwxr-xr-x root/root         0 2019-10-23 17:20 ./usr/
+drwxr-xr-x root/root         0 2019-10-23 17:21 ./usr/bin/
+-rwxr-xr-x root/root      9792 2019-10-23 17:21 ./usr/bin/i386-linux-gnu-vainfo-1
+drwxr-xr-x root/root         0 2019-10-23 17:20 ./usr/share/
+drwxr-xr-x root/root         0 2019-10-23 17:20 ./usr/share/doc/
+drwxr-xr-x root/root         0 2019-10-23 17:20 ./usr/share/doc/vainfo-1-multiarch/
+-rw-r--r-- root/root      2446 2016-03-15 07:04 ./usr/share/doc/vainfo-1-multiarch/changelog.gz
+-rw-r--r-- root/root      4631 2019-10-23 17:17 ./usr/share/doc/vainfo-1-multiarch/changelog.Debian.i386.gz
+-rw-r--r-- root/root      7256 2019-10-22 15:42 ./usr/share/doc/vainfo-1-multiarch/copyright

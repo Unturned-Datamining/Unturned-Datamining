@@ -6,6 +6,26 @@ Size_X 1
 Size_Y 1
 Size_Z 0.45
 
+Fishing_Catchable
+{
+	Min_Relocate_Interval 2
+	Max_Relocate_Interval 3
+	Max_Upward_Acceleration 0.3
+	Max_Downward_Acceleration 0.3
+	Max_Upward_Speed 0.1
+	Max_Downward_Speed 0.1
+	Upper_Restitution 0
+	Lower_Restitution 0
+	Min_Target_Delta 0.28
+	Max_Target_Delta 0.32
+	Min_Target_Position 0.34
+	Max_Target_Position 0.66
+	Capture_Duration 1
+	Escape_Duration 4
+	Spring_Stiffness 16
+	Spring_Damping 8
+}
+
 Blueprints
 [
 	{

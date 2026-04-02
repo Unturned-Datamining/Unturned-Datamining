@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<engine schema_version="0.1" module_name="mist" long_name="Mist">
+
+  <metainfo>
+    <version>2.20.2</version>
+    <website>http://www.gnome.org</website>
+    <author>
+      <name>Dave Camp</name>
+      <email>dave@ximian.com</email>
+    </author>
+    <author>
+      <name>Andrew Johnson</name>
+      <email>ajgenius@ajgenius.us</email>
+    </author>
+  </metainfo>
+
+</engine>

@@ -1,0 +1,22 @@
+GUID a7700ffae27c43af8a800a7cf559099a
+Type Spawn
+ID 516
+
+Tables
+[
+	{
+		// Maple Log (Supply Item)
+		LegacyAssetId 39
+		Weight 120
+	}
+	{
+		// Maple Stick (Supply Item)
+		LegacyAssetId 40
+		Weight 79
+	}
+	{
+		// Maple Syrup (Water Item)
+		LegacyAssetId 1159
+		Weight 1
+	}
+]

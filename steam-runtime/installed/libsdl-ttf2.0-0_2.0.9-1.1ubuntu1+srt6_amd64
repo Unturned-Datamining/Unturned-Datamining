@@ -1,0 +1,13 @@
+drwxr-xr-x root/root         0 2019-04-03 19:05 ./
+drwxr-xr-x root/root         0 2019-04-03 19:05 ./usr/
+drwxr-xr-x root/root         0 2019-04-03 19:05 ./usr/lib/
+drwxr-xr-x root/root         0 2019-04-03 19:05 ./usr/lib/x86_64-linux-gnu/
+-rw-r--r-- root/root     22680 2019-04-03 19:05 ./usr/lib/x86_64-linux-gnu/libSDL_ttf-2.0.so.0.6.3
+drwxr-xr-x root/root         0 2019-04-03 19:05 ./usr/share/
+drwxr-xr-x root/root         0 2019-04-03 19:05 ./usr/share/doc/
+drwxr-xr-x root/root         0 2019-04-03 19:05 ./usr/share/doc/libsdl-ttf2.0-0/
+-rw-r--r-- root/root      2202 2007-07-15 06:17 ./usr/share/doc/libsdl-ttf2.0-0/changelog.gz
+-rw-r--r-- root/root       928 2007-07-02 02:02 ./usr/share/doc/libsdl-ttf2.0-0/README
+-rw-r--r-- root/root       470 2019-04-03 19:01 ./usr/share/doc/libsdl-ttf2.0-0/copyright
+-rw-r--r-- root/root      1502 2019-04-03 19:01 ./usr/share/doc/libsdl-ttf2.0-0/changelog.Debian.amd64.gz
+lrwxrwxrwx root/root         0 2019-04-03 19:05 ./usr/lib/x86_64-linux-gnu/libSDL_ttf-2.0.so.0 -> libSDL_ttf-2.0.so.0.6.3

@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<page xmlns="http://projectmallard.org/1.0/" type="topic" id="text" xml:lang="ja">
+  <info>
+    <link type="guide" xref="index#dialogs"/>
+    <desc><cmd>--text-info</cmd> オプションの使用</desc>
+  </info>
+  <title>テキスト情報ダイアログ</title>
+    <p>テキスト情報ダイアログを作成するには、<cmd>--text-info</cmd> というオプションを使ってください。</p>
+	
+    <p>テキスト情報ダイアログは、以下のオプションをサポートしています。</p>
+
+    <terms>
+
+      <item>
+        <title><cmd>--filename</cmd>=<var>ファイル名</var></title>
+	<p>テキスト情報ダイアログに読み込むファイルを指定します。</p>
+      </item>
+
+      <item>
+        <title><cmd>--editable</cmd></title>
+        <p>表示されたテキストの編集を許可します。ダイアログを閉じると標準出力へ編集されたテキストが返却されます。</p>
+      </item>
+
+      <item>
+        <title><cmd>--font</cmd>=<var>フォント</var></title>
+	<p>テキストのフォントを指定します。</p>
+      </item>
+
+      <item>
+        <title><cmd>--checkbox</cmd>=<var>テキスト</var></title>
+	<p>「文書を読み承諾します。」というように使うチェックボックスを有効にします。</p>
+      </item>
+
+      <item>
+        <title><cmd>--html</cmd></title>
+        <p>HTML サポートを有効にします。</p>
+      </item>
+
+      <item>
+        <title><cmd>--url</cmd>=<var>URL</var></title>
+	<p>ファイルの代わりに URL を指定します。--html オプションを利用している場合にのみ機能します。</p>
+      </item>
+
+    </terms>
+
+    <p>以下のスクリプトの例でテキスト情報ダイアログの作成方法を示します。</p>
+
+<code>
+#!/bin/sh
+
+# You must place file "COPYING" in same folder of this script.
+FILE=`dirname $0`/COPYING
+
+zenity --text-info \
+       --title="ライセンス" \
+       --filename=$FILE \
+       --checkbox="文書を読み承諾します。"
+
+case $? in
+    0)
+        echo "インストールを開始します!"
+	# next step
+	;;
+    1)
+        echo "インストールを停止します!"
+	;;
+    -1)
+        echo "予期せぬエラーが発生しました。"
+	;;
+esac
+</code>
+
+    <figure id="zenity-text-screenshot">
+      <title>テキスト情報ダイアログの例</title>
+      <desc><app>Zenity</app> テキスト情報ダイアログの例</desc>
+      <media type="image" mime="image/png" src="figures/zenity-text-screenshot.png"/>
+    </figure>
+</page>

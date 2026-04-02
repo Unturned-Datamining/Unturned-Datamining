@@ -1,0 +1,17 @@
+﻿GUID 6d205c5ff4ad451088bfb08181b38982
+Type Resource
+ID 78
+
+Health 1
+Radius 3
+
+Vertical_Offset 0.1
+
+Explosion 43
+
+Reward_ID 901
+Forage
+
+Reset 1000
+
+Has_Clip_Prefab false

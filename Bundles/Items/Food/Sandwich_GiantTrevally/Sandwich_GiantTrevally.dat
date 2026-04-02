@@ -1,0 +1,38 @@
+﻿GUID 344a9af3599845e18be82c232c6997bc
+Type Food
+Rarity Rare
+Useable Consumeable
+ID 1972
+
+Size_X 1
+Size_Y 1
+Size_Z 0.3
+
+Food 80
+Water 20
+
+Blueprints
+[
+	{
+		CategoryTag "d089feb7e43f40c5a7dfcefc36998cfb" // Supplies
+		InputItems
+		[
+			"4880f590a948465891188c5f96559340 x 2" // Bread
+			"11cb923a867e4c8b8033bc2e06dda44b" // Cooked Giant Trevally
+		]
+		OutputItems this
+		Skill Cook
+		Skill_Level 2
+		RequiresNearbyCraftingTags
+		[
+			"68816064e2ce44839c3f35da55033cba" // Cooking Table
+		]
+		Effect "84347b13028340b8976033c08675d458" // Wrench
+	}
+]
+
+ConsumeAudioClip Sounds/EatSandwich.mp3
+Randomize_Consume_Audio_Pitch false
+Procedurally_Animate_Inertia false
+Instantiated_Item_Name_Override 467
+EquipablePrefab Items/Food/Sandwich_GiantTrevally/Equipable.prefab

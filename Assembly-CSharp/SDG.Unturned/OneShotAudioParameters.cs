@@ -29,6 +29,13 @@ public struct OneShotAudioParameters
 
     public float maxDistance;
 
+    /// <summary>
+    /// If true, caller is responsible for returning audio source to the pool.
+    /// Antithetical to the OneShot naming (originally referring to AudioSource.PlayOneShot),
+    /// but this struct is moreso for requesting an audio source from the pool.
+    /// </summary>
+    public bool looping;
+
     public AudioMixerGroup outputAudioMixerGroup;
 
     public OneShotAudioParameters(Vector3 position, AudioClip clip, Transform parent)
@@ -42,6 +49,7 @@ public struct OneShotAudioParameters
         rolloffMode = AudioRolloffMode.Linear;
         minDistance = 1f;
         maxDistance = 32f;
+        looping = false;
         outputAudioMixerGroup = null;
     }
 
@@ -55,6 +63,18 @@ public struct OneShotAudioParameters
     {
     }
 
+    public OneShotAudioParameters(Transform parent, AudioReference audioRef)
+        : this(parent.position, null, parent)
+    {
+        clip = audioRef.LoadAudioClip(out volume, out pitch);
+    }
+
+    public OneShotAudioParameters(Vector3 position, AudioReference audioRef)
+        : this(position, null, null)
+    {
+        clip = audioRef.LoadAudioClip(out volume, out pitch);
+    }
+
     /// <summary>
     /// 2D audio.
     /// </summary>
@@ -64,14 +84,24 @@ public struct OneShotAudioParameters
         spatialBlend = 0f;
     }
 
+    /// <summary>
+    /// 2D audio.
+    /// </summary>
+    public OneShotAudioParameters(AudioReference audioRef)
+        : this(Vector3.zero, null, null)
+    {
+        clip = audioRef.LoadAudioClip(out volume, out pitch);
+        spatialBlend = 0f;
+    }
+
     public void RandomizeVolume(float min, float max)
     {
-        volume = Random.Range(min, max);
+        volume *= Random.Range(min, max);
     }
 
     public void RandomizePitch(float min, float max)
     {
-        pitch = Random.Range(min, max);
+        pitch *= Random.Range(min, max);
     }
 
     public void SetSpatialBlend2D()

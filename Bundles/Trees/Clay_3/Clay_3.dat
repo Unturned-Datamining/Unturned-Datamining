@@ -1,0 +1,18 @@
+﻿GUID 74192f26950545d8aabc0e84a2372f9e
+Type Resource
+ID 68
+
+Health 1400
+Radius 4
+
+Explosion 52
+Reward_ID 900
+Reward_XP 6
+Reward_Min 2
+Reward_Max 5
+
+BladeID 1
+
+No_Debris
+Reset 1000
+Has_Clip_Prefab false

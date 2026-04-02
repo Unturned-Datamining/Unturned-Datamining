@@ -1,0 +1,56 @@
+GUID 73997a9a41b94e1e95b09fe622591b8c
+Type Spawn
+
+Tables
+[
+	{
+		// Binoculars (Optic Item)
+		Guid f260c581cf504098956f424d62345982
+		Weight 25
+	}
+	{
+		// Flashlight (Melee Item)
+		Guid 922c5bfe21864487a9405f3e2e0f5d97
+		Weight 25
+	}
+	{
+		// Hammer (Melee Item)
+		Guid b0d48d63525544aa8ee95d4e686858b1
+		Weight 20
+	}
+	{
+		// Hockey Stick (Melee Item)
+		Guid 3920b257c1664bf3b53943867d531bfd
+		Weight 20
+	}
+	{
+		// Baseball Bat (Melee Item)
+		Guid bdb0a99f009c42bf92ef8764095f4bae
+		Weight 20
+	}
+	{
+		// Rake (Melee Item)
+		Guid 91cb075e6f5743f7a22f9bf4a821f48f
+		Weight 20
+	}
+	{
+		// Frying Pan (Melee Item)
+		Guid 1a16077af9724848ade891f84bf81df8
+		Weight 20
+	}
+	{
+		// Golf Club (Melee Item)
+		Guid e6d9c1f5bddf4b32b0b928e5dc5fd527
+		Weight 20
+	}
+	{
+		// Shovel (Melee Item)
+		Guid 45bfcc70d3154232aa1020310238f799
+		Weight 15
+	}
+	{
+		// Fishing Rod (Fisher Item)
+		Guid 04e1a631fc0848a68b02022d8b1c2141
+		Weight 15
+	}
+]

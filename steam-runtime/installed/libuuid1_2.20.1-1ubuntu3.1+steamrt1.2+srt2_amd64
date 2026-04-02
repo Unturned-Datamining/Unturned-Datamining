@@ -1,0 +1,12 @@
+drwxr-xr-x root/root         0 2019-04-03 12:39 ./
+drwxr-xr-x root/root         0 2019-04-03 12:39 ./lib/
+drwxr-xr-x root/root         0 2019-04-03 12:39 ./lib/x86_64-linux-gnu/
+-rw-r--r-- root/root     18928 2019-04-03 12:39 ./lib/x86_64-linux-gnu/libuuid.so.1.3.0
+drwxr-xr-x root/root         0 2019-04-03 12:39 ./usr/
+drwxr-xr-x root/root         0 2019-04-03 12:39 ./usr/share/
+drwxr-xr-x root/root         0 2019-04-03 12:39 ./usr/share/doc/
+drwxr-xr-x root/root         0 2019-04-03 12:39 ./usr/share/doc/libuuid1/
+-rw-r--r-- root/root      7288 2011-10-18 10:47 ./usr/share/doc/libuuid1/changelog.gz
+-rw-r--r-- root/root      1647 2019-04-03 12:39 ./usr/share/doc/libuuid1/copyright
+-rw-r--r-- root/root     49948 2019-04-03 12:37 ./usr/share/doc/libuuid1/changelog.Debian.amd64.gz
+lrwxrwxrwx root/root         0 2019-04-03 12:39 ./lib/x86_64-linux-gnu/libuuid.so.1 -> libuuid.so.1.3.0

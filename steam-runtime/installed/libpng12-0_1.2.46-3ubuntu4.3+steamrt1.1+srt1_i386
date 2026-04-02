@@ -1,0 +1,20 @@
+drwxr-xr-x root/root         0 2021-05-18 11:00 ./
+drwxr-xr-x root/root         0 2021-05-18 11:00 ./usr/
+drwxr-xr-x root/root         0 2021-05-18 11:00 ./usr/share/
+drwxr-xr-x root/root         0 2021-05-18 11:00 ./usr/share/doc-base/
+-rw-r--r-- root/root      1366 2020-08-18 12:20 ./usr/share/doc-base/libpng12
+drwxr-xr-x root/root         0 2021-05-18 11:00 ./usr/share/doc/
+drwxr-xr-x root/root         0 2021-05-18 11:00 ./usr/share/doc/libpng12-0/
+-rw-r--r-- root/root     41191 2011-07-09 10:30 ./usr/share/doc/libpng12-0/changelog.gz
+-rw-r--r-- root/root     42775 2021-05-18 10:59 ./usr/share/doc/libpng12-0/libpng-1.2.46.txt.gz
+-rw-r--r-- root/root     11617 2021-05-18 10:59 ./usr/share/doc/libpng12-0/changelog.Debian.i386.gz
+-rw-r--r-- root/root      4747 2020-08-18 12:15 ./usr/share/doc/libpng12-0/copyright
+-rw-r--r-- root/root      1231 2009-06-25 17:46 ./usr/share/doc/libpng12-0/TODO
+-rw-r--r-- root/root      1333 2020-08-18 12:15 ./usr/share/doc/libpng12-0/README.Debian
+-rw-r--r-- root/root       848 2011-07-09 10:30 ./usr/share/doc/libpng12-0/KNOWNBUG
+-rw-r--r-- root/root      5334 2011-07-09 10:30 ./usr/share/doc/libpng12-0/README.gz
+-rw-r--r-- root/root      1947 2011-07-09 10:30 ./usr/share/doc/libpng12-0/ANNOUNCE
+drwxr-xr-x root/root         0 2021-05-18 11:00 ./lib/
+drwxr-xr-x root/root         0 2021-05-18 11:00 ./lib/i386-linux-gnu/
+-rw-r--r-- root/root    165756 2021-05-18 11:00 ./lib/i386-linux-gnu/libpng12.so.0.46.0
+lrwxrwxrwx root/root         0 2021-05-18 11:00 ./lib/i386-linux-gnu/libpng12.so.0 -> libpng12.so.0.46.0

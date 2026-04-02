@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<page xmlns="http://projectmallard.org/1.0/" type="topic" id="file-selection" xml:lang="sv">
+  <info>
+    <link type="guide" xref="index#dialogs"/>
+    <desc>Use the <cmd>--file-selection</cmd> option.</desc>
+  </info>
+  <title>Filväljardialog</title>
+    <p>
+	Use the <cmd>--file-selection</cmd> option to create a file selection dialog. <app>Zenity</app> returns the selected files or directories to standard 
+        output. The default mode of the file selection dialog is open.
+    </p>
+    <p>Filväljardialogen har stöd för följande flaggor:</p>
+
+    <terms>
+
+      <item>
+        <title><cmd>--filename</cmd>=<var>filename</var></title>
+	<p>Anger filen eller katalogen som är markerad i filväljardialogen när dialogen först visas.</p>
+      </item>
+
+      <item>
+	<title><cmd>--multiple</cmd></title>
+	<p>Tillåter markering av flera filnamn i filväljardialogen.</p>
+      </item>
+
+      <item>
+	<title><cmd>--directory</cmd></title>
+	<p>Tillåter endast markering av kataloger i filväljardialogen.</p>
+      </item>
+
+      <item>
+	<title><cmd>--save</cmd></title>
+	<p>Ställ in filväljardialogen till sparningsläge.</p>
+      </item>
+
+      <item>
+	<title><cmd>--separator</cmd>=<var>separator</var></title>
+	<p>Anger strängen som används för att avgränsa den returnerade listan över filnamn.</p>
+      </item>
+
+    </terms>
+
+    <p>
+      The following example script shows how to create a file selection dialog:
+    </p>
+
+<code>
+#!/bin/sh
+
+FILE=`zenity --file-selection --title="Select a File"`
+
+case $? in
+         0)
+                echo "\"$FILE\" selected.";;
+         1)
+                echo "No file selected.";;
+        -1)
+                echo "An unexpected error has occurred.";;
+esac
+</code>
+
+    <figure id="zenity-fileselection-screenshot">
+      <title>Exempel på filväljardialog</title>
+      <desc><app>Zenity</app> file selection dialog example</desc>
+      <media type="image" mime="image/png" src="figures/zenity-fileselection-screenshot.png"/>
+    </figure>
+</page>

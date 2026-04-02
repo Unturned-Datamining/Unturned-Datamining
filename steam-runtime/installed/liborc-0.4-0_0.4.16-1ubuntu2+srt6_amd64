@@ -1,0 +1,15 @@
+drwxr-xr-x root/root         0 2019-04-03 15:54 ./
+drwxr-xr-x root/root         0 2019-04-03 15:54 ./usr/
+drwxr-xr-x root/root         0 2019-04-03 15:54 ./usr/lib/
+drwxr-xr-x root/root         0 2019-04-03 15:54 ./usr/lib/x86_64-linux-gnu/
+-rw-r--r-- root/root    502440 2019-04-03 15:54 ./usr/lib/x86_64-linux-gnu/liborc-0.4.so.0.16.0
+-rw-r--r-- root/root     31208 2019-04-03 15:54 ./usr/lib/x86_64-linux-gnu/liborc-test-0.4.so.0.16.0
+drwxr-xr-x root/root         0 2019-04-03 15:54 ./usr/share/
+drwxr-xr-x root/root         0 2019-04-03 15:54 ./usr/share/doc/
+drwxr-xr-x root/root         0 2019-04-03 15:54 ./usr/share/doc/liborc-0.4-0/
+-rw-r--r-- root/root      4041 2011-04-12 16:22 ./usr/share/doc/liborc-0.4-0/README
+-rw-r--r-- root/root      3368 2011-12-05 05:59 ./usr/share/doc/liborc-0.4-0/copyright
+-rw-r--r-- root/root       427 2011-04-12 16:22 ./usr/share/doc/liborc-0.4-0/TODO
+-rw-r--r-- root/root      2019 2019-04-03 15:52 ./usr/share/doc/liborc-0.4-0/changelog.Debian.amd64.gz
+lrwxrwxrwx root/root         0 2019-04-03 15:54 ./usr/lib/x86_64-linux-gnu/liborc-0.4.so.0 -> liborc-0.4.so.0.16.0
+lrwxrwxrwx root/root         0 2019-04-03 15:54 ./usr/lib/x86_64-linux-gnu/liborc-test-0.4.so.0 -> liborc-test-0.4.so.0.16.0

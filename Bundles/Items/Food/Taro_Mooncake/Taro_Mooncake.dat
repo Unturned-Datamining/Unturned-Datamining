@@ -1,0 +1,47 @@
+﻿GUID 407a8a6efb984334a0fff1fca8a3a232
+Type Food
+Rarity Legendary
+Useable Consumeable
+ID 1951
+
+Size_X 1
+Size_Y 1
+Size_Z 0.3
+
+Food 90
+Water 55
+Energy 55
+Health 25
+
+
+Blueprints
+[
+	{
+		CategoryTag "d089feb7e43f40c5a7dfcefc36998cfb" // Supplies
+		InputItems
+		[
+			"45d6ea26d86b4b17bbce848e2e9a3264" // Poi
+			"67d687f8e6974d0290343d21294940f9" // Eggs
+			"375ee1fb16a848ff8bc5be5d4fafb4fc x 2" // Wheat
+			"39f46646aa6f4baf91a8e6004acb9291" // Sugar
+		]
+		OutputItems
+		[
+			"407a8a6efb984334a0fff1fca8a3a232" // Taro Mooncake
+			"7bc206a6790b4494a44957867871146e" // Clay Bowl
+		]
+		Skill Cook
+		Skill_Level 3
+		RequiresNearbyCraftingTags
+		[
+			"20f30322bbcc4b01a4f116d22b24c21a" // Heat Source
+			"68816064e2ce44839c3f35da55033cba" // Cooking Table
+		]
+		Effect "84347b13028340b8976033c08675d458" // Wrench
+		Searchable false
+	}
+]
+
+ConsumeAudioClip Sounds/EatTaroMooncake.mp3
+Procedurally_Animate_Inertia false
+EquipablePrefab Items/Food/Taro_Mooncake/Equipable.prefab

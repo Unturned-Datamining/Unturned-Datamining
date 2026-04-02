@@ -1,0 +1,17 @@
+drwxr-xr-x root/root         0 2019-04-03 15:31 ./
+drwxr-xr-x root/root         0 2019-04-03 15:31 ./usr/
+drwxr-xr-x root/root         0 2019-04-03 15:31 ./usr/lib/
+drwxr-xr-x root/root         0 2019-04-03 15:31 ./usr/lib/i386-linux-gnu/
+-rw-r--r-- root/root    187400 2019-04-03 15:31 ./usr/lib/i386-linux-gnu/libgconf-2.so.4.1.5
+drwxr-xr-x root/root         0 2019-04-03 15:31 ./usr/share/
+drwxr-xr-x root/root         0 2019-04-03 15:31 ./usr/share/doc/
+drwxr-xr-x root/root         0 2019-04-03 15:31 ./usr/share/doc/libgconf-2-4/
+-rw-r--r-- root/root    322266 2012-03-10 23:02 ./usr/share/doc/libgconf-2-4/changelog.gz
+-rw-r--r-- root/root       775 2012-03-07 18:08 ./usr/share/doc/libgconf-2-4/README
+-rw-r--r-- root/root     10415 2012-03-10 22:58 ./usr/share/doc/libgconf-2-4/NEWS.gz
+-rw-r--r-- root/root      1458 2018-10-09 10:19 ./usr/share/doc/libgconf-2-4/copyright
+-rw-r--r-- root/root        32 2012-03-07 18:08 ./usr/share/doc/libgconf-2-4/AUTHORS
+-rw-r--r-- root/root      4043 2012-03-07 18:08 ./usr/share/doc/libgconf-2-4/TODO
+-rw-r--r-- root/root       391 2018-10-09 10:19 ./usr/share/doc/libgconf-2-4/NEWS.Debian.gz
+-rw-r--r-- root/root     16558 2019-04-03 15:29 ./usr/share/doc/libgconf-2-4/changelog.Debian.i386.gz
+lrwxrwxrwx root/root         0 2019-04-03 15:31 ./usr/lib/i386-linux-gnu/libgconf-2.so.4 -> libgconf-2.so.4.1.5

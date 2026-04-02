@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<page xmlns="http://projectmallard.org/1.0/" type="topic" id="color-selection" xml:lang="ja">
+  <info>
+    <link type="guide" xref="index#dialogs"/>
+    <desc><cmd>--color-selection</cmd> オプションの使用</desc>
+  </info>
+  <title>色選択ダイアログ</title>
+  <p>色選択ダイアログを作成するには、<cmd>--color-selection</cmd> というオプションを使ってください。</p>
+  <p>色選択ダイアログは、以下のオプションをサポートしています。</p>
+
+  <terms>
+
+    <item>
+      <title><cmd>--color</cmd>=<var>値</var></title>
+      <p>初期の色を指定します。(例: #FF0000)</p>
+    </item>
+
+    <item>
+      <title><cmd>--show-palette</cmd></title>
+      <p>パレットを表示します。</p>
+    </item>
+
+  </terms>
+
+  <p>以下のスクリプトの例で色選択ダイアログの作成方法を示します。</p>
+
+<code>
+#!/bin/sh
+
+COLOR=`zenity --color-selection --show-palette`
+
+case $? in
+         0)
+		echo "$COLOR を選択しました。";;
+         1)
+                echo "色が選択されませんでした。";;
+        -1)
+                echo "予期せぬエラーが発生しました。";;
+esac
+</code>
+
+  <figure id="zenity-colorselection-screenshot">
+    <title>色選択ダイアログの例</title>
+    <desc><app>Zenity</app> 色選択ダイアログの例</desc>
+    <media type="image" mime="image/png" src="figures/zenity-colorselection-screenshot.png"/>
+  </figure>
+
+</page>

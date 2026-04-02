@@ -1,0 +1,16 @@
+drwxr-xr-x root/root         0 2019-04-03 13:26 ./
+drwxr-xr-x root/root         0 2019-04-03 13:26 ./usr/
+drwxr-xr-x root/root         0 2019-04-03 13:26 ./usr/lib/
+drwxr-xr-x root/root         0 2019-04-03 13:26 ./usr/lib/x86_64-linux-gnu/
+-rw-r--r-- root/root   1289760 2019-04-03 13:26 ./usr/lib/x86_64-linux-gnu/libX11.so.6.3.0
+drwxr-xr-x root/root         0 2019-04-03 13:26 ./usr/share/
+drwxr-xr-x root/root         0 2019-04-03 13:26 ./usr/share/doc/
+drwxr-xr-x root/root         0 2019-04-03 13:26 ./usr/share/doc/libx11-6/
+-rw-r--r-- root/root      3653 2015-03-09 22:28 ./usr/share/doc/libx11-6/NEWS.gz
+-rw-r--r-- root/root     47104 2019-04-03 13:24 ./usr/share/doc/libx11-6/copyright
+-rw-r--r-- root/root     12119 2019-04-03 13:24 ./usr/share/doc/libx11-6/changelog.Debian.amd64.gz
+-rw-r--r-- root/root       963 2019-04-03 13:24 ./usr/share/doc/libx11-6/NEWS.Debian.gz
+drwxr-xr-x root/root         0 2019-04-03 13:26 ./usr/share/lintian/
+drwxr-xr-x root/root         0 2019-04-03 13:26 ./usr/share/lintian/overrides/
+-rw-r--r-- root/root        60 2019-04-03 13:24 ./usr/share/lintian/overrides/libx11-6
+lrwxrwxrwx root/root         0 2019-04-03 13:26 ./usr/lib/x86_64-linux-gnu/libX11.so.6 -> libX11.so.6.3.0

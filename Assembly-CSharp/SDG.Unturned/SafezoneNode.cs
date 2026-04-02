@@ -16,7 +16,8 @@ public class SafezoneNode : Node
 
     /// <summary>
     /// Please check CurrentlyAllowsBuilding.
-    /// Bypassed by LevelAsset's ShouldAllowBuildingInSafezonesInSingleplayer option.
+    /// Bypassed by LevelAsset's ShouldAllowBuildingInSafezonesInSingleplayer option as well as
+    /// Gameplay config's Bypass_Building_In_Safezones option.
     /// </summary>
     public bool noBuildables;
 
@@ -43,7 +44,7 @@ public class SafezoneNode : Node
     {
         get
         {
-            if (noBuildables)
+            if (noBuildables && !(Provider.modeConfigData?.Gameplay?.Bypass_Building_In_Safezones).GetValueOrDefault())
             {
                 LevelAsset asset = Level.getAsset();
                 if (asset != null && asset.ShouldAllowBuildingInSafezonesInSingleplayer && Provider.isServer)

@@ -1,0 +1,14 @@
+drwxr-xr-x root/root         0 2019-04-03 16:17 ./
+drwxr-xr-x root/root         0 2019-04-03 16:17 ./usr/
+drwxr-xr-x root/root         0 2019-04-03 16:17 ./usr/lib/
+drwxr-xr-x root/root         0 2019-04-03 16:17 ./usr/lib/x86_64-linux-gnu/
+-rw-r--r-- root/root    446576 2019-04-03 16:17 ./usr/lib/x86_64-linux-gnu/libopenal.so.1.16.0
+drwxr-xr-x root/root         0 2019-04-03 16:17 ./usr/share/
+drwxr-xr-x root/root         0 2019-04-03 16:17 ./usr/share/doc/
+drwxr-xr-x root/root         0 2019-04-03 16:17 ./usr/share/doc/libopenal1/
+-rw-r--r-- root/root      1422 2014-08-15 07:06 ./usr/share/doc/libopenal1/changelog.gz
+-rw-r--r-- root/root      7542 2015-05-12 09:09 ./usr/share/doc/libopenal1/copyright
+drwxr-xr-x root/root         0 2019-04-03 16:17 ./usr/share/doc/libopenal1/examples/
+-rw-r--r-- root/root      5064 2014-08-15 07:06 ./usr/share/doc/libopenal1/examples/alsoftrc.sample.gz
+-rw-r--r-- root/root      4122 2019-04-03 16:16 ./usr/share/doc/libopenal1/changelog.Debian.amd64.gz
+lrwxrwxrwx root/root         0 2019-04-03 16:17 ./usr/lib/x86_64-linux-gnu/libopenal.so.1 -> libopenal.so.1.16.0

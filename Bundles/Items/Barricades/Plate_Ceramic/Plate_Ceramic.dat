@@ -1,0 +1,45 @@
+﻿GUID de4c1d984045427a9a88dbacddf25787
+Type Storage
+Useable Barricade
+Build Storage
+ID 1928
+
+Size_X 1
+Size_Y 1
+Size_Z 0.3
+
+Health 100
+Range 4
+Radius 0.01
+Offset 0.07
+
+Storage_X 2
+Storage_Y 2
+Display
+
+Explosion 97
+Vulnerable
+
+Blueprints
+[
+	{
+		CategoryTag "b0c6cc0a8b4346be89aef697ecdb8e46" // Furniture
+		InputItems
+		[
+			"ebf1b6d9f81f46b588297c2ef9b03c67 x 2" // Clay
+		]
+		OutputItems this
+		Skill Craft
+		Skill_Level 2
+		RequiresNearbyCraftingTags
+		[
+			"192e071c94d1419b991a430d42fe2be3" // Pottery Kiln
+		]
+		Effect "84347b13028340b8976033c08675d458" // Wrench
+	}
+]
+
+Should_Close_When_Outside_Range true
+
+PlacementAudioClip Sounds/WoodenPlacement.mp3
+Has_Clip_Prefab false

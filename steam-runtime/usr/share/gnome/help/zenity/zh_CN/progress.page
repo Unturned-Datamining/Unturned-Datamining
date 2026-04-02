@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<page xmlns="http://projectmallard.org/1.0/" type="topic" id="progress" xml:lang="zh_CN">
+  <info>
+    <link type="guide" xref="index#dialogs"/>
+    <desc>Use the <cmd>--progress</cmd> option.</desc>
+  </info>
+  <title>进度框</title>
+    <p>
+	Use the <cmd>--progress</cmd> option to create a progress dialog. 
+    </p>
+
+    <p>
+      <app>Zenity</app> reads data from standard input line by line. If a line is prefixed with #, the text is updated with the text on that line. If a line contains only a number, the percentage is updated with that number.
+    </p>
+	
+    <p>进度框支持以下选项：</p>
+
+    <terms>
+
+      <item>
+        <title><cmd>--text</cmd>=<var>text</var></title>
+	  <p>指定显示在进度框里的文本。</p>
+      </item>
+
+      <item>
+        <title><cmd>--percentage</cmd>=<var>percentage</var></title>
+	  <p>指定进度框开始时的百分比设定。</p>
+      </item>
+
+      <item>
+	<title><cmd>--auto-close</cmd></title>
+	  <p>当达到 100% 时自动关闭对话框。</p>
+      </item>
+
+      <item>
+        <title><cmd>--pulsate</cmd></title>
+	  <p>指定进度条跳动，直到从标准输入读到一个 EOF 文件结束符。</p>
+      </item>
+
+    </terms>
+
+    <p>
+      The following example script shows how to create a progress dialog:
+    </p>
+
+<code>
+#!/bin/sh
+(
+echo "10" ; sleep 1
+echo "# Updating mail logs" ; sleep 1
+echo "20" ; sleep 1
+echo "# Resetting cron jobs" ; sleep 1
+echo "50" ; sleep 1
+echo "This line will just be ignored" ; sleep 1
+echo "75" ; sleep 1
+echo "# Rebooting system" ; sleep 1
+echo "100" ; sleep 1
+) |
+zenity --progress \
+  --title="Update System Logs" \
+  --text="Scanning mail logs..." \
+  --percentage=0
+
+if [ "$?" = -1 ] ; then
+        zenity --error \
+          --text="Update canceled."
+fi
+</code>
+
+
+    <figure id="zenity-progress-screenshot">
+      <title>进度框范例</title>
+      <desc><app>Zenity</app> progress dialog example</desc>
+      <media type="image" mime="image/png" src="figures/zenity-progress-screenshot.png"/>
+    </figure>
+</page>

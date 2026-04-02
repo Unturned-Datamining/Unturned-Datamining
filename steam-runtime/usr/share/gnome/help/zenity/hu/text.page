@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<page xmlns="http://projectmallard.org/1.0/" type="topic" id="text" xml:lang="hu">
+  <info>
+    <link type="guide" xref="index#dialogs"/>
+    <desc>A <cmd>--text-info</cmd> kapcsoló használata.</desc>
+  </info>
+  <title>Szöveges információs ablak</title>
+    <p>A <cmd>--text-info</cmd> kapcsoló használatával egy szöveges információs ablak hozható létre.</p>
+	
+    <p>A szöveges információs ablak a következő kapcsolókat támogatja:</p>
+
+    <terms>
+
+      <item>
+        <title><cmd>--filename</cmd>=<var>fájlnév</var></title>
+	<p>A szöveges információs ablakba betöltendő fájl megadása.</p>
+      </item>
+
+      <item>
+        <title><cmd>--editable</cmd></title>
+        <p>Lehetővé teszi a megjelenített szöveg szerkesztését. A szerkesztett szöveg a szabványos kimenetre kerül az ablak bezárásakor.</p>
+      </item>
+
+      <item>
+        <title><cmd>--font</cmd>=<var>BETŰKÉSZLET</var></title>
+	<p>A szöveg betűkészletének megadása.</p>
+      </item>
+
+      <item>
+        <title><cmd>--checkbox</cmd>=<var>SZÖVEG</var></title>
+	<p>Jelölőnégyzet megjelenítése, például „Elolvastam és elfogadom a feltételeket” jellegű felhasználásra.</p>
+      </item>
+
+      <item>
+        <title><cmd>--html</cmd></title>
+        <p>HTML-támogatás engedélyezése.</p>
+      </item>
+
+      <item>
+        <title><cmd>--url</cmd>=<var>URL</var></title>
+	<p>URL-címet állít be fájl helyett. Csak a --html kapcsolóval együtt működik.</p>
+      </item>
+
+    </terms>
+
+    <p>A következő példa parancsfájl bemutatja a szöveges információs ablak létrehozását:</p>
+
+<code>
+#!/bin/sh
+
+# A „COPYING” fájlt ugyanabba a mappába kell elhelyeznie, mint ezt a parancsfájlt.
+FILE=`dirname $0`/COPYING
+
+zenity --text-info \
+       --title="Licenc" \
+       --filename=$FILE \
+       --checkbox="Elolvastam és elfogadom a feltételeket."
+
+case $? in
+    0)
+        echo "Telepítés indítása!"
+	# következő lépés
+	;;
+    1)
+        echo "Telepítés leállítása!"
+	;;
+    -1)
+        echo "Váratlan hiba történt."
+	;;
+esac
+</code>
+
+    <figure id="zenity-text-screenshot">
+      <title>Példa szöveges információs ablak</title>
+      <desc><app>Zenity</app> példa szöveges információs ablak</desc>
+      <media type="image" mime="image/png" src="figures/zenity-text-screenshot.png"/>
+    </figure>
+</page>

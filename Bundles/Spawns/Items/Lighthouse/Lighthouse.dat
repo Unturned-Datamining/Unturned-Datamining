@@ -1,0 +1,36 @@
+GUID 1522c8065d804246864d59094df891b2
+Type Spawn
+
+Tables
+[
+	{
+		// Lighthouse_Junk (Spawn)
+		Guid 088f5fc3f2b64a67890fb229b818ad59
+		Weight 32
+	}
+	{
+		// Lighthouse_Snacks (Spawn)
+		Guid 814793db2bea43aa924078c96364885d
+		Weight 18
+	}
+	{
+		// Lighthouse_Clothes (Spawn)
+		Guid 6d535d1033584b6abfd1df670bb371e1
+		Weight 15
+	}
+	{
+		// Flare (Spawn)
+		Guid a80600f3546d4c7a9add07f527571a23
+		Weight 15
+	}
+	{
+		// Lighthouse_Tools (Spawn)
+		Guid bb66c3e2366b489db93c1eecd5756b3f
+		Weight 10
+	}
+	{
+		// Food_Canned (Spawn)
+		Guid 52eaa9d1caac44af92d362e012c227c5
+		Weight 10
+	}
+]

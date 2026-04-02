@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<page xmlns="http://projectmallard.org/1.0/" type="topic" id="question" xml:lang="fr">
+  <info>
+    <link type="guide" xref="message"/>
+    <desc>Utiliser l'option <cmd>--question</cmd>.</desc>
+  </info>
+  <title>Boîte de dialogue de question</title>
+      <p>Utilisez l'option <cmd>--question</cmd> pour créer une boîte de dialogue de question.</p>
+
+      <p>Le script d'exemple suivant montre comment créer une boîte de dialogue de question :</p>
+
+<code>
+#!/bin/bash
+
+zenity --question \
+--text="Voulez-vous vraiment continuer ?"
+</code>
+
+
+      <figure id="zenity-question-screenshot">
+        <title>Exemple de boîte de dialogue de question</title>
+	<desc>Exemple de boîte de dialogue de question <app>Zenity</app></desc>
+        <media type="image" mime="image/png" src="figures/zenity-question-screenshot.png"/>
+      </figure>
+</page>

@@ -11,6 +11,18 @@ EquipableModelParent LeftHook
 
 Reward_ID 2
 
+Fishing_Reward_Mode WaterVolumes
+CatchChallenge_Enabled true
+CatchChallenge_CursorSize 0.1
+CatchChallenge_Gravity 0.725
+CatchChallenge_Acceleration 0.725
+CatchChallenge_UpperRestitution 0.66
+CatchChallenge_LowerRestitution 0.66
+CatchChallenge_CaptureSpeed 0.75
+CatchChallenge_EscapeSpeed 1.25
+
+Fish_Bite_Interval_Multiplier 1.1
+
 Blueprints
 [
 	{

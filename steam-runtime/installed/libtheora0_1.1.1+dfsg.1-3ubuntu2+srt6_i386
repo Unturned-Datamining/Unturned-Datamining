@@ -1,0 +1,17 @@
+drwxr-xr-x root/root         0 2019-04-03 16:24 ./
+drwxr-xr-x root/root         0 2019-04-03 16:24 ./usr/
+drwxr-xr-x root/root         0 2019-04-03 16:24 ./usr/lib/
+drwxr-xr-x root/root         0 2019-04-03 16:24 ./usr/lib/i386-linux-gnu/
+-rw-r--r-- root/root    112148 2019-04-03 16:24 ./usr/lib/i386-linux-gnu/libtheoradec.so.1.1.4
+-rw-r--r-- root/root    263700 2019-04-03 16:24 ./usr/lib/i386-linux-gnu/libtheoraenc.so.1.1.2
+-rw-r--r-- root/root    325100 2019-04-03 16:24 ./usr/lib/i386-linux-gnu/libtheora.so.0.3.10
+drwxr-xr-x root/root         0 2019-04-03 16:24 ./usr/share/
+drwxr-xr-x root/root         0 2019-04-03 16:24 ./usr/share/doc/
+drwxr-xr-x root/root         0 2019-04-03 16:24 ./usr/share/doc/libtheora0/
+-rw-r--r-- root/root      2250 2009-09-26 20:55 ./usr/share/doc/libtheora0/README.gz
+-rw-r--r-- root/root      2911 2019-04-03 16:22 ./usr/share/doc/libtheora0/changelog.Debian.i386.gz
+-rw-r--r-- root/root       702 2009-08-22 18:01 ./usr/share/doc/libtheora0/AUTHORS
+-rw-r--r-- root/root      1688 2019-04-03 16:22 ./usr/share/doc/libtheora0/copyright
+lrwxrwxrwx root/root         0 2019-04-03 16:24 ./usr/lib/i386-linux-gnu/libtheora.so.0 -> libtheora.so.0.3.10
+lrwxrwxrwx root/root         0 2019-04-03 16:24 ./usr/lib/i386-linux-gnu/libtheoraenc.so.1 -> libtheoraenc.so.1.1.2
+lrwxrwxrwx root/root         0 2019-04-03 16:24 ./usr/lib/i386-linux-gnu/libtheoradec.so.1 -> libtheoradec.so.1.1.4

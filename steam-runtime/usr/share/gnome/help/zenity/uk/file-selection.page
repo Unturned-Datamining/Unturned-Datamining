@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<page xmlns="http://projectmallard.org/1.0/" type="topic" id="file-selection" xml:lang="uk">
+  <info>
+    <link type="guide" xref="index#dialogs"/>
+    <desc>Use the <cmd>--file-selection</cmd> option.</desc>
+  </info>
+  <title>Діалог вибору файлів</title>
+    <p>
+	Use the <cmd>--file-selection</cmd> option to create a file selection dialog. <app>Zenity</app> returns the selected files or directories to standard 
+        output. The default mode of the file selection dialog is open.
+    </p>
+    <p>Ділог вибору файлів підтримує наступні параметри:</p>
+
+    <terms>
+
+      <item>
+        <title><cmd>--filename</cmd>=<var>filename</var></title>
+	<p>Вказує файл ч и каталог, який виділяється при першому показі діалогу вибору файлів.</p>
+      </item>
+
+      <item>
+	<title><cmd>--multiple</cmd></title>
+	<p>дозволяє вибір кількох назв файлів у діалозі вибору файлів.</p>
+      </item>
+
+      <item>
+	<title><cmd>--directory</cmd></title>
+	<p>Дозволяє лише вибір каталогів у діалозі вибору файлів.</p>
+      </item>
+
+      <item>
+	<title><cmd>--save</cmd></title>
+	<p>Встановлює режим збереження у діалозі вибору файлів.</p>
+      </item>
+
+      <item>
+	<title><cmd>--separator</cmd>=<var>separator</var></title>
+	<p>Вказує рядок, який використовується для розділення списку назв файлів, що повертаються командою.</p>
+      </item>
+
+    </terms>
+
+    <p>
+      The following example script shows how to create a file selection dialog:
+    </p>
+
+<code>
+#!/bin/sh
+
+FILE=`zenity --file-selection --title="Select a File"`
+
+case $? in
+         0)
+                echo "\"$FILE\" selected.";;
+         1)
+                echo "No file selected.";;
+        -1)
+                echo "An unexpected error has occurred.";;
+esac
+</code>
+
+    <figure id="zenity-fileselection-screenshot">
+      <title>Приклад діалогу вибору файлів</title>
+      <desc><app>Zenity</app> file selection dialog example</desc>
+      <media type="image" mime="image/png" src="figures/zenity-fileselection-screenshot.png"/>
+    </figure>
+</page>

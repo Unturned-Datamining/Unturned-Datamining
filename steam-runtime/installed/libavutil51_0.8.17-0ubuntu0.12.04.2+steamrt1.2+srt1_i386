@@ -1,0 +1,20 @@
+drwxr-xr-x root/root         0 2023-03-23 18:07 ./
+drwxr-xr-x root/root         0 2023-03-23 18:07 ./usr/
+drwxr-xr-x root/root         0 2023-03-23 18:07 ./usr/share/
+drwxr-xr-x root/root         0 2023-03-23 18:07 ./usr/share/lintian/
+drwxr-xr-x root/root         0 2023-03-23 18:07 ./usr/share/lintian/overrides/
+-rw-r--r-- root/root       101 2018-09-18 17:08 ./usr/share/lintian/overrides/libavutil51
+drwxr-xr-x root/root         0 2023-03-23 18:07 ./usr/share/doc/
+drwxr-xr-x root/root         0 2023-03-23 18:07 ./usr/share/doc/libavutil51/
+-rw-r--r-- root/root      3282 2018-09-18 17:08 ./usr/share/doc/libavutil51/copyright
+-rw-r--r-- root/root      2225 2018-09-18 17:08 ./usr/share/doc/libavutil51/README.Debian.gz
+-rw-r--r-- root/root     27308 2023-03-23 18:00 ./usr/share/doc/libavutil51/changelog.Debian.i386.gz
+-rw-r--r-- root/root     19358 2015-03-10 02:21 ./usr/share/doc/libavutil51/changelog.gz
+drwxr-xr-x root/root         0 2023-03-23 18:06 ./usr/lib/
+drwxr-xr-x root/root         0 2023-03-23 18:07 ./usr/lib/i386-linux-gnu/
+drwxr-xr-x root/root         0 2023-03-23 18:06 ./usr/lib/i386-linux-gnu/i686/
+drwxr-xr-x root/root         0 2023-03-23 18:07 ./usr/lib/i386-linux-gnu/i686/cmov/
+-rw-r--r-- root/root    121336 2023-03-23 18:07 ./usr/lib/i386-linux-gnu/i686/cmov/libavutil.so.51.22.3
+-rw-r--r-- root/root    121336 2023-03-23 18:07 ./usr/lib/i386-linux-gnu/libavutil.so.51.22.3
+lrwxrwxrwx root/root         0 2023-03-23 18:07 ./usr/lib/i386-linux-gnu/libavutil.so.51 -> libavutil.so.51.22.3
+lrwxrwxrwx root/root         0 2023-03-23 18:07 ./usr/lib/i386-linux-gnu/i686/cmov/libavutil.so.51 -> libavutil.so.51.22.3

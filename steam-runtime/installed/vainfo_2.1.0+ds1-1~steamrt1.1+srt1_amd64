@@ -1,0 +1,14 @@
+drwxr-xr-x root/root         0 2019-10-23 17:41 ./
+drwxr-xr-x root/root         0 2019-10-23 17:41 ./usr/
+drwxr-xr-x root/root         0 2019-10-23 17:41 ./usr/bin/
+drwxr-xr-x root/root         0 2019-10-23 17:41 ./usr/share/
+drwxr-xr-x root/root         0 2019-10-23 17:41 ./usr/share/man/
+drwxr-xr-x root/root         0 2019-10-23 17:41 ./usr/share/man/man1/
+-rw-r--r-- root/root       175 2019-10-23 17:41 ./usr/share/man/man1/vainfo.1.gz
+drwxr-xr-x root/root         0 2019-10-23 17:41 ./usr/share/doc/
+drwxr-xr-x root/root         0 2019-10-23 17:41 ./usr/share/doc/vainfo/
+-rw-r--r-- root/root      3137 2019-10-22 15:31 ./usr/share/doc/vainfo/copyright
+-rw-r--r-- root/root      5264 2019-10-23 17:39 ./usr/share/doc/vainfo/changelog.Debian.amd64.gz
+-rw-r--r-- root/root       713 2018-02-12 07:18 ./usr/share/doc/vainfo/changelog.gz
+lrwxrwxrwx root/root         0 2019-10-23 17:41 ./usr/bin/vainfo -> x86_64-linux-gnu-vainfo-2
+lrwxrwxrwx root/root         0 2019-10-23 17:41 ./usr/bin/vainfo-2 -> x86_64-linux-gnu-vainfo-2

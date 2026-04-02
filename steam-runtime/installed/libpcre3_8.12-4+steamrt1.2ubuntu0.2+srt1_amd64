@@ -1,0 +1,25 @@
+drwxr-xr-x root/root         0 2020-08-17 16:44 ./
+drwxr-xr-x root/root         0 2020-08-17 16:44 ./lib/
+drwxr-xr-x root/root         0 2020-08-17 16:44 ./lib/x86_64-linux-gnu/
+-rw-r--r-- root/root    248000 2020-08-17 16:44 ./lib/x86_64-linux-gnu/libpcre.so.3.12.1
+drwxr-xr-x root/root         0 2020-08-17 16:44 ./usr/
+drwxr-xr-x root/root         0 2020-08-17 16:44 ./usr/bin/
+drwxr-xr-x root/root         0 2020-08-17 16:44 ./usr/share/
+drwxr-xr-x root/root         0 2020-08-17 16:44 ./usr/share/man/
+drwxr-xr-x root/root         0 2020-08-17 16:44 ./usr/share/man/man3/
+-rw-r--r-- root/root     35720 2020-08-17 16:44 ./usr/share/man/man3/pcrepattern.3.gz
+drwxr-xr-x root/root         0 2020-08-17 16:44 ./usr/share/doc/
+drwxr-xr-x root/root         0 2020-08-17 16:44 ./usr/share/doc/libpcre3/
+-rw-r--r-- root/root     11781 2010-01-19 16:39 ./usr/share/doc/libpcre3/README.gz
+-rw-r--r-- root/root      2765 2020-08-17 16:42 ./usr/share/doc/libpcre3/copyright
+-rw-r--r-- root/root       436 2020-08-17 16:42 ./usr/share/doc/libpcre3/README.Debian
+-rw-r--r-- root/root      6562 2020-08-17 16:42 ./usr/share/doc/libpcre3/changelog.Debian.amd64.gz
+-rw-r--r-- root/root      7551 2011-01-15 11:25 ./usr/share/doc/libpcre3/NEWS.gz
+-rw-r--r-- root/root       403 2010-01-19 15:53 ./usr/share/doc/libpcre3/AUTHORS
+-rw-r--r-- root/root     70055 2011-01-15 17:26 ./usr/share/doc/libpcre3/changelog.gz
+drwxr-xr-x root/root         0 2020-08-17 16:44 ./usr/lib/
+drwxr-xr-x root/root         0 2020-08-17 16:44 ./usr/lib/x86_64-linux-gnu/
+-rw-r--r-- root/root     10264 2020-08-17 16:44 ./usr/lib/x86_64-linux-gnu/libpcreposix.so.3.12.1
+drwxr-xr-x root/root         0 2020-08-17 16:44 ./usr/sbin/
+lrwxrwxrwx root/root         0 2020-08-17 16:44 ./lib/x86_64-linux-gnu/libpcre.so.3 -> libpcre.so.3.12.1
+lrwxrwxrwx root/root         0 2020-08-17 16:44 ./usr/lib/x86_64-linux-gnu/libpcreposix.so.3 -> libpcreposix.so.3.12.1

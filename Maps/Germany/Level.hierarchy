@@ -1,4 +1,4 @@
-"Available_Instance_ID" "17635"
+"Available_Instance_ID" "17636"
 "Items"
 [
 	{
@@ -1404,6 +1404,7 @@
 			"Is_Reflection_Visible" "true"
 			"Is_Sea_Level" "true"
 			"Water_Type" "SALTY"
+			"Fish_Spawn_Table" "00000000000000000000000000000000"
 		}
 	}
 	{
@@ -1413,9 +1414,9 @@
 		{
 			"Position"
 			{
-				"X" "-2757.999"
-				"Y" "131.366"
-				"Z" "-2790.27"
+				"X" "-2593.46"
+				"Y" "131.3668"
+				"Z" "-2633.874"
 			}
 			"Rotation"
 			{
@@ -1426,15 +1427,16 @@
 			}
 			"Scale"
 			{
-				"X" "3258.631"
+				"X" "2804.615"
 				"Y" "37.66164"
-				"Z" "569.1005"
+				"Z" "569.1006"
 			}
 			"Shape" "Box"
 			"Is_Surface_Visible" "true"
 			"Is_Reflection_Visible" "false"
 			"Is_Sea_Level" "false"
-			"Water_Type" "SALTY"
+			"Water_Type" "DIRTY"
+			"Fish_Spawn_Table" "329e533b3dd842b4a759880043b709fb"
 		}
 	}
 	{
@@ -260156,7 +260158,8 @@
 			"Is_Surface_Visible" "true"
 			"Is_Reflection_Visible" "false"
 			"Is_Sea_Level" "false"
-			"Water_Type" "SALTY"
+			"Water_Type" "DIRTY"
+			"Fish_Spawn_Table" "329e533b3dd842b4a759880043b709fb"
 		}
 	}
 	{
@@ -260277,7 +260280,8 @@
 			"Is_Surface_Visible" "true"
 			"Is_Reflection_Visible" "false"
 			"Is_Sea_Level" "false"
-			"Water_Type" "SALTY"
+			"Water_Type" "DIRTY"
+			"Fish_Spawn_Table" "329e533b3dd842b4a759880043b709fb"
 		}
 	}
 	{
@@ -260308,7 +260312,8 @@
 			"Is_Surface_Visible" "true"
 			"Is_Reflection_Visible" "false"
 			"Is_Sea_Level" "false"
-			"Water_Type" "SALTY"
+			"Water_Type" "DIRTY"
+			"Fish_Spawn_Table" "329e533b3dd842b4a759880043b709fb"
 		}
 	}
 	{
@@ -260369,7 +260374,9 @@
 			"Is_Surface_Visible" "true"
 			"Is_Reflection_Visible" "false"
 			"Is_Sea_Level" "false"
-			"Water_Type" "SALTY"
+			"Water_Type" "DIRTY"
+			"Fish_Spawn_Table" "329e533b3dd842b4a759880043b709fb"
+			"Fishing_Minimum_Depth_Override" "1"
 		}
 	}
 	{
@@ -260640,7 +260647,9 @@
 			"Is_Surface_Visible" "true"
 			"Is_Reflection_Visible" "false"
 			"Is_Sea_Level" "false"
-			"Water_Type" "SALTY"
+			"Water_Type" "DIRTY"
+			"Fish_Spawn_Table" "329e533b3dd842b4a759880043b709fb"
+			"Fishing_Minimum_Depth_Override" "2"
 		}
 	}
 	{
@@ -260795,6 +260804,7 @@
 			"Is_Reflection_Visible" "false"
 			"Is_Sea_Level" "false"
 			"Water_Type" "SALTY"
+			"Fish_Spawn_Table" "00000000000000000000000000000000"
 		}
 	}
 	{
@@ -260826,6 +260836,7 @@
 			"Is_Reflection_Visible" "false"
 			"Is_Sea_Level" "false"
 			"Water_Type" "SALTY"
+			"Fish_Spawn_Table" "00000000000000000000000000000000"
 		}
 	}
 	{
@@ -261447,11 +261458,12 @@
 				"Z" "258.1571"
 			}
 			"Shape" "Box"
+			"Falloff" "0"
 			"Ambiance_ID" "122"
 			"No_Water" "false"
 			"No_Lighting" "true"
 			"Weather_Mask" "4294967295"
-			"Override_Fog" "false"
+			"Override_Fog_Mode" "None"
 			"Fog_Color"
 			{
 				"R" "0"
@@ -261461,6 +261473,14 @@
 			}
 			"Fog_Intensity" "0.5"
 			"Override_Atmospheric_Fog" "false"
+			"Enable_Falloff" "false"
+			"Priority" "0"
+			"Audio_FadeIn" "2"
+			"Audio_FadeOut" "2"
+			"Fog_FadeIn" "20"
+			"Fog_FadeOut" "8"
+			"Lighting_FadeIn" "4"
+			"Lighting_FadeOut" "4"
 		}
 	}
 	{
@@ -261488,11 +261508,12 @@
 				"Z" "205.0932"
 			}
 			"Shape" "Box"
+			"Falloff" "0"
 			"Ambiance_ID" "122"
 			"No_Water" "false"
 			"No_Lighting" "true"
 			"Weather_Mask" "4294967295"
-			"Override_Fog" "false"
+			"Override_Fog_Mode" "None"
 			"Fog_Color"
 			{
 				"R" "0"
@@ -261502,6 +261523,14 @@
 			}
 			"Fog_Intensity" "0.5"
 			"Override_Atmospheric_Fog" "false"
+			"Enable_Falloff" "false"
+			"Priority" "0"
+			"Audio_FadeIn" "2"
+			"Audio_FadeOut" "2"
+			"Fog_FadeIn" "20"
+			"Fog_FadeOut" "8"
+			"Lighting_FadeIn" "4"
+			"Lighting_FadeOut" "4"
 		}
 	}
 	{
@@ -261529,11 +261558,12 @@
 				"Z" "152.4841"
 			}
 			"Shape" "Box"
+			"Falloff" "0"
 			"Ambiance_ID" "122"
 			"No_Water" "false"
 			"No_Lighting" "true"
 			"Weather_Mask" "4294967295"
-			"Override_Fog" "false"
+			"Override_Fog_Mode" "None"
 			"Fog_Color"
 			{
 				"R" "0"
@@ -261543,6 +261573,14 @@
 			}
 			"Fog_Intensity" "0.5"
 			"Override_Atmospheric_Fog" "false"
+			"Enable_Falloff" "false"
+			"Priority" "0"
+			"Audio_FadeIn" "2"
+			"Audio_FadeOut" "2"
+			"Fog_FadeIn" "20"
+			"Fog_FadeOut" "8"
+			"Lighting_FadeIn" "4"
+			"Lighting_FadeOut" "4"
 		}
 	}
 	{
@@ -261570,11 +261608,12 @@
 				"Z" "54.7442"
 			}
 			"Shape" "Box"
+			"Falloff" "0"
 			"Ambiance_ID" "122"
 			"No_Water" "false"
 			"No_Lighting" "true"
 			"Weather_Mask" "4294967295"
-			"Override_Fog" "false"
+			"Override_Fog_Mode" "None"
 			"Fog_Color"
 			{
 				"R" "0"
@@ -261584,6 +261623,14 @@
 			}
 			"Fog_Intensity" "0.5"
 			"Override_Atmospheric_Fog" "false"
+			"Enable_Falloff" "false"
+			"Priority" "0"
+			"Audio_FadeIn" "2"
+			"Audio_FadeOut" "2"
+			"Fog_FadeIn" "20"
+			"Fog_FadeOut" "8"
+			"Lighting_FadeIn" "4"
+			"Lighting_FadeOut" "4"
 		}
 	}
 	{
@@ -261611,11 +261658,12 @@
 				"Z" "96.31797"
 			}
 			"Shape" "Box"
+			"Falloff" "0"
 			"Ambiance_ID" "122"
 			"No_Water" "false"
 			"No_Lighting" "true"
 			"Weather_Mask" "4294967295"
-			"Override_Fog" "false"
+			"Override_Fog_Mode" "None"
 			"Fog_Color"
 			{
 				"R" "0"
@@ -261625,6 +261673,14 @@
 			}
 			"Fog_Intensity" "0.5"
 			"Override_Atmospheric_Fog" "false"
+			"Enable_Falloff" "false"
+			"Priority" "0"
+			"Audio_FadeIn" "2"
+			"Audio_FadeOut" "2"
+			"Fog_FadeIn" "20"
+			"Fog_FadeOut" "8"
+			"Lighting_FadeIn" "4"
+			"Lighting_FadeOut" "4"
 		}
 	}
 	{
@@ -261652,11 +261708,12 @@
 				"Z" "229.7023"
 			}
 			"Shape" "Box"
+			"Falloff" "0"
 			"Ambiance_ID" "122"
 			"No_Water" "false"
 			"No_Lighting" "true"
 			"Weather_Mask" "4294967295"
-			"Override_Fog" "false"
+			"Override_Fog_Mode" "None"
 			"Fog_Color"
 			{
 				"R" "0"
@@ -261666,6 +261723,14 @@
 			}
 			"Fog_Intensity" "0.5"
 			"Override_Atmospheric_Fog" "false"
+			"Enable_Falloff" "false"
+			"Priority" "0"
+			"Audio_FadeIn" "2"
+			"Audio_FadeOut" "2"
+			"Fog_FadeIn" "20"
+			"Fog_FadeOut" "8"
+			"Lighting_FadeIn" "4"
+			"Lighting_FadeOut" "4"
 		}
 	}
 	{
@@ -261693,11 +261758,12 @@
 				"Z" "217.4198"
 			}
 			"Shape" "Box"
+			"Falloff" "0"
 			"Ambiance_ID" "122"
 			"No_Water" "false"
 			"No_Lighting" "true"
 			"Weather_Mask" "4294967295"
-			"Override_Fog" "false"
+			"Override_Fog_Mode" "None"
 			"Fog_Color"
 			{
 				"R" "0"
@@ -261707,6 +261773,14 @@
 			}
 			"Fog_Intensity" "0.5"
 			"Override_Atmospheric_Fog" "false"
+			"Enable_Falloff" "false"
+			"Priority" "0"
+			"Audio_FadeIn" "2"
+			"Audio_FadeOut" "2"
+			"Fog_FadeIn" "20"
+			"Fog_FadeOut" "8"
+			"Lighting_FadeIn" "4"
+			"Lighting_FadeOut" "4"
 		}
 	}
 	{
@@ -261734,11 +261808,12 @@
 				"Z" "196.4663"
 			}
 			"Shape" "Box"
+			"Falloff" "0"
 			"Ambiance_ID" "122"
 			"No_Water" "false"
 			"No_Lighting" "true"
 			"Weather_Mask" "4294967295"
-			"Override_Fog" "false"
+			"Override_Fog_Mode" "None"
 			"Fog_Color"
 			{
 				"R" "0"
@@ -261748,6 +261823,14 @@
 			}
 			"Fog_Intensity" "0.5"
 			"Override_Atmospheric_Fog" "false"
+			"Enable_Falloff" "false"
+			"Priority" "0"
+			"Audio_FadeIn" "2"
+			"Audio_FadeOut" "2"
+			"Fog_FadeIn" "20"
+			"Fog_FadeOut" "8"
+			"Lighting_FadeIn" "4"
+			"Lighting_FadeOut" "4"
 		}
 	}
 	{
@@ -261775,11 +261858,12 @@
 				"Z" "175.1784"
 			}
 			"Shape" "Box"
+			"Falloff" "0"
 			"Ambiance_ID" "122"
 			"No_Water" "false"
 			"No_Lighting" "true"
 			"Weather_Mask" "4294967295"
-			"Override_Fog" "false"
+			"Override_Fog_Mode" "None"
 			"Fog_Color"
 			{
 				"R" "0"
@@ -261789,6 +261873,14 @@
 			}
 			"Fog_Intensity" "0.5"
 			"Override_Atmospheric_Fog" "false"
+			"Enable_Falloff" "false"
+			"Priority" "0"
+			"Audio_FadeIn" "2"
+			"Audio_FadeOut" "2"
+			"Fog_FadeIn" "20"
+			"Fog_FadeOut" "8"
+			"Lighting_FadeIn" "4"
+			"Lighting_FadeOut" "4"
 		}
 	}
 	{
@@ -261816,11 +261908,12 @@
 				"Z" "201.9139"
 			}
 			"Shape" "Box"
+			"Falloff" "0"
 			"Ambiance_ID" "122"
 			"No_Water" "false"
 			"No_Lighting" "true"
 			"Weather_Mask" "4294967295"
-			"Override_Fog" "false"
+			"Override_Fog_Mode" "None"
 			"Fog_Color"
 			{
 				"R" "0"
@@ -261830,6 +261923,14 @@
 			}
 			"Fog_Intensity" "0.5"
 			"Override_Atmospheric_Fog" "false"
+			"Enable_Falloff" "false"
+			"Priority" "0"
+			"Audio_FadeIn" "2"
+			"Audio_FadeOut" "2"
+			"Fog_FadeIn" "20"
+			"Fog_FadeOut" "8"
+			"Lighting_FadeIn" "4"
+			"Lighting_FadeOut" "4"
 		}
 	}
 	{
@@ -261857,11 +261958,12 @@
 				"Z" "61.10387"
 			}
 			"Shape" "Box"
+			"Falloff" "0"
 			"Ambiance_ID" "122"
 			"No_Water" "false"
 			"No_Lighting" "true"
 			"Weather_Mask" "4294967295"
-			"Override_Fog" "false"
+			"Override_Fog_Mode" "None"
 			"Fog_Color"
 			{
 				"R" "0"
@@ -261871,6 +261973,14 @@
 			}
 			"Fog_Intensity" "0.5"
 			"Override_Atmospheric_Fog" "false"
+			"Enable_Falloff" "false"
+			"Priority" "0"
+			"Audio_FadeIn" "2"
+			"Audio_FadeOut" "2"
+			"Fog_FadeIn" "20"
+			"Fog_FadeOut" "8"
+			"Lighting_FadeIn" "4"
+			"Lighting_FadeOut" "4"
 		}
 	}
 	{
@@ -262597,6 +262707,10 @@
 			}
 			"Shape" "Sphere"
 			"Deadzone_Type" "DefaultRadiation"
+			"UnprotectedDamagePerSecond" "0"
+			"ProtectedDamagePerSecond" "0"
+			"UnprotectedRadiationPerSecond" "6.25"
+			"MaskFilterDamagePerSecond" "0.4"
 		}
 	}
 	{

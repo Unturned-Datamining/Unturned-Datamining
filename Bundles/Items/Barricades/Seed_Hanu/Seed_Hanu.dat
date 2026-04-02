@@ -1,0 +1,33 @@
+﻿GUID 3bfd564a78654b0aad00ffbb87607bf6
+Type Farm
+Useable Barricade
+Build Farm
+ID 574
+
+Size_X 1
+Size_Y 1
+Size_Z 0.2
+
+Health 1
+Range 4
+Radius 0.25
+Offset 0.375
+
+Growth 12600
+Grow 270
+
+Explosion 43
+Vulnerable
+
+Blueprints
+[
+	{
+		CategoryTag "bfac6026305f4737a95fd275ebff65a6" // Utilities
+		InputItems "0242ac749e2746e6930a99f1cb8e821c" // Raw Hanuberries
+		OutputItems this
+		Effect "84347b13028340b8976033c08675d458" // Wrench
+	}
+]
+
+PlacementAudioClip Sounds/FoliagePlacement.mp3
+Has_Clip_Prefab false

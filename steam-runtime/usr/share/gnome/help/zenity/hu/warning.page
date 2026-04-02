@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<page xmlns="http://projectmallard.org/1.0/" type="topic" id="warning" xml:lang="hu">
+  <info>
+    <link type="guide" xref="message"/>
+    <desc>A <cmd>--warning</cmd> kapcsoló használata.</desc>
+  </info>
+  <title>Figyelmeztető ablak</title>
+      <p>A <cmd>--warning</cmd> kapcsoló használatával figyelmeztető ablakot hozhat létre.</p>
+
+      <p>A következő példa parancsfájl bemutatja a figyelmeztető ablak létrehozását:</p>
+
+<code>
+#!/bin/bash
+
+zenity --warning \
+--text="Az áramütés elkerülése érdekében húzza ki az elektromos kábelt."
+</code>
+
+
+      <figure id="zenity-warning-screenshot">
+        <title>Példa figyelmeztető ablak</title>
+	<desc><app>Zenity</app> példa figyelmeztető ablak</desc>
+        <media type="image" mime="image/png" src="figures/zenity-warning-screenshot.png"/>
+      </figure>
+</page>

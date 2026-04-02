@@ -1,0 +1,16 @@
+drwxr-xr-x root/root         0 2020-08-17 17:04 ./
+drwxr-xr-x root/root         0 2020-08-17 17:04 ./usr/
+drwxr-xr-x root/root         0 2020-08-17 17:04 ./usr/lib/
+drwxr-xr-x root/root         0 2020-08-17 17:04 ./usr/lib/x86_64-linux-gnu/
+drwxr-xr-x root/root         0 2020-08-17 17:04 ./usr/lib/x86_64-linux-gnu/vdpau/
+-rw-r--r-- root/root     51160 2020-08-17 17:04 ./usr/lib/x86_64-linux-gnu/vdpau/libvdpau_trace.so.1.0.0
+-rw-r--r-- root/root     14752 2020-08-17 17:04 ./usr/lib/x86_64-linux-gnu/libvdpau.so.1.0.0
+drwxr-xr-x root/root         0 2020-08-17 17:04 ./usr/share/
+drwxr-xr-x root/root         0 2020-08-17 17:04 ./usr/share/doc/
+drwxr-xr-x root/root         0 2020-08-17 17:04 ./usr/share/doc/libvdpau1/
+-rw-r--r-- root/root      3178 2020-08-14 17:21 ./usr/share/doc/libvdpau1/copyright
+-rw-r--r-- root/root      3088 2020-08-17 17:02 ./usr/share/doc/libvdpau1/changelog.Debian.amd64.gz
+drwxr-xr-x root/root         0 2020-08-17 17:04 ./etc/
+-rw-r--r-- root/root        51 2020-08-17 17:04 ./etc/vdpau_wrapper.cfg
+lrwxrwxrwx root/root         0 2020-08-17 17:04 ./usr/lib/x86_64-linux-gnu/libvdpau.so.1 -> libvdpau.so.1.0.0
+lrwxrwxrwx root/root         0 2020-08-17 17:04 ./usr/lib/x86_64-linux-gnu/vdpau/libvdpau_trace.so.1 -> libvdpau_trace.so.1.0.0

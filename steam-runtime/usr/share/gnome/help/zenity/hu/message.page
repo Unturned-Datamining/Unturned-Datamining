@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<page xmlns="http://projectmallard.org/1.0/" type="guide" id="message" xml:lang="hu">
+  <info>
+    <link type="guide" xref="index#dialogs" group="message"/>
+    <desc><link xref="error">Hiba</link>, <link xref="info">Info</link>, <link xref="question">Kérdés</link>, <link xref="warning">Figyelmeztetés</link></desc>
+  </info>
+  <title>Üzenet ablak</title>
+  <p>Minden típus esetén használja a <cmd>--text</cmd> kapcsolót az ablakban megjelenített szöveg megadásához.</p>
+  <links type="topic" style="2column"/>
+</page>

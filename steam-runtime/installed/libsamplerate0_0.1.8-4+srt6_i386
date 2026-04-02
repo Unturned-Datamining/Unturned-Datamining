@@ -1,0 +1,12 @@
+drwxr-xr-x root/root         0 2019-04-03 16:03 ./
+drwxr-xr-x root/root         0 2019-04-03 16:03 ./usr/
+drwxr-xr-x root/root         0 2019-04-03 16:03 ./usr/lib/
+drwxr-xr-x root/root         0 2019-04-03 16:03 ./usr/lib/i386-linux-gnu/
+-rw-r--r-- root/root   1484144 2019-04-03 16:03 ./usr/lib/i386-linux-gnu/libsamplerate.so.0.1.8
+drwxr-xr-x root/root         0 2019-04-03 16:03 ./usr/share/
+drwxr-xr-x root/root         0 2019-04-03 16:03 ./usr/share/doc/
+drwxr-xr-x root/root         0 2019-04-03 16:03 ./usr/share/doc/libsamplerate0/
+-rw-r--r-- root/root      8969 2011-08-15 12:11 ./usr/share/doc/libsamplerate0/changelog.gz
+-rw-r--r-- root/root      1139 2012-03-11 05:48 ./usr/share/doc/libsamplerate0/copyright
+-rw-r--r-- root/root      1794 2019-04-03 16:01 ./usr/share/doc/libsamplerate0/changelog.Debian.i386.gz
+lrwxrwxrwx root/root         0 2019-04-03 16:03 ./usr/lib/i386-linux-gnu/libsamplerate.so.0 -> libsamplerate.so.0.1.8

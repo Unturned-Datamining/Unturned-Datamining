@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<page xmlns="http://projectmallard.org/1.0/" type="topic" id="scale" xml:lang="hu">
+  <info>
+    <link type="guide" xref="index#dialogs"/>
+    <desc>A <cmd>--scale</cmd> kapcsoló használata.</desc>
+  </info>
+  <title>Méretezés ablak</title>
+  <p>A <cmd>--scale</cmd> kapcsoló használatával méretezés ablakot hozhat létre.</p>
+  <p>A méretezés ablak a következő kapcsolókat támogatja:</p>
+
+  <terms>
+
+    <item>
+      <title><cmd>--text</cmd>=<var>SZÖVEG</var></title>
+      <p>Az ablak szövegének beállítása. (Alapértelmezett: A méretezés értékének beállítása)</p>
+    </item>
+
+    <item>
+      <title><cmd>--value</cmd>=<var>ÉRTÉK</var></title>
+      <p>Kiinduló érték beállítása (Alapértelmezett: 0). Az értéket a minimális és a maximális érték között kell megadnia.</p>
+    </item>
+
+    <item>
+      <title><cmd>--min-value</cmd>=<var>ÉRTÉK</var></title>
+      <p>Minimális érték beállítása (Alapértelmezett: 0).</p>
+    </item>
+
+    <item>
+      <title><cmd>--max-value</cmd>=<var>ÉRTÉK</var></title>
+      <p>Maximális érték beállítása (Alapértelmezett: 100)</p>
+    </item>
+
+    <item>
+      <title><cmd>--step</cmd>=<var>ÉRTÉK</var></title>
+      <p>Lépés értékének beállítása (Alapértelmezett: 1)</p>
+    </item>
+
+    <item>
+      <title><cmd>--print-partial</cmd></title>
+      <p>Érték kiírása a szabványos kimenetre amikor csak az érték változik.</p>
+    </item>
+
+    <item>
+      <title><cmd>--hide-value</cmd></title>
+      <p>Érték elrejtése az ablakban.</p>
+    </item>
+
+  </terms>
+
+  <p>A következő példa parancsfájl bemutatja a méretezés ablak létrehozását:</p>
+
+<code>
+#!/bin/sh
+
+VALUE=`zenity --scale --text="Válassza ki az ablak átlátszóságát." --value=50`
+
+case $? in
+         0)
+		echo "Ezt választotta: $VALUE%.";;
+         1)
+                echo "Nem választott értéket.";;
+        -1)
+                echo "Váratlan hiba történt.";;
+esac
+</code>
+
+  <figure id="zenity-scale-screenshot">
+    <title>Példa méretezés ablak</title>
+    <desc><app>Zenity</app> példa méretezés ablak</desc>
+    <media type="image" mime="image/png" src="figures/zenity-scale-screenshot.png"/>
+  </figure>
+
+</page>

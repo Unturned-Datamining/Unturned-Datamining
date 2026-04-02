@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<page xmlns="http://projectmallard.org/1.0/" type="topic" id="color-selection" xml:lang="de">
+  <info>
+    <link type="guide" xref="index#dialogs"/>
+    <desc>Die Option <cmd>--color-selection</cmd> verwenden.</desc>
+  </info>
+  <title>Farbauswahldialog</title>
+  <p>Verwenden Sie die Option <option>--color-selection</option>, um einen Farbauswahldialog zu erzeugen.</p>
+  <p>Der Farbauswahldialog unterstützt die folgenden Optionen:</p>
+
+  <terms>
+
+    <item>
+      <title><cmd>--color</cmd>=<var>WERT</var></title>
+      <p>Die anfängliche Farbe festlegen (z.B. #FF0000)</p>
+    </item>
+
+    <item>
+      <title><cmd>--show-palette</cmd></title>
+      <p>Die Palette anzeigen.</p>
+    </item>
+
+  </terms>
+
+  <p>Das folgende Beispielskript zeigt, wie Sie einen Farbauswahldialog erzeugen können:</p>
+
+<code>
+#!/bin/sh
+
+COLOR=`zenity --color-selection --show-palette`
+
+case $? in
+         0)
+		echo "You selected $COLOR.";;
+         1)
+                echo "No color selected.";;
+        -1)
+                echo "An unexpected error has occurred.";;
+esac
+</code>
+
+  <figure id="zenity-colorselection-screenshot">
+    <title>Beispiel für einen Farbauswahldialog</title>
+    <desc>Beispiel für einen Farbauswahldialog in <app>Zenity</app></desc>
+    <media type="image" mime="image/png" src="figures/zenity-colorselection-screenshot.png"/>
+  </figure>
+
+</page>

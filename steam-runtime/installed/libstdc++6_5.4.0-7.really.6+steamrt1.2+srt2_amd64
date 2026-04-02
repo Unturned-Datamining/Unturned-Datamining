@@ -1,0 +1,23 @@
+drwxr-xr-x root/root         0 2019-04-03 21:10 ./
+drwxr-xr-x root/root         0 2019-04-03 21:10 ./usr/
+drwxr-xr-x root/root         0 2019-04-03 21:10 ./usr/lib/
+drwxr-xr-x root/root         0 2019-04-03 21:10 ./usr/lib/x86_64-linux-gnu/
+-rw-r--r-- root/root   1094136 2019-04-03 21:10 ./usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.21
+drwxr-xr-x root/root         0 2019-04-03 21:10 ./usr/share/
+drwxr-xr-x root/root         0 2019-04-03 21:10 ./usr/share/doc/
+drwxr-xr-x root/root         0 2019-04-03 21:10 ./usr/share/gcc-5/
+drwxr-xr-x root/root         0 2019-04-03 21:10 ./usr/share/gcc-5/python/
+drwxr-xr-x root/root         0 2019-04-03 21:10 ./usr/share/gcc-5/python/libstdcxx/
+-rw-r--r-- root/root         1 2019-04-03 21:03 ./usr/share/gcc-5/python/libstdcxx/__init__.py
+drwxr-xr-x root/root         0 2019-04-03 21:10 ./usr/share/gcc-5/python/libstdcxx/v6/
+-rw-r--r-- root/root     54671 2019-04-03 21:03 ./usr/share/gcc-5/python/libstdcxx/v6/printers.py
+-rw-r--r-- root/root     21267 2019-04-03 21:03 ./usr/share/gcc-5/python/libstdcxx/v6/xmethods.py
+-rw-r--r-- root/root      1161 2019-04-03 21:03 ./usr/share/gcc-5/python/libstdcxx/v6/__init__.py
+drwxr-xr-x root/root         0 2019-04-03 21:10 ./usr/share/gdb/
+drwxr-xr-x root/root         0 2019-04-03 21:10 ./usr/share/gdb/auto-load/
+drwxr-xr-x root/root         0 2019-04-03 21:10 ./usr/share/gdb/auto-load/usr/
+drwxr-xr-x root/root         0 2019-04-03 21:10 ./usr/share/gdb/auto-load/usr/lib/
+drwxr-xr-x root/root         0 2019-04-03 21:10 ./usr/share/gdb/auto-load/usr/lib/x86_64-linux-gnu/
+-rw-r--r-- root/root      2389 2019-04-03 21:10 ./usr/share/gdb/auto-load/usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.21-gdb.py
+lrwxrwxrwx root/root         0 2019-04-03 21:03 ./usr/lib/x86_64-linux-gnu/libstdc++.so.6 -> libstdc++.so.6.0.21
+lrwxrwxrwx root/root         0 2019-04-03 21:10 ./usr/share/doc/libstdc++6 -> gcc-5-base

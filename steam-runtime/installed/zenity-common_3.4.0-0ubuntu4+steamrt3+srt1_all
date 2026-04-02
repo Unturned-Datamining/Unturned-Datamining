@@ -1,0 +1,1109 @@
+drwxr-xr-x root/root         0 2020-04-21 14:11 ./
+drwxr-xr-x root/root         0 2020-04-21 14:11 ./usr/
+drwxr-xr-x root/root         0 2020-04-21 14:11 ./usr/share/
+drwxr-xr-x root/root         0 2020-04-21 14:11 ./usr/share/locale/
+drwxr-xr-x root/root         0 2020-04-21 14:11 ./usr/share/locale/hu/
+drwxr-xr-x root/root         0 2020-04-21 14:11 ./usr/share/locale/hu/LC_MESSAGES/
+-rw-r--r-- root/root     15561 2020-04-21 14:11 ./usr/share/locale/hu/LC_MESSAGES/zenity.mo
+drwxr-xr-x root/root         0 2020-04-21 14:11 ./usr/share/locale/bn/
+drwxr-xr-x root/root         0 2020-04-21 14:11 ./usr/share/locale/bn/LC_MESSAGES/
+-rw-r--r-- root/root     19004 2020-04-21 14:11 ./usr/share/locale/bn/LC_MESSAGES/zenity.mo
+drwxr-xr-x root/root         0 2020-04-21 14:11 ./usr/share/locale/be@latin/
+drwxr-xr-x root/root         0 2020-04-21 14:11 ./usr/share/locale/be@latin/LC_MESSAGES/
+-rw-r--r-- root/root     11309 2020-04-21 14:11 ./usr/share/locale/be@latin/LC_MESSAGES/zenity.mo
+drwxr-xr-x root/root         0 2020-04-21 14:11 ./usr/share/locale/xh/
+drwxr-xr-x root/root         0 2020-04-21 14:11 ./usr/share/locale/xh/LC_MESSAGES/
+-rw-r--r-- root/root      8213 2020-04-21 14:11 ./usr/share/locale/xh/LC_MESSAGES/zenity.mo
+drwxr-xr-x root/root         0 2020-04-21 14:11 ./usr/share/locale/dz/
+drwxr-xr-x root/root         0 2020-04-21 14:11 ./usr/share/locale/dz/LC_MESSAGES/
+-rw-r--r-- root/root     20175 2020-04-21 14:11 ./usr/share/locale/dz/LC_MESSAGES/zenity.mo
+drwxr-xr-x root/root         0 2020-04-21 14:11 ./usr/share/locale/fi/
+drwxr-xr-x root/root         0 2020-04-21 14:11 ./usr/share/locale/fi/LC_MESSAGES/
+-rw-r--r-- root/root     13985 2020-04-21 14:11 ./usr/share/locale/fi/LC_MESSAGES/zenity.mo
+drwxr-xr-x root/root         0 2020-04-21 14:11 ./usr/share/locale/mg/
+drwxr-xr-x root/root         0 2020-04-21 14:11 ./usr/share/locale/mg/LC_MESSAGES/
+-rw-r--r-- root/root     11273 2020-04-21 14:11 ./usr/share/locale/mg/LC_MESSAGES/zenity.mo
+drwxr-xr-x root/root         0 2020-04-21 14:11 ./usr/share/locale/cs/
+drwxr-xr-x root/root         0 2020-04-21 14:11 ./usr/share/locale/cs/LC_MESSAGES/
+-rw-r--r-- root/root     14593 2020-04-21 14:11 ./usr/share/locale/cs/LC_MESSAGES/zenity.mo
+drwxr-xr-x root/root         0 2020-04-21 14:11 ./usr/share/locale/eu/
+drwxr-xr-x root/root         0 2020-04-21 14:11 ./usr/share/locale/eu/LC_MESSAGES/
+-rw-r--r-- root/root     14744 2020-04-21 14:11 ./usr/share/locale/eu/LC_MESSAGES/zenity.mo
+drwxr-xr-x root/root         0 2020-04-21 14:11 ./usr/share/locale/mai/
+drwxr-xr-x root/root         0 2020-04-21 14:11 ./usr/share/locale/mai/LC_MESSAGES/
+-rw-r--r-- root/root     15686 2020-04-21 14:11 ./usr/share/locale/mai/LC_MESSAGES/zenity.mo
+drwxr-xr-x root/root         0 2020-04-21 14:11 ./usr/share/locale/tr/
+drwxr-xr-x root/root         0 2020-04-21 14:11 ./usr/share/locale/tr/LC_MESSAGES/
+-rw-r--r-- root/root     14430 2020-04-21 14:11 ./usr/share/locale/tr/LC_MESSAGES/zenity.mo
+drwxr-xr-x root/root         0 2020-04-21 14:11 ./usr/share/locale/sr/
+drwxr-xr-x root/root         0 2020-04-21 14:11 ./usr/share/locale/sr/LC_MESSAGES/
+-rw-r--r-- root/root     18475 2020-04-21 14:11 ./usr/share/locale/sr/LC_MESSAGES/zenity.mo
+drwxr-xr-x root/root         0 2020-04-21 14:11 ./usr/share/locale/ga/
+drwxr-xr-x root/root         0 2020-04-21 14:11 ./usr/share/locale/ga/LC_MESSAGES/
+-rw-r--r-- root/root      7219 2020-04-21 14:11 ./usr/share/locale/ga/LC_MESSAGES/zenity.mo
+drwxr-xr-x root/root         0 2020-04-21 14:11 ./usr/share/locale/en@shaw/
+drwxr-xr-x root/root         0 2020-04-21 14:11 ./usr/share/locale/en@shaw/LC_MESSAGES/
+-rw-r--r-- root/root     18495 2020-04-21 14:11 ./usr/share/locale/en@shaw/LC_MESSAGES/zenity.mo
+drwxr-xr-x root/root         0 2020-04-21 14:11 ./usr/share/locale/oc/
+drwxr-xr-x root/root         0 2020-04-21 14:11 ./usr/share/locale/oc/LC_MESSAGES/
+-rw-r--r-- root/root     12615 2020-04-21 14:11 ./usr/share/locale/oc/LC_MESSAGES/zenity.mo
+drwxr-xr-x root/root         0 2020-04-21 14:11 ./usr/share/locale/da/
+drwxr-xr-x root/root         0 2020-04-21 14:11 ./usr/share/locale/da/LC_MESSAGES/
+-rw-r--r-- root/root     13632 2020-04-21 14:11 ./usr/share/locale/da/LC_MESSAGES/zenity.mo
+drwxr-xr-x root/root         0 2020-04-21 14:11 ./usr/share/locale/ms/
+drwxr-xr-x root/root         0 2020-04-21 14:11 ./usr/share/locale/ms/LC_MESSAGES/
+-rw-r--r-- root/root      5669 2020-04-21 14:11 ./usr/share/locale/ms/LC_MESSAGES/zenity.mo
+drwxr-xr-x root/root         0 2020-04-21 14:11 ./usr/share/locale/bn_IN/
+drwxr-xr-x root/root         0 2020-04-21 14:11 ./usr/share/locale/bn_IN/LC_MESSAGES/
+-rw-r--r-- root/root     23056 2020-04-21 14:11 ./usr/share/locale/bn_IN/LC_MESSAGES/zenity.mo
+drwxr-xr-x root/root         0 2020-04-21 14:11 ./usr/share/locale/ne/
+drwxr-xr-x root/root         0 2020-04-21 14:11 ./usr/share/locale/ne/LC_MESSAGES/
+-rw-r--r-- root/root     17668 2020-04-21 14:11 ./usr/share/locale/ne/LC_MESSAGES/zenity.mo
+drwxr-xr-x root/root         0 2020-04-21 14:11 ./usr/share/locale/am/
+drwxr-xr-x root/root         0 2020-04-21 14:11 ./usr/share/locale/am/LC_MESSAGES/
+-rw-r--r-- root/root      2413 2020-04-21 14:11 ./usr/share/locale/am/LC_MESSAGES/zenity.mo
+drwxr-xr-x root/root         0 2020-04-21 14:11 ./usr/share/locale/hr/
+drwxr-xr-x root/root         0 2020-04-21 14:11 ./usr/share/locale/hr/LC_MESSAGES/
+-rw-r--r-- root/root      9174 2020-04-21 14:11 ./usr/share/locale/hr/LC_MESSAGES/zenity.mo
+drwxr-xr-x root/root         0 2020-04-21 14:11 ./usr/share/locale/sq/
+drwxr-xr-x root/root         0 2020-04-21 14:11 ./usr/share/locale/sq/LC_MESSAGES/
+-rw-r--r-- root/root     11868 2020-04-21 14:11 ./usr/share/locale/sq/LC_MESSAGES/zenity.mo
+drwxr-xr-x root/root         0 2020-04-21 14:11 ./usr/share/locale/nb/
+drwxr-xr-x root/root         0 2020-04-21 14:11 ./usr/share/locale/nb/LC_MESSAGES/
+-rw-r--r-- root/root     13600 2020-04-21 14:11 ./usr/share/locale/nb/LC_MESSAGES/zenity.mo
+drwxr-xr-x root/root         0 2020-04-21 14:11 ./usr/share/locale/de/
+drwxr-xr-x root/root         0 2020-04-21 14:11 ./usr/share/locale/de/LC_MESSAGES/
+-rw-r--r-- root/root     14628 2020-04-21 14:11 ./usr/share/locale/de/LC_MESSAGES/zenity.mo
+drwxr-xr-x root/root         0 2020-04-21 14:11 ./usr/share/locale/th/
+drwxr-xr-x root/root         0 2020-04-21 14:11 ./usr/share/locale/th/LC_MESSAGES/
+-rw-r--r-- root/root     21222 2020-04-21 14:11 ./usr/share/locale/th/LC_MESSAGES/zenity.mo
+drwxr-xr-x root/root         0 2020-04-21 14:11 ./usr/share/locale/af/
+drwxr-xr-x root/root         0 2020-04-21 14:11 ./usr/share/locale/af/LC_MESSAGES/
+-rw-r--r-- root/root      2310 2020-04-21 14:11 ./usr/share/locale/af/LC_MESSAGES/zenity.mo
+drwxr-xr-x root/root         0 2020-04-21 14:11 ./usr/share/locale/zh_TW/
+drwxr-xr-x root/root         0 2020-04-21 14:11 ./usr/share/locale/zh_TW/LC_MESSAGES/
+-rw-r--r-- root/root     13557 2020-04-21 14:11 ./usr/share/locale/zh_TW/LC_MESSAGES/zenity.mo
+drwxr-xr-x root/root         0 2020-04-21 14:11 ./usr/share/locale/fa/
+drwxr-xr-x root/root         0 2020-04-21 14:11 ./usr/share/locale/fa/LC_MESSAGES/
+-rw-r--r-- root/root     17123 2020-04-21 14:11 ./usr/share/locale/fa/LC_MESSAGES/zenity.mo
+drwxr-xr-x root/root         0 2020-04-21 14:11 ./usr/share/locale/mk/
+drwxr-xr-x root/root         0 2020-04-21 14:11 ./usr/share/locale/mk/LC_MESSAGES/
+-rw-r--r-- root/root     14193 2020-04-21 14:11 ./usr/share/locale/mk/LC_MESSAGES/zenity.mo
+drwxr-xr-x root/root         0 2020-04-21 14:11 ./usr/share/locale/ka/
+drwxr-xr-x root/root         0 2020-04-21 14:11 ./usr/share/locale/ka/LC_MESSAGES/
+-rw-r--r-- root/root     13704 2020-04-21 14:11 ./usr/share/locale/ka/LC_MESSAGES/zenity.mo
+drwxr-xr-x root/root         0 2020-04-21 14:11 ./usr/share/locale/ps/
+drwxr-xr-x root/root         0 2020-04-21 14:11 ./usr/share/locale/ps/LC_MESSAGES/
+-rw-r--r-- root/root      5682 2020-04-21 14:11 ./usr/share/locale/ps/LC_MESSAGES/zenity.mo
+drwxr-xr-x root/root         0 2020-04-21 14:11 ./usr/share/locale/ug/
+drwxr-xr-x root/root         0 2020-04-21 14:11 ./usr/share/locale/ug/LC_MESSAGES/
+-rw-r--r-- root/root     17554 2020-04-21 14:11 ./usr/share/locale/ug/LC_MESSAGES/zenity.mo
+drwxr-xr-x root/root         0 2020-04-21 14:11 ./usr/share/locale/vi/
+drwxr-xr-x root/root         0 2020-04-21 14:11 ./usr/share/locale/vi/LC_MESSAGES/
+-rw-r--r-- root/root     14405 2020-04-21 14:11 ./usr/share/locale/vi/LC_MESSAGES/zenity.mo
+drwxr-xr-x root/root         0 2020-04-21 14:11 ./usr/share/locale/mn/
+drwxr-xr-x root/root         0 2020-04-21 14:11 ./usr/share/locale/mn/LC_MESSAGES/
+-rw-r--r-- root/root      7142 2020-04-21 14:11 ./usr/share/locale/mn/LC_MESSAGES/zenity.mo
+drwxr-xr-x root/root         0 2020-04-21 14:11 ./usr/share/locale/pa/
+drwxr-xr-x root/root         0 2020-04-21 14:11 ./usr/share/locale/pa/LC_MESSAGES/
+-rw-r--r-- root/root     19258 2020-04-21 14:11 ./usr/share/locale/pa/LC_MESSAGES/zenity.mo
+drwxr-xr-x root/root         0 2020-04-21 14:11 ./usr/share/locale/uk/
+drwxr-xr-x root/root         0 2020-04-21 14:11 ./usr/share/locale/uk/LC_MESSAGES/
+-rw-r--r-- root/root     18174 2020-04-21 14:11 ./usr/share/locale/uk/LC_MESSAGES/zenity.mo
+drwxr-xr-x root/root         0 2020-04-21 14:11 ./usr/share/locale/id/
+drwxr-xr-x root/root         0 2020-04-21 14:11 ./usr/share/locale/id/LC_MESSAGES/
+-rw-r--r-- root/root     13573 2020-04-21 14:11 ./usr/share/locale/id/LC_MESSAGES/zenity.mo
+drwxr-xr-x root/root         0 2020-04-21 14:11 ./usr/share/locale/bs/
+drwxr-xr-x root/root         0 2020-04-21 14:11 ./usr/share/locale/bs/LC_MESSAGES/
+-rw-r--r-- root/root      5643 2020-04-21 14:11 ./usr/share/locale/bs/LC_MESSAGES/zenity.mo
+drwxr-xr-x root/root         0 2020-04-21 14:11 ./usr/share/locale/it/
+drwxr-xr-x root/root         0 2020-04-21 14:11 ./usr/share/locale/it/LC_MESSAGES/
+-rw-r--r-- root/root     14785 2020-04-21 14:11 ./usr/share/locale/it/LC_MESSAGES/zenity.mo
+drwxr-xr-x root/root         0 2020-04-21 14:11 ./usr/share/locale/sl/
+drwxr-xr-x root/root         0 2020-04-21 14:11 ./usr/share/locale/sl/LC_MESSAGES/
+-rw-r--r-- root/root     14365 2020-04-21 14:11 ./usr/share/locale/sl/LC_MESSAGES/zenity.mo
+drwxr-xr-x root/root         0 2020-04-21 14:11 ./usr/share/locale/as/
+drwxr-xr-x root/root         0 2020-04-21 14:11 ./usr/share/locale/as/LC_MESSAGES/
+-rw-r--r-- root/root     21963 2020-04-21 14:11 ./usr/share/locale/as/LC_MESSAGES/zenity.mo
+drwxr-xr-x root/root         0 2020-04-21 14:11 ./usr/share/locale/is/
+drwxr-xr-x root/root         0 2020-04-21 14:11 ./usr/share/locale/is/LC_MESSAGES/
+-rw-r--r-- root/root      3385 2020-04-21 14:11 ./usr/share/locale/is/LC_MESSAGES/zenity.mo
+drwxr-xr-x root/root         0 2020-04-21 14:11 ./usr/share/locale/nn/
+drwxr-xr-x root/root         0 2020-04-21 14:11 ./usr/share/locale/nn/LC_MESSAGES/
+-rw-r--r-- root/root     12536 2020-04-21 14:11 ./usr/share/locale/nn/LC_MESSAGES/zenity.mo
+drwxr-xr-x root/root         0 2020-04-21 14:11 ./usr/share/locale/lt/
+drwxr-xr-x root/root         0 2020-04-21 14:11 ./usr/share/locale/lt/LC_MESSAGES/
+-rw-r--r-- root/root     14777 2020-04-21 14:11 ./usr/share/locale/lt/LC_MESSAGES/zenity.mo
+drwxr-xr-x root/root         0 2020-04-21 14:11 ./usr/share/locale/ml/
+drwxr-xr-x root/root         0 2020-04-21 14:11 ./usr/share/locale/ml/LC_MESSAGES/
+-rw-r--r-- root/root     21258 2020-04-21 14:11 ./usr/share/locale/ml/LC_MESSAGES/zenity.mo
+drwxr-xr-x root/root         0 2020-04-21 14:11 ./usr/share/locale/mi/
+drwxr-xr-x root/root         0 2020-04-21 14:11 ./usr/share/locale/mi/LC_MESSAGES/
+-rw-r--r-- root/root       410 2020-04-21 14:11 ./usr/share/locale/mi/LC_MESSAGES/zenity.mo
+drwxr-xr-x root/root         0 2020-04-21 14:11 ./usr/share/locale/lv/
+drwxr-xr-x root/root         0 2020-04-21 14:11 ./usr/share/locale/lv/LC_MESSAGES/
+-rw-r--r-- root/root     14351 2020-04-21 14:11 ./usr/share/locale/lv/LC_MESSAGES/zenity.mo
+drwxr-xr-x root/root         0 2020-04-21 14:11 ./usr/share/locale/ro/
+drwxr-xr-x root/root         0 2020-04-21 14:11 ./usr/share/locale/ro/LC_MESSAGES/
+-rw-r--r-- root/root     14233 2020-04-21 14:11 ./usr/share/locale/ro/LC_MESSAGES/zenity.mo
+drwxr-xr-x root/root         0 2020-04-21 14:11 ./usr/share/locale/si/
+drwxr-xr-x root/root         0 2020-04-21 14:11 ./usr/share/locale/si/LC_MESSAGES/
+-rw-r--r-- root/root     17287 2020-04-21 14:11 ./usr/share/locale/si/LC_MESSAGES/zenity.mo
+drwxr-xr-x root/root         0 2020-04-21 14:11 ./usr/share/locale/zh_CN/
+drwxr-xr-x root/root         0 2020-04-21 14:11 ./usr/share/locale/zh_CN/LC_MESSAGES/
+-rw-r--r-- root/root     12859 2020-04-21 14:11 ./usr/share/locale/zh_CN/LC_MESSAGES/zenity.mo
+drwxr-xr-x root/root         0 2020-04-21 14:11 ./usr/share/locale/en_CA/
+drwxr-xr-x root/root         0 2020-04-21 14:11 ./usr/share/locale/en_CA/LC_MESSAGES/
+-rw-r--r-- root/root     10363 2020-04-21 14:11 ./usr/share/locale/en_CA/LC_MESSAGES/zenity.mo
+drwxr-xr-x root/root         0 2020-04-21 14:11 ./usr/share/locale/ku/
+drwxr-xr-x root/root         0 2020-04-21 14:11 ./usr/share/locale/ku/LC_MESSAGES/
+-rw-r--r-- root/root      1216 2020-04-21 14:11 ./usr/share/locale/ku/LC_MESSAGES/zenity.mo
+drwxr-xr-x root/root         0 2020-04-21 14:11 ./usr/share/locale/te/
+drwxr-xr-x root/root         0 2020-04-21 14:11 ./usr/share/locale/te/LC_MESSAGES/
+-rw-r--r-- root/root     22272 2020-04-21 14:11 ./usr/share/locale/te/LC_MESSAGES/zenity.mo
+drwxr-xr-x root/root         0 2020-04-21 14:11 ./usr/share/locale/gl/
+drwxr-xr-x root/root         0 2020-04-21 14:11 ./usr/share/locale/gl/LC_MESSAGES/
+-rw-r--r-- root/root     14898 2020-04-21 14:11 ./usr/share/locale/gl/LC_MESSAGES/zenity.mo
+drwxr-xr-x root/root         0 2020-04-21 14:11 ./usr/share/locale/gu/
+drwxr-xr-x root/root         0 2020-04-21 14:11 ./usr/share/locale/gu/LC_MESSAGES/
+-rw-r--r-- root/root     18463 2020-04-21 14:11 ./usr/share/locale/gu/LC_MESSAGES/zenity.mo
+drwxr-xr-x root/root         0 2020-04-21 14:11 ./usr/share/locale/sr@latin/
+drwxr-xr-x root/root         0 2020-04-21 14:11 ./usr/share/locale/sr@latin/LC_MESSAGES/
+-rw-r--r-- root/root     14375 2020-04-21 14:11 ./usr/share/locale/sr@latin/LC_MESSAGES/zenity.mo
+drwxr-xr-x root/root         0 2020-04-21 14:11 ./usr/share/locale/en_GB/
+drwxr-xr-x root/root         0 2020-04-21 14:11 ./usr/share/locale/en_GB/LC_MESSAGES/
+-rw-r--r-- root/root     13411 2020-04-21 14:11 ./usr/share/locale/en_GB/LC_MESSAGES/zenity.mo
+drwxr-xr-x root/root         0 2020-04-21 14:11 ./usr/share/locale/mr/
+drwxr-xr-x root/root         0 2020-04-21 14:11 ./usr/share/locale/mr/LC_MESSAGES/
+-rw-r--r-- root/root     16522 2020-04-21 14:11 ./usr/share/locale/mr/LC_MESSAGES/zenity.mo
+drwxr-xr-x root/root         0 2020-04-21 14:11 ./usr/share/locale/eo/
+drwxr-xr-x root/root         0 2020-04-21 14:11 ./usr/share/locale/eo/LC_MESSAGES/
+-rw-r--r-- root/root      9632 2020-04-21 14:11 ./usr/share/locale/eo/LC_MESSAGES/zenity.mo
+drwxr-xr-x root/root         0 2020-04-21 14:11 ./usr/share/locale/kn/
+drwxr-xr-x root/root         0 2020-04-21 14:11 ./usr/share/locale/kn/LC_MESSAGES/
+-rw-r--r-- root/root     16919 2020-04-21 14:11 ./usr/share/locale/kn/LC_MESSAGES/zenity.mo
+drwxr-xr-x root/root         0 2020-04-21 14:11 ./usr/share/locale/es/
+drwxr-xr-x root/root         0 2020-04-21 14:11 ./usr/share/locale/es/LC_MESSAGES/
+-rw-r--r-- root/root     15067 2020-04-21 14:11 ./usr/share/locale/es/LC_MESSAGES/zenity.mo
+drwxr-xr-x root/root         0 2020-04-21 14:11 ./usr/share/locale/be/
+drwxr-xr-x root/root         0 2020-04-21 14:11 ./usr/share/locale/be/LC_MESSAGES/
+-rw-r--r-- root/root     18678 2020-04-21 14:11 ./usr/share/locale/be/LC_MESSAGES/zenity.mo
+drwxr-xr-x root/root         0 2020-04-21 14:11 ./usr/share/locale/az/
+drwxr-xr-x root/root         0 2020-04-21 14:11 ./usr/share/locale/az/LC_MESSAGES/
+-rw-r--r-- root/root      6143 2020-04-21 14:11 ./usr/share/locale/az/LC_MESSAGES/zenity.mo
+drwxr-xr-x root/root         0 2020-04-21 14:11 ./usr/share/locale/ast/
+drwxr-xr-x root/root         0 2020-04-21 14:11 ./usr/share/locale/ast/LC_MESSAGES/
+-rw-r--r-- root/root     12291 2020-04-21 14:11 ./usr/share/locale/ast/LC_MESSAGES/zenity.mo
+drwxr-xr-x root/root         0 2020-04-21 14:11 ./usr/share/locale/ta/
+drwxr-xr-x root/root         0 2020-04-21 14:11 ./usr/share/locale/ta/LC_MESSAGES/
+-rw-r--r-- root/root     22491 2020-04-21 14:11 ./usr/share/locale/ta/LC_MESSAGES/zenity.mo
+drwxr-xr-x root/root         0 2020-04-21 14:11 ./usr/share/locale/el/
+drwxr-xr-x root/root         0 2020-04-21 14:11 ./usr/share/locale/el/LC_MESSAGES/
+-rw-r--r-- root/root     18493 2020-04-21 14:11 ./usr/share/locale/el/LC_MESSAGES/zenity.mo
+drwxr-xr-x root/root         0 2020-04-21 14:11 ./usr/share/locale/ru/
+drwxr-xr-x root/root         0 2020-04-21 14:11 ./usr/share/locale/ru/LC_MESSAGES/
+-rw-r--r-- root/root     19132 2020-04-21 14:11 ./usr/share/locale/ru/LC_MESSAGES/zenity.mo
+drwxr-xr-x root/root         0 2020-04-21 14:11 ./usr/share/locale/pt_BR/
+drwxr-xr-x root/root         0 2020-04-21 14:11 ./usr/share/locale/pt_BR/LC_MESSAGES/
+-rw-r--r-- root/root     14626 2020-04-21 14:11 ./usr/share/locale/pt_BR/LC_MESSAGES/zenity.mo
+drwxr-xr-x root/root         0 2020-04-21 14:11 ./usr/share/locale/fr/
+drwxr-xr-x root/root         0 2020-04-21 14:11 ./usr/share/locale/fr/LC_MESSAGES/
+-rw-r--r-- root/root     15626 2020-04-21 14:11 ./usr/share/locale/fr/LC_MESSAGES/zenity.mo
+drwxr-xr-x root/root         0 2020-04-21 14:11 ./usr/share/locale/sv/
+drwxr-xr-x root/root         0 2020-04-21 14:11 ./usr/share/locale/sv/LC_MESSAGES/
+-rw-r--r-- root/root     13629 2020-04-21 14:11 ./usr/share/locale/sv/LC_MESSAGES/zenity.mo
+drwxr-xr-x root/root         0 2020-04-21 14:11 ./usr/share/locale/sk/
+drwxr-xr-x root/root         0 2020-04-21 14:11 ./usr/share/locale/sk/LC_MESSAGES/
+-rw-r--r-- root/root     12184 2020-04-21 14:11 ./usr/share/locale/sk/LC_MESSAGES/zenity.mo
+drwxr-xr-x root/root         0 2020-04-21 14:11 ./usr/share/locale/ar/
+drwxr-xr-x root/root         0 2020-04-21 14:11 ./usr/share/locale/ar/LC_MESSAGES/
+-rw-r--r-- root/root     15267 2020-04-21 14:11 ./usr/share/locale/ar/LC_MESSAGES/zenity.mo
+drwxr-xr-x root/root         0 2020-04-21 14:11 ./usr/share/locale/nl/
+drwxr-xr-x root/root         0 2020-04-21 14:11 ./usr/share/locale/nl/LC_MESSAGES/
+-rw-r--r-- root/root     13991 2020-04-21 14:11 ./usr/share/locale/nl/LC_MESSAGES/zenity.mo
+drwxr-xr-x root/root         0 2020-04-21 14:11 ./usr/share/locale/ca@valencia/
+drwxr-xr-x root/root         0 2020-04-21 14:11 ./usr/share/locale/ca@valencia/LC_MESSAGES/
+-rw-r--r-- root/root     14690 2020-04-21 14:11 ./usr/share/locale/ca@valencia/LC_MESSAGES/zenity.mo
+drwxr-xr-x root/root         0 2020-04-21 14:11 ./usr/share/locale/ca/
+drwxr-xr-x root/root         0 2020-04-21 14:11 ./usr/share/locale/ca/LC_MESSAGES/
+-rw-r--r-- root/root     14721 2020-04-21 14:11 ./usr/share/locale/ca/LC_MESSAGES/zenity.mo
+drwxr-xr-x root/root         0 2020-04-21 14:11 ./usr/share/locale/pt/
+drwxr-xr-x root/root         0 2020-04-21 14:11 ./usr/share/locale/pt/LC_MESSAGES/
+-rw-r--r-- root/root     14584 2020-04-21 14:11 ./usr/share/locale/pt/LC_MESSAGES/zenity.mo
+drwxr-xr-x root/root         0 2020-04-21 14:11 ./usr/share/locale/bg/
+drwxr-xr-x root/root         0 2020-04-21 14:11 ./usr/share/locale/bg/LC_MESSAGES/
+-rw-r--r-- root/root     19681 2020-04-21 14:11 ./usr/share/locale/bg/LC_MESSAGES/zenity.mo
+drwxr-xr-x root/root         0 2020-04-21 14:11 ./usr/share/locale/zh_HK/
+drwxr-xr-x root/root         0 2020-04-21 14:11 ./usr/share/locale/zh_HK/LC_MESSAGES/
+-rw-r--r-- root/root     13560 2020-04-21 14:11 ./usr/share/locale/zh_HK/LC_MESSAGES/zenity.mo
+drwxr-xr-x root/root         0 2020-04-21 14:11 ./usr/share/locale/cy/
+drwxr-xr-x root/root         0 2020-04-21 14:11 ./usr/share/locale/cy/LC_MESSAGES/
+-rw-r--r-- root/root      8826 2020-04-21 14:11 ./usr/share/locale/cy/LC_MESSAGES/zenity.mo
+drwxr-xr-x root/root         0 2020-04-21 14:11 ./usr/share/locale/or/
+drwxr-xr-x root/root         0 2020-04-21 14:11 ./usr/share/locale/or/LC_MESSAGES/
+-rw-r--r-- root/root     19634 2020-04-21 14:11 ./usr/share/locale/or/LC_MESSAGES/zenity.mo
+drwxr-xr-x root/root         0 2020-04-21 14:11 ./usr/share/locale/pl/
+drwxr-xr-x root/root         0 2020-04-21 14:11 ./usr/share/locale/pl/LC_MESSAGES/
+-rw-r--r-- root/root     14782 2020-04-21 14:11 ./usr/share/locale/pl/LC_MESSAGES/zenity.mo
+drwxr-xr-x root/root         0 2020-04-21 14:11 ./usr/share/locale/ja/
+drwxr-xr-x root/root         0 2020-04-21 14:11 ./usr/share/locale/ja/LC_MESSAGES/
+-rw-r--r-- root/root     16139 2020-04-21 14:11 ./usr/share/locale/ja/LC_MESSAGES/zenity.mo
+drwxr-xr-x root/root         0 2020-04-21 14:11 ./usr/share/locale/hi/
+drwxr-xr-x root/root         0 2020-04-21 14:11 ./usr/share/locale/hi/LC_MESSAGES/
+-rw-r--r-- root/root     15697 2020-04-21 14:11 ./usr/share/locale/hi/LC_MESSAGES/zenity.mo
+drwxr-xr-x root/root         0 2020-04-21 14:11 ./usr/share/locale/et/
+drwxr-xr-x root/root         0 2020-04-21 14:11 ./usr/share/locale/et/LC_MESSAGES/
+-rw-r--r-- root/root     14121 2020-04-21 14:11 ./usr/share/locale/et/LC_MESSAGES/zenity.mo
+drwxr-xr-x root/root         0 2020-04-21 14:11 ./usr/share/locale/rw/
+drwxr-xr-x root/root         0 2020-04-21 14:11 ./usr/share/locale/rw/LC_MESSAGES/
+-rw-r--r-- root/root       804 2020-04-21 14:11 ./usr/share/locale/rw/LC_MESSAGES/zenity.mo
+drwxr-xr-x root/root         0 2020-04-21 14:11 ./usr/share/locale/ko/
+drwxr-xr-x root/root         0 2020-04-21 14:11 ./usr/share/locale/ko/LC_MESSAGES/
+-rw-r--r-- root/root     15050 2020-04-21 14:11 ./usr/share/locale/ko/LC_MESSAGES/zenity.mo
+drwxr-xr-x root/root         0 2020-04-21 14:11 ./usr/share/locale/he/
+drwxr-xr-x root/root         0 2020-04-21 14:11 ./usr/share/locale/he/LC_MESSAGES/
+-rw-r--r-- root/root     13506 2020-04-21 14:11 ./usr/share/locale/he/LC_MESSAGES/zenity.mo
+drwxr-xr-x root/root         0 2020-04-21 14:11 ./usr/share/gnome/
+drwxr-xr-x root/root         0 2020-04-21 14:11 ./usr/share/gnome/help/
+drwxr-xr-x root/root         0 2020-04-21 14:11 ./usr/share/gnome/help/zenity/
+drwxr-xr-x root/root         0 2020-04-21 14:11 ./usr/share/gnome/help/zenity/hu/
+-rw-r--r-- root/root      1077 2020-04-21 14:11 ./usr/share/gnome/help/zenity/hu/notification.page
+-rw-r--r-- root/root       818 2020-04-21 14:11 ./usr/share/gnome/help/zenity/hu/index.page
+drwxr-xr-x root/root         0 2020-04-21 14:11 ./usr/share/gnome/help/zenity/hu/figures/
+-rw-r--r-- root/root      1297 2020-04-21 14:11 ./usr/share/gnome/help/zenity/hu/password.page
+-rw-r--r-- root/root      1634 2020-04-21 14:11 ./usr/share/gnome/help/zenity/hu/entry.page
+-rw-r--r-- root/root      2421 2020-04-21 14:11 ./usr/share/gnome/help/zenity/hu/forms.page
+-rw-r--r-- root/root      2349 2020-04-21 14:11 ./usr/share/gnome/help/zenity/hu/progress.page
+-rw-r--r-- root/root      1098 2020-04-21 14:11 ./usr/share/gnome/help/zenity/hu/intro.page
+-rw-r--r-- root/root      2273 2020-04-21 14:11 ./usr/share/gnome/help/zenity/hu/scale.page
+-rw-r--r-- root/root       824 2020-04-21 14:11 ./usr/share/gnome/help/zenity/hu/question.page
+-rw-r--r-- root/root      2290 2020-04-21 14:11 ./usr/share/gnome/help/zenity/hu/calendar.page
+-rw-r--r-- root/root      8863 2020-04-21 14:11 ./usr/share/gnome/help/zenity/hu/usage.page
+-rw-r--r-- root/root      2164 2020-04-21 14:11 ./usr/share/gnome/help/zenity/hu/file-selection.page
+-rw-r--r-- root/root       871 2020-04-21 14:11 ./usr/share/gnome/help/zenity/hu/info.page
+-rw-r--r-- root/root       571 2020-04-21 14:11 ./usr/share/gnome/help/zenity/hu/message.page
+-rw-r--r-- root/root       782 2020-04-21 14:11 ./usr/share/gnome/help/zenity/hu/error.page
+-rw-r--r-- root/root      2428 2020-04-21 14:11 ./usr/share/gnome/help/zenity/hu/text.page
+-rw-r--r-- root/root      2843 2020-04-21 14:11 ./usr/share/gnome/help/zenity/hu/list.page
+-rw-r--r-- root/root      1414 2020-04-21 14:11 ./usr/share/gnome/help/zenity/hu/color-selection.page
+-rw-r--r-- root/root       887 2020-04-21 14:11 ./usr/share/gnome/help/zenity/hu/warning.page
+-rw-r--r-- root/root      3705 2020-04-21 14:11 ./usr/share/gnome/help/zenity/hu/legal.xml
+drwxr-xr-x root/root         0 2020-04-21 14:11 ./usr/share/gnome/help/zenity/fi/
+-rw-r--r-- root/root      1046 2020-04-21 14:11 ./usr/share/gnome/help/zenity/fi/notification.page
+-rw-r--r-- root/root       814 2020-04-21 14:11 ./usr/share/gnome/help/zenity/fi/index.page
+drwxr-xr-x root/root         0 2020-04-21 14:11 ./usr/share/gnome/help/zenity/fi/figures/
+-rw-r--r-- root/root     10269 2020-04-21 14:11 ./usr/share/gnome/help/zenity/fi/figures/zenity-question-screenshot.png
+-rw-r--r-- root/root      8028 2020-04-21 14:11 ./usr/share/gnome/help/zenity/fi/figures/zenity-entry-screenshot.png
+-rw-r--r-- root/root      8400 2020-04-21 14:11 ./usr/share/gnome/help/zenity/fi/figures/zenity-progress-screenshot.png
+-rw-r--r-- root/root      9414 2020-04-21 14:11 ./usr/share/gnome/help/zenity/fi/figures/zenity-warning-screenshot.png
+-rw-r--r-- root/root     10832 2020-04-21 14:11 ./usr/share/gnome/help/zenity/fi/figures/zenity-information-screenshot.png
+-rw-r--r-- root/root     66862 2020-04-21 14:11 ./usr/share/gnome/help/zenity/fi/figures/zenity-fileselection-screenshot.png
+-rw-r--r-- root/root     24325 2020-04-21 14:11 ./usr/share/gnome/help/zenity/fi/figures/zenity-calendar-screenshot.png
+-rw-r--r-- root/root      9573 2020-04-21 14:11 ./usr/share/gnome/help/zenity/fi/figures/zenity-error-screenshot.png
+-rw-r--r-- root/root      3522 2020-04-21 14:11 ./usr/share/gnome/help/zenity/fi/figures/zenity-notification-screenshot.png
+-rw-r--r-- root/root     22178 2020-04-21 14:11 ./usr/share/gnome/help/zenity/fi/figures/zenity-list-screenshot.png
+-rw-r--r-- root/root     31550 2020-04-21 14:11 ./usr/share/gnome/help/zenity/fi/figures/zenity-text-screenshot.png
+-rw-r--r-- root/root      1252 2020-04-21 14:11 ./usr/share/gnome/help/zenity/fi/password.page
+-rw-r--r-- root/root      1574 2020-04-21 14:11 ./usr/share/gnome/help/zenity/fi/entry.page
+-rw-r--r-- root/root      2205 2020-04-21 14:11 ./usr/share/gnome/help/zenity/fi/forms.page
+-rw-r--r-- root/root      2224 2020-04-21 14:11 ./usr/share/gnome/help/zenity/fi/progress.page
+-rw-r--r-- root/root      1016 2020-04-21 14:11 ./usr/share/gnome/help/zenity/fi/intro.page
+-rw-r--r-- root/root      2020 2020-04-21 14:11 ./usr/share/gnome/help/zenity/fi/scale.page
+-rw-r--r-- root/root       829 2020-04-21 14:11 ./usr/share/gnome/help/zenity/fi/question.page
+-rw-r--r-- root/root      2212 2020-04-21 14:11 ./usr/share/gnome/help/zenity/fi/calendar.page
+-rw-r--r-- root/root      8426 2020-04-21 14:11 ./usr/share/gnome/help/zenity/fi/usage.page
+-rw-r--r-- root/root      2136 2020-04-21 14:11 ./usr/share/gnome/help/zenity/fi/file-selection.page
+-rw-r--r-- root/root       838 2020-04-21 14:11 ./usr/share/gnome/help/zenity/fi/info.page
+-rw-r--r-- root/root       586 2020-04-21 14:11 ./usr/share/gnome/help/zenity/fi/message.page
+-rw-r--r-- root/root       807 2020-04-21 14:11 ./usr/share/gnome/help/zenity/fi/error.page
+-rw-r--r-- root/root      2160 2020-04-21 14:11 ./usr/share/gnome/help/zenity/fi/text.page
+-rw-r--r-- root/root      2767 2020-04-21 14:11 ./usr/share/gnome/help/zenity/fi/list.page
+-rw-r--r-- root/root      1366 2020-04-21 14:11 ./usr/share/gnome/help/zenity/fi/color-selection.page
+-rw-r--r-- root/root       842 2020-04-21 14:11 ./usr/share/gnome/help/zenity/fi/warning.page
+-rw-r--r-- root/root      3090 2020-04-21 14:11 ./usr/share/gnome/help/zenity/fi/legal.xml
+drwxr-xr-x root/root         0 2020-04-21 14:11 ./usr/share/gnome/help/zenity/cs/
+-rw-r--r-- root/root      1051 2020-04-21 14:11 ./usr/share/gnome/help/zenity/cs/notification.page
+-rw-r--r-- root/root       819 2020-04-21 14:11 ./usr/share/gnome/help/zenity/cs/index.page
+drwxr-xr-x root/root         0 2020-04-21 14:11 ./usr/share/gnome/help/zenity/cs/figures/
+-rw-r--r-- root/root     14367 2020-04-21 14:11 ./usr/share/gnome/help/zenity/cs/figures/zenity-question-screenshot.png
+-rw-r--r-- root/root     10564 2020-04-21 14:11 ./usr/share/gnome/help/zenity/cs/figures/zenity-entry-screenshot.png
+-rw-r--r-- root/root     15696 2020-04-21 14:11 ./usr/share/gnome/help/zenity/cs/figures/zenity-progress-screenshot.png
+-rw-r--r-- root/root     13529 2020-04-21 14:11 ./usr/share/gnome/help/zenity/cs/figures/zenity-warning-screenshot.png
+-rw-r--r-- root/root     15262 2020-04-21 14:11 ./usr/share/gnome/help/zenity/cs/figures/zenity-information-screenshot.png
+-rw-r--r-- root/root     62362 2020-04-21 14:11 ./usr/share/gnome/help/zenity/cs/figures/zenity-fileselection-screenshot.png
+-rw-r--r-- root/root     24618 2020-04-21 14:11 ./usr/share/gnome/help/zenity/cs/figures/zenity-calendar-screenshot.png
+-rw-r--r-- root/root     13015 2020-04-21 14:11 ./usr/share/gnome/help/zenity/cs/figures/zenity-error-screenshot.png
+-rw-r--r-- root/root      4888 2020-04-21 14:11 ./usr/share/gnome/help/zenity/cs/figures/zenity-notification-screenshot.png
+-rw-r--r-- root/root     28472 2020-04-21 14:11 ./usr/share/gnome/help/zenity/cs/figures/zenity-list-screenshot.png
+-rw-r--r-- root/root     44199 2020-04-21 14:11 ./usr/share/gnome/help/zenity/cs/figures/zenity-text-screenshot.png
+-rw-r--r-- root/root      1252 2020-04-21 14:11 ./usr/share/gnome/help/zenity/cs/password.page
+-rw-r--r-- root/root      1606 2020-04-21 14:11 ./usr/share/gnome/help/zenity/cs/entry.page
+-rw-r--r-- root/root      2205 2020-04-21 14:11 ./usr/share/gnome/help/zenity/cs/forms.page
+-rw-r--r-- root/root      2282 2020-04-21 14:11 ./usr/share/gnome/help/zenity/cs/progress.page
+-rw-r--r-- root/root      1065 2020-04-21 14:11 ./usr/share/gnome/help/zenity/cs/intro.page
+-rw-r--r-- root/root      2020 2020-04-21 14:11 ./usr/share/gnome/help/zenity/cs/scale.page
+-rw-r--r-- root/root       852 2020-04-21 14:11 ./usr/share/gnome/help/zenity/cs/question.page
+-rw-r--r-- root/root      2256 2020-04-21 14:11 ./usr/share/gnome/help/zenity/cs/calendar.page
+-rw-r--r-- root/root      8857 2020-04-21 14:11 ./usr/share/gnome/help/zenity/cs/usage.page
+-rw-r--r-- root/root      2144 2020-04-21 14:11 ./usr/share/gnome/help/zenity/cs/file-selection.page
+-rw-r--r-- root/root       869 2020-04-21 14:11 ./usr/share/gnome/help/zenity/cs/info.page
+-rw-r--r-- root/root       586 2020-04-21 14:11 ./usr/share/gnome/help/zenity/cs/message.page
+-rw-r--r-- root/root       862 2020-04-21 14:11 ./usr/share/gnome/help/zenity/cs/error.page
+-rw-r--r-- root/root      2258 2020-04-21 14:11 ./usr/share/gnome/help/zenity/cs/text.page
+-rw-r--r-- root/root      2850 2020-04-21 14:11 ./usr/share/gnome/help/zenity/cs/list.page
+-rw-r--r-- root/root      1366 2020-04-21 14:11 ./usr/share/gnome/help/zenity/cs/color-selection.page
+-rw-r--r-- root/root       891 2020-04-21 14:11 ./usr/share/gnome/help/zenity/cs/warning.page
+-rw-r--r-- root/root      3065 2020-04-21 14:11 ./usr/share/gnome/help/zenity/cs/legal.xml
+drwxr-xr-x root/root         0 2020-04-21 14:11 ./usr/share/gnome/help/zenity/eu/
+-rw-r--r-- root/root      1053 2020-04-21 14:11 ./usr/share/gnome/help/zenity/eu/notification.page
+-rw-r--r-- root/root       821 2020-04-21 14:11 ./usr/share/gnome/help/zenity/eu/index.page
+drwxr-xr-x root/root         0 2020-04-21 14:11 ./usr/share/gnome/help/zenity/eu/figures/
+-rw-r--r-- root/root     11461 2020-04-21 14:11 ./usr/share/gnome/help/zenity/eu/figures/zenity-question-screenshot.png
+-rw-r--r-- root/root      9064 2020-04-21 14:11 ./usr/share/gnome/help/zenity/eu/figures/zenity-entry-screenshot.png
+-rw-r--r-- root/root     11409 2020-04-21 14:11 ./usr/share/gnome/help/zenity/eu/figures/zenity-progress-screenshot.png
+-rw-r--r-- root/root     10100 2020-04-21 14:11 ./usr/share/gnome/help/zenity/eu/figures/zenity-warning-screenshot.png
+-rw-r--r-- root/root     10928 2020-04-21 14:11 ./usr/share/gnome/help/zenity/eu/figures/zenity-information-screenshot.png
+-rw-r--r-- root/root     37802 2020-04-21 14:11 ./usr/share/gnome/help/zenity/eu/figures/zenity-fileselection-screenshot.png
+-rw-r--r-- root/root     17708 2020-04-21 14:11 ./usr/share/gnome/help/zenity/eu/figures/zenity-calendar-screenshot.png
+-rw-r--r-- root/root      9941 2020-04-21 14:11 ./usr/share/gnome/help/zenity/eu/figures/zenity-error-screenshot.png
+-rw-r--r-- root/root      7290 2020-04-21 14:11 ./usr/share/gnome/help/zenity/eu/figures/zenity-notification-screenshot.png
+-rw-r--r-- root/root     20600 2020-04-21 14:11 ./usr/share/gnome/help/zenity/eu/figures/zenity-list-screenshot.png
+-rw-r--r-- root/root     40303 2020-04-21 14:11 ./usr/share/gnome/help/zenity/eu/figures/zenity-text-screenshot.png
+-rw-r--r-- root/root      1252 2020-04-21 14:11 ./usr/share/gnome/help/zenity/eu/password.page
+-rw-r--r-- root/root      1656 2020-04-21 14:11 ./usr/share/gnome/help/zenity/eu/entry.page
+-rw-r--r-- root/root      2205 2020-04-21 14:11 ./usr/share/gnome/help/zenity/eu/forms.page
+-rw-r--r-- root/root      2267 2020-04-21 14:11 ./usr/share/gnome/help/zenity/eu/progress.page
+-rw-r--r-- root/root      1035 2020-04-21 14:11 ./usr/share/gnome/help/zenity/eu/intro.page
+-rw-r--r-- root/root      2020 2020-04-21 14:11 ./usr/share/gnome/help/zenity/eu/scale.page
+-rw-r--r-- root/root       860 2020-04-21 14:11 ./usr/share/gnome/help/zenity/eu/question.page
+-rw-r--r-- root/root      2267 2020-04-21 14:11 ./usr/share/gnome/help/zenity/eu/calendar.page
+-rw-r--r-- root/root      8864 2020-04-21 14:11 ./usr/share/gnome/help/zenity/eu/usage.page
+-rw-r--r-- root/root      2276 2020-04-21 14:11 ./usr/share/gnome/help/zenity/eu/file-selection.page
+-rw-r--r-- root/root       861 2020-04-21 14:11 ./usr/share/gnome/help/zenity/eu/info.page
+-rw-r--r-- root/root       586 2020-04-21 14:11 ./usr/share/gnome/help/zenity/eu/message.page
+-rw-r--r-- root/root       842 2020-04-21 14:11 ./usr/share/gnome/help/zenity/eu/error.page
+-rw-r--r-- root/root      2248 2020-04-21 14:11 ./usr/share/gnome/help/zenity/eu/text.page
+-rw-r--r-- root/root      2884 2020-04-21 14:11 ./usr/share/gnome/help/zenity/eu/list.page
+-rw-r--r-- root/root      1366 2020-04-21 14:11 ./usr/share/gnome/help/zenity/eu/color-selection.page
+-rw-r--r-- root/root       857 2020-04-21 14:11 ./usr/share/gnome/help/zenity/eu/warning.page
+-rw-r--r-- root/root      3210 2020-04-21 14:11 ./usr/share/gnome/help/zenity/eu/legal.xml
+drwxr-xr-x root/root         0 2020-04-21 14:11 ./usr/share/gnome/help/zenity/oc/
+-rw-r--r-- root/root      1067 2020-04-21 14:11 ./usr/share/gnome/help/zenity/oc/notification.page
+-rw-r--r-- root/root       805 2020-04-21 14:11 ./usr/share/gnome/help/zenity/oc/index.page
+drwxr-xr-x root/root         0 2020-04-21 14:11 ./usr/share/gnome/help/zenity/oc/figures/
+-rw-r--r-- root/root      1252 2020-04-21 14:11 ./usr/share/gnome/help/zenity/oc/password.page
+-rw-r--r-- root/root      1567 2020-04-21 14:11 ./usr/share/gnome/help/zenity/oc/entry.page
+-rw-r--r-- root/root      2205 2020-04-21 14:11 ./usr/share/gnome/help/zenity/oc/forms.page
+-rw-r--r-- root/root      2191 2020-04-21 14:11 ./usr/share/gnome/help/zenity/oc/progress.page
+-rw-r--r-- root/root      1037 2020-04-21 14:11 ./usr/share/gnome/help/zenity/oc/intro.page
+-rw-r--r-- root/root      2020 2020-04-21 14:11 ./usr/share/gnome/help/zenity/oc/scale.page
+-rw-r--r-- root/root       828 2020-04-21 14:11 ./usr/share/gnome/help/zenity/oc/question.page
+-rw-r--r-- root/root      2214 2020-04-21 14:11 ./usr/share/gnome/help/zenity/oc/calendar.page
+-rw-r--r-- root/root      8349 2020-04-21 14:11 ./usr/share/gnome/help/zenity/oc/usage.page
+-rw-r--r-- root/root      2094 2020-04-21 14:11 ./usr/share/gnome/help/zenity/oc/file-selection.page
+-rw-r--r-- root/root       840 2020-04-21 14:11 ./usr/share/gnome/help/zenity/oc/info.page
+-rw-r--r-- root/root       586 2020-04-21 14:11 ./usr/share/gnome/help/zenity/oc/message.page
+-rw-r--r-- root/root       804 2020-04-21 14:11 ./usr/share/gnome/help/zenity/oc/error.page
+-rw-r--r-- root/root      2189 2020-04-21 14:11 ./usr/share/gnome/help/zenity/oc/text.page
+-rw-r--r-- root/root      2749 2020-04-21 14:11 ./usr/share/gnome/help/zenity/oc/list.page
+-rw-r--r-- root/root      1366 2020-04-21 14:11 ./usr/share/gnome/help/zenity/oc/color-selection.page
+-rw-r--r-- root/root       837 2020-04-21 14:11 ./usr/share/gnome/help/zenity/oc/warning.page
+-rw-r--r-- root/root      3705 2020-04-21 14:11 ./usr/share/gnome/help/zenity/oc/legal.xml
+drwxr-xr-x root/root         0 2020-04-21 14:11 ./usr/share/gnome/help/zenity/da/
+-rw-r--r-- root/root      1046 2020-04-21 14:11 ./usr/share/gnome/help/zenity/da/notification.page
+-rw-r--r-- root/root       817 2020-04-21 14:11 ./usr/share/gnome/help/zenity/da/index.page
+drwxr-xr-x root/root         0 2020-04-21 14:11 ./usr/share/gnome/help/zenity/da/figures/
+-rw-r--r-- root/root      1252 2020-04-21 14:11 ./usr/share/gnome/help/zenity/da/password.page
+-rw-r--r-- root/root      1513 2020-04-21 14:11 ./usr/share/gnome/help/zenity/da/entry.page
+-rw-r--r-- root/root      2205 2020-04-21 14:11 ./usr/share/gnome/help/zenity/da/forms.page
+-rw-r--r-- root/root      2215 2020-04-21 14:11 ./usr/share/gnome/help/zenity/da/progress.page
+-rw-r--r-- root/root      1022 2020-04-21 14:11 ./usr/share/gnome/help/zenity/da/intro.page
+-rw-r--r-- root/root      2020 2020-04-21 14:11 ./usr/share/gnome/help/zenity/da/scale.page
+-rw-r--r-- root/root       851 2020-04-21 14:11 ./usr/share/gnome/help/zenity/da/question.page
+-rw-r--r-- root/root      2203 2020-04-21 14:11 ./usr/share/gnome/help/zenity/da/calendar.page
+-rw-r--r-- root/root      8326 2020-04-21 14:11 ./usr/share/gnome/help/zenity/da/usage.page
+-rw-r--r-- root/root      2020 2020-04-21 14:11 ./usr/share/gnome/help/zenity/da/file-selection.page
+-rw-r--r-- root/root       851 2020-04-21 14:11 ./usr/share/gnome/help/zenity/da/info.page
+-rw-r--r-- root/root       586 2020-04-21 14:11 ./usr/share/gnome/help/zenity/da/message.page
+-rw-r--r-- root/root       817 2020-04-21 14:11 ./usr/share/gnome/help/zenity/da/error.page
+-rw-r--r-- root/root      2213 2020-04-21 14:11 ./usr/share/gnome/help/zenity/da/text.page
+-rw-r--r-- root/root      2728 2020-04-21 14:11 ./usr/share/gnome/help/zenity/da/list.page
+-rw-r--r-- root/root      1366 2020-04-21 14:11 ./usr/share/gnome/help/zenity/da/color-selection.page
+-rw-r--r-- root/root       856 2020-04-21 14:11 ./usr/share/gnome/help/zenity/da/warning.page
+-rw-r--r-- root/root      3125 2020-04-21 14:11 ./usr/share/gnome/help/zenity/da/legal.xml
+drwxr-xr-x root/root         0 2020-04-21 14:11 ./usr/share/gnome/help/zenity/de/
+-rw-r--r-- root/root      1121 2020-04-21 14:11 ./usr/share/gnome/help/zenity/de/notification.page
+-rw-r--r-- root/root       803 2020-04-21 14:11 ./usr/share/gnome/help/zenity/de/index.page
+drwxr-xr-x root/root         0 2020-04-21 14:11 ./usr/share/gnome/help/zenity/de/figures/
+-rw-r--r-- root/root     11346 2020-04-21 14:11 ./usr/share/gnome/help/zenity/de/figures/zenity-question-screenshot.png
+-rw-r--r-- root/root      9647 2020-04-21 14:11 ./usr/share/gnome/help/zenity/de/figures/zenity-entry-screenshot.png
+-rw-r--r-- root/root     10860 2020-04-21 14:11 ./usr/share/gnome/help/zenity/de/figures/zenity-progress-screenshot.png
+-rw-r--r-- root/root     10028 2020-04-21 14:11 ./usr/share/gnome/help/zenity/de/figures/zenity-warning-screenshot.png
+-rw-r--r-- root/root     10830 2020-04-21 14:11 ./usr/share/gnome/help/zenity/de/figures/zenity-information-screenshot.png
+-rw-r--r-- root/root     63948 2020-04-21 14:11 ./usr/share/gnome/help/zenity/de/figures/zenity-fileselection-screenshot.png
+-rw-r--r-- root/root     18440 2020-04-21 14:11 ./usr/share/gnome/help/zenity/de/figures/zenity-calendar-screenshot.png
+-rw-r--r-- root/root      9206 2020-04-21 14:11 ./usr/share/gnome/help/zenity/de/figures/zenity-error-screenshot.png
+-rw-r--r-- root/root      7727 2020-04-21 14:11 ./usr/share/gnome/help/zenity/de/figures/zenity-notification-screenshot.png
+-rw-r--r-- root/root     20164 2020-04-21 14:11 ./usr/share/gnome/help/zenity/de/figures/zenity-list-screenshot.png
+-rw-r--r-- root/root     23778 2020-04-21 14:11 ./usr/share/gnome/help/zenity/de/figures/zenity-text-screenshot.png
+-rw-r--r-- root/root      1307 2020-04-21 14:11 ./usr/share/gnome/help/zenity/de/password.page
+-rw-r--r-- root/root      1645 2020-04-21 14:11 ./usr/share/gnome/help/zenity/de/entry.page
+-rw-r--r-- root/root      2326 2020-04-21 14:11 ./usr/share/gnome/help/zenity/de/forms.page
+-rw-r--r-- root/root      2372 2020-04-21 14:11 ./usr/share/gnome/help/zenity/de/progress.page
+-rw-r--r-- root/root      1033 2020-04-21 14:11 ./usr/share/gnome/help/zenity/de/intro.page
+-rw-r--r-- root/root      2182 2020-04-21 14:11 ./usr/share/gnome/help/zenity/de/scale.page
+-rw-r--r-- root/root       832 2020-04-21 14:11 ./usr/share/gnome/help/zenity/de/question.page
+-rw-r--r-- root/root      2370 2020-04-21 14:11 ./usr/share/gnome/help/zenity/de/calendar.page
+-rw-r--r-- root/root      9078 2020-04-21 14:11 ./usr/share/gnome/help/zenity/de/usage.page
+-rw-r--r-- root/root      2162 2020-04-21 14:11 ./usr/share/gnome/help/zenity/de/file-selection.page
+-rw-r--r-- root/root       871 2020-04-21 14:11 ./usr/share/gnome/help/zenity/de/info.page
+-rw-r--r-- root/root       566 2020-04-21 14:11 ./usr/share/gnome/help/zenity/de/message.page
+-rw-r--r-- root/root       832 2020-04-21 14:11 ./usr/share/gnome/help/zenity/de/error.page
+-rw-r--r-- root/root      2303 2020-04-21 14:11 ./usr/share/gnome/help/zenity/de/text.page
+-rw-r--r-- root/root      2944 2020-04-21 14:11 ./usr/share/gnome/help/zenity/de/list.page
+-rw-r--r-- root/root      1405 2020-04-21 14:11 ./usr/share/gnome/help/zenity/de/color-selection.page
+-rw-r--r-- root/root       860 2020-04-21 14:11 ./usr/share/gnome/help/zenity/de/warning.page
+-rw-r--r-- root/root      3705 2020-04-21 14:11 ./usr/share/gnome/help/zenity/de/legal.xml
+drwxr-xr-x root/root         0 2020-04-21 14:11 ./usr/share/gnome/help/zenity/uk/
+-rw-r--r-- root/root      1164 2020-04-21 14:11 ./usr/share/gnome/help/zenity/uk/notification.page
+-rw-r--r-- root/root       855 2020-04-21 14:11 ./usr/share/gnome/help/zenity/uk/index.page
+drwxr-xr-x root/root         0 2020-04-21 14:11 ./usr/share/gnome/help/zenity/uk/figures/
+-rw-r--r-- root/root     11399 2020-04-21 14:11 ./usr/share/gnome/help/zenity/uk/figures/zenity-question-screenshot.png
+-rw-r--r-- root/root      8126 2020-04-21 14:11 ./usr/share/gnome/help/zenity/uk/figures/zenity-entry-screenshot.png
+-rw-r--r-- root/root      9230 2020-04-21 14:11 ./usr/share/gnome/help/zenity/uk/figures/zenity-progress-screenshot.png
+-rw-r--r-- root/root     12332 2020-04-21 14:11 ./usr/share/gnome/help/zenity/uk/figures/zenity-warning-screenshot.png
+-rw-r--r-- root/root     11188 2020-04-21 14:11 ./usr/share/gnome/help/zenity/uk/figures/zenity-information-screenshot.png
+-rw-r--r-- root/root     40680 2020-04-21 14:11 ./usr/share/gnome/help/zenity/uk/figures/zenity-fileselection-screenshot.png
+-rw-r--r-- root/root     17446 2020-04-21 14:11 ./usr/share/gnome/help/zenity/uk/figures/zenity-calendar-screenshot.png
+-rw-r--r-- root/root     10006 2020-04-21 14:11 ./usr/share/gnome/help/zenity/uk/figures/zenity-error-screenshot.png
+-rw-r--r-- root/root      3117 2020-04-21 14:11 ./usr/share/gnome/help/zenity/uk/figures/zenity-notification-screenshot.png
+-rw-r--r-- root/root     19985 2020-04-21 14:11 ./usr/share/gnome/help/zenity/uk/figures/zenity-list-screenshot.png
+-rw-r--r-- root/root     23812 2020-04-21 14:11 ./usr/share/gnome/help/zenity/uk/figures/zenity-text-screenshot.png
+-rw-r--r-- root/root      1252 2020-04-21 14:11 ./usr/share/gnome/help/zenity/uk/password.page
+-rw-r--r-- root/root      1755 2020-04-21 14:11 ./usr/share/gnome/help/zenity/uk/entry.page
+-rw-r--r-- root/root      2205 2020-04-21 14:11 ./usr/share/gnome/help/zenity/uk/forms.page
+-rw-r--r-- root/root      2435 2020-04-21 14:11 ./usr/share/gnome/help/zenity/uk/progress.page
+-rw-r--r-- root/root      1200 2020-04-21 14:11 ./usr/share/gnome/help/zenity/uk/intro.page
+-rw-r--r-- root/root      2020 2020-04-21 14:11 ./usr/share/gnome/help/zenity/uk/scale.page
+-rw-r--r-- root/root       869 2020-04-21 14:11 ./usr/share/gnome/help/zenity/uk/question.page
+-rw-r--r-- root/root      2355 2020-04-21 14:11 ./usr/share/gnome/help/zenity/uk/calendar.page
+-rw-r--r-- root/root      9823 2020-04-21 14:11 ./usr/share/gnome/help/zenity/uk/usage.page
+-rw-r--r-- root/root      2434 2020-04-21 14:11 ./usr/share/gnome/help/zenity/uk/file-selection.page
+-rw-r--r-- root/root       864 2020-04-21 14:11 ./usr/share/gnome/help/zenity/uk/info.page
+-rw-r--r-- root/root       586 2020-04-21 14:11 ./usr/share/gnome/help/zenity/uk/message.page
+-rw-r--r-- root/root       843 2020-04-21 14:11 ./usr/share/gnome/help/zenity/uk/error.page
+-rw-r--r-- root/root      2505 2020-04-21 14:11 ./usr/share/gnome/help/zenity/uk/text.page
+-rw-r--r-- root/root      3235 2020-04-21 14:11 ./usr/share/gnome/help/zenity/uk/list.page
+-rw-r--r-- root/root      1366 2020-04-21 14:11 ./usr/share/gnome/help/zenity/uk/color-selection.page
+-rw-r--r-- root/root       892 2020-04-21 14:11 ./usr/share/gnome/help/zenity/uk/warning.page
+-rw-r--r-- root/root      4674 2020-04-21 14:11 ./usr/share/gnome/help/zenity/uk/legal.xml
+drwxr-xr-x root/root         0 2020-04-21 14:11 ./usr/share/gnome/help/zenity/sl/
+-rw-r--r-- root/root      1055 2020-04-21 14:11 ./usr/share/gnome/help/zenity/sl/notification.page
+-rw-r--r-- root/root       802 2020-04-21 14:11 ./usr/share/gnome/help/zenity/sl/index.page
+drwxr-xr-x root/root         0 2020-04-21 14:11 ./usr/share/gnome/help/zenity/sl/figures/
+-rw-r--r-- root/root      1252 2020-04-21 14:11 ./usr/share/gnome/help/zenity/sl/password.page
+-rw-r--r-- root/root      1567 2020-04-21 14:11 ./usr/share/gnome/help/zenity/sl/entry.page
+-rw-r--r-- root/root      2205 2020-04-21 14:11 ./usr/share/gnome/help/zenity/sl/forms.page
+-rw-r--r-- root/root      2191 2020-04-21 14:11 ./usr/share/gnome/help/zenity/sl/progress.page
+-rw-r--r-- root/root      1028 2020-04-21 14:11 ./usr/share/gnome/help/zenity/sl/intro.page
+-rw-r--r-- root/root      2020 2020-04-21 14:11 ./usr/share/gnome/help/zenity/sl/scale.page
+-rw-r--r-- root/root       828 2020-04-21 14:11 ./usr/share/gnome/help/zenity/sl/question.page
+-rw-r--r-- root/root      2214 2020-04-21 14:11 ./usr/share/gnome/help/zenity/sl/calendar.page
+-rw-r--r-- root/root      8328 2020-04-21 14:11 ./usr/share/gnome/help/zenity/sl/usage.page
+-rw-r--r-- root/root      2094 2020-04-21 14:11 ./usr/share/gnome/help/zenity/sl/file-selection.page
+-rw-r--r-- root/root       840 2020-04-21 14:11 ./usr/share/gnome/help/zenity/sl/info.page
+-rw-r--r-- root/root       586 2020-04-21 14:11 ./usr/share/gnome/help/zenity/sl/message.page
+-rw-r--r-- root/root       804 2020-04-21 14:11 ./usr/share/gnome/help/zenity/sl/error.page
+-rw-r--r-- root/root      2189 2020-04-21 14:11 ./usr/share/gnome/help/zenity/sl/text.page
+-rw-r--r-- root/root      2741 2020-04-21 14:11 ./usr/share/gnome/help/zenity/sl/list.page
+-rw-r--r-- root/root      1366 2020-04-21 14:11 ./usr/share/gnome/help/zenity/sl/color-selection.page
+-rw-r--r-- root/root       837 2020-04-21 14:11 ./usr/share/gnome/help/zenity/sl/warning.page
+-rw-r--r-- root/root      3705 2020-04-21 14:11 ./usr/share/gnome/help/zenity/sl/legal.xml
+drwxr-xr-x root/root         0 2020-04-21 14:11 ./usr/share/gnome/help/zenity/C/
+-rw-r--r-- root/root      1014 2020-04-21 14:11 ./usr/share/gnome/help/zenity/C/notification.page
+-rw-r--r-- root/root       769 2020-04-21 14:11 ./usr/share/gnome/help/zenity/C/index.page
+drwxr-xr-x root/root         0 2020-04-21 14:11 ./usr/share/gnome/help/zenity/C/figures/
+-rw-r--r-- root/root      4445 2020-04-21 14:11 ./usr/share/gnome/help/zenity/C/figures/zenity-question-screenshot.png
+-rw-r--r-- root/root      4190 2020-04-21 14:11 ./usr/share/gnome/help/zenity/C/figures/zenity-entry-screenshot.png
+-rw-r--r-- root/root      4377 2020-04-21 14:11 ./usr/share/gnome/help/zenity/C/figures/zenity-scale-screenshot.png
+-rw-r--r-- root/root      3898 2020-04-21 14:11 ./usr/share/gnome/help/zenity/C/figures/zenity-progress-screenshot.png
+-rw-r--r-- root/root      4443 2020-04-21 14:11 ./usr/share/gnome/help/zenity/C/figures/zenity-warning-screenshot.png
+-rw-r--r-- root/root      9210 2020-04-21 14:11 ./usr/share/gnome/help/zenity/C/figures/zenity-forms-screenshot.png
+-rw-r--r-- root/root      4124 2020-04-21 14:11 ./usr/share/gnome/help/zenity/C/figures/zenity-information-screenshot.png
+-rw-r--r-- root/root     22656 2020-04-21 14:11 ./usr/share/gnome/help/zenity/C/figures/zenity-fileselection-screenshot.png
+-rw-r--r-- root/root      7216 2020-04-21 14:11 ./usr/share/gnome/help/zenity/C/figures/zenity-calendar-screenshot.png
+-rw-r--r-- root/root      5426 2020-04-21 14:11 ./usr/share/gnome/help/zenity/C/figures/zenity-password-screenshot.png
+-rw-r--r-- root/root      3814 2020-04-21 14:11 ./usr/share/gnome/help/zenity/C/figures/zenity-error-screenshot.png
+-rw-r--r-- root/root     12875 2020-04-21 14:11 ./usr/share/gnome/help/zenity/C/figures/zenity-notification-screenshot.png
+-rw-r--r-- root/root      6777 2020-04-21 14:11 ./usr/share/gnome/help/zenity/C/figures/zenity-list-screenshot.png
+-rw-r--r-- root/root      9138 2020-04-21 14:11 ./usr/share/gnome/help/zenity/C/figures/zenity-text-screenshot.png
+-rw-r--r-- root/root     32589 2020-04-21 14:11 ./usr/share/gnome/help/zenity/C/figures/zenity-colorselection-screenshot.png
+-rw-r--r-- root/root      1211 2020-04-21 14:11 ./usr/share/gnome/help/zenity/C/password.page
+-rw-r--r-- root/root      1526 2020-04-21 14:11 ./usr/share/gnome/help/zenity/C/entry.page
+-rw-r--r-- root/root      2163 2020-04-21 14:11 ./usr/share/gnome/help/zenity/C/forms.page
+-rw-r--r-- root/root      2150 2020-04-21 14:11 ./usr/share/gnome/help/zenity/C/progress.page
+-rw-r--r-- root/root       975 2020-04-21 14:11 ./usr/share/gnome/help/zenity/C/intro.page
+-rw-r--r-- root/root      1979 2020-04-21 14:11 ./usr/share/gnome/help/zenity/C/scale.page
+-rw-r--r-- root/root       787 2020-04-21 14:11 ./usr/share/gnome/help/zenity/C/question.page
+-rw-r--r-- root/root      2173 2020-04-21 14:11 ./usr/share/gnome/help/zenity/C/calendar.page
+-rw-r--r-- root/root      8285 2020-04-21 14:11 ./usr/share/gnome/help/zenity/C/usage.page
+-rw-r--r-- root/root      2053 2020-04-21 14:11 ./usr/share/gnome/help/zenity/C/file-selection.page
+-rw-r--r-- root/root       799 2020-04-21 14:11 ./usr/share/gnome/help/zenity/C/info.page
+-rw-r--r-- root/root       545 2020-04-21 14:11 ./usr/share/gnome/help/zenity/C/message.page
+-rw-r--r-- root/root       763 2020-04-21 14:11 ./usr/share/gnome/help/zenity/C/error.page
+-rw-r--r-- root/root      2148 2020-04-21 14:11 ./usr/share/gnome/help/zenity/C/text.page
+-rw-r--r-- root/root      2700 2020-04-21 14:11 ./usr/share/gnome/help/zenity/C/list.page
+-rw-r--r-- root/root      1325 2020-04-21 14:11 ./usr/share/gnome/help/zenity/C/color-selection.page
+-rw-r--r-- root/root       796 2020-04-21 14:11 ./usr/share/gnome/help/zenity/C/warning.page
+-rw-r--r-- root/root      3672 2020-04-21 14:11 ./usr/share/gnome/help/zenity/C/legal.xml
+drwxr-xr-x root/root         0 2020-04-21 14:11 ./usr/share/gnome/help/zenity/zh_CN/
+-rw-r--r-- root/root      1035 2020-04-21 14:11 ./usr/share/gnome/help/zenity/zh_CN/notification.page
+-rw-r--r-- root/root       796 2020-04-21 14:11 ./usr/share/gnome/help/zenity/zh_CN/index.page
+drwxr-xr-x root/root         0 2020-04-21 14:11 ./usr/share/gnome/help/zenity/zh_CN/figures/
+-rw-r--r-- root/root      1255 2020-04-21 14:11 ./usr/share/gnome/help/zenity/zh_CN/password.page
+-rw-r--r-- root/root      1451 2020-04-21 14:11 ./usr/share/gnome/help/zenity/zh_CN/entry.page
+-rw-r--r-- root/root      2208 2020-04-21 14:11 ./usr/share/gnome/help/zenity/zh_CN/forms.page
+-rw-r--r-- root/root      2084 2020-04-21 14:11 ./usr/share/gnome/help/zenity/zh_CN/progress.page
+-rw-r--r-- root/root      1018 2020-04-21 14:11 ./usr/share/gnome/help/zenity/zh_CN/intro.page
+-rw-r--r-- root/root      2023 2020-04-21 14:11 ./usr/share/gnome/help/zenity/zh_CN/scale.page
+-rw-r--r-- root/root       817 2020-04-21 14:11 ./usr/share/gnome/help/zenity/zh_CN/question.page
+-rw-r--r-- root/root      2152 2020-04-21 14:11 ./usr/share/gnome/help/zenity/zh_CN/calendar.page
+-rw-r--r-- root/root      7948 2020-04-21 14:11 ./usr/share/gnome/help/zenity/zh_CN/usage.page
+-rw-r--r-- root/root      1994 2020-04-21 14:11 ./usr/share/gnome/help/zenity/zh_CN/file-selection.page
+-rw-r--r-- root/root       832 2020-04-21 14:11 ./usr/share/gnome/help/zenity/zh_CN/info.page
+-rw-r--r-- root/root       589 2020-04-21 14:11 ./usr/share/gnome/help/zenity/zh_CN/message.page
+-rw-r--r-- root/root       799 2020-04-21 14:11 ./usr/share/gnome/help/zenity/zh_CN/error.page
+-rw-r--r-- root/root      2115 2020-04-21 14:11 ./usr/share/gnome/help/zenity/zh_CN/text.page
+-rw-r--r-- root/root      2492 2020-04-21 14:11 ./usr/share/gnome/help/zenity/zh_CN/list.page
+-rw-r--r-- root/root      1369 2020-04-21 14:11 ./usr/share/gnome/help/zenity/zh_CN/color-selection.page
+-rw-r--r-- root/root       828 2020-04-21 14:11 ./usr/share/gnome/help/zenity/zh_CN/warning.page
+-rw-r--r-- root/root      2671 2020-04-21 14:11 ./usr/share/gnome/help/zenity/zh_CN/legal.xml
+drwxr-xr-x root/root         0 2020-04-21 14:11 ./usr/share/gnome/help/zenity/gl/
+-rw-r--r-- root/root      1106 2020-04-21 14:11 ./usr/share/gnome/help/zenity/gl/notification.page
+-rw-r--r-- root/root       830 2020-04-21 14:11 ./usr/share/gnome/help/zenity/gl/index.page
+drwxr-xr-x root/root         0 2020-04-21 14:11 ./usr/share/gnome/help/zenity/gl/figures/
+-rw-r--r-- root/root      1249 2020-04-21 14:11 ./usr/share/gnome/help/zenity/gl/password.page
+-rw-r--r-- root/root      1616 2020-04-21 14:11 ./usr/share/gnome/help/zenity/gl/entry.page
+-rw-r--r-- root/root      2307 2020-04-21 14:11 ./usr/share/gnome/help/zenity/gl/forms.page
+-rw-r--r-- root/root      2195 2020-04-21 14:11 ./usr/share/gnome/help/zenity/gl/progress.page
+-rw-r--r-- root/root      1047 2020-04-21 14:11 ./usr/share/gnome/help/zenity/gl/intro.page
+-rw-r--r-- root/root      2104 2020-04-21 14:11 ./usr/share/gnome/help/zenity/gl/scale.page
+-rw-r--r-- root/root       830 2020-04-21 14:11 ./usr/share/gnome/help/zenity/gl/question.page
+-rw-r--r-- root/root      2296 2020-04-21 14:11 ./usr/share/gnome/help/zenity/gl/calendar.page
+-rw-r--r-- root/root      8629 2020-04-21 14:11 ./usr/share/gnome/help/zenity/gl/usage.page
+-rw-r--r-- root/root      2236 2020-04-21 14:11 ./usr/share/gnome/help/zenity/gl/file-selection.page
+-rw-r--r-- root/root       843 2020-04-21 14:11 ./usr/share/gnome/help/zenity/gl/info.page
+-rw-r--r-- root/root       572 2020-04-21 14:11 ./usr/share/gnome/help/zenity/gl/message.page
+-rw-r--r-- root/root       788 2020-04-21 14:11 ./usr/share/gnome/help/zenity/gl/error.page
+-rw-r--r-- root/root      2300 2020-04-21 14:11 ./usr/share/gnome/help/zenity/gl/text.page
+-rw-r--r-- root/root      2765 2020-04-21 14:11 ./usr/share/gnome/help/zenity/gl/list.page
+-rw-r--r-- root/root      1399 2020-04-21 14:11 ./usr/share/gnome/help/zenity/gl/color-selection.page
+-rw-r--r-- root/root       862 2020-04-21 14:11 ./usr/share/gnome/help/zenity/gl/warning.page
+-rw-r--r-- root/root      3705 2020-04-21 14:11 ./usr/share/gnome/help/zenity/gl/legal.xml
+drwxr-xr-x root/root         0 2020-04-21 14:11 ./usr/share/gnome/help/zenity/en_GB/
+-rw-r--r-- root/root      1058 2020-04-21 14:11 ./usr/share/gnome/help/zenity/en_GB/notification.page
+-rw-r--r-- root/root       805 2020-04-21 14:11 ./usr/share/gnome/help/zenity/en_GB/index.page
+drwxr-xr-x root/root         0 2020-04-21 14:11 ./usr/share/gnome/help/zenity/en_GB/figures/
+-rw-r--r-- root/root      1255 2020-04-21 14:11 ./usr/share/gnome/help/zenity/en_GB/password.page
+-rw-r--r-- root/root      1574 2020-04-21 14:11 ./usr/share/gnome/help/zenity/en_GB/entry.page
+-rw-r--r-- root/root      2208 2020-04-21 14:11 ./usr/share/gnome/help/zenity/en_GB/forms.page
+-rw-r--r-- root/root      2199 2020-04-21 14:11 ./usr/share/gnome/help/zenity/en_GB/progress.page
+-rw-r--r-- root/root      1019 2020-04-21 14:11 ./usr/share/gnome/help/zenity/en_GB/intro.page
+-rw-r--r-- root/root      2023 2020-04-21 14:11 ./usr/share/gnome/help/zenity/en_GB/scale.page
+-rw-r--r-- root/root       835 2020-04-21 14:11 ./usr/share/gnome/help/zenity/en_GB/question.page
+-rw-r--r-- root/root      2220 2020-04-21 14:11 ./usr/share/gnome/help/zenity/en_GB/calendar.page
+-rw-r--r-- root/root      8313 2020-04-21 14:11 ./usr/share/gnome/help/zenity/en_GB/usage.page
+-rw-r--r-- root/root      2106 2020-04-21 14:11 ./usr/share/gnome/help/zenity/en_GB/file-selection.page
+-rw-r--r-- root/root       845 2020-04-21 14:11 ./usr/share/gnome/help/zenity/en_GB/info.page
+-rw-r--r-- root/root       589 2020-04-21 14:11 ./usr/share/gnome/help/zenity/en_GB/message.page
+-rw-r--r-- root/root       811 2020-04-21 14:11 ./usr/share/gnome/help/zenity/en_GB/error.page
+-rw-r--r-- root/root      2193 2020-04-21 14:11 ./usr/share/gnome/help/zenity/en_GB/text.page
+-rw-r--r-- root/root      2710 2020-04-21 14:11 ./usr/share/gnome/help/zenity/en_GB/list.page
+-rw-r--r-- root/root      1369 2020-04-21 14:11 ./usr/share/gnome/help/zenity/en_GB/color-selection.page
+-rw-r--r-- root/root       844 2020-04-21 14:11 ./usr/share/gnome/help/zenity/en_GB/warning.page
+-rw-r--r-- root/root      2960 2020-04-21 14:11 ./usr/share/gnome/help/zenity/en_GB/legal.xml
+drwxr-xr-x root/root         0 2020-04-21 14:11 ./usr/share/gnome/help/zenity/es/
+-rw-r--r-- root/root      1094 2020-04-21 14:11 ./usr/share/gnome/help/zenity/es/notification.page
+-rw-r--r-- root/root       841 2020-04-21 14:11 ./usr/share/gnome/help/zenity/es/index.page
+drwxr-xr-x root/root         0 2020-04-21 14:11 ./usr/share/gnome/help/zenity/es/figures/
+-rw-r--r-- root/root     12904 2020-04-21 14:11 ./usr/share/gnome/help/zenity/es/figures/zenity-question-screenshot.png
+-rw-r--r-- root/root     10304 2020-04-21 14:11 ./usr/share/gnome/help/zenity/es/figures/zenity-entry-screenshot.png
+-rw-r--r-- root/root     11314 2020-04-21 14:11 ./usr/share/gnome/help/zenity/es/figures/zenity-progress-screenshot.png
+-rw-r--r-- root/root     11263 2020-04-21 14:11 ./usr/share/gnome/help/zenity/es/figures/zenity-warning-screenshot.png
+-rw-r--r-- root/root     12742 2020-04-21 14:11 ./usr/share/gnome/help/zenity/es/figures/zenity-information-screenshot.png
+-rw-r--r-- root/root     73765 2020-04-21 14:11 ./usr/share/gnome/help/zenity/es/figures/zenity-fileselection-screenshot.png
+-rw-r--r-- root/root     21694 2020-04-21 14:11 ./usr/share/gnome/help/zenity/es/figures/zenity-calendar-screenshot.png
+-rw-r--r-- root/root     10282 2020-04-21 14:11 ./usr/share/gnome/help/zenity/es/figures/zenity-error-screenshot.png
+-rw-r--r-- root/root      3657 2020-04-21 14:11 ./usr/share/gnome/help/zenity/es/figures/zenity-notification-screenshot.png
+-rw-r--r-- root/root     14065 2020-04-21 14:11 ./usr/share/gnome/help/zenity/es/figures/zenity-list-screenshot.png
+-rw-r--r-- root/root     31286 2020-04-21 14:11 ./usr/share/gnome/help/zenity/es/figures/zenity-text-screenshot.png
+-rw-r--r-- root/root      1289 2020-04-21 14:11 ./usr/share/gnome/help/zenity/es/password.page
+-rw-r--r-- root/root      1686 2020-04-21 14:11 ./usr/share/gnome/help/zenity/es/entry.page
+-rw-r--r-- root/root      2455 2020-04-21 14:11 ./usr/share/gnome/help/zenity/es/forms.page
+-rw-r--r-- root/root      2314 2020-04-21 14:11 ./usr/share/gnome/help/zenity/es/progress.page
+-rw-r--r-- root/root      1057 2020-04-21 14:11 ./usr/share/gnome/help/zenity/es/intro.page
+-rw-r--r-- root/root      2191 2020-04-21 14:11 ./usr/share/gnome/help/zenity/es/scale.page
+-rw-r--r-- root/root       841 2020-04-21 14:11 ./usr/share/gnome/help/zenity/es/question.page
+-rw-r--r-- root/root      2385 2020-04-21 14:11 ./usr/share/gnome/help/zenity/es/calendar.page
+-rw-r--r-- root/root      8937 2020-04-21 14:11 ./usr/share/gnome/help/zenity/es/usage.page
+-rw-r--r-- root/root      2288 2020-04-21 14:11 ./usr/share/gnome/help/zenity/es/file-selection.page
+-rw-r--r-- root/root       887 2020-04-21 14:11 ./usr/share/gnome/help/zenity/es/info.page
+-rw-r--r-- root/root       574 2020-04-21 14:11 ./usr/share/gnome/help/zenity/es/message.page
+-rw-r--r-- root/root       812 2020-04-21 14:11 ./usr/share/gnome/help/zenity/es/error.page
+-rw-r--r-- root/root      2354 2020-04-21 14:11 ./usr/share/gnome/help/zenity/es/text.page
+-rw-r--r-- root/root      2853 2020-04-21 14:11 ./usr/share/gnome/help/zenity/es/list.page
+-rw-r--r-- root/root      1435 2020-04-21 14:11 ./usr/share/gnome/help/zenity/es/color-selection.page
+-rw-r--r-- root/root       877 2020-04-21 14:11 ./usr/share/gnome/help/zenity/es/warning.page
+-rw-r--r-- root/root      3705 2020-04-21 14:11 ./usr/share/gnome/help/zenity/es/legal.xml
+drwxr-xr-x root/root         0 2020-04-21 14:11 ./usr/share/gnome/help/zenity/el/
+-rw-r--r-- root/root      1172 2020-04-21 14:11 ./usr/share/gnome/help/zenity/el/notification.page
+-rw-r--r-- root/root       896 2020-04-21 14:11 ./usr/share/gnome/help/zenity/el/index.page
+drwxr-xr-x root/root         0 2020-04-21 14:11 ./usr/share/gnome/help/zenity/el/figures/
+-rw-r--r-- root/root     14285 2020-04-21 14:11 ./usr/share/gnome/help/zenity/el/figures/zenity-question-screenshot.png
+-rw-r--r-- root/root     14658 2020-04-21 14:11 ./usr/share/gnome/help/zenity/el/figures/zenity-entry-screenshot.png
+-rw-r--r-- root/root     16577 2020-04-21 14:11 ./usr/share/gnome/help/zenity/el/figures/zenity-progress-screenshot.png
+-rw-r--r-- root/root     14237 2020-04-21 14:11 ./usr/share/gnome/help/zenity/el/figures/zenity-warning-screenshot.png
+-rw-r--r-- root/root     14047 2020-04-21 14:11 ./usr/share/gnome/help/zenity/el/figures/zenity-information-screenshot.png
+-rw-r--r-- root/root     69751 2020-04-21 14:11 ./usr/share/gnome/help/zenity/el/figures/zenity-fileselection-screenshot.png
+-rw-r--r-- root/root     27024 2020-04-21 14:11 ./usr/share/gnome/help/zenity/el/figures/zenity-calendar-screenshot.png
+-rw-r--r-- root/root     12442 2020-04-21 14:11 ./usr/share/gnome/help/zenity/el/figures/zenity-error-screenshot.png
+-rw-r--r-- root/root      2766 2020-04-21 14:11 ./usr/share/gnome/help/zenity/el/figures/zenity-notification-screenshot.png
+-rw-r--r-- root/root     32026 2020-04-21 14:11 ./usr/share/gnome/help/zenity/el/figures/zenity-list-screenshot.png
+-rw-r--r-- root/root     25189 2020-04-21 14:11 ./usr/share/gnome/help/zenity/el/figures/zenity-text-screenshot.png
+-rw-r--r-- root/root      1252 2020-04-21 14:11 ./usr/share/gnome/help/zenity/el/password.page
+-rw-r--r-- root/root      1966 2020-04-21 14:11 ./usr/share/gnome/help/zenity/el/entry.page
+-rw-r--r-- root/root      2205 2020-04-21 14:11 ./usr/share/gnome/help/zenity/el/forms.page
+-rw-r--r-- root/root      2599 2020-04-21 14:11 ./usr/share/gnome/help/zenity/el/progress.page
+-rw-r--r-- root/root      1224 2020-04-21 14:11 ./usr/share/gnome/help/zenity/el/intro.page
+-rw-r--r-- root/root      2020 2020-04-21 14:11 ./usr/share/gnome/help/zenity/el/scale.page
+-rw-r--r-- root/root       877 2020-04-21 14:11 ./usr/share/gnome/help/zenity/el/question.page
+-rw-r--r-- root/root      2421 2020-04-21 14:11 ./usr/share/gnome/help/zenity/el/calendar.page
+-rw-r--r-- root/root     10914 2020-04-21 14:11 ./usr/share/gnome/help/zenity/el/usage.page
+-rw-r--r-- root/root      2617 2020-04-21 14:11 ./usr/share/gnome/help/zenity/el/file-selection.page
+-rw-r--r-- root/root       876 2020-04-21 14:11 ./usr/share/gnome/help/zenity/el/info.page
+-rw-r--r-- root/root       586 2020-04-21 14:11 ./usr/share/gnome/help/zenity/el/message.page
+-rw-r--r-- root/root       863 2020-04-21 14:11 ./usr/share/gnome/help/zenity/el/error.page
+-rw-r--r-- root/root      2531 2020-04-21 14:11 ./usr/share/gnome/help/zenity/el/text.page
+-rw-r--r-- root/root      3477 2020-04-21 14:11 ./usr/share/gnome/help/zenity/el/list.page
+-rw-r--r-- root/root      1366 2020-04-21 14:11 ./usr/share/gnome/help/zenity/el/color-selection.page
+-rw-r--r-- root/root       912 2020-04-21 14:11 ./usr/share/gnome/help/zenity/el/warning.page
+-rw-r--r-- root/root      3773 2020-04-21 14:11 ./usr/share/gnome/help/zenity/el/legal.xml
+drwxr-xr-x root/root         0 2020-04-21 14:11 ./usr/share/gnome/help/zenity/ru/
+-rw-r--r-- root/root      1151 2020-04-21 14:11 ./usr/share/gnome/help/zenity/ru/notification.page
+-rw-r--r-- root/root       847 2020-04-21 14:11 ./usr/share/gnome/help/zenity/ru/index.page
+drwxr-xr-x root/root         0 2020-04-21 14:11 ./usr/share/gnome/help/zenity/ru/figures/
+-rw-r--r-- root/root     12115 2020-04-21 14:11 ./usr/share/gnome/help/zenity/ru/figures/zenity-question-screenshot.png
+-rw-r--r-- root/root      7942 2020-04-21 14:11 ./usr/share/gnome/help/zenity/ru/figures/zenity-entry-screenshot.png
+-rw-r--r-- root/root      9738 2020-04-21 14:11 ./usr/share/gnome/help/zenity/ru/figures/zenity-scale-screenshot.png
+-rw-r--r-- root/root     11574 2020-04-21 14:11 ./usr/share/gnome/help/zenity/ru/figures/zenity-progress-screenshot.png
+-rw-r--r-- root/root     13527 2020-04-21 14:11 ./usr/share/gnome/help/zenity/ru/figures/zenity-warning-screenshot.png
+-rw-r--r-- root/root     12032 2020-04-21 14:11 ./usr/share/gnome/help/zenity/ru/figures/zenity-information-screenshot.png
+-rw-r--r-- root/root     46490 2020-04-21 14:11 ./usr/share/gnome/help/zenity/ru/figures/zenity-fileselection-screenshot.png
+-rw-r--r-- root/root     20521 2020-04-21 14:11 ./usr/share/gnome/help/zenity/ru/figures/zenity-calendar-screenshot.png
+-rw-r--r-- root/root      9656 2020-04-21 14:11 ./usr/share/gnome/help/zenity/ru/figures/zenity-error-screenshot.png
+-rw-r--r-- root/root      4597 2020-04-21 14:11 ./usr/share/gnome/help/zenity/ru/figures/zenity-notification-screenshot.png
+-rw-r--r-- root/root     26454 2020-04-21 14:11 ./usr/share/gnome/help/zenity/ru/figures/zenity-list-screenshot.png
+-rw-r--r-- root/root     49396 2020-04-21 14:11 ./usr/share/gnome/help/zenity/ru/figures/zenity-text-screenshot.png
+-rw-r--r-- root/root      1252 2020-04-21 14:11 ./usr/share/gnome/help/zenity/ru/password.page
+-rw-r--r-- root/root      1858 2020-04-21 14:11 ./usr/share/gnome/help/zenity/ru/entry.page
+-rw-r--r-- root/root      2205 2020-04-21 14:11 ./usr/share/gnome/help/zenity/ru/forms.page
+-rw-r--r-- root/root      2700 2020-04-21 14:11 ./usr/share/gnome/help/zenity/ru/progress.page
+-rw-r--r-- root/root      1168 2020-04-21 14:11 ./usr/share/gnome/help/zenity/ru/intro.page
+-rw-r--r-- root/root      2020 2020-04-21 14:11 ./usr/share/gnome/help/zenity/ru/scale.page
+-rw-r--r-- root/root       893 2020-04-21 14:11 ./usr/share/gnome/help/zenity/ru/question.page
+-rw-r--r-- root/root      2468 2020-04-21 14:11 ./usr/share/gnome/help/zenity/ru/calendar.page
+-rw-r--r-- root/root     10681 2020-04-21 14:11 ./usr/share/gnome/help/zenity/ru/usage.page
+-rw-r--r-- root/root      2532 2020-04-21 14:11 ./usr/share/gnome/help/zenity/ru/file-selection.page
+-rw-r--r-- root/root       879 2020-04-21 14:11 ./usr/share/gnome/help/zenity/ru/info.page
+-rw-r--r-- root/root       586 2020-04-21 14:11 ./usr/share/gnome/help/zenity/ru/message.page
+-rw-r--r-- root/root       871 2020-04-21 14:11 ./usr/share/gnome/help/zenity/ru/error.page
+-rw-r--r-- root/root      2594 2020-04-21 14:11 ./usr/share/gnome/help/zenity/ru/text.page
+-rw-r--r-- root/root      3435 2020-04-21 14:11 ./usr/share/gnome/help/zenity/ru/list.page
+-rw-r--r-- root/root      1366 2020-04-21 14:11 ./usr/share/gnome/help/zenity/ru/color-selection.page
+-rw-r--r-- root/root       932 2020-04-21 14:11 ./usr/share/gnome/help/zenity/ru/warning.page
+-rw-r--r-- root/root      4162 2020-04-21 14:11 ./usr/share/gnome/help/zenity/ru/legal.xml
+drwxr-xr-x root/root         0 2020-04-21 14:11 ./usr/share/gnome/help/zenity/pt_BR/
+-rw-r--r-- root/root      1070 2020-04-21 14:11 ./usr/share/gnome/help/zenity/pt_BR/notification.page
+-rw-r--r-- root/root       808 2020-04-21 14:11 ./usr/share/gnome/help/zenity/pt_BR/index.page
+drwxr-xr-x root/root         0 2020-04-21 14:11 ./usr/share/gnome/help/zenity/pt_BR/figures/
+-rw-r--r-- root/root      1255 2020-04-21 14:11 ./usr/share/gnome/help/zenity/pt_BR/password.page
+-rw-r--r-- root/root      1621 2020-04-21 14:11 ./usr/share/gnome/help/zenity/pt_BR/entry.page
+-rw-r--r-- root/root      2208 2020-04-21 14:11 ./usr/share/gnome/help/zenity/pt_BR/forms.page
+-rw-r--r-- root/root      2296 2020-04-21 14:11 ./usr/share/gnome/help/zenity/pt_BR/progress.page
+-rw-r--r-- root/root      1059 2020-04-21 14:11 ./usr/share/gnome/help/zenity/pt_BR/intro.page
+-rw-r--r-- root/root      2023 2020-04-21 14:11 ./usr/share/gnome/help/zenity/pt_BR/scale.page
+-rw-r--r-- root/root       844 2020-04-21 14:11 ./usr/share/gnome/help/zenity/pt_BR/question.page
+-rw-r--r-- root/root      2249 2020-04-21 14:11 ./usr/share/gnome/help/zenity/pt_BR/calendar.page
+-rw-r--r-- root/root      8716 2020-04-21 14:11 ./usr/share/gnome/help/zenity/pt_BR/usage.page
+-rw-r--r-- root/root      2185 2020-04-21 14:11 ./usr/share/gnome/help/zenity/pt_BR/file-selection.page
+-rw-r--r-- root/root       852 2020-04-21 14:11 ./usr/share/gnome/help/zenity/pt_BR/info.page
+-rw-r--r-- root/root       589 2020-04-21 14:11 ./usr/share/gnome/help/zenity/pt_BR/message.page
+-rw-r--r-- root/root       818 2020-04-21 14:11 ./usr/share/gnome/help/zenity/pt_BR/error.page
+-rw-r--r-- root/root      2245 2020-04-21 14:11 ./usr/share/gnome/help/zenity/pt_BR/text.page
+-rw-r--r-- root/root      2783 2020-04-21 14:11 ./usr/share/gnome/help/zenity/pt_BR/list.page
+-rw-r--r-- root/root      1369 2020-04-21 14:11 ./usr/share/gnome/help/zenity/pt_BR/color-selection.page
+-rw-r--r-- root/root       849 2020-04-21 14:11 ./usr/share/gnome/help/zenity/pt_BR/warning.page
+-rw-r--r-- root/root      3125 2020-04-21 14:11 ./usr/share/gnome/help/zenity/pt_BR/legal.xml
+drwxr-xr-x root/root         0 2020-04-21 14:11 ./usr/share/gnome/help/zenity/fr/
+-rw-r--r-- root/root      1081 2020-04-21 14:11 ./usr/share/gnome/help/zenity/fr/notification.page
+-rw-r--r-- root/root       832 2020-04-21 14:11 ./usr/share/gnome/help/zenity/fr/index.page
+drwxr-xr-x root/root         0 2020-04-21 14:11 ./usr/share/gnome/help/zenity/fr/figures/
+-rw-r--r-- root/root     11568 2020-04-21 14:11 ./usr/share/gnome/help/zenity/fr/figures/zenity-question-screenshot.png
+-rw-r--r-- root/root     12539 2020-04-21 14:11 ./usr/share/gnome/help/zenity/fr/figures/zenity-entry-screenshot.png
+-rw-r--r-- root/root     11947 2020-04-21 14:11 ./usr/share/gnome/help/zenity/fr/figures/zenity-scale-screenshot.png
+-rw-r--r-- root/root     11543 2020-04-21 14:11 ./usr/share/gnome/help/zenity/fr/figures/zenity-progress-screenshot.png
+-rw-r--r-- root/root     12466 2020-04-21 14:11 ./usr/share/gnome/help/zenity/fr/figures/zenity-warning-screenshot.png
+-rw-r--r-- root/root     32053 2020-04-21 14:11 ./usr/share/gnome/help/zenity/fr/figures/zenity-forms-screenshot.png
+-rw-r--r-- root/root     11735 2020-04-21 14:11 ./usr/share/gnome/help/zenity/fr/figures/zenity-information-screenshot.png
+-rw-r--r-- root/root    144426 2020-04-21 14:11 ./usr/share/gnome/help/zenity/fr/figures/zenity-fileselection-screenshot.png
+-rw-r--r-- root/root     22236 2020-04-21 14:11 ./usr/share/gnome/help/zenity/fr/figures/zenity-calendar-screenshot.png
+-rw-r--r-- root/root     16577 2020-04-21 14:11 ./usr/share/gnome/help/zenity/fr/figures/zenity-password-screenshot.png
+-rw-r--r-- root/root     10763 2020-04-21 14:11 ./usr/share/gnome/help/zenity/fr/figures/zenity-error-screenshot.png
+-rw-r--r-- root/root     40672 2020-04-21 14:11 ./usr/share/gnome/help/zenity/fr/figures/zenity-notification-screenshot.png
+-rw-r--r-- root/root     26718 2020-04-21 14:11 ./usr/share/gnome/help/zenity/fr/figures/zenity-list-screenshot.png
+-rw-r--r-- root/root     33021 2020-04-21 14:11 ./usr/share/gnome/help/zenity/fr/figures/zenity-text-screenshot.png
+-rw-r--r-- root/root     38103 2020-04-21 14:11 ./usr/share/gnome/help/zenity/fr/figures/zenity-colorselection-screenshot.png
+-rw-r--r-- root/root      1396 2020-04-21 14:11 ./usr/share/gnome/help/zenity/fr/password.page
+-rw-r--r-- root/root      1616 2020-04-21 14:11 ./usr/share/gnome/help/zenity/fr/entry.page
+-rw-r--r-- root/root      2511 2020-04-21 14:11 ./usr/share/gnome/help/zenity/fr/forms.page
+-rw-r--r-- root/root      2480 2020-04-21 14:11 ./usr/share/gnome/help/zenity/fr/progress.page
+-rw-r--r-- root/root      1107 2020-04-21 14:11 ./usr/share/gnome/help/zenity/fr/intro.page
+-rw-r--r-- root/root      2304 2020-04-21 14:11 ./usr/share/gnome/help/zenity/fr/scale.page
+-rw-r--r-- root/root       889 2020-04-21 14:11 ./usr/share/gnome/help/zenity/fr/question.page
+-rw-r--r-- root/root      2475 2020-04-21 14:11 ./usr/share/gnome/help/zenity/fr/calendar.page
+-rw-r--r-- root/root      9127 2020-04-21 14:11 ./usr/share/gnome/help/zenity/fr/usage.page
+-rw-r--r-- root/root      2290 2020-04-21 14:11 ./usr/share/gnome/help/zenity/fr/file-selection.page
+-rw-r--r-- root/root       915 2020-04-21 14:11 ./usr/share/gnome/help/zenity/fr/info.page
+-rw-r--r-- root/root       597 2020-04-21 14:11 ./usr/share/gnome/help/zenity/fr/message.page
+-rw-r--r-- root/root       869 2020-04-21 14:11 ./usr/share/gnome/help/zenity/fr/error.page
+-rw-r--r-- root/root      2414 2020-04-21 14:11 ./usr/share/gnome/help/zenity/fr/text.page
+-rw-r--r-- root/root      3013 2020-04-21 14:11 ./usr/share/gnome/help/zenity/fr/list.page
+-rw-r--r-- root/root      1509 2020-04-21 14:11 ./usr/share/gnome/help/zenity/fr/color-selection.page
+-rw-r--r-- root/root       928 2020-04-21 14:11 ./usr/share/gnome/help/zenity/fr/warning.page
+-rw-r--r-- root/root      3705 2020-04-21 14:11 ./usr/share/gnome/help/zenity/fr/legal.xml
+drwxr-xr-x root/root         0 2020-04-21 14:11 ./usr/share/gnome/help/zenity/sv/
+-rw-r--r-- root/root      1037 2020-04-21 14:11 ./usr/share/gnome/help/zenity/sv/notification.page
+-rw-r--r-- root/root       808 2020-04-21 14:11 ./usr/share/gnome/help/zenity/sv/index.page
+drwxr-xr-x root/root         0 2020-04-21 14:11 ./usr/share/gnome/help/zenity/sv/figures/
+-rw-r--r-- root/root     13951 2020-04-21 14:11 ./usr/share/gnome/help/zenity/sv/figures/zenity-question-screenshot.png
+-rw-r--r-- root/root     11110 2020-04-21 14:11 ./usr/share/gnome/help/zenity/sv/figures/zenity-entry-screenshot.png
+-rw-r--r-- root/root     12520 2020-04-21 14:11 ./usr/share/gnome/help/zenity/sv/figures/zenity-progress-screenshot.png
+-rw-r--r-- root/root     12015 2020-04-21 14:11 ./usr/share/gnome/help/zenity/sv/figures/zenity-warning-screenshot.png
+-rw-r--r-- root/root     12766 2020-04-21 14:11 ./usr/share/gnome/help/zenity/sv/figures/zenity-information-screenshot.png
+-rw-r--r-- root/root     51020 2020-04-21 14:11 ./usr/share/gnome/help/zenity/sv/figures/zenity-fileselection-screenshot.png
+-rw-r--r-- root/root     22941 2020-04-21 14:11 ./usr/share/gnome/help/zenity/sv/figures/zenity-calendar-screenshot.png
+-rw-r--r-- root/root     10928 2020-04-21 14:11 ./usr/share/gnome/help/zenity/sv/figures/zenity-error-screenshot.png
+-rw-r--r-- root/root      5011 2020-04-21 14:11 ./usr/share/gnome/help/zenity/sv/figures/zenity-notification-screenshot.png
+-rw-r--r-- root/root     27951 2020-04-21 14:11 ./usr/share/gnome/help/zenity/sv/figures/zenity-list-screenshot.png
+-rw-r--r-- root/root     18472 2020-04-21 14:11 ./usr/share/gnome/help/zenity/sv/figures/zenity-text-screenshot.png
+-rw-r--r-- root/root      1252 2020-04-21 14:11 ./usr/share/gnome/help/zenity/sv/password.page
+-rw-r--r-- root/root      1552 2020-04-21 14:11 ./usr/share/gnome/help/zenity/sv/entry.page
+-rw-r--r-- root/root      2205 2020-04-21 14:11 ./usr/share/gnome/help/zenity/sv/forms.page
+-rw-r--r-- root/root      2161 2020-04-21 14:11 ./usr/share/gnome/help/zenity/sv/progress.page
+-rw-r--r-- root/root      1009 2020-04-21 14:11 ./usr/share/gnome/help/zenity/sv/intro.page
+-rw-r--r-- root/root      2020 2020-04-21 14:11 ./usr/share/gnome/help/zenity/sv/scale.page
+-rw-r--r-- root/root       826 2020-04-21 14:11 ./usr/share/gnome/help/zenity/sv/question.page
+-rw-r--r-- root/root      2179 2020-04-21 14:11 ./usr/share/gnome/help/zenity/sv/calendar.page
+-rw-r--r-- root/root      8338 2020-04-21 14:11 ./usr/share/gnome/help/zenity/sv/usage.page
+-rw-r--r-- root/root      2055 2020-04-21 14:11 ./usr/share/gnome/help/zenity/sv/file-selection.page
+-rw-r--r-- root/root       844 2020-04-21 14:11 ./usr/share/gnome/help/zenity/sv/info.page
+-rw-r--r-- root/root       586 2020-04-21 14:11 ./usr/share/gnome/help/zenity/sv/message.page
+-rw-r--r-- root/root       802 2020-04-21 14:11 ./usr/share/gnome/help/zenity/sv/error.page
+-rw-r--r-- root/root      2174 2020-04-21 14:11 ./usr/share/gnome/help/zenity/sv/text.page
+-rw-r--r-- root/root      2694 2020-04-21 14:11 ./usr/share/gnome/help/zenity/sv/list.page
+-rw-r--r-- root/root      1366 2020-04-21 14:11 ./usr/share/gnome/help/zenity/sv/color-selection.page
+-rw-r--r-- root/root       841 2020-04-21 14:11 ./usr/share/gnome/help/zenity/sv/warning.page
+-rw-r--r-- root/root      3332 2020-04-21 14:11 ./usr/share/gnome/help/zenity/sv/legal.xml
+drwxr-xr-x root/root         0 2020-04-21 14:11 ./usr/share/gnome/help/zenity/ca/
+-rw-r--r-- root/root      1062 2020-04-21 14:11 ./usr/share/gnome/help/zenity/ca/notification.page
+-rw-r--r-- root/root       823 2020-04-21 14:11 ./usr/share/gnome/help/zenity/ca/index.page
+drwxr-xr-x root/root         0 2020-04-21 14:11 ./usr/share/gnome/help/zenity/ca/figures/
+-rw-r--r-- root/root     13021 2020-04-21 14:11 ./usr/share/gnome/help/zenity/ca/figures/zenity-question-screenshot.png
+-rw-r--r-- root/root     11104 2020-04-21 14:11 ./usr/share/gnome/help/zenity/ca/figures/zenity-entry-screenshot.png
+-rw-r--r-- root/root     13561 2020-04-21 14:11 ./usr/share/gnome/help/zenity/ca/figures/zenity-progress-screenshot.png
+-rw-r--r-- root/root     10979 2020-04-21 14:11 ./usr/share/gnome/help/zenity/ca/figures/zenity-warning-screenshot.png
+-rw-r--r-- root/root     12286 2020-04-21 14:11 ./usr/share/gnome/help/zenity/ca/figures/zenity-information-screenshot.png
+-rw-r--r-- root/root     55313 2020-04-21 14:11 ./usr/share/gnome/help/zenity/ca/figures/zenity-fileselection-screenshot.png
+-rw-r--r-- root/root     21218 2020-04-21 14:11 ./usr/share/gnome/help/zenity/ca/figures/zenity-calendar-screenshot.png
+-rw-r--r-- root/root     10137 2020-04-21 14:11 ./usr/share/gnome/help/zenity/ca/figures/zenity-error-screenshot.png
+-rw-r--r-- root/root     16160 2020-04-21 14:11 ./usr/share/gnome/help/zenity/ca/figures/zenity-notification-screenshot.png
+-rw-r--r-- root/root     24900 2020-04-21 14:11 ./usr/share/gnome/help/zenity/ca/figures/zenity-list-screenshot.png
+-rw-r--r-- root/root     19292 2020-04-21 14:11 ./usr/share/gnome/help/zenity/ca/figures/zenity-text-screenshot.png
+-rw-r--r-- root/root      1252 2020-04-21 14:11 ./usr/share/gnome/help/zenity/ca/password.page
+-rw-r--r-- root/root      1586 2020-04-21 14:11 ./usr/share/gnome/help/zenity/ca/entry.page
+-rw-r--r-- root/root      2205 2020-04-21 14:11 ./usr/share/gnome/help/zenity/ca/forms.page
+-rw-r--r-- root/root      2232 2020-04-21 14:11 ./usr/share/gnome/help/zenity/ca/progress.page
+-rw-r--r-- root/root      1032 2020-04-21 14:11 ./usr/share/gnome/help/zenity/ca/intro.page
+-rw-r--r-- root/root      2020 2020-04-21 14:11 ./usr/share/gnome/help/zenity/ca/scale.page
+-rw-r--r-- root/root       839 2020-04-21 14:11 ./usr/share/gnome/help/zenity/ca/question.page
+-rw-r--r-- root/root      2220 2020-04-21 14:11 ./usr/share/gnome/help/zenity/ca/calendar.page
+-rw-r--r-- root/root      8668 2020-04-21 14:11 ./usr/share/gnome/help/zenity/ca/usage.page
+-rw-r--r-- root/root      2189 2020-04-21 14:11 ./usr/share/gnome/help/zenity/ca/file-selection.page
+-rw-r--r-- root/root       846 2020-04-21 14:11 ./usr/share/gnome/help/zenity/ca/info.page
+-rw-r--r-- root/root       586 2020-04-21 14:11 ./usr/share/gnome/help/zenity/ca/message.page
+-rw-r--r-- root/root       813 2020-04-21 14:11 ./usr/share/gnome/help/zenity/ca/error.page
+-rw-r--r-- root/root      2203 2020-04-21 14:11 ./usr/share/gnome/help/zenity/ca/text.page
+-rw-r--r-- root/root      2822 2020-04-21 14:11 ./usr/share/gnome/help/zenity/ca/list.page
+-rw-r--r-- root/root      1366 2020-04-21 14:11 ./usr/share/gnome/help/zenity/ca/color-selection.page
+-rw-r--r-- root/root       842 2020-04-21 14:11 ./usr/share/gnome/help/zenity/ca/warning.page
+-rw-r--r-- root/root      3093 2020-04-21 14:11 ./usr/share/gnome/help/zenity/ca/legal.xml
+drwxr-xr-x root/root         0 2020-04-21 14:11 ./usr/share/gnome/help/zenity/bg/
+-rw-r--r-- root/root      1150 2020-04-21 14:11 ./usr/share/gnome/help/zenity/bg/notification.page
+-rw-r--r-- root/root       823 2020-04-21 14:11 ./usr/share/gnome/help/zenity/bg/index.page
+drwxr-xr-x root/root         0 2020-04-21 14:11 ./usr/share/gnome/help/zenity/bg/figures/
+-rw-r--r-- root/root     14518 2020-04-21 14:11 ./usr/share/gnome/help/zenity/bg/figures/zenity-question-screenshot.png
+-rw-r--r-- root/root     12524 2020-04-21 14:11 ./usr/share/gnome/help/zenity/bg/figures/zenity-entry-screenshot.png
+-rw-r--r-- root/root     15527 2020-04-21 14:11 ./usr/share/gnome/help/zenity/bg/figures/zenity-progress-screenshot.png
+-rw-r--r-- root/root     14872 2020-04-21 14:11 ./usr/share/gnome/help/zenity/bg/figures/zenity-warning-screenshot.png
+-rw-r--r-- root/root     14914 2020-04-21 14:11 ./usr/share/gnome/help/zenity/bg/figures/zenity-information-screenshot.png
+-rw-r--r-- root/root     50697 2020-04-21 14:11 ./usr/share/gnome/help/zenity/bg/figures/zenity-fileselection-screenshot.png
+-rw-r--r-- root/root     24223 2020-04-21 14:11 ./usr/share/gnome/help/zenity/bg/figures/zenity-calendar-screenshot.png
+-rw-r--r-- root/root     11895 2020-04-21 14:11 ./usr/share/gnome/help/zenity/bg/figures/zenity-error-screenshot.png
+-rw-r--r-- root/root      3605 2020-04-21 14:11 ./usr/share/gnome/help/zenity/bg/figures/zenity-notification-screenshot.png
+-rw-r--r-- root/root     33090 2020-04-21 14:11 ./usr/share/gnome/help/zenity/bg/figures/zenity-list-screenshot.png
+-rw-r--r-- root/root     25070 2020-04-21 14:11 ./usr/share/gnome/help/zenity/bg/figures/zenity-text-screenshot.png
+-rw-r--r-- root/root      1252 2020-04-21 14:11 ./usr/share/gnome/help/zenity/bg/password.page
+-rw-r--r-- root/root      1966 2020-04-21 14:11 ./usr/share/gnome/help/zenity/bg/entry.page
+-rw-r--r-- root/root      2205 2020-04-21 14:11 ./usr/share/gnome/help/zenity/bg/forms.page
+-rw-r--r-- root/root      2519 2020-04-21 14:11 ./usr/share/gnome/help/zenity/bg/progress.page
+-rw-r--r-- root/root      1163 2020-04-21 14:11 ./usr/share/gnome/help/zenity/bg/intro.page
+-rw-r--r-- root/root      2020 2020-04-21 14:11 ./usr/share/gnome/help/zenity/bg/scale.page
+-rw-r--r-- root/root       880 2020-04-21 14:11 ./usr/share/gnome/help/zenity/bg/question.page
+-rw-r--r-- root/root      2393 2020-04-21 14:11 ./usr/share/gnome/help/zenity/bg/calendar.page
+-rw-r--r-- root/root     10196 2020-04-21 14:11 ./usr/share/gnome/help/zenity/bg/usage.page
+-rw-r--r-- root/root      2539 2020-04-21 14:11 ./usr/share/gnome/help/zenity/bg/file-selection.page
+-rw-r--r-- root/root       874 2020-04-21 14:11 ./usr/share/gnome/help/zenity/bg/info.page
+-rw-r--r-- root/root       586 2020-04-21 14:11 ./usr/share/gnome/help/zenity/bg/message.page
+-rw-r--r-- root/root       858 2020-04-21 14:11 ./usr/share/gnome/help/zenity/bg/error.page
+-rw-r--r-- root/root      2379 2020-04-21 14:11 ./usr/share/gnome/help/zenity/bg/text.page
+-rw-r--r-- root/root      3384 2020-04-21 14:11 ./usr/share/gnome/help/zenity/bg/list.page
+-rw-r--r-- root/root      1366 2020-04-21 14:11 ./usr/share/gnome/help/zenity/bg/color-selection.page
+-rw-r--r-- root/root       919 2020-04-21 14:11 ./usr/share/gnome/help/zenity/bg/warning.page
+-rw-r--r-- root/root      4904 2020-04-21 14:11 ./usr/share/gnome/help/zenity/bg/legal.xml
+drwxr-xr-x root/root         0 2020-04-21 14:11 ./usr/share/gnome/help/zenity/ja/
+-rw-r--r-- root/root      1115 2020-04-21 14:11 ./usr/share/gnome/help/zenity/ja/notification.page
+-rw-r--r-- root/root       855 2020-04-21 14:11 ./usr/share/gnome/help/zenity/ja/index.page
+drwxr-xr-x root/root         0 2020-04-21 14:11 ./usr/share/gnome/help/zenity/ja/figures/
+-rw-r--r-- root/root      5155 2020-04-21 14:11 ./usr/share/gnome/help/zenity/ja/figures/zenity-question-screenshot.png
+-rw-r--r-- root/root      6833 2020-04-21 14:11 ./usr/share/gnome/help/zenity/ja/figures/zenity-entry-screenshot.png
+-rw-r--r-- root/root      5892 2020-04-21 14:11 ./usr/share/gnome/help/zenity/ja/figures/zenity-scale-screenshot.png
+-rw-r--r-- root/root      5291 2020-04-21 14:11 ./usr/share/gnome/help/zenity/ja/figures/zenity-progress-screenshot.png
+-rw-r--r-- root/root      6361 2020-04-21 14:11 ./usr/share/gnome/help/zenity/ja/figures/zenity-warning-screenshot.png
+-rw-r--r-- root/root     10633 2020-04-21 14:11 ./usr/share/gnome/help/zenity/ja/figures/zenity-forms-screenshot.png
+-rw-r--r-- root/root      6087 2020-04-21 14:11 ./usr/share/gnome/help/zenity/ja/figures/zenity-information-screenshot.png
+-rw-r--r-- root/root     54721 2020-04-21 14:11 ./usr/share/gnome/help/zenity/ja/figures/zenity-fileselection-screenshot.png
+-rw-r--r-- root/root      9364 2020-04-21 14:11 ./usr/share/gnome/help/zenity/ja/figures/zenity-calendar-screenshot.png
+-rw-r--r-- root/root      6534 2020-04-21 14:11 ./usr/share/gnome/help/zenity/ja/figures/zenity-password-screenshot.png
+-rw-r--r-- root/root      4574 2020-04-21 14:11 ./usr/share/gnome/help/zenity/ja/figures/zenity-error-screenshot.png
+-rw-r--r-- root/root     13096 2020-04-21 14:11 ./usr/share/gnome/help/zenity/ja/figures/zenity-notification-screenshot.png
+-rw-r--r-- root/root     10004 2020-04-21 14:11 ./usr/share/gnome/help/zenity/ja/figures/zenity-list-screenshot.png
+-rw-r--r-- root/root     12370 2020-04-21 14:11 ./usr/share/gnome/help/zenity/ja/figures/zenity-text-screenshot.png
+-rw-r--r-- root/root     39159 2020-04-21 14:11 ./usr/share/gnome/help/zenity/ja/figures/zenity-colorselection-screenshot.png
+-rw-r--r-- root/root      1459 2020-04-21 14:11 ./usr/share/gnome/help/zenity/ja/password.page
+-rw-r--r-- root/root      1909 2020-04-21 14:11 ./usr/share/gnome/help/zenity/ja/entry.page
+-rw-r--r-- root/root      2709 2020-04-21 14:11 ./usr/share/gnome/help/zenity/ja/forms.page
+-rw-r--r-- root/root      2592 2020-04-21 14:11 ./usr/share/gnome/help/zenity/ja/progress.page
+-rw-r--r-- root/root      1103 2020-04-21 14:11 ./usr/share/gnome/help/zenity/ja/intro.page
+-rw-r--r-- root/root      2376 2020-04-21 14:11 ./usr/share/gnome/help/zenity/ja/scale.page
+-rw-r--r-- root/root       876 2020-04-21 14:11 ./usr/share/gnome/help/zenity/ja/question.page
+-rw-r--r-- root/root      2696 2020-04-21 14:11 ./usr/share/gnome/help/zenity/ja/calendar.page
+-rw-r--r-- root/root      9897 2020-04-21 14:11 ./usr/share/gnome/help/zenity/ja/usage.page
+-rw-r--r-- root/root      2482 2020-04-21 14:11 ./usr/share/gnome/help/zenity/ja/file-selection.page
+-rw-r--r-- root/root       944 2020-04-21 14:11 ./usr/share/gnome/help/zenity/ja/info.page
+-rw-r--r-- root/root       621 2020-04-21 14:11 ./usr/share/gnome/help/zenity/ja/message.page
+-rw-r--r-- root/root       904 2020-04-21 14:11 ./usr/share/gnome/help/zenity/ja/error.page
+-rw-r--r-- root/root      2613 2020-04-21 14:11 ./usr/share/gnome/help/zenity/ja/text.page
+-rw-r--r-- root/root      3196 2020-04-21 14:11 ./usr/share/gnome/help/zenity/ja/list.page
+-rw-r--r-- root/root      1516 2020-04-21 14:11 ./usr/share/gnome/help/zenity/ja/color-selection.page
+-rw-r--r-- root/root       941 2020-04-21 14:11 ./usr/share/gnome/help/zenity/ja/warning.page
+-rw-r--r-- root/root      3705 2020-04-21 14:11 ./usr/share/gnome/help/zenity/ja/legal.xml
+drwxr-xr-x root/root         0 2020-04-21 14:11 ./usr/share/zenity/
+-rw-r--r-- root/root      1669 2020-04-21 14:11 ./usr/share/zenity/zenity-entry.png
+-rw-r--r-- root/root      3523 2020-04-21 14:11 ./usr/share/zenity/zenity-text.png
+-rw-r--r-- root/root      2342 2020-04-21 14:11 ./usr/share/zenity/zenity.png
+-rw-r--r-- root/root       898 2020-04-21 14:11 ./usr/share/zenity/zenity-notification.png
+-rw-r--r-- root/root      1343 2020-04-21 14:11 ./usr/share/zenity/zenity-file.png
+drwxr-xr-x root/root         0 2020-04-21 14:11 ./usr/share/zenity/clothes/
+-rw-r--r-- root/root      4147 2020-04-21 14:11 ./usr/share/zenity/clothes/gnome-tshirt.png
+-rw-r--r-- root/root     13730 2020-04-21 14:11 ./usr/share/zenity/clothes/hawaii-shirt.png
+-rw-r--r-- root/root      9773 2020-04-21 14:11 ./usr/share/zenity/clothes/monk.png
+-rw-r--r-- root/root     14484 2020-04-21 14:11 ./usr/share/zenity/clothes/surfboard.png
+-rw-r--r-- root/root      2721 2020-04-21 14:11 ./usr/share/zenity/clothes/sunglasses.png
+-rw-r--r-- root/root     52588 2020-04-21 14:11 ./usr/share/zenity/zenity.ui
+-rw-r--r-- root/root       256 2020-04-21 14:11 ./usr/share/zenity/zenity-list.png
+-rw-r--r-- root/root      2857 2020-04-21 14:11 ./usr/share/zenity/zenity-calendar.png
+-rw-r--r-- root/root      4509 2020-04-21 14:11 ./usr/share/zenity/zenity-progress.png
+-rw-r--r-- root/root       240 2020-04-21 14:11 ./usr/share/zenity/zenity-scale.png
+drwxr-xr-x root/root         0 2020-04-21 14:11 ./usr/share/doc/
+drwxr-xr-x root/root         0 2020-04-21 14:11 ./usr/share/doc/zenity-common/
+-rw-r--r-- root/root     13507 2012-03-25 02:15 ./usr/share/doc/zenity-common/NEWS.gz
+-rw-r--r-- root/root    162021 2012-03-25 02:23 ./usr/share/doc/zenity-common/changelog.gz
+-rw-r--r-- root/root      3059 2011-08-16 13:52 ./usr/share/doc/zenity-common/THANKS.gz
+-rw-r--r-- root/root      1536 2020-04-20 08:39 ./usr/share/doc/zenity-common/copyright
+-rw-r--r-- root/root       768 2011-08-16 13:52 ./usr/share/doc/zenity-common/TODO
+-rw-r--r-- root/root      4975 2020-04-21 14:10 ./usr/share/doc/zenity-common/changelog.Debian.all.gz
+-rw-r--r-- root/root       406 2011-08-16 13:52 ./usr/share/doc/zenity-common/README
+-rw-r--r-- root/root       101 2011-08-16 13:52 ./usr/share/doc/zenity-common/AUTHORS
+lrwxrwxrwx root/root         0 2020-04-21 14:11 ./usr/share/gnome/help/zenity/hu/figures/zenity-question-screenshot.png -> ../../C/figures/zenity-question-screenshot.png
+lrwxrwxrwx root/root         0 2020-04-21 14:11 ./usr/share/gnome/help/zenity/hu/figures/zenity-entry-screenshot.png -> ../../C/figures/zenity-entry-screenshot.png
+lrwxrwxrwx root/root         0 2020-04-21 14:11 ./usr/share/gnome/help/zenity/hu/figures/zenity-scale-screenshot.png -> ../../C/figures/zenity-scale-screenshot.png
+lrwxrwxrwx root/root         0 2020-04-21 14:11 ./usr/share/gnome/help/zenity/hu/figures/zenity-progress-screenshot.png -> ../../C/figures/zenity-progress-screenshot.png
+lrwxrwxrwx root/root         0 2020-04-21 14:11 ./usr/share/gnome/help/zenity/hu/figures/zenity-warning-screenshot.png -> ../../C/figures/zenity-warning-screenshot.png
+lrwxrwxrwx root/root         0 2020-04-21 14:11 ./usr/share/gnome/help/zenity/hu/figures/zenity-forms-screenshot.png -> ../../C/figures/zenity-forms-screenshot.png
+lrwxrwxrwx root/root         0 2020-04-21 14:11 ./usr/share/gnome/help/zenity/hu/figures/zenity-information-screenshot.png -> ../../C/figures/zenity-information-screenshot.png
+lrwxrwxrwx root/root         0 2020-04-21 14:11 ./usr/share/gnome/help/zenity/hu/figures/zenity-fileselection-screenshot.png -> ../../C/figures/zenity-fileselection-screenshot.png
+lrwxrwxrwx root/root         0 2020-04-21 14:11 ./usr/share/gnome/help/zenity/hu/figures/zenity-calendar-screenshot.png -> ../../C/figures/zenity-calendar-screenshot.png
+lrwxrwxrwx root/root         0 2020-04-21 14:11 ./usr/share/gnome/help/zenity/hu/figures/zenity-password-screenshot.png -> ../../C/figures/zenity-password-screenshot.png
+lrwxrwxrwx root/root         0 2020-04-21 14:11 ./usr/share/gnome/help/zenity/hu/figures/zenity-error-screenshot.png -> ../../C/figures/zenity-error-screenshot.png
+lrwxrwxrwx root/root         0 2020-04-21 14:11 ./usr/share/gnome/help/zenity/hu/figures/zenity-notification-screenshot.png -> ../../C/figures/zenity-notification-screenshot.png
+lrwxrwxrwx root/root         0 2020-04-21 14:11 ./usr/share/gnome/help/zenity/hu/figures/zenity-list-screenshot.png -> ../../C/figures/zenity-list-screenshot.png
+lrwxrwxrwx root/root         0 2020-04-21 14:11 ./usr/share/gnome/help/zenity/hu/figures/zenity-text-screenshot.png -> ../../C/figures/zenity-text-screenshot.png
+lrwxrwxrwx root/root         0 2020-04-21 14:11 ./usr/share/gnome/help/zenity/hu/figures/zenity-colorselection-screenshot.png -> ../../C/figures/zenity-colorselection-screenshot.png
+lrwxrwxrwx root/root         0 2020-04-21 14:11 ./usr/share/gnome/help/zenity/fi/figures/zenity-scale-screenshot.png -> ../../C/figures/zenity-scale-screenshot.png
+lrwxrwxrwx root/root         0 2020-04-21 14:11 ./usr/share/gnome/help/zenity/fi/figures/zenity-forms-screenshot.png -> ../../C/figures/zenity-forms-screenshot.png
+lrwxrwxrwx root/root         0 2020-04-21 14:11 ./usr/share/gnome/help/zenity/fi/figures/zenity-password-screenshot.png -> ../../C/figures/zenity-password-screenshot.png
+lrwxrwxrwx root/root         0 2020-04-21 14:11 ./usr/share/gnome/help/zenity/fi/figures/zenity-colorselection-screenshot.png -> ../../C/figures/zenity-colorselection-screenshot.png
+lrwxrwxrwx root/root         0 2020-04-21 14:11 ./usr/share/gnome/help/zenity/cs/figures/zenity-scale-screenshot.png -> ../../C/figures/zenity-scale-screenshot.png
+lrwxrwxrwx root/root         0 2020-04-21 14:11 ./usr/share/gnome/help/zenity/cs/figures/zenity-forms-screenshot.png -> ../../C/figures/zenity-forms-screenshot.png
+lrwxrwxrwx root/root         0 2020-04-21 14:11 ./usr/share/gnome/help/zenity/cs/figures/zenity-password-screenshot.png -> ../../C/figures/zenity-password-screenshot.png
+lrwxrwxrwx root/root         0 2020-04-21 14:11 ./usr/share/gnome/help/zenity/cs/figures/zenity-colorselection-screenshot.png -> ../../C/figures/zenity-colorselection-screenshot.png
+lrwxrwxrwx root/root         0 2020-04-21 14:11 ./usr/share/gnome/help/zenity/eu/figures/zenity-scale-screenshot.png -> ../../C/figures/zenity-scale-screenshot.png
+lrwxrwxrwx root/root         0 2020-04-21 14:11 ./usr/share/gnome/help/zenity/eu/figures/zenity-forms-screenshot.png -> ../../C/figures/zenity-forms-screenshot.png
+lrwxrwxrwx root/root         0 2020-04-21 14:11 ./usr/share/gnome/help/zenity/eu/figures/zenity-password-screenshot.png -> ../../C/figures/zenity-password-screenshot.png
+lrwxrwxrwx root/root         0 2020-04-21 14:11 ./usr/share/gnome/help/zenity/eu/figures/zenity-colorselection-screenshot.png -> ../../C/figures/zenity-colorselection-screenshot.png
+lrwxrwxrwx root/root         0 2020-04-21 14:11 ./usr/share/gnome/help/zenity/oc/figures/zenity-question-screenshot.png -> ../../C/figures/zenity-question-screenshot.png
+lrwxrwxrwx root/root         0 2020-04-21 14:11 ./usr/share/gnome/help/zenity/oc/figures/zenity-entry-screenshot.png -> ../../C/figures/zenity-entry-screenshot.png
+lrwxrwxrwx root/root         0 2020-04-21 14:11 ./usr/share/gnome/help/zenity/oc/figures/zenity-scale-screenshot.png -> ../../C/figures/zenity-scale-screenshot.png
+lrwxrwxrwx root/root         0 2020-04-21 14:11 ./usr/share/gnome/help/zenity/oc/figures/zenity-progress-screenshot.png -> ../../C/figures/zenity-progress-screenshot.png
+lrwxrwxrwx root/root         0 2020-04-21 14:11 ./usr/share/gnome/help/zenity/oc/figures/zenity-warning-screenshot.png -> ../../C/figures/zenity-warning-screenshot.png
+lrwxrwxrwx root/root         0 2020-04-21 14:11 ./usr/share/gnome/help/zenity/oc/figures/zenity-forms-screenshot.png -> ../../C/figures/zenity-forms-screenshot.png
+lrwxrwxrwx root/root         0 2020-04-21 14:11 ./usr/share/gnome/help/zenity/oc/figures/zenity-information-screenshot.png -> ../../C/figures/zenity-information-screenshot.png
+lrwxrwxrwx root/root         0 2020-04-21 14:11 ./usr/share/gnome/help/zenity/oc/figures/zenity-fileselection-screenshot.png -> ../../C/figures/zenity-fileselection-screenshot.png
+lrwxrwxrwx root/root         0 2020-04-21 14:11 ./usr/share/gnome/help/zenity/oc/figures/zenity-calendar-screenshot.png -> ../../C/figures/zenity-calendar-screenshot.png
+lrwxrwxrwx root/root         0 2020-04-21 14:11 ./usr/share/gnome/help/zenity/oc/figures/zenity-password-screenshot.png -> ../../C/figures/zenity-password-screenshot.png
+lrwxrwxrwx root/root         0 2020-04-21 14:11 ./usr/share/gnome/help/zenity/oc/figures/zenity-error-screenshot.png -> ../../C/figures/zenity-error-screenshot.png
+lrwxrwxrwx root/root         0 2020-04-21 14:11 ./usr/share/gnome/help/zenity/oc/figures/zenity-notification-screenshot.png -> ../../C/figures/zenity-notification-screenshot.png
+lrwxrwxrwx root/root         0 2020-04-21 14:11 ./usr/share/gnome/help/zenity/oc/figures/zenity-list-screenshot.png -> ../../C/figures/zenity-list-screenshot.png
+lrwxrwxrwx root/root         0 2020-04-21 14:11 ./usr/share/gnome/help/zenity/oc/figures/zenity-text-screenshot.png -> ../../C/figures/zenity-text-screenshot.png
+lrwxrwxrwx root/root         0 2020-04-21 14:11 ./usr/share/gnome/help/zenity/oc/figures/zenity-colorselection-screenshot.png -> ../../C/figures/zenity-colorselection-screenshot.png
+lrwxrwxrwx root/root         0 2020-04-21 14:11 ./usr/share/gnome/help/zenity/da/figures/zenity-question-screenshot.png -> ../../C/figures/zenity-question-screenshot.png
+lrwxrwxrwx root/root         0 2020-04-21 14:11 ./usr/share/gnome/help/zenity/da/figures/zenity-entry-screenshot.png -> ../../C/figures/zenity-entry-screenshot.png
+lrwxrwxrwx root/root         0 2020-04-21 14:11 ./usr/share/gnome/help/zenity/da/figures/zenity-scale-screenshot.png -> ../../C/figures/zenity-scale-screenshot.png
+lrwxrwxrwx root/root         0 2020-04-21 14:11 ./usr/share/gnome/help/zenity/da/figures/zenity-progress-screenshot.png -> ../../C/figures/zenity-progress-screenshot.png
+lrwxrwxrwx root/root         0 2020-04-21 14:11 ./usr/share/gnome/help/zenity/da/figures/zenity-warning-screenshot.png -> ../../C/figures/zenity-warning-screenshot.png
+lrwxrwxrwx root/root         0 2020-04-21 14:11 ./usr/share/gnome/help/zenity/da/figures/zenity-forms-screenshot.png -> ../../C/figures/zenity-forms-screenshot.png
+lrwxrwxrwx root/root         0 2020-04-21 14:11 ./usr/share/gnome/help/zenity/da/figures/zenity-information-screenshot.png -> ../../C/figures/zenity-information-screenshot.png
+lrwxrwxrwx root/root         0 2020-04-21 14:11 ./usr/share/gnome/help/zenity/da/figures/zenity-fileselection-screenshot.png -> ../../C/figures/zenity-fileselection-screenshot.png
+lrwxrwxrwx root/root         0 2020-04-21 14:11 ./usr/share/gnome/help/zenity/da/figures/zenity-calendar-screenshot.png -> ../../C/figures/zenity-calendar-screenshot.png
+lrwxrwxrwx root/root         0 2020-04-21 14:11 ./usr/share/gnome/help/zenity/da/figures/zenity-password-screenshot.png -> ../../C/figures/zenity-password-screenshot.png
+lrwxrwxrwx root/root         0 2020-04-21 14:11 ./usr/share/gnome/help/zenity/da/figures/zenity-error-screenshot.png -> ../../C/figures/zenity-error-screenshot.png
+lrwxrwxrwx root/root         0 2020-04-21 14:11 ./usr/share/gnome/help/zenity/da/figures/zenity-notification-screenshot.png -> ../../C/figures/zenity-notification-screenshot.png
+lrwxrwxrwx root/root         0 2020-04-21 14:11 ./usr/share/gnome/help/zenity/da/figures/zenity-list-screenshot.png -> ../../C/figures/zenity-list-screenshot.png
+lrwxrwxrwx root/root         0 2020-04-21 14:11 ./usr/share/gnome/help/zenity/da/figures/zenity-text-screenshot.png -> ../../C/figures/zenity-text-screenshot.png
+lrwxrwxrwx root/root         0 2020-04-21 14:11 ./usr/share/gnome/help/zenity/da/figures/zenity-colorselection-screenshot.png -> ../../C/figures/zenity-colorselection-screenshot.png
+lrwxrwxrwx root/root         0 2020-04-21 14:11 ./usr/share/gnome/help/zenity/de/figures/zenity-scale-screenshot.png -> ../../C/figures/zenity-scale-screenshot.png
+lrwxrwxrwx root/root         0 2020-04-21 14:11 ./usr/share/gnome/help/zenity/de/figures/zenity-forms-screenshot.png -> ../../C/figures/zenity-forms-screenshot.png
+lrwxrwxrwx root/root         0 2020-04-21 14:11 ./usr/share/gnome/help/zenity/de/figures/zenity-password-screenshot.png -> ../../C/figures/zenity-password-screenshot.png
+lrwxrwxrwx root/root         0 2020-04-21 14:11 ./usr/share/gnome/help/zenity/de/figures/zenity-colorselection-screenshot.png -> ../../C/figures/zenity-colorselection-screenshot.png
+lrwxrwxrwx root/root         0 2020-04-21 14:11 ./usr/share/gnome/help/zenity/uk/figures/zenity-scale-screenshot.png -> ../../C/figures/zenity-scale-screenshot.png
+lrwxrwxrwx root/root         0 2020-04-21 14:11 ./usr/share/gnome/help/zenity/uk/figures/zenity-forms-screenshot.png -> ../../C/figures/zenity-forms-screenshot.png
+lrwxrwxrwx root/root         0 2020-04-21 14:11 ./usr/share/gnome/help/zenity/uk/figures/zenity-password-screenshot.png -> ../../C/figures/zenity-password-screenshot.png
+lrwxrwxrwx root/root         0 2020-04-21 14:11 ./usr/share/gnome/help/zenity/uk/figures/zenity-colorselection-screenshot.png -> ../../C/figures/zenity-colorselection-screenshot.png
+lrwxrwxrwx root/root         0 2020-04-21 14:11 ./usr/share/gnome/help/zenity/sl/figures/zenity-question-screenshot.png -> ../../C/figures/zenity-question-screenshot.png
+lrwxrwxrwx root/root         0 2020-04-21 14:11 ./usr/share/gnome/help/zenity/sl/figures/zenity-entry-screenshot.png -> ../../C/figures/zenity-entry-screenshot.png
+lrwxrwxrwx root/root         0 2020-04-21 14:11 ./usr/share/gnome/help/zenity/sl/figures/zenity-scale-screenshot.png -> ../../C/figures/zenity-scale-screenshot.png
+lrwxrwxrwx root/root         0 2020-04-21 14:11 ./usr/share/gnome/help/zenity/sl/figures/zenity-progress-screenshot.png -> ../../C/figures/zenity-progress-screenshot.png
+lrwxrwxrwx root/root         0 2020-04-21 14:11 ./usr/share/gnome/help/zenity/sl/figures/zenity-warning-screenshot.png -> ../../C/figures/zenity-warning-screenshot.png
+lrwxrwxrwx root/root         0 2020-04-21 14:11 ./usr/share/gnome/help/zenity/sl/figures/zenity-forms-screenshot.png -> ../../C/figures/zenity-forms-screenshot.png
+lrwxrwxrwx root/root         0 2020-04-21 14:11 ./usr/share/gnome/help/zenity/sl/figures/zenity-information-screenshot.png -> ../../C/figures/zenity-information-screenshot.png
+lrwxrwxrwx root/root         0 2020-04-21 14:11 ./usr/share/gnome/help/zenity/sl/figures/zenity-fileselection-screenshot.png -> ../../C/figures/zenity-fileselection-screenshot.png
+lrwxrwxrwx root/root         0 2020-04-21 14:11 ./usr/share/gnome/help/zenity/sl/figures/zenity-calendar-screenshot.png -> ../../C/figures/zenity-calendar-screenshot.png
+lrwxrwxrwx root/root         0 2020-04-21 14:11 ./usr/share/gnome/help/zenity/sl/figures/zenity-password-screenshot.png -> ../../C/figures/zenity-password-screenshot.png
+lrwxrwxrwx root/root         0 2020-04-21 14:11 ./usr/share/gnome/help/zenity/sl/figures/zenity-error-screenshot.png -> ../../C/figures/zenity-error-screenshot.png
+lrwxrwxrwx root/root         0 2020-04-21 14:11 ./usr/share/gnome/help/zenity/sl/figures/zenity-notification-screenshot.png -> ../../C/figures/zenity-notification-screenshot.png
+lrwxrwxrwx root/root         0 2020-04-21 14:11 ./usr/share/gnome/help/zenity/sl/figures/zenity-list-screenshot.png -> ../../C/figures/zenity-list-screenshot.png
+lrwxrwxrwx root/root         0 2020-04-21 14:11 ./usr/share/gnome/help/zenity/sl/figures/zenity-text-screenshot.png -> ../../C/figures/zenity-text-screenshot.png
+lrwxrwxrwx root/root         0 2020-04-21 14:11 ./usr/share/gnome/help/zenity/sl/figures/zenity-colorselection-screenshot.png -> ../../C/figures/zenity-colorselection-screenshot.png
+lrwxrwxrwx root/root         0 2020-04-21 14:11 ./usr/share/gnome/help/zenity/zh_CN/figures/zenity-question-screenshot.png -> ../../C/figures/zenity-question-screenshot.png
+lrwxrwxrwx root/root         0 2020-04-21 14:11 ./usr/share/gnome/help/zenity/zh_CN/figures/zenity-entry-screenshot.png -> ../../C/figures/zenity-entry-screenshot.png
+lrwxrwxrwx root/root         0 2020-04-21 14:11 ./usr/share/gnome/help/zenity/zh_CN/figures/zenity-scale-screenshot.png -> ../../C/figures/zenity-scale-screenshot.png
+lrwxrwxrwx root/root         0 2020-04-21 14:11 ./usr/share/gnome/help/zenity/zh_CN/figures/zenity-progress-screenshot.png -> ../../C/figures/zenity-progress-screenshot.png
+lrwxrwxrwx root/root         0 2020-04-21 14:11 ./usr/share/gnome/help/zenity/zh_CN/figures/zenity-warning-screenshot.png -> ../../C/figures/zenity-warning-screenshot.png
+lrwxrwxrwx root/root         0 2020-04-21 14:11 ./usr/share/gnome/help/zenity/zh_CN/figures/zenity-forms-screenshot.png -> ../../C/figures/zenity-forms-screenshot.png
+lrwxrwxrwx root/root         0 2020-04-21 14:11 ./usr/share/gnome/help/zenity/zh_CN/figures/zenity-information-screenshot.png -> ../../C/figures/zenity-information-screenshot.png
+lrwxrwxrwx root/root         0 2020-04-21 14:11 ./usr/share/gnome/help/zenity/zh_CN/figures/zenity-fileselection-screenshot.png -> ../../C/figures/zenity-fileselection-screenshot.png
+lrwxrwxrwx root/root         0 2020-04-21 14:11 ./usr/share/gnome/help/zenity/zh_CN/figures/zenity-calendar-screenshot.png -> ../../C/figures/zenity-calendar-screenshot.png
+lrwxrwxrwx root/root         0 2020-04-21 14:11 ./usr/share/gnome/help/zenity/zh_CN/figures/zenity-password-screenshot.png -> ../../C/figures/zenity-password-screenshot.png
+lrwxrwxrwx root/root         0 2020-04-21 14:11 ./usr/share/gnome/help/zenity/zh_CN/figures/zenity-error-screenshot.png -> ../../C/figures/zenity-error-screenshot.png
+lrwxrwxrwx root/root         0 2020-04-21 14:11 ./usr/share/gnome/help/zenity/zh_CN/figures/zenity-notification-screenshot.png -> ../../C/figures/zenity-notification-screenshot.png
+lrwxrwxrwx root/root         0 2020-04-21 14:11 ./usr/share/gnome/help/zenity/zh_CN/figures/zenity-list-screenshot.png -> ../../C/figures/zenity-list-screenshot.png
+lrwxrwxrwx root/root         0 2020-04-21 14:11 ./usr/share/gnome/help/zenity/zh_CN/figures/zenity-text-screenshot.png -> ../../C/figures/zenity-text-screenshot.png
+lrwxrwxrwx root/root         0 2020-04-21 14:11 ./usr/share/gnome/help/zenity/zh_CN/figures/zenity-colorselection-screenshot.png -> ../../C/figures/zenity-colorselection-screenshot.png
+lrwxrwxrwx root/root         0 2020-04-21 14:11 ./usr/share/gnome/help/zenity/gl/figures/zenity-question-screenshot.png -> ../../C/figures/zenity-question-screenshot.png
+lrwxrwxrwx root/root         0 2020-04-21 14:11 ./usr/share/gnome/help/zenity/gl/figures/zenity-entry-screenshot.png -> ../../C/figures/zenity-entry-screenshot.png
+lrwxrwxrwx root/root         0 2020-04-21 14:11 ./usr/share/gnome/help/zenity/gl/figures/zenity-scale-screenshot.png -> ../../C/figures/zenity-scale-screenshot.png
+lrwxrwxrwx root/root         0 2020-04-21 14:11 ./usr/share/gnome/help/zenity/gl/figures/zenity-progress-screenshot.png -> ../../C/figures/zenity-progress-screenshot.png
+lrwxrwxrwx root/root         0 2020-04-21 14:11 ./usr/share/gnome/help/zenity/gl/figures/zenity-warning-screenshot.png -> ../../C/figures/zenity-warning-screenshot.png
+lrwxrwxrwx root/root         0 2020-04-21 14:11 ./usr/share/gnome/help/zenity/gl/figures/zenity-forms-screenshot.png -> ../../C/figures/zenity-forms-screenshot.png
+lrwxrwxrwx root/root         0 2020-04-21 14:11 ./usr/share/gnome/help/zenity/gl/figures/zenity-information-screenshot.png -> ../../C/figures/zenity-information-screenshot.png
+lrwxrwxrwx root/root         0 2020-04-21 14:11 ./usr/share/gnome/help/zenity/gl/figures/zenity-fileselection-screenshot.png -> ../../C/figures/zenity-fileselection-screenshot.png
+lrwxrwxrwx root/root         0 2020-04-21 14:11 ./usr/share/gnome/help/zenity/gl/figures/zenity-calendar-screenshot.png -> ../../C/figures/zenity-calendar-screenshot.png
+lrwxrwxrwx root/root         0 2020-04-21 14:11 ./usr/share/gnome/help/zenity/gl/figures/zenity-password-screenshot.png -> ../../C/figures/zenity-password-screenshot.png
+lrwxrwxrwx root/root         0 2020-04-21 14:11 ./usr/share/gnome/help/zenity/gl/figures/zenity-error-screenshot.png -> ../../C/figures/zenity-error-screenshot.png
+lrwxrwxrwx root/root         0 2020-04-21 14:11 ./usr/share/gnome/help/zenity/gl/figures/zenity-notification-screenshot.png -> ../../C/figures/zenity-notification-screenshot.png
+lrwxrwxrwx root/root         0 2020-04-21 14:11 ./usr/share/gnome/help/zenity/gl/figures/zenity-list-screenshot.png -> ../../C/figures/zenity-list-screenshot.png
+lrwxrwxrwx root/root         0 2020-04-21 14:11 ./usr/share/gnome/help/zenity/gl/figures/zenity-text-screenshot.png -> ../../C/figures/zenity-text-screenshot.png
+lrwxrwxrwx root/root         0 2020-04-21 14:11 ./usr/share/gnome/help/zenity/gl/figures/zenity-colorselection-screenshot.png -> ../../C/figures/zenity-colorselection-screenshot.png
+lrwxrwxrwx root/root         0 2020-04-21 14:11 ./usr/share/gnome/help/zenity/en_GB/figures/zenity-question-screenshot.png -> ../../C/figures/zenity-question-screenshot.png
+lrwxrwxrwx root/root         0 2020-04-21 14:11 ./usr/share/gnome/help/zenity/en_GB/figures/zenity-entry-screenshot.png -> ../../C/figures/zenity-entry-screenshot.png
+lrwxrwxrwx root/root         0 2020-04-21 14:11 ./usr/share/gnome/help/zenity/en_GB/figures/zenity-scale-screenshot.png -> ../../C/figures/zenity-scale-screenshot.png
+lrwxrwxrwx root/root         0 2020-04-21 14:11 ./usr/share/gnome/help/zenity/en_GB/figures/zenity-progress-screenshot.png -> ../../C/figures/zenity-progress-screenshot.png
+lrwxrwxrwx root/root         0 2020-04-21 14:11 ./usr/share/gnome/help/zenity/en_GB/figures/zenity-warning-screenshot.png -> ../../C/figures/zenity-warning-screenshot.png
+lrwxrwxrwx root/root         0 2020-04-21 14:11 ./usr/share/gnome/help/zenity/en_GB/figures/zenity-forms-screenshot.png -> ../../C/figures/zenity-forms-screenshot.png
+lrwxrwxrwx root/root         0 2020-04-21 14:11 ./usr/share/gnome/help/zenity/en_GB/figures/zenity-information-screenshot.png -> ../../C/figures/zenity-information-screenshot.png
+lrwxrwxrwx root/root         0 2020-04-21 14:11 ./usr/share/gnome/help/zenity/en_GB/figures/zenity-fileselection-screenshot.png -> ../../C/figures/zenity-fileselection-screenshot.png
+lrwxrwxrwx root/root         0 2020-04-21 14:11 ./usr/share/gnome/help/zenity/en_GB/figures/zenity-calendar-screenshot.png -> ../../C/figures/zenity-calendar-screenshot.png
+lrwxrwxrwx root/root         0 2020-04-21 14:11 ./usr/share/gnome/help/zenity/en_GB/figures/zenity-password-screenshot.png -> ../../C/figures/zenity-password-screenshot.png
+lrwxrwxrwx root/root         0 2020-04-21 14:11 ./usr/share/gnome/help/zenity/en_GB/figures/zenity-error-screenshot.png -> ../../C/figures/zenity-error-screenshot.png
+lrwxrwxrwx root/root         0 2020-04-21 14:11 ./usr/share/gnome/help/zenity/en_GB/figures/zenity-notification-screenshot.png -> ../../C/figures/zenity-notification-screenshot.png
+lrwxrwxrwx root/root         0 2020-04-21 14:11 ./usr/share/gnome/help/zenity/en_GB/figures/zenity-list-screenshot.png -> ../../C/figures/zenity-list-screenshot.png
+lrwxrwxrwx root/root         0 2020-04-21 14:11 ./usr/share/gnome/help/zenity/en_GB/figures/zenity-text-screenshot.png -> ../../C/figures/zenity-text-screenshot.png
+lrwxrwxrwx root/root         0 2020-04-21 14:11 ./usr/share/gnome/help/zenity/en_GB/figures/zenity-colorselection-screenshot.png -> ../../C/figures/zenity-colorselection-screenshot.png
+lrwxrwxrwx root/root         0 2020-04-21 14:11 ./usr/share/gnome/help/zenity/es/figures/zenity-scale-screenshot.png -> ../../C/figures/zenity-scale-screenshot.png
+lrwxrwxrwx root/root         0 2020-04-21 14:11 ./usr/share/gnome/help/zenity/es/figures/zenity-forms-screenshot.png -> ../../C/figures/zenity-forms-screenshot.png
+lrwxrwxrwx root/root         0 2020-04-21 14:11 ./usr/share/gnome/help/zenity/es/figures/zenity-password-screenshot.png -> ../../C/figures/zenity-password-screenshot.png
+lrwxrwxrwx root/root         0 2020-04-21 14:11 ./usr/share/gnome/help/zenity/es/figures/zenity-colorselection-screenshot.png -> ../../C/figures/zenity-colorselection-screenshot.png
+lrwxrwxrwx root/root         0 2020-04-21 14:11 ./usr/share/gnome/help/zenity/el/figures/zenity-scale-screenshot.png -> ../../C/figures/zenity-scale-screenshot.png
+lrwxrwxrwx root/root         0 2020-04-21 14:11 ./usr/share/gnome/help/zenity/el/figures/zenity-forms-screenshot.png -> ../../C/figures/zenity-forms-screenshot.png
+lrwxrwxrwx root/root         0 2020-04-21 14:11 ./usr/share/gnome/help/zenity/el/figures/zenity-password-screenshot.png -> ../../C/figures/zenity-password-screenshot.png
+lrwxrwxrwx root/root         0 2020-04-21 14:11 ./usr/share/gnome/help/zenity/el/figures/zenity-colorselection-screenshot.png -> ../../C/figures/zenity-colorselection-screenshot.png
+lrwxrwxrwx root/root         0 2020-04-21 14:11 ./usr/share/gnome/help/zenity/ru/figures/zenity-forms-screenshot.png -> ../../C/figures/zenity-forms-screenshot.png
+lrwxrwxrwx root/root         0 2020-04-21 14:11 ./usr/share/gnome/help/zenity/ru/figures/zenity-password-screenshot.png -> ../../C/figures/zenity-password-screenshot.png
+lrwxrwxrwx root/root         0 2020-04-21 14:11 ./usr/share/gnome/help/zenity/ru/figures/zenity-colorselection-screenshot.png -> ../../C/figures/zenity-colorselection-screenshot.png
+lrwxrwxrwx root/root         0 2020-04-21 14:11 ./usr/share/gnome/help/zenity/pt_BR/figures/zenity-question-screenshot.png -> ../../C/figures/zenity-question-screenshot.png
+lrwxrwxrwx root/root         0 2020-04-21 14:11 ./usr/share/gnome/help/zenity/pt_BR/figures/zenity-entry-screenshot.png -> ../../C/figures/zenity-entry-screenshot.png
+lrwxrwxrwx root/root         0 2020-04-21 14:11 ./usr/share/gnome/help/zenity/pt_BR/figures/zenity-scale-screenshot.png -> ../../C/figures/zenity-scale-screenshot.png
+lrwxrwxrwx root/root         0 2020-04-21 14:11 ./usr/share/gnome/help/zenity/pt_BR/figures/zenity-progress-screenshot.png -> ../../C/figures/zenity-progress-screenshot.png
+lrwxrwxrwx root/root         0 2020-04-21 14:11 ./usr/share/gnome/help/zenity/pt_BR/figures/zenity-warning-screenshot.png -> ../../C/figures/zenity-warning-screenshot.png
+lrwxrwxrwx root/root         0 2020-04-21 14:11 ./usr/share/gnome/help/zenity/pt_BR/figures/zenity-forms-screenshot.png -> ../../C/figures/zenity-forms-screenshot.png
+lrwxrwxrwx root/root         0 2020-04-21 14:11 ./usr/share/gnome/help/zenity/pt_BR/figures/zenity-information-screenshot.png -> ../../C/figures/zenity-information-screenshot.png
+lrwxrwxrwx root/root         0 2020-04-21 14:11 ./usr/share/gnome/help/zenity/pt_BR/figures/zenity-fileselection-screenshot.png -> ../../C/figures/zenity-fileselection-screenshot.png
+lrwxrwxrwx root/root         0 2020-04-21 14:11 ./usr/share/gnome/help/zenity/pt_BR/figures/zenity-calendar-screenshot.png -> ../../C/figures/zenity-calendar-screenshot.png
+lrwxrwxrwx root/root         0 2020-04-21 14:11 ./usr/share/gnome/help/zenity/pt_BR/figures/zenity-password-screenshot.png -> ../../C/figures/zenity-password-screenshot.png
+lrwxrwxrwx root/root         0 2020-04-21 14:11 ./usr/share/gnome/help/zenity/pt_BR/figures/zenity-error-screenshot.png -> ../../C/figures/zenity-error-screenshot.png
+lrwxrwxrwx root/root         0 2020-04-21 14:11 ./usr/share/gnome/help/zenity/pt_BR/figures/zenity-notification-screenshot.png -> ../../C/figures/zenity-notification-screenshot.png
+lrwxrwxrwx root/root         0 2020-04-21 14:11 ./usr/share/gnome/help/zenity/pt_BR/figures/zenity-list-screenshot.png -> ../../C/figures/zenity-list-screenshot.png
+lrwxrwxrwx root/root         0 2020-04-21 14:11 ./usr/share/gnome/help/zenity/pt_BR/figures/zenity-text-screenshot.png -> ../../C/figures/zenity-text-screenshot.png
+lrwxrwxrwx root/root         0 2020-04-21 14:11 ./usr/share/gnome/help/zenity/pt_BR/figures/zenity-colorselection-screenshot.png -> ../../C/figures/zenity-colorselection-screenshot.png
+lrwxrwxrwx root/root         0 2020-04-21 14:11 ./usr/share/gnome/help/zenity/sv/figures/zenity-scale-screenshot.png -> ../../C/figures/zenity-scale-screenshot.png
+lrwxrwxrwx root/root         0 2020-04-21 14:11 ./usr/share/gnome/help/zenity/sv/figures/zenity-forms-screenshot.png -> ../../C/figures/zenity-forms-screenshot.png
+lrwxrwxrwx root/root         0 2020-04-21 14:11 ./usr/share/gnome/help/zenity/sv/figures/zenity-password-screenshot.png -> ../../C/figures/zenity-password-screenshot.png
+lrwxrwxrwx root/root         0 2020-04-21 14:11 ./usr/share/gnome/help/zenity/sv/figures/zenity-colorselection-screenshot.png -> ../../C/figures/zenity-colorselection-screenshot.png
+lrwxrwxrwx root/root         0 2020-04-21 14:11 ./usr/share/gnome/help/zenity/ca/figures/zenity-scale-screenshot.png -> ../../C/figures/zenity-scale-screenshot.png
+lrwxrwxrwx root/root         0 2020-04-21 14:11 ./usr/share/gnome/help/zenity/ca/figures/zenity-forms-screenshot.png -> ../../C/figures/zenity-forms-screenshot.png
+lrwxrwxrwx root/root         0 2020-04-21 14:11 ./usr/share/gnome/help/zenity/ca/figures/zenity-password-screenshot.png -> ../../C/figures/zenity-password-screenshot.png
+lrwxrwxrwx root/root         0 2020-04-21 14:11 ./usr/share/gnome/help/zenity/ca/figures/zenity-colorselection-screenshot.png -> ../../C/figures/zenity-colorselection-screenshot.png
+lrwxrwxrwx root/root         0 2020-04-21 14:11 ./usr/share/gnome/help/zenity/bg/figures/zenity-scale-screenshot.png -> ../../C/figures/zenity-scale-screenshot.png
+lrwxrwxrwx root/root         0 2020-04-21 14:11 ./usr/share/gnome/help/zenity/bg/figures/zenity-forms-screenshot.png -> ../../C/figures/zenity-forms-screenshot.png
+lrwxrwxrwx root/root         0 2020-04-21 14:11 ./usr/share/gnome/help/zenity/bg/figures/zenity-password-screenshot.png -> ../../C/figures/zenity-password-screenshot.png
+lrwxrwxrwx root/root         0 2020-04-21 14:11 ./usr/share/gnome/help/zenity/bg/figures/zenity-colorselection-screenshot.png -> ../../C/figures/zenity-colorselection-screenshot.png

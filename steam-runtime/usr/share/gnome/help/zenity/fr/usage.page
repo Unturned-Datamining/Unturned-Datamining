@@ -1,0 +1,258 @@
+<?xml version="1.0" encoding="utf-8"?>
+<page xmlns="http://projectmallard.org/1.0/" type="topic" id="usage" xml:lang="fr">
+<info>
+  <link type="guide" xref="index"/>
+  <desc>Vous pouvez utiliser <app>Zenity</app> pour créer des boîtes de dialogue simples avec lesquels l'utilisateur interagit graphiquement.</desc>
+</info>
+<title>Utilisation</title>
+    <p>Quand vous écrivez des scripts, vous pouvez utiliser <app>Zenity</app> pour créer des boîtes de dialogue simples avec lesquels l'utilisateur interagit graphiquement :</p>
+    <list>
+      <item>
+        <p>Pour obtenir des informations de la part de l'utilisateur. Par exemple en demandant de choisir une date dans une boîte de dialogue de calendrier, ou en demandant de sélectionner un fichier dans une boîte de dialogue de sélection de fichiers.</p>
+      </item>
+      <item>
+        <p>Pour donner des informations à l'utilisateur. Par exemple en utilisant une boîte de dialogue de barre de progression pour indiquer l'avancement d'une opération, ou en utilisant une boîte de dialogue d'avertissement pour alerter l'utilisateur.</p>
+      </item>
+    </list>
+    <p>Quand l'utilisateur ferme la boîte de dialogue, <app>Zenity</app> affiche le texte produit sur le flux de sortie standard.</p>
+
+    <note>
+      <p>Quand vous écrivez des commandes <app>Zenity</app>, assurez-vous de bien placer des guillemets autour de chaque argument.</p>
+      <p>Par exemple, utilisez :</p>
+      <screen>zenity --calendar --title="Planning des vacances"</screen>
+      <p>N'utilisez pas :</p>
+      <screen>zenity --calendar --title=Planning des vacances</screen>
+      <p>Si vous n'utilisez pas les guillemets, vous risquez d'obtenir des résultats inattendus.</p>
+    </note>
+
+    <section id="zenity-usage-mnemonics">
+      <title>Touches d'accès</title>
+	<p>Une touche d'accès est une touche permettant d'effectuer une action au clavier plutôt qu'en utilisant la souris. Une touche d'accès est identifiée avec une lettre soulignée dans les entrées de menu ou de boîtes de dialogue.</p>
+	<p>Certaines boîtes de dialogue de <app>Zenity</app> permettent l'utilisation de touches d'accès. Pour indiquer la lettre à utiliser comme touche d'accès, placez un souligné « _ » avant cette lettre dans le texte de la boîte de dialogue. L'exemple suivant montre comment utiliser la lettre 'C' comme touche d'accès :</p>
+	<screen><input>"_Choisissez un nom".</input></screen>
+    </section>
+
+    <section id="zenity-usage-exitcodes">
+      <title>Codes de sortie</title>
+    <p><app>Zenity</app> retourne les codes de sortie suivants :</p>
+
+    <table frame="all" rules="all">
+        <thead>
+          <tr valign="top">
+            <td colname="COLSPEC0">
+              <p>Code de sortie</p></td>
+            <td colname="COLSPEC1">
+              <p>Description</p></td>
+          </tr>
+        </thead>
+        <tbody>
+          <tr valign="top">
+            <td>
+              <p><var>0</var></p>
+            </td>
+            <td>
+              <p>L'utilisateur a appuyé sur <gui style="button">OK</gui> ou sur <gui style="button">Fermer</gui>.</p>
+            </td>
+          </tr>
+          <tr valign="top">
+            <td>
+              <p><var>1</var></p>
+            </td>
+            <td>
+              <p>L'utilisateur a soit appuyé sur le bouton <gui style="button">Annuler</gui>, soit fermé la boîte de dialogue.</p>
+            </td>
+          </tr>
+          <tr valign="top">
+            <td>
+              <p><var>-1</var></p>
+            </td>
+            <td>
+              <p>Une erreur inattendue s'est produite.</p>
+            </td>
+          </tr>
+          <tr valign="top">
+            <td>
+              <p><var>5</var></p>
+            </td>
+            <td>
+              <p>La boîte de dialogue a été fermée car le délai d'affichage a expiré.</p>
+            </td>
+          </tr>
+        </tbody>
+    </table>
+
+    </section>
+
+
+  <!-- ==== General Options ====== -->
+
+  <section id="zenity-usage-general-options">
+    <title>Options générales</title>
+
+    <p>Toutes les boîtes de dialogue <app>Zenity</app> supportent les options générales suivantes :</p>
+
+    <terms>
+
+      <item>
+        <title><cmd>--title</cmd>=<var>titre</var></title>
+	<p>Indique le titre d'une boîte de dialogue.</p>
+      </item>
+
+      <item>
+        <title><cmd>--window-icon</cmd>=<var>chemin_icone</var></title>
+	<p>Indique l'icône affichée dans le cadre de la boîte de dialogue. Quatre icônes prédéfinies sont également disponibles en utilisant l'un des mots-clés suivants : 'info', 'warning', 'question' et 'error'.</p>
+      </item>
+
+      <item>
+        <title><cmd>--width</cmd>=<var>largeur</var></title>
+	<p>Indique la largeur de la boîte de dialogue.</p>
+      </item>
+
+      <item>
+        <title><cmd>--height</cmd>=<var>hauteur</var></title>
+	<p>Indique la hauteur de la boîte de dialogue.</p>
+      </item>
+
+      <item>
+        <title><cmd>--timeout</cmd>=<var>délai</var></title>
+	<p>Indique en secondes le délai après lequel la boîte de dialogue est fermée.</p>
+      </item>
+
+    </terms>
+
+  </section>
+
+<!-- ==== Miscellaneous Options ====== -->
+
+  <section id="zenity-help-options">
+    <title>Options d'aide</title>
+
+    <p><app>Zenity</app> fournit les options d'aide suivantes :</p>
+
+    <terms>
+
+      <item>
+        <title><cmd>--help</cmd></title>
+	<p>Afficher un court texte d'aide.</p>
+      </item>
+
+      <item>
+        <title><cmd>--help-all</cmd></title>
+	<p>Afficher le texte d'aide complet pour toutes les boîtes de dialogue.</p>
+      </item>
+ 
+      <item>
+        <title><cmd>--help-general</cmd></title>
+	<p>Afficher l'aide pour les options générales.</p>
+      </item>
+ 
+      <item>
+        <title><cmd>--help-calendar</cmd></title>
+	<p>Afficher l'aide pour les options de la boîte de dialogue de calendrier.</p>
+      </item>
+ 
+      <item>
+        <title><cmd>--help-entry</cmd></title>
+	<p>Afficher l'aide pour les options de la boîte de dialogue de saisie.</p>
+      </item>
+ 
+      <item>
+        <title><cmd>--help-error</cmd></title>
+	<p>Afficher l'aide pour les options de la boîte de dialogue d'erreur.</p>
+      </item>
+ 
+      <item>
+        <title><cmd>--help-info</cmd></title>
+	<p>Afficher l'aide pour les options de la boîte de dialogue d'information.</p>
+      </item>
+ 
+      <item>
+        <title><cmd>--help-file-selection</cmd></title>
+	<p>Afficher l'aide pour les options de la boîte de dialogue de sélection de fichier.</p>
+      </item>
+ 
+      <item>
+        <title><cmd>--help-list</cmd></title>
+	<p>Afficher l'aide pour les options de la boîte de dialogue de liste.</p>
+      </item>
+ 
+      <item>
+        <title><cmd>--help-notification</cmd></title>
+	<p>Afficher l'aide pour les options de l'icône de notification.</p>
+      </item>
+ 
+      <item>
+        <title><cmd>--help-progress</cmd></title>
+	<p>Afficher l'aide pour les options de la boîte de dialogue de barre de progression.</p>
+      </item>
+ 
+      <item>
+        <title><cmd>--help-question</cmd></title>
+	<p>Afficher l'aide pour les options de la boîte de dialogue de question.</p>
+      </item>
+ 
+      <item>
+        <title><cmd>--help-warning</cmd></title>
+	<p>Afficher l'aide pour les options de la boîte de dialogue d'avertissement.</p>
+      </item>
+ 
+      <item>
+	<title><cmd>--help-text-info</cmd></title>
+	<p>Afficher l'aide pour les options de la boîte de dialogue de texte d'information.</p>
+      </item>
+ 
+      <item>
+        <title><cmd>--help-misc</cmd></title>
+	<p>Afficher l'aide pour les options diverses.</p>
+      </item>
+ 
+      <item>
+        <title><cmd>--help-gtk</cmd></title>
+	<p>Afficher l'aide pour les options GTK+.</p>
+      </item>
+ 
+    </terms>
+
+  </section>
+
+<!-- ==== Miscellaneous Options ====== -->
+
+  <section id="zenity-miscellaneous-options">
+    <title>Options diverses</title>
+
+    <p><app>Zenity</app> fournit également les options suivantes :</p>
+
+    <terms>
+
+      <item>
+        <title><cmd>--about</cmd></title>
+	<p>Afficher la boîte de dialogue <gui>À propos de Zenity</gui>, qui contient des informations sur la version de <app>Zenity</app>, des informations sur la licence, et des informations sur les développeurs.</p>
+      </item>
+
+      <item>
+        <title><cmd>--version</cmd></title>
+	<p>Afficher le numéro de version de <app>Zenity</app>.</p>
+      </item>
+
+    </terms>
+
+  </section>
+
+<!-- ==== GTK+ Options ====== -->
+
+  <section id="zenity-gtk-options">
+    <title>Options GTK+</title>
+
+    <p><app>Zenity</app> supporte les options GTK+ standards. Pour plus d'informations à propos des options GTK+, lancez la commande <cmd>zenity --help-gtk</cmd>.</p>
+
+  </section>
+
+<!-- ==== Environment variables ==== -->
+
+  <section id="zenity-environment-variables">
+    <title>Variables d'environnement</title>
+
+    <p>Normalement, <app>Zenity</app> détecte la fenêtre de terminal à partir de laquelle il a été lancé et demeure au-dessus de cette fenêtre. Ce comportement peut être désactivé en déconfigurant la variable d'environnement <var>WINDOWID</var>.</p>
+
+  </section>
+</page>

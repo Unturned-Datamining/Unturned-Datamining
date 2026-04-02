@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<page xmlns="http://projectmallard.org/1.0/" type="topic" id="scale" xml:lang="de">
+  <info>
+    <link type="guide" xref="index#dialogs"/>
+    <desc>Die Option <cmd>--scale</cmd> verwenden.</desc>
+  </info>
+  <title>Schiebereglerdialog</title>
+  <p>Verwenden Sie die Option <option>--scale</option>, um einen Schiebereglerdialog zu erzeugen.</p>
+  <p>Der Schiebereglerdialog unterstützt die folgenden Optionen:</p>
+
+  <terms>
+
+    <item>
+      <title><cmd>--text</cmd>=<var>TEXT</var></title>
+      <p>Set the dialog text. (Default: Adjust the scale value)</p>
+    </item>
+
+    <item>
+      <title><cmd>--value</cmd>=<var>WERT</var></title>
+      <p>Den Anfangswert festlegen (Vorgabe: 0). Sie müssen einen Wert zwischen dem Maximal- und dem Minimalwert angeben.</p>
+    </item>
+
+    <item>
+      <title><cmd>--min-value</cmd>=<var>WERT</var></title>
+      <p>Den Minimalwert festlegen (Vorgabe: 0)</p>
+    </item>
+
+    <item>
+      <title><cmd>--max-value</cmd>=<var>WERT</var></title>
+      <p>Den Maximalwert festlegen (Vorgabe: 100)</p>
+    </item>
+
+    <item>
+      <title><cmd>--step</cmd>=<var>WERT</var></title>
+      <p>Die Schrittweite festlegen (Vorgabe: 1)</p>
+    </item>
+
+    <item>
+      <title><cmd>--print-partial</cmd></title>
+      <p>Wert in die Standardausgabe schreiben, immer dann, wenn sich der Wert ändert.</p>
+    </item>
+
+    <item>
+      <title><cmd>--hide-value</cmd></title>
+      <p>Den Wert im Dialog verbergen.</p>
+    </item>
+
+  </terms>
+
+  <p>Das folgende Beispielskript zeigt, wie Sie einen Schiebereglerdialog erzeugen können:</p>
+
+<code>
+#!/bin/sh
+
+VALUE=`zenity --scale --text="Select window transparency." --value=50`
+
+case $? in
+         0)
+		echo "You selected $VALUE%.";;
+         1)
+                echo "No value selected.";;
+        -1)
+                echo "An unexpected error has occurred.";;
+esac
+</code>
+
+  <figure id="zenity-scale-screenshot">
+    <title>Beispiel für einen Schiebereglerdialog</title>
+    <desc>Beispiel für einen Schiebereglerdialog in <app>Zenity</app></desc>
+    <media type="image" mime="image/png" src="figures/zenity-scale-screenshot.png"/>
+  </figure>
+
+</page>

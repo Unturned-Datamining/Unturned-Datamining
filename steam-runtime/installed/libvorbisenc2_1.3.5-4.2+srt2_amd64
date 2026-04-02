@@ -1,0 +1,12 @@
+drwxr-xr-x root/root         0 2019-04-03 15:04 ./
+drwxr-xr-x root/root         0 2019-04-03 15:04 ./usr/
+drwxr-xr-x root/root         0 2019-04-03 15:03 ./usr/lib/
+drwxr-xr-x root/root         0 2019-04-03 15:04 ./usr/lib/x86_64-linux-gnu/
+-rw-r--r-- root/root    690288 2019-04-03 15:04 ./usr/lib/x86_64-linux-gnu/libvorbisenc.so.2.0.11
+drwxr-xr-x root/root         0 2019-04-03 15:04 ./usr/share/
+drwxr-xr-x root/root         0 2019-04-03 15:04 ./usr/share/doc/
+drwxr-xr-x root/root         0 2019-04-03 15:04 ./usr/share/doc/libvorbisenc2/
+-rw-r--r-- root/root      2598 2015-03-03 00:05 ./usr/share/doc/libvorbisenc2/changelog.gz
+-rw-r--r-- root/root      2222 2018-03-16 21:26 ./usr/share/doc/libvorbisenc2/copyright
+-rw-r--r-- root/root      5630 2019-04-03 15:02 ./usr/share/doc/libvorbisenc2/changelog.Debian.amd64.gz
+lrwxrwxrwx root/root         0 2019-04-03 15:04 ./usr/lib/x86_64-linux-gnu/libvorbisenc.so.2 -> libvorbisenc.so.2.0.11

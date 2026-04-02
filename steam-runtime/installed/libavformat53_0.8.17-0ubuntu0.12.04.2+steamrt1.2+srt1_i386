@@ -1,0 +1,21 @@
+drwxr-xr-x root/root         0 2023-03-23 18:07 ./
+drwxr-xr-x root/root         0 2023-03-23 18:07 ./usr/
+drwxr-xr-x root/root         0 2023-03-23 18:07 ./usr/share/
+drwxr-xr-x root/root         0 2023-03-23 18:07 ./usr/share/lintian/
+drwxr-xr-x root/root         0 2023-03-23 18:07 ./usr/share/lintian/overrides/
+-rw-r--r-- root/root       103 2018-09-18 17:08 ./usr/share/lintian/overrides/libavformat53
+drwxr-xr-x root/root         0 2023-03-23 18:07 ./usr/share/doc/
+drwxr-xr-x root/root         0 2023-03-23 18:07 ./usr/share/doc/libavformat53/
+-rw-r--r-- root/root      3282 2018-09-18 17:08 ./usr/share/doc/libavformat53/copyright
+-rw-r--r-- root/root      2225 2018-09-18 17:08 ./usr/share/doc/libavformat53/README.Debian.gz
+-rw-r--r-- root/root     27308 2023-03-23 18:00 ./usr/share/doc/libavformat53/changelog.Debian.i386.gz
+-rw-r--r-- root/root        66 2023-03-23 18:06 ./usr/share/doc/libavformat53/formats.txt
+-rw-r--r-- root/root     19358 2015-03-10 02:21 ./usr/share/doc/libavformat53/changelog.gz
+drwxr-xr-x root/root         0 2023-03-23 18:06 ./usr/lib/
+drwxr-xr-x root/root         0 2023-03-23 18:07 ./usr/lib/i386-linux-gnu/
+-rw-r--r-- root/root    152936 2023-03-23 18:07 ./usr/lib/i386-linux-gnu/libavformat.so.53.21.1
+drwxr-xr-x root/root         0 2023-03-23 18:06 ./usr/lib/i386-linux-gnu/i686/
+drwxr-xr-x root/root         0 2023-03-23 18:07 ./usr/lib/i386-linux-gnu/i686/cmov/
+-rw-r--r-- root/root    152936 2023-03-23 18:07 ./usr/lib/i386-linux-gnu/i686/cmov/libavformat.so.53.21.1
+lrwxrwxrwx root/root         0 2023-03-23 18:07 ./usr/lib/i386-linux-gnu/i686/cmov/libavformat.so.53 -> libavformat.so.53.21.1
+lrwxrwxrwx root/root         0 2023-03-23 18:07 ./usr/lib/i386-linux-gnu/libavformat.so.53 -> libavformat.so.53.21.1

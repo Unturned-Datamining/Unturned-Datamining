@@ -25,4 +25,5 @@ Asset
 		}
 	]
 	Should_Animate_Background_Image true
+	Allow_Building_In_Safezone_In_Singleplayer true
 }

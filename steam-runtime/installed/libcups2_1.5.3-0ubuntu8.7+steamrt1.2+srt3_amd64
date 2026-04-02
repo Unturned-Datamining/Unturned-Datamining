@@ -1,0 +1,14 @@
+drwxr-xr-x root/root         0 2019-04-03 11:31 ./
+drwxr-xr-x root/root         0 2019-04-03 11:31 ./usr/
+drwxr-xr-x root/root         0 2019-04-03 11:31 ./usr/lib/
+drwxr-xr-x root/root         0 2019-04-03 11:31 ./usr/lib/x86_64-linux-gnu/
+-rw-r--r-- root/root    343352 2019-04-03 11:31 ./usr/lib/x86_64-linux-gnu/libcups.so.2
+drwxr-xr-x root/root         0 2019-04-03 11:31 ./usr/share/
+drwxr-xr-x root/root         0 2019-04-03 11:31 ./usr/share/doc/
+drwxr-xr-x root/root         0 2019-04-03 11:31 ./usr/share/doc/libcups2/
+-rw-r--r-- root/root      5160 2012-05-15 14:01 ./usr/share/doc/libcups2/changelog.gz
+-rw-r--r-- root/root      3106 2018-10-30 14:51 ./usr/share/doc/libcups2/copyright
+-rw-r--r-- root/root      4536 2018-10-30 14:51 ./usr/share/doc/libcups2/README.Debian.gz
+drwxr-xr-x root/root         0 2019-04-03 11:31 ./usr/share/doc/libcups2/examples/
+-rw-r--r-- root/root      2568 2018-10-30 14:51 ./usr/share/doc/libcups2/examples/client.conf
+-rw-r--r-- root/root     78106 2019-04-03 11:29 ./usr/share/doc/libcups2/changelog.Debian.amd64.gz

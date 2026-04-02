@@ -1,0 +1,27 @@
+﻿GUID 4d72899b4e9645cbb887e6d49a668ae2
+Type Supply
+ID 1992
+
+Size_X 2
+Size_Y 1
+Size_Z 0.2
+
+Fishing_Catchable
+{
+	Min_Relocate_Interval 1.5
+	Max_Relocate_Interval 3
+	Max_Upward_Acceleration 0.3
+	Max_Downward_Acceleration 0.3
+	Max_Upward_Speed 0.35
+	Max_Downward_Speed 0.5
+	Upper_Restitution 0
+	Lower_Restitution 10
+	Min_Target_Delta 0.2
+	Max_Target_Delta 0.5
+	Min_Target_Position 0
+	Max_Target_Position 0.66
+	Capture_Duration 5
+	Escape_Duration 1.5
+	Spring_Stiffness 20
+	Spring_Damping 2
+}

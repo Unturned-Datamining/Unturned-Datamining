@@ -1,0 +1,4 @@
+libCg.so libcg #MINVER#
+# No symbols listed here yet
+libCgGL.so libcg #MINVER#
+# No symbols listed here yet

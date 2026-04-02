@@ -1,0 +1,12 @@
+drwxr-xr-x root/root         0 2024-05-16 12:00 ./
+drwxr-xr-x root/root         0 2024-05-16 12:00 ./usr/
+drwxr-xr-x root/root         0 2024-05-16 12:00 ./usr/lib/
+drwxr-xr-x root/root         0 2024-05-16 12:00 ./usr/lib/i386-linux-gnu/
+-rw-r--r-- root/root    145692 2024-05-16 12:00 ./usr/lib/i386-linux-gnu/libjson-glib-1.0.so.0.0.2
+drwxr-xr-x root/root         0 2024-05-16 12:00 ./usr/share/
+drwxr-xr-x root/root         0 2024-05-16 12:00 ./usr/share/doc/
+drwxr-xr-x root/root         0 2024-05-16 12:00 ./usr/share/doc/libjson-glib-1.0-0/
+-rw-r--r-- root/root      2166 2014-05-29 09:02 ./usr/share/doc/libjson-glib-1.0-0/NEWS.gz
+-rw-r--r-- root/root      2886 2024-05-16 11:58 ./usr/share/doc/libjson-glib-1.0-0/changelog.Debian.i386.gz
+-rw-r--r-- root/root      1637 2024-05-15 15:19 ./usr/share/doc/libjson-glib-1.0-0/copyright
+lrwxrwxrwx root/root         0 2024-05-16 12:00 ./usr/lib/i386-linux-gnu/libjson-glib-1.0.so.0 -> libjson-glib-1.0.so.0.0.2

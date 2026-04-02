@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<page xmlns="http://projectmallard.org/1.0/" type="topic" id="forms" xml:lang="hu">
+  <info>
+    <link type="guide" xref="index#dialogs"/>
+    <desc>A <cmd>--forms</cmd> kapcsoló használata.</desc>
+  </info>
+  <title>Űrlapok ablak</title>
+    <p>A <cmd>--forms</cmd> kapcsoló használatával űrlapok ablakot hozhat létre.</p>
+	
+    <p>Az űrlapok ablak a következő kapcsolókat támogatja:</p>
+
+    <terms>
+
+      <item>
+        <title><cmd>--add-entry</cmd>=<var>Mezőnév</var></title>
+	<p>Új bejegyzés hozzáadása az Űrlapok ablakhoz.</p>
+      </item>
+
+      <item>
+        <title>--add-password<cmd/>=<var>Mezőnév</var></title>
+	<p>Új jelszóbeviteli mező hozzáadása az Űrlapok ablakhoz. (szöveg elrejtése)</p>
+      </item>
+
+      <item>
+        <title><cmd>--add-calendar</cmd>=<var>Mezőnév</var></title>
+	<p>Új naptár hozzáadása az Űrlapok ablakhoz.</p>
+      </item>
+
+      <item>
+        <title><cmd>--text</cmd>=<var>SZÖVEG</var></title>
+	<p>Ablak szövegének beállítása.</p>
+      </item>
+
+      <item>
+        <title><cmd>--separator</cmd>=<var>elválasztó</var></title>
+	<p>A kimenet elválasztókarakterének beállítása. (Alapértelmezett: | )</p>
+      </item>
+
+      <item>
+        <title><cmd>--forms-date-format</cmd>=<var>Minta</var></title>
+	<p>A visszaadott dátum formátumának beállítása. Az alapértelmezett formátum függ a területi beállítástól. A formátumnak az <cmd>strftime</cmd> függvény által elfogadhatónak kell lennie, például: <var>%A %d/%m/%y</var>.</p>
+      </item>
+
+    </terms>
+
+    <p>A következő példa parancsfájl bemutatja az űrlapok ablak létrehozását:</p>
+
+<code>
+#!/bin/sh
+
+zenity --forms --title="Ismerős felvétele" \
+	--text="Adja meg az ismerősével kapcsolatos információkat." \
+	--separator="," \
+	--add-entry="Utónév" \
+	--add-entry="Vezetéknév" \
+	--add-entry="E-mail cím" \
+	--add-calendar="Születésnap" &gt;&gt; cím.csv
+
+case $? in
+    0)
+        echo "Ismerős felvéve.";;
+    1)
+        echo "Az ismerős nem lett felvéve."
+	;;
+    -1)
+        echo "Váratlan hiba történt."
+	;;
+esac
+</code>
+
+    <figure id="zenity-forms-screenshot">
+      <title>Példa űrlapok ablak</title>
+      <desc><app>Zenity</app> példa űrlapok ablak</desc>
+      <media type="image" mime="image/png" src="figures/zenity-forms-screenshot.png"/>
+    </figure>
+</page>

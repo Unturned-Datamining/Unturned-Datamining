@@ -1,0 +1,15 @@
+drwxr-xr-x root/root         0 2023-03-23 17:03 ./
+drwxr-xr-x root/root         0 2023-03-23 17:03 ./usr/
+drwxr-xr-x root/root         0 2023-03-23 17:03 ./usr/lib/
+drwxr-xr-x root/root         0 2023-03-23 17:04 ./usr/lib/x86_64-linux-gnu/
+-rw-r--r-- root/root    155184 2023-03-23 17:04 ./usr/lib/x86_64-linux-gnu/libatk-1.0.so.0.21809.1
+drwxr-xr-x root/root         0 2023-03-23 17:03 ./usr/share/
+drwxr-xr-x root/root         0 2023-03-23 17:03 ./usr/share/doc/
+drwxr-xr-x root/root         0 2023-03-23 17:04 ./usr/share/doc/libatk1.0-0/
+-rw-r--r-- root/root     13141 2015-09-21 15:10 ./usr/share/doc/libatk1.0-0/NEWS.gz
+-rw-r--r-- root/root     28608 2015-09-21 15:10 ./usr/share/doc/libatk1.0-0/changelog.gz
+-rw-r--r-- root/root      1158 2023-03-21 19:41 ./usr/share/doc/libatk1.0-0/copyright
+-rw-r--r-- root/root      6792 2023-03-23 17:02 ./usr/share/doc/libatk1.0-0/changelog.Debian.amd64.gz
+-rw-r--r-- root/root      1280 2015-09-21 15:10 ./usr/share/doc/libatk1.0-0/README
+-rw-r--r-- root/root       534 2015-09-21 15:10 ./usr/share/doc/libatk1.0-0/AUTHORS
+lrwxrwxrwx root/root         0 2023-03-23 17:03 ./usr/lib/x86_64-linux-gnu/libatk-1.0.so.0 -> libatk-1.0.so.0.21809.1

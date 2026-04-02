@@ -189,6 +189,10 @@ public class InteractableObjectNPC : InteractableObject, IDialogueTarget
         skull = transform2.Find("Spine").Find("Skull");
         anim = transform.GetComponent<Animation>();
         humanAnim = transform.GetComponent<HumanAnimator>();
+        humanAnim.lean = npcAsset.poseLean;
+        humanAnim.pitch = npcAsset.posePitch;
+        humanAnim.offset = npcAsset.poseHeadOffset;
+        humanAnim.force();
         transform.localScale = new Vector3((!npcAsset.IsLeftHanded) ? 1 : (-1), 1f, 1f);
         ItemAsset itemAsset = null;
         Transform transform3 = null;
@@ -437,9 +441,6 @@ public class InteractableObjectNPC : InteractableObject, IDialogueTarget
         {
             return;
         }
-        humanAnim.lean = npcAsset.poseLean;
-        humanAnim.pitch = npcAsset.posePitch;
-        humanAnim.offset = npcAsset.poseHeadOffset;
         if (!string.IsNullOrEmpty(stanceActive) && Time.time - lastIdle < anim[stanceActive].length)
         {
             anim.CrossFade(stanceActive);

@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<page xmlns="http://projectmallard.org/1.0/" type="topic" id="list" xml:lang="de">
+  <info>
+    <link type="guide" xref="index#dialogs"/>
+    <desc>Die Option <cmd>--list</cmd> verwenden.</desc>
+  </info>
+  <title>Listendialog</title>
+    <p>Verwenden Sie die Option <cmd>--list</cmd>, um einen Listendialog zu erzeugen. <app>Zenity</app> gibt die Einträge in der ersten Spalte der ausgewählten Zeile an die Standardausgabe zurück.</p>
+
+    <p>Die Daten für den Dialog müssen Spalte für Spalte und Zeile für Zeile angegeben werden. Die Daten können dem Dialog durch die Standardeingabe zur Verfügung gestellt werden. Die einzelnen Einträge müssen durch ein Newline-Zeichen voneinander getrennt werden.</p>
+
+    <p>Wenn Sie die Optionen <cmd>--checklist</cmd> oder <cmd>--radiolist</cmd> verwenden, muss jede Zeile entweder mit 'TRUE' oder mit 'FALSE' beginnen.</p>
+
+    <p>Der Listendialog unterstützt die folgenden Optionen:</p>
+
+    <terms>
+
+      <item>
+        <title><cmd>--column</cmd>=<var>column</var></title>
+	  <p>Legt die Spaltenüberschriften fest, die im Listendialog angezeigt werden sollen. Sie müssen eine <cmd>--column</cmd>-Option für jede Spalte angeben, die Sie im Listendialog anzeigen wollen.</p>
+      </item>
+
+      <item>
+        <title><cmd>--checklist</cmd></title>
+	  <p>Legt fest, dass die erste Spalte im Listendialog Ankreuzfelder enthält.</p>
+      </item>
+
+      <item>
+        <title><cmd>--radiolist</cmd></title>
+	  <p>Legt fest, dass die erste Spalte im Listendialog Radioknöpfe enthalten soll.</p>
+      </item>
+
+      <item>
+        <title><cmd>--editable</cmd></title>
+	  <p>Erlaubt die Bearbeitung der angezeigten Objekte.</p>
+      </item>
+
+      <item>
+        <title><cmd>--separator</cmd>=<var>Trenner</var></title>
+	  <p>Legt fest, welche Zeichenkette verwendet wird, wenn der Listendialog die ausgewählten Einträge zurück gibt.</p>
+      </item>
+
+      <item>
+        <title><cmd>--print-column</cmd>=<var>Spalte</var></title>
+	  <p>Dies legt fest, welche Spalte Ihrer Auswahl ausgegeben werden soll. Die Vorgabe ist »1«. Sie können »ALL« verwenden, um alle Spalten der Liste ausgeben zu lassen.</p>
+      </item>
+
+    </terms>
+
+    <p>Das folgende Beispielskript zeigt, wie Sie einen Listendialog erzeugen:</p>
+<code>
+#!/bin/sh
+
+zenity --list \
+  --title="Choose the Bugs You Wish to View" \
+  --column="Bug Number" --column="Severity" --column="Description" \
+    992383 Normal "GtkTreeView crashes on multiple selections" \
+    293823 High "GNOME Dictionary does not handle proxy" \
+    393823 Critical "Menu editing does not work in GNOME 2.0"
+</code>
+
+
+    <figure id="zenity-list-screenshot">
+      <title>Beispiel für einen Listendialog</title>
+      <desc>Beispiel für einen Listendialog in <app>Zenity</app></desc>
+      <media type="image" mime="image/png" src="figures/zenity-list-screenshot.png"/>
+    </figure>
+</page>

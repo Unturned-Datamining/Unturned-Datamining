@@ -1,0 +1,26 @@
+GUID 51c80ffaecb249338f9ff3f41f6954d6
+Type Spawn
+
+Tables
+[
+	{
+		// Cloth (Supply Item)
+		Guid 14901f32cd3240179fd6124324cc27e5
+		Weight 25
+	}
+	{
+		// Tape (Supply Item)
+		Guid 8c25cf28c76a4634855f404c8972c0ae
+		Weight 25
+	}
+	{
+		// Rope (Supply Item)
+		Guid 5ff4bcf752554990bf06e103b996cef2
+		Weight 25
+	}
+	{
+		// Glue (Water Item)
+		Guid ae1fc8674d0b4443b3ad9a68776dcf0f
+		Weight 25
+	}
+]

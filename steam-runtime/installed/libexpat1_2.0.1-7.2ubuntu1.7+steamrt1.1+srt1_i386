@@ -1,0 +1,16 @@
+drwxr-xr-x root/root         0 2023-03-23 17:22 ./
+drwxr-xr-x root/root         0 2023-03-23 17:22 ./lib/
+drwxr-xr-x root/root         0 2023-03-23 17:22 ./lib/i386-linux-gnu/
+-rw-r--r-- root/root    165228 2023-03-23 17:22 ./lib/i386-linux-gnu/libexpat.so.1.5.2
+drwxr-xr-x root/root         0 2023-03-23 17:22 ./usr/
+drwxr-xr-x root/root         0 2023-03-23 17:22 ./usr/share/
+drwxr-xr-x root/root         0 2023-03-23 17:22 ./usr/share/doc/
+drwxr-xr-x root/root         0 2023-03-23 17:22 ./usr/share/doc/libexpat1/
+-rw-r--r-- root/root      1480 2023-03-23 17:19 ./usr/share/doc/libexpat1/copyright
+-rw-r--r-- root/root      6130 2023-03-23 17:19 ./usr/share/doc/libexpat1/changelog.Debian.i386.gz
+-rw-r--r-- root/root      3870 2007-06-05 15:06 ./usr/share/doc/libexpat1/changelog.gz
+drwxr-xr-x root/root         0 2023-03-23 17:22 ./usr/lib/
+drwxr-xr-x root/root         0 2023-03-23 17:22 ./usr/lib/i386-linux-gnu/
+-rw-r--r-- root/root    165228 2023-03-23 17:22 ./usr/lib/i386-linux-gnu/libexpatw.so.1.5.2
+lrwxrwxrwx root/root         0 2023-03-23 17:22 ./lib/i386-linux-gnu/libexpat.so.1 -> libexpat.so.1.5.2
+lrwxrwxrwx root/root         0 2023-03-23 17:22 ./usr/lib/i386-linux-gnu/libexpatw.so.1 -> libexpatw.so.1.5.2

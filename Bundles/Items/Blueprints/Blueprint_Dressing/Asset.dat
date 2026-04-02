@@ -1,0 +1,14 @@
+GUID 8d840f701cc645789d4dc0765b461a2a
+Type Supply
+ID 1991
+
+Size_X 2
+Size_Y 1
+Size_Z 0.2
+
+Actions 1
+Action_0_Type Blueprint
+Action_0_Source 394
+Action_0_Blueprints 2
+Action_0_Blueprint_0_Index 1
+Action_0_Key Craft_Dressing

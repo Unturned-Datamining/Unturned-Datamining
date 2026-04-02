@@ -1,0 +1,50 @@
+drwxr-xr-x root/root         0 2019-04-03 16:48 ./
+drwxr-xr-x root/root         0 2019-04-03 16:48 ./usr/
+drwxr-xr-x root/root         0 2019-04-03 16:48 ./usr/lib/
+drwxr-xr-x root/root         0 2019-04-03 16:48 ./usr/lib/x86_64-linux-gnu/
+drwxr-xr-x root/root         0 2019-04-03 16:48 ./usr/lib/x86_64-linux-gnu/alsa-lib/
+-rw-r--r-- root/root     14712 2019-04-03 16:48 ./usr/lib/x86_64-linux-gnu/alsa-lib/libasound_module_ctl_oss.so
+-rw-r--r-- root/root     27328 2019-04-03 16:48 ./usr/lib/x86_64-linux-gnu/alsa-lib/libasound_module_ctl_arcam_av.so
+-rw-r--r-- root/root     14888 2019-04-03 16:48 ./usr/lib/x86_64-linux-gnu/alsa-lib/libasound_module_pcm_usb_stream.so
+-rw-r--r-- root/root     10344 2019-04-03 16:48 ./usr/lib/x86_64-linux-gnu/alsa-lib/libasound_module_rate_speexrate.so
+-rw-r--r-- root/root     10344 2019-04-03 16:48 ./usr/lib/x86_64-linux-gnu/alsa-lib/libasound_module_rate_samplerate.so
+-rw-r--r-- root/root     23000 2019-04-03 16:48 ./usr/lib/x86_64-linux-gnu/alsa-lib/libasound_module_ctl_pulse.so
+-rw-r--r-- root/root     27256 2019-04-03 16:48 ./usr/lib/x86_64-linux-gnu/alsa-lib/libasound_module_pcm_pulse.so
+-rw-r--r-- root/root     14736 2019-04-03 16:48 ./usr/lib/x86_64-linux-gnu/alsa-lib/libasound_module_pcm_upmix.so
+-rw-r--r-- root/root     10368 2019-04-03 16:48 ./usr/lib/x86_64-linux-gnu/alsa-lib/libasound_module_pcm_vdownmix.so
+-rw-r--r-- root/root     10416 2019-04-03 16:48 ./usr/lib/x86_64-linux-gnu/alsa-lib/libasound_module_pcm_speex.so
+-rw-r--r-- root/root      6120 2019-04-03 16:48 ./usr/lib/x86_64-linux-gnu/alsa-lib/libasound_module_conf_pulse.so
+-rw-r--r-- root/root     14520 2019-04-03 16:48 ./usr/lib/x86_64-linux-gnu/alsa-lib/libasound_module_pcm_oss.so
+-rw-r--r-- root/root     14792 2019-04-03 16:48 ./usr/lib/x86_64-linux-gnu/alsa-lib/libasound_module_pcm_jack.so
+drwxr-xr-x root/root         0 2019-04-03 16:48 ./usr/share/
+drwxr-xr-x root/root         0 2019-04-03 16:48 ./usr/share/alsa/
+drwxr-xr-x root/root         0 2019-04-03 16:48 ./usr/share/alsa/alsa.conf.d/
+-rw-r--r-- root/root       216 2019-04-03 16:48 ./usr/share/alsa/alsa.conf.d/50-pulseaudio.conf
+-rw-r--r-- root/root       201 2019-04-03 16:48 ./usr/share/alsa/alsa.conf.d/99-pulseaudio-default.conf.example
+drwxr-xr-x root/root         0 2019-04-03 16:48 ./usr/share/doc/
+drwxr-xr-x root/root         0 2019-04-03 16:48 ./usr/share/doc/libasound2-plugins/
+-rw-r--r-- root/root      4680 2016-01-04 02:57 ./usr/share/doc/libasound2-plugins/changelog.gz
+-rw-r--r-- root/root      1303 2015-10-27 13:34 ./usr/share/doc/libasound2-plugins/speexdsp.txt
+-rw-r--r-- root/root      1949 2015-10-27 13:34 ./usr/share/doc/libasound2-plugins/README-pulse
+-rw-r--r-- root/root      1048 2015-10-27 13:34 ./usr/share/doc/libasound2-plugins/README-pcm-oss
+-rw-r--r-- root/root      2691 2015-10-27 13:34 ./usr/share/doc/libasound2-plugins/README-maemo.gz
+-rw-r--r-- root/root      1383 2016-01-04 02:57 ./usr/share/doc/libasound2-plugins/copyright
+-rw-r--r-- root/root      1767 2015-10-27 13:34 ./usr/share/doc/libasound2-plugins/a52.txt
+-rw-r--r-- root/root      1029 2015-10-27 13:34 ./usr/share/doc/libasound2-plugins/lavcrate.txt
+-rw-r--r-- root/root      1012 2015-10-27 13:34 ./usr/share/doc/libasound2-plugins/README-arcam-av
+-rw-r--r-- root/root       560 2015-10-27 13:34 ./usr/share/doc/libasound2-plugins/vdownmix.txt
+-rw-r--r-- root/root      1336 2015-10-27 13:34 ./usr/share/doc/libasound2-plugins/README-jack
+-rw-r--r-- root/root       958 2015-10-27 13:34 ./usr/share/doc/libasound2-plugins/speexrate.txt
+-rw-r--r-- root/root      1243 2015-10-27 13:34 ./usr/share/doc/libasound2-plugins/upmix.txt
+-rw-r--r-- root/root       933 2015-10-27 13:34 ./usr/share/doc/libasound2-plugins/samplerate.txt
+drwxr-xr-x root/root         0 2019-04-03 16:48 ./usr/share/doc/libasound2-plugins/examples/
+-rw-r--r-- root/root       182 2016-01-04 02:57 ./usr/share/doc/libasound2-plugins/examples/asound.conf_jack
+-rw-r--r-- root/root       446 2016-01-04 02:57 ./usr/share/doc/libasound2-plugins/examples/a52.conf_pulse
+-rw-r--r-- root/root        92 2016-01-04 02:57 ./usr/share/doc/libasound2-plugins/examples/asound.conf_oss
+-rw-r--r-- root/root      9626 2019-04-03 16:47 ./usr/share/doc/libasound2-plugins/changelog.Debian.amd64.gz
+lrwxrwxrwx root/root         0 2019-04-03 16:48 ./usr/lib/x86_64-linux-gnu/alsa-lib/libasound_module_rate_samplerate_order.so -> libasound_module_rate_samplerate.so
+lrwxrwxrwx root/root         0 2019-04-03 16:48 ./usr/lib/x86_64-linux-gnu/alsa-lib/libasound_module_rate_samplerate_medium.so -> libasound_module_rate_samplerate.so
+lrwxrwxrwx root/root         0 2019-04-03 16:48 ./usr/lib/x86_64-linux-gnu/alsa-lib/libasound_module_rate_samplerate_linear.so -> libasound_module_rate_samplerate.so
+lrwxrwxrwx root/root         0 2019-04-03 16:48 ./usr/lib/x86_64-linux-gnu/alsa-lib/libasound_module_rate_speexrate_medium.so -> libasound_module_rate_speexrate.so
+lrwxrwxrwx root/root         0 2019-04-03 16:48 ./usr/lib/x86_64-linux-gnu/alsa-lib/libasound_module_rate_speexrate_best.so -> libasound_module_rate_speexrate.so
+lrwxrwxrwx root/root         0 2019-04-03 16:48 ./usr/lib/x86_64-linux-gnu/alsa-lib/libasound_module_rate_samplerate_best.so -> libasound_module_rate_samplerate.so

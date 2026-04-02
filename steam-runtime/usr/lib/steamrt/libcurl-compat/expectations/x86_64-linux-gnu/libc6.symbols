@@ -1,0 +1,16 @@
+# Copyright 2022 Collabora Ltd.
+# SPDX-License-Identifier: MIT
+#
+# Enough symbols to be able to detect that glibc is of a suitable version
+# to be able to use the libcurl shim.
+#
+# We'd like to be able to use GLIBC_2.30@GLIBC_2.30 for this detection,
+# but dlvsym() can't find such symbols, so we have to use one of the few
+# functions that happens to have been added during the same release cycle.
+# We're intentionally avoiding getdents64() because that one might be
+# tied up with large file support or lack thereof; gettid() is a simple
+# syscall wrapper which seems like a good candidate.
+
+libc.so.6 libc6 #MINVER#
+ GLIBC_2.30@GLIBC_2.30 0
+ gettid@GLIBC_2.30 0

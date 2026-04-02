@@ -1,0 +1,77 @@
+This package was Debianized by Ed Boraas <ed@debian.org> and Josselin
+Mouette <joss@debian.org>.
+
+It was downloaded from
+http://ftp.gnome.org/pub/GNOME/sources/gtk-engines/
+
+
+For the following engines, this license applies:
+
+    This package is free software; you can redistribute it and/or
+    modify it under the terms of the GNU Lesser General Public
+    License as published by the Free Software Foundation; either
+    version 2 of the License, or (at your option) any later version.
+
+    This package is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+    Lesser General Public License for more details.
+
+    You should have received a copy of the GNU Lesser General Public
+    License along with this package; if not, write to the Free Software
+    Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
+
+On Debian systems, the complete text of the GNU Lesser General
+Public License can be found in `/usr/share/common-licenses/LGPL'.
+
+High contrast - Author: Bill Haneman <bill.haneman@sun.com>
+
+Industrial - Authors: Christopher James Lahey <clahey@ximian.com>
+                      Tuomas Kuosmanen <tigert@ximian.com>
+                      Rodney Dawes <dobey@ximian.com>
+                      Jakub Steiner <jimmac@ximian.com>
+
+Redmond95 - Authors: Owen Taylor <otaylor@redhat.com>
+                     Andrew Johnson <ajgenius@ajgenius.us>
+
+
+For the following engines, this license applies:
+
+   This package is free software; you can redistribute it and/or modify
+   it under the terms of the GNU General Public License as published by
+   the Free Software Foundation; either version 2 of the License, or
+   (at your option) any later version.
+
+   This package is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+   GNU General Public License for more details.
+
+   You should have received a copy of the GNU General Public License
+   along with this package; if not, write to the Free Software
+   Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
+
+On Debian systems, the complete text of the GNU General
+Public License can be found in `/usr/share/common-licenses/GPL'.
+
+Clearlooks - Authors: Richard Stellingwerff <remenic@gmail.com>
+                      Daniel Borgmann <daniel.borgmann@gmail.com>
+
+Crux - Authors: Arlo Rose <arlo@eazel.com> - Design
+                John Harper <jsh@eazel.com> - Implementation
+                Seth Nickell <snickell@stanford.edu> - GTK2 implementation
+                Josh Barrow <josh@eazel.com> - original GTK+ theme
+
+LighthouseBlue - Authors: Jan Rosczak <jan.rosczak@web.de>
+                          Eugenia Loli-Queru <eloli@hotmail.com>
+                          Owen Taylor <otaylor@redhat.com>
+                          Alexander Larsson <alexl@redhat.com>
+
+Metal - Authors: Randy Gordon <randy@integrand.com>
+                 Owen Taylor <otaylor@redhat.com>
+
+Mist - Author: Dave Camp <dave@ximian.com>
+
+Thinice - Authors: Tim Gerla <timg@rrv.net>
+                   Tomas Ögren <stric@ing.umu.se>
+                   Richard Hult <rhult@codefactory.se>

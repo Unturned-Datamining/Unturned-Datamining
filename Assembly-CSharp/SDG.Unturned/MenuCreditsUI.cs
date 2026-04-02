@@ -86,8 +86,9 @@ public class MenuCreditsUI
         creditsBox.AddChild(scrollBox);
         float verticalOffset = 0f;
         AddHeader(localization.format("Header_Unturned"), ref verticalOffset);
-        AddRow("Nelson Sexton", "adding bugs and breaking the game", ref verticalOffset);
-        AddRow("Tyler \"MoltonMontro\" Pope", "community+web+server admin", ref verticalOffset);
+        AddRow("Nelson Sexton", "Developer", ref verticalOffset);
+        AddRow("Tyler \"MoltonMontro\" Pope", "Community Manager", ref verticalOffset);
+        AddRow("Dogfood", "Additional Content (2025-2026)", ref verticalOffset);
         AddRow("Sven Mawby", "RocketMod", ref verticalOffset);
         AddRow("Riley Labrecque", "Steamworks .NET", ref verticalOffset);
         AddRow("Stephen McKamey", "A* Pathfinding Project", ref verticalOffset);

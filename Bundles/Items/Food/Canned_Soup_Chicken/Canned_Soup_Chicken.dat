@@ -9,4 +9,9 @@ Size_Z 0.3
 
 Food 40
 Water 15
-ConsumeAudioClip Sounds/DrinkSwallow.mp3
+
+ConsumeAudioClip Sounds/EatCanL_Water.mp3
+Randomize_Consume_Audio_Pitch false
+Procedurally_Animate_Inertia false
+Instantiated_Item_Name_Override 13
+EquipablePrefab Items/Food/Canned_Soup_Chicken/Equipable.prefab

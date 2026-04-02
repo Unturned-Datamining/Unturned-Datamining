@@ -1,0 +1,35 @@
+GUID c88cc2394c46482dadbb7d1a36a0e50c
+Type Hat
+Rarity Uncommon
+Useable Clothing
+ID 1996
+
+Size_X 2
+Size_Y 2
+Size_Z 0.45
+
+Beard
+
+Armor 0.95
+
+Blueprints
+[
+	{
+		Name Salvage
+		CategoryTag "7ed29f9101ae4523a3b2e389414b7bd9" // Salvage
+		InputItems this
+		OutputItems "14901f32cd3240179fd6124324cc27e5 x 2" // Cloth
+		Effect "7eceb9f7751d4634b572c8e236355104" // Rip
+	}
+	{
+		Name Repair
+		CategoryTag "732ee6ffeb18418985cf4f9fde33dd11" // Repair
+		Operation RepairTargetItem
+		InputItems "14901f32cd3240179fd6124324cc27e5 x 2" // Cloth
+		RequiresNearbyCraftingTags
+		[
+			"2ac5ddc545a848008c0308d21f5d2e6b" // Spinning Wheel
+		]
+		Effect "7eceb9f7751d4634b572c8e236355104" // Rip
+	}
+]

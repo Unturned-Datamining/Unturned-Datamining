@@ -1,0 +1,12 @@
+drwxr-xr-x root/root         0 2019-04-03 15:22 ./
+drwxr-xr-x root/root         0 2019-04-03 15:22 ./usr/
+drwxr-xr-x root/root         0 2019-04-03 15:22 ./usr/lib/
+drwxr-xr-x root/root         0 2019-04-03 15:22 ./usr/lib/i386-linux-gnu/
+-rw-r--r-- root/root     67448 2019-04-03 15:22 ./usr/lib/i386-linux-gnu/libXpm.so.4.11.0
+drwxr-xr-x root/root         0 2019-04-03 15:22 ./usr/share/
+drwxr-xr-x root/root         0 2019-04-03 15:22 ./usr/share/doc/
+drwxr-xr-x root/root         0 2019-04-03 15:22 ./usr/share/doc/libxpm4/
+-rw-r--r-- root/root      2714 2019-04-03 15:21 ./usr/share/doc/libxpm4/changelog.Debian.i386.gz
+-rw-r--r-- root/root      9844 2010-10-30 00:30 ./usr/share/doc/libxpm4/changelog.gz
+-rw-r--r-- root/root      3878 2019-04-03 15:21 ./usr/share/doc/libxpm4/copyright
+lrwxrwxrwx root/root         0 2019-04-03 15:22 ./usr/lib/i386-linux-gnu/libXpm.so.4 -> libXpm.so.4.11.0

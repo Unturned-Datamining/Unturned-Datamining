@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<page xmlns="http://projectmallard.org/1.0/" type="topic" id="calendar" xml:lang="es">
+  <info>
+    <link type="guide" xref="index#dialogs"/>
+    <desc>Use la opción <cmd>--calendar</cmd>.</desc>
+  </info>
+  <title>Diálogo de calendario</title>
+    <p>Use la opción <cmd>--calendar</cmd> para crear un diálogo de calendario. Zenity devuelve la fecha seleccionada a la salida estándar. Si no se especifica una fecha en la línea de comando, el diálogo usa la fecha actual.</p>
+    <p>El diálogo de calendario soporta las siguientes opciones:</p>
+
+    <terms>
+
+      <item>
+        <title><cmd>--text</cmd>=<var>texto</var></title>
+	<p>Especifica el texto que se muestra en el diálogo del calendario.</p>
+      </item>
+     	
+      <item>
+        <title><cmd>--day</cmd>=<var>día</var></title>
+	<p>Especifica el día que se selecciona en el diálogo del calendario.«Día» debe ser un número entre 1 y 31 ambos incluídos.</p>
+      </item>
+
+      <item>
+        <title><cmd>--month</cmd>=<var>mes</var></title>
+	<p>Especifica el mes que se selecciona en el diálogo del calendario. «Mes» debe ser un número entre 1 y 12 ambos incluídos.</p>
+      </item>
+
+      <item>
+        <title><cmd>--year</cmd>=<var>año</var></title>
+	<p>Especifica el año que se selecciona en el diálogo del calendario.</p>
+      </item>
+
+      <item>
+        <title><cmd>--date-format</cmd>=<var>formato</var></title>
+	<p>Especifica el formato que se devuelve desde el diálogo de calendario después de la selección de la fecha. El formato predeterminado depende de configuración regional. «Formato» debe ser un formato que sea compatible con la función <cmd>strftime</cmd>, por ejemplo <var>%A %d/%m/%y</var>.</p>
+      </item>
+
+    </terms>
+
+    <p>El siguiente script de ejemplo muestra cómo se crea un diálogo de calendario:</p>
+
+<code>
+#!/bin/sh
+
+
+if zenity --calendar \
+--title="Seleccione una fecha" \
+--text="Pulse en una fecha para seleccionarla." \
+--day=10 --month=8 --year=2004
+  then echo $?
+  else echo "No ha seleccionado ninguna fecha"
+fi
+</code>
+
+
+    <figure id="zenity-calendar-screenshot">
+      <title>Ejemplo de un diálogo de calendario</title>
+      <desc>Ejemplo de un diálogo de calendario de Zenity</desc>
+      <media type="image" mime="image/png" src="figures/zenity-calendar-screenshot.png"/>
+   </figure>
+</page>

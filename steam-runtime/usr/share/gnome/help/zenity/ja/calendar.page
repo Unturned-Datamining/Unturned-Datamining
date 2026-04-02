@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<page xmlns="http://projectmallard.org/1.0/" type="topic" id="calendar" xml:lang="ja">
+  <info>
+    <link type="guide" xref="index#dialogs"/>
+    <desc><cmd>--calendar</cmd> オプションの使用</desc>
+  </info>
+  <title>カレンダーダイアログ</title>
+    <p>カレンダーダイアログを作成するには、<cmd>--calendar</cmd> というオプションを使ってください。<app>Zenity</app> は、標準出力へ選択された日付を返却します。コマンドラインで日付を指定しなかった場合、ダイアログは現在の日付を利用します。</p>
+    <p>カレンダーダイアログは、以下のオプションをサポートしています。</p>
+
+    <terms>
+
+      <item>
+        <title><cmd>--text</cmd>=<var>テキスト</var></title>
+	<p>カレンダーダイアログに表示されるテキストを指定します。</p>
+      </item>
+     	
+      <item>
+        <title><cmd>--day</cmd>=<var>日</var></title>
+	<p>カレンダーダイアログで選択されている日を指定します。日は、1 から 31 の数字でなければなりません。</p>
+      </item>
+
+      <item>
+        <title><cmd>--month</cmd>=<var>月</var></title>
+	<p>カレンダーダイアログで選択されている月を指定します。月は、1 から 12 の数字でなければなりません。</p>
+      </item>
+
+      <item>
+        <title><cmd>--year</cmd>=<var>年</var></title>
+	<p>カレンダーダイアログで選択されている年を指定します。(訳注:西暦の数字部分で指定します。)</p>
+      </item>
+
+      <item>
+        <title><cmd>--date-format</cmd>=<var>書式</var></title>
+	<p>日付が選択された後、カレンダーダイアログが返却する書式を指定します。デフォルトの書式は、locale に依存します。書式は、 <cmd>strftime</cmd> 関数が受け取れる書式でなければなりません。たとえば、<var>%A %d/%m/%y</var> です。</p>
+      </item>
+
+    </terms>
+
+    <p>以下のスクリプトの例でカレンダーダイアログの作成方法を示します。</p>
+
+<code>
+#!/bin/sh
+
+
+if zenity --calendar \
+--title="日付の選択" \
+--text="日付をクリックして選択してください。" \
+--day=10 --month=8 --year=2004
+  then echo $?
+  else echo "日付が選択されませんでした。"
+fi
+</code>
+
+
+    <figure id="zenity-calendar-screenshot">
+      <title>カレンダーダイアログの例</title>
+      <desc>Zenity カレンダーダイアログの例</desc>
+      <media type="image" mime="image/png" src="figures/zenity-calendar-screenshot.png"/>
+   </figure>
+</page>

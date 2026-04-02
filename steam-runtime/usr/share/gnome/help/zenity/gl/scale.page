@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<page xmlns="http://projectmallard.org/1.0/" type="topic" id="scale" xml:lang="gl">
+  <info>
+    <link type="guide" xref="index#dialogs"/>
+    <desc>Use a opción <cmd>--scale</cmd>.</desc>
+  </info>
+  <title>Diálogo de escala</title>
+  <p>Use a opción <cmd>--scale</cmd> para crear un diálogo de escala.</p>
+  <p>O diálogo de escala admite as seguintes opcións:</p>
+
+  <terms>
+
+    <item>
+      <title><cmd>--text</cmd>=<var>TEXTO</var></title>
+      <p>EStabeleza o texto do diálogo. (Predeterminado: «Axustar o valor da escala»)</p>
+    </item>
+
+    <item>
+      <title><cmd>--value</cmd>=<var>VALOR</var></title>
+      <p>Set initial value. (Default: 0) You must specify value between minimum value to maximum value.</p>
+    </item>
+
+    <item>
+      <title><cmd>--min-value</cmd>=<var>VALOR</var></title>
+      <p>Estableza o valor mínimo. (Predeteminado: 0)</p>
+    </item>
+
+    <item>
+      <title><cmd>--max-value</cmd>=<var>VALUE</var></title>
+      <p>Set maximum value. (Default: 100)</p>
+    </item>
+
+    <item>
+      <title><cmd>--step</cmd>=<var>VALUE</var></title>
+      <p>Set step size. (Default: 1)</p>
+    </item>
+
+    <item>
+      <title><cmd>--print-partial</cmd></title>
+      <p>Print value to standard output, whenever a value is changed. </p>
+    </item>
+
+    <item>
+      <title><cmd>--hide-value</cmd></title>
+      <p>Ocultar o valor nun diálogo.</p>
+    </item>
+
+  </terms>
+
+  <p>O seguinte script de exemplo mostra como se crea un diálogo de calendario:</p>
+
+<code>
+#!/bin/sh
+
+VALUE=`zenity --scale --text="Select window transparency." --value=50`
+
+case $? in
+         0)
+		echo "Seleccionouse $VALUE%.";;
+         1)
+                echo "Non se seleccionou ningún valor.";;
+        -1)
+                echo "Produciuse un erro non esperado.";;
+esac
+</code>
+
+  <figure id="zenity-scale-screenshot">
+    <title>Exemplo de diálogo de escala</title>
+    <desc>Exemplo do diálogo de escala de <app>Zenity</app></desc>
+    <media type="image" mime="image/png" src="figures/zenity-scale-screenshot.png"/>
+  </figure>
+
+</page>

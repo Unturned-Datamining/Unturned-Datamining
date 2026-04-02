@@ -5,7 +5,7 @@ namespace SDG.Unturned;
 
 public class SleekWrapper : ISleekElement
 {
-    private ISleekElement implementation;
+    private ISleekProxyImplementation implementation;
 
     public bool IsVisible
     {
@@ -317,6 +317,11 @@ public class SleekWrapper : ISleekElement
     public void ForceLayoutUpdate()
     {
         implementation.ForceLayoutUpdate();
+    }
+
+    public ISleekProxyImplementation GetProxyImplementation()
+    {
+        return implementation;
     }
 
     public virtual void OnUpdate()

@@ -233,7 +233,8 @@ internal static class UseableHousingUtils
             }
             return false;
         }
-        if (VolumeManager<PlayerClipVolume, PlayerClipVolumeManager>.Get().IsPositionInsideAnyVolume(pendingPlacementPosition))
+        bool valueOrDefault = (Provider.modeConfigData?.Gameplay?.Bypass_No_Building_Zones).GetValueOrDefault();
+        if (!valueOrDefault && VolumeManager<PlayerClipVolume, PlayerClipVolumeManager>.Get().IsPositionInsideAnyVolume(pendingPlacementPosition))
         {
             if (channel.IsLocalPlayer)
             {
@@ -249,7 +250,7 @@ internal static class UseableHousingUtils
             }
             return false;
         }
-        if (VolumeManager<NoStructuresVolume, NoStructuresVolumeManager>.Get().IsPositionInsideAnyVolume(pendingPlacementPosition))
+        if (!valueOrDefault && VolumeManager<NoStructuresVolume, NoStructuresVolumeManager>.Get().IsPositionInsideAnyVolume(pendingPlacementPosition))
         {
             if (channel.IsLocalPlayer)
             {

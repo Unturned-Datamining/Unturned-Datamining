@@ -1,0 +1,12 @@
+drwxr-xr-x root/root         0 2019-04-03 15:04 ./
+drwxr-xr-x root/root         0 2019-04-03 15:04 ./usr/
+drwxr-xr-x root/root         0 2019-04-03 15:03 ./usr/lib/
+drwxr-xr-x root/root         0 2019-04-03 15:04 ./usr/lib/x86_64-linux-gnu/
+-rw-r--r-- root/root     35248 2019-04-03 15:04 ./usr/lib/x86_64-linux-gnu/libvorbisfile.so.3.3.7
+drwxr-xr-x root/root         0 2019-04-03 15:04 ./usr/share/
+drwxr-xr-x root/root         0 2019-04-03 15:04 ./usr/share/doc/
+drwxr-xr-x root/root         0 2019-04-03 15:04 ./usr/share/doc/libvorbisfile3/
+-rw-r--r-- root/root      2598 2015-03-03 00:05 ./usr/share/doc/libvorbisfile3/changelog.gz
+-rw-r--r-- root/root      2222 2018-03-16 21:26 ./usr/share/doc/libvorbisfile3/copyright
+-rw-r--r-- root/root      5630 2019-04-03 15:02 ./usr/share/doc/libvorbisfile3/changelog.Debian.amd64.gz
+lrwxrwxrwx root/root         0 2019-04-03 15:04 ./usr/lib/x86_64-linux-gnu/libvorbisfile.so.3 -> libvorbisfile.so.3.3.7

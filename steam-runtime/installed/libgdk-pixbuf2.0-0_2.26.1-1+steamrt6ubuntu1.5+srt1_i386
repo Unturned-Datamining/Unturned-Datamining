@@ -1,0 +1,21 @@
+drwxr-xr-x root/root         0 2023-03-23 17:31 ./
+drwxr-xr-x root/root         0 2023-03-23 17:31 ./usr/
+drwxr-xr-x root/root         0 2023-03-23 17:31 ./usr/share/
+drwxr-xr-x root/root         0 2023-03-23 17:31 ./usr/share/doc/
+drwxr-xr-x root/root         0 2023-03-23 17:32 ./usr/share/doc/libgdk-pixbuf2.0-0/
+-rw-r--r-- root/root      8267 2021-05-06 14:48 ./usr/share/doc/libgdk-pixbuf2.0-0/copyright
+-rw-r--r-- root/root      4687 2023-03-23 17:29 ./usr/share/doc/libgdk-pixbuf2.0-0/changelog.Debian.i386.gz
+-rw-r--r-- root/root      2163 2012-04-14 18:28 ./usr/share/doc/libgdk-pixbuf2.0-0/NEWS.gz
+-rw-r--r-- root/root      1535 2011-08-16 01:45 ./usr/share/doc/libgdk-pixbuf2.0-0/AUTHORS
+drwxr-xr-x root/root         0 2023-03-23 17:31 ./usr/lib/
+drwxr-xr-x root/root         0 2023-03-23 17:32 ./usr/lib/i386-linux-gnu/
+-rw-r--r-- root/root    245140 2023-03-23 17:32 ./usr/lib/i386-linux-gnu/libgdk_pixbuf-2.0.so.0.2600.1
+drwxr-xr-x root/root         0 2023-03-23 17:32 ./usr/lib/i386-linux-gnu/gdk-pixbuf-2.0/
+-rwxr-xr-x root/root      9704 2023-03-23 17:32 ./usr/lib/i386-linux-gnu/gdk-pixbuf-2.0/gdk-pixbuf-query-loaders
+drwxr-xr-x root/root         0 2023-03-23 17:31 ./usr/lib/i386-linux-gnu/gdk-pixbuf-2.0/2.10.0/
+drwxr-xr-x root/root         0 2023-03-23 17:32 ./usr/lib/i386-linux-gnu/gdk-pixbuf-2.0/2.10.0/loaders/
+-rw-r--r-- root/root     26140 2023-03-23 17:32 ./usr/lib/i386-linux-gnu/gdk-pixbuf-2.0/2.10.0/loaders/libpixbufloader-gif.so
+-rw-r--r-- root/root     13792 2023-03-23 17:32 ./usr/lib/i386-linux-gnu/gdk-pixbuf-2.0/2.10.0/loaders/libpixbufloader-ani.so
+-rw-r--r-- root/root     67172 2023-03-23 17:32 ./usr/lib/i386-linux-gnu/libgdk_pixbuf_xlib-2.0.so.0.2600.1
+lrwxrwxrwx root/root         0 2023-03-23 17:31 ./usr/lib/i386-linux-gnu/libgdk_pixbuf-2.0.so.0 -> libgdk_pixbuf-2.0.so.0.2600.1
+lrwxrwxrwx root/root         0 2023-03-23 17:31 ./usr/lib/i386-linux-gnu/libgdk_pixbuf_xlib-2.0.so.0 -> libgdk_pixbuf_xlib-2.0.so.0.2600.1

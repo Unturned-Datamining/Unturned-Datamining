@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<engine schema_version="0.1" module_name="crux-engine" long_name="Crux">
+
+  <metainfo>
+    <version>2.20.2</version>
+    <website>http://www.gnome.org</website>
+    <author>
+      <name>Arlo Rose</name>
+      <email>arlo@eazel.com</email>
+    </author>
+    <author>
+      <name>John Harper</name>
+      <email>jsh@eazel.com</email>
+    </author>
+    <author>
+      <name>Seth Nickell</name>
+      <email>snickell@stanford.edu</email>
+    </author>
+    <author>
+      <name>Thomas Wood</name>
+      <email>thos@gnome.org</email>
+    </author>
+  </metainfo>
+
+</engine>

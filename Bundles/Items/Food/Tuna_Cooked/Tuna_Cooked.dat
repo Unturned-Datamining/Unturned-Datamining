@@ -1,0 +1,30 @@
+﻿GUID 50550f1be76548709a52769cc087cee4
+Type Food
+Rarity Epic
+Useable Consumeable
+ID 1962
+
+Size_X 3
+Size_Y 2
+Size_Z 0.35
+
+Food 45
+Water 30
+
+Blueprints
+[
+	{
+		CategoryTag "d089feb7e43f40c5a7dfcefc36998cfb" // Supplies
+		InputItems "bbdbc161bb2048c2a08de45dd0c3b58c" // Raw Tuna
+		OutputItems this
+		Skill Cook
+		Skill_Level 1
+		RequiresNearbyCraftingTags
+		[
+			"20f30322bbcc4b01a4f116d22b24c21a" // Heat Source
+		]
+		Effect "84347b13028340b8976033c08675d458" // Wrench
+	}
+]
+
+ConsumeAudioClip Sounds/EatCrunchy.mp3

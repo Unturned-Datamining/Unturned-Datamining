@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<page xmlns="http://projectmallard.org/1.0/" type="topic" id="introduction" xml:lang="pt_BR">
+<info>
+  <link type="guide" xref="index"/>
+  <desc><app>Zenity</app> enables you to create the various types of simple dialog.</desc>
+</info>
+<title>Introdução</title>
+<p>
+    <app>Zenity</app> enables you to create the following types of simple dialog:
+</p>
+
+<list>
+    <item><p>Calendário</p></item>
+    <item><p>Seleção de arquivo</p></item>
+    <item><p>Forms</p></item>
+    <item><p>Lista</p></item>
+    <item><p>Ícone de notificação</p></item>
+    <item><p>Mensagem</p>
+        <list>
+            <item><p>Erro</p></item>
+    	<item><p>Informação</p></item>
+    	<item><p>Pergunta</p></item>
+    	<item><p>Aviso</p></item>
+        </list>
+    </item>
+    <item><p>Password entry</p></item>
+    <item><p>Indicador de progresso</p></item>
+    <item><p>Entrada de texto</p></item>
+    <item><p>Informação de texto</p></item>
+    <item><p>Scale</p></item>
+    <item><p>Color selection</p></item>
+</list>
+</page>

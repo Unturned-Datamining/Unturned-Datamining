@@ -1,0 +1,17 @@
+drwxr-xr-x root/root         0 2021-05-17 17:45 ./
+drwxr-xr-x root/root         0 2021-05-17 17:45 ./usr/
+drwxr-xr-x root/root         0 2021-05-17 17:45 ./usr/lib/
+drwxr-xr-x root/root         0 2021-05-17 17:45 ./usr/lib/x86_64-linux-gnu/
+-rw-r--r-- root/root   1421816 2021-05-17 17:45 ./usr/lib/x86_64-linux-gnu/libxml2.so.2.7.8
+drwxr-xr-x root/root         0 2021-05-17 17:45 ./usr/share/
+drwxr-xr-x root/root         0 2021-05-17 17:45 ./usr/share/doc/
+drwxr-xr-x root/root         0 2021-05-17 17:45 ./usr/share/doc/libxml2/
+-rw-r--r-- root/root     32299 2010-10-12 06:25 ./usr/share/doc/libxml2/NEWS.gz
+-rw-r--r-- root/root    203660 2010-10-12 06:25 ./usr/share/doc/libxml2/changelog.gz
+-rw-r--r-- root/root      5119 2021-05-17 17:41 ./usr/share/doc/libxml2/copyright
+-rw-r--r-- root/root     18992 2021-05-17 17:41 ./usr/share/doc/libxml2/changelog.Debian.amd64.gz
+-rw-r--r-- root/root       629 2021-05-17 17:41 ./usr/share/doc/libxml2/README.Debian
+-rw-r--r-- root/root      1190 2009-09-24 15:31 ./usr/share/doc/libxml2/README
+-rw-r--r-- root/root       208 2009-09-24 15:31 ./usr/share/doc/libxml2/AUTHORS
+-rw-r--r-- root/root      5168 2009-09-24 15:31 ./usr/share/doc/libxml2/TODO.gz
+lrwxrwxrwx root/root         0 2021-05-17 17:45 ./usr/lib/x86_64-linux-gnu/libxml2.so.2 -> libxml2.so.2.7.8

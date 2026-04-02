@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<page xmlns="http://projectmallard.org/1.0/" type="topic" id="introduction" xml:lang="hu">
+<info>
+  <link type="guide" xref="index"/>
+  <desc>A <app>Zenity</app> lehetővé teszi különböző egyszerű párbeszédablakok létrehozását.</desc>
+</info>
+<title>Bevezetés</title>
+<p>A <app>Zenity</app> lehetővé teszi a következő típusú egyszerű párbeszédablakok létrehozását:</p>
+
+<list>
+    <item><p>Naptár</p></item>
+    <item><p>Fájlválasztó</p></item>
+    <item><p>Űrlapok</p></item>
+    <item><p>Lista</p></item>
+    <item><p>Értesítési ikon</p></item>
+    <item><p>Üzenet</p>
+        <list>
+            <item><p>Hiba</p></item>
+    	<item><p>Információ</p></item>
+    	<item><p>Kérdés</p></item>
+    	<item><p>Figyelmeztetés</p></item>
+        </list>
+    </item>
+    <item><p>Jelszóbeviteli mező</p></item>
+    <item><p>Folyamatjelző</p></item>
+    <item><p>Szövegmező</p></item>
+    <item><p>Szöveges információk</p></item>
+    <item><p>Méretezés</p></item>
+    <item><p>Színválasztó</p></item>
+</list>
+</page>

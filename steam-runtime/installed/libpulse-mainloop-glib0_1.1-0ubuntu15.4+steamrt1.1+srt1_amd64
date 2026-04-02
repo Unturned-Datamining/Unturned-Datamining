@@ -1,0 +1,12 @@
+drwxr-xr-x root/root         0 2021-05-18 11:02 ./
+drwxr-xr-x root/root         0 2021-05-18 11:02 ./usr/
+drwxr-xr-x root/root         0 2021-05-18 11:02 ./usr/lib/
+drwxr-xr-x root/root         0 2021-05-18 11:02 ./usr/lib/x86_64-linux-gnu/
+-rw-r--r-- root/root     18632 2021-05-18 11:02 ./usr/lib/x86_64-linux-gnu/libpulse-mainloop-glib.so.0.0.4
+drwxr-xr-x root/root         0 2021-05-18 11:02 ./usr/share/
+drwxr-xr-x root/root         0 2021-05-18 11:02 ./usr/share/doc/
+drwxr-xr-x root/root         0 2021-05-18 11:02 ./usr/share/doc/libpulse-mainloop-glib0/
+-rw-r--r-- root/root     21450 2021-05-18 10:57 ./usr/share/doc/libpulse-mainloop-glib0/copyright
+-rw-r--r-- root/root     45786 2021-05-18 10:57 ./usr/share/doc/libpulse-mainloop-glib0/changelog.Debian.amd64.gz
+-rw-r--r-- root/root      1028 2011-10-20 12:54 ./usr/share/doc/libpulse-mainloop-glib0/README
+lrwxrwxrwx root/root         0 2021-05-18 11:02 ./usr/lib/x86_64-linux-gnu/libpulse-mainloop-glib.so.0 -> libpulse-mainloop-glib.so.0.0.4

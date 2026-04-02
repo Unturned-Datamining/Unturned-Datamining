@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<page xmlns="http://projectmallard.org/1.0/" type="topic" id="list" xml:lang="fi">
+  <info>
+    <link type="guide" xref="index#dialogs"/>
+    <desc>Use the <cmd>--list</cmd> option.</desc>
+  </info>
+  <title>Luetteloikkuna</title>
+    <p>
+	Use the <cmd>--list</cmd> option to create a list dialog. <app>Zenity</app> returns the entries in the first column of text of selected rows to standard output.
+    </p>
+
+    <p>Ikkunan sisältö tulee määrittää sarake sarakkeelta ja rivi riviltä. Tiedot voidaan syöttää ikkunaan vakiosyötteen kautta. Jokainen tietue pitää erottaa rivinvaihtomerkillä. </p>
+
+    <p>
+	If you use the <cmd>--checklist</cmd> or <cmd>--radiolist</cmd> options, each row must start with either 'TRUE' or 'FALSE'.
+    </p>
+
+    <p>Luetteloikkuna tarjoaa seuraavat valitsimet:</p>
+
+    <terms>
+
+      <item>
+        <title><cmd>--column</cmd>=<var>column</var></title>
+	  <p>Specifies the column headers that are displayed in the list dialog. You must specify a <cmd>--column</cmd> option for each column that you want to display in the dialog.
+	  </p>
+      </item>
+
+      <item>
+        <title><cmd>--checklist</cmd></title>
+	  <p>Määrittää, että ensimmäinen sarake luetteloikkunassa sisältää valintaruutuja.</p>
+      </item>
+
+      <item>
+        <title><cmd>--radiolist</cmd></title>
+	  <p>Määrittää, että ensimmäinen sarake luetteloikkunassa sisältää radiovalitsimia.</p>
+      </item>
+
+      <item>
+        <title><cmd>--editable</cmd></title>
+	  <p>Sallii näytettävien tietuiden muokaamisen.</p>
+      </item>
+
+      <item>
+        <title><cmd>--separator</cmd>=<var>separator</var></title>
+	  <p>Määrittää mitä merkkijonoa käytetään kun luetteloikkuna palauttaa valitut tietueet.</p>
+      </item>
+
+      <item>
+        <title><cmd>--print-column</cmd>=<var>column</var></title>
+	  <p>Määrittää mitkä sarakkeet tulostetaan valinnan jälkeen. Oletussarake on "1". "ALL" (kaikki) tarkoittaa, että kaikki luettelon sarakkeet tulostetaan.</p>
+      </item>
+
+    </terms>
+
+    <p>
+      The following example script shows how to create a list dialog:
+    </p>
+<code>
+#!/bin/sh
+
+zenity --list \
+  --title="Choose the Bugs You Wish to View" \
+  --column="Bug Number" --column="Severity" --column="Description" \
+    992383 Normal "GtkTreeView crashes on multiple selections" \
+    293823 High "GNOME Dictionary does not handle proxy" \
+    393823 Critical "Menu editing does not work in GNOME 2.0"
+</code>
+
+
+    <figure id="zenity-list-screenshot">
+      <title>Esimerkki luetteloikkunasta</title>
+      <desc><app>Zenity</app> list dialog example</desc>
+      <media type="image" mime="image/png" src="figures/zenity-list-screenshot.png"/>
+    </figure>
+</page>

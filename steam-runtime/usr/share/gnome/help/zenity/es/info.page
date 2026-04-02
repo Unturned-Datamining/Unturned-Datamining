@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<page xmlns="http://projectmallard.org/1.0/" type="topic" id="info" xml:lang="es">
+  <info>
+    <link type="guide" xref="message"/>
+    <desc>Use la opción <cmd>--info</cmd>.</desc>
+  </info>
+  <title>Diálogo de información</title>
+      <p>Use la opción <cmd>--info</cmd> para crear un diálogo de información.</p>
+
+      <p>El siguiente script de ejemplo muestra cómo crear un diálogo de información:</p>
+
+<code>
+#!/bin/bash
+
+zenity --info \
+--text="Merge complete. Combinación completa. Actualizados 3 de 10 archivos."
+</code>
+
+
+      <figure id="zenity-information-screenshot">
+        <title>Ejemplo de diálogo de información</title>
+        <desc>Ejemplo del diálogo de información de <app>Zenity</app></desc>
+        <media type="image" mime="image/png" src="figures/zenity-information-screenshot.png"/>
+      </figure>
+</page>

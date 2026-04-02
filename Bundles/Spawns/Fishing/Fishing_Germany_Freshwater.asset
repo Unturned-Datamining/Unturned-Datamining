@@ -1,0 +1,56 @@
+GUID 329e533b3dd842b4a759880043b709fb
+Type Spawn
+
+Tables
+[
+	{
+		// Raw Minnow (Food Item)
+		Guid 1b7034184634492c9f78e11b42c651db
+		Weight 180
+	}
+	{
+		// Raw Goldfish (Food Item)
+		Guid 0b12b6e13f6349b9a9925f08f1576548
+		Weight 102
+	}
+	{
+		// Raw Trout (Food Item)
+		Guid d228c0a89be74844a367760972689567
+		Weight 80
+	}
+	{
+		// Raw Northern Pike (Food Item)
+		Guid 19bcff41cf5b4e6ab3149884f0f9fe3b
+		Weight 66
+	}
+	{
+		// Raw Salmon (Food Item)
+		Guid 7c09233d7e2c4ccfa59cf24f602d6ee9
+		Weight 60
+	}
+	{
+		// Raw Bass (Food Item)
+		Guid 00f066e5a3a24ae5b9a07d184266f78c
+		Weight 45
+	}
+	{
+		// Fishing_Junk (Spawn)
+		Guid ad4cc83259f541bfb49d39d81f162b1d
+		Weight 39
+	}
+	{
+		// Seaweed (Food Item)
+		Guid dd657a9ca0944deb9764b093d98f40fd
+		Weight 21
+	}
+	{
+		// Upgraded Fishing Rod Blueprint (Supply Item)
+		Guid 1c47939b50344c79852e1b4376debbfc
+		Weight 4
+	}
+	{
+		// Pike Blueprint (Supply Item)
+		Guid 4d72899b4e9645cbb887e6d49a668ae2
+		Weight 3
+	}
+]

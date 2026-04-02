@@ -1,0 +1,15 @@
+drwxr-xr-x root/root         0 2019-04-03 16:51 ./
+drwxr-xr-x root/root         0 2019-04-03 16:51 ./usr/
+drwxr-xr-x root/root         0 2019-04-03 16:51 ./usr/lib/
+drwxr-xr-x root/root         0 2019-04-03 16:51 ./usr/lib/i386-linux-gnu/
+-rw-r--r-- root/root    646184 2019-04-03 16:51 ./usr/lib/i386-linux-gnu/libvpx.so.1.0.0
+drwxr-xr-x root/root         0 2019-04-03 16:51 ./usr/share/
+drwxr-xr-x root/root         0 2019-04-03 16:51 ./usr/share/doc/
+drwxr-xr-x root/root         0 2019-04-03 16:51 ./usr/share/doc/libvpx1/
+-rw-r--r-- root/root      6846 2012-01-27 18:36 ./usr/share/doc/libvpx1/changelog.gz
+-rw-r--r-- root/root      3246 2012-01-27 18:36 ./usr/share/doc/libvpx1/README
+-rw-r--r-- root/root     23857 2017-08-30 10:02 ./usr/share/doc/libvpx1/copyright
+-rw-r--r-- root/root      2213 2012-01-27 18:36 ./usr/share/doc/libvpx1/AUTHORS
+-rw-r--r-- root/root      1992 2019-04-03 16:49 ./usr/share/doc/libvpx1/changelog.Debian.i386.gz
+lrwxrwxrwx root/root         0 2019-04-03 16:51 ./usr/lib/i386-linux-gnu/libvpx.so.1.0 -> libvpx.so.1.0.0
+lrwxrwxrwx root/root         0 2019-04-03 16:51 ./usr/lib/i386-linux-gnu/libvpx.so.1 -> libvpx.so.1.0.0

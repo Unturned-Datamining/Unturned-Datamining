@@ -1,12 +1,12 @@
 ﻿GUID 5f85885dbd404b08983c3ec11ad98416
 Type Melee
-Rarity Mythical
+Rarity Legendary
 Useable Melee
-Slot Secondary
+Slot Primary
 ID 1867
 
-Size_X 1
-Size_Y 4
+Size_X 4
+Size_Y 1
 Size_Z 0.8
 Size2_Z 0.65
 
@@ -14,21 +14,21 @@ Range 3
 Strength 1.5
 Weak 0.45
 Strong 0.44
-Stamina 25
+Stamina 30
 
-Player_Damage 60
+Player_Damage 55
 Player_Leg_Multiplier 0.6
 Player_Arm_Multiplier 0.6
 Player_Spine_Multiplier 0.8
 Player_Skull_Multiplier 1.1
 
-Zombie_Damage 60
+Zombie_Damage 55
 Zombie_Leg_Multiplier 0.3
 Zombie_Arm_Multiplier 0.3
 Zombie_Spine_Multiplier 0.6
 Zombie_Skull_Multiplier 1.1
 
-Animal_Damage 60
+Animal_Damage 55
 Animal_Leg_Multiplier 0.3
 Animal_Spine_Multiplier 0.6
 Animal_Skull_Multiplier 1.1
@@ -36,13 +36,52 @@ Animal_Skull_Multiplier 1.1
 Barricade_Damage 5
 Structure_Damage 5
 Vehicle_Damage 25
-Resource_Damage 30
-Object_Damage 25
+Resource_Damage 10
+Object_Damage 10
 
 Durability 0.145
 
 Blueprints
 [
+	{
+		CategoryTag "ad1804b6945145f3b308738b0b8ea447" // Tools
+		InputItems
+		[
+			{
+				ID "4d72899b4e9645cbb887e6d49a668ae2" // Pike Blueprint
+				Critical true
+				Delete false
+			}
+			{
+				ID "7f06b16642724683bd61584a52fde981" // Metal Sheet
+				Amount 4
+			}
+			{
+				ID "46218740c256475b87dbc6a2e9a1fb19" // Maple Stick
+				Amount 10
+			}
+			{
+				ID "01ee4903b12b4998aa0ad5d7a0a567ba" // Leather
+				Amount 2
+			}
+			{
+				ID "ae1fc8674d0b4443b3ad9a68776dcf0f" // Glue
+				Amount 3
+			}
+			{
+				ID "19bcff41cf5b4e6ab3149884f0f9fe3b" // Raw Northern Pike
+			}
+		]
+		RequiresNearbyCraftingTags
+		[
+			// Workbench
+			7b82c125a5a54984b8bb26576b59e977
+		]
+		OutputItems this
+		Skill Craft
+		Skill_Level 3
+		Effect "84347b13028340b8976033c08675d458" // Wrench
+	}
 	{
 		Name Repair
 		CategoryTag "732ee6ffeb18418985cf4f9fde33dd11" // Repair

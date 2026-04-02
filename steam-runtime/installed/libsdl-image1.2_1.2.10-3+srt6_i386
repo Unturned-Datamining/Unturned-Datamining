@@ -1,0 +1,15 @@
+drwxr-xr-x root/root         0 2019-04-03 19:29 ./
+drwxr-xr-x root/root         0 2019-04-03 19:29 ./usr/
+drwxr-xr-x root/root         0 2019-04-03 19:29 ./usr/lib/
+drwxr-xr-x root/root         0 2019-04-03 19:29 ./usr/lib/i386-linux-gnu/
+-rw-r--r-- root/root     50672 2019-04-03 19:29 ./usr/lib/i386-linux-gnu/libSDL_image-1.2.so.0.8.2
+drwxr-xr-x root/root         0 2019-04-03 19:29 ./usr/share/
+drwxr-xr-x root/root         0 2019-04-03 19:29 ./usr/share/doc/
+drwxr-xr-x root/root         0 2019-04-03 19:29 ./usr/share/doc/libsdl-image1.2/
+-rw-r--r-- root/root      3540 2019-04-03 19:27 ./usr/share/doc/libsdl-image1.2/changelog.Debian.i386.gz
+-rw-r--r-- root/root      1593 2009-10-12 23:06 ./usr/share/doc/libsdl-image1.2/README
+-rw-r--r-- root/root      1112 2011-12-28 15:41 ./usr/share/doc/libsdl-image1.2/copyright
+drwxr-xr-x root/root         0 2019-04-03 19:29 ./usr/share/lintian/
+drwxr-xr-x root/root         0 2019-04-03 19:29 ./usr/share/lintian/overrides/
+-rw-r--r-- root/root        70 2011-12-28 15:41 ./usr/share/lintian/overrides/libsdl-image1.2
+lrwxrwxrwx root/root         0 2019-04-03 19:29 ./usr/lib/i386-linux-gnu/libSDL_image-1.2.so.0 -> libSDL_image-1.2.so.0.8.2

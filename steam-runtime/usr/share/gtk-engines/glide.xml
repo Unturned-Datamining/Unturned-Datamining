@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<engine schema_version="0.1" module_name="glide" long_name="Glide">
+
+  <metainfo>
+    <version>2.20.2</version>
+    <website>http://www.gnome.org</website>
+    <author>
+      <name>Andrew Johnson</name>
+      <email>acjgenius@earthlin.net</email>
+    </author>
+  </metainfo>
+
+</engine>

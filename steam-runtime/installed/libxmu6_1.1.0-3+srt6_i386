@@ -1,0 +1,12 @@
+drwxr-xr-x root/root         0 2019-04-03 15:09 ./
+drwxr-xr-x root/root         0 2019-04-03 15:09 ./usr/
+drwxr-xr-x root/root         0 2019-04-03 15:09 ./usr/lib/
+drwxr-xr-x root/root         0 2019-04-03 15:09 ./usr/lib/i386-linux-gnu/
+-rw-r--r-- root/root    101028 2019-04-03 15:09 ./usr/lib/i386-linux-gnu/libXmu.so.6.2.0
+drwxr-xr-x root/root         0 2019-04-03 15:09 ./usr/share/
+drwxr-xr-x root/root         0 2019-04-03 15:09 ./usr/share/doc/
+drwxr-xr-x root/root         0 2019-04-03 15:09 ./usr/share/doc/libxmu6/
+-rw-r--r-- root/root      2507 2019-04-03 15:08 ./usr/share/doc/libxmu6/changelog.Debian.i386.gz
+-rw-r--r-- root/root      8428 2010-10-29 23:58 ./usr/share/doc/libxmu6/changelog.gz
+-rw-r--r-- root/root      3636 2019-04-03 15:08 ./usr/share/doc/libxmu6/copyright
+lrwxrwxrwx root/root         0 2019-04-03 15:09 ./usr/lib/i386-linux-gnu/libXmu.so.6 -> libXmu.so.6.2.0

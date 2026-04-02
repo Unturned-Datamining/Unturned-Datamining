@@ -1,0 +1,258 @@
+<?xml version="1.0" encoding="utf-8"?>
+<page xmlns="http://projectmallard.org/1.0/" type="topic" id="usage" xml:lang="ja">
+<info>
+  <link type="guide" xref="index"/>
+  <desc><app>Zenity</app> を使えば、ユーザーと視覚的に対話する簡単なダイアログを作成できます。</desc>
+</info>
+<title>使用法</title>
+    <p>スクリプトを書く際に <app>Zenity</app> を使えば、以下のようにユーザーと視覚的に対話する簡単なダイアログを作成できます。</p>
+    <list>
+      <item>
+        <p>ユーザーからの情報を取得するダイアログを作成できます。たとえば、カレンダーから日付を選択したり、ファイル選択ダイアログからファイルを選択したりするようにユーザーに求めることができます。</p>
+      </item>
+      <item>
+        <p>ユーザーに情報を提供するダイアログが作成できます。たとえば、処理の現在の状況を示す進捗表示ダイアログやユーザーに注意を促す警告メッセージダイアログを使用できます。</p>
+      </item>
+    </list>
+    <p>ユーザーがダイアログを閉じると <app>Zenity</app> は標準出力へダイアログにより作成されたテキストを出力します。</p>
+
+    <note>
+      <p><app>Zenity</app> コマンドを書く時は、確実に各引数を引用符で囲むようにしてください。</p>
+      <p>たとえば、次のように使います。</p>
+      <screen>zenity --calendar --title="Holiday Planner"</screen>
+      <p>次のように使ってはいけません。</p>
+      <screen>zenity --calendar --title=Holiday Planner</screen>
+      <p>引用符を利用しない場合、予期せぬ結果を招く恐れがあります。</p>
+    </note>
+
+    <section id="zenity-usage-mnemonics">
+      <title>アクセスキー</title>
+	<p>アクセスキーは、メニューやダイアログからマウスでコマンドを選択する代わりにキーボードで操作ができるようにするキーです。それぞれのアクセスキーは、メニューやダイアログのオプションで下線によって識別されます。</p>
+	<p>いくつかの <app>Zenity</app> ダイアログは、アクセスキーの利用をサポートしています。アクセスキーとして利用する文字を指定するには、ダイアログのテキスト内にあるアクセスキーにしたい文字の前にアンダースコア (_) を置いてください。以下の例は、アクセスキーとして文字 'C' を指定する方法を示しています。</p>
+	<screen><input>"名前の選択(_C)"</input></screen>
+    </section>
+
+    <section id="zenity-usage-exitcodes">
+      <title>終了コード</title>
+    <p>Zenity は、以下の終了コードを返します。</p>
+
+    <table frame="all" rules="all">
+        <thead>
+          <tr valign="top">
+            <td colname="COLSPEC0">
+              <p>終了コード</p></td>
+            <td colname="COLSPEC1">
+              <p>説明</p></td>
+          </tr>
+        </thead>
+        <tbody>
+          <tr valign="top">
+            <td>
+              <p><var>0</var></p>
+            </td>
+            <td>
+              <p>ユーザーが、<gui style="button">OK</gui> か <gui style="button">閉じる</gui>を押しました。</p>
+            </td>
+          </tr>
+          <tr valign="top">
+            <td>
+              <p><var>1</var></p>
+            </td>
+            <td>
+              <p>ユーザーが<gui style="button">キャンセル</gui>を押したか、ウィンドウの機能を利用してダイアログを閉じました。</p>
+            </td>
+          </tr>
+          <tr valign="top">
+            <td>
+              <p><var>-1</var></p>
+            </td>
+            <td>
+              <p>予期しないエラーが発生しました。</p>
+            </td>
+          </tr>
+          <tr valign="top">
+            <td>
+              <p><var>5</var></p>
+            </td>
+            <td>
+              <p>タイムアウトに達したため、ダイアログが閉じました。</p>
+            </td>
+          </tr>
+        </tbody>
+    </table>
+
+    </section>
+
+
+  <!-- ==== General Options ====== -->
+
+  <section id="zenity-usage-general-options">
+    <title>汎用的なオプション</title>
+
+    <p>すべての Zenity ダイアログは、以下の汎用的なオプションをサポートしています。</p>
+
+    <terms>
+
+      <item>
+        <title><cmd>--title</cmd>=<var>タイトル</var></title>
+	<p>ダイアログのタイトルを指定します。</p>
+      </item>
+
+      <item>
+        <title><cmd>--window-icon</cmd>=<var>アイコンのパス</var></title>
+	<p>ダイアログのウィンドウフレームに表示するアイコンを指定します。「info」、「warning」、「question」および「error」というキーワードで提供される 4 つのストックアイコンも利用可能です。</p>
+      </item>
+
+      <item>
+        <title><cmd>--width</cmd>=<var>幅</var></title>
+	<p>ダイアログの幅を指定します。</p>
+      </item>
+
+      <item>
+        <title><cmd>--height</cmd>=<var>高さ</var></title>
+	<p>ダイアログの高さを指定します。</p>
+      </item>
+
+      <item>
+        <title><cmd>--timeout</cmd>=<var>タイムアウト</var></title>
+	<p>ダイアログが閉じるまでのタイムアウト値を秒数で指定します。</p>
+      </item>
+
+    </terms>
+
+  </section>
+
+<!-- ==== Miscellaneous Options ====== -->
+
+  <section id="zenity-help-options">
+    <title>ヘルプのオプション</title>
+
+    <p>Zenity は、以下のヘルプのオプションを提供しています。</p>
+
+    <terms>
+
+      <item>
+        <title><cmd>--help</cmd></title>
+	<p>簡単なヘルプを表示します。</p>
+      </item>
+
+      <item>
+        <title><cmd>--help-all</cmd></title>
+	<p>すべてのダイアログに関する完全なヘルプを表示します。</p>
+      </item>
+ 
+      <item>
+        <title><cmd>--help-general</cmd></title>
+	<p>汎用的なオプションを表示します。</p>
+      </item>
+ 
+      <item>
+        <title><cmd>--help-calendar</cmd></title>
+	<p>カレンダーダイアログのオプションに関するヘルプを表示します。</p>
+      </item>
+ 
+      <item>
+        <title><cmd>--help-entry</cmd></title>
+	<p>テキスト入力ダイアログのオプションに関するヘルプを表示します。</p>
+      </item>
+ 
+      <item>
+        <title><cmd>--help-error</cmd></title>
+	<p>エラーダイアログのオプションに関するヘルプを表示します。</p>
+      </item>
+ 
+      <item>
+        <title><cmd>--help-info</cmd></title>
+	<p>情報ダイアログのオプションに関するヘルプを表示します。</p>
+      </item>
+ 
+      <item>
+        <title><cmd>--help-file-selection</cmd></title>
+	<p>ファイル選択ダイアログのオプションに関するヘルプを表示します。</p>
+      </item>
+ 
+      <item>
+        <title><cmd>--help-list</cmd></title>
+	<p>一覧ダイアログのオプションに関するヘルプを表示します。</p>
+      </item>
+ 
+      <item>
+        <title><cmd>--help-notification</cmd></title>
+	<p>通知アイコンのオプションに関するヘルプを表示します。</p>
+      </item>
+ 
+      <item>
+        <title><cmd>--help-progress</cmd></title>
+	<p>進捗表示ダイアログのオプションに関するヘルプを表示します。</p>
+      </item>
+ 
+      <item>
+        <title><cmd>--help-question</cmd></title>
+	<p>質問ダイアログのオプションに関するヘルプを表示します。</p>
+      </item>
+ 
+      <item>
+        <title><cmd>--help-warning</cmd></title>
+	<p>警告ダイアログのオプションに関するヘルプを表示します。</p>
+      </item>
+ 
+      <item>
+	<title><cmd>--help-text-info</cmd></title>
+	<p>テキスト情報ダイアログのオプションに関するヘルプを表示します。</p>
+      </item>
+ 
+      <item>
+        <title><cmd>--help-misc</cmd></title>
+	<p>種々雑多なオプションに関するヘルプを表示します。</p>
+      </item>
+ 
+      <item>
+        <title><cmd>--help-gtk</cmd></title>
+	<p>GTK+ のオプションに関するヘルプを表示します。</p>
+      </item>
+ 
+    </terms>
+
+  </section>
+
+<!-- ==== Miscellaneous Options ====== -->
+
+  <section id="zenity-miscellaneous-options">
+    <title>種々雑多なオプション</title>
+
+    <p>Zenity は、以下のような種々雑多なオプションも提供しています。</p>
+
+    <terms>
+
+      <item>
+        <title><cmd>--about</cmd></title>
+	<p>Zenity のバージョン情報、著作権情報および開発者の情報を含んだ「<gui>Zenity について</gui>」というダイアログを表示します。</p>
+      </item>
+
+      <item>
+        <title><cmd>--version</cmd></title>
+	<p>Zenity のバージョン番号を標準出力に表示します。</p>
+      </item>
+
+    </terms>
+
+  </section>
+
+<!-- ==== GTK+ Options ====== -->
+
+  <section id="zenity-gtk-options">
+    <title>GTK+ のオプション</title>
+
+    <p>Zenity は、標準的な GTK+ のオプションをサポートしています。GTK+ のオプションについての詳細は、<cmd>zenity --help-gtk</cmd> というコマンドを実行して確認してください。</p>
+
+  </section>
+
+<!-- ==== Environment variables ==== -->
+
+  <section id="zenity-environment-variables">
+    <title>環境変数</title>
+
+    <p>通常、Zenity は自身が起動された端末ウィンドウを検出し、そのウィンドウより前面に位置し続けます。この振る舞いは、<var>WINDOWID</var> という環境変数の定義を解除することにより、無効にできます。</p>
+
+  </section>
+</page>

@@ -1,0 +1,12 @@
+﻿Metadata
+{
+	GUID 84517eff8e0b42d19df02b25f7901f1b
+	Type SDG.Unturned.LevelAsset, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+}
+Asset
+{
+	Should_Animate_Background_Image true
+
+	Supports_Fishing_Volumes true
+	Default_Fish_Spawn_Table e86a54301132497eaede8fdf0b516302
+}

@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<page xmlns="http://projectmallard.org/1.0/" type="topic" id="warning" xml:lang="ja">
+  <info>
+    <link type="guide" xref="message"/>
+    <desc><cmd>--warning</cmd> オプションの使用</desc>
+  </info>
+  <title>警告ダイアログ</title>
+      <p>警告ダイアログを作成するには、<cmd>--warning</cmd> というオプションを使ってください。</p>
+
+      <p>以下のスクリプトの例で警告ダイアログの作成方法を示します。</p>
+
+<code>
+#!/bin/bash
+
+zenity --warning \
+--text="電気ショックを避けるために電源ケーブルの接続を解除しました。"
+</code>
+
+
+      <figure id="zenity-warning-screenshot">
+        <title>警告ダイアログの例</title>
+	<desc><app>Zenity</app> 警告ダイアログの例</desc>
+        <media type="image" mime="image/png" src="figures/zenity-warning-screenshot.png"/>
+      </figure>
+</page>

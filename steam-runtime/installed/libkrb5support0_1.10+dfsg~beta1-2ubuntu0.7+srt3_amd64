@@ -1,0 +1,12 @@
+drwxr-xr-x root/root         0 2019-04-03 13:46 ./
+drwxr-xr-x root/root         0 2019-04-03 13:46 ./usr/
+drwxr-xr-x root/root         0 2019-04-03 13:46 ./usr/lib/
+drwxr-xr-x root/root         0 2019-04-03 13:46 ./usr/lib/x86_64-linux-gnu/
+-rw-r--r-- root/root     35408 2019-04-03 13:46 ./usr/lib/x86_64-linux-gnu/libkrb5support.so.0.1
+drwxr-xr-x root/root         0 2019-04-03 13:46 ./usr/share/
+drwxr-xr-x root/root         0 2019-04-03 13:46 ./usr/share/doc/
+drwxr-xr-x root/root         0 2019-04-03 13:46 ./usr/share/doc/libkrb5support0/
+-rw-r--r-- root/root     17869 2012-07-18 21:02 ./usr/share/doc/libkrb5support0/copyright
+-rw-r--r-- root/root      1200 2012-07-18 21:02 ./usr/share/doc/libkrb5support0/NEWS.Debian.gz
+-rw-r--r-- root/root     26983 2019-04-03 13:44 ./usr/share/doc/libkrb5support0/changelog.Debian.amd64.gz
+lrwxrwxrwx root/root         0 2019-04-03 13:46 ./usr/lib/x86_64-linux-gnu/libkrb5support.so.0 -> libkrb5support.so.0.1

@@ -349,7 +349,7 @@ public class ZombieClothing
         }
         if (faceTexture == null)
         {
-            faceTexture = Resources.Load<Texture2D>("Faces/19/Texture");
+            faceTexture = Assets.coreMasterBundle.LoadAsset<Texture2D>("Items/Faces/19/Texture.png");
         }
         if (clothingShader == null)
         {

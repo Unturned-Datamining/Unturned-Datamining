@@ -1,0 +1,4 @@
+File formats:
+ D. = Demuxing supported
+ .E = Muxing supported
+ --

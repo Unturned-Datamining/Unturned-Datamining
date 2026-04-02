@@ -1,0 +1,37 @@
+﻿GUID 0b8f4a5efb974c8a82f8927534071d49
+Type Food
+Useable Consumeable
+ID 1937
+
+Size_X 1
+Size_Y 1
+Size_Z 0.15
+
+Food 5
+Energy 15
+
+Blueprints
+[
+	{
+		CategoryTag "d089feb7e43f40c5a7dfcefc36998cfb" // Supplies
+		InputItems
+		[
+			"1a0dadc7e4274ca3891fa8681fcb7b39" // Red Spotted Mushroom
+		]
+		OutputItems this
+		Skill Cook
+		Skill_Level 2
+		RequiresNearbyCraftingTags
+		[
+			"20f30322bbcc4b01a4f116d22b24c21a" // Heat Source
+		]
+		Effect "84347b13028340b8976033c08675d458" // Wrench
+	}
+]
+
+ConsumeAudioClip Sounds/EatMushroomRoast.mp3
+Randomize_Consume_Audio_Pitch false
+EquipableModelParent LeftHook
+Procedurally_Animate_Inertia false
+Instantiated_Item_Name_Override 1936
+EquipablePrefab Items/Food/Mushroom_Red_Roast/Equipable.prefab

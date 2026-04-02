@@ -1,0 +1,61 @@
+GUID bb66c3e2366b489db93c1eecd5756b3f
+Type Spawn
+
+Tables
+[
+	{
+		// Flashlight (Melee Item)
+		Guid 922c5bfe21864487a9405f3e2e0f5d97
+		Weight 15
+	}
+	{
+		// Binoculars (Optic Item)
+		Guid f260c581cf504098956f424d62345982
+		Weight 15
+	}
+	{
+		// Hammer (Melee Item)
+		Guid b0d48d63525544aa8ee95d4e686858b1
+		Weight 15
+	}
+	{
+		// Pocketknife (Melee Item)
+		Guid 38dbb3ce060d47998371064f5ac26aa8
+		Weight 15
+	}
+	{
+		// Chart (Map Item)
+		Guid ae907de0d5c14c1086a22c2b95c58a47
+		Weight 10
+	}
+	{
+		// Walkie Talkie (Tool Item)
+		Guid cdaf67e77a5a45c5b099fa2f844e967d
+		Weight 10
+	}
+	{
+		// Compass (Map Item)
+		Guid 58a47bfe40574416bfb40d013928f9cd
+		Weight 5
+	}
+	{
+		// Portable Gas Can (Fuel Item)
+		Guid d5b9f19e2f2a4ee2ab4dc666f32f7df3
+		Weight 5
+	}
+	{
+		// Headlamp (Glasses Item)
+		Guid fb9c1de78e714610b037fa7539549008
+		Weight 5
+	}
+	{
+		// Canteen (Refill Item)
+		Guid 9fac086e1b194a3e97fb77f8940208de
+		Weight 5
+	}
+	{
+		// Fishing Rod
+		Guid 04e1a631fc0848a68b02022d8b1c2141
+		Weight 5
+	}
+]

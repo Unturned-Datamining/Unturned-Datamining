@@ -1,0 +1,12 @@
+drwxr-xr-x root/root         0 2019-04-03 14:07 ./
+drwxr-xr-x root/root         0 2019-04-03 14:07 ./usr/
+drwxr-xr-x root/root         0 2019-04-03 14:07 ./usr/lib/
+drwxr-xr-x root/root         0 2019-04-03 14:07 ./usr/lib/i386-linux-gnu/
+-rw-r--r-- root/root    243648 2019-04-03 14:07 ./usr/lib/i386-linux-gnu/libnettle.so.6.2
+drwxr-xr-x root/root         0 2019-04-03 14:07 ./usr/share/
+drwxr-xr-x root/root         0 2019-04-03 14:07 ./usr/share/doc/
+drwxr-xr-x root/root         0 2019-04-03 14:07 ./usr/share/doc/libnettle6/
+-rw-r--r-- root/root     91393 2016-01-28 20:02 ./usr/share/doc/libnettle6/changelog.gz
+-rw-r--r-- root/root     13246 2015-08-03 18:12 ./usr/share/doc/libnettle6/copyright
+-rw-r--r-- root/root      5386 2019-04-03 14:06 ./usr/share/doc/libnettle6/changelog.Debian.i386.gz
+lrwxrwxrwx root/root         0 2019-04-03 14:07 ./usr/lib/i386-linux-gnu/libnettle.so.6 -> libnettle.so.6.2

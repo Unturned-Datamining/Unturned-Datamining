@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<page xmlns="http://projectmallard.org/1.0/" type="topic" id="file-selection" xml:lang="fr">
+  <info>
+    <link type="guide" xref="index#dialogs"/>
+    <desc>Utiliser l'option <cmd>--file-selection</cmd>.</desc>
+  </info>
+  <title>Boîte de dialogue de sélection de fichiers</title>
+    <p>L'option <cmd>--file-selection</cmd> crée une boîte de dialogue de sélection de fichiers. <app>Zenity</app> retourne les fichiers ou les dossiers sélectionnés sur le flux de sortie standard. Par défaut, la boîte de dialogue de sélection de fichiers est en mode ouverture.</p>
+    <p>Options de la boîte de dialogue de sélection de fichiers :</p>
+
+    <terms>
+
+      <item>
+        <title><cmd>--filename</cmd>=<var>nomdefichier</var></title>
+	<p>Spécifier le fichier ou le dossier sélectionné au premier affichage de la boîte de dialogue de sélection de fichiers.</p>
+      </item>
+
+      <item>
+	<title><cmd>--multiple</cmd></title>
+	<p>Permettre la sélection de plusieurs fichiers.</p>
+      </item>
+
+      <item>
+	<title><cmd>--directory</cmd></title>
+	<p>Permettre uniquement la sélection de dossiers.</p>
+      </item>
+
+      <item>
+	<title><cmd>--save</cmd></title>
+	<p>Mettre la boîte de dialogue de sélection de fichiers en mode sauvegarde.</p>
+      </item>
+
+      <item>
+	<title><cmd>--separator</cmd>=<var>séparateur</var></title>
+	<p>Spécifier le texte utilisé comme séparateur pour diviser la liste des noms de fichiers retournée.</p>
+      </item>
+
+    </terms>
+
+    <p>Le script d'exemple suivant montre comment créer une boîte de dialogue de sélection de fichiers :</p>
+
+<code>
+#!/bin/sh
+
+FILE=`zenity --file-selection --title="Sélectionnez un fichier"`
+
+case $? in
+        0)
+              echo "\"$FILE\" est sélectionné.";;
+        1)
+              echo "Aucun fichier sélectionné.";;
+        -1)
+              echo "Une erreur inattendue est survenue.";;
+esac
+</code>
+
+    <figure id="zenity-fileselection-screenshot">
+      <title>Exemple de boîte de dialogue de sélection de fichiers</title>
+      <desc>Exemple de boîte de dialogue de sélection de fichiers <app>Zenity</app></desc>
+      <media type="image" mime="image/png" src="figures/zenity-fileselection-screenshot.png"/>
+    </figure>
+</page>

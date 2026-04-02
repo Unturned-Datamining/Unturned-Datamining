@@ -7,5 +7,6 @@ Size_Y 2
 Size_Z 0.5
 
 Hair_Override Model_1
+Hair_Override_NonGoldColor #213D91
 
 Pro

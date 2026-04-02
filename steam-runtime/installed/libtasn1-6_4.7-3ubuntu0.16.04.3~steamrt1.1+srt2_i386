@@ -1,0 +1,15 @@
+drwxr-xr-x root/root         0 2019-04-03 15:01 ./
+drwxr-xr-x root/root         0 2019-04-03 15:01 ./usr/
+drwxr-xr-x root/root         0 2019-04-03 15:01 ./usr/lib/
+drwxr-xr-x root/root         0 2019-04-03 15:01 ./usr/lib/i386-linux-gnu/
+-rw-r--r-- root/root     71276 2019-04-03 15:01 ./usr/lib/i386-linux-gnu/libtasn1.so.6.5.1
+drwxr-xr-x root/root         0 2019-04-03 15:01 ./usr/share/
+drwxr-xr-x root/root         0 2019-04-03 15:01 ./usr/share/doc/
+drwxr-xr-x root/root         0 2019-04-03 15:01 ./usr/share/doc/libtasn1-6/
+-rw-r--r-- root/root      7011 2015-09-14 17:41 ./usr/share/doc/libtasn1-6/NEWS.gz
+-rw-r--r-- root/root      8276 2019-04-03 14:59 ./usr/share/doc/libtasn1-6/changelog.Debian.i386.gz
+-rw-r--r-- root/root       456 2014-11-14 19:53 ./usr/share/doc/libtasn1-6/AUTHORS
+-rw-r--r-- root/root       936 2014-11-14 19:53 ./usr/share/doc/libtasn1-6/README
+-rw-r--r-- root/root      3406 2018-10-17 17:06 ./usr/share/doc/libtasn1-6/copyright
+-rw-r--r-- root/root      1269 2014-11-14 19:53 ./usr/share/doc/libtasn1-6/THANKS
+lrwxrwxrwx root/root         0 2019-04-03 15:01 ./usr/lib/i386-linux-gnu/libtasn1.so.6 -> libtasn1.so.6.5.1

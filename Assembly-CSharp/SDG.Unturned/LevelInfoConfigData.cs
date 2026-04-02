@@ -11,6 +11,8 @@ public class LevelInfoConfigData
 
     public string[] Thanks;
 
+    public Dictionary<string, string[]> CustomCredits;
+
     public int Item;
 
     public int[] Associated_Stockpile_Items;
@@ -169,6 +171,7 @@ public class LevelInfoConfigData
         Creators = new string[0];
         Collaborators = new string[0];
         Thanks = new string[0];
+        CustomCredits = new Dictionary<string, string[]>();
         Item = 0;
         Associated_Stockpile_Items = new int[0];
         Feedback = null;

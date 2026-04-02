@@ -1,0 +1,11 @@
+drwxr-xr-x root/root         0 2023-08-01 18:27 ./
+drwxr-xr-x root/root         0 2023-08-01 18:26 ./usr/
+drwxr-xr-x root/root         0 2023-08-01 18:26 ./usr/lib/
+drwxr-xr-x root/root         0 2023-08-01 18:27 ./usr/lib/i386-linux-gnu/
+-rw-r--r-- root/root     38184 2023-08-01 18:27 ./usr/lib/i386-linux-gnu/libgudev-1.0.so.0.2.0
+drwxr-xr-x root/root         0 2023-08-01 18:26 ./usr/share/
+drwxr-xr-x root/root         0 2023-08-01 18:26 ./usr/share/doc/
+drwxr-xr-x root/root         0 2023-08-01 18:27 ./usr/share/doc/libgudev-1.0-0/
+-rw-r--r-- root/root     29583 2023-08-01 18:12 ./usr/share/doc/libgudev-1.0-0/changelog.Debian.i386.gz
+-rw-r--r-- root/root      8003 2023-07-27 14:54 ./usr/share/doc/libgudev-1.0-0/copyright
+lrwxrwxrwx root/root         0 2023-08-01 18:27 ./usr/lib/i386-linux-gnu/libgudev-1.0.so.0 -> libgudev-1.0.so.0.2.0

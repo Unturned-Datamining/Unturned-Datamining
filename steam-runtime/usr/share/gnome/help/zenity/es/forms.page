@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<page xmlns="http://projectmallard.org/1.0/" type="topic" id="forms" xml:lang="es">
+  <info>
+    <link type="guide" xref="index#dialogs"/>
+    <desc>Use la opción <cmd>--forms</cmd>.</desc>
+  </info>
+  <title>Diálogo de formularios</title>
+    <p>Use la opción <cmd>--forms</cmd> para crear un diálogo de formularios.</p>
+	
+    <p>El diálogo de formularios soporta las siguientes opciones:</p>
+
+    <terms>
+
+      <item>
+        <title><cmd>--add-entry</cmd>=<var>nombre_del_campo</var></title>
+	<p>Añadir una entrada nueva en el diálogo de formularios.</p>
+      </item>
+
+      <item>
+        <title>--add-password<cmd/>=<var>nombre_del_campo</var></title>
+	<p>Añadir una contraseña nueva en el diálogo de formularios. (Ocultar el texto)</p>
+      </item>
+
+      <item>
+        <title><cmd>--add-calendar</cmd>=<var>nombre_del_campo</var></title>
+	<p>Añadir un calendario nuevo en el diálogo de formularios.</p>
+      </item>
+
+      <item>
+        <title><cmd>--text</cmd>=<var>TEXTO</var></title>
+	<p>Establezca el texto del diálogo.</p>
+      </item>
+
+      <item>
+        <title><cmd>--separator</cmd>=<var>SEPARADOR</var></title>
+	<p>Establecer el carácter separador. (Predeterminado: «|»)</p>
+      </item>
+
+      <item>
+        <title><cmd>--forms-date-format</cmd>=<var>PATRÓN</var></title>
+	<p>Establecer el formato de la fecha que se devuelve. El formato predeterminado depende de su configuración regional. «formato» debe ser un formato que sea compatible con la función <cmd>strftime</cmd>, por ejemplo <var>%A %d/%m/%y</var>.</p>
+      </item>
+
+    </terms>
+
+    <p>El siguiente script de ejemplo muestra cómo se crea un diálogo de formularios:</p>
+
+<code>
+#!/bin/sh
+
+zenity --forms --title="Añadir amigo" \
+	--text="Introduzca la información sobre su amigo." \
+	--separator="," \
+	--add-entry="Nombre" \
+	--add-entry="Apellido" \
+	--add-entry="Correo-e" \
+	--add-calendar="Cumpleaños" &gt;&gt; dirs.csv
+
+case $? in
+    0)
+        echo "Amigo añadido.";;
+    1)
+        echo "No se ha añadido ningún amigo."
+	;;
+    -1)
+        echo "Ha ocurrido un error inesperado."
+	;;
+esac
+</code>
+
+    <figure id="zenity-forms-screenshot">
+      <title>Ejemplo de diálogo de formularios</title>
+      <desc>Ejemplo del diálogo de información de <app>Zenity</app></desc>
+      <media type="image" mime="image/png" src="figures/zenity-forms-screenshot.png"/>
+    </figure>
+</page>

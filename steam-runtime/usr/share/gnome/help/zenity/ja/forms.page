@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<page xmlns="http://projectmallard.org/1.0/" type="topic" id="forms" xml:lang="ja">
+  <info>
+    <link type="guide" xref="index#dialogs"/>
+    <desc><cmd>--forms</cmd> オプションの使用</desc>
+  </info>
+  <title>フォームダイアログ</title>
+    <p>フォームダイアログを作成するには、<cmd>--forms</cmd> というオプションを使ってください。</p>
+	
+    <p>フォームダイアログは、以下のオプションをサポートしています。</p>
+
+    <terms>
+
+      <item>
+        <title><cmd>--add-entry</cmd>=<var>項目名</var></title>
+	<p>フォームダイアログに入力欄を追加します。</p>
+      </item>
+
+      <item>
+        <title>--add-password<cmd/>=<var>項目名</var></title>
+	<p>フォームダイアログにパスワード入力欄を追加します。 (入力テキストを隠します)</p>
+      </item>
+
+      <item>
+        <title><cmd>--add-calendar</cmd>=<var>項目名</var></title>
+	<p>フォームダイアログにカレンダーを追加します。</p>
+      </item>
+
+      <item>
+        <title><cmd>--text</cmd>=<var>テキスト</var></title>
+	<p>ダイアログに表示するテキストを指定します。</p>
+      </item>
+
+      <item>
+        <title><cmd>--separator</cmd>=<var>セパレーター</var></title>
+	<p>セパレーターとして出力する文字を指定します。(既定値: | )</p>
+      </item>
+
+      <item>
+        <title><cmd>--forms-date-format</cmd>=<var>パターン</var></title>
+	<p>日付を返却する書式を指定します。デフォルトの書式は、locale に依存します。書式は、 <cmd>strftime</cmd> 関数が受け取れる書式でなければなりません。たとえば、<var>%A %d/%m/%y</var> です。</p>
+      </item>
+
+    </terms>
+
+    <p>以下のスクリプトの例でフォームダイアログの作成方法を示します。</p>
+
+<code>
+#!/bin/sh
+
+zenity --forms --title="友達の追加" \
+	--text="友達について情報を入力してください。" \
+	--separator="," \
+	--add-entry="名" \
+	--add-entry="姓" \
+	--add-entry="電子メール" \
+	--add-calendar="誕生日" &gt;&gt; addr.csv
+
+case $? in
+    0)
+        echo "友達が追加されました。";;
+    1)
+        echo "友達は追加されませんでした。"
+	;;
+    -1)
+        echo "予期せぬエラーが発生しました。"
+	;;
+esac
+</code>
+
+    <figure id="zenity-forms-screenshot">
+      <title>フォームダイアログの例</title>
+      <desc><app>Zenity</app> フォームダイアログの例</desc>
+      <media type="image" mime="image/png" src="figures/zenity-forms-screenshot.png"/>
+    </figure>
+</page>

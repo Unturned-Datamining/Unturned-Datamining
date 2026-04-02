@@ -1,0 +1,46 @@
+GUID ad4cc83259f541bfb49d39d81f162b1d
+Type Spawn
+
+Tables
+[
+	{
+		// Cloth (Supply Item)
+		LegacyAssetId 66
+		Weight 25
+	}
+	{
+		// Nails (Supply Item)
+		LegacyAssetId 71
+		Weight 25
+	}
+	{
+		// Tape (Supply Item)
+		LegacyAssetId 69
+		Weight 25
+	}
+	{
+		// Rope (Supply Item)
+		Guid 5ff4bcf752554990bf06e103b996cef2
+		Weight 13
+	}
+	{
+		// Metal Can (Supply Item)
+		LegacyAssetId 72
+		Weight 13
+	}
+	{
+		// Birch Stick (Supply Item)
+		LegacyAssetId 38
+		Weight 8
+	}
+	{
+		// Maple Stick (Supply Item)
+		LegacyAssetId 40
+		Weight 8
+	}
+	{
+		// Pine Stick (Supply Item)
+		LegacyAssetId 42
+		Weight 8
+	}
+]

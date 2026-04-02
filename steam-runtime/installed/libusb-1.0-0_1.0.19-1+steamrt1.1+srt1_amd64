@@ -1,0 +1,13 @@
+drwxr-xr-x root/root         0 2023-08-01 16:51 ./
+drwxr-xr-x root/root         0 2023-08-01 16:51 ./usr/
+drwxr-xr-x root/root         0 2023-08-01 16:51 ./usr/share/
+drwxr-xr-x root/root         0 2023-08-01 16:51 ./usr/share/doc/
+drwxr-xr-x root/root         0 2023-08-01 16:51 ./usr/share/doc/libusb-1.0-0/
+-rw-r--r-- root/root       103 2014-04-22 12:19 ./usr/share/doc/libusb-1.0-0/changelog.gz
+-rw-r--r-- root/root      3561 2018-09-18 18:03 ./usr/share/doc/libusb-1.0-0/copyright
+-rw-r--r-- root/root      7109 2023-08-01 16:49 ./usr/share/doc/libusb-1.0-0/changelog.Debian.amd64.gz
+-rw-r--r-- root/root       884 2014-04-22 12:19 ./usr/share/doc/libusb-1.0-0/README
+drwxr-xr-x root/root         0 2023-08-01 16:51 ./lib/
+drwxr-xr-x root/root         0 2023-08-01 16:51 ./lib/x86_64-linux-gnu/
+-rw-r--r-- root/root     97160 2023-08-01 16:51 ./lib/x86_64-linux-gnu/libusb-1.0.so.0.1.0
+lrwxrwxrwx root/root         0 2023-08-01 16:51 ./lib/x86_64-linux-gnu/libusb-1.0.so.0 -> libusb-1.0.so.0.1.0

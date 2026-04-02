@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<page xmlns="http://projectmallard.org/1.0/" type="topic" id="info" xml:lang="hu">
+  <info>
+    <link type="guide" xref="message"/>
+    <desc>A <cmd>--info</cmd> kapcsoló használata.</desc>
+  </info>
+  <title>Információs ablak</title>
+      <p>A <cmd>--info</cmd> kapcsoló használatával egy információs ablak hozható létre.</p>
+
+      <p>A következő példa parancsfájl bemutatja az információs ablak létrehozását:</p>
+
+<code>
+#!/bin/bash
+
+zenity --info \
+--text="Az összefésülés kész. 10 fájlból 3 frissítve."
+</code>
+
+
+      <figure id="zenity-information-screenshot">
+        <title>Példa információs ablak</title>
+        <desc><app>Zenity</app> példa információs ablak</desc>
+        <media type="image" mime="image/png" src="figures/zenity-information-screenshot.png"/>
+      </figure>
+</page>

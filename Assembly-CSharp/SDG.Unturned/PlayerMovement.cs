@@ -460,6 +460,25 @@ public class PlayerMovement : PlayerCaller
         return seat;
     }
 
+    /// <summary>
+    /// Get ragdoll effect to use when running enemies over with the current vehicle.
+    /// </summary>
+    public ERagdollEffect GetVehicleRagdollEffect()
+    {
+        if (vehicle != null && base.player.clothing.isMythic && base.channel.owner.GetVehicleSkinItemDefId(vehicle, out var itemdefid))
+        {
+            if (base.channel.owner.TryGetRagdollEffectForItemDef(itemdefid, out var effect))
+            {
+                return effect;
+            }
+            if (Assets.find(EAssetType.SKIN, Provider.provider.economyService.getInventorySkinID(itemdefid)) is SkinAsset skinAsset)
+            {
+                return skinAsset.ragdollEffect;
+            }
+        }
+        return ERagdollEffect.NONE;
+    }
+
     internal void ApplyPendingVehicleChange()
     {
         hasPendingVehicleChange = false;

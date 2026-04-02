@@ -512,6 +512,10 @@ public class PlayerInputPacket
                         info.transform = componentInParent.transform;
                         info.section = componentInParent.getSection(info.collider.transform);
                     }
+                    else
+                    {
+                        info.transform = info.transform.root;
+                    }
                     if (ObjectManager.tryGetRegion(info.transform, out var x2, out var y2, out var index2))
                     {
                         writer.WriteClampedVector3(info.point);

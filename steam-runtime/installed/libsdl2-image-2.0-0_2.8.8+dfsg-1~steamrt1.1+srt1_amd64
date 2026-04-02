@@ -1,0 +1,13 @@
+drwxr-xr-x root/root         0 2025-03-17 19:40 ./
+drwxr-xr-x root/root         0 2025-03-17 19:40 ./usr/
+drwxr-xr-x root/root         0 2025-03-17 19:40 ./usr/share/
+drwxr-xr-x root/root         0 2025-03-17 19:40 ./usr/share/doc/
+drwxr-xr-x root/root         0 2025-03-17 19:40 ./usr/share/doc/libsdl2-image-2.0-0/
+-rw-r--r-- root/root     10578 2025-03-17 19:38 ./usr/share/doc/libsdl2-image-2.0-0/changelog.Debian.amd64.gz
+-rw-r--r-- root/root      6214 2025-03-04 14:20 ./usr/share/doc/libsdl2-image-2.0-0/copyright
+-rw-r--r-- root/root      2041 2023-06-21 21:11 ./usr/share/doc/libsdl2-image-2.0-0/README.txt
+-rw-r--r-- root/root      3429 2025-03-03 21:25 ./usr/share/doc/libsdl2-image-2.0-0/changelog.gz
+drwxr-xr-x root/root         0 2025-03-17 19:40 ./usr/lib/
+drwxr-xr-x root/root         0 2025-03-17 19:40 ./usr/lib/x86_64-linux-gnu/
+-rw-r--r-- root/root    141928 2025-03-17 19:40 ./usr/lib/x86_64-linux-gnu/libSDL2_image-2.0.so.0.800.8
+lrwxrwxrwx root/root         0 2025-03-17 19:40 ./usr/lib/x86_64-linux-gnu/libSDL2_image-2.0.so.0 -> libSDL2_image-2.0.so.0.800.8

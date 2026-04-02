@@ -1,0 +1,43 @@
+﻿GUID e0bc8bb1aed54db4964e48ca6cb3be68
+Type Food
+Rarity Epic
+Useable Consumeable
+ID 1939
+
+Size_X 2
+Size_Y 2
+Size_Z 0.45
+
+Health 20
+Food 100
+Disinfectant 15
+Energy 55
+
+Blueprints
+[
+	{
+		CategoryTag "d089feb7e43f40c5a7dfcefc36998cfb" // Supplies
+		InputItems
+		[
+			"306effe98c694ead8eab42802d1838b1 x 3" // Dough
+			"a51c979f42b34359bc7df4974ccb8b92" // Cheese
+			"fc32f1577f094c8f88f18a10c101edfc x 2" // Tomato
+			"a974348e439e45de91fa44b5b6da20b8 x 2" // Roasted Brown Cap Mushroom
+			"0b8f4a5efb974c8a82f8927534071d49 x 2" // Roasted Red Spotted Mushroom
+		]
+		OutputItems this
+		Skill Cook
+		Skill_Level 3
+		RequiresNearbyCraftingTags
+		[
+			"d2cc65b749e5477f95103601df89cdbc" // Enclosed Heat Source
+		]
+		Effect "84347b13028340b8976033c08675d458" // Wrench
+	}
+]
+
+ConsumeAudioClip Sounds/EatPizza.mp3
+Randomize_Consume_Audio_Pitch false
+Procedurally_Animate_Inertia false
+Instantiated_Item_Name_Override 1164
+EquipablePrefab Items/Food/Pizza_Mushroom/Equipable.prefab

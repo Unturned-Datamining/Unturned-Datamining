@@ -1,0 +1,46 @@
+﻿GUID 48ddce6dd54e410191bea7067ac8d8e4
+Type Food
+Rarity Epic
+Useable Consumeable
+ID 1978
+
+Size_X 2
+Size_Y 2
+Size_Z 0.3
+
+Food 20
+Water 65
+Warmth 75
+
+Blueprints
+[
+	{
+		CategoryTag "d089feb7e43f40c5a7dfcefc36998cfb" // Supplies
+		InputItems
+		[
+			"7bc206a6790b4494a44957867871146e" // Clay Bowl
+			"dd657a9ca0944deb9764b093d98f40fd x 3" // Seaweed
+			"f81d68ebb2a8490dbe1545d432b9c099" // Bottled Water
+		]
+		OutputItems this
+		Skill Cook
+		Skill_Level 1
+		RequiresNearbyCraftingTags
+		[
+			"20f30322bbcc4b01a4f116d22b24c21a" // Heat Source
+		]
+		Effect "84347b13028340b8976033c08675d458" // Wrench
+	}
+]
+
+Quest_Rewards 1
+Quest_Reward_0_Type Item
+Quest_Reward_0_ID 7bc206a6790b4494a44957867871146e
+Quest_Reward_0_Amount 1
+
+ConsumeAudioClip Sounds/EatStew.mp3
+Randomize_Consume_Audio_Pitch false
+EquipableModelParent LeftHook
+Procedurally_Animate_Inertia false
+Instantiated_Item_Name_Override 1931
+EquipablePrefab Items/Food/Stew_Seaweed/Equipable.prefab

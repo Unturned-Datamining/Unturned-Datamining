@@ -1,0 +1,18 @@
+﻿GUID d43dce6f901c44fbaa63fd332848793a
+Type Resource
+ID 80
+
+Health 1
+Radius 3
+Scale 0.1
+
+Explosion 43
+
+Reward_ID 903
+Forage
+
+Reset 1000
+
+Christmas_Redirect daf92dff13734db8932d9b8d4d4ea1d3
+
+Has_Clip_Prefab false

@@ -1,0 +1,16 @@
+drwxr-xr-x root/root         0 2021-05-17 20:24 ./
+drwxr-xr-x root/root         0 2021-05-17 20:24 ./usr/
+drwxr-xr-x root/root         0 2021-05-17 20:24 ./usr/share/
+drwxr-xr-x root/root         0 2021-05-17 20:24 ./usr/share/doc/
+drwxr-xr-x root/root         0 2021-05-17 20:24 ./usr/share/doc/libtasn1-3/
+-rw-r--r-- root/root      3476 2011-10-31 07:45 ./usr/share/doc/libtasn1-3/copyright
+-rw-r--r-- root/root     14027 2011-10-25 17:40 ./usr/share/doc/libtasn1-3/NEWS
+-rw-r--r-- root/root      1270 2011-09-14 17:20 ./usr/share/doc/libtasn1-3/THANKS
+-rw-r--r-- root/root       936 2011-09-14 17:20 ./usr/share/doc/libtasn1-3/README
+-rw-r--r-- root/root      6715 2021-05-17 20:22 ./usr/share/doc/libtasn1-3/changelog.Debian.amd64.gz
+-rw-r--r-- root/root       505 2011-09-14 17:20 ./usr/share/doc/libtasn1-3/AUTHORS
+-rw-r--r-- root/root     16995 2011-10-25 17:43 ./usr/share/doc/libtasn1-3/changelog.gz
+drwxr-xr-x root/root         0 2021-05-17 20:24 ./usr/lib/
+drwxr-xr-x root/root         0 2021-05-17 20:24 ./usr/lib/x86_64-linux-gnu/
+-rw-r--r-- root/root     67992 2021-05-17 20:24 ./usr/lib/x86_64-linux-gnu/libtasn1.so.3.1.12
+lrwxrwxrwx root/root         0 2021-05-17 20:24 ./usr/lib/x86_64-linux-gnu/libtasn1.so.3 -> libtasn1.so.3.1.12

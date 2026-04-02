@@ -1,0 +1,11 @@
+drwxr-xr-x root/root         0 2019-04-03 13:13 ./
+drwxr-xr-x root/root         0 2019-04-03 13:12 ./usr/
+drwxr-xr-x root/root         0 2019-04-03 13:12 ./usr/lib/
+drwxr-xr-x root/root         0 2019-04-03 13:13 ./usr/lib/x86_64-linux-gnu/
+-rw-r--r-- root/root     10272 2019-04-03 13:13 ./usr/lib/x86_64-linux-gnu/libxcb-damage.so.0.0.0
+drwxr-xr-x root/root         0 2019-04-03 13:12 ./usr/share/
+drwxr-xr-x root/root         0 2019-04-03 13:12 ./usr/share/doc/
+drwxr-xr-x root/root         0 2019-04-03 13:13 ./usr/share/doc/libxcb-damage0/
+-rw-r--r-- root/root      1780 2019-04-03 13:12 ./usr/share/doc/libxcb-damage0/copyright
+-rw-r--r-- root/root      6594 2019-04-03 13:11 ./usr/share/doc/libxcb-damage0/changelog.Debian.amd64.gz
+lrwxrwxrwx root/root         0 2019-04-03 13:13 ./usr/lib/x86_64-linux-gnu/libxcb-damage.so.0 -> libxcb-damage.so.0.0.0

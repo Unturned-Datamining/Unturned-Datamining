@@ -1,0 +1,11 @@
+drwxr-xr-x root/root         0 2023-03-23 18:20 ./
+drwxr-xr-x root/root         0 2023-03-23 18:20 ./usr/
+drwxr-xr-x root/root         0 2023-03-23 18:20 ./usr/lib/
+drwxr-xr-x root/root         0 2023-03-23 18:20 ./usr/lib/i386-linux-gnu/
+-rw-r--r-- root/root     63012 2023-03-23 18:20 ./usr/lib/i386-linux-gnu/libXi.so.6.1.0
+drwxr-xr-x root/root         0 2023-03-23 18:20 ./usr/share/
+drwxr-xr-x root/root         0 2023-03-23 18:20 ./usr/share/doc/
+drwxr-xr-x root/root         0 2023-03-23 18:20 ./usr/share/doc/libxi6/
+-rw-r--r-- root/root      5533 2023-03-23 18:19 ./usr/share/doc/libxi6/changelog.Debian.i386.gz
+-rw-r--r-- root/root      4434 2023-03-23 18:19 ./usr/share/doc/libxi6/copyright
+lrwxrwxrwx root/root         0 2023-03-23 18:20 ./usr/lib/i386-linux-gnu/libXi.so.6 -> libXi.so.6.1.0

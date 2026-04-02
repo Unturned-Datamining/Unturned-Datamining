@@ -1,0 +1,8 @@
+libform.so.5 libncurses5 #MINVER#
+# No symbols listed here yet
+libmenu.so.5 libncurses5 #MINVER#
+# No symbols listed here yet
+libncurses.so.5 libncurses5 #MINVER#
+# No symbols listed here yet
+libpanel.so.5 libncurses5 #MINVER#
+# No symbols listed here yet

@@ -1,0 +1,12 @@
+drwxr-xr-x root/root         0 2020-08-17 16:42 ./
+drwxr-xr-x root/root         0 2020-08-17 16:42 ./usr/
+drwxr-xr-x root/root         0 2020-08-17 16:42 ./usr/share/
+drwxr-xr-x root/root         0 2020-08-17 16:42 ./usr/share/doc/
+drwxr-xr-x root/root         0 2020-08-17 16:42 ./usr/share/doc/libxext6/
+-rw-r--r-- root/root     10421 2020-08-17 16:40 ./usr/share/doc/libxext6/copyright
+-rw-r--r-- root/root      3794 2020-08-17 16:40 ./usr/share/doc/libxext6/changelog.Debian.i386.gz
+-rw-r--r-- root/root     15611 2011-05-07 00:24 ./usr/share/doc/libxext6/changelog.gz
+drwxr-xr-x root/root         0 2020-08-17 16:42 ./usr/lib/
+drwxr-xr-x root/root         0 2020-08-17 16:42 ./usr/lib/i386-linux-gnu/
+-rw-r--r-- root/root     68264 2020-08-17 16:42 ./usr/lib/i386-linux-gnu/libXext.so.6.4.0
+lrwxrwxrwx root/root         0 2020-08-17 16:42 ./usr/lib/i386-linux-gnu/libXext.so.6 -> libXext.so.6.4.0

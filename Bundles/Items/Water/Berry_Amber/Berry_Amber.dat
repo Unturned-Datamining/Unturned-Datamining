@@ -7,10 +7,9 @@ Size_X 1
 Size_Y 1
 Size_Z 0.3
 
-Health 10
-Food 5
+Food 10
 Water 10
-Virus 5
+Energy 60
 Vision 20
 
 Actions 1

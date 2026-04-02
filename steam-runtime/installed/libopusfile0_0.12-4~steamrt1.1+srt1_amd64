@@ -1,0 +1,15 @@
+drwxr-xr-x root/root         0 2023-02-13 17:27 ./
+drwxr-xr-x root/root         0 2023-02-13 17:27 ./usr/
+drwxr-xr-x root/root         0 2023-02-13 17:27 ./usr/lib/
+drwxr-xr-x root/root         0 2023-02-13 17:27 ./usr/lib/x86_64-linux-gnu/
+-rw-r--r-- root/root     39608 2023-02-13 17:27 ./usr/lib/x86_64-linux-gnu/libopusurl.so.0.4.5
+-rw-r--r-- root/root     47520 2023-02-13 17:27 ./usr/lib/x86_64-linux-gnu/libopusfile.so.0.4.5
+drwxr-xr-x root/root         0 2023-02-13 17:27 ./usr/share/
+drwxr-xr-x root/root         0 2023-02-13 17:27 ./usr/share/doc/
+drwxr-xr-x root/root         0 2023-02-13 17:27 ./usr/share/doc/libopusfile0/
+-rw-r--r-- root/root      1915 2022-05-31 15:28 ./usr/share/doc/libopusfile0/copyright
+-rw-r--r-- root/root      2986 2023-02-13 17:26 ./usr/share/doc/libopusfile0/changelog.Debian.amd64.gz
+-rw-r--r-- root/root       262 2020-03-23 18:01 ./usr/share/doc/libopusfile0/AUTHORS
+-rw-r--r-- root/root       908 2020-06-25 15:36 ./usr/share/doc/libopusfile0/README.md
+lrwxrwxrwx root/root         0 2023-02-13 17:27 ./usr/lib/x86_64-linux-gnu/libopusfile.so.0 -> libopusfile.so.0.4.5
+lrwxrwxrwx root/root         0 2023-02-13 17:27 ./usr/lib/x86_64-linux-gnu/libopusurl.so.0 -> libopusurl.so.0.4.5

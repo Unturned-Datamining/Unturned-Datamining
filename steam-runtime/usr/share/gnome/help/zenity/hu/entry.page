@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<page xmlns="http://projectmallard.org/1.0/" type="topic" id="entry" xml:lang="hu">
+  <info>
+    <link type="guide" xref="index#dialogs"/>
+    <desc>A <cmd>--entry</cmd> kapcsoló használata.</desc>
+  </info>
+  <title>Szövegbeviteli ablak</title>
+    <p>A <cmd>--entry</cmd> kapcsoló használatával szövegbeviteli ablakot hozhat létre. A <app>Zenity</app> a szövegbeviteli mező tartalmát kiírja a szabványos kimenetre.</p>	
+    <p>A szövegbeviteli ablak a következő kapcsolókat támogatja:</p>
+
+    <terms>
+
+      <item>
+        <title><cmd>--text</cmd>=<var>szöveg</var></title>
+	<p>A szövegbeviteli ablakban megjelenítendő szöveg megadása.</p>
+      </item>
+
+      <item>
+        <title><cmd>--entry-text</cmd>=<var>szöveg</var></title>
+	<p>A szövegbeviteli ablak beviteli mezőjében megjelenítendő szöveg megadása.</p>
+      </item>
+
+      <item>
+        <title><cmd>--hide-text</cmd></title>
+	<p>A szöveg elrejtése a szövegbeviteli ablak beviteli mezőjében.</p>
+      </item>
+
+    </terms>
+
+    <p>A következő példa parancsfájl bemutatja a szövegbeviteli ablak létrehozását:</p>
+
+<code>
+#!/bin/sh
+
+if zenity --entry \
+--title="Új profil hozzáadása" \
+--text="Adja meg az új profil nevét:" \
+--entry-text "ÚjProfil"
+  then echo $?
+  else echo "Nem adott meg nevet"
+fi
+</code>
+
+
+    <figure id="zenity-entry-screenshot">
+      <title>Példa szövegbeviteli ablak</title>
+      <desc><app>Zenity</app> példa szövegbeviteli ablak</desc>
+      <media type="image" mime="image/png" src="figures/zenity-entry-screenshot.png"/>
+    </figure>
+</page>

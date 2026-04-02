@@ -1,0 +1,258 @@
+<?xml version="1.0" encoding="utf-8"?>
+<page xmlns="http://projectmallard.org/1.0/" type="topic" id="usage" xml:lang="hu">
+<info>
+  <link type="guide" xref="index"/>
+  <desc>A <app>Zenity</app> segítségével egyszerű grafikus párbeszédablakokat hozhat létre.</desc>
+</info>
+<title>Használat</title>
+    <p>Parancsfájlok írásakor a <app>Zenity</app> segítségével egyszerű grafikus párbeszédablakokat hozhat létre, amelyek a következőképpen kommunikálnak a felhasználóval:</p>
+    <list>
+      <item>
+        <p>Létrehozhat egy ablakot, amelyben információkat kér a felhasználótól. Megkérheti például a felhasználót egy dátum kiválasztására a dátumválasztó ablakból, vagy fájl kiválasztására a fájlválasztó ablakból.</p>
+      </item>
+      <item>
+        <p>Létrehozhat egy ablakot, amelyben információkat ad a felhasználónak. Egy folyamatjelző ablak használatával például jelezheti egy művelet aktuális állapotát, vagy egy figyelmeztető ablakkal felhívhatja valamire a felhasználó figyelmét.</p>
+      </item>
+    </list>
+    <p>Amikor a felhasználó bezárja az ablakot, a <app>Zenity</app> kiírja az ablak által visszaadott szöveget a szabványos kimenetre.</p>
+
+    <note>
+      <p>Amikor <app>Zenity</app> parancsokat ír, mindig tegye idézőjelek közé az egyes argumentumokat.</p>
+      <p>Például így:</p>
+      <screen>zenity --calendar --title="Szabadság tervezése"</screen>
+      <p>Ne használja így:</p>
+      <screen>zenity --calendar --title=Szabadság tervezése</screen>
+      <p>Ha nem használ idézőjeleket, akkor váratlan eredményeket kaphat.</p>
+    </note>
+
+    <section id="zenity-usage-mnemonics">
+      <title>Hívóbetűk</title>
+	<p>A hívóbetű lehetővé teszi egy művelet végrehajtását a billentyűzetről, így nem muszáj mindig az egérrel kiválasztania a parancsot a menüből vagy ablakból. A hívóbetűk a menüpontok vagy beállítások szövegének aláhúzott betűi.</p>
+	<p>Egyes <app>Zenity</app> ablakok támogatják a hívóbetűk használatát. A hívóbetűként használandó karakter megadásához helyezzen el egy aláhúzást az ablak szövegében. A következő példa bemutatja, hogyan adhatja meg a „V” betűt hívóbetűként:</p>
+	<screen><input>"_Válasszon egy nevet."</input></screen>
+    </section>
+
+    <section id="zenity-usage-exitcodes">
+      <title>Kilépési kódok</title>
+    <p>A Zenity a következő kilépési kódokat adja vissza:</p>
+
+    <table frame="all" rules="all">
+        <thead>
+          <tr valign="top">
+            <td colname="COLSPEC0">
+              <p>Kilépési kód</p></td>
+            <td colname="COLSPEC1">
+              <p>Leírás</p></td>
+          </tr>
+        </thead>
+        <tbody>
+          <tr valign="top">
+            <td>
+              <p><var>0</var></p>
+            </td>
+            <td>
+              <p>A felhasználó megnyomta az <gui style="button">OK</gui> vagy a <gui style="button">Bezárás</gui> gombot.</p>
+            </td>
+          </tr>
+          <tr valign="top">
+            <td>
+              <p><var>1</var></p>
+            </td>
+            <td>
+              <p>A felhasználó megnyomta a <gui style="button">Mégse</gui> gombot, vagy az ablakvezérlő elemekkel bezárta az ablakot.</p>
+            </td>
+          </tr>
+          <tr valign="top">
+            <td>
+              <p><var>-1</var></p>
+            </td>
+            <td>
+              <p>Váratlan hiba történt.</p>
+            </td>
+          </tr>
+          <tr valign="top">
+            <td>
+              <p><var>5</var></p>
+            </td>
+            <td>
+              <p>Az ablak az időkorlát elérése miatt bezárva.</p>
+            </td>
+          </tr>
+        </tbody>
+    </table>
+
+    </section>
+
+
+  <!-- ==== General Options ====== -->
+
+  <section id="zenity-usage-general-options">
+    <title>Általános beállítások</title>
+
+    <p>Minden Zenity ablak támogatja a következő általános beállításokat:</p>
+
+    <terms>
+
+      <item>
+        <title><cmd>--title</cmd>=<var>cím</var></title>
+	<p>Az ablak címének megadása.</p>
+      </item>
+
+      <item>
+        <title><cmd>--window-icon</cmd>=<var>ikonútvonal</var></title>
+	<p>Az ablakkeretben megjelenő ikon megadása. A következő kulcsszavak megadásával elérhető 4 alapértelmezett ikon is: „info”, „warning” (figyelmeztetés), „question” (kérdés) és „error” (hiba).</p>
+      </item>
+
+      <item>
+        <title><cmd>--width</cmd>=<var>szélesség</var></title>
+	<p>Az ablak szélességének megadása.</p>
+      </item>
+
+      <item>
+        <title><cmd>--height</cmd>=<var>magasság</var></title>
+	<p>Az ablak magasságának megadása.</p>
+      </item>
+
+      <item>
+        <title><cmd>--timeout</cmd>=<var>időkorlát</var></title>
+	<p>Időkorlát megadása másodpercben, amely után az ablak bezárandó.</p>
+      </item>
+
+    </terms>
+
+  </section>
+
+<!-- ==== Miscellaneous Options ====== -->
+
+  <section id="zenity-help-options">
+    <title>Súgólehetőségek</title>
+
+    <p>A Zenity a következő súgólehetőségeket biztosítja:</p>
+
+    <terms>
+
+      <item>
+        <title><cmd>--help</cmd></title>
+	<p>Rövid súgószöveg megjelenítése.</p>
+      </item>
+
+      <item>
+        <title><cmd>--help-all</cmd></title>
+	<p>Részletes súgószöveg megjelenítése minden ablakhoz.</p>
+      </item>
+ 
+      <item>
+        <title><cmd>--help-general</cmd></title>
+	<p>Súgószöveg megjelenítése az általános ablakbeállításokhoz.</p>
+      </item>
+ 
+      <item>
+        <title><cmd>--help-calendar</cmd></title>
+	<p>Súgószöveg megjelenítése a naptár ablak beállításaihoz.</p>
+      </item>
+ 
+      <item>
+        <title><cmd>--help-entry</cmd></title>
+	<p>Súgószöveg megjelenítése a szövegbeviteli ablak beállításaihoz.</p>
+      </item>
+ 
+      <item>
+        <title><cmd>--help-error</cmd></title>
+	<p>Súgószöveg megjelenítése a hibaablak beállításaihoz.</p>
+      </item>
+ 
+      <item>
+        <title><cmd>--help-info</cmd></title>
+	<p>Súgószöveg megjelenítése az információs ablak beállításaihoz.</p>
+      </item>
+ 
+      <item>
+        <title><cmd>--help-file-selection</cmd></title>
+	<p>Súgószöveg megjelenítése a fájlválasztó ablak beállításaihoz.</p>
+      </item>
+ 
+      <item>
+        <title><cmd>--help-list</cmd></title>
+	<p>Súgószöveg megjelenítése a lista ablak beállításaihoz.</p>
+      </item>
+ 
+      <item>
+        <title><cmd>--help-notification</cmd></title>
+	<p>Súgószöveg megjelenítése az értesítési ikon beállításaihoz.</p>
+      </item>
+ 
+      <item>
+        <title><cmd>--help-progress</cmd></title>
+	<p>Súgószöveg megjelenítése a folyamatjelző ablak beállításaihoz.</p>
+      </item>
+ 
+      <item>
+        <title><cmd>--help-question</cmd></title>
+	<p>Súgószöveg megjelenítése a kérdés ablak beállításaihoz.</p>
+      </item>
+ 
+      <item>
+        <title><cmd>--help-warning</cmd></title>
+	<p>Súgószöveg megjelenítése a figyelmeztető ablak beállításaihoz.</p>
+      </item>
+ 
+      <item>
+	<title><cmd>--help-text-info</cmd></title>
+	<p>Súgószöveg megjelenítése a szöveges információs ablak beállításaihoz.</p>
+      </item>
+ 
+      <item>
+        <title><cmd>--help-misc</cmd></title>
+	<p>Súgószöveg megjelenítése egyéb beállításokhoz.</p>
+      </item>
+ 
+      <item>
+        <title><cmd>--help-gtk</cmd></title>
+	<p>Súgószöveg megjelenítése a GTK+ beállításokhoz.</p>
+      </item>
+ 
+    </terms>
+
+  </section>
+
+<!-- ==== Miscellaneous Options ====== -->
+
+  <section id="zenity-miscellaneous-options">
+    <title>Egyéb beállítások</title>
+
+    <p>A Zenity a következő egyéb beállításokat is biztosítja:</p>
+
+    <terms>
+
+      <item>
+        <title><cmd>--about</cmd></title>
+	<p>Megjeleníti a <gui>Zenity névjegye</gui> ablakot, amely verzió-, szerzői jogi és fejlesztői információkat tartalmaz.</p>
+      </item>
+
+      <item>
+        <title><cmd>--version</cmd></title>
+	<p>A Zenity verziószámának megjelenítése.</p>
+      </item>
+
+    </terms>
+
+  </section>
+
+<!-- ==== GTK+ Options ====== -->
+
+  <section id="zenity-gtk-options">
+    <title>GTK+ beállításai</title>
+
+    <p>A Zenity támogatja a szabványos GTK+ beállításokat. A GTK+ beállításokkal kapcsolatos további információkért adja ki a <cmd>zenity --help-gtk</cmd> parancsot.</p>
+
+  </section>
+
+<!-- ==== Environment variables ==== -->
+
+  <section id="zenity-environment-variables">
+    <title>Környezeti változók</title>
+
+    <p>Általában a Zenity felismeri azt a terminálablakot, amelyből elindították, és azon ablak fölött tartja magát. Ez a viselkedés letiltható a <var>WINDOWID</var> környezeti változó törlésével.</p>
+
+  </section>
+</page>

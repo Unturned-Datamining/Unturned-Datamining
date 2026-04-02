@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<page xmlns="http://projectmallard.org/1.0/" type="topic" id="list" xml:lang="uk">
+  <info>
+    <link type="guide" xref="index#dialogs"/>
+    <desc>Use the <cmd>--list</cmd> option.</desc>
+  </info>
+  <title>Діалог списку</title>
+    <p>
+	Use the <cmd>--list</cmd> option to create a list dialog. <app>Zenity</app> returns the entries in the first column of text of selected rows to standard output.
+    </p>
+
+    <p>Дані для діалогу мають вказуватись стовпчик за стовпчиком. Дані можуть передаватись діалогу через стандартний потік вводу. Кожен елемент має відокремлюватись символом нового рядка.</p>
+
+    <p>
+	If you use the <cmd>--checklist</cmd> or <cmd>--radiolist</cmd> options, each row must start with either 'TRUE' or 'FALSE'.
+    </p>
+
+    <p>Діалог списку підтримує наступні параметри:</p>
+
+    <terms>
+
+      <item>
+        <title><cmd>--column</cmd>=<var>column</var></title>
+	  <p>Specifies the column headers that are displayed in the list dialog. You must specify a <cmd>--column</cmd> option for each column that you want to display in the dialog.
+	  </p>
+      </item>
+
+      <item>
+        <title><cmd>--checklist</cmd></title>
+	  <p>Вказує, що перший стовпчик списку містить поля для відмітки.</p>
+      </item>
+
+      <item>
+        <title><cmd>--radiolist</cmd></title>
+	  <p>Вказує, що перший стовпчик списку містить поля радіо-перемикачі. </p>
+      </item>
+
+      <item>
+        <title><cmd>--editable</cmd></title>
+	  <p>Дозволяє редагувати відображувані елементи.</p>
+      </item>
+
+      <item>
+        <title><cmd>--separator</cmd>=<var>separator</var></title>
+	  <p>Вказує який рядок використовується, коли діалог списку повертає виділені елементи.</p>
+      </item>
+
+      <item>
+        <title><cmd>--print-column</cmd>=<var>column</var></title>
+	  <p>Вказує стовпчик, виділені елементи з якого будуть виводитись. Типове значення '1'. Щоб виводити елементи з усіх стовпчиків, можна вказати 'ALL'.</p>
+      </item>
+
+    </terms>
+
+    <p>
+      The following example script shows how to create a list dialog:
+    </p>
+<code>
+#!/bin/sh
+
+zenity --list \
+  --title="Choose the Bugs You Wish to View" \
+  --column="Bug Number" --column="Severity" --column="Description" \
+    992383 Normal "GtkTreeView crashes on multiple selections" \
+    293823 High "GNOME Dictionary does not handle proxy" \
+    393823 Critical "Menu editing does not work in GNOME 2.0"
+</code>
+
+
+    <figure id="zenity-list-screenshot">
+      <title>Приклад діалогу списку</title>
+      <desc><app>Zenity</app> list dialog example</desc>
+      <media type="image" mime="image/png" src="figures/zenity-list-screenshot.png"/>
+    </figure>
+</page>

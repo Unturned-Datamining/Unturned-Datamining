@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<page xmlns="http://projectmallard.org/1.0/" type="topic" id="progress" xml:lang="fr">
+  <info>
+    <link type="guide" xref="index#dialogs"/>
+    <desc>Utiliser l'option <cmd>--progress</cmd>.</desc>
+  </info>
+  <title>Boîte de dialogue de barre de progression</title>
+    <p>L'option <cmd>--progress</cmd> crée une boîte de dialogue de barre de progression.</p>
+
+    <p><app>Zenity</app> lit les données à partir de l'entrée standard, ligne par ligne. Si une ligne commence par '#', le texte est mis à jour avec le texte de cette ligne. Si une ligne contient seulement un nombre, le pourcentage est mis à jour avec ce nombre.</p>
+	
+    <p>Options de la boîte de dialogue de barre de progression :</p>
+
+    <terms>
+
+      <item>
+        <title><cmd>--text</cmd>=<var>texte</var></title>
+	  <p>Spécifier le texte affiché dans la boîte de dialogue de barre de progression.</p>
+      </item>
+
+      <item>
+        <title><cmd>--percentage</cmd>=<var>pourcentage</var></title>
+	  <p>Spécifier le pourcentage initial réglé dans la boîte de dialogue de barre de progression.</p>
+      </item>
+
+      <item>
+	<title><cmd>--auto-close</cmd></title>
+	  <p>Fermer la boîte de dialogue quand la barre de progression atteint 100%.</p>
+      </item>
+
+      <item>
+        <title><cmd>--pulsate</cmd></title>
+	  <p>Laisser la barre de progression pulser jusqu'à ce qu'un caractère EOF soit lu sur l'entrée standard.</p>
+      </item>
+
+    </terms>
+
+    <p>Le script d'exemple suivant montre comment créer une boîte de dialogue de barre de progression :</p>
+
+<code>
+#!/bin/sh
+(
+echo "10" ; sleep 1
+echo "# Mise à jour des journaux de mail" ; sleep 1
+echo "20" ; sleep 1
+echo "# Remise à zéro des paramètres" ; sleep 1
+echo "50" ; sleep 1
+echo "Cette ligne est ignorée" ; sleep 1
+echo "75" ; sleep 1
+echo "# Redémarrage du système" ; sleep 1
+echo "100" ; sleep 1
+) |
+zenity --progress \
+  --title="Mise à jour des journaux système" \
+  --text="Analyse des journaux de mail..." \
+  --percentage=0
+
+if [ "$?" = -1 ] ; then
+        zenity --error \
+          --text="Mise à jour annulée."
+fi
+</code>
+
+
+    <figure id="zenity-progress-screenshot">
+      <title>Exemple de boîte de dialogue de barre de progression</title>
+      <desc>Exemple de boîte de dialogue de barre de progression <app>Zenity</app></desc>
+      <media type="image" mime="image/png" src="figures/zenity-progress-screenshot.png"/>
+    </figure>
+</page>

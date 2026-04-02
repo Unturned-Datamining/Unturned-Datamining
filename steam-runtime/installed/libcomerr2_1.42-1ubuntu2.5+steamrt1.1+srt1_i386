@@ -1,0 +1,11 @@
+drwxr-xr-x root/root         0 2021-05-17 19:27 ./
+drwxr-xr-x root/root         0 2021-05-17 19:27 ./usr/
+drwxr-xr-x root/root         0 2021-05-17 19:27 ./usr/share/
+drwxr-xr-x root/root         0 2021-05-17 19:27 ./usr/share/doc/
+drwxr-xr-x root/root         0 2021-05-17 19:27 ./usr/share/doc/libcomerr2/
+-rw-r--r-- root/root     49727 2021-05-17 19:25 ./usr/share/doc/libcomerr2/changelog.Debian.i386.gz
+-rw-r--r-- root/root      1154 2021-05-06 14:58 ./usr/share/doc/libcomerr2/copyright
+drwxr-xr-x root/root         0 2021-05-17 19:27 ./lib/
+drwxr-xr-x root/root         0 2021-05-17 19:27 ./lib/i386-linux-gnu/
+-rw-r--r-- root/root     13888 2021-05-17 19:27 ./lib/i386-linux-gnu/libcom_err.so.2.1
+lrwxrwxrwx root/root         0 2021-05-17 19:27 ./lib/i386-linux-gnu/libcom_err.so.2 -> libcom_err.so.2.1

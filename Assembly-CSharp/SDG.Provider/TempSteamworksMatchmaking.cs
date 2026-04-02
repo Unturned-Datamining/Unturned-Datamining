@@ -208,7 +208,7 @@ public class TempSteamworksMatchmaking
         curationDenyMode = serverListCuration.DenyMode;
         currentNameRegex = null;
         string text = "regex:";
-        if (isCurrentNameFilterSet && currentNameFilter.StartsWith(text))
+        if (isCurrentNameFilterSet && currentNameFilter.StartsWith(text, StringComparison.InvariantCultureIgnoreCase))
         {
             string text2 = currentNameFilter.Substring(text.Length);
             try

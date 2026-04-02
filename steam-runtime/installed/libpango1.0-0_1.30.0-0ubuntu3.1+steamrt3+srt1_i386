@@ -1,0 +1,42 @@
+drwxr-xr-x root/root         0 2023-03-23 17:03 ./
+drwxr-xr-x root/root         0 2023-03-23 17:03 ./usr/
+drwxr-xr-x root/root         0 2023-03-23 17:03 ./usr/share/
+drwxr-xr-x root/root         0 2023-03-23 17:03 ./usr/share/doc/
+drwxr-xr-x root/root         0 2023-03-23 17:03 ./usr/share/doc/libpango1.0-0/
+-rw-r--r-- root/root      2674 2023-03-22 18:12 ./usr/share/doc/libpango1.0-0/copyright
+-rw-r--r-- root/root       403 2011-08-16 01:11 ./usr/share/doc/libpango1.0-0/THANKS
+-rw-r--r-- root/root     18403 2023-03-23 16:58 ./usr/share/doc/libpango1.0-0/changelog.Debian.i386.gz
+-rw-r--r-- root/root      3675 2011-08-16 01:11 ./usr/share/doc/libpango1.0-0/README
+-rw-r--r-- root/root     34211 2012-03-27 01:28 ./usr/share/doc/libpango1.0-0/NEWS.gz
+-rw-r--r-- root/root        96 2011-08-16 01:11 ./usr/share/doc/libpango1.0-0/AUTHORS
+-rw-r--r-- root/root     73296 2012-03-27 01:41 ./usr/share/doc/libpango1.0-0/changelog.gz
+drwxr-xr-x root/root         0 2023-03-23 17:03 ./usr/lib/
+drwxr-xr-x root/root         0 2023-03-23 17:03 ./usr/lib/i386-linux-gnu/
+-rw-r--r-- root/root    174612 2023-03-23 17:03 ./usr/lib/i386-linux-gnu/libpangoft2-1.0.so.0.3000.0
+-rw-r--r-- root/root     47068 2023-03-23 17:03 ./usr/lib/i386-linux-gnu/libpangocairo-1.0.so.0.3000.0
+-rw-r--r-- root/root    301992 2023-03-23 17:03 ./usr/lib/i386-linux-gnu/libpango-1.0.so.0.3000.0
+-rw-r--r-- root/root     30412 2023-03-23 17:03 ./usr/lib/i386-linux-gnu/libpangoxft-1.0.so.0.3000.0
+drwxr-xr-x root/root         0 2023-03-23 17:03 ./usr/lib/i386-linux-gnu/pango/
+drwxr-xr-x root/root         0 2023-03-23 17:03 ./usr/lib/i386-linux-gnu/pango/1.6.0/
+drwxr-xr-x root/root         0 2023-03-23 17:03 ./usr/lib/i386-linux-gnu/pango/1.6.0/modules/
+-rw-r--r-- root/root     17828 2023-03-23 17:03 ./usr/lib/i386-linux-gnu/pango/1.6.0/modules/pango-thai-fc.so
+-rw-r--r-- root/root     80032 2023-03-23 17:03 ./usr/lib/i386-linux-gnu/pango/1.6.0/modules/pango-basic-x.so
+-rw-r--r-- root/root      9624 2023-03-23 17:03 ./usr/lib/i386-linux-gnu/pango/1.6.0/modules/pango-arabic-fc.so
+-rw-r--r-- root/root     13712 2023-03-23 17:03 ./usr/lib/i386-linux-gnu/pango/1.6.0/modules/pango-hebrew-fc.so
+-rw-r--r-- root/root      9588 2023-03-23 17:03 ./usr/lib/i386-linux-gnu/pango/1.6.0/modules/pango-khmer-fc.so
+-rw-r--r-- root/root      5468 2023-03-23 17:03 ./usr/lib/i386-linux-gnu/pango/1.6.0/modules/pango-thai-lang.so
+-rw-r--r-- root/root      9612 2023-03-23 17:03 ./usr/lib/i386-linux-gnu/pango/1.6.0/modules/pango-syriac-fc.so
+-rw-r--r-- root/root      5440 2023-03-23 17:03 ./usr/lib/i386-linux-gnu/pango/1.6.0/modules/pango-arabic-lang.so
+-rw-r--r-- root/root      9588 2023-03-23 17:03 ./usr/lib/i386-linux-gnu/pango/1.6.0/modules/pango-tibetan-fc.so
+-rw-r--r-- root/root     13652 2023-03-23 17:03 ./usr/lib/i386-linux-gnu/pango/1.6.0/modules/pango-hangul-fc.so
+-rw-r--r-- root/root     22260 2023-03-23 17:03 ./usr/lib/i386-linux-gnu/pango/1.6.0/modules/pango-indic-fc.so
+-rw-r--r-- root/root      9820 2023-03-23 17:03 ./usr/lib/i386-linux-gnu/pango/1.6.0/modules/pango-indic-lang.so
+-rw-r--r-- root/root      9876 2023-03-23 17:03 ./usr/lib/i386-linux-gnu/pango/1.6.0/modules/pango-basic-fc.so
+drwxr-xr-x root/root         0 2023-03-23 17:03 ./usr/lib/i386-linux-gnu/pango/1.6.0/module-files.d/
+-rw-r--r-- root/root      3153 2023-03-23 17:03 ./usr/lib/i386-linux-gnu/pango/1.6.0/module-files.d/libpango1.0-0.modules
+-rw-r--r-- root/root     47112 2023-03-23 17:03 ./usr/lib/i386-linux-gnu/libpangox-1.0.so.0.3000.0
+lrwxrwxrwx root/root         0 2023-03-23 17:03 ./usr/lib/i386-linux-gnu/libpangocairo-1.0.so.0 -> libpangocairo-1.0.so.0.3000.0
+lrwxrwxrwx root/root         0 2023-03-23 17:03 ./usr/lib/i386-linux-gnu/libpangox-1.0.so.0 -> libpangox-1.0.so.0.3000.0
+lrwxrwxrwx root/root         0 2023-03-23 17:03 ./usr/lib/i386-linux-gnu/libpangoxft-1.0.so.0 -> libpangoxft-1.0.so.0.3000.0
+lrwxrwxrwx root/root         0 2023-03-23 17:03 ./usr/lib/i386-linux-gnu/libpango-1.0.so.0 -> libpango-1.0.so.0.3000.0
+lrwxrwxrwx root/root         0 2023-03-23 17:03 ./usr/lib/i386-linux-gnu/libpangoft2-1.0.so.0 -> libpangoft2-1.0.so.0.3000.0

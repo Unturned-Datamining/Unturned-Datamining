@@ -1,0 +1,41 @@
+﻿GUID d042fd27a3cd4ca2b12c076458c0e46c
+Type Food
+Rarity Rare
+Useable Consumeable
+ID 1977
+
+Size_X 2
+Size_Y 1
+Size_Z 0.3
+
+Health 25
+Food 80
+Water 35
+
+Blueprints
+[
+	{
+		CategoryTag "d089feb7e43f40c5a7dfcefc36998cfb" // Supplies
+		InputItems
+		[
+			"4880f590a948465891188c5f96559340" // Bread
+			"15ac0c779c3f4538a0789cf8ba50c75e" // Cooked Lobster
+			"67d687f8e6974d0290343d21294940f9" // Eggs
+			"97c48e1bffaa48339e42e788396df94a" // Lettuce
+		]
+		OutputItems this
+		Skill Cook
+		Skill_Level 2
+		RequiresNearbyCraftingTags
+		[
+			"68816064e2ce44839c3f35da55033cba" // Cooking Table
+			"20f30322bbcc4b01a4f116d22b24c21a" // Heat Source
+		]
+		Effect "84347b13028340b8976033c08675d458" // Wrench
+	}
+]
+
+ConsumeAudioClip Sounds/EatRoll.mp3
+Randomize_Consume_Audio_Pitch false
+Procedurally_Animate_Inertia false
+EquipablePrefab Items/Food/Roll_Lobster/Equipable.prefab

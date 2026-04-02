@@ -356,6 +356,24 @@ public class Characters : MonoBehaviour
         return false;
     }
 
+    /// <summary>
+    /// Given the itemdefid of an equipped skin, try to find its corresponding Steam unique instance ID.
+    /// (A.K.A. "Package" in older code?)
+    /// </summary>
+    public static bool TryGetEquippedSkinInstanceIdByItemDefId(int itemDefId, out ulong itemInstanceId)
+    {
+        foreach (ulong packageSkin in packageSkins)
+        {
+            if (Provider.provider.economyService.getInventoryItem(packageSkin) == itemDefId)
+            {
+                itemInstanceId = packageSkin;
+                return true;
+            }
+        }
+        itemInstanceId = 0uL;
+        return false;
+    }
+
     private static bool getSlot0StatTrackerValue(out EStatTrackerType type, out int kills)
     {
         type = EStatTrackerType.NONE;
@@ -771,6 +789,7 @@ public class Characters : MonoBehaviour
         character = GameObject.Find("Hero").transform;
         clothes = character.GetComponent<HumanClothes>();
         clothes.isView = true;
+        clothes.ShouldHairOverridesUseFallbackColor = !Provider.isPro;
         slots = new Transform[PlayerInventory.SLOTS];
         primaryMeleeSlot = character.Find("Skeleton").Find("Spine").Find("Primary_Melee");
         primaryLargeGunSlot = character.Find("Skeleton").Find("Spine").Find("Primary_Large_Gun");

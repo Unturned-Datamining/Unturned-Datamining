@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<page xmlns="http://projectmallard.org/1.0/" type="topic" id="calendar" xml:lang="gl">
+  <info>
+    <link type="guide" xref="index#dialogs"/>
+    <desc>Use a opción <cmd>--calendar</cmd>.</desc>
+  </info>
+  <title>Diálogo de calendario</title>
+    <p>Use a opción <option>--calendar</option> para crear un diálogo de calendario. Zenity devolve a data seleccionada á entrada estándar. Se non se selecciona ningunha data na liña de ordes, o diálogo use a data actual.</p>
+    <p>O diálogo de calendario admite as seguintes opcións:</p>
+
+    <terms>
+
+      <item>
+        <title><cmd>--text</cmd>=<var>text</var></title>
+	<p>Especifica o texto que se mostra no diálogo de calendario.</p>
+      </item>
+     	
+      <item>
+        <title><cmd>--day</cmd>=<var>día</var></title>
+	<p>Especifica o día que se selecciona no diálogo do calendario.«Día» debe ser un número entre 1 e 31 ambos incluídos.</p>
+      </item>
+
+      <item>
+        <title><cmd>--month</cmd>=<var>mes</var></title>
+	<p>Especifica o mes que se selecciona no diálogo do calendario. «Mes» debe ser un número entre 1 e 12 ambos incluídos.</p>
+      </item>
+
+      <item>
+        <title><cmd>--year</cmd>=<var>ano</var></title>
+	<p>Especifica o ano que está seleccionado no diálogo de calendario.</p>
+      </item>
+
+      <item>
+        <title><cmd>--date-format</cmd>=<var>formato</var></title>
+	<p>Specifies the format that is returned from the calendar dialog after date selection. The default format depends on your locale. Format must be a format that is acceptable to the <cmd>strftime</cmd> function, for example <var>%A %d/%m/%y</var>.</p>
+      </item>
+
+    </terms>
+
+    <p>O seguinte script de exemplo mostra como se crea un diálogo de calendario:</p>
+
+<code>
+#!/bin/sh
+
+
+if zenity --calendar \
+--title="SSeleccione unha data" \
+--text="Prema sobre unha data para seleccionala." \
+--day=10 --month=8 --year=2004
+  then echo $?
+  else echo "Non seleccinou ningunha data"
+fi
+</code>
+
+
+    <figure id="zenity-calendar-screenshot">
+      <title>Diálogo de calendario de exemplo</title>
+      <desc>Diálogo de calendario de exemplo de Zenity</desc>
+      <media type="image" mime="image/png" src="figures/zenity-calendar-screenshot.png"/>
+   </figure>
+</page>

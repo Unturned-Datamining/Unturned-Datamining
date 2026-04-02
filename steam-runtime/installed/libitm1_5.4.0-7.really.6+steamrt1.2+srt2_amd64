@@ -1,0 +1,9 @@
+drwxr-xr-x root/root         0 2019-04-03 21:07 ./
+drwxr-xr-x root/root         0 2019-04-03 21:07 ./usr/
+drwxr-xr-x root/root         0 2019-04-03 21:07 ./usr/lib/
+drwxr-xr-x root/root         0 2019-04-03 21:07 ./usr/lib/x86_64-linux-gnu/
+-rw-r--r-- root/root    108880 2019-04-03 21:07 ./usr/lib/x86_64-linux-gnu/libitm.so.1.0.0
+drwxr-xr-x root/root         0 2019-04-03 21:07 ./usr/share/
+drwxr-xr-x root/root         0 2019-04-03 21:07 ./usr/share/doc/
+lrwxrwxrwx root/root         0 2019-04-03 21:03 ./usr/lib/x86_64-linux-gnu/libitm.so.1 -> libitm.so.1.0.0
+lrwxrwxrwx root/root         0 2019-04-03 21:07 ./usr/share/doc/libitm1 -> gcc-5-base

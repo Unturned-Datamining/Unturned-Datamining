@@ -1,0 +1,23 @@
+﻿GUID 2204f86aa81a4f58b5ecf896704dffd8
+Type Food
+Useable Consumeable
+ID 1940
+
+Size_X 1
+Size_Y 1
+Size_Z 0.25
+
+Quality_Max 50
+
+Food 15
+Water 10
+Virus 15
+
+Actions 1
+Action_0_Type Blueprint
+Action_0_Source 1941
+Action_0_Blueprints 1
+Action_0_Blueprint_0_Index 0
+Action_0_Key Craft_Seed
+
+ConsumeAudioClip Sounds/EatCrunchy.mp3

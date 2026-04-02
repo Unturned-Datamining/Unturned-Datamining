@@ -1,0 +1,11 @@
+drwxr-xr-x root/root         0 2019-04-03 17:33 ./
+drwxr-xr-x root/root         0 2019-04-03 17:33 ./usr/
+drwxr-xr-x root/root         0 2019-04-03 17:33 ./usr/lib/
+drwxr-xr-x root/root         0 2019-04-03 17:33 ./usr/lib/i386-linux-gnu/
+-rw-r--r-- root/root    353544 2019-04-03 17:33 ./usr/lib/i386-linux-gnu/libGLEW.so.1.6.0
+drwxr-xr-x root/root         0 2019-04-03 17:33 ./usr/share/
+drwxr-xr-x root/root         0 2019-04-03 17:33 ./usr/share/doc/
+drwxr-xr-x root/root         0 2019-04-03 17:33 ./usr/share/doc/libglew1.6/
+-rw-r--r-- root/root      3451 2019-04-03 17:30 ./usr/share/doc/libglew1.6/changelog.Debian.i386.gz
+-rw-r--r-- root/root      4244 2019-04-03 17:30 ./usr/share/doc/libglew1.6/copyright
+lrwxrwxrwx root/root         0 2019-04-03 17:33 ./usr/lib/i386-linux-gnu/libGLEW.so.1.6 -> libGLEW.so.1.6.0

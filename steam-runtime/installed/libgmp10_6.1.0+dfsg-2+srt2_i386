@@ -1,0 +1,12 @@
+drwxr-xr-x root/root         0 2019-04-03 13:14 ./
+drwxr-xr-x root/root         0 2019-04-03 13:14 ./usr/
+drwxr-xr-x root/root         0 2019-04-03 13:14 ./usr/lib/
+drwxr-xr-x root/root         0 2019-04-03 13:14 ./usr/lib/i386-linux-gnu/
+-rw-r--r-- root/root    551716 2019-04-03 13:14 ./usr/lib/i386-linux-gnu/libgmp.so.10.3.0
+drwxr-xr-x root/root         0 2019-04-03 13:14 ./usr/share/
+drwxr-xr-x root/root         0 2019-04-03 13:14 ./usr/share/doc/
+drwxr-xr-x root/root         0 2019-04-03 13:14 ./usr/share/doc/libgmp10/
+-rw-r--r-- root/root     13061 2019-04-03 13:10 ./usr/share/doc/libgmp10/changelog.Debian.i386.gz
+-rw-r--r-- root/root      2019 2015-07-05 21:47 ./usr/share/doc/libgmp10/copyright
+-rw-r--r-- root/root       334 2015-07-05 21:47 ./usr/share/doc/libgmp10/README.Debian
+lrwxrwxrwx root/root         0 2019-04-03 13:14 ./usr/lib/i386-linux-gnu/libgmp.so.10 -> libgmp.so.10.3.0

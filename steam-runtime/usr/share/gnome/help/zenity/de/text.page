@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<page xmlns="http://projectmallard.org/1.0/" type="topic" id="text" xml:lang="de">
+  <info>
+    <link type="guide" xref="index#dialogs"/>
+    <desc>Die Option <cmd>--text-info</cmd> verwenden.</desc>
+  </info>
+  <title>Text-Informationsdialog</title>
+    <p>Verwenden Sie die Option <cmd>--text-info</cmd>, um einen Textinformationsdialog zu erzeugen.</p>
+	
+    <p>Der Textinformationsdialog unterstützt die folgenden Optionen:</p>
+
+    <terms>
+
+      <item>
+        <title><cmd>--filename</cmd>=<var>Dateiname</var></title>
+	<p>Legt eine Datei fest, die im Textinformationsdialog geladen wird.</p>
+      </item>
+
+      <item>
+        <title><cmd>--editable</cmd></title>
+        <p>Ermöglicht die Bearbeitung des angezeigten Texts. Der bearbeitete Text wird an die Standardausgabe zurückgegeben, wenn der Dialog geschlossen wird.</p>
+      </item>
+
+      <item>
+        <title><cmd>--font</cmd>=<var>SCHRIFT</var></title>
+	<p>Die Schriftart des Textes festlegen.</p>
+      </item>
+
+      <item>
+        <title><cmd>--checkbox</cmd>=<var>TEXT</var></title>
+	<p>Enable a checkbox for use like a 'I read and accept the terms.'</p>
+      </item>
+
+      <item>
+        <title><cmd>--html</cmd></title>
+        <p>HTML-Unterstützung aktivieren.</p>
+      </item>
+
+      <item>
+        <title><cmd>--url</cmd>=<var>URL</var></title>
+	<p>Eine URL anstelle einer Datei angeben. Das funktioniert nur mit der Option --html.</p>
+      </item>
+
+    </terms>
+
+    <p>Das folgende Beispielskript zeigt, wie Sie einen Textinformationsdialog erzeugen:</p>
+
+<code>
+#!/bin/sh
+
+# You must place file "COPYING" in same folder of this script.
+FILE=`dirname $0`/COPYING
+
+zenity --text-info \
+       --title="License" \
+       --filename=$FILE \
+       --checkbox="I read and accept the terms."
+
+case $? in
+    0)
+        echo "Start installation!"
+	# next step
+	;;
+    1)
+        echo "Stop installation!"
+	;;
+    -1)
+        echo "An unexpected error has occurred."
+	;;
+esac
+</code>
+
+    <figure id="zenity-text-screenshot">
+      <title>Beispiel für einen Text-Informationsdialog</title>
+      <desc>Beispiel für einen Textinformationsdialog in <app>Zenity</app></desc>
+      <media type="image" mime="image/png" src="figures/zenity-text-screenshot.png"/>
+    </figure>
+</page>

@@ -1,0 +1,39 @@
+               The Debian GNU Compiler Collection setup
+               ========================================
+
+Please see the README.Debian in /usr/share/doc/gcc, contained in the
+gcc package for a description of the setup of the different compiler
+versions.
+
+For general discussion about the Debian toolchain (GCC, glibc, binutils)
+please use the mailing list debian-toolchain@lists.debian.org; for GCC
+specific things, please use debian-gcc@lists.debian.org.  When in doubt
+use the debian-toolchain ML.
+
+
+Maintainers of these packages
+-----------------------------
+
+Matthias Klose <doko@debian.org>
+Falk Hueffner <falk@debian.org>			(alpha-linux)
+Ludovic Brenta <ludovic@ludovic-brenta.org>	(gnat)
+Aurelien Jarno <aurel32@debian.org>		(mips*-linux)
+
+Former and/or inactive maintainers of these packages
+----------------------------------------------------
+
+Ray Dassen <jdassen@debian.org>
+Jeff Bailey <jbailey@nisa.net>			(hurd-i386)
+Joel Baker <fenton@debian.org>			(netbsd-i386)
+Randolph Chung <tausq@debian.org>		(ia64-linux)
+Philip Blundell <pb@debian.org>			(arm-linux)
+Ben Collins <bcollins@debian.org>		(sparc-linux)
+Dan Jacobowitz <dan@debian.org>			(powerpc-linux)
+Thiemo Seufer <ths@networkno.de>		(mips*-linux)
+Matt Taggart <taggart@carmen.fc.hp.com>		(hppa-linux)
+Gerhard Tonn <GerhardTonn@swol.de>		(s390-linux)
+Roman Zippel <zippel@linux-m68k.org>		(m68k-linux)
+Arthur Loiret <arthur.loiret@gmail.com>		(gdc)
+
+===============================================================================
+

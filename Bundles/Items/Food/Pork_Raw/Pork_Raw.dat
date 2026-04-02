@@ -10,4 +10,9 @@ Size_Z 0.45
 Health 10
 Food 25
 Virus 35
-ConsumeAudioClip Sounds/EatCrunchy.mp3
+
+ConsumeAudioClip Sounds/EatVenison.mp3
+Randomize_Consume_Audio_Pitch false
+Procedurally_Animate_Inertia false
+Instantiated_Item_Name_Override 514
+EquipablePrefab Items/Food/Pork_Raw/Equipable.prefab

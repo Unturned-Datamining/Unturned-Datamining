@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<page xmlns="http://projectmallard.org/1.0/" type="topic" id="list" xml:lang="cs">
+  <info>
+    <link type="guide" xref="index#dialogs"/>
+    <desc>Use the <cmd>--list</cmd> option.</desc>
+  </info>
+  <title>Dialogové okno se seznamem</title>
+    <p>
+	Use the <cmd>--list</cmd> option to create a list dialog. <app>Zenity</app> returns the entries in the first column of text of selected rows to standard output.
+    </p>
+
+    <p>Data pro dialogové okno se musí zadat sloupec po sloupci, řádek po řádku. Data lze dialogovému oknu předat i přes standardní vstup. Každá položka musí být oddělená znakem nového řádku.</p>
+
+    <p>
+	If you use the <cmd>--checklist</cmd> or <cmd>--radiolist</cmd> options, each row must start with either 'TRUE' or 'FALSE'.
+    </p>
+
+    <p>Dialogové okno se seznamem podporuje následující přepínače:</p>
+
+    <terms>
+
+      <item>
+        <title><cmd>--column</cmd>=<var>column</var></title>
+	  <p>Specifies the column headers that are displayed in the list dialog. You must specify a <cmd>--column</cmd> option for each column that you want to display in the dialog.
+	  </p>
+      </item>
+
+      <item>
+        <title><cmd>--checklist</cmd></title>
+	  <p>Určuje, že první sloupec v seznamu bude obsahovat zaškrtávací pole.</p>
+      </item>
+
+      <item>
+        <title><cmd>--radiolist</cmd></title>
+	  <p>Určuje, že první sloupec v seznamu bude obsahovat skupinový přepínač.</p>
+      </item>
+
+      <item>
+        <title><cmd>--editable</cmd></title>
+	  <p>Povolit v zobrazených položkách provádění úprav.</p>
+      </item>
+
+      <item>
+        <title><cmd>--separator</cmd>=<var>separator</var></title>
+	  <p>Určuje řetězec použitý jako oddělovač vybraných položek seznamu, které dialogové okno vrátí.</p>
+      </item>
+
+      <item>
+        <title><cmd>--print-column</cmd>=<var>column</var></title>
+	  <p>Určuje sloupec, který se má z vybraného řádku vracet. Výchozí hodnota je „1“. Pokud chcete vrátit všechny sloupce seznamu, můžete použít hodnotu „ALL“.</p>
+      </item>
+
+    </terms>
+
+    <p>
+      The following example script shows how to create a list dialog:
+    </p>
+<code>
+#!/bin/sh
+
+zenity --list \
+  --title="Choose the Bugs You Wish to View" \
+  --column="Bug Number" --column="Severity" --column="Description" \
+    992383 Normal "GtkTreeView crashes on multiple selections" \
+    293823 High "GNOME Dictionary does not handle proxy" \
+    393823 Critical "Menu editing does not work in GNOME 2.0"
+</code>
+
+
+    <figure id="zenity-list-screenshot">
+      <title>Příklad dialogového okna se seznamem</title>
+      <desc><app>Zenity</app> list dialog example</desc>
+      <media type="image" mime="image/png" src="figures/zenity-list-screenshot.png"/>
+    </figure>
+</page>

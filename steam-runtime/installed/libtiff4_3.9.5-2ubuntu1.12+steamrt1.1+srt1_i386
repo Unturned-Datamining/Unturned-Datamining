@@ -1,0 +1,18 @@
+drwxr-xr-x root/root         0 2023-03-23 16:06 ./
+drwxr-xr-x root/root         0 2023-03-23 16:06 ./usr/
+drwxr-xr-x root/root         0 2023-03-23 16:06 ./usr/share/
+drwxr-xr-x root/root         0 2023-03-23 16:06 ./usr/share/lintian/
+drwxr-xr-x root/root         0 2023-03-23 16:06 ./usr/share/lintian/overrides/
+-rw-r--r-- root/root       180 2023-03-23 11:34 ./usr/share/lintian/overrides/libtiff4
+drwxr-xr-x root/root         0 2023-03-23 16:06 ./usr/share/doc/
+drwxr-xr-x root/root         0 2023-03-23 16:06 ./usr/share/doc/libtiff4/
+-rw-r--r-- root/root      1914 2023-03-23 11:34 ./usr/share/doc/libtiff4/copyright
+-rw-r--r-- root/root      1187 2023-03-23 11:34 ./usr/share/doc/libtiff4/README.Debian
+-rw-r--r-- root/root       433 2002-10-10 05:28 ./usr/share/doc/libtiff4/TODO
+-rw-r--r-- root/root     10026 2023-03-23 16:04 ./usr/share/doc/libtiff4/changelog.Debian.i386.gz
+-rw-r--r-- root/root      2363 2004-10-30 13:44 ./usr/share/doc/libtiff4/README
+-rw-r--r-- root/root     45558 2011-04-09 20:00 ./usr/share/doc/libtiff4/changelog.gz
+drwxr-xr-x root/root         0 2023-03-23 16:06 ./usr/lib/
+drwxr-xr-x root/root         0 2023-03-23 16:06 ./usr/lib/i386-linux-gnu/
+-rw-r--r-- root/root    403088 2023-03-23 16:06 ./usr/lib/i386-linux-gnu/libtiff.so.4.3.4
+lrwxrwxrwx root/root         0 2023-03-23 16:06 ./usr/lib/i386-linux-gnu/libtiff.so.4 -> libtiff.so.4.3.4

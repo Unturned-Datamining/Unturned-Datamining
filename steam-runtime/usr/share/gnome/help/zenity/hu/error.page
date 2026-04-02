@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<page xmlns="http://projectmallard.org/1.0/" type="topic" id="error" xml:lang="hu">
+  <info>
+    <link type="guide" xref="message"/>
+    <desc>A <cmd>--error</cmd> kapcsoló használata.</desc>
+  </info>
+  <title>Hiba ablak</title>
+      <p>A <cmd>--error</cmd> kapcsolóval hiba ablakot hozhat létre. </p>
+
+      <p>A következő példa parancsfájl bemutatja a hiba ablak létrehozását:</p>
+
+<code>
+#!/bin/bash
+
+zenity --error \
+--text="A /var/log/syslog nem található."
+</code>
+
+
+      <figure id="zenity-error-screenshot">
+        <title>Példa hiba ablak</title>
+        <desc><app>Zenity</app> példa hiba ablak</desc>
+        <media type="image" mime="image/png" src="figures/zenity-error-screenshot.png"/>
+      </figure>
+</page>

@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<page xmlns="http://projectmallard.org/1.0/" type="guide" id="index" xml:lang="es">
+<info>
+  <credit type="author">
+    <name>Equipo de documentación del escritorio de Sun Java Desktop System</name>
+  </credit>
+  <credit type="author">
+    <name>Glynn Foster</name>
+  </credit>
+  <credit type="editor">
+    <name>Nicholas Curran</name>
+    <email/>
+  </credit>
+  <credit type="editor">
+    <name>Yasumichi Akahoshi</name>
+    <email>yasumichi@vinelinux.org</email>
+  </credit>
+  <license>
+   <p>Licencia libre de documentación de GNU (GFDL)</p>
+  </license>
+   <include xmlns="http://www.w3.org/2001/XInclude" href="legal.xml"/>
+</info>
+<title>Manual de Zenity</title>
+<!--links type="topic" groups="dialogs" /-->
+<section id="dialogs" style="2column">
+  <title>Diálogos</title>
+</section>
+</page>

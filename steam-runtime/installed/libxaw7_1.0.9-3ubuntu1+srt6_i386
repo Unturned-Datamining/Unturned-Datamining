@@ -1,0 +1,13 @@
+drwxr-xr-x root/root         0 2019-04-03 15:24 ./
+drwxr-xr-x root/root         0 2019-04-03 15:24 ./usr/
+drwxr-xr-x root/root         0 2019-04-03 15:24 ./usr/lib/
+drwxr-xr-x root/root         0 2019-04-03 15:24 ./usr/lib/i386-linux-gnu/
+-rw-r--r-- root/root    423836 2019-04-03 15:24 ./usr/lib/i386-linux-gnu/libXaw7.so.7.0.0
+drwxr-xr-x root/root         0 2019-04-03 15:24 ./usr/share/
+drwxr-xr-x root/root         0 2019-04-03 15:24 ./usr/share/doc/
+drwxr-xr-x root/root         0 2019-04-03 15:24 ./usr/share/doc/libxaw7/
+-rw-r--r-- root/root     16312 2011-01-12 01:14 ./usr/share/doc/libxaw7/changelog.gz
+-rw-r--r-- root/root      8843 2019-04-03 15:23 ./usr/share/doc/libxaw7/copyright
+-rw-r--r-- root/root      3548 2019-04-03 15:23 ./usr/share/doc/libxaw7/changelog.Debian.i386.gz
+lrwxrwxrwx root/root         0 2019-04-03 15:24 ./usr/lib/i386-linux-gnu/libXaw7.so.7 -> libXaw7.so.7.0.0
+lrwxrwxrwx root/root         0 2019-04-03 15:24 ./usr/lib/i386-linux-gnu/libXaw.so.7 -> libXaw7.so.7

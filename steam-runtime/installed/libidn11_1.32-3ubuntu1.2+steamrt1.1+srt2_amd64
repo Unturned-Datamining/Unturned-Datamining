@@ -1,0 +1,11 @@
+drwxr-xr-x root/root         0 2019-04-03 15:02 ./
+drwxr-xr-x root/root         0 2019-04-03 15:02 ./usr/
+drwxr-xr-x root/root         0 2019-04-03 15:02 ./usr/lib/
+drwxr-xr-x root/root         0 2019-04-03 15:02 ./usr/lib/x86_64-linux-gnu/
+-rw-r--r-- root/root    211408 2019-04-03 15:02 ./usr/lib/x86_64-linux-gnu/libidn.so.11.6.15
+drwxr-xr-x root/root         0 2019-04-03 15:02 ./usr/share/
+drwxr-xr-x root/root         0 2019-04-03 15:02 ./usr/share/doc/
+drwxr-xr-x root/root         0 2019-04-03 15:02 ./usr/share/doc/libidn11/
+-rw-r--r-- root/root     17404 2018-12-04 16:48 ./usr/share/doc/libidn11/copyright
+-rw-r--r-- root/root      5630 2019-04-03 15:00 ./usr/share/doc/libidn11/changelog.Debian.amd64.gz
+lrwxrwxrwx root/root         0 2019-04-03 15:02 ./usr/lib/x86_64-linux-gnu/libidn.so.11 -> libidn.so.11.6.15
