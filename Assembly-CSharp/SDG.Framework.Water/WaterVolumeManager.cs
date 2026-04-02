@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using SDG.Unturned;
 using UnityEngine;
 
@@ -9,6 +10,8 @@ public class WaterVolumeManager : VolumeManager<WaterVolume, WaterVolumeManager>
     /// Water volume marked as being sea level.
     /// </summary>
     public static WaterVolume seaLevelVolume;
+
+    private static List<WaterVolume> tempVolumes = new List<WaterVolume>();
 
     private EGraphicQuality oldWaterQuality;
 
@@ -24,6 +27,36 @@ public class WaterVolumeManager : VolumeManager<WaterVolume, WaterVolumeManager>
             }
             return -1024f;
         }
+    }
+
+    /// <summary>
+    /// Prioritizes volumes with a fishing override.
+    /// </summary>
+    public WaterVolume GetFishingVolume(Vector3 position)
+    {
+        tempVolumes.Clear();
+        foreach (WaterVolume allVolume in allVolumes)
+        {
+            if (allVolume.GetFishSpawnTable() != null)
+            {
+                if (allVolume.IsPositionInsideVolume(position))
+                {
+                    return allVolume;
+                }
+            }
+            else
+            {
+                tempVolumes.Add(allVolume);
+            }
+        }
+        foreach (WaterVolume tempVolume in tempVolumes)
+        {
+            if (tempVolume.IsPositionInsideVolume(position))
+            {
+                return tempVolume;
+            }
+        }
+        return null;
     }
 
     public WaterVolumeManager()

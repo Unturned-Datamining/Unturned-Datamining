@@ -262,7 +262,7 @@ public class MenuConfigurationGraphicsUI
 
     private static void onSwappedFoliageState(SleekButtonState button, int index)
     {
-        GraphicsSettings.foliageQuality = (EGraphicQuality)(index + 1);
+        GraphicsSettings.foliageQuality = (EGraphicQuality)index;
         GraphicsSettings.apply("changed foliage quality");
         updatePerfWarnings();
     }
@@ -381,7 +381,7 @@ public class MenuConfigurationGraphicsUI
         antiAliasingButton.state = (int)GraphicsSettings.antiAliasingType;
         anisotropicFilteringButton.state = (int)GraphicsSettings.anisotropicFilteringMode;
         effectButton.state = (int)(GraphicsSettings.effectQuality - 1);
-        foliageButton.state = (int)(GraphicsSettings.foliageQuality - 1);
+        foliageButton.state = (int)GraphicsSettings.foliageQuality;
         sunShaftsButton.state = (int)GraphicsSettings.sunShaftsQuality;
         lightingButton.state = (int)GraphicsSettings.lightingQuality;
         reflectionButton.state = (int)GraphicsSettings.reflectionQuality;
@@ -691,7 +691,7 @@ public class MenuConfigurationGraphicsUI
         effectButton.onSwappedState = onSwappedEffectState;
         graphicsBox.AddChild(effectButton);
         num += 40;
-        foliageButton = new SleekButtonState(new GUIContent(localization.format("Low")), new GUIContent(localization.format("Medium")), new GUIContent(localization.format("High")), new GUIContent(localization.format("Ultra")));
+        foliageButton = new SleekButtonState(new GUIContent(localization.format("Off")), new GUIContent(localization.format("Low")), new GUIContent(localization.format("Medium")), new GUIContent(localization.format("High")), new GUIContent(localization.format("Ultra")));
         foliageButton.PositionOffset_X = 205f;
         foliageButton.PositionOffset_Y = num;
         foliageButton.SizeOffset_X = 200f;

@@ -35,4 +35,12 @@ internal class LevelObjectRefComponent : MonoBehaviour, ICraftingTagProvider
     {
         modHook = GetComponent<CraftingTagProviderComponent>();
     }
+
+    private void OnDestroy()
+    {
+        if (levelObjectOwner != null)
+        {
+            levelObjectOwner.OnDestroy();
+        }
+    }
 }

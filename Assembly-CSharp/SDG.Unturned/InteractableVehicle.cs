@@ -2931,11 +2931,12 @@ public class InteractableVehicle : Interactable, IExplosionDamageable, IEquatabl
             }
             if (shouldAllow)
             {
+                vehicle.transform.GetPositionAndRotation(out var position, out var rotation);
                 HookInfo hookInfo = new HookInfo();
                 hookInfo.target = vehicle.transform;
                 hookInfo.vehicle = vehicle;
-                hookInfo.deltaPosition = hook.InverseTransformPoint(vehicle.transform.position);
-                hookInfo.deltaRotation = Quaternion.FromToRotation(hook.forward, vehicle.transform.forward);
+                hookInfo.deltaPosition = hook.InverseTransformPoint(position);
+                hookInfo.deltaRotation = hook.InverseTransformRotation(rotation);
                 hooked.Add(hookInfo);
                 vehicle.isHooked = true;
                 ignoreCollisionWithVehicle(vehicle, shouldIgnore: true);
@@ -3619,10 +3620,19 @@ public class InteractableVehicle : Interactable, IExplosionDamageable, IEquatabl
     {
         foreach (HookInfo item in hooked)
         {
-            if (item != null && !(item.target == null))
+            if (item != null && !(item.vehicle == null))
             {
-                item.target.position = hook.TransformPoint(item.deltaPosition);
-                item.target.rotation = hook.rotation * item.deltaRotation;
+                Vector3 position = hook.TransformPoint(item.deltaPosition);
+                Quaternion quaternion = hook.rotation * item.deltaRotation;
+                if (item.vehicle.rootRigidbody != null)
+                {
+                    item.vehicle.rootRigidbody.MovePosition(position);
+                    item.vehicle.rootRigidbody.MoveRotation(quaternion);
+                }
+                else
+                {
+                    item.vehicle.transform.SetPositionAndRotation(position, quaternion);
+                }
             }
         }
     }

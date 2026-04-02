@@ -365,7 +365,7 @@ public class UseableBarricade : Useable
                 return false;
             }
         }
-        if (!equippedBarricadeAsset.AllowPlacementInsideClipVolumes && VolumeManager<PlayerClipVolume, PlayerClipVolumeManager>.Get().IsPositionInsideAnyVolume(pointInWorldSpace))
+        if (!equippedBarricadeAsset.AllowPlacementInsideClipVolumes && !Provider.modeConfigData.Gameplay.Bypass_No_Building_Zones && VolumeManager<PlayerClipVolume, PlayerClipVolumeManager>.Get().IsPositionInsideAnyVolume(pointInWorldSpace))
         {
             if (base.channel.IsLocalPlayer)
             {

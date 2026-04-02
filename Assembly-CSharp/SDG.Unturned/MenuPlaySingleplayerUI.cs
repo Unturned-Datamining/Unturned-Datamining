@@ -126,7 +126,7 @@ public class MenuPlaySingleplayerUI
             previewImage.Texture = ReadWrite.readTextureFromFile(previewImageFilePath);
         }
         float num = creditsBox.PositionOffset_Y;
-        if (selectedLevel.configData.Creators.Length != 0 || selectedLevel.configData.Collaborators.Length != 0 || selectedLevel.configData.Thanks.Length != 0)
+        if (selectedLevel.configData.Creators.Length != 0 || selectedLevel.configData.Collaborators.Length != 0 || selectedLevel.configData.Thanks.Length != 0 || selectedLevel.configData.CustomCredits.Count > 0)
         {
             int num2 = 0;
             string text = string.Empty;
@@ -170,6 +170,25 @@ public class MenuPlaySingleplayerUI
                     num2 += 20;
                 }
             }
+            if (selectedLevel.configData.CustomCredits.Count > 0 && local != null)
+            {
+                foreach (KeyValuePair<string, string[]> customCredit in selectedLevel.configData.CustomCredits)
+                {
+                    if (text.Length > 0)
+                    {
+                        text += "\n\n";
+                        num2 += 30;
+                    }
+                    text += local.format(customCredit.Key);
+                    num2 += 20;
+                    string[] value = customCredit.Value;
+                    foreach (string text2 in value)
+                    {
+                        text = text + "\n" + text2;
+                        num2 += 20;
+                    }
+                }
+            }
             num2 = Mathf.Max(num2, 40);
             creditsBox.SizeOffset_Y = num2;
             creditsBox.Text = text;
@@ -209,13 +228,13 @@ public class MenuPlaySingleplayerUI
         {
             itemButton.IsVisible = false;
         }
-        string text2 = selectedLevel.feedbackUrl;
-        if (!string.IsNullOrEmpty(text2) && !WebUtils.CanParseThirdPartyUrl(text2))
+        string text3 = selectedLevel.feedbackUrl;
+        if (!string.IsNullOrEmpty(text3) && !WebUtils.CanParseThirdPartyUrl(text3))
         {
-            UnturnedLog.warn("Ignoring potentially unsafe level feedback url {0}", text2);
-            text2 = null;
+            UnturnedLog.warn("Ignoring potentially unsafe level feedback url {0}", text3);
+            text3 = null;
         }
-        if (string.IsNullOrEmpty(text2))
+        if (string.IsNullOrEmpty(text3))
         {
             feedbackButton.IsVisible = false;
         }

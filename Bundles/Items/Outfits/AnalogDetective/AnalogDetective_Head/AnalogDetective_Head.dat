@@ -3,4 +3,7 @@ Type Mask
 
 Pro
 
+Mirror_Left_Handed_Model false
+
 Hair_Override HairColor
+Hair_Override_NonGoldColor #c1b9aa

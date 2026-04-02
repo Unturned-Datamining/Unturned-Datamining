@@ -205,7 +205,7 @@ public class MenuConfigurationOptionsUI
 
     private static void onToggledGoreToggle(ISleekToggle toggle, bool state)
     {
-        OptionsSettings.gore = state;
+        OptionsSettings.EnableGore = state;
     }
 
     private static void onToggledFilterToggle(ISleekToggle toggle, bool state)
@@ -468,7 +468,7 @@ public class MenuConfigurationOptionsUI
         fovLabel.Text = FormatFieldOfViewTooltip();
         debugToggle.Value = OptionsSettings.debug;
         timerToggle.Value = OptionsSettings.timer;
-        goreToggle.Value = OptionsSettings.gore;
+        goreToggle.Value = OptionsSettings.EnableGore;
         filterToggle.Value = OptionsSettings.filter;
         chatTextToggle.Value = OptionsSettings.chatText;
         chatVoiceInToggle.Value = OptionsSettings.chatVoiceIn;

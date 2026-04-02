@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.Reflection;
 using System.Text;
 using SDG.HostBans;
 using SDG.Provider;
@@ -885,30 +886,47 @@ public class MenuPlayServerInfoUI
                 {
                     continue;
                 }
-                bool flag = string.Equals(value13, "Gameplay.Disable_Motion_Sickness_Options");
-                string fieldName = value13.Substring(0, num3);
-                string fieldName2 = value13.Substring(num3 + 1, num4 - num3 - 1);
-                string text3 = value13.Substring(num4 + 1);
-                string text4 = null;
+                string text3 = value13.Substring(0, num3);
+                string text4 = value13.Substring(num3 + 1, num4 - num3 - 1);
+                string text5 = value13.Substring(num4 + 1);
+                string text6 = null;
+                bool flag = false;
+                FieldInfo field = typeof(ModeConfigData).GetField(text3);
+                if (field == null)
+                {
+                    UnturnedLog.warn("Unknown config category \"" + text3 + "\" in \"" + value13 + "\"");
+                }
+                else
+                {
+                    FieldInfo field2 = field.FieldType.GetField(text4);
+                    if (field2 == null)
+                    {
+                        UnturnedLog.warn("Unknown config field \"" + text4 + "\" in \"" + value13 + "\"");
+                    }
+                    else
+                    {
+                        flag = field2.GetCustomAttribute<ConfigWarnIfTrueAttribute>() != null;
+                    }
+                }
                 float result7;
                 int result8;
-                if (text3 == "T")
+                if (text5 == "T")
                 {
-                    text4 = localization.format("Yes");
+                    text6 = localization.format("Yes");
                 }
-                else if (text3 == "F")
+                else if (text5 == "F")
                 {
-                    text4 = localization.format("No");
+                    text6 = localization.format("No");
                 }
-                else if (float.TryParse(text3, NumberStyles.Any, CultureInfo.InvariantCulture, out result7))
+                else if (float.TryParse(text5, NumberStyles.Any, CultureInfo.InvariantCulture, out result7))
                 {
-                    text4 = result7.ToString();
+                    text6 = result7.ToString();
                 }
-                else if (int.TryParse(text3, NumberStyles.Any, CultureInfo.InvariantCulture, out result8))
+                else if (int.TryParse(text5, NumberStyles.Any, CultureInfo.InvariantCulture, out result8))
                 {
-                    text4 = result8.ToString();
+                    text6 = result8.ToString();
                 }
-                if (string.IsNullOrEmpty(text4))
+                if (string.IsNullOrEmpty(text6))
                 {
                     ISleekLabel sleekLabel2 = Glazier.Get().CreateLabel();
                     sleekLabel2.PositionOffset_X = 5f;
@@ -930,7 +948,7 @@ public class MenuPlayServerInfoUI
                     sleekLabel3.SizeOffset_Y = 30f;
                     sleekLabel3.SizeScale_X = 0.25f;
                     sleekLabel3.TextAlignment = TextAnchor.MiddleRight;
-                    sleekLabel3.Text = MenuPlayConfigUI.sanitizeName(fieldName);
+                    sleekLabel3.Text = MenuPlayConfigUI.sanitizeName(text3);
                     sleekLabel3.TextColor = new SleekColor(ESleekTint.FONT, 0.5f);
                     configBox.AddChild(sleekLabel3);
                     ISleekLabel sleekLabel4 = Glazier.Get().CreateLabel();
@@ -941,7 +959,7 @@ public class MenuPlayServerInfoUI
                     sleekLabel4.SizeOffset_Y = 30f;
                     sleekLabel4.SizeScale_X = 0.75f;
                     sleekLabel4.TextAlignment = TextAnchor.MiddleLeft;
-                    sleekLabel4.Text = localization.format("Rule", MenuPlayConfigUI.sanitizeName(fieldName2), text4);
+                    sleekLabel4.Text = localization.format("Rule", MenuPlayConfigUI.sanitizeName(text4), text6);
                     if (flag)
                     {
                         sleekLabel4.TextColor = ESleekTint.BAD;

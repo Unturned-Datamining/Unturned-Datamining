@@ -254,7 +254,6 @@ public class ResourceSpawnpoint
         if (asset != null && asset.isForage)
         {
             flag2 = true;
-            flag3 = true;
             model?.Find("Forage")?.gameObject.SetActive(isAlive);
         }
         bool flag4 = areConditionsMet && (Dedicator.IsDedicatedServer || flag);

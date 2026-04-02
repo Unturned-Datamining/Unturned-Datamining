@@ -6,6 +6,20 @@ Size_X 1
 Size_Y 1
 Size_Z 0.55
 
+Blueprints
+[
+	{
+		CategoryTag "cdb2df24b76d4c6e9d8411c940d8337f" // Gear
+		InputItems "ebf1b6d9f81f46b588297c2ef9b03c67 x 2" // Clay
+		OutputItems this
+		RequiresNearbyCraftingTags
+		[
+			"192e071c94d1419b991a430d42fe2be3" // Pottery Kiln
+		]
+		Effect "84347b13028340b8976033c08675d458" // Wrench
+	}
+]
+
 Actions 1
 Action_0_Type Blueprint
 Action_0_Source 1915

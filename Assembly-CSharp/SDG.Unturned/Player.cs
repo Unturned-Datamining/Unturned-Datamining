@@ -1095,6 +1095,11 @@ public class Player : MonoBehaviour, IDialogueTarget, IExplosionDamageable, IEqu
         {
             channel.owner.incrementStatTrackerValue(equipment.asset.sharedSkinLookupID, stat);
         }
+        InteractableVehicle vehicle = movement.getVehicle();
+        if (vehicle != null && movement.getSeat() == 0 && vehicle.asset != null)
+        {
+            channel.owner.incrementStatTrackerValue(vehicle, stat);
+        }
     }
 
     public void sendStat(EPlayerKill kill)

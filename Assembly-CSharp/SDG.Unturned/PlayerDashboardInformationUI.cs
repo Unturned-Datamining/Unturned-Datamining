@@ -953,7 +953,7 @@ public class PlayerDashboardInformationUI
         }
         PlayerQuest playerQuest = displayedQuests[num];
         PlayerDashboardUI.close();
-        PlayerNPCQuestUI.open(playerQuest.asset, null, null, EQuestViewMode.DETAILS);
+        PlayerNPCQuestUI.open(playerQuest.asset, null, null, null, EQuestViewMode.DETAILS);
     }
 
     private static void onClickedQuestsButton(ISleekElement button)

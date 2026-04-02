@@ -96,7 +96,7 @@ public class Zombie : MonoBehaviour, IExplosionDamageable, IEquatable<IExplosion
 
     public bool isUpdated;
 
-    private LegacyAIPath seeker;
+    private IUnturnedPathfindingMovementComponentInterface seeker;
 
     private Player player;
 
@@ -709,7 +709,7 @@ public class Zombie : MonoBehaviour, IExplosionDamageable, IEquatable<IExplosion
             }
             if (Provider.isServer)
             {
-                seeker.canMove = true;
+                seeker.CanMove = true;
             }
         }
     }
@@ -751,7 +751,7 @@ public class Zombie : MonoBehaviour, IExplosionDamageable, IEquatable<IExplosion
             isSpittingAcid = false;
             if (Provider.isServer)
             {
-                seeker.canMove = true;
+                seeker.CanMove = true;
             }
         }
     }
@@ -800,7 +800,7 @@ public class Zombie : MonoBehaviour, IExplosionDamageable, IEquatable<IExplosion
             isChargingSpark = false;
             if (Provider.isServer)
             {
-                seeker.canMove = true;
+                seeker.CanMove = true;
             }
         }
     }
@@ -857,7 +857,7 @@ public class Zombie : MonoBehaviour, IExplosionDamageable, IEquatable<IExplosion
             isStompingWind = false;
             if (Provider.isServer)
             {
-                seeker.canMove = true;
+                seeker.CanMove = true;
             }
         }
     }
@@ -901,7 +901,7 @@ public class Zombie : MonoBehaviour, IExplosionDamageable, IEquatable<IExplosion
             }
             if (Provider.isServer)
             {
-                seeker.canMove = true;
+                seeker.CanMove = true;
             }
         }
     }
@@ -1151,8 +1151,8 @@ public class Zombie : MonoBehaviour, IExplosionDamageable, IEquatable<IExplosion
             stuckSearchTimer = 0f;
             player = newPlayer;
             target.position = player.transform.position;
-            seeker.canSearch = true;
-            seeker.canMove = true;
+            seeker.CanSearch = true;
+            seeker.CanMove = true;
             if (isMega)
             {
                 path = EZombiePath.RUSH;
@@ -1260,8 +1260,8 @@ public class Zombie : MonoBehaviour, IExplosionDamageable, IEquatable<IExplosion
             lastStuck = Time.time;
             stuckSearchTimer = 0f;
             target.position = newPosition;
-            seeker.canSearch = true;
-            seeker.canMove = true;
+            seeker.CanSearch = true;
+            seeker.CanMove = true;
         }
         else if ((newPosition - base.transform.position).sqrMagnitude < (target.position - base.transform.position).sqrMagnitude)
         {
@@ -1295,8 +1295,8 @@ public class Zombie : MonoBehaviour, IExplosionDamageable, IEquatable<IExplosion
         targetObstructionVehicle = null;
         targetPassengerVehicle = null;
         targetObject = null;
-        seeker.canSearch = false;
-        seeker.canMove = false;
+        seeker.CanSearch = false;
+        seeker.CanMove = false;
         target.position = base.transform.position;
     }
 
@@ -1310,7 +1310,7 @@ public class Zombie : MonoBehaviour, IExplosionDamageable, IEquatable<IExplosion
         StopStompingWind();
         StopChargingSpark();
         isMoving = false;
-        seeker.canMove = false;
+        seeker.CanMove = false;
         if (speciality == EZombieSpeciality.CRAWLER)
         {
             float value = UnityEngine.Random.value;
@@ -1521,7 +1521,7 @@ public class Zombie : MonoBehaviour, IExplosionDamageable, IEquatable<IExplosion
             SetCapsuleRadiusAndHeight(0.75f, 2f);
             if (Provider.isServer)
             {
-                seeker.speed = 6f;
+                seeker.Speed = 6f;
             }
             return;
         }
@@ -1538,42 +1538,42 @@ public class Zombie : MonoBehaviour, IExplosionDamageable, IEquatable<IExplosion
         {
             if (Provider.modeConfigData.Zombies.Slow_Movement)
             {
-                seeker.speed = 2.5f;
+                seeker.Speed = 2.5f;
             }
             else
             {
-                seeker.speed = 3f;
+                seeker.Speed = 3f;
             }
         }
         else if (speciality == EZombieSpeciality.SPRINTER || speciality.IsDLVolatile())
         {
             if (Provider.modeConfigData.Zombies.Slow_Movement)
             {
-                seeker.speed = 6f;
+                seeker.Speed = 6f;
             }
             else
             {
-                seeker.speed = 6.5f;
+                seeker.Speed = 6.5f;
             }
         }
         else if (speciality == EZombieSpeciality.FLANKER_FRIENDLY || speciality == EZombieSpeciality.FLANKER_STALK)
         {
             if (Provider.modeConfigData.Zombies.Slow_Movement)
             {
-                seeker.speed = 5.5f;
+                seeker.Speed = 5.5f;
             }
             else
             {
-                seeker.speed = 6f;
+                seeker.Speed = 6f;
             }
         }
         else if (Provider.modeConfigData.Zombies.Slow_Movement)
         {
-            seeker.speed = 4.5f;
+            seeker.Speed = 4.5f;
         }
         else
         {
-            seeker.speed = 5.5f;
+            seeker.Speed = 5.5f;
         }
     }
 
@@ -1676,8 +1676,8 @@ public class Zombie : MonoBehaviour, IExplosionDamageable, IEquatable<IExplosion
         targetObstructionVehicle = null;
         targetPassengerVehicle = null;
         targetObject = null;
-        seeker.canSearch = false;
-        seeker.canMove = false;
+        seeker.CanSearch = false;
+        seeker.CanMove = false;
         health = LevelZombies.tables[type].health;
         if (speciality == EZombieSpeciality.CRAWLER || speciality.IsDLVolatile())
         {
@@ -1928,32 +1928,32 @@ public class Zombie : MonoBehaviour, IExplosionDamageable, IEquatable<IExplosion
             num3 = MathfEx.HorizontalDistanceSquared(targetBarricade.position, base.transform.position);
             num4 = Mathf.Abs(targetBarricade.position.y - base.transform.position.y);
             target.position = targetBarricade.position;
-            seeker.canTurn = false;
-            seeker.targetDirection = targetBarricade.position - base.transform.position;
+            seeker.CanTurn = false;
+            seeker.TargetDirection = targetBarricade.position - base.transform.position;
         }
         else if (targetStructure != null)
         {
             num3 = 0f;
             num4 = 0f;
             target.position = base.transform.position;
-            seeker.canTurn = false;
-            seeker.targetDirection = targetStructure.position - base.transform.position;
+            seeker.CanTurn = false;
+            seeker.TargetDirection = targetStructure.position - base.transform.position;
         }
         else if (targetObstructionVehicle != null)
         {
             num3 = MathfEx.HorizontalDistanceSquared(targetObstructionVehicle.transform.position, base.transform.position);
             num4 = Mathf.Abs(targetObstructionVehicle.transform.position.y - base.transform.position.y);
             target.position = targetObstructionVehicle.transform.position;
-            seeker.canTurn = false;
-            seeker.targetDirection = targetObstructionVehicle.transform.position - base.transform.position;
+            seeker.CanTurn = false;
+            seeker.TargetDirection = targetObstructionVehicle.transform.position - base.transform.position;
         }
         else if (targetObject != null)
         {
             num3 = 0f;
             num4 = 0f;
             target.position = base.transform.position;
-            seeker.canTurn = false;
-            seeker.targetDirection = targetObject.transform.position - base.transform.position;
+            seeker.CanTurn = false;
+            seeker.TargetDirection = targetObject.transform.position - base.transform.position;
         }
         else if (player != null)
         {
@@ -1974,7 +1974,7 @@ public class Zombie : MonoBehaviour, IExplosionDamageable, IEquatable<IExplosion
                 num3 = MathfEx.HorizontalDistanceSquared(targetPassengerVehicle.transform.position, base.transform.position);
                 num4 = Mathf.Abs(targetPassengerVehicle.transform.position.y - base.transform.position.y);
                 target.position = targetPassengerVehicle.transform.position;
-                seeker.canTurn = true;
+                seeker.CanTurn = true;
             }
             else
             {
@@ -1985,85 +1985,85 @@ public class Zombie : MonoBehaviour, IExplosionDamageable, IEquatable<IExplosion
                 {
                     if (num3 > 100f)
                     {
-                        seeker.canTurn = true;
+                        seeker.CanTurn = true;
                         target.position += player.transform.right * 9f + player.transform.forward * -4f;
                     }
                     else if (num3 > 20f || Vector3.Dot((base.transform.position - player.transform.position).normalized, player.transform.forward) > 0f)
                     {
-                        seeker.canTurn = true;
+                        seeker.CanTurn = true;
                         target.position += player.transform.right * 3f + player.transform.forward * -3f;
                     }
                     else if (num3 > 4f)
                     {
-                        seeker.canTurn = true;
+                        seeker.CanTurn = true;
                         target.position -= player.transform.forward;
                     }
                     else
                     {
-                        seeker.canTurn = false;
-                        seeker.targetDirection = player.transform.position - base.transform.position;
+                        seeker.CanTurn = false;
+                        seeker.TargetDirection = player.transform.position - base.transform.position;
                     }
                 }
                 else if (path == EZombiePath.RIGHT_FLANK)
                 {
                     if (num3 > 100f)
                     {
-                        seeker.canTurn = true;
+                        seeker.CanTurn = true;
                         target.position += player.transform.right * -9f + player.transform.forward * -4f;
                     }
                     else if (num3 > 20f || Vector3.Dot((base.transform.position - player.transform.position).normalized, player.transform.forward) > 0f)
                     {
-                        seeker.canTurn = true;
+                        seeker.CanTurn = true;
                         target.position += player.transform.right * -3f + player.transform.forward * -3f;
                     }
                     else if (num3 > 4f)
                     {
-                        seeker.canTurn = true;
+                        seeker.CanTurn = true;
                         target.position -= player.transform.forward;
                     }
                     else
                     {
-                        seeker.canTurn = false;
-                        seeker.targetDirection = player.transform.position - base.transform.position;
+                        seeker.CanTurn = false;
+                        seeker.TargetDirection = player.transform.position - base.transform.position;
                     }
                 }
                 else if (path == EZombiePath.LEFT)
                 {
                     if (num3 > 4f)
                     {
-                        seeker.canTurn = true;
+                        seeker.CanTurn = true;
                         target.position -= base.transform.right;
                     }
                     else
                     {
-                        seeker.canTurn = false;
-                        seeker.targetDirection = player.transform.position - base.transform.position;
+                        seeker.CanTurn = false;
+                        seeker.TargetDirection = player.transform.position - base.transform.position;
                     }
                 }
                 else if (path == EZombiePath.RIGHT)
                 {
                     if (num3 > 4f)
                     {
-                        seeker.canTurn = true;
+                        seeker.CanTurn = true;
                         target.position += base.transform.right;
                     }
                     else
                     {
-                        seeker.canTurn = false;
-                        seeker.targetDirection = player.transform.position - base.transform.position;
+                        seeker.CanTurn = false;
+                        seeker.TargetDirection = player.transform.position - base.transform.position;
                     }
                 }
                 else if (path == EZombiePath.RUSH)
                 {
                     if (num3 > 4f)
                     {
-                        seeker.canTurn = true;
+                        seeker.CanTurn = true;
                         target.position -= base.transform.forward;
                     }
                     else
                     {
-                        seeker.canTurn = false;
-                        seeker.targetDirection = player.transform.position - base.transform.position;
+                        seeker.CanTurn = false;
+                        seeker.TargetDirection = player.transform.position - base.transform.position;
                     }
                 }
                 if (!Dedicator.IsDedicatedServer && speciality == EZombieSpeciality.SPRINTER)
@@ -2076,7 +2076,7 @@ public class Zombie : MonoBehaviour, IExplosionDamageable, IEquatable<IExplosion
         {
             num3 = MathfEx.HorizontalDistanceSquared(target.position, base.transform.position);
             num4 = Mathf.Abs(target.position.y - base.transform.position.y);
-            seeker.canTurn = true;
+            seeker.CanTurn = true;
         }
         isMoving = num3 > 3f;
         if (!isWandering && num3 > 4096f && (player == null || !zombieRegion.HasInfiniteAgroRange))
@@ -2124,27 +2124,27 @@ public class Zombie : MonoBehaviour, IExplosionDamageable, IEquatable<IExplosion
                         {
                             specialUseDelay *= 0.5f;
                         }
-                        seeker.canMove = false;
+                        seeker.CanMove = false;
                         ZombieManager.sendZombieThrow(this);
                         break;
                     case EAbilityChoice.SpitAcid:
                         specialUseDelay = UnityEngine.Random.Range(4f, 8f);
-                        seeker.canMove = false;
+                        seeker.CanMove = false;
                         ZombieManager.sendZombieSpit(this);
                         break;
                     case EAbilityChoice.Stomp:
                         specialUseDelay = UnityEngine.Random.Range(4f, 8f);
-                        seeker.canMove = false;
+                        seeker.CanMove = false;
                         ZombieManager.sendZombieStomp(this);
                         break;
                     case EAbilityChoice.BreatheFire:
                         specialUseDelay = UnityEngine.Random.Range(4f, 8f);
-                        seeker.canMove = false;
+                        seeker.CanMove = false;
                         ZombieManager.sendZombieBreath(this);
                         break;
                     case EAbilityChoice.ElectricShock:
                         specialUseDelay = UnityEngine.Random.Range(4f, 8f);
-                        seeker.canMove = false;
+                        seeker.CanMove = false;
                         ZombieManager.sendZombieCharge(this);
                         break;
                     case EAbilityChoice.Flashbang:
@@ -2368,7 +2368,7 @@ public class Zombie : MonoBehaviour, IExplosionDamageable, IEquatable<IExplosion
         }
         if (seeker != null)
         {
-            seeker.move(num);
+            seeker.Move(num);
         }
     }
 
@@ -2698,7 +2698,7 @@ public class Zombie : MonoBehaviour, IExplosionDamageable, IEquatable<IExplosion
             lastStuck = Time.time;
             stuckSearchTimer = 0f;
             isStunned = false;
-            seeker.canMove = true;
+            seeker.CanMove = true;
         }
         if (isLeaving && Time.time - lastLeave > leaveTime)
         {
@@ -2728,11 +2728,11 @@ public class Zombie : MonoBehaviour, IExplosionDamageable, IEquatable<IExplosion
         updateDifficulty();
         if (Provider.isServer)
         {
-            seeker = GetComponent<LegacyAIPath>();
+            seeker = UnturnedPathfinding.Get().CreateMovementComponentForZombie(this);
             GetComponent<CharacterController>().enableOverlapRecovery = false;
             target = base.transform.Find("Target");
             target.parent = null;
-            seeker.target = target;
+            seeker.TargetTransform = target;
             reset();
         }
         else
@@ -2824,12 +2824,15 @@ public class Zombie : MonoBehaviour, IExplosionDamageable, IEquatable<IExplosion
 
     private void PlayOneShot(AudioClip[] clips)
     {
-        AudioClip clip = clips[UnityEngine.Random.Range(0, clips.Length)];
-        OneShotAudioParameters oneShotAudioParameters = new OneShotAudioParameters(base.transform, clip);
-        oneShotAudioParameters.volume = 0.5f;
-        oneShotAudioParameters.pitch = GetRandomPitch();
-        oneShotAudioParameters.SetLinearRolloff(1f, 32f);
-        oneShotAudioParameters.Play();
+        if (clips != null && clips.Length >= 1)
+        {
+            AudioClip clip = clips[UnityEngine.Random.Range(0, clips.Length)];
+            OneShotAudioParameters oneShotAudioParameters = new OneShotAudioParameters(base.transform, clip);
+            oneShotAudioParameters.volume = 0.5f;
+            oneShotAudioParameters.pitch = GetRandomPitch();
+            oneShotAudioParameters.SetLinearRolloff(1f, 32f);
+            oneShotAudioParameters.Play();
+        }
     }
 
     private float GetRandomPitch()

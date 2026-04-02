@@ -417,16 +417,6 @@ public class SteamServerAdvertisement
         this.infoSource = infoSource;
     }
 
-    public SteamServerAdvertisement(string newName, EGameMode newMode, bool newVACSecure, bool newBattlEyeEnabled, bool newPro)
-    {
-        _name = newName;
-        ProfanityFilter.ApplyFilter(OptionsSettings.filter, ref _name);
-        _mode = newMode;
-        IsVACSecure = newVACSecure;
-        IsBattlEyeSecure = newBattlEyeEnabled;
-        _isPro = newPro;
-    }
-
     public SteamServerAdvertisement(CSteamID steamId)
     {
         _steamID = steamId;

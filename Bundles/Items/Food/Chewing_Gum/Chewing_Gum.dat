@@ -35,4 +35,6 @@ Blueprints
 	}
 ]
 
-ConsumeAudioClip Sounds/EatSquishy.mp3
+ConsumeAudioClip Sounds/EatGum.mp3
+Procedurally_Animate_Inertia false
+EquipablePrefab Items/Food/Chewing_Gum/Equipable.prefab

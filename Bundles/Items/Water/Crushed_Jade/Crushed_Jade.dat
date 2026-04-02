@@ -7,8 +7,9 @@ Size_X 1
 Size_Y 1
 Size_Z 0.3
 
-Food 15
+Food 10
 Water 10
+Disinfectant 5
 
 Blueprints
 [

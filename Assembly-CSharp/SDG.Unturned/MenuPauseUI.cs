@@ -81,7 +81,7 @@ public class MenuPauseUI
         }
         else
         {
-            Provider.provider.browserService.open("https://bsky.app/profile/nelson.smartlydressed.games");
+            Provider.provider.browserService.open("https://bsky.app/profile/smartlydressedgames.com");
         }
     }
 

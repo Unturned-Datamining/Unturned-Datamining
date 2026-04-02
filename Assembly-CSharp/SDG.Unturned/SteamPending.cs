@@ -40,10 +40,21 @@ public class SteamPending : SteamConnectedClientBase
 
     public int glassesItem;
 
+    /// <summary>
+    /// Steam itemdef IDs of equipped weapon and vehicle skins.
+    /// </summary>
     public int[] skinItems;
 
+    /// <summary>
+    /// Unique per-item tags.
+    /// Indices correspond to those in skinItems array.
+    /// </summary>
     public string[] skinTags;
 
+    /// <summary>
+    /// Unique per-item dynamic properties.
+    /// Indices correspond to those in skinItems array.
+    /// </summary>
     public string[] skinDynamicProps;
 
     public ulong packageShirt;

@@ -130,4 +130,5 @@ Asset
 		}
 	]
 	Ambient_Audio_Clip Effects/Weather/DefaultRainAmbience.ogg
+	Fish_Bite_Interval_Multiplier 0.8
 }

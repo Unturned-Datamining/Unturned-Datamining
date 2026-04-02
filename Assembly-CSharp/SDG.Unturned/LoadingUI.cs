@@ -416,7 +416,7 @@ public class LoadingUI : MonoBehaviour
         NotifyLevelLoadingProgress(0f);
         Local local = Localization.read("/Menu/MenuTips.dat");
         int num = (int)tip;
-        int maxExclusive = 40;
+        int maxExclusive = 43;
         int num2;
         do
         {
@@ -465,6 +465,9 @@ public class LoadingUI : MonoBehaviour
             ELoadingTip.WORKSTATION_MEDICINE => local.format("WorkstationMedicine"), 
             ELoadingTip.WORKSTATION_DYE => local.format("WorkstationDye"), 
             ELoadingTip.WORKSTATION_CLOTHES => local.format("WorkstationClothes"), 
+            ELoadingTip.WORKSTATION_POTTERY => local.format("WorkstationPottery"), 
+            ELoadingTip.MINING_CLAY => local.format("MiningClay"), 
+            ELoadingTip.FISHING => local.format("Fishing"), 
             _ => "#" + tip, 
         }));
         if (Level.info != null)
@@ -514,7 +517,7 @@ public class LoadingUI : MonoBehaviour
             {
                 loadingProgressBar.DescriptionText = localization.format("Loading_Level_Edit", localizedName);
             }
-            if (Level.info.configData.Creators.Length != 0 || Level.info.configData.Collaborators.Length != 0 || Level.info.configData.Thanks.Length != 0)
+            if (Level.info.configData.Creators.Length != 0 || Level.info.configData.Collaborators.Length != 0 || Level.info.configData.Thanks.Length != 0 || Level.info.configData.CustomCredits.Count > 0)
             {
                 StringBuilder stringBuilder = new StringBuilder();
                 if (Level.info.configData.Creators.Length != 0)
@@ -556,6 +559,25 @@ public class LoadingUI : MonoBehaviour
                     for (int k = 0; k < Level.info.configData.Thanks.Length; k++)
                     {
                         stringBuilder.AppendLine(Level.info.configData.Thanks[k]);
+                    }
+                }
+                if (Level.info.configData.CustomCredits.Count > 0 && local2 != null)
+                {
+                    foreach (KeyValuePair<string, string[]> customCredit in Level.info.configData.CustomCredits)
+                    {
+                        if (stringBuilder.Length > 0)
+                        {
+                            stringBuilder.AppendLine();
+                        }
+                        stringBuilder.Append("<color=#f0f0f0>");
+                        stringBuilder.Append(local2.format(customCredit.Key));
+                        stringBuilder.AppendLine("</color>");
+                        stringBuilder.AppendLine();
+                        string[] value = customCredit.Value;
+                        foreach (string value2 in value)
+                        {
+                            stringBuilder.AppendLine(value2);
+                        }
                     }
                 }
                 creditsLabel.Text = stringBuilder.ToString();

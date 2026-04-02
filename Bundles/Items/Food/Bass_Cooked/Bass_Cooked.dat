@@ -1,6 +1,6 @@
 ﻿GUID c5b7615b46aa4b9fbd8e9904188e8b80
 Type Food
-Rarity Rare
+Rarity Uncommon
 Useable Consumeable
 ID 1352
 
@@ -8,7 +8,8 @@ Size_X 3
 Size_Y 1
 Size_Z 0.225
 
-Food 30
+Food 25
+Water 15
 
 Blueprints
 [

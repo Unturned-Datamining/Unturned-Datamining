@@ -9,7 +9,8 @@ Size_Y 2
 Size_Z 0.45
 
 Food 100
-Water 25
+Water 50
+Disinfectant 5
 
 Blueprints
 [
@@ -32,4 +33,8 @@ Blueprints
 	}
 ]
 
-ConsumeAudioClip Sounds/EatCrunchy.mp3
+ConsumeAudioClip Sounds/EatCake.mp3
+Randomize_Consume_Audio_Pitch false
+Procedurally_Animate_Inertia false
+Instantiated_Item_Name_Override 1076
+EquipablePrefab Items/Food/Pie/Equipable.prefab

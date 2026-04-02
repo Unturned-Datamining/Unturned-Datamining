@@ -358,6 +358,22 @@ public class OptionsSettings
         }
     }
 
+    public static bool EnableGore
+    {
+        get
+        {
+            return gore;
+        }
+        set
+        {
+            if (gore != value)
+            {
+                gore = value;
+                OptionsSettings.OnEnableGoreChanged?.Invoke();
+            }
+        }
+    }
+
     public static bool EnableOutboundVoiceChat
     {
         get
@@ -583,6 +599,8 @@ public class OptionsSettings
         }
     }
 
+    public static event System.Action OnEnableGoreChanged;
+
     public static event System.Action OnEnableOutboundVoiceChatChanged;
 
     public static event System.Action OnUnitSystemChanged;
@@ -659,7 +677,7 @@ public class OptionsSettings
         timer = false;
         fov = 0.75f;
         debug = false;
-        gore = true;
+        EnableGore = true;
         filter = true;
         chatText = true;
         chatVoiceIn = false;
@@ -786,7 +804,7 @@ public class OptionsSettings
             loadingScreenMusicVolume = 0.5f;
         }
         debug = block.readBoolean();
-        gore = block.readBoolean();
+        EnableGore = block.readBoolean();
         filter = block.readBoolean();
         if (b < 57)
         {
@@ -1180,7 +1198,7 @@ public class OptionsSettings
         block.writeSingle(voiceVolume);
         block.writeSingle(loadingScreenMusicVolume);
         block.writeBoolean(debug);
-        block.writeBoolean(gore);
+        block.writeBoolean(EnableGore);
         block.writeBoolean(filter);
         block.writeBoolean(chatText);
         block.writeBoolean(chatVoiceIn);

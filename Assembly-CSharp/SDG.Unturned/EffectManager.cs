@@ -1366,7 +1366,7 @@ public class EffectManager : SteamCaller
         {
             RegisterAttachment(transform.gameObject);
         }
-        if (asset.splatter > 0 && (!asset.gore || OptionsSettings.gore))
+        if (asset.splatter > 0 && (!asset.gore || OptionsSettings.EnableGore))
         {
             for (int i = 0; i < asset.splatter * ((asset.splatterLiquid || !(Player.LocalPlayer != null) || Player.LocalPlayer.skills.boost != EPlayerBoost.SPLATTERIFIC) ? 1 : 8); i++)
             {
@@ -1409,7 +1409,7 @@ public class EffectManager : SteamCaller
         if (asset.gore)
         {
             ParticleSystem.EmissionModule emission = transform.GetComponent<ParticleSystem>().emission;
-            emission.enabled = OptionsSettings.gore;
+            emission.enabled = OptionsSettings.EnableGore;
         }
         if (!asset.isStatic && transform.GetComponent<AudioSource>() != null)
         {

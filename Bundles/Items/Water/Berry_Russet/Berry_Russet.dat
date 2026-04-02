@@ -7,11 +7,10 @@ Size_X 1
 Size_Y 1
 Size_Z 0.3
 
-Health 10
-Food 10
+Food 5
 Water 5
-Virus 5
-Vision 20
+Virus 15
+Vision 40
 
 Actions 1
 Action_0_Type Blueprint

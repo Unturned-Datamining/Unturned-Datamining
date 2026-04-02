@@ -491,6 +491,14 @@ public class PlayerLook : PlayerCaller
         }
     }
 
+    /// <summary>
+    /// Moves legacy image effect dependency out of SDK release.
+    /// </summary>
+    private void UpdateScopeGrayscaleEnabled()
+    {
+        scopeCamera.GetComponent<GrayscaleEffect>().blend = ((scopeVision == ELightingVision.CIVILIAN) ? 1f : 0f);
+    }
+
     public void enableScope(float zoom, ItemSightAsset sightAsset)
     {
         scopeCameraZoomFactor = zoom;
@@ -499,7 +507,7 @@ public class PlayerLook : PlayerCaller
         scopeNightvisionColor = sightAsset.nightvisionColor;
         scopeNightvisionFogIntensity = sightAsset.nightvisionFogIntensity;
         scopeCamera.enabled = scopeCamera.targetTexture != null && scopeVision == ELightingVision.NONE;
-        scopeCamera.GetComponent<GrayscaleEffect>().blend = ((scopeVision == ELightingVision.CIVILIAN) ? 1f : 0f);
+        UpdateScopeGrayscaleEnabled();
         UpdateSingleRenderScope();
     }
 

@@ -9,4 +9,9 @@ Size_Z 0.3
 
 Food 40
 Water 10
-ConsumeAudioClip Sounds/EatCrunchy.mp3
+
+ConsumeAudioClip Sounds/EatCanS_Sardine.mp3
+Randomize_Consume_Audio_Pitch false
+EquipableModelParent LeftHook
+Procedurally_Animate_Inertia false
+EquipablePrefab Items/Food/Canned_Sardines/Equipable.prefab

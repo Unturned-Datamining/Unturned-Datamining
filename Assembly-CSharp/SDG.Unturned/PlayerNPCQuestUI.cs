@@ -33,6 +33,8 @@ public class PlayerNPCQuestUI
     /// </summary>
     private static DialogueAsset dialogueContext;
 
+    private static DialogueMessage dialogueMessageContext;
+
     private static EQuestViewMode mode;
 
     private static ISleekBox questBox;
@@ -77,12 +79,12 @@ public class PlayerNPCQuestUI
 
     private static List<bool> areConditionsMet = new List<bool>(8);
 
-    public static void open(QuestAsset newQuest, DialogueAsset newDialogueContext, DialogueResponse newPendingResponse, EQuestViewMode newMode)
+    public static void open(QuestAsset newQuest, DialogueAsset newDialogueContext, DialogueMessage newDialogueMessageContext, DialogueResponse newPendingResponse, EQuestViewMode newMode)
     {
         if (!active)
         {
             active = true;
-            updateQuest(newQuest, newDialogueContext, newPendingResponse, newMode);
+            updateQuest(newQuest, newDialogueContext, newDialogueMessageContext, newPendingResponse, newMode);
             container.AnimateIntoView();
         }
     }
@@ -113,11 +115,12 @@ public class PlayerNPCQuestUI
         }
     }
 
-    private static void updateQuest(QuestAsset newQuest, DialogueAsset newDialogueContext, DialogueResponse newPendingResponse, EQuestViewMode newMode)
+    private static void updateQuest(QuestAsset newQuest, DialogueAsset newDialogueContext, DialogueMessage newDialogueMessageContext, DialogueResponse newPendingResponse, EQuestViewMode newMode)
     {
         quest = newQuest;
         pendingResponse = newPendingResponse;
         dialogueContext = newDialogueContext;
+        dialogueMessageContext = newDialogueMessageContext;
         mode = newMode;
         if (quest == null)
         {
@@ -235,7 +238,7 @@ public class PlayerNPCQuestUI
     private static void onClickedAcceptButton(ISleekElement button)
     {
         SetButtonsAreClickable(isClickable: false);
-        Player.LocalPlayer.quests.ClientChooseDialogueResponse(dialogueContext.GUID, pendingResponse.index);
+        Player.LocalPlayer.quests.ClientChooseDialogueResponse(dialogueContext.GUID, dialogueMessageContext.index, pendingResponse.index);
     }
 
     private static void onClickedDeclineButton(ISleekElement button)
@@ -248,7 +251,7 @@ public class PlayerNPCQuestUI
     private static void onClickedContinueButton(ISleekElement button)
     {
         SetButtonsAreClickable(isClickable: false);
-        Player.LocalPlayer.quests.ClientChooseDialogueResponse(dialogueContext.GUID, pendingResponse.index);
+        Player.LocalPlayer.quests.ClientChooseDialogueResponse(dialogueContext.GUID, dialogueMessageContext.index, pendingResponse.index);
     }
 
     private static void onClickedTrackButton(ISleekElement button)
