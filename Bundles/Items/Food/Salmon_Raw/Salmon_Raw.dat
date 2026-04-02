@@ -9,27 +9,5 @@ Size_Y 1
 Size_Z 0.225
 
 Food 25
-Water 10
 Virus 25
 ConsumeAudioClip Sounds/EatCrunchy.mp3
-
-// Identical to default Fishing_Catchable values.
-Fishing_Catchable
-{
-	Min_Relocate_Interval 1.5
-	Max_Relocate_Interval 2
-	Max_Upward_Acceleration 1.5
-	Max_Downward_Acceleration 1.2
-	Max_Upward_Speed 0.6
-	Max_Downward_Speed 0.45
-	Upper_Restitution 0.6
-	Lower_Restitution 0.4
-	Min_Target_Delta 0.3
-	Max_Target_Delta 0.4
-	Min_Target_Position 0.1
-	Max_Target_Position 0.9
-	Capture_Duration 2
-	Escape_Duration 2
-	Spring_Stiffness 16
-	Spring_Damping 4
-}

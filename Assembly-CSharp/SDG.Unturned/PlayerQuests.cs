@@ -143,9 +143,7 @@ public class PlayerQuests : PlayerCaller
 
     private static readonly ServerInstanceMethod<Guid> SendAbandonQuestRequest = ServerInstanceMethod<Guid>.Get(typeof(PlayerQuests), "ReceiveAbandonQuestRequest");
 
-    private static readonly ServerInstanceMethod<Guid, byte, byte> SendChooseDialogueResponseRequest = ServerInstanceMethod<Guid, byte, byte>.Get(typeof(PlayerQuests), "ReceiveChooseDialogueResponseRequest");
-
-    private static List<DialogueResponse> tempDialogueResponses = new List<DialogueResponse>();
+    private static readonly ServerInstanceMethod<Guid, byte> SendChooseDialogueResponseRequest = ServerInstanceMethod<Guid, byte>.Get(typeof(PlayerQuests), "ReceiveChooseDialogueResponseRequest");
 
     private static readonly ServerInstanceMethod<Guid, byte> SendChooseDefaultNextDialogueRequest = ServerInstanceMethod<Guid, byte>.Get(typeof(PlayerQuests), "ReceiveChooseDefaultNextDialogueRequest");
 
@@ -1652,14 +1650,14 @@ public class PlayerQuests : PlayerCaller
     }
 
     [SteamCall(ESteamCallValidation.ONLY_FROM_OWNER, ratelimitHz = 20)]
-    public void ReceiveChooseDialogueResponseRequest(in ServerInvocationContext context, Guid assetGuid, byte messageIndex, byte responseIndex)
+    public void ReceiveChooseDialogueResponseRequest(in ServerInvocationContext context, Guid assetGuid, byte index)
     {
         if (DialogueTarget == null || (DialogueTarget.GetDialogueTargetWorldPosition() - base.transform.position).sqrMagnitude > 400f || serverCurrentDialogueAsset == null || serverCurrentDialogueMessage == null)
         {
             return;
         }
         DialogueAsset dialogueAsset = Assets.find<DialogueAsset>(assetGuid);
-        if (dialogueAsset == null || dialogueAsset != serverCurrentDialogueAsset || messageIndex != serverCurrentDialogueMessage.index || dialogueAsset.responses == null || responseIndex >= dialogueAsset.responses.Length)
+        if (dialogueAsset == null || dialogueAsset != serverCurrentDialogueAsset || dialogueAsset.responses == null || index >= dialogueAsset.responses.Length)
         {
             return;
         }
@@ -1668,7 +1666,7 @@ public class PlayerQuests : PlayerCaller
             bool flag = false;
             for (int i = 0; i < serverCurrentDialogueMessage.responses.Length; i++)
             {
-                if (responseIndex == serverCurrentDialogueMessage.responses[i])
+                if (index == serverCurrentDialogueMessage.responses[i])
                 {
                     flag = true;
                     break;
@@ -1679,7 +1677,7 @@ public class PlayerQuests : PlayerCaller
                 return;
             }
         }
-        DialogueResponse dialogueResponse = dialogueAsset.responses[responseIndex];
+        DialogueResponse dialogueResponse = dialogueAsset.responses[index];
         if (dialogueResponse == null || !dialogueResponse.areConditionsMet(base.player))
         {
             return;
@@ -1712,7 +1710,7 @@ public class PlayerQuests : PlayerCaller
                 dialogueAsset2 = serverCurrentDialogueAsset;
                 dialogueMessage = serverCurrentDialogueMessage;
             }
-            serverDefaultNextDialogueAsset = GetDefaultNextDialogueAsset(dialogueAsset2, dialogueMessage, serverCurrentDialogueAsset);
+            serverDefaultNextDialogueAsset = dialogueMessage.FindPrevDialogueAsset() ?? serverCurrentDialogueAsset;
             serverCurrentDialogueAsset = dialogueAsset2;
             serverCurrentDialogueMessage = dialogueMessage;
             serverCurrentVendorAsset = vendorAsset;
@@ -1720,7 +1718,7 @@ public class PlayerQuests : PlayerCaller
         }
         else if (dialogueAsset2 != null && dialogueMessage != null)
         {
-            serverDefaultNextDialogueAsset = GetDefaultNextDialogueAsset(dialogueAsset2, dialogueMessage, serverCurrentDialogueAsset);
+            serverDefaultNextDialogueAsset = dialogueMessage?.FindPrevDialogueAsset() ?? serverCurrentDialogueAsset;
             serverCurrentDialogueAsset = dialogueAsset2;
             serverCurrentDialogueMessage = dialogueMessage;
             serverCurrentVendorAsset = null;
@@ -1731,22 +1729,6 @@ public class PlayerQuests : PlayerCaller
             dialogueMessage.ApplyConditions(base.player);
             dialogueMessage.GrantRewards(base.player);
         }
-    }
-
-    private DialogueAsset GetDefaultNextDialogueAsset(DialogueAsset asset, DialogueMessage message, DialogueAsset previousAsset)
-    {
-        DialogueAsset dialogueAsset = message.FindPrevDialogueAsset();
-        if (dialogueAsset != null)
-        {
-            return dialogueAsset;
-        }
-        tempDialogueResponses.Clear();
-        asset.getAvailableResponses(base.player, message.index, tempDialogueResponses);
-        if (tempDialogueResponses.Count > 0)
-        {
-            return null;
-        }
-        return previousAsset;
     }
 
     [SteamCall(ESteamCallValidation.ONLY_FROM_OWNER, ratelimitHz = 20)]
@@ -1775,15 +1757,15 @@ public class PlayerQuests : PlayerCaller
         }
     }
 
-    public void ClientChooseDialogueResponse(Guid assetGuid, byte messageIndex, byte responseIndex)
+    public void ClientChooseDialogueResponse(Guid assetGuid, byte index)
     {
-        SendChooseDialogueResponseRequest.Invoke(GetNetId(), ENetReliability.Reliable, assetGuid, messageIndex, responseIndex);
+        SendChooseDialogueResponseRequest.Invoke(GetNetId(), ENetReliability.Reliable, assetGuid, index);
     }
 
     /// <summary>
     /// Called when there are no responses to choose, but server has indicated a next dialogue is available.
     /// </summary>
-    public void ClientChooseDefaultNextDialogue(Guid assetGuid, byte index)
+    public void ClientChooseNextDialogue(Guid assetGuid, byte index)
     {
         SendChooseDefaultNextDialogueRequest.Invoke(GetNetId(), ENetReliability.Reliable, assetGuid, index);
     }
@@ -1970,7 +1952,7 @@ public class PlayerQuests : PlayerCaller
         serverCurrentDialogueAsset = rootDialogueAsset;
         serverCurrentDialogueMessage = availableMessage;
         serverCurrentVendorAsset = null;
-        serverDefaultNextDialogueAsset = GetDefaultNextDialogueAsset(rootDialogueAsset, availableMessage, null);
+        serverDefaultNextDialogueAsset = availableMessage.FindPrevDialogueAsset();
         SendTalkWithNpcResponse.Invoke(GetNetId(), ENetReliability.Reliable, base.channel.GetOwnerTransportConnection(), DialogueTarget.GetDialogueTargetNetId(), rootDialogueAsset.GUID, serverCurrentDialogueMessage.index, serverDefaultNextDialogueAsset != null);
         serverCurrentDialogueMessage.ApplyConditions(base.player);
         serverCurrentDialogueMessage.GrantRewards(base.player);

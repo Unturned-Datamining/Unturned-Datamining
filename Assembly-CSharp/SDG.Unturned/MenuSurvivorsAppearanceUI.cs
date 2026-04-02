@@ -231,7 +231,7 @@ public class MenuSurvivorsAppearanceUI
             sleekImage2.PositionOffset_Y = 2f;
             sleekImage2.SizeOffset_X = 16f;
             sleekImage2.SizeOffset_Y = 16f;
-            sleekImage2.Texture = Assets.coreMasterBundle.LoadAsset<Texture2D>("Items/Faces/" + i + "/Texture.png");
+            sleekImage2.Texture = (Texture2D)Resources.Load("Faces/" + i + "/Texture");
             sleekImage.AddChild(sleekImage2);
             if (i >= Customization.FACES_FREE)
             {
@@ -284,7 +284,7 @@ public class MenuSurvivorsAppearanceUI
             sleekImage4.PositionOffset_Y = 10f;
             sleekImage4.SizeOffset_X = 20f;
             sleekImage4.SizeOffset_Y = 20f;
-            sleekImage4.Texture = Assets.coreMasterBundle.LoadAsset<Texture2D>("Items/Hairs/" + j + "/Texture.png");
+            sleekImage4.Texture = (Texture2D)Resources.Load("Hairs/" + j + "/Texture");
             sleekButton2.AddChild(sleekImage4);
             if (j >= Customization.HAIRS_FREE)
             {
@@ -337,7 +337,7 @@ public class MenuSurvivorsAppearanceUI
             sleekImage6.PositionOffset_Y = 10f;
             sleekImage6.SizeOffset_X = 20f;
             sleekImage6.SizeOffset_Y = 20f;
-            sleekImage6.Texture = Assets.coreMasterBundle.LoadAsset<Texture2D>("Items/Beards/" + k + "/Texture.png");
+            sleekImage6.Texture = (Texture2D)Resources.Load("Beards/" + k + "/Texture");
             sleekButton3.AddChild(sleekImage6);
             if (k >= Customization.BEARDS_FREE)
             {

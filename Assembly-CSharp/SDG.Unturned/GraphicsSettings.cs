@@ -567,6 +567,10 @@ public class GraphicsSettings
     {
         get
         {
+            if (graphicsSettingsData.FoliageQuality2 == EGraphicQuality.OFF)
+            {
+                return EGraphicQuality.LOW;
+            }
             return graphicsSettingsData.FoliageQuality2;
         }
         set
@@ -1003,8 +1007,59 @@ public class GraphicsSettings
             MainCamera.instance.renderingPath = ((renderMode != 0) ? RenderingPath.Forward : RenderingPath.DeferredShading);
             MainCamera.instance.allowHDR = true;
             MainCamera.instance.allowMSAA = false;
-            ApplySunShaftsSettings();
-            ApplyOutlineSettings();
+            SunShaftsCs component = MainCamera.instance.GetComponent<SunShaftsCs>();
+            if (component != null)
+            {
+                if (sunShaftsQuality == EGraphicQuality.LOW)
+                {
+                    component.resolution = ESunShaftsCsResolution.Low;
+                }
+                else if (sunShaftsQuality == EGraphicQuality.MEDIUM)
+                {
+                    component.resolution = ESunShaftsCsResolution.Normal;
+                }
+                else if (sunShaftsQuality == EGraphicQuality.HIGH)
+                {
+                    component.resolution = ESunShaftsCsResolution.High;
+                }
+                component.enabled = sunShaftsQuality != EGraphicQuality.OFF;
+            }
+            HighlightingRenderer component2 = MainCamera.instance.GetComponent<HighlightingRenderer>();
+            if (component2 != null)
+            {
+                if (outlineQuality == EGraphicQuality.LOW)
+                {
+                    component2.downsampleFactor = 4;
+                    component2.iterations = 1;
+                    component2.blurMinSpread = 0.75f;
+                    component2.blurSpread = 0f;
+                    component2.blurIntensity = 0.25f;
+                }
+                else if (outlineQuality == EGraphicQuality.MEDIUM)
+                {
+                    component2.downsampleFactor = 4;
+                    component2.iterations = 2;
+                    component2.blurMinSpread = 0.5f;
+                    component2.blurSpread = 0.25f;
+                    component2.blurIntensity = 0.25f;
+                }
+                else if (outlineQuality == EGraphicQuality.HIGH)
+                {
+                    component2.downsampleFactor = 2;
+                    component2.iterations = 2;
+                    component2.blurMinSpread = 1f;
+                    component2.blurSpread = 0.5f;
+                    component2.blurIntensity = 0.25f;
+                }
+                else if (outlineQuality == EGraphicQuality.ULTRA)
+                {
+                    component2.downsampleFactor = 1;
+                    component2.iterations = 3;
+                    component2.blurMinSpread = 0.5f;
+                    component2.blurSpread = 0.5f;
+                    component2.blurIntensity = 0.25f;
+                }
+            }
             MainCamera.instance.farClipPlane = num;
             MainCamera.instance.layerCullDistances = array;
             MainCamera.instance.layerCullSpherical = true;
@@ -1023,8 +1078,52 @@ public class GraphicsSettings
                 Player.LocalPlayer.animator.viewmodelCamera.allowMSAA = false;
             }
         }
-        ApplyFoliageQuality();
-        FoliageSettings.focusDistance = num;
+        switch (foliageQuality)
+        {
+        case EGraphicQuality.OFF:
+            FoliageSettings.enabled = false;
+            FoliageSettings.drawDistance = 0;
+            FoliageSettings.instanceDensity = 0f;
+            FoliageSettings.drawFocusDistance = 0;
+            FoliageSettings.focusDistance = 0f;
+            break;
+        case EGraphicQuality.LOW:
+            FoliageSettings.enabled = true;
+            FoliageSettings.drawDistance = 2;
+            FoliageSettings.instanceDensity = 0.25f;
+            FoliageSettings.drawFocusDistance = 1;
+            FoliageSettings.focusDistance = num;
+            break;
+        case EGraphicQuality.MEDIUM:
+            FoliageSettings.enabled = true;
+            FoliageSettings.drawDistance = 3;
+            FoliageSettings.instanceDensity = 0.5f;
+            FoliageSettings.drawFocusDistance = 2;
+            FoliageSettings.focusDistance = num;
+            break;
+        case EGraphicQuality.HIGH:
+            FoliageSettings.enabled = true;
+            FoliageSettings.drawDistance = 4;
+            FoliageSettings.instanceDensity = 0.75f;
+            FoliageSettings.drawFocusDistance = 3;
+            FoliageSettings.focusDistance = num;
+            break;
+        case EGraphicQuality.ULTRA:
+            FoliageSettings.enabled = true;
+            FoliageSettings.drawDistance = 5;
+            FoliageSettings.instanceDensity = 1f;
+            FoliageSettings.drawFocusDistance = 4;
+            FoliageSettings.focusDistance = num;
+            break;
+        default:
+            FoliageSettings.enabled = true;
+            FoliageSettings.drawDistance = 2;
+            FoliageSettings.instanceDensity = 0.25f;
+            FoliageSettings.drawFocusDistance = 1;
+            FoliageSettings.focusDistance = num;
+            UnturnedLog.error("Unknown foliage quality: " + foliageQuality);
+            break;
+        }
         FoliageSettings.drawFocus = foliageFocus;
         if (waterQuality == EGraphicQuality.LOW || waterQuality == EGraphicQuality.MEDIUM)
         {
@@ -1141,55 +1240,6 @@ public class GraphicsSettings
         }
     }
 
-    internal static void ApplyFoliageQuality()
-    {
-        EGraphicQuality eGraphicQuality = foliageQuality;
-        if (eGraphicQuality == EGraphicQuality.OFF && (Provider.modeConfigData?.Gameplay?.Disable_Foliage_Off).GetValueOrDefault())
-        {
-            eGraphicQuality = EGraphicQuality.LOW;
-        }
-        switch (eGraphicQuality)
-        {
-        case EGraphicQuality.OFF:
-            FoliageSettings.enabled = false;
-            FoliageSettings.drawDistance = 0;
-            FoliageSettings.instanceDensity = 0f;
-            FoliageSettings.drawFocusDistance = 0;
-            break;
-        case EGraphicQuality.LOW:
-            FoliageSettings.enabled = true;
-            FoliageSettings.drawDistance = 2;
-            FoliageSettings.instanceDensity = 0.25f;
-            FoliageSettings.drawFocusDistance = 1;
-            break;
-        case EGraphicQuality.MEDIUM:
-            FoliageSettings.enabled = true;
-            FoliageSettings.drawDistance = 3;
-            FoliageSettings.instanceDensity = 0.5f;
-            FoliageSettings.drawFocusDistance = 2;
-            break;
-        case EGraphicQuality.HIGH:
-            FoliageSettings.enabled = true;
-            FoliageSettings.drawDistance = 4;
-            FoliageSettings.instanceDensity = 0.75f;
-            FoliageSettings.drawFocusDistance = 3;
-            break;
-        case EGraphicQuality.ULTRA:
-            FoliageSettings.enabled = true;
-            FoliageSettings.drawDistance = 5;
-            FoliageSettings.instanceDensity = 1f;
-            FoliageSettings.drawFocusDistance = 4;
-            break;
-        default:
-            FoliageSettings.enabled = true;
-            FoliageSettings.drawDistance = 2;
-            FoliageSettings.instanceDensity = 0.25f;
-            FoliageSettings.drawFocusDistance = 1;
-            UnturnedLog.error("Unknown foliage quality: " + eGraphicQuality);
-            break;
-        }
-    }
-
     public static void load()
     {
         if (ReadWrite.fileExists("/Settings/Graphics.json", useCloud: true))
@@ -1233,72 +1283,5 @@ public class GraphicsSettings
     public static void save()
     {
         ReadWrite.serializeJSON("/Settings/Graphics.json", useCloud: true, graphicsSettingsData);
-    }
-
-    /// <summary>
-    /// Moves legacy image effect dependency out of SDK release.
-    /// </summary>
-    private static void ApplySunShaftsSettings()
-    {
-        SunShaftsCs component = MainCamera.instance.GetComponent<SunShaftsCs>();
-        if (component != null)
-        {
-            if (sunShaftsQuality == EGraphicQuality.LOW)
-            {
-                component.resolution = ESunShaftsCsResolution.Low;
-            }
-            else if (sunShaftsQuality == EGraphicQuality.MEDIUM)
-            {
-                component.resolution = ESunShaftsCsResolution.Normal;
-            }
-            else if (sunShaftsQuality == EGraphicQuality.HIGH)
-            {
-                component.resolution = ESunShaftsCsResolution.High;
-            }
-            component.enabled = sunShaftsQuality != EGraphicQuality.OFF;
-        }
-    }
-
-    /// <summary>
-    /// Moves highlighting plugin dependency out of SDK release.
-    /// </summary>
-    private static void ApplyOutlineSettings()
-    {
-        HighlightingRenderer component = MainCamera.instance.GetComponent<HighlightingRenderer>();
-        if (component != null)
-        {
-            if (outlineQuality == EGraphicQuality.LOW)
-            {
-                component.downsampleFactor = 4;
-                component.iterations = 1;
-                component.blurMinSpread = 0.75f;
-                component.blurSpread = 0f;
-                component.blurIntensity = 0.25f;
-            }
-            else if (outlineQuality == EGraphicQuality.MEDIUM)
-            {
-                component.downsampleFactor = 4;
-                component.iterations = 2;
-                component.blurMinSpread = 0.5f;
-                component.blurSpread = 0.25f;
-                component.blurIntensity = 0.25f;
-            }
-            else if (outlineQuality == EGraphicQuality.HIGH)
-            {
-                component.downsampleFactor = 2;
-                component.iterations = 2;
-                component.blurMinSpread = 1f;
-                component.blurSpread = 0.5f;
-                component.blurIntensity = 0.25f;
-            }
-            else if (outlineQuality == EGraphicQuality.ULTRA)
-            {
-                component.downsampleFactor = 1;
-                component.iterations = 3;
-                component.blurMinSpread = 0.5f;
-                component.blurSpread = 0.5f;
-                component.blurIntensity = 0.25f;
-            }
-        }
     }
 }

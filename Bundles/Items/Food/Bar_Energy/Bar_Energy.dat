@@ -9,8 +9,4 @@ Size_Z 0.35
 
 Food 15
 Energy 50
-
-ConsumeAudioClip Sounds/EatBar.mp3
-Procedurally_Animate_Inertia false
-Instantiated_Item_Name_Override 83
-EquipablePrefab Items/Food/Bar_Energy/Equipable.prefab
+ConsumeAudioClip Sounds/EatCrunchy.mp3

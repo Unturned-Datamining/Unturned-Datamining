@@ -57,7 +57,7 @@ public class LandscapeMaterialAsset : Asset
         get
         {
             string text = name;
-            if (name.EndsWith("_Material", StringComparison.Ordinal))
+            if (name.EndsWith("_Material"))
             {
                 text = text.Substring(0, text.Length - 9);
             }

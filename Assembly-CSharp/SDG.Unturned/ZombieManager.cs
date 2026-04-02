@@ -1361,53 +1361,41 @@ public class ZombieManager : SteamCaller
         BeaconManager.onBeaconUpdated = (BeaconUpdated)Delegate.Combine(BeaconManager.onBeaconUpdated, new BeaconUpdated(onBeaconUpdated));
         if (!Dedicator.IsDedicatedServer)
         {
-            Assets.onAssetsRefreshed = (AssetsRefreshed)Delegate.Combine(Assets.onAssetsRefreshed, new AssetsRefreshed(OnAssetsRefreshed));
-        }
-    }
-
-    private void OnAssetsRefreshed()
-    {
-        Assets.onAssetsRefreshed = (AssetsRefreshed)Delegate.Remove(Assets.onAssetsRefreshed, new AssetsRefreshed(OnAssetsRefreshed));
-        MasterBundleConfig masterBundleConfig = Assets.findMasterBundleByName("core.masterbundle");
-        if (masterBundleConfig == null)
-        {
-            UnturnedLog.warn("Unable to load default zombie sounds");
-            return;
-        }
-        roars = new AudioClip[16];
-        for (int i = 0; i < roars.Length; i++)
-        {
-            roars[i] = masterBundleConfig.assetBundle.LoadAsset<AudioClip>($"Assets/CoreMasterBundle/Sounds/Zombies/Roars/Roar_{i}.mp3");
-        }
-        groans = new AudioClip[5];
-        for (int j = 0; j < groans.Length; j++)
-        {
-            groans[j] = masterBundleConfig.assetBundle.LoadAsset<AudioClip>($"Assets/CoreMasterBundle/Sounds/Zombies/Groans/Groan_{j}.mp3");
-        }
-        spits = new AudioClip[4];
-        for (int k = 0; k < spits.Length; k++)
-        {
-            spits[k] = masterBundleConfig.assetBundle.LoadAsset<AudioClip>($"Assets/CoreMasterBundle/Sounds/Zombies/Spits/Spit_{k}.mp3");
-        }
-        dl_attacks = new AudioClip[6];
-        for (int l = 0; l < dl_attacks.Length; l++)
-        {
-            dl_attacks[l] = masterBundleConfig.assetBundle.LoadAsset<AudioClip>($"Assets/CoreMasterBundle/Sounds/Zombies/DL_Volatile/volatile00_attack_0{l}.wav");
-        }
-        dl_deaths = new AudioClip[4];
-        for (int m = 0; m < dl_deaths.Length; m++)
-        {
-            dl_deaths[m] = masterBundleConfig.assetBundle.LoadAsset<AudioClip>($"Assets/CoreMasterBundle/Sounds/Zombies/DL_Volatile/volatile00_death_0{m}.wav");
-        }
-        dl_enemy_spotted = new AudioClip[4];
-        for (int n = 0; n < dl_enemy_spotted.Length; n++)
-        {
-            dl_enemy_spotted[n] = masterBundleConfig.assetBundle.LoadAsset<AudioClip>($"Assets/CoreMasterBundle/Sounds/Zombies/DL_Volatile/volatile00_enemy_spotted_0{n}.wav");
-        }
-        dl_taunt = new AudioClip[4];
-        for (int num = 0; num < dl_taunt.Length; num++)
-        {
-            dl_taunt[num] = masterBundleConfig.assetBundle.LoadAsset<AudioClip>($"Assets/CoreMasterBundle/Sounds/Zombies/DL_Volatile/volatile_taunt_0{num}.wav");
+            roars = new AudioClip[16];
+            for (int i = 0; i < roars.Length; i++)
+            {
+                roars[i] = (AudioClip)Resources.Load("Sounds/Zombies/Roars/Roar_" + i);
+            }
+            groans = new AudioClip[5];
+            for (int j = 0; j < groans.Length; j++)
+            {
+                groans[j] = (AudioClip)Resources.Load("Sounds/Zombies/Groans/Groan_" + j);
+            }
+            spits = new AudioClip[4];
+            for (int k = 0; k < spits.Length; k++)
+            {
+                spits[k] = (AudioClip)Resources.Load("Sounds/Zombies/Spits/Spit_" + k);
+            }
+            dl_attacks = new AudioClip[6];
+            for (int l = 0; l < dl_attacks.Length; l++)
+            {
+                dl_attacks[l] = Resources.Load<AudioClip>("Sounds/Zombies/DL_Volatile/volatile00_attack_0" + l);
+            }
+            dl_deaths = new AudioClip[4];
+            for (int m = 0; m < dl_deaths.Length; m++)
+            {
+                dl_deaths[m] = Resources.Load<AudioClip>("Sounds/Zombies/DL_Volatile/volatile00_death_0" + m);
+            }
+            dl_enemy_spotted = new AudioClip[4];
+            for (int n = 0; n < dl_enemy_spotted.Length; n++)
+            {
+                dl_enemy_spotted[n] = Resources.Load<AudioClip>("Sounds/Zombies/DL_Volatile/volatile00_enemy_spotted_0" + n);
+            }
+            dl_taunt = new AudioClip[4];
+            for (int num = 0; num < dl_taunt.Length; num++)
+            {
+                dl_taunt[num] = Resources.Load<AudioClip>("Sounds/Zombies/DL_Volatile/volatile_taunt_0" + num);
+            }
         }
     }
 

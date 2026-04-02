@@ -1,4 +1,4 @@
-"Available_Instance_ID" "5"
+"Available_Instance_ID" "4"
 "Items"
 [
 	{
@@ -187,38 +187,6 @@
 			"Instanced_Meshes" "true"
 			"Resources" "true"
 			"Objects" "true"
-		}
-	}
-	{
-		"Type" "SDG.Framework.Water.WaterVolume, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null"
-		"Instance_ID" "4"
-		"Item"
-		{
-			"Position"
-			{
-				"X" "-0.2651672"
-				"Y" "11.63836"
-				"Z" "-0.006469727"
-			}
-			"Rotation"
-			{
-				"X" "0"
-				"Y" "0"
-				"Z" "0"
-				"W" "1"
-			}
-			"Scale"
-			{
-				"X" "2050.608"
-				"Y" "27.92361"
-				"Z" "2048.456"
-			}
-			"Shape" "Box"
-			"Is_Surface_Visible" "true"
-			"Is_Reflection_Visible" "true"
-			"Is_Sea_Level" "true"
-			"Water_Type" "SALTY"
-			"Fish_Spawn_Table" "00000000000000000000000000000000"
 		}
 	}
 ]

@@ -155,7 +155,7 @@ internal class Glazier_IMGUI : GlazierBase, IGlazier
         return new GlazierFloat64Field_IMGUI();
     }
 
-    public ISleekProxyImplementation CreateProxyImplementation(SleekWrapper owner)
+    public ISleekElement CreateProxyImplementation(SleekWrapper owner)
     {
         return new GlazierProxy_IMGUI(owner);
     }

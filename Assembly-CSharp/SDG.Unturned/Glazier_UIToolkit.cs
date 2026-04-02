@@ -249,7 +249,7 @@ internal class Glazier_UIToolkit : GlazierBase, IGlazier
         return glazierFloat64Field_UIToolkit;
     }
 
-    public ISleekProxyImplementation CreateProxyImplementation(SleekWrapper owner)
+    public ISleekElement CreateProxyImplementation(SleekWrapper owner)
     {
         GlazierProxy_UIToolkit glazierProxy_UIToolkit = new GlazierProxy_UIToolkit(this, owner);
         liveElements.Add(glazierProxy_UIToolkit);

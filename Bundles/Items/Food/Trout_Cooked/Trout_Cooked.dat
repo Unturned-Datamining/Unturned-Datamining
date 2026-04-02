@@ -1,6 +1,5 @@
 ﻿GUID 1183047fcfd640e893a21ddb24000e30
 Type Food
-Rarity Uncommon
 Useable Consumeable
 ID 512
 
@@ -9,7 +8,6 @@ Size_Y 1
 Size_Z 0.2
 
 Food 20
-Water 10
 
 Blueprints
 [

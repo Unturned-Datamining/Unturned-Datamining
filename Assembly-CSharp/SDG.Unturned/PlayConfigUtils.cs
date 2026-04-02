@@ -69,7 +69,7 @@ internal static class PlayConfigUtils
     public static string GetFieldPath(FieldInfo field)
     {
         string text = field.DeclaringType.Name;
-        if (text.EndsWith("ConfigData", StringComparison.Ordinal))
+        if (text.EndsWith("ConfigData"))
         {
             text = text.Substring(0, text.Length - "ConfigData".Length);
         }

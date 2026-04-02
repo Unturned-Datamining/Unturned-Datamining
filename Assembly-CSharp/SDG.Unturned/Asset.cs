@@ -159,7 +159,7 @@ public abstract class Asset : IAssetErrorContext
     public string GetTypeNameWithoutSuffix()
     {
         string text = GetType().Name;
-        if (text.EndsWith("Asset", StringComparison.Ordinal))
+        if (text.EndsWith("Asset"))
         {
             return text.Substring(0, text.Length - 5);
         }

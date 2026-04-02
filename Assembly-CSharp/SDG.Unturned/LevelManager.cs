@@ -17,7 +17,7 @@ public class LevelManager : SteamCaller
 
     private static ELevelType _levelType;
 
-    private static AudioClip timerClip;
+    private static AudioClip timer;
 
     private static float lastFinaleMessage;
 
@@ -136,15 +136,6 @@ public class LevelManager : SteamCaller
     };
 
     public static bool hasAirdrop => _hasAirdrop;
-
-    private static AudioClip GetOrLoadTimerClip()
-    {
-        if (timerClip == null)
-        {
-            timerClip = new AudioReference("core.masterbundle", "Sounds/Timer.mp3").LoadAudioClip();
-        }
-        return timerClip;
-    }
 
     public static bool isPlayerInArena(Player player)
     {
@@ -566,7 +557,7 @@ public class LevelManager : SteamCaller
             countTimerMessages--;
             if (arenaMessage == EArenaMessage.WARMUP && !Dedicator.IsDedicatedServer && MainCamera.instance != null && OptionsSettings.timer)
             {
-                MainCamera.instance.GetComponent<AudioSource>().PlayOneShot(GetOrLoadTimerClip(), 1f);
+                MainCamera.instance.GetComponent<AudioSource>().PlayOneShot(timer, 1f);
             }
         }
         if (Provider.isServer)
@@ -1042,6 +1033,10 @@ public class LevelManager : SteamCaller
     private void Start()
     {
         manager = this;
+        if (!Dedicator.IsDedicatedServer)
+        {
+            timer = (AudioClip)Resources.Load("Sounds/General/Timer");
+        }
         Level.onLevelLoaded = (LevelLoaded)Delegate.Combine(Level.onLevelLoaded, new LevelLoaded(onLevelLoaded));
     }
 

@@ -287,8 +287,6 @@ public class LevelAsset : Asset
     /// </summary>
     internal List<TerrainColorRule> terrainColorRules;
 
-    private CachingAssetRef _defaultFishSpawnTable;
-
     /// <summary>
     /// Intensity of fog effect while camera is inside a water volume.
     /// Defaults to 0.075.
@@ -330,28 +328,6 @@ public class LevelAsset : Asset
     /// </summary>
     public CachingAssetRef[] Tags { get; set; }
 
-    /// <summary>
-    /// Fishing rods using per-water-volume fishing spawn table fallback to this table.
-    /// </summary>
-    public CachingAssetRef DefaultFishSpawnTable
-    {
-        get
-        {
-            return _defaultFishSpawnTable;
-        }
-        set
-        {
-            _defaultFishSpawnTable = value;
-        }
-    }
-
-    /// <summary>
-    /// If true, this level has assigned fishing spawn tables to water volumes and/or set
-    /// the default table. Defaults to false. Enables fishing rods to work on all maps
-    /// regardless of when they were designed.
-    /// </summary>
-    public bool SupportsFishingVolumes { get; set; }
-
     public DefaultLoadoutItem[] GetSkillsetLoadoutOrNull(EPlayerSkillset skillset)
     {
         if (DefaultSkillsetLoadouts == null)
@@ -391,11 +367,6 @@ public class LevelAsset : Asset
             }
         }
         return false;
-    }
-
-    public SpawnAsset GetDefaultFishingSpawnTable()
-    {
-        return _defaultFishSpawnTable.Get<SpawnAsset>();
     }
 
     public override void PopulateAsset(in PopulateAssetParameters p)
@@ -605,13 +576,6 @@ public class LevelAsset : Asset
         ZombieDifficultyAssetPrioritization = p.data.ParseEnum("ZombieDifficultyAssetPrioritization", EZombieDifficultyAssetPrioritization.NavmeshOverridesTable);
         ShouldAllowBuildingInSafezonesInSingleplayer = p.data.ParseBool("Allow_Building_In_Safezone_In_Singleplayer");
         Tags = p.data.ParseArrayOfStructs<CachingAssetRef>("Tags");
-        SupportsFishingVolumes = p.data.ParseBool("Supports_Fishing_Volumes");
-        _defaultFishSpawnTable = p.data.ParseAssetRef("Default_Fish_Spawn_Table");
-    }
-
-    public string OnGetFishErrorContext()
-    {
-        return FriendlyName + " level asset";
     }
 
     public LevelAsset()

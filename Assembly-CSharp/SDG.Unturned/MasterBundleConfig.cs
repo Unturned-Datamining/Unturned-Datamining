@@ -147,7 +147,7 @@ public class MasterBundleConfig
         {
             return assetPath;
         }
-        if (assetPrefix.EndsWith("/", StringComparison.Ordinal) || assetPath.StartsWith("/", StringComparison.Ordinal))
+        if (assetPrefix.EndsWith("/") || assetPath.StartsWith("/"))
         {
             return assetPrefix + assetPath;
         }
@@ -251,12 +251,6 @@ public class MasterBundleConfig
         }
         UnturnedLog.warn($"Unloading \"{assetBundle}\" because source workshop file ID ({origin.workshopFileId}) does not match owner workshop file ID(s) ({text2})");
         unload();
-    }
-
-    public T LoadAsset<T>(string name) where T : UnityEngine.Object
-    {
-        string name2 = formatAssetPath(name);
-        return assetBundle.LoadAsset<T>(name2);
     }
 
     public AssetBundleRequest LoadAssetAsync<T>(string name) where T : UnityEngine.Object

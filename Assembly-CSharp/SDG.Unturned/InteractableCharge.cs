@@ -154,12 +154,22 @@ public class InteractableCharge : Interactable
 
     public void highlight()
     {
-        PartialEnableHighlight();
+        if (!(highlighter != null))
+        {
+            highlighter = base.gameObject.AddComponent<Highlighter>();
+            updateHighlight();
+        }
     }
 
     public void unhighlight()
     {
-        PartialDisableHighlight();
+        if (!(highlighter == null))
+        {
+            UnityEngine.Object.DestroyImmediate(highlighter);
+            highlighter = null;
+            isSelected = false;
+            isTargeted = false;
+        }
     }
 
     private void updateHighlight()
@@ -186,26 +196,6 @@ public class InteractableCharge : Interactable
         else
         {
             highlighter.ConstantOn(Color.red);
-        }
-    }
-
-    private void PartialEnableHighlight()
-    {
-        if (!(highlighter != null))
-        {
-            highlighter = base.gameObject.AddComponent<Highlighter>();
-            updateHighlight();
-        }
-    }
-
-    private void PartialDisableHighlight()
-    {
-        if (!(highlighter == null))
-        {
-            UnityEngine.Object.DestroyImmediate(highlighter);
-            highlighter = null;
-            isSelected = false;
-            isTargeted = false;
         }
     }
 }

@@ -107,11 +107,6 @@ public class SpawnTableTool
         return Resolve(spawnAsset, legacyTargetAssetType, errorContextCallback);
     }
 
-    public static TAsset Resolve<TAsset>(Guid spawnAssetGuid, EAssetType legacyTargetAssetType, Func<string> errorContextCallback) where TAsset : Asset
-    {
-        return Resolve(spawnAssetGuid, legacyTargetAssetType, errorContextCallback) as TAsset;
-    }
-
     public static Asset Resolve(ushort spawnAssetLegacyId, EAssetType legacyTargetAssetType, Func<string> errorContextCallback)
     {
         if (spawnAssetLegacyId == 0)
@@ -127,11 +122,6 @@ public class SpawnTableTool
             return null;
         }
         return Resolve(spawnAsset, legacyTargetAssetType, errorContextCallback);
-    }
-
-    public static TAsset Resolve<TAsset>(ushort spawnAssetLegacyId, EAssetType legacyTargetAssetType, Func<string> errorContextCallback) where TAsset : Asset
-    {
-        return Resolve(spawnAssetLegacyId, legacyTargetAssetType, errorContextCallback) as TAsset;
     }
 
     /// <summary>

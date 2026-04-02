@@ -47,7 +47,4 @@ Asset
 		}
 	]
 	Allow_Building_In_Safezone_In_Singleplayer true
-
-	Supports_Fishing_Volumes true
-	Default_Fish_Spawn_Table cdb3d42ccc1940429eb801227694d6cb
 }

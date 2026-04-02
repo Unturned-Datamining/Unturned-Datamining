@@ -12,29 +12,12 @@ EquipableModelParent LeftHook
 
 Reward_ID 675
 
-Fishing_Reward_Mode WaterVolumes
-CatchChallenge_Enabled true
-CatchChallenge_CursorSize 0.25
-CatchChallenge_Gravity 2.0
-CatchChallenge_Acceleration 2.0
-CatchChallenge_UpperRestitution 0.2
-CatchChallenge_LowerRestitution 0.2
-CatchChallenge_CaptureSpeed 1.25
-CatchChallenge_EscapeSpeed 0.75
-
-Fish_Bite_Interval_Multiplier 0.9
-
 Blueprints
 [
 	{
 		CategoryTag "ad1804b6945145f3b308738b0b8ea447" // Tools
 		InputItems
 		[
-			{
-				ID "1c47939b50344c79852e1b4376debbfc" // Upgraded Fishing Rod Blueprint
-				Critical true
-				Delete false
-			}
 			{
 				ID "04e1a631fc0848a68b02022d8b1c2141" // Fishing Rod
 			}
@@ -47,6 +30,11 @@ Blueprints
 			{
 				ID "ebb61f2e64f24351a6ab905b5516060b" // Wire
 				Amount 2
+			}
+			{
+				ID "1c47939b50344c79852e1b4376debbfc" // Upgraded Fishing Rod Blueprint
+				Critical true
+				Delete false
 			}
 		]
 		OutputItems this

@@ -394,7 +394,18 @@ public class PlayerInteract : PlayerCaller
                 }
                 else if (PlayerNPCDialogueUI.active)
                 {
-                    PlayerNPCDialogueUI.HandleInteractPressed();
+                    if (PlayerNPCDialogueUI.IsDialogueAnimating)
+                    {
+                        PlayerNPCDialogueUI.SkipAnimation();
+                        return;
+                    }
+                    if (PlayerNPCDialogueUI.CanAdvanceToNextPage)
+                    {
+                        PlayerNPCDialogueUI.AdvancePage();
+                        return;
+                    }
+                    PlayerNPCDialogueUI.close();
+                    PlayerLifeUI.open();
                 }
                 else if (PlayerNPCQuestUI.active)
                 {

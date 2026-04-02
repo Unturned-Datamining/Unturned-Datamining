@@ -53,7 +53,7 @@ public class EditorEnvironmentNavigationUI
         {
             widthSlider.Value = flag.width;
             heightSlider.Value = flag.height;
-            navBox.Text = flag.EditorFlagInterface.GraphIndexForUI.ToString();
+            navBox.Text = flag.graph.graphIndex.ToString();
             difficultyGUIDField.Text = flag.data.difficultyGUID;
             maxZombiesField.Value = flag.data.maxZombies;
             maxBossZombiesField.Value = flag.data.maxBossZombies;

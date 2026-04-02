@@ -334,7 +334,7 @@ public class LevelObject
             if (!Dedicator.IsDedicatedServer)
             {
                 flag = asset.areConditionsMet(Player.LocalPlayer);
-                flag &= OptionsSettings.EnableGore || !asset.isGore;
+                flag &= OptionsSettings.gore || !asset.isGore;
             }
             if (flag && asset.holidayRestriction != 0)
             {
@@ -835,10 +835,6 @@ public class LevelObject
                 areConditionsMet = false;
                 updateConditions();
             }
-            if (!Dedicator.IsDedicatedServer && asset.isGore)
-            {
-                OptionsSettings.OnEnableGoreChanged += updateConditions;
-            }
             if (asset.foliage.isValid)
             {
                 FoliageSurfaceComponent foliageSurfaceComponent = this.transform.gameObject.AddComponent<FoliageSurfaceComponent>();
@@ -952,16 +948,5 @@ public class LevelObject
     public void disableSkybox()
     {
         SetIsActiveInRegion(isActive: true);
-    }
-
-    /// <summary>
-    /// Unlike destroy() this is called when Unity object is destroyed for any reason.
-    /// </summary>
-    internal void OnDestroy()
-    {
-        if (asset != null && !Dedicator.IsDedicatedServer && asset.isGore)
-        {
-            OptionsSettings.OnEnableGoreChanged -= updateConditions;
-        }
     }
 }

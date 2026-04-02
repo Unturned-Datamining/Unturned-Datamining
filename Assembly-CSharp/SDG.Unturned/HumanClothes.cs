@@ -17,12 +17,6 @@ public class HumanClothes : MonoBehaviour
 
     private Material materialBeard;
 
-    /// <summary>
-    /// For non-gold players' hairOverride and beardOverride cosmetics default color.
-    /// Worst case scenario is 3 hair overrides and 3 beard overrides.
-    /// </summary>
-    private Material[] extraHairOverrideMaterials;
-
     private Transform spine;
 
     private Transform skull;
@@ -177,8 +171,6 @@ public class HumanClothes : MonoBehaviour
     public Transform hairModel { get; private set; }
 
     public Transform beardModel { get; private set; }
-
-    public bool ShouldHairOverridesUseFallbackColor { get; set; }
 
     public bool isVisual
     {
@@ -901,60 +893,6 @@ public class HumanClothes : MonoBehaviour
         glassesDirty = isDirty;
     }
 
-    private Material GetHairOverrideMaterialAtIndex(int index)
-    {
-        if (extraHairOverrideMaterials == null)
-        {
-            extraHairOverrideMaterials = new Material[6];
-        }
-        Material material = extraHairOverrideMaterials[index];
-        if (material == null)
-        {
-            material = new Material(shader);
-            material.name = $"ExtraHair_{index}";
-            material.hideFlags = HideFlags.HideAndDontSave;
-            material.SetFloat("_Glossiness", 0f);
-            material.SetColor("_SpecColor", Color.black);
-            extraHairOverrideMaterials[index] = material;
-        }
-        return material;
-    }
-
-    private int GetHairOverrideMaterialIndex(ItemGearAsset itemAsset, bool isBeard)
-    {
-        int num = ((!isBeard) ? 3 : 0);
-        return itemAsset.type switch
-        {
-            EItemType.GLASSES => num + 1, 
-            EItemType.MASK => num + 2, 
-            _ => num, 
-        };
-    }
-
-    private Material GetHairOverrideMaterial(ItemGearAsset itemAsset)
-    {
-        if (!ShouldHairOverridesUseFallbackColor || !itemAsset.hairOverrideNonGoldColor.HasValue)
-        {
-            return materialHair;
-        }
-        int hairOverrideMaterialIndex = GetHairOverrideMaterialIndex(itemAsset, isBeard: false);
-        Material hairOverrideMaterialAtIndex = GetHairOverrideMaterialAtIndex(hairOverrideMaterialIndex);
-        hairOverrideMaterialAtIndex.color = itemAsset.hairOverrideNonGoldColor.Value;
-        return hairOverrideMaterialAtIndex;
-    }
-
-    private Material GetBeardOverrideMaterial(ItemGearAsset itemAsset)
-    {
-        if (!ShouldHairOverridesUseFallbackColor || !itemAsset.beardOverrideNonGoldColor.HasValue)
-        {
-            return materialBeard;
-        }
-        int hairOverrideMaterialIndex = GetHairOverrideMaterialIndex(itemAsset, isBeard: true);
-        Material hairOverrideMaterialAtIndex = GetHairOverrideMaterialAtIndex(hairOverrideMaterialIndex);
-        hairOverrideMaterialAtIndex.color = itemAsset.beardOverrideNonGoldColor.Value;
-        return hairOverrideMaterialAtIndex;
-    }
-
     private void ApplyHairOverride(ItemGearAsset itemAsset, Transform rootModel)
     {
         if (string.IsNullOrEmpty(itemAsset.hairOverride))
@@ -970,7 +908,7 @@ public class HumanClothes : MonoBehaviour
         Renderer component = transform.GetComponent<Renderer>();
         if (component != null)
         {
-            component.sharedMaterial = GetHairOverrideMaterial(itemAsset);
+            component.sharedMaterial = materialHair;
         }
         else
         {
@@ -993,7 +931,7 @@ public class HumanClothes : MonoBehaviour
         Renderer component = transform.GetComponent<Renderer>();
         if (component != null)
         {
-            component.sharedMaterial = GetBeardOverrideMaterial(itemAsset);
+            component.sharedMaterial = materialBeard;
         }
         else
         {
@@ -1086,10 +1024,8 @@ public class HumanClothes : MonoBehaviour
         }
         if (faceDirty)
         {
-            Texture2D value = Assets.coreMasterBundle.LoadAsset<Texture2D>("Items/Faces/" + face + "/Texture.png");
-            Texture2D value2 = Assets.coreMasterBundle.LoadAsset<Texture2D>("Items/Faces/" + face + "/Emission.png");
-            materialClothing.SetTexture(faceAlbedoTexturePropertyID, value);
-            materialClothing.SetTexture(faceEmissionTexturePropertyID, value2);
+            materialClothing.SetTexture(faceAlbedoTexturePropertyID, Resources.Load<Texture2D>("Faces/" + face + "/Texture"));
+            materialClothing.SetTexture(faceEmissionTexturePropertyID, Resources.Load<Texture2D>("Faces/" + face + "/Emission"));
         }
         if (shirtDirty)
         {
@@ -1430,7 +1366,7 @@ public class HumanClothes : MonoBehaviour
                 }
                 if (hasHair)
                 {
-                    GameObject gameObject = Assets.coreMasterBundle.LoadAsset<GameObject>("Items/Hairs/" + hair + "/Hair.prefab");
+                    GameObject gameObject = Resources.Load<GameObject>("Hairs/" + hair + "/Hair");
                     if (gameObject != null)
                     {
                         InstantiateParameters instantiateParameters = default(InstantiateParameters);
@@ -1461,7 +1397,7 @@ public class HumanClothes : MonoBehaviour
                 }
                 if (hasBeard)
                 {
-                    GameObject gameObject2 = Assets.coreMasterBundle.LoadAsset<GameObject>("Items/Beards/" + beard + "/Beard.prefab");
+                    GameObject gameObject2 = Resources.Load<GameObject>("Beards/" + beard + "/Beard");
                     if (gameObject2 != null)
                     {
                         InstantiateParameters instantiateParameters = default(InstantiateParameters);
@@ -1645,18 +1581,5 @@ public class HumanClothes : MonoBehaviour
             UnityEngine.Object.DestroyImmediate(materialBeard);
             materialBeard = null;
         }
-        if (extraHairOverrideMaterials == null)
-        {
-            return;
-        }
-        Material[] array = extraHairOverrideMaterials;
-        foreach (Material material in array)
-        {
-            if (material != null)
-            {
-                UnityEngine.Object.DestroyImmediate(material);
-            }
-        }
-        extraHairOverrideMaterials = null;
     }
 }

@@ -1,6 +1,9 @@
 using System;
 using System.Collections.Generic;
 using System.Globalization;
+using Pathfinding;
+using Pathfinding.Graphs.Navmesh;
+using Pathfinding.Util;
 using UnityEngine;
 
 namespace SDG.Unturned;
@@ -28,13 +31,6 @@ public class LevelNavigation
     private static List<Flag> flags;
 
     private static List<Bounds> _bounds;
-
-    /// <summary>
-    /// Nelson 2026-03-04: the "bounds" list contains navmesh baking bounds + "BOUNDS_SIZE" expansion.
-    /// Several parts of the code were looping through ASPFP active graphs and checking whether a
-    /// point is within those bounds, so we'll now duplicate some bounds data for that purpose.
-    /// </summary>
-    private static List<Bounds> nonExpandedNavmeshBounds;
 
     [Obsolete("Was the parent of misc objects in the past, but now empty for TransformHierarchy performance.")]
     public static Transform models
@@ -79,19 +75,45 @@ public class LevelNavigation
     {
         nav = byte.MaxValue;
         bool result = false;
-        if (nonExpandedNavmeshBounds != null)
+        if ((UnityEngine.Object)(object)AstarPath.active != null)
         {
-            for (int i = 0; i < nonExpandedNavmeshBounds.Count; i++)
+            for (byte b = 0; b < Mathf.Min(bounds.Count, AstarPath.active.graphs.Length); b++)
             {
-                if (nonExpandedNavmeshBounds[i].ContainsXZ(point))
+                if (AstarPath.active.graphs[b] is RecastGraph recastGraph)
                 {
-                    nav = (byte)i;
-                    result = true;
-                    break;
+                    float f = point.x - recastGraph.forcedBoundsCenter.x;
+                    float f2 = point.z - recastGraph.forcedBoundsCenter.z;
+                    if (Mathf.Abs(f) <= recastGraph.forcedBoundsSize.x / 2f && Mathf.Abs(f2) <= recastGraph.forcedBoundsSize.z / 2f)
+                    {
+                        nav = b;
+                        result = true;
+                        break;
+                    }
                 }
             }
         }
         return result;
+    }
+
+    internal static NavGraph GetNavGraph(Vector3 position)
+    {
+        if ((UnityEngine.Object)(object)AstarPath.active != null)
+        {
+            NavGraph[] graphs = AstarPath.active.graphs;
+            foreach (NavGraph navGraph in graphs)
+            {
+                if (navGraph is RecastGraph recastGraph)
+                {
+                    float f = position.x - recastGraph.forcedBoundsCenter.x;
+                    float f2 = position.z - recastGraph.forcedBoundsCenter.z;
+                    if (Mathf.Abs(f) <= recastGraph.forcedBoundsSize.x / 2f && Mathf.Abs(f2) <= recastGraph.forcedBoundsSize.z / 2f)
+                    {
+                        return navGraph;
+                    }
+                }
+            }
+        }
+        return null;
     }
 
     public static bool checkSafe(byte bound)
@@ -121,14 +143,17 @@ public class LevelNavigation
 
     public static bool checkSafeFakeNav(Vector3 point)
     {
-        if (nonExpandedNavmeshBounds != null)
+        if (LevelNavigation.bounds == null)
         {
-            for (int i = 0; i < nonExpandedNavmeshBounds.Count; i++)
+            return false;
+        }
+        for (byte b = 0; b < LevelNavigation.bounds.Count; b++)
+        {
+            Bounds bounds = LevelNavigation.bounds[b];
+            bounds.size -= BOUNDS_SIZE;
+            if (bounds.ContainsXZ(point))
             {
-                if (nonExpandedNavmeshBounds[i].ContainsXZ(point))
-                {
-                    return true;
-                }
+                return true;
             }
         }
         return false;
@@ -136,11 +161,18 @@ public class LevelNavigation
 
     public static bool checkNavigation(Vector3 point)
     {
-        if (nonExpandedNavmeshBounds != null)
+        if ((UnityEngine.Object)(object)AstarPath.active == null)
         {
-            for (int i = 0; i < nonExpandedNavmeshBounds.Count; i++)
+            return false;
+        }
+        NavGraph[] graphs = AstarPath.active.graphs;
+        for (int i = 0; i < graphs.Length; i++)
+        {
+            if (graphs[i] is RecastGraph recastGraph)
             {
-                if (nonExpandedNavmeshBounds[i].ContainsXZ(point))
+                float f = point.x - recastGraph.forcedBoundsCenter.x;
+                float f2 = point.z - recastGraph.forcedBoundsCenter.z;
+                if (Mathf.Abs(f) <= recastGraph.forcedBoundsSize.x / 2f && Mathf.Abs(f2) <= recastGraph.forcedBoundsSize.z / 2f)
                 {
                     return true;
                 }
@@ -160,29 +192,57 @@ public class LevelNavigation
         }
     }
 
+    public static RecastGraph addGraph()
+    {
+        RecastGraph recastGraph = AstarPath.active.data.AddGraph<RecastGraph>();
+        recastGraph.cellSize = 0.1f;
+        recastGraph.useTiles = true;
+        recastGraph.editorTileSize = 128;
+        recastGraph.minRegionSize = 64f;
+        recastGraph.walkableHeight = 2f;
+        recastGraph.walkableClimb = 0.75f;
+        recastGraph.characterRadius = 0.5f;
+        recastGraph.maxSlope = 75f;
+        recastGraph.maxEdgeLength = 16f;
+        recastGraph.contourMaxError = 2f;
+        recastGraph.collectionSettings.terrainHeightmapDownsamplingFactor = 1;
+        recastGraph.collectionSettings.rasterizeTrees = false;
+        recastGraph.collectionSettings.rasterizeMeshes = false;
+        recastGraph.collectionSettings.rasterizeColliders = true;
+        recastGraph.collectionSettings.colliderRasterizeDetail = 4f;
+        recastGraph.collectionSettings.layerMask = RayMasks.BLOCK_NAVMESH;
+        recastGraph.enableNavmeshCutting = !Level.isEditor;
+        return recastGraph;
+    }
+
     public static void updateBounds()
     {
-        if (!Level.isEditor)
+        _bounds = new List<Bounds>();
+        for (int i = 0; i < AstarPath.active.graphs.Length; i++)
         {
-            UnturnedLog.error("LevelNavigation.updateBounds should not be called from outside the level editor");
-            return;
-        }
-        _bounds = new List<Bounds>(flags.Count);
-        nonExpandedNavmeshBounds = new List<Bounds>(flags.Count);
-        foreach (Flag flag in flags)
-        {
-            Bounds item = flag.CalculateBakingBounds();
-            nonExpandedNavmeshBounds.Add(item);
-            Bounds item2 = new Bounds(item.center, item.size + BOUNDS_SIZE);
-            _bounds.Add(item2);
+            RecastGraph recastGraph = (RecastGraph)AstarPath.active.graphs[i];
+            if (recastGraph != null)
+            {
+                bounds.Add(new Bounds(recastGraph.forcedBoundsCenter, recastGraph.forcedBoundsSize + BOUNDS_SIZE));
+            }
+            else
+            {
+                bounds.Add(new Bounds(new Vector3(20000f, 20000f, 20000f), Vector3.zero));
+            }
         }
     }
 
     public static Transform addFlag(Vector3 point)
     {
-        IUnturnedNavmeshInterface newNavmesh = UnturnedPathfinding.Get().CreateNavmesh();
+        RecastGraph graph = null;
+        System.Action callback = delegate
+        {
+            graph = addGraph();
+        };
+        AstarPath.active.AddWorkItem(callback);
+        AstarPath.active.FlushWorkItems();
         FlagData flagData = new FlagData("", 64);
-        flags.Add(new Flag(point, newNavmesh, flagData));
+        flags.Add(new Flag(point, graph, flagData));
         LevelNavigation.flagData.Add(flagData);
         return flags[flags.Count - 1].model;
     }
@@ -228,7 +288,6 @@ public class LevelNavigation
     public static void load()
     {
         _bounds = new List<Bounds>();
-        nonExpandedNavmeshBounds = new List<Bounds>();
         flagData = new List<FlagData>();
         if (ReadWrite.fileExists(Level.info.path + "/Environment/Bounds.dat", useCloud: false, usePath: false))
         {
@@ -239,9 +298,8 @@ public class LevelNavigation
                 for (byte b2 = 0; b2 < b; b2++)
                 {
                     Vector3 center = river.readSingleVector3();
-                    Vector3 vector = river.readSingleVector3();
-                    bounds.Add(new Bounds(center, vector));
-                    nonExpandedNavmeshBounds.Add(new Bounds(center, vector - BOUNDS_SIZE));
+                    Vector3 size = river.readSingleVector3();
+                    bounds.Add(new Bounds(center, size));
                 }
             }
             river.closeRiver();
@@ -288,91 +346,99 @@ public class LevelNavigation
                 flagData.Add(new FlagData("", 64));
             }
         }
-        if (Level.isEditor)
+        System.Action callback = delegate
         {
-            flags = new List<Flag>();
-            if (ReadWrite.fileExists(Level.info.path + "/Environment/Flags.dat", useCloud: false, usePath: false))
+            if (Level.isEditor)
             {
-                River river3 = new River(Level.info.path + "/Environment/Flags.dat", usePath: false);
-                byte b6 = river3.readByte();
-                if (b6 > 2)
+                flags = new List<Flag>();
+                if (ReadWrite.fileExists(Level.info.path + "/Environment/Flags.dat", useCloud: false, usePath: false))
                 {
-                    byte b7 = river3.readByte();
-                    if (flagData.Count < b7)
+                    River river3 = new River(Level.info.path + "/Environment/Flags.dat", usePath: false);
+                    byte b6 = river3.readByte();
+                    if (b6 > 2)
                     {
-                        UnturnedLog.error($"Navigation flag data count ({flagData.Count}) does not match flags count ({b7}) during editor load, fixing");
-                        for (int j = flagData.Count; j < b7; j++)
+                        byte b7 = river3.readByte();
+                        if (flagData.Count < b7)
                         {
-                            flagData.Add(new FlagData("", 64));
-                        }
-                    }
-                    for (byte b8 = 0; b8 < b7; b8++)
-                    {
-                        Vector3 newPoint = river3.readSingleVector3();
-                        float num = river3.readSingle();
-                        float num2 = river3.readSingle();
-                        if (b6 < 4)
-                        {
-                            num *= 0.5f;
-                            num2 *= 0.5f;
-                        }
-                        IUnturnedNavmeshInterface unturnedNavmeshInterface = UnturnedPathfinding.Get().CreateNavmesh();
-                        if (ReadWrite.fileExists(Level.info.path + "/Environment/Navigation_" + b8.ToString(CultureInfo.InvariantCulture) + ".dat", useCloud: false, usePath: false))
-                        {
-                            River river4 = new River(Level.info.path + "/Environment/Navigation_" + b8.ToString(CultureInfo.InvariantCulture) + ".dat", usePath: false);
-                            if (river4.readByte() > 0)
+                            UnturnedLog.error($"Navigation flag data count ({flagData.Count}) does not match flags count ({b7}) during editor load, fixing");
+                            for (int j = flagData.Count; j < b7; j++)
                             {
-                                unturnedNavmeshInterface.Deserialize(river4);
+                                flagData.Add(new FlagData("", 64));
                             }
-                            river4.closeRiver();
                         }
-                        flags.Add(new Flag(newPoint, num, num2, unturnedNavmeshInterface, flagData[b8]));
+                        for (byte b8 = 0; b8 < b7; b8++)
+                        {
+                            Vector3 newPoint = river3.readSingleVector3();
+                            float num = river3.readSingle();
+                            float num2 = river3.readSingle();
+                            if (b6 < 4)
+                            {
+                                num *= 0.5f;
+                                num2 *= 0.5f;
+                            }
+                            RecastGraph recastGraph = null;
+                            if (ReadWrite.fileExists(Level.info.path + "/Environment/Navigation_" + b8.ToString(CultureInfo.InvariantCulture) + ".dat", useCloud: false, usePath: false))
+                            {
+                                River river4 = new River(Level.info.path + "/Environment/Navigation_" + b8.ToString(CultureInfo.InvariantCulture) + ".dat", usePath: false);
+                                if (river4.readByte() > 0)
+                                {
+                                    recastGraph = buildGraph(river4);
+                                }
+                                river4.closeRiver();
+                            }
+                            if (recastGraph == null)
+                            {
+                                recastGraph = addGraph();
+                            }
+                            flags.Add(new Flag(newPoint, num, num2, recastGraph, flagData[b8]));
+                        }
                     }
+                    river3.closeRiver();
                 }
-                river3.closeRiver();
-            }
-            if (bounds.Count != flags.Count)
-            {
-                UnturnedLog.error("Navigation bounds count ({0}) does not match flags count ({1}) during editor load, fixing", bounds.Count, flags.Count);
-                updateBounds();
-            }
-        }
-        else
-        {
-            if (!Provider.isServer)
-            {
-                return;
-            }
-            int num3 = 0;
-            int num4 = 0;
-            while (num3 < 5)
-            {
-                string text = Level.info.path + "/Environment/Navigation_" + num4.ToString(CultureInfo.InvariantCulture) + ".dat";
-                if (ReadWrite.fileExists(text, useCloud: false, usePath: false))
+                if (bounds.Count != AstarPath.active.graphs.Length)
                 {
-                    River river5 = new River(text, usePath: false);
-                    if (river5.readByte() > 0)
+                    UnturnedLog.error("Navigation bounds count ({0}) does not match graph count ({1}) during editor load, fixing", bounds.Count, AstarPath.active.graphs.Length);
+                    updateBounds();
+                }
+            }
+            else if (Provider.isServer)
+            {
+                int num3 = 0;
+                int num4 = 0;
+                while (num3 < 5)
+                {
+                    string text = Level.info.path + "/Environment/Navigation_" + num4.ToString(CultureInfo.InvariantCulture) + ".dat";
+                    if (ReadWrite.fileExists(text, useCloud: false, usePath: false))
                     {
-                        UnturnedPathfinding.Get().CreateNavmesh().Deserialize(river5);
+                        River river5 = new River(text, usePath: false);
+                        if (river5.readByte() > 0)
+                        {
+                            buildGraph(river5);
+                        }
+                        river5.closeRiver();
+                        num3 = 0;
                     }
-                    river5.closeRiver();
-                    num3 = 0;
+                    else
+                    {
+                        num3++;
+                    }
+                    num4++;
                 }
-                else
+                if (bounds.Count != AstarPath.active.graphs.Length)
                 {
-                    num3++;
+                    UnturnedLog.error("Navigation bounds count ({0}) does not match graph count ({1}) during server load", bounds.Count, AstarPath.active.graphs.Length);
                 }
-                num4++;
             }
-        }
+        };
+        AstarPath.active.AddWorkItem(callback);
+        AstarPath.active.FlushWorkItems();
     }
 
     public static void save()
     {
-        if (bounds.Count != flags.Count)
+        if (bounds.Count != AstarPath.active.graphs.Length)
         {
-            UnturnedLog.error("Navigation bounds count ({0}) does not match flags count ({1}) during save", bounds.Count, flags.Count);
-            updateBounds();
+            UnturnedLog.error("Navigation bounds count ({0}) does not match graph count ({1}) during save", bounds.Count, AstarPath.active.graphs.Length);
         }
         River river = new River(Level.info.path + "/Environment/Bounds.dat", usePath: false);
         river.writeByte(SAVEDATA_BOUNDS_VERSION);
@@ -410,7 +476,7 @@ public class LevelNavigation
             river3.writeSingleVector3(flag.point);
             river3.writeSingle(flag.width);
             river3.writeSingle(flag.height);
-            if (!flag.navmeshInterface.ContainsAnyBakedData)
+            if (flag.graph.tileXCount < 1 || flag.graph.tileZCount < 1)
             {
                 UnturnedLog.warn($"Navmesh at {flag.point} has not been baked yet");
             }
@@ -418,11 +484,76 @@ public class LevelNavigation
             {
                 River river4 = new River(Level.info.path + "/Environment/Navigation_" + b3.ToString(CultureInfo.InvariantCulture) + ".dat", usePath: false);
                 river4.writeByte(SAVEDATA_NAVIGATION_VERSION);
-                flag.navmeshInterface.Serialize(river4);
+                RecastGraph graph = flag.graph;
+                river4.writeSingleVector3(graph.forcedBoundsCenter);
+                river4.writeSingleVector3(graph.forcedBoundsSize);
+                river4.writeByte((byte)graph.tileXCount);
+                river4.writeByte((byte)graph.tileZCount);
+                NavmeshTile[] tiles = graph.GetTiles();
+                for (int i = 0; i < graph.tileZCount; i++)
+                {
+                    for (int j = 0; j < graph.tileXCount; j++)
+                    {
+                        NavmeshTile navmeshTile = tiles[j + i * graph.tileXCount];
+                        river4.writeUInt16((ushort)navmeshTile.tris.Length);
+                        for (int k = 0; k < navmeshTile.tris.Length; k++)
+                        {
+                            river4.writeUInt16((ushort)navmeshTile.tris[k]);
+                        }
+                        river4.writeUInt16((ushort)navmeshTile.verts.Length);
+                        for (int l = 0; l < navmeshTile.verts.Length; l++)
+                        {
+                            Int3 @int = navmeshTile.verts[l];
+                            river4.writeInt32(@int.x);
+                            river4.writeInt32(@int.y);
+                            river4.writeInt32(@int.z);
+                        }
+                    }
+                }
                 river4.closeRiver();
                 flag.needsNavigationSave = false;
             }
         }
         river3.closeRiver();
+    }
+
+    private static RecastGraph buildGraph(River river)
+    {
+        RecastGraph recastGraph = addGraph();
+        TriangleMeshNode.SetNavmeshHolder(AstarPath.active.data.GetGraphIndex(recastGraph), recastGraph);
+        recastGraph.forcedBoundsCenter = river.readSingleVector3();
+        recastGraph.forcedBoundsSize = river.readSingleVector3();
+        recastGraph.tileXCount = river.readByte();
+        recastGraph.tileZCount = river.readByte();
+        GraphTransform graphTransform = recastGraph.CalculateTransform();
+        TileMeshes tileMeshes = default(TileMeshes);
+        tileMeshes.tileMeshes = new TileMesh[recastGraph.tileXCount * recastGraph.tileZCount];
+        tileMeshes.tileRect = new IntRect(0, 0, recastGraph.tileXCount - 1, recastGraph.tileZCount - 1);
+        tileMeshes.tileWorldSize = new Vector2(recastGraph.TileWorldSizeX, recastGraph.TileWorldSizeZ);
+        for (int i = 0; i < recastGraph.tileZCount; i++)
+        {
+            for (int j = 0; j < recastGraph.tileXCount; j++)
+            {
+                TileMesh tileMesh = default(TileMesh);
+                tileMesh.triangles = new int[river.readUInt16()];
+                for (int k = 0; k < tileMesh.triangles.Length; k++)
+                {
+                    tileMesh.triangles[k] = river.readUInt16();
+                }
+                tileMesh.verticesInTileSpace = new Int3[river.readUInt16()];
+                for (int l = 0; l < tileMesh.verticesInTileSpace.Length; l++)
+                {
+                    Int3 point = new Int3(river.readInt32(), river.readInt32(), river.readInt32());
+                    Int3 @int = graphTransform.InverseTransform(point);
+                    Int3 int2 = (Int3)new Vector3(recastGraph.TileWorldSizeX * (float)j, 0f, recastGraph.TileWorldSizeZ * (float)i);
+                    tileMesh.verticesInTileSpace[l] = @int - int2;
+                }
+                tileMesh.tags = new uint[tileMesh.triangles.Length];
+                int num = j + i * recastGraph.tileXCount;
+                tileMeshes.tileMeshes[num] = tileMesh;
+            }
+        }
+        recastGraph.ReplaceTiles(tileMeshes);
+        return recastGraph;
     }
 }

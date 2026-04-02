@@ -32,9 +32,18 @@ Asset
 		Y 360
 		Z 0
 	}
-	Uniform_Scale true
-	Min_Scale 1.4
-	Max_Scale 1.7
+	Min_Scale
+	{
+		X 1.4
+		Y 1.4
+		Z 1.4
+	}
+	Max_Scale
+	{
+		X 1.7
+		Y 1.7
+		Z 1.7
+	}
 	Mesh
 	{
 		Name core.masterbundle

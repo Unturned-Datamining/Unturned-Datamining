@@ -13,8 +13,4 @@ Quality_Max 100
 
 Food 75
 Water 75
-
-ConsumeAudioClip Sounds/EatBag_MRE.mp3
-Randomize_Consume_Audio_Pitch false
-Procedurally_Animate_Inertia false
-EquipablePrefab Items/Food/Bag_MRE/Equipable.prefab
+ConsumeAudioClip Sounds/EatCrunchy.mp3

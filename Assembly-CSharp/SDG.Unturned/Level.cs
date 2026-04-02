@@ -1719,7 +1719,6 @@ public class Level : MonoBehaviour
         }
         if (scene.buildIndex > BUILD_INDEX_SETUP && info != null)
         {
-            UnturnedPathfinding.Get().OnGameLevelInstantiated();
             _level = new GameObject().transform;
             level.name = info.name;
             level.tag = "Logic";

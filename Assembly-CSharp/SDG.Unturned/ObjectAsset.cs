@@ -438,51 +438,6 @@ public class ObjectAsset : Asset, IArmorFalloff
                 ensureNavMeshReadable();
             }
         }
-        if (!Assets.shouldValidateAssets)
-        {
-            return;
-        }
-        if (interactabilityNav != 0)
-        {
-            if (asset == null)
-            {
-                ReportAssetError($"has Interactability_Nav_Mode {interactabilityNav} but no Nav prefab");
-            }
-            else if (asset.GetComponentInChildren<Collider>(includeInactive: true) == null)
-            {
-                Component component = null;
-                Type cutComponentType = UnturnedPathfinding.Get().GetCutComponentType();
-                if (cutComponentType != null)
-                {
-                    component = asset.GetComponentInChildren(cutComponentType, includeInactive: true);
-                }
-                if (component == null)
-                {
-                    ReportAssetError($"has Interactability_Nav_Mode {interactabilityNav} but Nav prefab has no collision or navmesh cuts");
-                }
-            }
-        }
-        if (RubbleNavMode == EObjectRubbleNavMode.Unaffected)
-        {
-            return;
-        }
-        if (asset == null)
-        {
-            ReportAssetError($"has Rubble_Nav_Mode {RubbleNavMode} but no Nav prefab");
-        }
-        else if (asset.GetComponentInChildren<Collider>(includeInactive: true) == null)
-        {
-            Component component2 = null;
-            Type cutComponentType2 = UnturnedPathfinding.Get().GetCutComponentType();
-            if (cutComponentType2 != null)
-            {
-                component2 = asset.GetComponentInChildren(cutComponentType2, includeInactive: true);
-            }
-            if (component2 == null)
-            {
-                ReportAssetError($"has Rubble_Nav_Mode {RubbleNavMode} but Nav prefab has no collision or navmesh cuts");
-            }
-        }
     }
 
     protected void onSlotsGameObjectLoaded(GameObject asset)

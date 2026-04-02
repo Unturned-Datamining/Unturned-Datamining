@@ -9,7 +9,7 @@ Size_Y 2
 Size_Z 0.45
 
 Food 100
-Water 35
+Water 25
 Virus 10
 
 Blueprints
@@ -19,15 +19,15 @@ Blueprints
 		InputItems
 		[
 			{
-				ID "92597ac5ebac45f0a08a79c0f2d36126" // Upgraded Cake Blueprint
-				Critical true
-				Delete false
-			}
-			{
 				ID "8e3bffce28494c3db54eee126b92fcdb" // Cake
 			}
 			{
 				ID "1f315672d98f4ebbb9f76255faa43721" // Stealy Wheely Automobiley
+			}
+			{
+				ID "92597ac5ebac45f0a08a79c0f2d36126" // Upgraded Cake Blueprint
+				Critical true
+				Delete false
 			}
 		]
 		OutputItems this
@@ -50,8 +50,4 @@ Blueprints
 	}
 ]
 
-ConsumeAudioClip Sounds/EatCake.mp3
-Randomize_Consume_Audio_Pitch false
-Procedurally_Animate_Inertia false
-Instantiated_Item_Name_Override 471
-EquipablePrefab Items/Food/Cake/Equipable.prefab
+ConsumeAudioClip Sounds/EatCrunchy.mp3

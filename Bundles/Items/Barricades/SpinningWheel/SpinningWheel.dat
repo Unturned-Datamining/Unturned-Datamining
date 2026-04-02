@@ -1,4 +1,4 @@
-﻿GUID 5af4fb6437734db3a667f38343abdf87
+﻿GUID cd32f764c1524311a780aee00717099d
 Type Barricade
 Rarity Rare
 Useable Barricade
@@ -18,34 +18,15 @@ Explosion 19
 
 Blueprints
 [
-	// MAPLE
 	{
 		CategoryTag "bfac6026305f4737a95fd275ebff65a6" // Utilities
 		InputItems
 		[
-			{
-				ID "1e884b3e38d04dbf8d5a65bd85c61130" // Sewing Workstations Blueprint
-				Critical true
-				Delete false
-			}
-			{
-				ID "e73a23b102f24520a32ec0b2afaa6157" // Maple Plank
-				Amount 5
-			}
-			{
-				ID "46218740c256475b87dbc6a2e9a1fb19" // Maple Stick
-				Amount 6
-			}
-			{
-				ID "656f319d2d194813b390edc6edd8a697" // Metal Bar
-				Amount 2
-			}
-			{
-				ID "14901f32cd3240179fd6124324cc27e5" // Cloth
-			}
-			{
-				ID "4b68587f5cad45eaab5e07ed0e6fd3b3" // Nails
-			}
+			"e73a23b102f24520a32ec0b2afaa6157 x 5" // Maple Plank
+			"46218740c256475b87dbc6a2e9a1fb19 x 6" // Maple Stick
+			"656f319d2d194813b390edc6edd8a697 x 2" // Metal Bar
+			"4b68587f5cad45eaab5e07ed0e6fd3b3" // Nails
+			"14901f32cd3240179fd6124324cc27e5" // Cloth
 		]
 		OutputItems this
 		Skill Craft
@@ -56,35 +37,15 @@ Blueprints
 		]
 		Effect "84347b13028340b8976033c08675d458" // Wrench
 	}
-	
-	// BIRCH
 	{
 		CategoryTag "bfac6026305f4737a95fd275ebff65a6" // Utilities
 		InputItems
 		[
-			{
-				ID "1e884b3e38d04dbf8d5a65bd85c61130" // Sewing Workstations Blueprint
-				Critical true
-				Delete false
-			}
-			{
-				ID "5a3c4302400e400b9b9486fbb5178eca" // Birch Plank
-				Amount 5
-			}
-			{
-				ID "9c563bf14d4641a18873f338beaed128" // Birch Stick
-				Amount 6
-			}
-			{
-				ID "656f319d2d194813b390edc6edd8a697" // Metal Bar
-				Amount 2
-			}
-			{
-				ID "14901f32cd3240179fd6124324cc27e5" // Cloth
-			}
-			{
-				ID "4b68587f5cad45eaab5e07ed0e6fd3b3" // Nails
-			}
+			"5a3c4302400e400b9b9486fbb5178eca x 5" // Birch Plank
+			"9c563bf14d4641a18873f338beaed128 x 6" // Birch Stick
+			"656f319d2d194813b390edc6edd8a697 x 2" // Metal Bar
+			"4b68587f5cad45eaab5e07ed0e6fd3b3" // Nails
+			"14901f32cd3240179fd6124324cc27e5" // Cloth
 		]
 		OutputItems this
 		Skill Craft
@@ -95,35 +56,15 @@ Blueprints
 		]
 		Effect "84347b13028340b8976033c08675d458" // Wrench
 	}
-	
-	// PINE
 	{
 		CategoryTag "bfac6026305f4737a95fd275ebff65a6" // Utilities
 		InputItems
 		[
-			{
-				ID "1e884b3e38d04dbf8d5a65bd85c61130" // Sewing Workstations Blueprint
-				Critical true
-				Delete false
-			}
-			{
-				ID "719bfdf2c2dc4be6ad5be44d044583e4" // Pine Plank
-				Amount 5
-			}
-			{
-				ID "55d9700ea53c477685458171932251f1" // Pine Stick
-				Amount 6
-			}
-			{
-				ID "656f319d2d194813b390edc6edd8a697" // Metal Bar
-				Amount 2
-			}
-			{
-				ID "14901f32cd3240179fd6124324cc27e5" // Cloth
-			}
-			{
-				ID "4b68587f5cad45eaab5e07ed0e6fd3b3" // Nails
-			}
+			"719bfdf2c2dc4be6ad5be44d044583e4 x 5" // Pine Plank
+			"55d9700ea53c477685458171932251f1 x 6" // Pine Stick
+			"656f319d2d194813b390edc6edd8a697 x 2" // Metal Bar
+			"4b68587f5cad45eaab5e07ed0e6fd3b3" // Nails
+			"14901f32cd3240179fd6124324cc27e5" // Cloth
 		]
 		OutputItems this
 		Skill Craft

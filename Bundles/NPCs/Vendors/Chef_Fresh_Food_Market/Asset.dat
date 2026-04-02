@@ -2,7 +2,7 @@
 Type Vendor
 ID 63
 
-Buying 22
+Buying 15
 // MRE
 Buying_0_ID 81
 Buying_0_Cost 50
@@ -48,32 +48,6 @@ Buying_13_Cost 30
 // Raw vension
 Buying_14_ID 514
 Buying_14_Cost 40
-// Raw Shrimp
-Buying_15_ID 1952
-Buying_15_Cost 5
-// Raw Goatfish
-Buying_16_ID 1954
-Buying_16_Cost 10
-// Raw Northern Pike
-Buying_17_ID 1959
-Buying_17_Cost 45
-// Raw Dolphinfish
-Buying_18_ID 1956
-Buying_18_Cost 45
-// Raw Lobster
-Buying_19_ID 1965
-Buying_19_Cost 50
-// Raw Tuna
-Buying_20_ID 1961
-Buying_20_Cost 60
-// Raw Giant Squid (if player has completed Wallace's squid quest)
-Buying_21_ID 1434
-Buying_21_Cost 60
-Buying_21_Conditions 1
-Buying_21_Condition_0_Type Quest
-Buying_21_Condition_0_ID 38
-Buying_21_Condition_0_Logic Equal
-Buying_21_Condition_0_Status Completed
 
 Selling 9
 // Maple syrup

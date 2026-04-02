@@ -50,9 +50,4 @@ public class RaycastInfo
         point = hit.position;
         section = byte.MaxValue;
     }
-
-    public override string ToString()
-    {
-        return $"(Transform: {transform?.GetSceneHierarchyPath()}, Collider: {collider?.GetSceneHierarchyPath()}, Distance: {distance}, Point: {point}, Direction: {direction}, Normal: {normal}, Player: {player}, Zombie: {zombie}, Animal: {animal}, Limb: {limb}, Material: {materialName}, Vehicle: {vehicle}, Section: {section})";
-    }
 }

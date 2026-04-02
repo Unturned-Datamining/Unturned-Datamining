@@ -98,26 +98,16 @@ public class HighlighterTool
     {
         if (!target.CompareTag("Player") && !target.CompareTag("Enemy") && !target.CompareTag("Zombie") && !target.CompareTag("Animal") && !target.CompareTag("Agent"))
         {
-            PartialHighlight(target, color);
+            Highlighter highlighter = target.GetComponent<Highlighter>();
+            if (highlighter == null)
+            {
+                highlighter = target.gameObject.AddComponent<Highlighter>();
+            }
+            highlighter.ConstantOn(color);
         }
-    }
-
-    private static void PartialHighlight(Transform target, Color color)
-    {
-        Highlighter highlighter = target.GetComponent<Highlighter>();
-        if (highlighter == null)
-        {
-            highlighter = target.gameObject.AddComponent<Highlighter>();
-        }
-        highlighter.ConstantOn(color);
     }
 
     public static void unhighlight(Transform target)
-    {
-        PartialUnhighlight(target);
-    }
-
-    private static void PartialUnhighlight(Transform target)
     {
         Highlighter component = target.GetComponent<Highlighter>();
         if (!(component == null))

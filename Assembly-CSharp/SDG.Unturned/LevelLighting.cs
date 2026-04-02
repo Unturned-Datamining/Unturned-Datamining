@@ -659,19 +659,6 @@ public class LevelLighting
 
     public static event IsSeaChangedHandler isSeaChanged;
 
-    public static float GetFishingBiteIntervalMultiplier(uint weatherMask)
-    {
-        float num = 1f;
-        foreach (CustomWeatherInstance customWeatherInstance in customWeatherInstances)
-        {
-            if ((customWeatherInstance.asset.volumeMask & weatherMask) != 0)
-            {
-                num *= Mathf.Lerp(1f, customWeatherInstance.asset.FishBiteIntervalMultiplier, customWeatherInstance.component.globalBlendAlpha);
-            }
-        }
-        return num;
-    }
-
     private static CustomWeatherInstance FindWeatherInstanceByAsset(WeatherAssetBase asset)
     {
         foreach (CustomWeatherInstance customWeatherInstance in customWeatherInstances)
@@ -1217,7 +1204,15 @@ public class LevelLighting
                 cloudRimColor = Color.Lerp(cloudRimColor, Color.black, localLightingBlend / 2f);
             }
         }
-        UpdateSunShafts(sunFlare, raysColor);
+        if (MainCamera.instance != null)
+        {
+            SunShaftsCs component = MainCamera.instance.GetComponent<SunShaftsCs>();
+            if (component != null)
+            {
+                component.sunTransform = sunFlare;
+                component.sunColor = raysColor;
+            }
+        }
         skybox.SetVector("_SkyHackAmbientEquator", RenderSettings.ambientEquatorColor.linear);
         skybox.SetVector("_SkyHackAmbientGround", RenderSettings.ambientGroundColor.linear);
         skybox.SetVector("_SunDirection", sun.forward);
@@ -2047,40 +2042,24 @@ public class LevelLighting
         }
         currentAudioVolume = Mathf.Lerp(currentAudioVolume, targetAudioVolume, 0.1f * deltaTime);
         float num8 = 1f - maxAmbianceAudioVolume;
-        bool flag3 = false;
         float num9 = 0f;
         float num10 = 0.15f;
         foreach (CustomWeatherInstance customWeatherInstance2 in customWeatherInstances)
         {
             if (customWeatherInstance2.component.ambientAudioSource != null)
             {
-                float num11 = customWeatherInstance2.component.EffectBlendAlpha;
-                if (customWeatherInstance2.asset.IsAudioHigherPriorityThanAmbianceVolumes)
-                {
-                    flag3 = true;
-                }
-                else
-                {
-                    num11 *= num8;
-                }
-                customWeatherInstance2.component.ambientAudioSource.volume = Mathf.Lerp(customWeatherInstance2.component.ambientAudioSource.volume, num11, 0.5f * deltaTime);
+                float b = num8 * customWeatherInstance2.component.EffectBlendAlpha;
+                customWeatherInstance2.component.ambientAudioSource.volume = Mathf.Lerp(customWeatherInstance2.component.ambientAudioSource.volume, b, 0.5f * deltaTime);
                 num9 = Mathf.Max(num9, customWeatherInstance2.component.ambientAudioSource.volume);
             }
-            float b = customWeatherInstance2.component.windMain * customWeatherInstance2.component.EffectBlendAlpha;
-            num10 = Mathf.Max(num10, b);
+            float b2 = customWeatherInstance2.component.windMain * customWeatherInstance2.component.EffectBlendAlpha;
+            num10 = Mathf.Max(num10, b2);
             customWeatherInstance2.component.UpdateWeather();
         }
-        float num12 = 1f - num9;
-        if (flag3)
-        {
-            foreach (AmbianceAudioInstance activeAmbianceAudioInstance in activeAmbianceAudioInstances)
-            {
-                activeAmbianceAudioInstance.audioSource.volume *= num12;
-            }
-        }
+        float num11 = 1f - num9;
         windAudio.volume = windOverride;
-        dayAudio.volume = Mathf.Lerp(dayAudio.volume, dayVolume * currentAudioVolume * (1f - waterAudio.volume * 4f) * (1f - belowAudio.volume) * (1f - windAudio.volume) * (1f - maxAmbianceAudioVolume) * num12, 0.5f * Time.deltaTime);
-        nightAudio.volume = Mathf.Lerp(nightAudio.volume, nightVolume * currentAudioVolume * (1f - waterAudio.volume * 4f) * (1f - belowAudio.volume) * (1f - windAudio.volume) * (1f - maxAmbianceAudioVolume) * num12, 0.5f * Time.deltaTime);
+        dayAudio.volume = Mathf.Lerp(dayAudio.volume, dayVolume * currentAudioVolume * (1f - waterAudio.volume * 4f) * (1f - belowAudio.volume) * (1f - windAudio.volume) * (1f - maxAmbianceAudioVolume) * num11, 0.5f * Time.deltaTime);
+        nightAudio.volume = Mathf.Lerp(nightAudio.volume, nightVolume * currentAudioVolume * (1f - waterAudio.volume * 4f) * (1f - belowAudio.volume) * (1f - windAudio.volume) * (1f - maxAmbianceAudioVolume) * num11, 0.5f * Time.deltaTime);
         windZone.transform.rotation = Quaternion.Slerp(windZone.transform.rotation, Quaternion.Euler(0f, wind, 0f), 0.5f * deltaTime);
         windZone.windMain = Mathf.Lerp(windZone.windMain, num10, 0.5f * deltaTime);
         point.y = Mathf.Min(point.y - 16f, num5 - 32f);
@@ -2150,7 +2129,14 @@ public class LevelLighting
             cachedAtmosphericFog = newFog;
             Shader.SetGlobalFloat("_AtmosphericFog", newFog);
         }
-        UpdateSunShaftsIntensity(1f - newFog);
+        if (MainCamera.instance != null)
+        {
+            SunShaftsCs component = MainCamera.instance.GetComponent<SunShaftsCs>();
+            if (component != null)
+            {
+                component.sunShaftIntensity = 1f - newFog;
+            }
+        }
     }
 
     private static void setAlphaParticleLightingColor(Color newColor)
@@ -2479,37 +2465,6 @@ public class LevelLighting
                 num5 = Mathf.Max(0f, num5 - num2);
                 maxAmbianceAudioVolume = Mathf.Max(num5, maxAmbianceAudioVolume);
                 ambianceAudioInstance2.audioSource.volume = num5;
-            }
-        }
-    }
-
-    /// <summary>
-    /// Moves legacy image effect dependency out of SDK release.
-    /// </summary>
-    private static void UpdateSunShafts(Transform sunTransform, Color sunColor)
-    {
-        if (MainCamera.instance != null)
-        {
-            SunShaftsCs component = MainCamera.instance.GetComponent<SunShaftsCs>();
-            if (component != null)
-            {
-                component.sunTransform = sunTransform;
-                component.sunColor = sunColor;
-            }
-        }
-    }
-
-    /// <summary>
-    /// Moves legacy image effect dependency out of SDK release.
-    /// </summary>
-    private static void UpdateSunShaftsIntensity(float intensity)
-    {
-        if (MainCamera.instance != null)
-        {
-            SunShaftsCs component = MainCamera.instance.GetComponent<SunShaftsCs>();
-            if (component != null)
-            {
-                component.sunShaftIntensity = intensity;
             }
         }
     }

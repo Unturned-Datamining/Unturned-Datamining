@@ -24,25 +24,6 @@ Blueprints
 		]
 		Effect "7eceb9f7751d4634b572c8e236355104" // Rip
 	}
-	{
-		CategoryTag "d089feb7e43f40c5a7dfcefc36998cfb" // Supplies
-		InputItems
-		[
-			{
-				ID "8d840f701cc645789d4dc0765b461a2a" // Dressing Blueprint
-				Critical true
-				Delete false
-			}
-			{
-				ID "e0503457d87b4230bfa78350c79d16ec" // Bandage
-			}
-			{
-				ID "7aee55ea2abf4f3fb70c4b2677da0e14" // Chemicals
-			}
-		]
-		OutputItems this
-		Effect "7eceb9f7751d4634b572c8e236355104" // Rip
-	}
 ]
 
 InventoryAudio Sounds/Inventory/LightCloth.asset

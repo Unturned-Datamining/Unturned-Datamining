@@ -9,12 +9,8 @@
 	"Category": "Official",
 	"Visible_In_Matchmaking": true,
 	"Status": "NONE",
-	"Version": "3.26.1.0",
+	"Version": "3.24.1.0",
 	"Use_Underground_Whitelist": true,
-	"Asset":
-	{
-		"GUID": "c8c0a176453b40018fbea2d4703af223"
-	},
 	"Batching_Version": 2,
 	"Enable_Clutter_Option": true
 }

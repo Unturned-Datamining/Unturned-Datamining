@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using Pathfinding;
-using SDG.Unturned;
 using UnityEngine;
 
 /// <summary>
@@ -11,7 +10,7 @@ using UnityEngine;
 /// </summary>
 [RequireComponent(typeof(Seeker))]
 [AddComponentMenu("Pathfinding/AI/LegacyAIPath")]
-public class LegacyAIPathNoRedist : MonoBehaviour, IUnturnedPathfindingMovementComponentInterface
+public class LegacyAIPath : MonoBehaviour
 {
     /// Determines how often it will search for new paths. 
     /// If you have fast moving targets or AIs, you might want to set it to a lower value.
@@ -108,78 +107,6 @@ public class LegacyAIPathNoRedist : MonoBehaviour, IUnturnedPathfindingMovementC
     /// Returns if the end-of-path has been reached
     /// \see targetReached 
     public bool TargetReached => targetReached;
-
-    public bool CanMove
-    {
-        get
-        {
-            return canMove;
-        }
-        set
-        {
-            canMove = value;
-        }
-    }
-
-    public bool CanTurn
-    {
-        get
-        {
-            return canTurn;
-        }
-        set
-        {
-            canTurn = value;
-        }
-    }
-
-    public bool CanSearch
-    {
-        get
-        {
-            return canSearch;
-        }
-        set
-        {
-            canSearch = value;
-        }
-    }
-
-    public float Speed
-    {
-        get
-        {
-            return speed;
-        }
-        set
-        {
-            speed = value;
-        }
-    }
-
-    public Transform TargetTransform
-    {
-        get
-        {
-            return target;
-        }
-        set
-        {
-            target = value;
-        }
-    }
-
-    public Vector3 TargetDirection
-    {
-        get
-        {
-            return targetDirection;
-        }
-        set
-        {
-            targetDirection = value;
-        }
-    }
 
     /// Initializes reference variables.
     /// 	 * If you override this function you should in most cases call base.Awake () at the start of it.
@@ -420,10 +347,5 @@ public class LegacyAIPathNoRedist : MonoBehaviour, IUnturnedPathfindingMovementC
         float magnitude = rhs.magnitude;
         rhs /= magnitude;
         return Vector3.Dot(point - lineStart, rhs) / magnitude;
-    }
-
-    public void Move(float deltaTime)
-    {
-        move(deltaTime);
     }
 }

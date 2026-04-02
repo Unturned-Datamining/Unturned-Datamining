@@ -26,8 +26,4 @@ Blueprints
 	}
 ]
 
-ConsumeAudioClip Sounds/EatVenison.mp3
-Randomize_Consume_Audio_Pitch false
-Procedurally_Animate_Inertia false
-Instantiated_Item_Name_Override 514
-EquipablePrefab Items/Food/Venison_Cooked/Equipable.prefab
+ConsumeAudioClip Sounds/EatCrunchy.mp3

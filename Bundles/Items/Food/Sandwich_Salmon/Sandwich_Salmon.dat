@@ -8,8 +8,7 @@ Size_X 1
 Size_Y 1
 Size_Z 0.3
 
-Food 65
-Water 10
+Food 90
 
 Blueprints
 [
@@ -18,7 +17,7 @@ Blueprints
 		InputItems
 		[
 			"4880f590a948465891188c5f96559340 x 2" // Bread
-			"2d6c74d430524040955e60f04e1399f2" // Cooked Salmon
+			"2d6c74d430524040955e60f04e1399f2 x 2" // Cooked Salmon
 		]
 		OutputItems this
 		Skill Cook
@@ -31,8 +30,4 @@ Blueprints
 	}
 ]
 
-ConsumeAudioClip Sounds/EatSandwich.mp3
-Randomize_Consume_Audio_Pitch false
-Procedurally_Animate_Inertia false
-Instantiated_Item_Name_Override 467
-EquipablePrefab Items/Food/Sandwich_Salmon/Equipable.prefab
+ConsumeAudioClip Sounds/EatCrunchy.mp3

@@ -7,7 +7,7 @@ public class NPCZombieKillsCondition : INPCCondition
 {
     /// <summary>
     /// Only kills outside this radius around the player are tracked.
-    /// Useful for quests incentivizing sniping.
+    /// NSTM requested this for a sniping zombies quest.
     /// </summary>
     public float sqrMinRadius;
 

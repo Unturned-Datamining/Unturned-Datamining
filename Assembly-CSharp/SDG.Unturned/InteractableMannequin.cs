@@ -332,7 +332,6 @@ public class InteractableMannequin : Interactable, IManualOnDestroy
         Transform transform = base.transform.Find("Root");
         anim = transform.GetComponent<Animation>();
         clothes = transform.GetOrAddComponent<HumanClothes>();
-        clothes.ShouldHairOverridesUseFallbackColor = true;
         updateState(state);
     }
 

@@ -8,7 +8,7 @@ Quality Your ranger weapons and attachments are more durable than their military
 Umbrella Use an umbrella to slow your fall.
 Heal Heal other players by right-clicking on them while holding a medical item.
 Rotate Rotate objects while building by holding right-click while dragging your mouse.
-Base Your crafting materials impacts stats and from best to worst are: <color=epic>Brick</color> → <color=epic>Metal</color> → <color=rare>Pine</color> → <color=uncommon>Maple</color> → <color=common>Birch</color>.
+Base Your crafting materials impacts stats and from best to worst are: <color=rare>Brick</color> → <color=epic>Metal</color> → <color=rare>Pine</color> → <color=uncommon>Maple</color> → <color=common>Birch</color>.
 Dequip Quickly dequip an item by pressing [{0}].
 Nightvision Toggle your nightvision goggles or headlamp by pressing [{0}].
 Transfer Quickly transfer an item in/out of storage by holding [{0}] while right-clicking it.
@@ -33,11 +33,8 @@ Steady Steady your scope by holding [{0}] while aiming. Remember to account for 
 Streamer Customize the names displayed in streamer mode by modifying StreamerNames.json, maybe with viewer/subscriber names!
 SkipActionCraftingMenu Skip visiting the crafting menu when performing an action in an item's context menu by holding [{0}] while clicking it.
 Workstation Most items require a workstation to craft or repair. Get started by making a <color=uncommon>Simple Workbench</color>!
-WorkstationHeat Raw food can be cooked at heat sources such as the <color=uncommon>Campfire</color> or <color=rare>Brick Oven</color>.
+WorkstationHeat Raw food can be cooked at heat sources such as the <color=uncommon>Campfire</color> or <color=rare>Brick Oven</color>
 WorkstationFood Create better foods with a <color=rare>Food Prep Station</color> or enclosed heat source like the <color=epic>Electric Stove</color>.
 WorkstationMedicine High-quality medicine and explosives requires a <color=epic>Chemistry Lab</color> to craft.
 WorkstationDye Dye clothing and furniture at a <color=rare>Dye Vat</color>.
-WorkstationClothes Clothing can be repaired at a <color=rare>Sewing Table</color>.
-WorkstationPottery Clay can be fired into bricks at a <color=rare>Pottery Kiln</color>.
-MiningClay Clay is often found underwater or near caves, and can be mined with a <color=rare>Pickaxe</color> or <color=uncommon>Shovel</color>.
-Fishing Some fish can be difficult to catch without a stronger fishing rod. Don't give up – most fish are rather predictable!
+WorkstationClothes Clothing can be repaired from a <color=rare>Spinning Wheel</color>

@@ -8,7 +8,7 @@ public class SleekButtonIcon : SleekWrapper
 
     private int iconSize;
 
-    private bool iconFillsButton;
+    private bool iconScale;
 
     private ISleekImage iconImage;
 
@@ -19,14 +19,15 @@ public class SleekButtonIcon : SleekWrapper
         set
         {
             iconImage.Texture = value;
-            if (iconSize == 0 && !iconFillsButton && iconImage.Texture != null)
+            if (iconSize == 0 && !iconScale && iconImage.Texture != null)
             {
                 iconImage.SizeOffset_X = iconImage.Texture.width;
                 iconImage.SizeOffset_Y = iconImage.Texture.height;
-            }
-            if (label != null)
-            {
-                UpdateLabelAlignment();
+                if (label != null)
+                {
+                    label.PositionOffset_X = iconImage.SizeOffset_X + iconImage.PositionOffset_X * 2f;
+                    label.SizeOffset_X = 0f - label.PositionOffset_X - 5f;
+                }
             }
         }
     }
@@ -173,7 +174,8 @@ public class SleekButtonIcon : SleekWrapper
             iconImage.PositionOffset_Y = value;
             if (label != null)
             {
-                UpdateLabelAlignment();
+                label.PositionOffset_X = iconImage.SizeOffset_X + iconImage.PositionOffset_X * 2f;
+                label.SizeOffset_X = 0f - label.PositionOffset_X - 5f;
             }
         }
     }
@@ -209,7 +211,7 @@ public class SleekButtonIcon : SleekWrapper
     public SleekButtonIcon(Texture2D newIcon, int newSize, bool newScale)
     {
         iconSize = newSize;
-        iconFillsButton = newScale;
+        iconScale = newScale;
         button = Glazier.Get().CreateButton();
         button.SizeScale_X = 1f;
         button.SizeScale_Y = 1f;
@@ -220,7 +222,7 @@ public class SleekButtonIcon : SleekWrapper
         iconImage = Glazier.Get().CreateImage();
         iconImage.Texture = newIcon;
         iconPositionOffset = 5;
-        if (iconFillsButton)
+        if (iconScale)
         {
             iconImage.SizeOffset_X = -10f;
             iconImage.SizeOffset_Y = -10f;
@@ -245,7 +247,8 @@ public class SleekButtonIcon : SleekWrapper
             label = Glazier.Get().CreateLabel();
             label.SizeScale_X = 1f;
             label.SizeScale_Y = 1f;
-            UpdateLabelAlignment();
+            label.PositionOffset_X = iconImage.SizeOffset_X + iconImage.PositionOffset_X * 2f;
+            label.SizeOffset_X = 0f - label.PositionOffset_X - 5f;
             AddChild(label);
         }
         AddChild(iconImage);
@@ -276,19 +279,5 @@ public class SleekButtonIcon : SleekWrapper
     private void onRightClickedInternalButton(ISleekElement internalButton)
     {
         this.onRightClickedButton?.Invoke(this);
-    }
-
-    private void UpdateLabelAlignment()
-    {
-        if (iconImage.Texture != null)
-        {
-            label.PositionOffset_X = iconImage.SizeOffset_X + iconImage.PositionOffset_X * 2f;
-            label.SizeOffset_X = 0f - label.PositionOffset_X - iconImage.PositionOffset_X;
-        }
-        else
-        {
-            label.PositionOffset_X = 5f;
-            label.SizeOffset_X = -10f;
-        }
     }
 }

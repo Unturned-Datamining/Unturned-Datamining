@@ -10,8 +10,4 @@ Size2_Z 0.35
 
 Health 10
 Food 55
-
-ConsumeAudioClip Sounds/EatCanL.mp3
-Randomize_Consume_Audio_Pitch false
-Procedurally_Animate_Inertia false
-EquipablePrefab Items/Food/Canned_Beans/Equipable.prefab
+ConsumeAudioClip Sounds/EatCrunchy.mp3

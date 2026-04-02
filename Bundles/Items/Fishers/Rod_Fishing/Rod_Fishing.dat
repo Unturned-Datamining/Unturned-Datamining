@@ -12,17 +12,6 @@ EquipableModelParent LeftHook
 
 Reward_ID 2
 
-// Identical to default CatchChallenge values.
-Fishing_Reward_Mode WaterVolumes
-CatchChallenge_Enabled true
-CatchChallenge_CursorSize 0.2
-CatchChallenge_Gravity 1.0
-CatchChallenge_Acceleration 1.0
-CatchChallenge_UpperRestitution 0.5
-CatchChallenge_LowerRestitution 0.5
-CatchChallenge_CaptureSpeed 1.0
-CatchChallenge_EscapeSpeed 1.0
-
 Blueprints
 [
 	{

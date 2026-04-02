@@ -9,9 +9,4 @@ Size_Z 0.3
 
 Health 10
 Food 40
-
-ConsumeAudioClip Sounds/EatCanS.mp3
-Randomize_Consume_Audio_Pitch false
-EquipableModelParent LeftHook
-Procedurally_Animate_Inertia false
-EquipablePrefab Items/Food/Canned_Bacon/Equipable.prefab
+ConsumeAudioClip Sounds/EatCrunchy.mp3

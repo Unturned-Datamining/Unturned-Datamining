@@ -83,9 +83,7 @@ public class PlayerUI : MonoBehaviour
 
     public static EChatMode chat;
 
-    private static AudioClip stunClip;
-
-    private static AudioClip hitCriticalSound;
+    private static StaticResourceRef<AudioClip> hitCriticalSound = new StaticResourceRef<AudioClip>("Sounds/General/Hit");
 
     internal static PlayerUI instance;
 
@@ -142,20 +140,11 @@ public class PlayerUI : MonoBehaviour
 
     public static event IsBlindfoldedChangedHandler isBlindfoldedChanged;
 
-    private static AudioClip GetOrLoadStunClip()
-    {
-        if (stunClip == null)
-        {
-            stunClip = new AudioReference("core.masterbundle", "Sounds/Stun.mp3").LoadAudioClip();
-        }
-        return stunClip;
-    }
-
     public static void stun(Color color, float amount)
     {
         stunColor = color;
         stunAlpha = amount * 5f;
-        MainCamera.instance.GetComponent<AudioSource>().PlayOneShot(GetOrLoadStunClip(), amount);
+        MainCamera.instance.GetComponent<AudioSource>().PlayOneShot((AudioClip)Resources.Load("Sounds/General/Stun"), amount);
         if (!isWindowEnabledByColorOverlay)
         {
             isWindowEnabledByColorOverlay = true;
@@ -171,15 +160,6 @@ public class PlayerUI : MonoBehaviour
             isWindowEnabledByColorOverlay = true;
             UpdateWindowEnabled();
         }
-    }
-
-    private static AudioClip GetOrLoadHitCriticalSound()
-    {
-        if (hitCriticalSound == null)
-        {
-            hitCriticalSound = new AudioReference("core.masterbundle", "Sounds/Hit.mp3").LoadAudioClip();
-        }
-        return hitCriticalSound;
     }
 
     public static void hitmark(Vector3 point, bool worldspace, EPlayerHit newHit)
@@ -202,7 +182,7 @@ public class PlayerUI : MonoBehaviour
             PlayerLifeUI.activeHitmarkers.Add(item);
             if (newHit == EPlayerHit.CRITICAL)
             {
-                MainCamera.instance.GetComponent<AudioSource>().PlayOneShot(GetOrLoadHitCriticalSound(), 0.5f);
+                MainCamera.instance.GetComponent<AudioSource>().PlayOneShot(hitCriticalSound, 0.5f);
             }
         }
     }

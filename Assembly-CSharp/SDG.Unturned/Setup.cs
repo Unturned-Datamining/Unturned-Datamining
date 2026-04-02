@@ -51,7 +51,6 @@ public class Setup : MonoBehaviour
         {
             GlazierFactory.Create();
         }
-        UnturnedPathfinding.Initialize();
     }
 
     private void Start()

@@ -2,7 +2,7 @@
 Type Vendor
 ID 27
 
-Selling 8
+Selling 7
 Selling_0_ID 115
 Selling_0_Cost 100
 Selling_1_ID 270
@@ -17,7 +17,5 @@ Selling_5_ID 274
 Selling_5_Cost 100
 Selling_6_ID 275
 Selling_6_Cost 100
-Selling_7_ID 571
-Selling_7_Cost 100
 
 FaceOverride 31

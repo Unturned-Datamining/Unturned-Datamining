@@ -43,8 +43,4 @@ Asset
 			ValueThreshold 0.1
 		}
 	]
-	Allow_Building_In_Safezone_In_Singleplayer true
-
-	Supports_Fishing_Volumes true
-	Default_Fish_Spawn_Table 49f082ab320a42b3a49da335c89fa44a
 }

@@ -31,11 +31,6 @@ public class WeatherAssetBase : Asset
     public MasterBundleReference<AudioClip> ambientAudio { get; protected set; }
 
     /// <summary>
-    /// If true, this weather's ambientAudio is higher priority than volumes.
-    /// </summary>
-    public bool IsAudioHigherPriorityThanAmbianceVolumes { get; set; }
-
-    /// <summary>
     /// Component to spawn for additional weather logic.
     /// </summary>
     public Type componentType { get; protected set; }
@@ -47,19 +42,12 @@ public class WeatherAssetBase : Asset
 
     public bool hasLightning { get; protected set; }
 
-    /// <summary>
-    /// Multiplier for interval before a fish takes the bait.
-    /// Defaults to 1.
-    /// </summary>
-    public float FishBiteIntervalMultiplier { get; set; }
-
     public override void PopulateAsset(in PopulateAssetParameters p)
     {
         base.PopulateAsset(in p);
         fadeInDuration = p.data.ParseFloat("Fade_In_Duration");
         fadeOutDuration = p.data.ParseFloat("Fade_Out_Duration");
         ambientAudio = p.data.ParseStruct<MasterBundleReference<AudioClip>>("Ambient_Audio_Clip");
-        IsAudioHigherPriorityThanAmbianceVolumes = p.data.ParseBool("Ambient_Audio_Takes_Priority_Over_Ambiance_Volumes");
         componentType = p.data.ParseType("Component_Type");
         if (componentType == null)
         {
@@ -87,6 +75,5 @@ public class WeatherAssetBase : Asset
                 lightningTargetRadius = 500f;
             }
         }
-        FishBiteIntervalMultiplier = p.data.ParseFloat("Fish_Bite_Interval_Multiplier", 1f);
     }
 }

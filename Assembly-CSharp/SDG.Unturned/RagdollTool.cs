@@ -210,7 +210,6 @@ public class RagdollTool
                 component.visualMask = clothes.visualMask;
                 component.visualGlasses = clothes.visualGlasses;
                 component.isVisual = clothes.isVisual;
-                component.ShouldHairOverridesUseFallbackColor = clothes.thirdClothes.ShouldHairOverridesUseFallbackColor;
                 component.apply();
             }
             applyRagdollEffect(transform, effect);

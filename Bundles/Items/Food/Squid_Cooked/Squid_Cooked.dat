@@ -1,6 +1,6 @@
 ﻿GUID cedb2b864cc74f13a95134a30ea08359
 Type Food
-Rarity Legendary
+Rarity Epic
 Useable Consumeable
 ID 1435
 
@@ -9,8 +9,6 @@ Size_Y 2
 Size_Z 0.35
 
 Food 50
-Water 30
-Disinfectant 10
 
 Blueprints
 [

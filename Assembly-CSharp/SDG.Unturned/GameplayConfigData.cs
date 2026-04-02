@@ -94,16 +94,6 @@ public class GameplayConfigData
     public bool Bypass_Buildable_Mobility;
 
     /// <summary>
-    /// If true, buildables can be placed in "no building" zones.
-    /// </summary>
-    public bool Bypass_No_Building_Zones;
-
-    /// <summary>
-    /// If true, buildables can be placed in safezones.
-    /// </summary>
-    public bool Bypass_Building_In_Safezones;
-
-    /// <summary>
     /// Should holiday (Halloween and Christmas) content like NPC outfits and decorations be loaded?
     /// </summary>
     public bool Allow_Holidays = true;
@@ -138,14 +128,7 @@ public class GameplayConfigData
     /// <summary>
     /// If true, client-side options like damage flinch, explosion camera shake, viewmodel bob are ignored.
     /// </summary>
-    [ConfigWarnIfTrue]
     public bool Disable_Motion_Sickness_Options;
-
-    /// <summary>
-    /// If true, minimum foliage density of "Low" is enforced.
-    /// </summary>
-    [ConfigWarnIfTrue]
-    public bool Disable_Foliage_Off;
 
     /// <summary>
     /// If true, hide viewmodel while aiming a dual-render scope and show a 2D overlay instead.
@@ -153,12 +136,6 @@ public class GameplayConfigData
     /// dual-render surface to zoom-*out* when aiming in.
     /// </summary>
     public bool Use_2D_Scope_Overlay;
-
-    /// <summary>
-    /// If true, a challenge must be completed before catching a fish.
-    /// Only applicable for supported maps and fishing rods. (I.e., not older custom maps.)
-    /// </summary>
-    public bool Enable_Fishing_Catch_Challenge;
 
     internal const uint MAX_TIMER_EXIT = 60u;
 
@@ -239,21 +216,6 @@ public class GameplayConfigData
     /// </summary>
     public float Viewmodel_AimingMisalignmentMultiplier = 1f;
 
-    /// <summary>
-    /// Shortest amount of time before a fish takes the bait.
-    /// </summary>
-    public float Min_Fishing_Bite_Interval;
-
-    /// <summary>
-    /// Longest amount of time before a fish takes the bait.
-    /// </summary>
-    public float Max_Fishing_Bite_Interval;
-
-    /// <summary>
-    /// Multiplier for fishing bite interval when casting strength bar is full.
-    /// </summary>
-    public float Fishing_MaxStrength_Bite_Interval_Multiplier = 0.3f;
-
     internal static CommandLineFlag _forceTrustClient = new CommandLineFlag(defaultValue: false, "-ForceTrustClient");
 
     public GameplayConfigData(EGameMode mode)
@@ -315,27 +277,10 @@ public class GameplayConfigData
         Enable_Damage_Flinch = true;
         Enable_Explosion_Camera_Shake = true;
         Enable_Workstation_Requirements = true;
-        Enable_Fishing_Catch_Challenge = true;
-        switch (mode)
-        {
-        case EGameMode.TUTORIAL:
-            Min_Fishing_Bite_Interval = 15f;
-            Max_Fishing_Bite_Interval = 25f;
-            break;
-        case EGameMode.EASY:
-            Min_Fishing_Bite_Interval = 35f;
-            Max_Fishing_Bite_Interval = 48f;
-            break;
-        default:
-            Min_Fishing_Bite_Interval = 48f;
-            Max_Fishing_Bite_Interval = 60f;
-            break;
-        }
     }
 
     public void InitSingleplayerDefaults()
     {
         Bypass_Buildable_Mobility = true;
-        Bypass_Building_In_Safezones = true;
     }
 }

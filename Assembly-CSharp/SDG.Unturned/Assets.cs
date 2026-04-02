@@ -144,6 +144,11 @@ public class Assets : MonoBehaviour
     private static List<MasterBundleConfig> pendingMasterBundles;
 
     /// <summary>
+    /// Master bundle from root /Bundles directory containing vanilla assets.
+    /// </summary>
+    private static MasterBundleConfig coreMasterBundle;
+
+    /// <summary>
     /// While an asset is being loaded, this is the asset.
     /// Used by some error logging.
     /// Note: not ideal because any global state like this prevents parallelization.
@@ -237,11 +242,6 @@ public class Assets : MonoBehaviour
             return false;
         }
     }
-
-    /// <summary>
-    /// Master bundle from root /Bundles directory containing vanilla assets.
-    /// </summary>
-    internal static MasterBundleConfig coreMasterBundle { get; private set; }
 
     /// <summary>
     /// While an asset is being loaded, this is the master bundle for that asset.

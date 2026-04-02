@@ -16,9 +16,8 @@ public class WaterVolume : LevelVolume<WaterVolume, WaterVolumeManager>
         {
             this.volume = volume;
             base.SizeOffset_X = 400f;
-            base.SizeOffset_Y = 230f;
+            base.SizeOffset_Y = 150f;
             ISleekToggle sleekToggle = Glazier.Get().CreateToggle();
-            sleekToggle.PositionOffset_Y = -30f;
             sleekToggle.SizeOffset_X = 40f;
             sleekToggle.SizeOffset_Y = 40f;
             sleekToggle.Value = volume.isSurfaceVisible;
@@ -26,7 +25,7 @@ public class WaterVolume : LevelVolume<WaterVolume, WaterVolumeManager>
             sleekToggle.OnValueChanged += OnIsSurfaceVisibleToggled;
             AddChild(sleekToggle);
             ISleekToggle sleekToggle2 = Glazier.Get().CreateToggle();
-            sleekToggle2.PositionOffset_Y = 10f;
+            sleekToggle2.PositionOffset_Y = 40f;
             sleekToggle2.SizeOffset_X = 40f;
             sleekToggle2.SizeOffset_Y = 40f;
             sleekToggle2.Value = volume.isReflectionVisible;
@@ -34,7 +33,7 @@ public class WaterVolume : LevelVolume<WaterVolume, WaterVolumeManager>
             sleekToggle2.OnValueChanged += OnIsReflectionVisibleToggled;
             AddChild(sleekToggle2);
             ISleekToggle sleekToggle3 = Glazier.Get().CreateToggle();
-            sleekToggle3.PositionOffset_Y = 50f;
+            sleekToggle3.PositionOffset_Y = 80f;
             sleekToggle3.SizeOffset_X = 40f;
             sleekToggle3.SizeOffset_Y = 40f;
             sleekToggle3.Value = volume.isSeaLevel;
@@ -42,29 +41,13 @@ public class WaterVolume : LevelVolume<WaterVolume, WaterVolumeManager>
             sleekToggle3.OnValueChanged += OnIsSeaLevelToggled;
             AddChild(sleekToggle3);
             SleekButtonState sleekButtonState = new SleekButtonState(new GUIContent("Clean"), new GUIContent("Salty"), new GUIContent("Dirty"));
-            sleekButtonState.PositionOffset_Y = 90f;
+            sleekButtonState.PositionOffset_Y = 120f;
             sleekButtonState.SizeOffset_X = 200f;
             sleekButtonState.SizeOffset_Y = 30f;
             sleekButtonState.AddLabel("Refill Type", ESleekSide.RIGHT);
             sleekButtonState.state = (int)(volume.waterType - 1);
             sleekButtonState.onSwappedState = (SwappedState)Delegate.Combine(sleekButtonState.onSwappedState, new SwappedState(OnSwappedWaterType));
             AddChild(sleekButtonState);
-            SleekAssetField sleekAssetField = new SleekAssetField();
-            sleekAssetField.PositionOffset_Y = 130f;
-            sleekAssetField.SizeOffset_X = 200f;
-            sleekAssetField.SizeOffset_Y = 60f;
-            sleekAssetField.Value = volume.FishSpawnTableRef;
-            sleekAssetField.AddLabel("Fish", ESleekSide.RIGHT);
-            sleekAssetField.OnValueChanged += OnFishSpawnTableChanged;
-            AddChild(sleekAssetField);
-            ISleekFloat32Field sleekFloat32Field = Glazier.Get().CreateFloat32Field();
-            sleekFloat32Field.PositionOffset_Y = 200f;
-            sleekFloat32Field.SizeOffset_X = 200f;
-            sleekFloat32Field.SizeOffset_Y = 30f;
-            sleekFloat32Field.Value = volume.FishingMinimumDepthOverride;
-            sleekFloat32Field.AddLabel("Fishing Minimum Depth Override", ESleekSide.RIGHT);
-            sleekFloat32Field.OnValueChanged += OnMinimumDepthChanged;
-            AddChild(sleekFloat32Field);
         }
 
         private void OnIsSurfaceVisibleToggled(ISleekToggle toggle, bool state)
@@ -90,18 +73,6 @@ public class WaterVolume : LevelVolume<WaterVolume, WaterVolumeManager>
             volume.waterType = (ERefillWaterType)(state + 1);
             LevelHierarchy.MarkDirty();
         }
-
-        private void OnFishSpawnTableChanged(SleekAssetField field)
-        {
-            volume.FishSpawnTableRef = field.Value;
-            LevelHierarchy.MarkDirty();
-        }
-
-        private void OnMinimumDepthChanged(ISleekFloat32Field field, float value)
-        {
-            volume.FishingMinimumDepthOverride = value;
-            LevelHierarchy.MarkDirty();
-        }
     }
 
     public static readonly int WATER_SURFACE_TILE_SIZE = 1024;
@@ -112,6 +83,8 @@ public class WaterVolume : LevelVolume<WaterVolume, WaterVolumeManager>
     /// All water tiles and the planar reflection component reference this material.
     /// </summary>
     public Material sharedMaterial;
+
+    public PlanarReflection planarReflection;
 
     [SerializeField]
     protected bool _isSurfaceVisible = true;
@@ -125,22 +98,11 @@ public class WaterVolume : LevelVolume<WaterVolume, WaterVolumeManager>
     protected bool _isSeaLevel;
 
     /// <summary>
-    /// Not using CachingAssetRef so it works with copy-paste. (Can we implement serialization for CachingAssetRef?)
-    /// </summary>
-    [SerializeField]
-    internal Guid _fishSpawnTableGuid;
-
-    [SerializeField]
-    private float _fishingMinimumDepthOverride = -1f;
-
-    /// <summary>
     /// Flag for legacy sea level.
     /// </summary>
     internal bool isManagedByLighting;
 
     public ERefillWaterType waterType = ERefillWaterType.SALTY;
-
-    public PlanarReflection planarReflection;
 
     public override ELevelVolumeShape Shape
     {
@@ -200,33 +162,6 @@ public class WaterVolume : LevelVolume<WaterVolume, WaterVolumeManager>
         }
     }
 
-    public CachingAssetRef FishSpawnTableRef
-    {
-        get
-        {
-            return new CachingAssetRef(_fishSpawnTableGuid);
-        }
-        set
-        {
-            _fishSpawnTableGuid = value.Guid;
-        }
-    }
-
-    /// <summary>
-    /// If set, depth at bobber must exceed this to catch fish.
-    /// </summary>
-    public float FishingMinimumDepthOverride
-    {
-        get
-        {
-            return _fishingMinimumDepthOverride;
-        }
-        set
-        {
-            _fishingMinimumDepthOverride = value;
-        }
-    }
-
     public override bool ShouldSave => !isManagedByLighting;
 
     public override bool CanBeSelected => !isManagedByLighting;
@@ -236,11 +171,6 @@ public class WaterVolume : LevelVolume<WaterVolume, WaterVolumeManager>
         ISleekElement sleekElement = new Menu(this);
         AppendBaseMenu(sleekElement);
         return sleekElement;
-    }
-
-    public SpawnAsset GetFishSpawnTable()
-    {
-        return FishSpawnTableRef.Get<SpawnAsset>();
     }
 
     public override void UpdateEditorVisibility(ELevelVolumeVisibility visibility)
@@ -270,7 +200,7 @@ public class WaterVolume : LevelVolume<WaterVolume, WaterVolumeManager>
         }
     }
 
-    private void SyncPlanarReflectionEnabledPartial()
+    internal void SyncPlanarReflectionEnabled()
     {
         if (planarReflection != null)
         {
@@ -284,11 +214,6 @@ public class WaterVolume : LevelVolume<WaterVolume, WaterVolumeManager>
         }
     }
 
-    internal void SyncPlanarReflectionEnabled()
-    {
-        SyncPlanarReflectionEnabledPartial();
-    }
-
     private void SyncWaterPlaneActive()
     {
         if (waterPlane != null)
@@ -297,8 +222,12 @@ public class WaterVolume : LevelVolume<WaterVolume, WaterVolumeManager>
         }
     }
 
-    private void CreateUnity4Water()
+    protected void createWaterPlanes()
     {
+        if (Dedicator.IsDedicatedServer || !(waterPlane == null))
+        {
+            return;
+        }
         InstantiateParameters instantiateParameters = default(InstantiateParameters);
         instantiateParameters.parent = base.transform;
         instantiateParameters.worldSpace = false;
@@ -333,57 +262,10 @@ public class WaterVolume : LevelVolume<WaterVolume, WaterVolumeManager>
             }
         }
         planarReflection.sharedMaterial = sharedMaterial;
-    }
-
-    private void CreateFallbackWaterPlanes()
-    {
-        waterPlane = new GameObject("Plane");
-        waterPlane.transform.parent = base.transform;
-        waterPlane.transform.SetLocalPositionAndRotation(new Vector3(0f, 0.5f, 0f), Quaternion.identity);
-        waterPlane.transform.localScale = Vector3.one;
-        int num = Mathf.Max(1, Mathf.FloorToInt(base.transform.localScale.x / (float)WATER_SURFACE_TILE_SIZE));
-        int num2 = Mathf.Max(1, Mathf.FloorToInt(base.transform.localScale.z / (float)WATER_SURFACE_TILE_SIZE));
-        float num3 = 1f / (float)num;
-        float num4 = 1f / (float)num2;
-        GameObject original = Resources.Load<GameObject>("Level/Water_Fallback");
-        InstantiateParameters instantiateParameters = default(InstantiateParameters);
-        instantiateParameters.parent = waterPlane.transform;
-        instantiateParameters.worldSpace = false;
-        InstantiateParameters parameters = instantiateParameters;
-        for (int i = 0; i < num; i++)
-        {
-            for (int j = 0; j < num2; j++)
-            {
-                Vector3 position = new Vector3(-0.5f + num3 / 2f + (float)i * num3, 0f, -0.5f + num4 / 2f + (float)j * num4);
-                GameObject gameObject = UnityEngine.Object.Instantiate(original, position, Quaternion.identity, parameters);
-                gameObject.name = "Tile_" + i + "_" + j;
-                gameObject.transform.localScale = new Vector3(0.1f * num3, 1f, 0.1f * num4);
-                if (sharedMaterial == null)
-                {
-                    sharedMaterial = gameObject.GetComponent<Renderer>().material;
-                }
-                else
-                {
-                    gameObject.GetComponent<Renderer>().material = sharedMaterial;
-                }
-            }
-        }
-    }
-
-    protected void createWaterPlanes()
-    {
-        if (!Dedicator.IsDedicatedServer && waterPlane == null)
-        {
-            CreateUnity4Water();
-            if (waterPlane == null)
-            {
-                CreateFallbackWaterPlanes();
-            }
-            SyncWaterQuality();
-            SyncPlanarReflectionEnabled();
-            SyncWaterPlaneActive();
-            LevelLighting.updateLighting();
-        }
+        SyncWaterQuality();
+        SyncPlanarReflectionEnabled();
+        SyncWaterPlaneActive();
+        LevelLighting.updateLighting();
     }
 
     public void beginCollision(Collider collider)
@@ -409,11 +291,6 @@ public class WaterVolume : LevelVolume<WaterVolume, WaterVolumeManager>
         isReflectionVisible = reader.readValue<bool>("Is_Reflection_Visible");
         isSeaLevel = reader.readValue<bool>("Is_Sea_Level");
         waterType = reader.readValue<ERefillWaterType>("Water_Type");
-        _fishSpawnTableGuid = reader.readValue<Guid>("Fish_Spawn_Table");
-        if (reader.containsKey("Fishing_Minimum_Depth_Override"))
-        {
-            _fishingMinimumDepthOverride = reader.readValue<float>("Fishing_Minimum_Depth_Override");
-        }
         createWaterPlanes();
     }
 
@@ -424,11 +301,6 @@ public class WaterVolume : LevelVolume<WaterVolume, WaterVolumeManager>
         writer.writeValue("Is_Reflection_Visible", isReflectionVisible);
         writer.writeValue("Is_Sea_Level", isSeaLevel);
         writer.writeValue("Water_Type", waterType);
-        writer.writeValue("Fish_Spawn_Table", _fishSpawnTableGuid);
-        if (_fishingMinimumDepthOverride > -0.5f)
-        {
-            writer.writeValue("Fishing_Minimum_Depth_Override", _fishingMinimumDepthOverride);
-        }
     }
 
     public void OnTriggerEnter(Collider other)
@@ -451,10 +323,5 @@ public class WaterVolume : LevelVolume<WaterVolume, WaterVolumeManager>
     {
         base.Start();
         createWaterPlanes();
-    }
-
-    public string OnGetFishErrorContext()
-    {
-        return $"water volume at {base.transform.position}";
     }
 }

@@ -331,7 +331,6 @@ public class PlayerSkills : PlayerCaller
 
     public uint cost(int speciality, int index)
     {
-        uint num = skills[speciality][index].cost;
         if ((Provider.modeConfigData?.Players?.Skillset_Reduces_Skill_Cost ?? true) && Level.info != null && Level.info.type != ELevelType.ARENA)
         {
             for (byte b = 0; b < SKILLSETS[(byte)base.channel.owner.skillset].Length; b++)
@@ -339,16 +338,11 @@ public class PlayerSkills : PlayerCaller
                 SpecialitySkillPair specialitySkillPair = SKILLSETS[(byte)base.channel.owner.skillset][b];
                 if (speciality == specialitySkillPair.speciality && index == specialitySkillPair.skill)
                 {
-                    num /= 2;
+                    return skills[speciality][index].cost / 2;
                 }
             }
         }
-        float num2 = Provider.modeConfigData?.Players?.Skill_Cost_Multiplier ?? 1f;
-        if (num2 != 1f)
-        {
-            num = MathfEx.RoundAndClampToUInt((float)num * num2);
-        }
-        return num;
+        return skills[speciality][index].cost;
     }
 
     public void askSpend(uint cost)

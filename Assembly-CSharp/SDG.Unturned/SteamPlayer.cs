@@ -66,21 +66,10 @@ public class SteamPlayer : SteamConnectedClientBase
 
     public int glassesItem;
 
-    /// <summary>
-    /// Steam itemdef IDs of equipped weapon and vehicle skins.
-    /// </summary>
     public int[] skinItems;
 
-    /// <summary>
-    /// Unique per-item tags.
-    /// Indices correspond to those in skinItems array.
-    /// </summary>
     public string[] skinTags;
 
-    /// <summary>
-    /// Unique per-item dynamic properties.
-    /// Indices correspond to those in skinItems array.
-    /// </summary>
     public string[] skinDynamicProps;
 
     public Dictionary<ushort, int> itemSkins;
@@ -90,10 +79,7 @@ public class SteamPlayer : SteamConnectedClientBase
 
     private Dictionary<Guid, int> vehicleGuidToSkinItemDefId;
 
-    /// <summary>
-    /// Steam item def IDs of items with dynamic property updates.
-    /// </summary>
-    public HashSet<int> modifiedItems;
+    public HashSet<ushort> modifiedItems;
 
     private bool submittedModifiedItems;
 
@@ -334,30 +320,9 @@ public class SteamPlayer : SteamConnectedClientBase
         return details.getStatTrackerValue(out type, out kills);
     }
 
-    public bool getStatTrackerValueForItemDef(int itemDefId, out EStatTrackerType type, out int kills)
-    {
-        if (!getDynamicEconDetailsForItemDef(itemDefId, out var details))
-        {
-            type = EStatTrackerType.NONE;
-            kills = -1;
-            return false;
-        }
-        return details.getStatTrackerValue(out type, out kills);
-    }
-
     public bool getRagdollEffect(ushort itemID, out ERagdollEffect effect)
     {
         if (!getDynamicEconDetails(itemID, out var details))
-        {
-            effect = ERagdollEffect.NONE;
-            return false;
-        }
-        return details.getRagdollEffect(out effect);
-    }
-
-    public bool TryGetRagdollEffectForItemDef(int itemDefId, out ERagdollEffect effect)
-    {
-        if (!getDynamicEconDetailsForItemDef(itemDefId, out var details))
         {
             effect = ERagdollEffect.NONE;
             return false;
@@ -374,25 +339,9 @@ public class SteamPlayer : SteamConnectedClientBase
         return 0;
     }
 
-    public void incrementStatTrackerValue(InteractableVehicle vehicle, EPlayerStat stat)
-    {
-        if (GetVehicleSkinItemDefId(vehicle, out var itemdefid))
-        {
-            IncrementStatTrackerValue(itemdefid, stat);
-        }
-    }
-
     public void incrementStatTrackerValue(ushort itemID, EPlayerStat stat)
     {
-        if (getItemSkinItemDefID(itemID, out var itemdefid))
-        {
-            IncrementStatTrackerValue(itemdefid, stat);
-        }
-    }
-
-    private void IncrementStatTrackerValue(int itemdefid, EPlayerStat stat)
-    {
-        if (!getTagsAndDynamicPropsForItem(itemdefid, out var tags, out var dynamic_props))
+        if (!getItemSkinItemDefID(itemID, out var itemdefid) || !getTagsAndDynamicPropsForItem(itemdefid, out var tags, out var dynamic_props))
         {
             return;
         }
@@ -418,7 +367,10 @@ public class SteamPlayer : SteamConnectedClientBase
             }
             break;
         }
-        modifiedItems.Add(itemdefid);
+        if (!modifiedItems.Contains(itemID))
+        {
+            modifiedItems.Add(itemID);
+        }
         kills++;
         for (int i = 0; i < skinItems.Length; i++)
         {
@@ -442,9 +394,9 @@ public class SteamPlayer : SteamConnectedClientBase
         submittedModifiedItems = true;
         SteamInventoryUpdateHandle_t handle = SteamInventory.StartUpdateProperties();
         int num = 0;
-        foreach (int modifiedItem in modifiedItems)
+        foreach (ushort modifiedItem in modifiedItems)
         {
-            if (Characters.TryGetEquippedSkinInstanceIdByItemDefId(modifiedItem, out var itemInstanceId) && getStatTrackerValueForItemDef(modifiedItem, out var type, out var kills))
+            if (Characters.getPackageForItemID(modifiedItem, out var itemInstanceId) && getStatTrackerValue(modifiedItem, out var type, out var kills))
             {
                 string statTrackerPropertyName = Provider.provider.economyService.getStatTrackerPropertyName(type);
                 if (!string.IsNullOrEmpty(statTrackerPropertyName))
@@ -710,7 +662,7 @@ public class SteamPlayer : SteamConnectedClientBase
         itemSkins = new Dictionary<ushort, int>();
         vehicleSkins = new Dictionary<ushort, int>();
         vehicleGuidToSkinItemDefId = new Dictionary<Guid, int>();
-        modifiedItems = new HashSet<int>();
+        modifiedItems = new HashSet<ushort>();
         for (int i = 0; i < skinItems.Length; i++)
         {
             int num = skinItems[i];

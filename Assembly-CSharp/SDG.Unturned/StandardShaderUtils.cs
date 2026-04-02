@@ -1,4 +1,3 @@
-using System;
 using UnityEngine;
 
 namespace SDG.Unturned;
@@ -18,11 +17,11 @@ public static class StandardShaderUtils
         {
             return false;
         }
-        if (name.StartsWith("Standard", StringComparison.Ordinal))
+        if (name.StartsWith("Standard"))
         {
-            if (name.Length != 8 && !name.EndsWith(" (Decalable)", StringComparison.Ordinal))
+            if (name.Length != 8 && !name.EndsWith(" (Decalable)"))
             {
-                return name.EndsWith(" (Specular setup)", StringComparison.Ordinal);
+                return name.EndsWith(" (Specular setup)");
             }
             return true;
         }

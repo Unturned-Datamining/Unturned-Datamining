@@ -17,7 +17,7 @@ Blueprints
 		InputItems
 		[
 			"4880f590a948465891188c5f96559340 x 2" // Bread
-			"263325e3ad4a496bb6ca1b5fa10dfb4b x 2" // Cooked Goldfish
+			"263325e3ad4a496bb6ca1b5fa10dfb4b x 3" // Cooked Goldfish
 		]
 		OutputItems this
 		Skill Cook
@@ -30,8 +30,4 @@ Blueprints
 	}
 ]
 
-ConsumeAudioClip Sounds/EatSandwich.mp3
-Randomize_Consume_Audio_Pitch false
-Procedurally_Animate_Inertia false
-Instantiated_Item_Name_Override 467
-EquipablePrefab Items/Food/Sandwich_Goldfish/Equipable.prefab
+ConsumeAudioClip Sounds/EatCrunchy.mp3

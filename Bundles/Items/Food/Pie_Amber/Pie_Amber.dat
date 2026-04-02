@@ -8,9 +8,10 @@ Size_X 2
 Size_Y 2
 Size_Z 0.45
 
+Health 20
 Food 50
 Water 50
-Energy 100
+Virus 10
 
 Blueprints
 [
@@ -18,7 +19,7 @@ Blueprints
 		CategoryTag "d089feb7e43f40c5a7dfcefc36998cfb" // Supplies
 		InputItems
 		[
-			"c60fc61f64c24bb388b879dd819fea96 x 3" // Refined Amber Berries
+			"c60fc61f64c24bb388b879dd819fea96 x 4" // Refined Amber Berries
 			"72ca2f3c6d2f41dab406d09c1253a3da" // Milk Box
 			"67d687f8e6974d0290343d21294940f9" // Eggs
 		]
@@ -33,7 +34,4 @@ Blueprints
 	}
 ]
 
-ConsumeAudioClip Sounds/EatCake.mp3
-Randomize_Consume_Audio_Pitch false
-Procedurally_Animate_Inertia false
-EquipablePrefab Items/Food/Pie_Amber/Equipable.prefab
+ConsumeAudioClip Sounds/EatCrunchy.mp3

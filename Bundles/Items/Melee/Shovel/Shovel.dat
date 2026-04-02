@@ -34,7 +34,7 @@ Animal_Skull_Multiplier 1.1
 Barricade_Damage 15
 Structure_Damage 10
 Vehicle_Damage 20
-Resource_Damage 35
+Resource_Damage 30
 Object_Damage 20
 
 Durability 0.15
@@ -62,7 +62,3 @@ Blueprints
 ]
 
 AttackAudioClip Sounds/MeleeAttack_01.mp3
-
-BladeIDs 2
-BladeID_0 0
-BladeID_1 1

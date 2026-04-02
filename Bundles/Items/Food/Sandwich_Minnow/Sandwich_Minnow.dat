@@ -8,7 +8,7 @@ Size_X 1
 Size_Y 1
 Size_Z 0.3
 
-Food 70
+Food 85
 
 Blueprints
 [
@@ -30,8 +30,4 @@ Blueprints
 	}
 ]
 
-ConsumeAudioClip Sounds/EatSandwich.mp3
-Randomize_Consume_Audio_Pitch false
-Procedurally_Animate_Inertia false
-Instantiated_Item_Name_Override 467
-EquipablePrefab Items/Food/Sandwich_Minnow/Equipable.prefab
+ConsumeAudioClip Sounds/EatCrunchy.mp3

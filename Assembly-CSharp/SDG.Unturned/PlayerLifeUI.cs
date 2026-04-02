@@ -515,10 +515,7 @@ public class PlayerLifeUI
         cachedHotbarSearch = -1;
     }
 
-    /// <summary>
-    /// Moves legacy image effect dependency out of SDK release.
-    /// </summary>
-    private static void UpdateGrayscaleEffectPartial()
+    public static void updateGrayscale()
     {
         GrayscaleEffect component = Player.LocalPlayer.animator.viewmodelCameraTransform.GetComponent<GrayscaleEffect>();
         GrayscaleEffect component2 = MainCamera.instance.GetComponent<GrayscaleEffect>();
@@ -547,11 +544,6 @@ public class PlayerLifeUI
         }
         component2.blend = component.blend;
         component3.blend = component.blend;
-    }
-
-    public static void updateGrayscale()
-    {
-        UpdateGrayscaleEffectPartial();
     }
 
     private static void onPerspectiveUpdated(EPlayerPerspective newPerspective)
@@ -1768,7 +1760,7 @@ public class PlayerLifeUI
             sleekImage2.PositionOffset_Y = 2f;
             sleekImage2.SizeOffset_X = 16f;
             sleekImage2.SizeOffset_Y = 16f;
-            sleekImage2.Texture = Assets.coreMasterBundle.LoadAsset<Texture2D>("Items/Faces/" + m + "/Texture.png");
+            sleekImage2.Texture = (Texture2D)Resources.Load("Faces/" + m + "/Texture");
             sleekImage.AddChild(sleekImage2);
             if (m >= Customization.FACES_FREE)
             {

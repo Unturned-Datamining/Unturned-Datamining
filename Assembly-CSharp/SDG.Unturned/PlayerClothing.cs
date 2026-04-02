@@ -1483,17 +1483,14 @@ public class PlayerClothing : PlayerCaller
             {
                 firstClothes = base.player.first.Find("Camera").Find("Viewmodel").GetComponent<HumanClothes>();
                 firstClothes.isMine = true;
-                firstClothes.ShouldHairOverridesUseFallbackColor = !base.player.channel.owner.isPro;
             }
             if (base.player.third != null)
             {
                 thirdClothes = base.player.third.GetComponent<HumanClothes>();
-                thirdClothes.ShouldHairOverridesUseFallbackColor = !base.player.channel.owner.isPro;
             }
             if (base.player.character != null)
             {
                 characterClothes = base.player.character.GetComponent<HumanClothes>();
-                characterClothes.ShouldHairOverridesUseFallbackColor = !base.player.channel.owner.isPro;
             }
         }
         else if (base.player.third != null)

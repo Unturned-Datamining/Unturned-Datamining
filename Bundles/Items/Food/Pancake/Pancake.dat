@@ -32,7 +32,4 @@ Blueprints
 	}
 ]
 
-ConsumeAudioClip Sounds/EatDoughnut.mp3
-Randomize_Consume_Audio_Pitch false
-Procedurally_Animate_Inertia false
-EquipablePrefab Items/Food/Pancake/Equipable.prefab
+ConsumeAudioClip Sounds/EatCrunchy.mp3

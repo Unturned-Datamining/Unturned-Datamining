@@ -280,11 +280,14 @@ public class PlayerNPCDialogueUI
         return false;
     }
 
+    /// <summary>
+    /// Called when the player presses Interact [F] in dialogue screen.
+    /// </summary>
     public static void AdvancePage()
     {
         if (dialoguePageIndex == message.pages.Length - 1)
         {
-            Player.LocalPlayer.quests.ClientChooseDefaultNextDialogue(dialogue.GUID, message.index);
+            Player.LocalPlayer.quests.ClientChooseNextDialogue(dialogue.GUID, message.index);
             return;
         }
         dialoguePageIndex++;
@@ -334,27 +337,6 @@ public class PlayerNPCDialogueUI
         }
         responseBox.ContentSizeOffset = new Vector2(0f, responses.Count * 30);
         OnPageAnimationFinished();
-    }
-
-    /// <summary>
-    /// Called when the player presses Interact [F] in dialogue screen.
-    /// </summary>
-    internal static void HandleInteractPressed()
-    {
-        if (IsDialogueAnimating || visibleResponsesCount < responses.Count)
-        {
-            SkipAnimation();
-        }
-        else if (OptionsSettings.talk || !(responsesVisibleTime < 0.15f))
-        {
-            if (CanAdvanceToNextPage)
-            {
-                AdvancePage();
-                return;
-            }
-            close();
-            PlayerLifeUI.open();
-        }
     }
 
     public static void UpdateAnimation()
@@ -453,7 +435,7 @@ public class PlayerNPCDialogueUI
         if (questAsset != null)
         {
             close();
-            PlayerNPCQuestUI.open(questAsset, dialogue, message, dialogueResponse, (Player.LocalPlayer.quests.GetQuestStatus(questAsset) == ENPCQuestStatus.READY) ? EQuestViewMode.END : EQuestViewMode.BEGIN);
+            PlayerNPCQuestUI.open(questAsset, dialogue, dialogueResponse, (Player.LocalPlayer.quests.GetQuestStatus(questAsset) == ENPCQuestStatus.READY) ? EQuestViewMode.END : EQuestViewMode.BEGIN);
             return;
         }
         DialogueAsset dialogueAsset = dialogueResponse.FindDialogueAsset();
@@ -463,7 +445,7 @@ public class PlayerNPCDialogueUI
             close();
             PlayerLifeUI.open();
         }
-        Player.LocalPlayer.quests.ClientChooseDialogueResponse(dialogue.GUID, message.index, dialogueResponse.index);
+        Player.LocalPlayer.quests.ClientChooseDialogueResponse(dialogue.GUID, dialogueResponse.index);
     }
 
     private static void SetResponseButtonsAreClickable(bool clickable)

@@ -154,7 +154,7 @@ public class PlayerVoice : PlayerCaller
     /// </summary>
     private bool _inputWantsToRecord;
 
-    private static AudioClip radioClip;
+    private static StaticResourceRef<AudioClip> radioClip = new StaticResourceRef<AudioClip>("Sounds/General/Radio");
 
     /// <summary>
     /// Player's voice audio source cached during Start.
@@ -646,21 +646,12 @@ public class PlayerVoice : PlayerCaller
         writer.WriteBytes(compressedVoiceBuffer, num);
     }
 
-    private static AudioClip GetOrLoadRadioClip()
-    {
-        if (radioClip == null)
-        {
-            radioClip = new AudioReference("core.masterbundle", "Sounds/Radio.ogg").LoadAudioClip();
-        }
-        return radioClip;
-    }
-
     /// <summary>
     /// Play walkie-talkie squawk at our position.
     /// </summary>
     private void playWalkieTalkieSound()
     {
-        OneShotAudioParameters oneShotAudioParameters = new OneShotAudioParameters(base.transform.position, GetOrLoadRadioClip());
+        OneShotAudioParameters oneShotAudioParameters = new OneShotAudioParameters(base.transform.position, radioClip);
         oneShotAudioParameters.RandomizeVolume(0.74f, 0.76f);
         oneShotAudioParameters.RandomizePitch(0.99f, 1.01f);
         oneShotAudioParameters.SetSpatialBlend2D();

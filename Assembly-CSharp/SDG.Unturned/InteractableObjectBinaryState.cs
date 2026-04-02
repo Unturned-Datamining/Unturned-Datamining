@@ -1,4 +1,5 @@
 using System;
+using Pathfinding;
 using UnityEngine;
 
 namespace SDG.Unturned;
@@ -17,7 +18,9 @@ public class InteractableObjectBinaryState : InteractableObject
 
     private AudioSource audioSourceComponent;
 
-    private IUnturnedNavmeshCutInterface cutComponent;
+    private NavmeshCut cutComponent;
+
+    private float cutHeight;
 
     private Material emissiveMaterialInstance;
 
@@ -114,11 +117,57 @@ public class InteractableObjectBinaryState : InteractableObject
         }
     }
 
+    private NavmeshCut initCutComponentFromBox(BoxCollider box)
+    {
+        NavmeshCut navmeshCut = box.gameObject.AddComponent<NavmeshCut>();
+        navmeshCut.type = NavmeshCut.MeshType.Rectangle;
+        navmeshCut.updateDistance = 0.4f;
+        navmeshCut.isDual = false;
+        navmeshCut.cutsAddedGeom = true;
+        navmeshCut.updateRotationDistance = 10f;
+        navmeshCut.useRotationAndScale = true;
+        navmeshCut.center = box.center;
+        navmeshCut.rectangleSize = new Vector2(box.size.x, box.size.z);
+        navmeshCut.height = box.size.y;
+        UnityEngine.Object.Destroy(box);
+        return navmeshCut;
+    }
+
     private void InitNav()
     {
-        if (base.objectAsset.interactabilityNav != 0)
+        if (base.objectAsset.interactabilityNav == EObjectInteractabilityNav.NONE)
         {
-            cutComponent = UnturnedPathfinding.Get().CreateCutForIOBS(this);
+            return;
+        }
+        Transform transform = base.transform.Find("Nav");
+        if (!(transform != null))
+        {
+            return;
+        }
+        Transform transform2 = transform.Find("Blocker");
+        if (!(transform2 != null))
+        {
+            return;
+        }
+        cutComponent = transform2.GetComponent<NavmeshCut>();
+        if ((UnityEngine.Object)(object)cutComponent == null)
+        {
+            BoxCollider component = transform2.GetComponent<BoxCollider>();
+            if (component != null)
+            {
+                cutComponent = initCutComponentFromBox(component);
+            }
+        }
+        if ((UnityEngine.Object)(object)cutComponent != null)
+        {
+            NavGraph navGraph = LevelNavigation.GetNavGraph(transform2.position);
+            if (navGraph != null && navGraph.graphIndex < 31)
+            {
+                cutComponent.graphMask = GraphMask.FromGraph(navGraph);
+                ((Behaviour)(object)cutComponent).enabled = false;
+                ((Behaviour)(object)cutComponent).enabled = true;
+            }
+            cutHeight = cutComponent.height;
         }
     }
 
@@ -136,9 +185,17 @@ public class InteractableObjectBinaryState : InteractableObject
             flag = !isUsed;
             break;
         }
-        if (cutComponent != null)
+        if ((UnityEngine.Object)(object)cutComponent != null)
         {
-            cutComponent.IsActive = flag;
+            if (flag)
+            {
+                cutComponent.height = cutHeight;
+            }
+            else
+            {
+                cutComponent.height = 0f;
+            }
+            cutComponent.ForceUpdate();
         }
         else if (owningLevelObject != null)
         {

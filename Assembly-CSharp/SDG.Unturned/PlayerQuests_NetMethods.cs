@@ -820,17 +820,15 @@ public static class PlayerQuests_NetMethods
             }
             reader.ReadGuid(out var value2);
             reader.ReadUInt8(out var value3);
-            reader.ReadUInt8(out var value4);
-            playerQuests.ReceiveChooseDialogueResponseRequest(in context, value2, value3, value4);
+            playerQuests.ReceiveChooseDialogueResponseRequest(in context, value2, value3);
         }
     }
 
     [NetInvokableGeneratedMethod("ReceiveChooseDialogueResponseRequest", ENetInvokableGeneratedMethodPurpose.Write)]
-    public static void ReceiveChooseDialogueResponseRequest_Write(NetPakWriter writer, Guid assetGuid, byte messageIndex, byte responseIndex)
+    public static void ReceiveChooseDialogueResponseRequest_Write(NetPakWriter writer, Guid assetGuid, byte index)
     {
         writer.WriteGuid(assetGuid);
-        writer.WriteUInt8(messageIndex);
-        writer.WriteUInt8(responseIndex);
+        writer.WriteUInt8(index);
     }
 
     [NetInvokableGeneratedMethod("ReceiveChooseDefaultNextDialogueRequest", ENetInvokableGeneratedMethodPurpose.Read)]

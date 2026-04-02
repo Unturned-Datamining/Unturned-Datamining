@@ -56,5 +56,5 @@ public interface IGlazier
 
     ISleekFloat64Field CreateFloat64Field();
 
-    ISleekProxyImplementation CreateProxyImplementation(SleekWrapper owner);
+    ISleekElement CreateProxyImplementation(SleekWrapper owner);
 }

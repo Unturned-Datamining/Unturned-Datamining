@@ -1,6 +1,5 @@
 ﻿GUID d228c0a89be74844a367760972689567
 Type Food
-Rarity Uncommon
 Useable Consumeable
 ID 504
 
@@ -9,26 +8,5 @@ Size_Y 1
 Size_Z 0.2
 
 Food 20
-Water 10
 Virus 20
 ConsumeAudioClip Sounds/EatCrunchy.mp3
-
-Fishing_Catchable
-{
-	Min_Relocate_Interval 1.9
-	Max_Relocate_Interval 2.3
-	Max_Upward_Acceleration 1.45
-	Max_Downward_Acceleration 1.15
-	Max_Upward_Speed 0.5
-	Max_Downward_Speed 0.4
-	Upper_Restitution 0.6
-	Lower_Restitution 0.4
-	Min_Target_Delta 0.4
-	Max_Target_Delta 0.8
-	Min_Target_Position 0.1
-	Max_Target_Position 0.9
-	Capture_Duration 4.33
-	Escape_Duration 2
-	Spring_Stiffness 20
-	Spring_Damping 5
-}

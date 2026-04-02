@@ -450,12 +450,6 @@ public class ItemAsset : Asset, ISkinableAsset, IBlueprintOwner
     /// </summary>
     protected virtual bool doesItemTypeHaveSkins => false;
 
-    /// <summary>
-    /// Defaults to null.
-    /// Allows items (specifically fish) to override fishing settings.
-    /// </summary>
-    public FishingCatchableProperties FishingCatchable { get; set; }
-
     public byte[] getState()
     {
         return getState(isFull: false);
@@ -514,16 +508,6 @@ public class ItemAsset : Asset, ISkinableAsset, IBlueprintOwner
             text = text.Substring(5) + " Item";
         }
         return text;
-    }
-
-    public void PlayInventoryAudio2D()
-    {
-        if (!inventoryAudio.IsNullOrEmpty)
-        {
-            OneShotAudioParameters oneShotAudioParameters = new OneShotAudioParameters(inventoryAudio);
-            oneShotAudioParameters.volume *= 0.2f;
-            oneShotAudioParameters.Play();
-        }
     }
 
     public void applySkinBaseTextures(Material material)
@@ -851,14 +835,6 @@ public class ItemAsset : Asset, ISkinableAsset, IBlueprintOwner
                     Assets.ReportError(this, "missing 'Stat_Tracker' Transform");
                 }
                 AssetValidation.searchGameObjectForErrors(this, item);
-                if ((bool)Assets.shouldValidateAssets)
-                {
-                    MeshCollider componentInChildren = _item.GetComponentInChildren<MeshCollider>();
-                    if (componentInChildren != null && !componentInChildren.convex)
-                    {
-                        ReportAssetError("contains non-convex MeshCollider at " + componentInChildren.GetSceneHierarchyPath());
-                    }
-                }
             }
         }
         bool defaultValue3 = !p.data.ContainsKey("Actions");
@@ -994,11 +970,6 @@ public class ItemAsset : Asset, ISkinableAsset, IBlueprintOwner
             _albedoBase = p.bundle.load<Texture2D>("Albedo_Base");
             _metallicBase = p.bundle.load<Texture2D>("Metallic_Base");
             _emissionBase = p.bundle.load<Texture2D>("Emission_Base");
-        }
-        if (p.data.TryGetDictionary("Fishing_Catchable", out var node3))
-        {
-            FishingCatchable = new FishingCatchableProperties();
-            FishingCatchable.Parse(node3);
         }
     }
 
@@ -1961,22 +1932,6 @@ public class ItemAsset : Asset, ISkinableAsset, IBlueprintOwner
             return new AudioReference("core.masterbundle", "Sounds/Inventory/LightGrab.asset");
         }
         return new AudioReference("core.masterbundle", "Sounds/Inventory/RoughGrab.asset");
-    }
-
-    protected void ValidateEquipableHasAnimation(string name)
-    {
-        if (_animations != null)
-        {
-            AnimationClip[] array = _animations;
-            foreach (AnimationClip animationClip in array)
-            {
-                if (animationClip != null && string.Equals(animationClip.name, name, StringComparison.Ordinal))
-                {
-                    return;
-                }
-            }
-        }
-        ReportAssetError("Equipable missing \"" + name + "\" animation in Animations.prefab");
     }
 
     protected int DescSort_HigherIsBeneficial(float value)

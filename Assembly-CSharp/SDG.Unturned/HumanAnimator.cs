@@ -10,7 +10,7 @@ public class HumanAnimator : CharacterAnimator
 
     public float lean;
 
-    private float _pitch;
+    private float _pitch = 90f;
 
     public float pitch = 90f;
 
