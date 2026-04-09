@@ -1,14 +1,14 @@
 MainMenuAlert
 {
-	Id 79
-	Header Community Organized Event: 2026 EU Winter Cup Finals
-	Body From the organizers: "Watch the best compete live, with new perspectives and new power-ups!"
-	Color #ff0000
-	Link https://pksk.to/sdg
-	IconURL cdn.smartlydressedgames.com/Images/PeekSeek.png
+	Id 80
+	Header Community Organized Event: Sign-ups for ReTake Events 2v2 Cup
+	Body From the organizers: "Join our Discord and register! The tournament is open to all regions; good luck to everyone, and have fun!"
+	Color #f0f0f0
+	Link https://discord.gg/E4gzMdeThP
+	IconURL cdn.smartlydressedgames.com/Images/ReTakeLogo.png
 	UseTimeWindow true
-	StartTime 2026-02-27 00:00:01
-	EndTime 2026-02-27 23:59:59
+	StartTime 2026-04-11 11:00:00
+	EndTime 2026-04-18 11:00:00
 }
 MainMenuWorkshop
 {
