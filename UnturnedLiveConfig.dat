@@ -1,14 +1,14 @@
 MainMenuAlert
 {
-	Id 80
-	Header Community Organized Event: Sign-ups for ReTake Events 2v2 Cup
-	Body From the organizers: "Join our Discord and register! The tournament is open to all regions; good luck to everyone, and have fun!"
-	Color #f0f0f0
-	Link https://discord.gg/E4gzMdeThP
-	IconURL cdn.smartlydressedgames.com/Images/ReTakeLogo.png
+	Id 81
+	Header Community Organized Event: Spring Labor Day Tournament 2026 | 2026年春季五一劳动节锦标赛
+	Body From the organizers: "Sign up for a PvP tournament hosted by BlackFlags-黑旗战队 and NoName Server! Servers are located in China / East Asia, with limits on ping to encourage fair play."
+	Color #73FF00
+	Link https://www.bilibili.com/video/BV1BXd8B9EtU
+	IconURL cdn.smartlydressedgames.com/Images/SpringLaborDayTournament2026.png
 	UseTimeWindow true
-	StartTime 2026-04-11 11:00:00
-	EndTime 2026-04-18 11:00:00
+	StartTime 2026-04-23 16:00:00
+	EndTime 2026-04-27 16:00:00
 }
 MainMenuWorkshop
 {
