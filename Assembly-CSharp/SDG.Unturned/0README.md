@@ -180,6 +180,7 @@
 - [CommandDebug.cs](CommandDebug.cs)
 - [CommandDecay.cs](CommandDecay.cs)
 - [CommandDestroyDrivenVehicle.cs](CommandDestroyDrivenVehicle.cs)
+- [CommandDialogue.cs](CommandDialogue.cs)
 - [CommandEffectUI.cs](CommandEffectUI.cs)
 - [CommandEnterAndDestroyNearestVehicle.cs](CommandEnterAndDestroyNearestVehicle.cs)
 - [Commander.cs](Commander.cs)

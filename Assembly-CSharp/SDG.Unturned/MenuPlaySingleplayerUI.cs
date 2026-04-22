@@ -267,7 +267,7 @@ public class MenuPlaySingleplayerUI
     private static void onClickedPlayButton(ISleekElement button)
     {
         Level.UpdateLevelReference(ref selectedLevel);
-        if (selectedLevel != null)
+        if (selectedLevel != null && !selectedLevel.IsMissingAnyDependencies())
         {
             Provider.map = selectedLevel.name;
             Provider.singleplayer(PlaySettings.singleplayerMode, PlaySettings.singleplayerCheats);

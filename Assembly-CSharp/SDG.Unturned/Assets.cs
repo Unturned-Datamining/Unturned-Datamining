@@ -143,6 +143,8 @@ public class Assets : MonoBehaviour
     /// </summary>
     private static List<MasterBundleConfig> pendingMasterBundles;
 
+    private static Queue<AssetsWorker.AssetDefinition> pendingAssetsToLoad;
+
     /// <summary>
     /// While an asset is being loaded, this is the asset.
     /// Used by some error logging.
@@ -1676,15 +1678,34 @@ public class Assets : MonoBehaviour
     {
         double realtimeSinceStartupAsDouble = Time.realtimeSinceStartupAsDouble;
         int gcFrameCount = 0;
-        while (worker.IsWorking || pendingMasterBundles.Count > 0)
+        while (worker.IsWorking || pendingMasterBundles.Count > 0 || pendingAssetsToLoad.Count > 0)
         {
-            if (worker.TryDequeueMasterBundle(out var result))
+            if (worker.TryDequeueResult(out var result))
             {
-                MasterBundleConfig config = result.config;
-                pendingMasterBundles.Add(config);
-                config.StartLoad(result.assetBundleData, result.hash);
-                loadingStats.isLoadingAssetBundles = true;
-                continue;
+                switch (result.ResultType)
+                {
+                case AssetsWorker.EResultType.MasterBundle:
+                {
+                    AssetsWorker.MasterBundle masterBundle = (AssetsWorker.MasterBundle)result;
+                    MasterBundleConfig config = masterBundle.config;
+                    pendingMasterBundles.Add(config);
+                    config.StartLoad(masterBundle.assetBundleData, masterBundle.hash);
+                    loadingStats.isLoadingAssetBundles = true;
+                    break;
+                }
+                case AssetsWorker.EResultType.Asset:
+                {
+                    AssetsWorker.AssetDefinition item = (AssetsWorker.AssetDefinition)result;
+                    pendingAssetsToLoad.Enqueue(item);
+                    break;
+                }
+                case AssetsWorker.EResultType.Exception:
+                {
+                    AssetsWorker.ExceptionDetails exceptionDetails = (AssetsWorker.ExceptionDetails)result;
+                    UnturnedLog.exception(exceptionDetails.exception, exceptionDetails.message);
+                    break;
+                }
+                }
             }
             AssetsWorker.AssetDefinition result2;
             if (pendingMasterBundles.Count > 0)
@@ -1729,7 +1750,7 @@ public class Assets : MonoBehaviour
                     loadingStats.isLoadingAssetBundles = false;
                 }
             }
-            else if (coreMasterBundle != null && worker.TryDequeueAssetDefinition(out result2))
+            else if (coreMasterBundle != null && pendingAssetsToLoad.TryDequeue(out result2))
             {
                 TryLoadFile(result2);
             }
@@ -1777,10 +1798,12 @@ public class Assets : MonoBehaviour
         {
             allMasterBundles = new List<MasterBundleConfig>();
             pendingMasterBundles = new List<MasterBundleConfig>();
+            pendingAssetsToLoad = new Queue<AssetsWorker.AssetDefinition>();
         }
         else
         {
             UnloadAllMasterBundles();
+            pendingAssetsToLoad.Clear();
         }
         assetOrigins = new List<AssetOrigin>();
         loadingStats.Reset();

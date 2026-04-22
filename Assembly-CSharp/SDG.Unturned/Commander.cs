@@ -156,5 +156,6 @@ public class Commander
         register(new CommandExitAndDestroyDrivenVehicle(newLocalization));
         register(new CommandEnterAndDestroyNearestVehicle(newLocalization));
         register(new CommandRewardList(newLocalization));
+        register(new CommandDialogue(newLocalization));
     }
 }

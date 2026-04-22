@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 namespace SDG.Unturned;
@@ -18,6 +19,8 @@ public class SleekLevel : SleekWrapper
     protected ISleekLabel nameLabel;
 
     protected ISleekLabel infoLabel;
+
+    protected ISleekLabel missingDependenciesLabel;
 
     public LevelInfo level { get; private set; }
 
@@ -52,6 +55,10 @@ public class SleekLevel : SleekWrapper
     {
         base.OnDestroy();
         LiveConfig.OnRefreshed -= OnLiveConfigRefreshed;
+        if (missingDependenciesLabel != null)
+        {
+            Assets.OnNewAssetsFinishedLoading = (System.Action)Delegate.Remove(Assets.OnNewAssetsFinishedLoading, new System.Action(RefreshMissingDependencies));
+        }
     }
 
     public SleekLevel(LevelInfo level)
@@ -142,5 +149,26 @@ public class SleekLevel : SleekWrapper
         hasCreatedStatusLabel = false;
         LiveConfig.OnRefreshed -= OnLiveConfigRefreshed;
         OnLiveConfigRefreshed();
+        LevelInfoConfigData configData = level.configData;
+        if (configData != null && configData.RequiredWorkshopFileIds?.Length > 0)
+        {
+            missingDependenciesLabel = Glazier.Get().CreateLabel();
+            missingDependenciesLabel.SizeScale_X = 1f;
+            missingDependenciesLabel.SizeScale_Y = 1f;
+            missingDependenciesLabel.TextColor = ESleekTint.BAD;
+            missingDependenciesLabel.TextAlignment = TextAnchor.MiddleCenter;
+            missingDependenciesLabel.TextContrastContext = ETextContrastContext.ColorfulBackdrop;
+            missingDependenciesLabel.Text = MenuPlaySingleplayerUI.localization.format("Info_MissingDependencies");
+            button.AddChild(missingDependenciesLabel);
+            Assets.OnNewAssetsFinishedLoading = (System.Action)Delegate.Combine(Assets.OnNewAssetsFinishedLoading, new System.Action(RefreshMissingDependencies));
+            RefreshMissingDependencies();
+        }
+    }
+
+    private void RefreshMissingDependencies()
+    {
+        bool flag = level.IsMissingAnyDependencies();
+        missingDependenciesLabel.IsVisible = flag;
+        button.IsClickable = !flag;
     }
 }

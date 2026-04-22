@@ -187,6 +187,28 @@ public class LevelInfo
         return LoadingUI.GetRandomImagePathInDirectory(text, onlyWithoutHud: false);
     }
 
+    /// <summary>
+    /// If dependency workshop file(s) are configured, check those.
+    /// Otherwise, always returns false.
+    /// </summary>
+    public bool IsMissingAnyDependencies()
+    {
+        if (configData == null || configData.RequiredWorkshopFileIds == null || configData.RequiredWorkshopFileIds.Length < 1)
+        {
+            return false;
+        }
+        ulong[] requiredWorkshopFileIds = configData.RequiredWorkshopFileIds;
+        for (int i = 0; i < requiredWorkshopFileIds.Length; i++)
+        {
+            AssetOrigin assetOrigin = Assets.FindWorkshopFileOrigin(requiredWorkshopFileIds[i]);
+            if (assetOrigin == null || assetOrigin.assets == null || assetOrigin.assets.IsEmpty())
+            {
+                return true;
+            }
+        }
+        return false;
+    }
+
     public LevelInfo(string newPath, string newName, ELevelSize newSize, ELevelType newType, bool newEditable, LevelInfoConfigData newConfigData, ulong publishedFileId, byte[] hash)
     {
         path = newPath;

@@ -149,6 +149,8 @@ public class LevelInfoConfigData
 
     public List<ArenaLoadout> Spawn_Loadouts;
 
+    public ulong[] RequiredWorkshopFileIds;
+
     [JsonIgnore]
     public byte[] Hash;
 
@@ -202,6 +204,7 @@ public class LevelInfoConfigData
         Use_Arena_Compactor = true;
         Arena_Loadouts = new List<ArenaLoadout>();
         Spawn_Loadouts = new List<ArenaLoadout>();
+        RequiredWorkshopFileIds = new ulong[0];
         Version = "3.0.0.0";
     }
 }

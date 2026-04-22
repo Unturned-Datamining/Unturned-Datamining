@@ -6,7 +6,7 @@ public class LookAtLocalPlayer : MonoBehaviour
 {
     private void LateUpdate()
     {
-        if (Player.LocalPlayer != null)
+        if (!Dedicator.IsDedicatedServer && Player.LocalPlayer != null)
         {
             base.transform.LookAt(Player.LocalPlayer.look.aim);
         }

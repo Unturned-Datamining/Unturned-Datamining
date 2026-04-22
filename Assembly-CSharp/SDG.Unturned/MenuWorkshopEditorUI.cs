@@ -122,7 +122,7 @@ public class MenuWorkshopEditorUI
     private static void onClickedEditButton(ISleekElement button)
     {
         Level.UpdateLevelReference(ref selectedLevel);
-        if (selectedLevel != null && selectedLevel.isEditable)
+        if (selectedLevel != null && selectedLevel.isEditable && !selectedLevel.IsMissingAnyDependencies())
         {
             Level.edit(selectedLevel);
         }

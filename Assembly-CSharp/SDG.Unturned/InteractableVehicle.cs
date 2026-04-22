@@ -1403,7 +1403,7 @@ public class InteractableVehicle : Interactable, IExplosionDamageable, IEquatabl
 
     /// <summary>
     /// If true, sentry ignores this vehicle early in target scanning.
-    /// Friendly if locked by owner/group of sentry, or driven by owner/group of sentry.
+    /// Friendly if locked by owner/group of sentry, or if a passenger is owner/group of sentry.
     /// </summary>
     public bool IsFriendlyToSentry(InteractableSentry sentry)
     {
@@ -1415,14 +1415,23 @@ public class InteractableVehicle : Interactable, IExplosionDamageable, IEquatabl
         {
             return true;
         }
-        Player driverPlayer = GetDriverPlayer();
-        if (driverPlayer != null)
+        if (_passengers != null)
         {
-            if (!(driverPlayer.channel.owner.playerID.steamID == sentry.owner))
+            Passenger[] array = _passengers;
+            foreach (Passenger passenger in array)
             {
-                return driverPlayer.quests.isMemberOfGroup(sentry.group);
+                if (passenger.player != null)
+                {
+                    if (passenger.player.playerID.steamID == sentry.owner)
+                    {
+                        return true;
+                    }
+                    if ((passenger.player.player?.quests?.isMemberOfGroup(sentry.group)).GetValueOrDefault())
+                    {
+                        return true;
+                    }
+                }
             }
-            return true;
         }
         return false;
     }

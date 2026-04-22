@@ -11,16 +11,30 @@ namespace SDG.Unturned;
 /// </summary>
 internal class AssetsWorker
 {
-    public struct MasterBundle
+    public enum EResultType
+    {
+        MasterBundle,
+        Asset,
+        Exception
+    }
+
+    public abstract class ResultItem
+    {
+        public abstract EResultType ResultType { get; }
+    }
+
+    public sealed class MasterBundle : ResultItem
     {
         public MasterBundleConfig config;
 
         public byte[] assetBundleData;
 
         public byte[] hash;
+
+        public override EResultType ResultType => EResultType.MasterBundle;
     }
 
-    public struct AssetDefinition
+    public sealed class AssetDefinition : ResultItem
     {
         public string path;
 
@@ -41,15 +55,32 @@ internal class AssetsWorker
         /// Warning: on worker thread this only acts as handle. Do not access.
         /// </summary>
         public AssetOrigin origin;
+
+        public override EResultType ResultType => EResultType.Asset;
+    }
+
+    public sealed class ExceptionDetails : ResultItem
+    {
+        public string message;
+
+        public Exception exception;
+
+        public override EResultType ResultType => EResultType.Exception;
     }
 
     private class WorkerThreadState
     {
-        public struct AssetDefFilePath
+        public struct ReaderWorkItem
         {
+            public enum EItemType
+            {
+                MasterBundle,
+                Asset
+            }
+
             public string filePath;
 
-            public bool checkForTranslations;
+            public EItemType itemType;
         }
 
         public AssetsWorker owner;
@@ -60,9 +91,7 @@ internal class AssetsWorker
 
         public Queue<string> searchPaths;
 
-        public ConcurrentQueue<string> masterBundleFilePaths;
-
-        public ConcurrentQueue<AssetDefFilePath> assetDefinitionFilePaths;
+        public ConcurrentQueue<ReaderWorkItem> readerWorkItems;
 
         public int isFinishedSearching;
 
@@ -87,10 +116,10 @@ internal class AssetsWorker
                 if (File.Exists(text))
                 {
                     Interlocked.Increment(ref owner.totalAssetDefinitionsFound);
-                    assetDefinitionFilePaths.Enqueue(new AssetDefFilePath
+                    readerWorkItems.Enqueue(new ReaderWorkItem
                     {
                         filePath = text,
-                        checkForTranslations = true
+                        itemType = ReaderWorkItem.EItemType.Asset
                     });
                     return;
                 }
@@ -106,10 +135,10 @@ internal class AssetsWorker
                 if (File.Exists(text))
                 {
                     Interlocked.Increment(ref owner.totalAssetDefinitionsFound);
-                    assetDefinitionFilePaths.Enqueue(new AssetDefFilePath
+                    readerWorkItems.Enqueue(new ReaderWorkItem
                     {
                         filePath = text,
-                        checkForTranslations = true
+                        itemType = ReaderWorkItem.EItemType.Asset
                     });
                     return;
                 }
@@ -125,10 +154,10 @@ internal class AssetsWorker
                 if (File.Exists(text))
                 {
                     Interlocked.Increment(ref owner.totalAssetDefinitionsFound);
-                    assetDefinitionFilePaths.Enqueue(new AssetDefFilePath
+                    readerWorkItems.Enqueue(new ReaderWorkItem
                     {
                         filePath = text,
-                        checkForTranslations = true
+                        itemType = ReaderWorkItem.EItemType.Asset
                     });
                     return;
                 }
@@ -143,10 +172,10 @@ internal class AssetsWorker
                 foreach (string item in Directory.EnumerateFiles(dirPath, "*.asset"))
                 {
                     Interlocked.Increment(ref owner.totalAssetDefinitionsFound);
-                    assetDefinitionFilePaths.Enqueue(new AssetDefFilePath
+                    readerWorkItems.Enqueue(new ReaderWorkItem
                     {
                         filePath = item,
-                        checkForTranslations = true
+                        itemType = ReaderWorkItem.EItemType.Asset
                     });
                 }
             }
@@ -185,7 +214,7 @@ internal class AssetsWorker
                 }
             }
             Interlocked.Increment(ref owner.totalAssetDefinitionsRead);
-            owner.foundAssetDefinitions.Enqueue(new AssetDefinition
+            owner.resultItems.Enqueue(new AssetDefinition
             {
                 path = filePath,
                 assetData = assetData,
@@ -199,7 +228,7 @@ internal class AssetsWorker
 
         public void AddException(Exception exception, string message)
         {
-            owner.exceptions.Enqueue(new ExceptionDetails
+            owner.resultItems.Enqueue(new ExceptionDetails
             {
                 message = message,
                 exception = exception
@@ -207,18 +236,9 @@ internal class AssetsWorker
         }
     }
 
-    private struct ExceptionDetails
-    {
-        public string message;
-
-        public Exception exception;
-    }
-
     private int shouldWorkerThreadsContinue;
 
-    private ConcurrentQueue<MasterBundle> foundMasterBundles;
-
-    private ConcurrentQueue<AssetDefinition> foundAssetDefinitions;
+    private ConcurrentQueue<ResultItem> resultItems;
 
     internal int totalMasterBundlesFound;
 
@@ -233,8 +253,6 @@ internal class AssetsWorker
     internal int totalSearchLocationsFinishedSearching;
 
     internal int totalSearchLocationsFinishedReading;
-
-    private ConcurrentQueue<ExceptionDetails> exceptions;
 
     private bool isWorking;
 
@@ -252,9 +270,7 @@ internal class AssetsWorker
         language = Provider.language;
         languageIsEnglish = Provider.languageIsEnglish;
         shouldWorkerThreadsContinue = 1;
-        foundMasterBundles = new ConcurrentQueue<MasterBundle>();
-        foundAssetDefinitions = new ConcurrentQueue<AssetDefinition>();
-        exceptions = new ConcurrentQueue<ExceptionDetails>();
+        resultItems = new ConcurrentQueue<ResultItem>();
     }
 
     public void Shutdown()
@@ -270,8 +286,7 @@ internal class AssetsWorker
             owner = this,
             rootPath = path,
             searchPaths = new Queue<string>(),
-            masterBundleFilePaths = new ConcurrentQueue<string>(),
-            assetDefinitionFilePaths = new ConcurrentQueue<WorkerThreadState.AssetDefFilePath>(),
+            readerWorkItems = new ConcurrentQueue<WorkerThreadState.ReaderWorkItem>(),
             datParser = new DatParser(),
             origin = origin
         };
@@ -281,24 +296,14 @@ internal class AssetsWorker
         isWorking = true;
     }
 
-    public bool TryDequeueMasterBundle(out MasterBundle result)
+    public bool TryDequeueResult(out ResultItem result)
     {
-        return foundMasterBundles.TryDequeue(out result);
-    }
-
-    public bool TryDequeueAssetDefinition(out AssetDefinition result)
-    {
-        return foundAssetDefinitions.TryDequeue(out result);
+        return resultItems.TryDequeue(out result);
     }
 
     public void Update()
     {
-        isWorking = totalSearchLocationRequests > totalSearchLocationsFinishedReading || foundMasterBundles.Count > 0 || foundAssetDefinitions.Count > 0;
-        ExceptionDetails result;
-        while (exceptions.TryDequeue(out result))
-        {
-            UnturnedLog.exception(result.exception, result.message);
-        }
+        isWorking = totalSearchLocationRequests > totalSearchLocationsFinishedReading || resultItems.Count > 0;
     }
 
     /// <summary>
@@ -317,7 +322,11 @@ internal class AssetsWorker
                 if (File.Exists(text2))
                 {
                     Interlocked.Increment(ref totalMasterBundlesFound);
-                    workerThreadState.masterBundleFilePaths.Enqueue(text2);
+                    workerThreadState.readerWorkItems.Enqueue(new WorkerThreadState.ReaderWorkItem
+                    {
+                        filePath = text2,
+                        itemType = WorkerThreadState.ReaderWorkItem.EItemType.MasterBundle
+                    });
                 }
             }
             catch (Exception exception)
@@ -346,55 +355,58 @@ internal class AssetsWorker
         WorkerThreadState state = (WorkerThreadState)untypedState;
         while (shouldWorkerThreadsContinue > 0)
         {
-            WorkerThreadState.AssetDefFilePath result;
-            if (state.masterBundleFilePaths.TryDequeue(out var mbConfigPath))
+            bool flag = state.isFinishedSearching > 0;
+            if (state.readerWorkItems.TryDequeue(out var workItem))
             {
-                try
+                if (workItem.itemType == WorkerThreadState.ReaderWorkItem.EItemType.MasterBundle)
                 {
-                    IDatDictionary data = state.ReadFileWithoutHash(mbConfigPath);
-                    string directoryName = Path.GetDirectoryName(mbConfigPath);
-                    MasterBundleConfig config = new MasterBundleConfig(directoryName, data, state.origin);
-                    byte[] assetBundleData;
-                    byte[] hash;
-                    using (FileStream fileStream = new FileStream(config.getAssetBundlePath(), FileMode.Open, FileAccess.Read, FileShare.Read))
+                    try
                     {
-                        using SHA1Stream hashStream = new SHA1Stream(fileStream);
-                        using MemoryStream memoryStream = new MemoryStream();
-                        await hashStream.CopyToAsync(memoryStream);
-                        assetBundleData = memoryStream.ToArray();
-                        hash = hashStream.Hash;
+                        IDatDictionary data = state.ReadFileWithoutHash(workItem.filePath);
+                        string directoryName = Path.GetDirectoryName(workItem.filePath);
+                        MasterBundleConfig config = new MasterBundleConfig(directoryName, data, state.origin);
+                        byte[] assetBundleData;
+                        byte[] hash;
+                        using (FileStream fileStream = new FileStream(config.getAssetBundlePath(), FileMode.Open, FileAccess.Read, FileShare.Read))
+                        {
+                            using SHA1Stream hashStream = new SHA1Stream(fileStream);
+                            using MemoryStream memoryStream = new MemoryStream();
+                            await hashStream.CopyToAsync(memoryStream);
+                            assetBundleData = memoryStream.ToArray();
+                            hash = hashStream.Hash;
+                        }
+                        Interlocked.Increment(ref totalMasterBundlesRead);
+                        state.owner.resultItems.Enqueue(new MasterBundle
+                        {
+                            config = config,
+                            assetBundleData = assetBundleData,
+                            hash = hash
+                        });
                     }
-                    Interlocked.Increment(ref totalMasterBundlesRead);
-                    state.owner.foundMasterBundles.Enqueue(new MasterBundle
+                    catch (Exception exception)
                     {
-                        config = config,
-                        assetBundleData = assetBundleData,
-                        hash = hash
-                    });
+                        state.AddException(exception, "Caught exception reading master bundle config at: \"" + workItem.filePath + "\"");
+                    }
                 }
-                catch (Exception exception)
+                else if (workItem.itemType == WorkerThreadState.ReaderWorkItem.EItemType.Asset)
                 {
-                    state.AddException(exception, "Caught exception reading master bundle config at: \"" + mbConfigPath + "\"");
-                }
-            }
-            else if (state.assetDefinitionFilePaths.TryDequeue(out result))
-            {
-                try
-                {
-                    state.AddFoundAsset(result.filePath, result.checkForTranslations);
-                }
-                catch (Exception exception2)
-                {
-                    state.AddException(exception2, "Caught exception reading asset definition at: \"" + result.filePath + "\"");
+                    try
+                    {
+                        state.AddFoundAsset(workItem.filePath, checkForTranslations: true);
+                    }
+                    catch (Exception exception2)
+                    {
+                        state.AddException(exception2, "Caught exception reading asset definition at: \"" + workItem.filePath + "\"");
+                    }
                 }
             }
             else
             {
-                if (state.isFinishedSearching > 0)
+                if (flag)
                 {
                     break;
                 }
-                mbConfigPath = null;
+                workItem = default(WorkerThreadState.ReaderWorkItem);
             }
         }
         Interlocked.Increment(ref totalSearchLocationsFinishedReading);

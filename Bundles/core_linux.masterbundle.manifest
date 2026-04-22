@@ -1,15 +1,15 @@
 ManifestFileVersion: 0
-CRC: 3258516038
+CRC: 3805813831
 Hashes:
   AssetFileHash:
     serializedVersion: 2
-    Hash: b68ca69a58285dd27518c7894ad77628
+    Hash: 59103ab5bdf492cce779895a5493535d
   TypeTreeHash:
     serializedVersion: 2
     Hash: 08ddf84309feed855874c05c8f901dbd
   IncrementalBuildHash:
     serializedVersion: 2
-    Hash: b68ca69a58285dd27518c7894ad77628
+    Hash: 59103ab5bdf492cce779895a5493535d
 HashAppended: 0
 ClassTypes:
 - Class: 1
@@ -918,6 +918,7 @@ Assets:
 - Assets/CoreMasterBundle/Effects/Explosions/Metal_5/Texture.png
 - Assets/CoreMasterBundle/Skins/Honeybadger/Toy/Skin_Secondary_296.mat
 - Assets/CoreMasterBundle/Items/Guns/Teklowvka/Metallic_Base.png
+- Assets/CoreMasterBundle/Items/Hats/Beret_Orange_Quadruple/Hat.prefab
 - Assets/CoreMasterBundle/Items/Barricades/Stack_Scrap/Animations.prefab
 - Assets/CoreMasterBundle/Objects/Large/Scenery/Boulder_08/Object.prefab
 - Assets/CoreMasterBundle/Mythics/Radioactive/System_Hook.prefab
@@ -5562,10 +5563,11 @@ Assets:
 - Assets/CoreMasterBundle/Objects/Large/Business/Container_1/Nav.prefab
 - Assets/CoreMasterBundle/Objects/Medium/Furniture/Luggage_Yellow/Object.prefab
 - Assets/CoreMasterBundle/Items/Guns/Rifle_Pine/Item.prefab
+- Assets/CoreMasterBundle/Items/Hats/Beret_Orange_Quadruple/Item.prefab
 - Assets/CoreMasterBundle/Objects/Large/Buildings/Research_3/Object.prefab
-- Assets/CoreMasterBundle/Skins/Bulldog/Push/Skin_Secondary_1004.mat
 - Assets/CoreMasterBundle/Items/Shirts/Hoodie_Feather/Shirt.png
 - Assets/CoreMasterBundle/Skins/Bluntforce/UMarine/Skin_Secondary_145.mat
+- Assets/CoreMasterBundle/Skins/Bulldog/Push/Skin_Secondary_1004.mat
 - Assets/CoreMasterBundle/Items/Magazines/Grizzly_5/Magazine.prefab
 - Assets/CoreMasterBundle/Items/Vests/BelgiumAcid_Vest/Vest.prefab
 - Assets/CoreMasterBundle/Items/Vests/Vest_Spec_Ops/Animations.prefab
