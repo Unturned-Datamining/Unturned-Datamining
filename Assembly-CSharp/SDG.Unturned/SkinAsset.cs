@@ -141,7 +141,7 @@ public class SkinAsset : Asset
         _hasBarrel = p.data.ContainsKey("Barrel");
         _hasMagazine = p.data.ContainsKey("Magazine");
         ShouldHideMagazine = p.data.ParseBool("Hide_Magazine");
-        ragdollEffect = p.data.ParseEnum("Ragdoll_Effect", ERagdollEffect.NONE);
+        ragdollEffect = p.data.ParseEnum("Ragdoll_Effect", ERagdollEffect.None);
         specialAudioOverride = p.data.ReadAudioReference("SpecialAudioOverrideDef", p.bundle);
         if (Dedicator.IsDedicatedServer)
         {

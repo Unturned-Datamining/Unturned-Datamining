@@ -412,6 +412,8 @@ public class Provider : MonoBehaviour
     /// </summary>
     private static IServerTransport serverTransport;
 
+    private const bool shouldIgnoreServerWorkshopFiles = false;
+
     private static CommandLineString clGameplayConfigFileOverride = new CommandLineString("-GameplayConfigFile");
 
     /// <summary>

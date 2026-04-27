@@ -1,15 +1,15 @@
 ManifestFileVersion: 0
-CRC: 3805813831
+CRC: 2988799322
 Hashes:
   AssetFileHash:
     serializedVersion: 2
-    Hash: 59103ab5bdf492cce779895a5493535d
+    Hash: 09c717a0bde809474136dd6b32d54f5a
   TypeTreeHash:
     serializedVersion: 2
     Hash: 08ddf84309feed855874c05c8f901dbd
   IncrementalBuildHash:
     serializedVersion: 2
-    Hash: 59103ab5bdf492cce779895a5493535d
+    Hash: 09c717a0bde809474136dd6b32d54f5a
 HashAppended: 0
 ClassTypes:
 - Class: 1
@@ -254,6 +254,7 @@ Assets:
 - Assets/CoreMasterBundle/Objects/Large/Buildings/Barracks_5/Object.prefab
 - Assets/CoreMasterBundle/Objects/Large/Roads/Bridge_Line_7/Object.prefab
 - Assets/CoreMasterBundle/Items/Buak/Buak_Scarf_Black/Vest.prefab
+- Assets/CoreMasterBundle/Skins/Maplestrike/CA_Adamantine/Override_Mesh_1.prefab
 - Assets/CoreMasterBundle/Items/Shirts/Hoodie_Yellow/Item.prefab
 - Assets/CoreMasterBundle/Skins/Eaglefire/Breeze/Skin_Secondary_6.mat
 - Assets/CoreMasterBundle/Effects/Physics/Footstep/Ice_Run/footstep_ice_crunchy_run_05.wav
@@ -261,7 +262,7 @@ Assets:
 - Assets/CoreMasterBundle/Items/Barricades/Frame_Large_Maple/Barricade.prefab
 - Assets/CoreMasterBundle/Items/Pants/Grass_Skirt/Item.prefab
 - Assets/CoreMasterBundle/Items/Structures/Hole_Pine_Triangle/Item.prefab
-- Assets/CoreMasterBundle/Items/Cali2/CA_Crimson_Bottom/Pants.png
+- Assets/CoreMasterBundle/Items/Cali2/Blue/CA_Crimson_Bottom/Pants.png
 - Assets/CoreMasterBundle/Items/Barricades/Siding_Birch/Animations.prefab
 - Assets/CoreMasterBundle/Items/Masks/Yeti/New Material.mat
 - Assets/CoreMasterBundle/Items/Masks/Yeti/Yeti.fbx
@@ -302,7 +303,7 @@ Assets:
 - Assets/CoreMasterBundle/Skins/Honeybadger/UMarine/Skin_Secondary_1004.mat
 - Assets/CoreMasterBundle/Effects/Impacts/Paintball_Purple_Dynamic/Material_0.mat
 - Assets/CoreMasterBundle/Effects/Physics/BulletImpact/Gravel/bullet_impact_gravel_03.wav
-- Assets/CoreMasterBundle/Items/Cali2/CA_Crystalmancy_Top/Emission.png
+- Assets/CoreMasterBundle/Items/Cali2/Cali2_Crystalmancer/CA_Crystalmancy_Top/Emission.png
 - Assets/CoreMasterBundle/Effects/Impacts/Concrete_Static/Concrete.mp3
 - Assets/CoreMasterBundle/Objects/Large/Buildings/Trailer_3/Slots.prefab
 - Assets/CoreMasterBundle/Objects/Large/Quests/Lasers/Laser_2/Object.prefab
@@ -329,7 +330,7 @@ Assets:
 - Assets/CoreMasterBundle/Effects/Physics/ShotgunShellBounce/Water/ShotgunShell_Land_Water_03.wav
 - Assets/CoreMasterBundle/Skins/Grizzly/Zone_Defender/Skin_Secondary_298.mat
 - Assets/CoreMasterBundle/Items/Barricades/Library_Maple/Nav.prefab
-- Assets/CoreMasterBundle/Items/Cali2/CA_Navy_Jacket_0/Material.mat
+- Assets/CoreMasterBundle/Items/Cali2/Red/CA_Navy_Jacket_0/Material.mat
 - Assets/CoreMasterBundle/Objects/Small/Overgrowth/IsaacMemorial/Decal.png
 - Assets/CoreMasterBundle/Items/Guns/Luger/Albedo_Base.png
 - Assets/CoreMasterBundle/Skins/Ekho/Toy/Skin_Secondary_296.mat
@@ -384,9 +385,10 @@ Assets:
 - Assets/CoreMasterBundle/Items/Fishers/Rod_Maple/Animations.prefab
 - Assets/CoreMasterBundle/Effects/Physics/LegacyImpact/Rock.mp3
 - Assets/CoreMasterBundle/Items/Hats/Anniversary_0_Silver/Item.prefab
-- Assets/CoreMasterBundle/Skins/Augewehr/Ghostly/Skin_Attachment.mat
+- Assets/CoreMasterBundle/Mythics/CA_Angry/System_First.prefab
 - Assets/CoreMasterBundle/Items/Shirts/Tee_RocketMod/Shirt.png
 - Assets/CoreMasterBundle/Skins/Zubeknakov/East_2/Skin_Secondary_124.mat
+- Assets/CoreMasterBundle/Skins/Augewehr/Ghostly/Skin_Attachment.mat
 - Assets/CoreMasterBundle/Items/Pants/Khaki_Pants_Pro/Item.prefab
 - Assets/CoreMasterBundle/Items/Melee/Knife_Swiss/Albedo_Base.png
 - Assets/CoreMasterBundle/Effects/Physics/BipedLand/Mud/footstep_mud_land_03.wav
@@ -394,9 +396,8 @@ Assets:
 - Assets/CoreMasterBundle/Items/Barricades/Table_Sqr_Metal/Nav.prefab
 - Assets/CoreMasterBundle/Animals/Bear/Animal_Server.prefab
 - Assets/CoreMasterBundle/Items/Vests/Scarf_Purple/Vest.prefab
-- Assets/Game/Sources/Models/Items/Cali2/Mythics/CA_Angry/System_First.prefab
 - Assets/CoreMasterBundle/Skins/Patterns/Harvest_1024x1024/Skin_Primary.mat
-- Assets/CoreMasterBundle/Items/Cali2/CA_Chemical_Bottom/Pants.png
+- Assets/CoreMasterBundle/Items/Cali2/Complimentary/CA_Chemical_Bottom/Pants.png
 - Assets/CoreMasterBundle/Items/Barricades/Workbench/Nav.prefab
 - Assets/CoreMasterBundle/Objects/Medium/Parks/Ice_0/Object.prefab
 - Assets/CoreMasterBundle/Items/Hats/ChristmasIceCubeHat/Hat.prefab
@@ -420,7 +421,7 @@ Assets:
 - Assets/CoreMasterBundle/Objects/Large/Scenery/Quarry_0/Object.prefab
 - Assets/CoreMasterBundle/Items/Outfits/Cultist/Cultist_Shirt/Shirt.png
 - Assets/CoreMasterBundle/Items/Buak/Buak_Cat_Hoodie/Material.mat
-- Assets/CoreMasterBundle/Items/Cali2/CA_Breacher_Jacket_Desert/Shirt.png
+- Assets/CoreMasterBundle/Items/Cali2/Complimentary/CA_Breacher_Jacket_Desert/Shirt.png
 - Assets/CoreMasterBundle/Skins/Card/Bloodsport/Skin_Secondary_1381.mat
 - Assets/CoreMasterBundle/Objects/Large/Quests/Lasers/Laser_0/Nav.prefab
 - Assets/CoreMasterBundle/Effects/Impacts/Flesh_Dynamic/Texture_3.png
@@ -433,7 +434,6 @@ Assets:
 - Assets/CoreMasterBundle/Items/Pants/Queen_Guard_Bottom/Material.mat
 - Assets/CoreMasterBundle/Items/Shirts/Hoodie_Nelson/Shirt.png
 - Assets/CoreMasterBundle/Items/Guns/Swissgewehr/Item.prefab
-- Assets/CoreMasterBundle/Skins/Cobra/Bull/Albedo_Secondary.png
 - Assets/CoreMasterBundle/Items/Throwables/Flare_Red/Animations.prefab
 - Assets/CoreMasterBundle/Skins/Desert_Falcon/CC24_Kitty/Skin_Attachment.mat
 - Assets/CoreMasterBundle/Effects/Explosions/Beach_2/Effect.prefab
@@ -490,7 +490,7 @@ Assets:
 - Assets/CoreMasterBundle/Items/Shirts/Tee_Hawaii_0/Item.prefab
 - Assets/CoreMasterBundle/Objects/Large/Scenery/Grass_4/Nav.prefab
 - Assets/CoreMasterBundle/Objects/Large/Buildings/Gas_2/Object.prefab
-- Assets/CoreMasterBundle/Items/Cali2/CA_Quilted_Jacket_Green/Shirt.png
+- Assets/CoreMasterBundle/Items/Cali2/Complimentary/CA_Quilted_Jacket_Green/Shirt.png
 - Assets/CoreMasterBundle/Effects/Physics/Footstep/Wood_Run/footstep_wood_run_02.wav
 - Assets/CoreMasterBundle/Effects/Explosions/Bomb_1/Effect.prefab
 - Assets/CoreMasterBundle/Items/Barricades/Couch_Red/Barricade.prefab
@@ -530,6 +530,7 @@ Assets:
 - Assets/CoreMasterBundle/Items/Hairs/19/Texture.png
 - Assets/CoreMasterBundle/Items/Pants/Chef_Bottom/Pants.png
 - Assets/CoreMasterBundle/Items/Barricades/Wardrobe_Metal/Item.prefab
+- Assets/CoreMasterBundle/Items/Boxes/CA_Box_Blue/Item.prefab
 - Assets/CoreMasterBundle/Items/Outfits/PlagueHunter/PHPants/Item.prefab
 - Assets/CoreMasterBundle/Effects/Physics/BulletImpact/Ice/bullet_impact_ice_03.wav
 - Assets/CoreMasterBundle/Skins/Patterns/White/Skin_Tertiary.mat
@@ -542,7 +543,7 @@ Assets:
 - Assets/CoreMasterBundle/Skins/Zubeknakov/Infected/Skin_Primary.mat
 - Assets/CoreMasterBundle/Items/Pants/Lederhosen_Bottom/Animations.prefab
 - Assets/CoreMasterBundle/Effects/Physics/BulletImpact/MetalLight/bullet_impact_metal_light_08.wav
-- Assets/CoreMasterBundle/Items/Cali2/CA_Beanie_LightBlue/Hat.prefab
+- Assets/CoreMasterBundle/Items/Cali2/Complimentary/CA_Beanie_LightBlue/Hat.prefab
 - Assets/CoreMasterBundle/Items/Elver2/Elver2_Clown_Hair/Item.prefab
 - Assets/CoreMasterBundle/Objects/Large/Scenery/Boulder_15/Object.prefab
 - Assets/CoreMasterBundle/Skins/Patterns/Tiger_512x512/Skin_Primary.mat
@@ -580,6 +581,7 @@ Assets:
 - Assets/CoreMasterBundle/Items/Barrels/Ranger_Muzzle/Barrel.prefab
 - Assets/CoreMasterBundle/Skins/Nykorev/East_1/Skin_Secondary_128.mat
 - Assets/CoreMasterBundle/Items/Pants/Trunks_Blue/Animations.prefab
+- Assets/CoreMasterBundle/Mythics/CA_Chained_Blue/System_Hook.prefab
 - Assets/CoreMasterBundle/Effects/Explosions/Wheat_0/Particle.png
 - Assets/CoreMasterBundle/Objects/Large/Buildings/Airport_3/Skybox.prefab
 - Assets/CoreMasterBundle/Skins/Crossbow/Phantox/Skin_Tertiary.mat
@@ -587,7 +589,7 @@ Assets:
 - Assets/CoreMasterBundle/Skins/Empire/Winter_Combat/Skin_Secondary_1482.mat
 - Assets/CoreMasterBundle/Items/PBS/PBS_SSamurai_Top/Item.prefab
 - Assets/CoreMasterBundle/Objects/Large/Utilities/Silo_Grain_1/Object.prefab
-- Assets/CoreMasterBundle/Items/Cali2/CA_Shorts_Sports_0/Pants.png
+- Assets/CoreMasterBundle/Items/Cali2/Complimentary/CA_Shorts_Sports_0/Pants.png
 - Assets/CoreMasterBundle/Mythics/Burning/System_First.prefab
 - Assets/CoreMasterBundle/Objects/Mooki/Sports_0/Nav.prefab
 - Assets/CoreMasterBundle/Objects/Large/Buildings/Diner_0/Object.prefab
@@ -596,7 +598,7 @@ Assets:
 - Assets/CoreMasterBundle/Items/Barricades/Pipe_Metal/Item.prefab
 - Assets/CoreMasterBundle/Items/Guns/Nailgun/Animations.prefab
 - Assets/CoreMasterBundle/Items/Shirts/FranceMime_Top/Item.prefab
-- Assets/CoreMasterBundle/Items/Cali2/CA_Street_Bandana/Glasses.prefab
+- Assets/CoreMasterBundle/Items/Cali2/Red/CA_Street_Bandana/Glasses.prefab
 - Assets/CoreMasterBundle/Items/Elver2/Elver2_Bowtie_Red/Item.prefab
 - Assets/CoreMasterBundle/Items/Outfits/ZhugeLiang/ZhugeLiangBottom/Item.prefab
 - Assets/CoreMasterBundle/Items/Barricades/Fence_Barbedwire/Item.prefab
@@ -610,7 +612,7 @@ Assets:
 - Assets/CoreMasterBundle/Effects/Physics/Footstep/Snow_Walk/footstep_snow_walk_11.wav
 - Assets/CoreMasterBundle/Items/Arid/Arid_Vintage_Helmet/Hat.prefab
 - Assets/CoreMasterBundle/Items/Water/Crushed_Indigo/Animations.prefab
-- Assets/CoreMasterBundle/Items/Cali2/CA_Crystalmancy_Bottom/Emission.png
+- Assets/CoreMasterBundle/Items/Cali2/Cali2_Crystalmancer/CA_Crystalmancy_Bottom/Emission.png
 - Assets/CoreMasterBundle/Skins/Patterns/TrophyAward_Bronze/Skin_Tertiary.mat
 - Assets/CoreMasterBundle/Items/Glasses/Nightvision_Military/Animations.prefab
 - Assets/CoreMasterBundle/Items/Hats/Magic_Hat/Hat.prefab
@@ -630,15 +632,17 @@ Assets:
 - Assets/CoreMasterBundle/Items/Outfits/StrawberryWaitress/StrawberryWaitress_Apron/Item.prefab
 - Assets/CoreMasterBundle/Skins/Launcher_Rocket/Fire_Breather/Skin_Tertiary.mat
 - Assets/CoreMasterBundle/Effects/Physics/MeleeImpact/Snow/snowball_hit_impact_08.wav
-- Assets/CoreMasterBundle/Items/Cali2/CA_Shorts_Sports_7/Material.mat
+- Assets/CoreMasterBundle/Items/Cali2/Complimentary/CA_Shorts_Sports_7/Material.mat
 - Assets/CoreMasterBundle/Items/Shirts/Jersey_France/Shirt.png
 - Assets/CoreMasterBundle/Items/Barricades/Sign_Metal/Animations.prefab
+- Assets/CoreMasterBundle/Mythics/CA_Chained_Red/System_Hook.prefab
 - Assets/CoreMasterBundle/Effects/Impacts/Flesh_Dynamic/Particle.mat
 - Assets/CoreMasterBundle/Items/Glasses/Eyepatch/Item.prefab
 - Assets/CoreMasterBundle/Items/Hats/Rio_Guard_Hat/Hat.prefab
 - Assets/CoreMasterBundle/Effects/Physics/BulletImpact/WoodLight/bullet_impact_wood_light_01.wav
 - Assets/CoreMasterBundle/Objects/Medium/Quests/Barnacles/Barnacle_7/Object.prefab
 - Assets/CoreMasterBundle/Effects/Physics/Footstep/Concrete_Walk/footstep_concrete_walk_21.wav
+- Assets/CoreMasterBundle/Mythics/CA_Raising/System_Hook.prefab
 - Assets/CoreMasterBundle/Objects/Large/Vehicles/Jeep_Forest/Nav.prefab
 - Assets/CoreMasterBundle/Skins/Maplestrike/Bomber/Skin_Secondary_1201.mat
 - Assets/CoreMasterBundle/Objects/Medium/Military/Crate_5/Nav.prefab
@@ -767,6 +771,7 @@ Assets:
 - Assets/CoreMasterBundle/Effects/Impacts/Snow_Static/Snow.mp3
 - Assets/CoreMasterBundle/Skins/Scalar/UMarine/Skin_Primary.mat
 - Assets/CoreMasterBundle/Items/Hats/BelgiumInfantry_Hat/Hat.prefab
+- Assets/CoreMasterBundle/Skins/Maplestrike/CA_Adamantine/Skin_Secondary_1004.mat
 - Assets/CoreMasterBundle/Items/Hats/Beret_Desert/Animations.prefab
 - Assets/CoreMasterBundle/Objects/Large/Vehicles/Wrecked_Space_Shuttle_1/Nav.prefab
 - Assets/CoreMasterBundle/Objects/Medium/Utilities/Door_Jail/Nav.prefab
@@ -828,7 +833,7 @@ Assets:
 - Assets/CoreMasterBundle/Objects/Large/Buildings/Tower_Military_2/Object.prefab
 - Assets/CoreMasterBundle/Items/RioRemastered/Free/Tank_Top/Rio_Tank_Top_White/Material.mat
 - Assets/CoreMasterBundle/Skins/Peacemaker/Crimson/Skin_Primary.mat
-- Assets/CoreMasterBundle/Items/Cali2/CA_Glasses_8/Glasses.prefab
+- Assets/CoreMasterBundle/Items/Cali2/Complimentary/CA_Glasses_8/Glasses.prefab
 - Assets/CoreMasterBundle/Trees/Bush_1/Stump.prefab
 - Assets/CoreMasterBundle/Items/Throwables/Smoke_Yellow/Item.prefab
 - Assets/CoreMasterBundle/Items/Frost/Frost_Pants_Spliced/Item.prefab
@@ -836,7 +841,7 @@ Assets:
 - Assets/CoreMasterBundle/Skins/Honeybadger/Foxtail/Skin_Secondary_17.mat
 - Assets/CoreMasterBundle/Items/Barricades/Barbedwire_Ornamental/Item.prefab
 - Assets/CoreMasterBundle/Items/Barricades/Plate_Large_Slip/Nav.prefab
-- Assets/CoreMasterBundle/Items/Cali2/CA_Breacher_Bottom_White/Material.mat
+- Assets/CoreMasterBundle/Items/Cali2/Complimentary/CA_Breacher_Bottom_White/Material.mat
 - Assets/CoreMasterBundle/Objects/Medium/Business/ATM_0/Nav.prefab
 - Assets/CoreMasterBundle/Items/Barricades/Plate_Large_Pine/Nav.prefab
 - Assets/CoreMasterBundle/Effects/Physics/BulletImpact/Gravel/bullet_impact_gravel_04.wav
@@ -947,7 +952,7 @@ Assets:
 - Assets/CoreMasterBundle/Items/Boxes/Rio_Box/Item.prefab
 - Assets/CoreMasterBundle/Items/Pants/Military_Bottom_Desert/Material.mat
 - Assets/CoreMasterBundle/Skins/Matamorez/Nautical/Skin_Tertiary.mat
-- Assets/CoreMasterBundle/Items/Cali2/CA_Liberty_Cap_0/Hat.prefab
+- Assets/CoreMasterBundle/Items/Cali2/Red/CA_Liberty_Cap_0/Hat.prefab
 - Assets/CoreMasterBundle/Items/Supplies/Can/Item.prefab
 - Assets/CoreMasterBundle/Effects/Physics/BipedLand/Sand/footstep_sand_land_04.wav
 - Assets/CoreMasterBundle/Items/Pants/Police_Bottom/Animations.prefab
@@ -1083,7 +1088,7 @@ Assets:
 - Assets/CoreMasterBundle/Effects/Impacts/Paintball_Orange_Dynamic/Texture_3.png
 - Assets/CoreMasterBundle/Skins/Ace/Militia_Ace/Skin_Secondary_108.mat
 - Assets/CoreMasterBundle/Objects/Large/Vehicles/Racecar_Blue/Nav.prefab
-- Assets/CoreMasterBundle/Items/Cali2/CA_Beanie_DarkBlue/Hat.prefab
+- Assets/CoreMasterBundle/Items/Cali2/Complimentary/CA_Beanie_DarkBlue/Hat.prefab
 - Assets/CoreMasterBundle/Effects/Physics/MeleeImpact/Snow/snowball_hit_impact_09.wav
 - Assets/CoreMasterBundle/Items/Kuwait2/Kuwait_Assorted_Slick_Hair/Item.prefab
 - Assets/CoreMasterBundle/Items/Keys/Key_Workshop_02/Item.prefab
@@ -1094,7 +1099,7 @@ Assets:
 - Assets/CoreMasterBundle/Items/Food/Sandwich_Ham/Item.prefab
 - Assets/CoreMasterBundle/Objects/Medium/Business/Dumpster_8/Object.prefab
 - Assets/CoreMasterBundle/Items/Sights/Schofield_Iron_Sights/Item.prefab
-- Assets/CoreMasterBundle/Items/Cali2/CA_Quilted_Jacket_Pink/Material.mat
+- Assets/CoreMasterBundle/Items/Cali2/Complimentary/CA_Quilted_Jacket_Pink/Material.mat
 - Assets/CoreMasterBundle/Vehicles/Skycrane/Vehicle.prefab
 - Assets/CoreMasterBundle/Effects/Explosions/Maple_6/Texture.png
 - Assets/CoreMasterBundle/Items/Buak/Buak_Recycled_Armour/Vest.prefab
@@ -1125,7 +1130,7 @@ Assets:
 - Assets/CoreMasterBundle/Items/Barricades/Table_Rect_Metal/Barricade.prefab
 - Assets/CoreMasterBundle/Items/RioRemastered/Free/Rio_Soccer_Top_Serbia/Shirt.png
 - Assets/CoreMasterBundle/Items/Limestone/Achievement/LS_HiVisVest/Vest.prefab
-- Assets/CoreMasterBundle/Items/Cali2/CA_Dual_Top_4/Material.mat
+- Assets/CoreMasterBundle/Items/Cali2/Complimentary/CA_Dual_Top_4/Material.mat
 - Assets/CoreMasterBundle/Items/Hats/Eskimo_Hat/Animations.prefab
 - Assets/CoreMasterBundle/Items/Shirts/Construction_Top/Shirt.png
 - Assets/CoreMasterBundle/Effects/Physics/Footstep/Concrete_Run/footstep_concrete_run_18.wav
@@ -1228,7 +1233,7 @@ Assets:
 - Assets/CoreMasterBundle/Skins/Dragonfang/Dragonblaster/Skin_Attachment.mat
 - Assets/CoreMasterBundle/Objects/Large/Buildings/Lobby_1/Object.prefab
 - Assets/CoreMasterBundle/Effects/Physics/ShotgunShellBounce/Rug/ShotgunShellBounce_Rug.asset
-- Assets/CoreMasterBundle/Items/Cali2/CA_Hoodie_Split_0/Material.mat
+- Assets/CoreMasterBundle/Items/Cali2/Complimentary/CA_Hoodie_Split_0/Material.mat
 - Assets/CoreMasterBundle/Sounds/CarHorn_03.mp3
 - Assets/CoreMasterBundle/Items/Shirts/Hoodie_Lucky/Shirt.png
 - Assets/CoreMasterBundle/Items/Barricades/Loom/Animations.prefab
@@ -1325,7 +1330,7 @@ Assets:
 - Assets/CoreMasterBundle/Objects/Large/Buildings/Apartment_2/Skybox.prefab
 - Assets/CoreMasterBundle/Effects/Explosions/Zombie_7/Particle_0.png
 - Assets/CoreMasterBundle/Skins/Honeybadger/Toy/Skin_Secondary_148.mat
-- Assets/CoreMasterBundle/Items/Cali2/CA_Tommy_Top/Material.mat
+- Assets/CoreMasterBundle/Items/Cali2/Red/CA_Tommy_Top/Material.mat
 - Assets/CoreMasterBundle/Items/PBS/PBS_Green_Button/Shirt.png
 - Assets/CoreMasterBundle/Items/ComboCrate2024/CC24_BlackApron/Pants.png
 - Assets/CoreMasterBundle/Trees/Pine_8/Skybox.prefab
@@ -1359,7 +1364,7 @@ Assets:
 - Assets/CoreMasterBundle/Items/Limestone/Extras/LS_Softshell_2/Material.mat
 - Assets/CoreMasterBundle/Skins/Launcher_Rocket/Apollo/Skin_Secondary_520.mat
 - Assets/CoreMasterBundle/Skins/Peacemaker/Symbiont/Skin_Secondary_22.mat
-- Assets/CoreMasterBundle/Items/Cali2/CA_Operator_Top_0/Material.mat
+- Assets/CoreMasterBundle/Items/Cali2/Cali2_Operator/CA_Operator_Top_0/Material.mat
 - Assets/CoreMasterBundle/Objects/Large/Buildings/Medic_2/Slots.prefab
 - Assets/CoreMasterBundle/Effects/Explosions/Wheat_1/Particle.png
 - Assets/CoreMasterBundle/Items/Barricades/Plate_Large_Slip/Item.prefab
@@ -1391,7 +1396,7 @@ Assets:
 - Assets/CoreMasterBundle/Skins/Augewehr/Milspec/Skin_Secondary_1363.mat
 - Assets/CoreMasterBundle/Objects/Large/Buildings/Airport_2/Slots.prefab
 - Assets/CoreMasterBundle/Skins/Augewehr/Mechanic/Skin_Secondary_125.mat
-- Assets/CoreMasterBundle/Items/Cali2/CA_Operator_Panama_0/Hat.prefab
+- Assets/CoreMasterBundle/Items/Cali2/Cali2_Operator/CA_Operator_Panama_0/Hat.prefab
 - Assets/CoreMasterBundle/Objects/Large/Buildings/Greenhouse_0/Object.prefab
 - Assets/CoreMasterBundle/Items/Throwables/Smoke_Purple/Animations.prefab
 - Assets/CoreMasterBundle/Items/RioRemastered/Free/Tank_Top/Rio_Tank_Top_Yellow/Item.prefab
@@ -1423,14 +1428,14 @@ Assets:
 - Assets/CoreMasterBundle/Items/Pants/VolcanoKnightBottom/Pants.png
 - Assets/CoreMasterBundle/Items/Hairs/13/Hair.prefab
 - Assets/CoreMasterBundle/Skins/Scalar/Aggressive_Revs/Skin_Secondary_147.mat
-- Assets/CoreMasterBundle/Items/Cali2/CA_Dual_Top_2/Material.mat
+- Assets/CoreMasterBundle/Items/Cali2/Complimentary/CA_Dual_Top_2/Material.mat
 - Assets/CoreMasterBundle/Items/Glasses/Headlamp/Animations.prefab
 - Assets/CoreMasterBundle/Effects/General/Drop/Drop.mp3
 - Assets/CoreMasterBundle/Objects/Large/Buildings/Lobby_0/Nav.prefab
 - Assets/CoreMasterBundle/Items/Medical/Morphine/Animations.prefab
 - Assets/CoreMasterBundle/Items/Backpacks/Daypack_Green/Item.prefab
 - Assets/CoreMasterBundle/Items/Barricades/XMAS_Castle_00/Barricade.prefab
-- Assets/CoreMasterBundle/Items/Cali2/CA_Breacher_Jacket_Black/Shirt.png
+- Assets/CoreMasterBundle/Items/Cali2/Complimentary/CA_Breacher_Jacket_Black/Shirt.png
 - Assets/CoreMasterBundle/Items/Magazines/Yuri_64/Item.prefab
 - Assets/CoreMasterBundle/Effects/Impacts/Paintball_Blue_Dynamic/Particle.png
 - Assets/CoreMasterBundle/Objects/Medium/Fences/Fence_Wood_2/Object.prefab
@@ -1447,7 +1452,7 @@ Assets:
 - Assets/CoreMasterBundle/Effects/Physics/Footstep/MetalHigh_Run/footstep_metal_high_run_15.wav
 - Assets/CoreMasterBundle/Items/Structures/Hole_Birch_Triangle/Nav.prefab
 - Assets/CoreMasterBundle/Objects/Medium/Parks/Crop_1/Nav.prefab
-- Assets/CoreMasterBundle/Items/Cali2/CA_Stubble_4/Mask.prefab
+- Assets/CoreMasterBundle/Items/Cali2/Complimentary/CA_Stubble_4/Mask.prefab
 - Assets/CoreMasterBundle/Items/Pants/FranceRULA_Bottom/Material.mat
 - Assets/CoreMasterBundle/Items/Pants/Rocket_Pants/Metallic.png
 - Assets/CoreMasterBundle/Items/Medical/Dressing/Item.prefab
@@ -1471,7 +1476,7 @@ Assets:
 - Assets/CoreMasterBundle/Objects/Medium/Parks/Cooler_Beach_0/Object.prefab
 - Assets/CoreMasterBundle/Items/Magazines/Matamorez_17/Item.prefab
 - Assets/CoreMasterBundle/Items/Backpacks/Daypack_Purple/Backpack.prefab
-- Assets/CoreMasterBundle/Items/Cali2/CA_Crystalmancy_Aura/Backpack.prefab
+- Assets/CoreMasterBundle/Items/Cali2/Cali2_Crystalmancer/CA_Crystalmancy_Aura/Backpack.prefab
 - Assets/CoreMasterBundle/Skins/Vonya/Warfare/Skin_Attachment.mat
 - Assets/CoreMasterBundle/Items/Barricades/Seed_Lettuce/Animations.prefab
 - Assets/CoreMasterBundle/Items/Fishers/Rod_Maple/Cast.mp3
@@ -1567,6 +1572,7 @@ Assets:
 - Assets/CoreMasterBundle/Items/Pants/Spec_Ops_Bottom/Material.mat
 - Assets/CoreMasterBundle/Items/Shirts/Hoodie_Squid/Material.mat
 - Assets/CoreMasterBundle/Objects/Large/Vehicles/Aircraft_Carrier_0/Object.prefab
+- Assets/CoreMasterBundle/Skins/Heartbreaker/CA_Sealine/Skin_Secondary_1004.mat
 - Assets/CoreMasterBundle/Items/Pants/HeadlessPants/Item.prefab
 - Assets/CoreMasterBundle/Objects/Medium/Parks/Dock_0/Object.prefab
 - Assets/CoreMasterBundle/Effects/Impacts/Alien_Dynamic/Effect.prefab
@@ -1686,7 +1692,7 @@ Assets:
 - Assets/CoreMasterBundle/Effects/Physics/BulletImpact/Mud/bullet_impact_mud_02.wav
 - Assets/CoreMasterBundle/Objects/Large/Vehicles/Volga_Yellow/Object.prefab
 - Assets/CoreMasterBundle/Effects/Physics/Footstep/MetalLow_Run/footstep_metal_low_run_27.wav
-- Assets/CoreMasterBundle/Items/Cali2/CA_Press_Vest_0/Vest.prefab
+- Assets/CoreMasterBundle/Items/Cali2/Blue/CA_Press_Vest_0/Vest.prefab
 - Assets/CoreMasterBundle/Items/Elver/Elver_Pant_Yellow/Item.prefab
 - Assets/CoreMasterBundle/Objects/Large/Utilities/Radar_2/Nav.prefab
 - Assets/CoreMasterBundle/Items/Barricades/Doorframe_Birch/Animations.prefab
@@ -1757,7 +1763,7 @@ Assets:
 - Assets/CoreMasterBundle/Skins/Eaglefire/Jackpot/Skin_Attachment.mat
 - Assets/CoreMasterBundle/Objects/Medium/Furniture/Fridge_1/Nav.prefab
 - Assets/CoreMasterBundle/Skins/Empire/Pegasus/Skin_Primary.mat
-- Assets/CoreMasterBundle/Items/Cali2/CA_Breacher_Bottom_Blue/Material.mat
+- Assets/CoreMasterBundle/Items/Cali2/Complimentary/CA_Breacher_Bottom_Blue/Material.mat
 - Assets/CoreMasterBundle/Items/Shirts/Trenchcoat_Vintage_Top/Material.mat
 - Assets/CoreMasterBundle/Objects/Large/Buildings/Bunker_6/Object.prefab
 - Assets/CoreMasterBundle/Objects/Medium/Furniture/Fridge_1/Object.prefab
@@ -1766,11 +1772,11 @@ Assets:
 - Assets/CoreMasterBundle/Skins/Eaglefire/Toy/Skin_Secondary_1177.mat
 - Assets/CoreMasterBundle/Items/Structures/Stairs_Birch/Item.prefab
 - Assets/CoreMasterBundle/Items/PBS/PBS_Fishing_Overalls_0/Material.mat
-- Assets/CoreMasterBundle/Items/Cali2/CA_Breacher_Bottom_Red/Pants.png
+- Assets/CoreMasterBundle/Items/Cali2/Complimentary/CA_Breacher_Bottom_Red/Pants.png
 - Assets/CoreMasterBundle/Effects/Physics/BipedLand/Gravel/footstep_gravel_land_v2_04.wav
 - Assets/CoreMasterBundle/Items/Pants/Medic_Bottom/Material.mat
 - Assets/CoreMasterBundle/Objects/Medium/Fences/Fence_Stone_1/Object.prefab
-- Assets/CoreMasterBundle/Items/Cali2/CA_Breacher_Jacket_Red/Material.mat
+- Assets/CoreMasterBundle/Items/Cali2/Complimentary/CA_Breacher_Jacket_Red/Material.mat
 - Assets/CoreMasterBundle/Items/RioRemastered/Free/Rio_Brazil_Scarf/Vest.prefab
 - Assets/CoreMasterBundle/Items/Glasses/Headlamp/Glasses.prefab
 - Assets/CoreMasterBundle/Skins/Augewehr/Insane/Skin_Secondary_125.mat
@@ -1817,7 +1823,7 @@ Assets:
 - Assets/CoreMasterBundle/Items/RioRemastered/Premium/Rio_Silly_Pan/Hat.prefab
 - Assets/CoreMasterBundle/Skins/Maplestrike/Knitted_Sweater/Skin_Attachment.mat
 - Assets/CoreMasterBundle/Skins/Peacemaker/Frostbite/Skin_Attachment.mat
-- Assets/Game/Sources/Models/Items/Cali2/Mythics/CA_Overloaded/System_Third.prefab
+- Assets/CoreMasterBundle/Mythics/CA_Overloaded/System_Third.prefab
 - Assets/CoreMasterBundle/Objects/Large/Buildings/Apartment_1/Nav.prefab
 - Assets/CoreMasterBundle/Items/Kuwait2/Kuwait_Assorted_Range_Specs/Item.prefab
 - Assets/CoreMasterBundle/Items/Shirts/Jersey_Poland/Shirt.png
@@ -1913,7 +1919,7 @@ Assets:
 - Assets/CoreMasterBundle/Items/Limestone/Extras/LS_Hood_Yellow/Hat.prefab
 - Assets/CoreMasterBundle/Items/Tools/Vehicle_Spraypaint_HotrodRed/Item.prefab
 - Assets/CoreMasterBundle/Items/Masks/Earpiece/Item.prefab
-- Assets/Game/Sources/Models/Items/Cali2/Mythics/CA_Angry/System_Third.prefab
+- Assets/CoreMasterBundle/Mythics/CA_Angry/System_Third.prefab
 - Assets/CoreMasterBundle/Objects/Medium/Furniture/Bed_0/Object.prefab
 - Assets/CoreMasterBundle/Skins/Bane/Moo/Skin_Secondary_1486.mat
 - Assets/CoreMasterBundle/Vehicles/Firetruck/Siren.ogg
@@ -1956,6 +1962,7 @@ Assets:
 - Assets/CoreMasterBundle/Trees/Pine_3/Stump.prefab
 - Assets/CoreMasterBundle/Effects/Physics/ShotgunShellBounce/Dirt/ShotgunShell_Land_Dirt_04.wav
 - Assets/CoreMasterBundle/Items/Elver2/Elver2_Tie_White/Item.prefab
+- Assets/CoreMasterBundle/Skins/Maplestrike/CA_Adamantine/Skin_Secondary_8.mat
 - Assets/CoreMasterBundle/Effects/Explosions/Board_0/Television.mp3
 - Assets/CoreMasterBundle/Effects/TireMotion/TireMotion_Foliage_Russia_02/Effect.prefab
 - Assets/CoreMasterBundle/Skins/Sabertooth/Era/Skin_Primary.mat
@@ -1969,13 +1976,14 @@ Assets:
 - Assets/CoreMasterBundle/Items/Barricades/Door_Birch/Item.prefab
 - Assets/CoreMasterBundle/Items/Shirts/Medic_Top/Shirt.png
 - Assets/CoreMasterBundle/Effects/Weather/DefaultSnowParticles.prefab
+- Assets/CoreMasterBundle/Skins/Maplestrike/CA_Adamantine/Skin_Secondary_364.mat
 - Assets/CoreMasterBundle/Items/Barricades/Makeshift_Vehicle_1_Seat/Animations.prefab
 - Assets/CoreMasterBundle/Items/Food/Pizza_Mushroom/Item.prefab
 - Assets/CoreMasterBundle/Items/Pants/Cargo_Pants/Material.mat
 - Assets/CoreMasterBundle/Items/Shirts/FranceRULA_Top/Item.prefab
 - Assets/CoreMasterBundle/Items/Shirts/Rain_Jacket/Material.mat
 - Assets/CoreMasterBundle/Effects/Guns/Muzzle_2 (laser)/Effect.prefab
-- Assets/CoreMasterBundle/Items/Cali2/CA_Shorts_Sports_3/Pants.png
+- Assets/CoreMasterBundle/Items/Cali2/Complimentary/CA_Shorts_Sports_3/Pants.png
 - Assets/CoreMasterBundle/Items/Guns/Swissgewehr/Hammer.mp3
 - Assets/CoreMasterBundle/Items/Barricades/XMAS_Stocking/Barricade.prefab
 - Assets/CoreMasterBundle/Skins/Eaglefire/Toy/Skin_Secondary_153.mat
@@ -2029,7 +2037,7 @@ Assets:
 - Assets/CoreMasterBundle/Items/Outfits/WanderingWizard/WanderingWizard_Hat/Hat.prefab
 - Assets/CoreMasterBundle/Effects/Physics/BulletImpact/Dirt/bullet_impact_dirt_04.wav
 - Assets/CoreMasterBundle/Items/Hats/HeadlessHood/Item.prefab
-- Assets/CoreMasterBundle/Items/Cali2/CA_Gnome_Pet_0/Vest.prefab
+- Assets/CoreMasterBundle/Items/Cali2/Achievement/CA_Gnome_Pet_0/Vest.prefab
 - Assets/CoreMasterBundle/Objects/Medium/Quests/Treasure/Treasure_Off/Object.prefab
 - Assets/CoreMasterBundle/Skins/Desert_Falcon/CC24_Kitty/Override_Mesh_1.prefab
 - Assets/CoreMasterBundle/Items/Guns/Teklowvka/Item.prefab
@@ -2069,7 +2077,6 @@ Assets:
 - Assets/CoreMasterBundle/Items/Guns/Empire/Item.prefab
 - Assets/CoreMasterBundle/Items/Magazines/Sabertooth_10/Magazine.prefab
 - Assets/CoreMasterBundle/Items/Barricades/Doubledoor_Metal/Nav.prefab
-- Assets/CoreMasterBundle/Skins/Colt/Stabilized/Skin_Primary.png
 - Assets/CoreMasterBundle/Skins/Launcher_Rocket/Worksite/Skin_Primary.mat
 - Assets/CoreMasterBundle/Items/Pants/Blueknight_Bottom/Material.mat
 - Assets/CoreMasterBundle/Sounds/Unturned_Theme.mp3
@@ -2085,7 +2092,7 @@ Assets:
 - Assets/CoreMasterBundle/Items/Barricades/Doubledoor_Birch/Animations.prefab
 - Assets/CoreMasterBundle/Effects/Physics/ShotgunShellBounce/Leaves/ShotgunShell_Land_Leaves_01.wav
 - Assets/CoreMasterBundle/Items/Structures/Post_Pine/Animations.prefab
-- Assets/CoreMasterBundle/Items/Cali2/CA_Dual_Top_3/Shirt.png
+- Assets/CoreMasterBundle/Items/Cali2/Complimentary/CA_Dual_Top_3/Shirt.png
 - Assets/CoreMasterBundle/Items/Barricades/Rack_Maple/Animations.prefab
 - Assets/CoreMasterBundle/Items/Barricades/Door_Jail/Barricade.prefab
 - Assets/CoreMasterBundle/Sounds/Inventory/LargeGunAttachment.asset
@@ -2102,7 +2109,7 @@ Assets:
 - Assets/CoreMasterBundle/Items/PBS/PBS_Yellow_Button/Shirt.png
 - Assets/CoreMasterBundle/Items/Shirts/Blueknight_Top/Shirt.png
 - Assets/CoreMasterBundle/Skins/Maplestrike/Hypertech/Skin_Secondary_6.mat
-- Assets/CoreMasterBundle/Items/Cali2/CA_Quilted_Jacket_Yellow/Shirt.png
+- Assets/CoreMasterBundle/Items/Cali2/Complimentary/CA_Quilted_Jacket_Yellow/Shirt.png
 - Assets/CoreMasterBundle/Items/Frost/Frost_Kitsune/Hat.prefab
 - Assets/CoreMasterBundle/Effects/Physics/Swim/HeavyWading/footstep_water_splash_heavy_wading_08.wav
 - Assets/CoreMasterBundle/Items/Structures/Ramp_Brick/Animations.prefab
@@ -2124,7 +2131,7 @@ Assets:
 - Assets/CoreMasterBundle/Items/Magazines/HMG_50/Magazine.prefab
 - Assets/CoreMasterBundle/Skins/Maplestrike/Bomber/Skin_Attachment.mat
 - Assets/CoreMasterBundle/Terrain/Foliage/Pebbles/Pebble_00_Mesh.fbx
-- Assets/CoreMasterBundle/Items/Cali2/CA_RolledUp_Top/Shirt.png
+- Assets/CoreMasterBundle/Items/Cali2/Red/CA_RolledUp_Top/Shirt.png
 - Assets/CoreMasterBundle/Skins/Scalar/UMarine/Skin_Secondary_1449.mat
 - Assets/CoreMasterBundle/Items/Halloween2024/HW2_Pillow/Backpack.prefab
 - Assets/CoreMasterBundle/Items/Hats/Cap_Green/Hat.prefab
@@ -2147,10 +2154,10 @@ Assets:
 - Assets/CoreMasterBundle/Items/Outfits/ZhugeLiang/ZhugeLiangVest/Vest.prefab
 - Assets/CoreMasterBundle/Items/Limestone/Premium/LS_Whiskers/Item.prefab
 - Assets/CoreMasterBundle/Objects/Medium/Business/Conveyor_0/Nav.prefab
-- Assets/CoreMasterBundle/Items/Cali2/CA_Breacher_Jacket_Olive/Shirt.png
+- Assets/CoreMasterBundle/Items/Cali2/Complimentary/CA_Breacher_Jacket_Olive/Shirt.png
 - Assets/CoreMasterBundle/Items/Barrels/Crossbow_Barrel/Shoot.mp3
 - Assets/CoreMasterBundle/Items/Guns/Matamorez/Reload.mp3
-- Assets/CoreMasterBundle/Items/Cali2/CA_Glasses_1/Glasses.prefab
+- Assets/CoreMasterBundle/Items/Cali2/Complimentary/CA_Glasses_1/Glasses.prefab
 - Assets/CoreMasterBundle/Trees/Pine_8/Resource.prefab
 - Assets/CoreMasterBundle/Objects/Large/Buildings/Security_0/Skybox.prefab
 - Assets/CoreMasterBundle/Trees/Maple_1/Skybox.prefab
@@ -2285,7 +2292,7 @@ Assets:
 - Assets/CoreMasterBundle/Items/Arid/Arid_Hockey_Mask_Black/Item.prefab
 - Assets/CoreMasterBundle/Objects/Medium/Quests/Engine/Engine_On/Object.prefab
 - Assets/CoreMasterBundle/Skins/Timberwolf/Era/Skin_Tertiary.mat
-- Assets/CoreMasterBundle/Items/Cali2/CA_Crystalmancy_Top/Material.mat
+- Assets/CoreMasterBundle/Items/Cali2/Cali2_Crystalmancer/CA_Crystalmancy_Top/Material.mat
 - Assets/CoreMasterBundle/Effects/Physics/Footstep/Grass_Run/footstep_grass_run_01.wav
 - Assets/CoreMasterBundle/Effects/Physics/Footstep/Gravel_Run/footstep_gravel_run_08.wav
 - Assets/CoreMasterBundle/Items/Hats/Beret_White/Animations.prefab
@@ -2298,7 +2305,7 @@ Assets:
 - Assets/CoreMasterBundle/Effects/Physics/Footstep/Concrete_Walk/footstep_concrete_walk_04.wav
 - Assets/CoreMasterBundle/Items/RioRemastered/Free/Rio_Soccer_Top_Mexico/Shirt.png
 - Assets/CoreMasterBundle/Items/RioRemastered/Free/Rio_Soccer_Bottom_White/Pants.png
-- Assets/CoreMasterBundle/Items/Cali2/CA_Shorts_Sports_1/Material.mat
+- Assets/CoreMasterBundle/Items/Cali2/Complimentary/CA_Shorts_Sports_1/Material.mat
 - Assets/CoreMasterBundle/Items/Food/Stew_Seaweed/Animations.prefab
 - Assets/CoreMasterBundle/Items/Throwables/Snowball/Animations.prefab
 - Assets/CoreMasterBundle/Objects/Large/Buildings/Gas_1/Nav.prefab
@@ -2306,7 +2313,7 @@ Assets:
 - Assets/CoreMasterBundle/Items/Elver2/Elver2_Tie_Red/Item.prefab
 - Assets/CoreMasterBundle/Items/Hats/Beret_Orange/Item.prefab
 - Assets/CoreMasterBundle/Effects/Impacts/Paintball_Red_Dynamic/Material_1_Decal.mat
-- Assets/CoreMasterBundle/Items/Cali2/CA_Beanie_Black/Hat.prefab
+- Assets/CoreMasterBundle/Items/Cali2/Complimentary/CA_Beanie_Black/Hat.prefab
 - Assets/CoreMasterBundle/Sounds/Inventory/SmallGunAttachment/gun_pistol_load_bullet_04.wav
 - Assets/CoreMasterBundle/Objects/Medium/Business/Computer_0/Object.prefab
 - Assets/CoreMasterBundle/Items/Barricades/Sandbag/Nav.prefab
@@ -2420,6 +2427,7 @@ Assets:
 - Assets/CoreMasterBundle/Items/Tools/Vehicle_Spraypaint_Military_Desert/Animations.prefab
 - Assets/CoreMasterBundle/Items/Barricades/Hatch_Maple/Barricade.prefab
 - Assets/CoreMasterBundle/Skins/Empire/Pegasus/Skin_Attachment.mat
+- Assets/CoreMasterBundle/Mythics/CA_UFO/System_Hook.prefab
 - Assets/CoreMasterBundle/Items/Shirts/Hoodie_Black/Animations.prefab
 - Assets/CoreMasterBundle/Items/Guns/Bluntforce/Metallic_Base.png
 - Assets/CoreMasterBundle/Objects/Medium/Military/Crate_4/Object.prefab
@@ -2493,7 +2501,7 @@ Assets:
 - Assets/CoreMasterBundle/Objects/Medium/Business/Chute_Wood_0/Object.prefab
 - Assets/CoreMasterBundle/Effects/Explosions/Glass_Weak/Glass.mp3
 - Assets/CoreMasterBundle/Items/Arid/Arid_Monocular/Item.prefab
-- Assets/CoreMasterBundle/Items/Cali2/CA_Breacher_Bottom_Olive/Material.mat
+- Assets/CoreMasterBundle/Items/Cali2/Complimentary/CA_Breacher_Bottom_Olive/Material.mat
 - Assets/CoreMasterBundle/Effects/Physics/Footstep/Sand_Run/footstep_sand_run_07.wav
 - Assets/CoreMasterBundle/Objects/Large/Buildings/Research_0/Nav.prefab
 - Assets/CoreMasterBundle/Objects/Large/Buildings/Medic_1/Object.prefab
@@ -2593,6 +2601,7 @@ Assets:
 - Assets/CoreMasterBundle/Items/Pants/Suit_Bottom_Gold/Metallic.png
 - Assets/CoreMasterBundle/Trees/Bush_Mauve_Snow/Stump.prefab
 - Assets/CoreMasterBundle/Items/PBS/PBS_White_Button/Item.prefab
+- Assets/CoreMasterBundle/Mythics/RagdollMaterials/Silver.mat
 - Assets/CoreMasterBundle/Effects/Physics/BipedLand/Wood/BipedLand_Wood.asset
 - Assets/CoreMasterBundle/Items/Buak/Buak_Hooded_Cap/Item.prefab
 - Assets/CoreMasterBundle/Objects/Large/Vehicles/Roadster_Red/Nav.prefab
@@ -2601,7 +2610,7 @@ Assets:
 - Assets/CoreMasterBundle/Skins/Scalar/Insane/Skin_Secondary_153.mat
 - Assets/CoreMasterBundle/Items/Guns/Nailgun/Item.prefab
 - Assets/CoreMasterBundle/Effects/Explosions/Pine_2/Material.mat
-- Assets/CoreMasterBundle/Items/Cali2/CA_Operator_Top_0/Shirt.png
+- Assets/CoreMasterBundle/Items/Cali2/Cali2_Operator/CA_Operator_Top_0/Shirt.png
 - Assets/CoreMasterBundle/Items/Guns/Eaglefire/Shoot.mp3
 - Assets/CoreMasterBundle/Items/Barricades/Plate_Porcelain/Barricade.prefab
 - Assets/CoreMasterBundle/Items/Barricades/Flag_Pine/Animations.prefab
@@ -2612,7 +2621,7 @@ Assets:
 - Assets/CoreMasterBundle/Items/Barricades/Rack_Birch/Animations.prefab
 - Assets/CoreMasterBundle/Objects/Medium/Parks/Statue_3/Object.prefab
 - Assets/CoreMasterBundle/Items/Anniversary_10/Classic_Cloak/Item.prefab
-- Assets/CoreMasterBundle/Items/Cali2/CA_Hoodie_Split_3/Shirt.png
+- Assets/CoreMasterBundle/Items/Cali2/Complimentary/CA_Hoodie_Split_3/Shirt.png
 - Assets/CoreMasterBundle/Objects/Large/Buildings/Barracks_France_2/Object.prefab
 - Assets/CoreMasterBundle/Objects/Large/Buildings/Station_0/Object.prefab
 - Assets/CoreMasterBundle/Mythics/Rainbow/System_Hook.prefab
@@ -2683,7 +2692,7 @@ Assets:
 - Assets/CoreMasterBundle/Objects/Large/Buildings/Gas_2/Slots.prefab
 - Assets/CoreMasterBundle/Objects/Medium/Parks/Barbecue_1/Nav.prefab
 - Assets/CoreMasterBundle/Objects/Medium/Traffic/Bollard_0/Nav.prefab
-- Assets/CoreMasterBundle/Items/Cali2/CA_Flight_Bottom/Material.mat
+- Assets/CoreMasterBundle/Items/Cali2/Red/CA_Flight_Bottom/Material.mat
 - Assets/CoreMasterBundle/Objects/Large/Buildings/Gas_2/Nav.prefab
 - Assets/CoreMasterBundle/Effects/Physics/Footstep/Gravel_Walk/footstep_gravel_walk_17.wav
 - Assets/CoreMasterBundle/Items/Shirts/Kaiser_Top/Item.prefab
@@ -2697,7 +2706,7 @@ Assets:
 - Assets/CoreMasterBundle/Items/Elver/Elver_Pant_Red/Item.prefab
 - Assets/CoreMasterBundle/Items/Shirts/Tee_Twitch/Item.prefab
 - Assets/CoreMasterBundle/Items/Food/Shrimp_Cooked/Animations.prefab
-- Assets/CoreMasterBundle/Items/Cali2/CA_Ponytail_0/Hat.prefab
+- Assets/CoreMasterBundle/Items/Cali2/Red/CA_Ponytail_0/Hat.prefab
 - Assets/CoreMasterBundle/Items/Kuwait2/Kuwait_Assorted_Artsie_Beret/Hat.prefab
 - Assets/CoreMasterBundle/Items/Guns/Matamorez/Hammer.mp3
 - Assets/CoreMasterBundle/Roads/TrainTracks.png
@@ -2742,7 +2751,7 @@ Assets:
 - Assets/CoreMasterBundle/Effects/Physics/Footstep/Wood_Walk/footstep_wood_walk_03.wav
 - Assets/CoreMasterBundle/Effects/Impacts/Water_Static/Particle.mat
 - Assets/CoreMasterBundle/Skins/Bulldog/Moo/Skin_Secondary_1370.mat
-- Assets/CoreMasterBundle/Items/Cali2/CA_Checkered_Pants_3/Material.mat
+- Assets/CoreMasterBundle/Items/Cali2/Complimentary/CA_Checkered_Pants_3/Material.mat
 - Assets/CoreMasterBundle/Items/Shirts/Parka_Blue/Animations.prefab
 - Assets/CoreMasterBundle/Items/Keys/U4_Invitation/Item.prefab
 - Assets/CoreMasterBundle/Items/Barricades/XMAS_Present_01/Item.prefab
@@ -2753,13 +2762,12 @@ Assets:
 - Assets/CoreMasterBundle/Skins/Cobra/Cryptic/Skin_Tertiary.mat
 - Assets/CoreMasterBundle/Items/Arid/Arid_Fancy_Glasses/Item.prefab
 - Assets/CoreMasterBundle/Effects/Physics/Footstep/MetalHigh_Walk/footstep_metal_high_walk_02.wav
-- Assets/CoreMasterBundle/Items/Cali2/CA_Crystalmancy_Capelet/Vest.prefab
+- Assets/CoreMasterBundle/Items/Cali2/Cali2_Crystalmancer/CA_Crystalmancy_Capelet/Vest.prefab
 - Assets/CoreMasterBundle/Objects/Large/Buildings/Oktoberfest_0/Nav.prefab
 - Assets/CoreMasterBundle/Skins/Heartbreaker/Paintbucket/Skin_Attachment.mat
 - Assets/CoreMasterBundle/Items/Structures/Roof_Metal/Item.prefab
 - Assets/CoreMasterBundle/Skins/Peacemaker/Echolocation/Skin_Primary.mat
-- Assets/CoreMasterBundle/Items/Cali2/CA_Stubble_3/Mask.prefab
-- Assets/CoreMasterBundle/Skins/Grizzly/Zone_Defender/Albedo_298.png
+- Assets/CoreMasterBundle/Items/Cali2/Complimentary/CA_Stubble_3/Mask.prefab
 - Assets/CoreMasterBundle/Items/Vests/Poncho_Blue/Animations.prefab
 - Assets/CoreMasterBundle/Items/Shirts/AthensAprix_Top/Material.mat
 - Assets/CoreMasterBundle/Objects/Large/Buildings/Tent_France_0/Object.prefab
@@ -2804,7 +2812,7 @@ Assets:
 - Assets/CoreMasterBundle/Items/Pants/Military_Bottom_Arctic/Pants.png
 - Assets/CoreMasterBundle/Trees/Bush_Indigo_Snow/Resource.prefab
 - Assets/CoreMasterBundle/Mythics/Elver_Runes/System_Hook.prefab
-- Assets/CoreMasterBundle/Items/Cali2/CA_Operator_Top_0/Shirt3.png
+- Assets/CoreMasterBundle/Items/Cali2/Cali2_Operator/CA_Operator_Top_0/Shirt3.png
 - Assets/CoreMasterBundle/Items/Hairs/15/Texture.png
 - Assets/CoreMasterBundle/Items/Barricades/Sentry/Item.prefab
 - Assets/CoreMasterBundle/Items/Food/Goldfish_Raw/Item.prefab
@@ -2839,7 +2847,6 @@ Assets:
 - Assets/CoreMasterBundle/Items/Barricades/Plate_Small_Glass_Weak/Animations.prefab
 - Assets/CoreMasterBundle/Effects/TireMotion/TireMotion_Sand_00/Particle.mat
 - Assets/CoreMasterBundle/Objects/Large/Buildings/Tent_0/Slots.prefab
-- Assets/CoreMasterBundle/Skins/Colt/Stabilized/Model_0.fbx
 - Assets/CoreMasterBundle/Objects/Mooki/Bridge_Line_3/Nav.prefab
 - Assets/CoreMasterBundle/Items/Sights/MP40_Iron_Sights/Item.prefab
 - Assets/CoreMasterBundle/Items/Shirts/Prisoner_Top/Item.prefab
@@ -2863,7 +2870,7 @@ Assets:
 - Assets/CoreMasterBundle/Items/Food/Bass_Cooked/Animations.prefab
 - Assets/CoreMasterBundle/Sounds/CarHorn_01.mp3
 - Assets/CoreMasterBundle/Items/Water/Bottled_Energy/Animations.prefab
-- Assets/CoreMasterBundle/Items/Cali2/CA_Breacher_Bottom_Pink/Material.mat
+- Assets/CoreMasterBundle/Items/Cali2/Complimentary/CA_Breacher_Bottom_Pink/Material.mat
 - Assets/CoreMasterBundle/Items/Structures/Roof_Metal_Triangle/Structure.prefab
 - Assets/CoreMasterBundle/Objects/Medium/Signs/Bielefeld/Object.prefab
 - Assets/CoreMasterBundle/Skins/Zubeknakov/East_2/Skin_Secondary_123.mat
@@ -2907,11 +2914,12 @@ Assets:
 - Assets/CoreMasterBundle/Items/Melee/Axe_Pick/Animations.prefab
 - Assets/CoreMasterBundle/Mythics/Meta/System_Hook.prefab
 - Assets/CoreMasterBundle/Objects/Large/Buildings/Barracks_3/Skybox.prefab
+- Assets/CoreMasterBundle/Skins/Maplestrike/CA_Adamantine/Skin_Secondary_148.mat
 - Assets/CoreMasterBundle/Skins/Zubeknakov/Hypertech/Skin_Secondary_125.mat
 - Assets/CoreMasterBundle/Skins/Dragonfang/Elver_Laser_Dragon/Skin_Tertiary.mat
 - Assets/CoreMasterBundle/Skins/Bluntforce/CC24_DogTag/Skin_Tertiary.mat
 - Assets/CoreMasterBundle/Skins/Vonya/Warfare/Skin_Secondary_1367.mat
-- Assets/CoreMasterBundle/Items/Cali2/CA_Stubble_6/Mask.prefab
+- Assets/CoreMasterBundle/Items/Cali2/Complimentary/CA_Stubble_6/Mask.prefab
 - Assets/CoreMasterBundle/Items/Buak/Buak_Poncho_Red/Item.prefab
 - Assets/CoreMasterBundle/Items/Shirts/Scientist_Mad_Top/Item.prefab
 - Assets/CoreMasterBundle/Items/Magazines/Arrow_Pine_1/Item.prefab
@@ -2945,6 +2953,7 @@ Assets:
 - Assets/CoreMasterBundle/Items/Kuwait2/Kuwait_Free_Caracal_Nightcap/Item.prefab
 - Assets/CoreMasterBundle/Items/Water/Berry_Indigo/Animations.prefab
 - Assets/CoreMasterBundle/Skins/Honeybadger/Dango_HB/Skin_Secondary_17.mat
+- Assets/CoreMasterBundle/Mythics/RagdollMaterials/Void.mat
 - Assets/CoreMasterBundle/Objects/Large/Buildings/Hangar_0/Skybox.prefab
 - Assets/CoreMasterBundle/Skins/Launcher_Rocket/Warhead/Skin_Tertiary.mat
 - Assets/CoreMasterBundle/Items/Pants/Trunks_Red/Material.mat
@@ -2992,7 +3001,7 @@ Assets:
 - Assets/CoreMasterBundle/Items/Tools/Vehicle_Spraypaint_ClassicOrange/Item.prefab
 - Assets/CoreMasterBundle/Objects/Large/Vehicles/Racecar_White/Object.prefab
 - Assets/CoreMasterBundle/Objects/Large/Vehicles/Van_Yellow/Nav.prefab
-- Assets/CoreMasterBundle/Items/Cali2/CA_Crystalmancy_Hood/Hat.prefab
+- Assets/CoreMasterBundle/Items/Cali2/Cali2_Crystalmancer/CA_Crystalmancy_Hood/Hat.prefab
 - Assets/CoreMasterBundle/Objects/Material_Palettes/Apartment/Apartment_0.mat
 - Assets/CoreMasterBundle/Skins/Zubeknakov/Hypertech/Skin_Tertiary.mat
 - Assets/CoreMasterBundle/Items/Elver2/Elver2_Bowtie_Navy/Item.prefab
@@ -3002,7 +3011,7 @@ Assets:
 - Assets/CoreMasterBundle/Items/Backpacks/Candyland_Cottontail_Ops_Tail/Backpack.prefab
 - Assets/CoreMasterBundle/Items/Guns/ShadowstalkerMk2/Animations.prefab
 - Assets/CoreMasterBundle/Items/Shirts/Screenshot_Contest_Top/Item.prefab
-- Assets/CoreMasterBundle/Items/Cali2/CA_Flight_Bottom/Pants3.png
+- Assets/CoreMasterBundle/Items/Cali2/Red/CA_Flight_Bottom/Pants3.png
 - Assets/CoreMasterBundle/Items/Backpacks/Daypack_Black/Item.prefab
 - Assets/CoreMasterBundle/Objects/Medium/Business/Vendor_0/Nav.prefab
 - Assets/CoreMasterBundle/Skins/Maplestrike/UMarine/Skin_Secondary_1004.mat
@@ -3032,7 +3041,7 @@ Assets:
 - Assets/CoreMasterBundle/Items/Barricades/Seed_Tomato/Barricade.prefab
 - Assets/CoreMasterBundle/Skins/Anniversary_10/Classic_Katana/Override_Mesh_0.prefab
 - Assets/CoreMasterBundle/Items/Barricades/ChemistryLab/Barricade.prefab
-- Assets/CoreMasterBundle/Items/Cali2/CA_Drone_Goggles_0/Glasses.prefab
+- Assets/CoreMasterBundle/Items/Cali2/Blue/CA_Drone_Goggles_0/Glasses.prefab
 - Assets/CoreMasterBundle/Items/PBS/PBS_Container_Pack/Backpack.prefab
 - Assets/CoreMasterBundle/Items/Boxes/Halloween2024_Box/Item.prefab
 - Assets/CoreMasterBundle/Skins/Honeybadger/UMarine/Skin_Secondary_148.mat
@@ -3058,7 +3067,7 @@ Assets:
 - Assets/CoreMasterBundle/Objects/Medium/Business/Coil_0/Nav.prefab
 - Assets/CoreMasterBundle/Items/RioRemastered/Free/Rio_Soccer_Top_Australia/Material.mat
 - Assets/CoreMasterBundle/Objects/Medium/Business/ATM_0/Object.prefab
-- Assets/CoreMasterBundle/Items/Cali2/CA_Midnight_Walkers/Material.mat
+- Assets/CoreMasterBundle/Items/Cali2/Red/CA_Midnight_Walkers/Material.mat
 - Assets/CoreMasterBundle/Skins/Grizzly/UMarine/Skin_Secondary_146.mat
 - Assets/CoreMasterBundle/Skins/Maplestrike/Arid_Dissipator/Override_Mesh_0.prefab
 - Assets/CoreMasterBundle/Items/Barricades/Placard_Metal/Nav.prefab
@@ -3066,7 +3075,7 @@ Assets:
 - Assets/CoreMasterBundle/Items/Barricades/Pipe_Metal/Barricade.prefab
 - Assets/CoreMasterBundle/Skins/Maplestrike/FranceRULA/Skin_Secondary_17.mat
 - Assets/CoreMasterBundle/Items/Food/Canned_Beef/Animations.prefab
-- Assets/CoreMasterBundle/Items/Cali2/CA_Beanie_Red/Hat.prefab
+- Assets/CoreMasterBundle/Items/Cali2/Complimentary/CA_Beanie_Red/Hat.prefab
 - Assets/CoreMasterBundle/Items/Barricades/Ladder_Maple/Barricade.prefab
 - Assets/CoreMasterBundle/Effects/Impacts/Alien_Dynamic/Material_1.mat
 - Assets/CoreMasterBundle/Items/Halloween2024/HW2_Candy_Corn_Bag/Item.prefab
@@ -3263,8 +3272,9 @@ Assets:
 - Assets/CoreMasterBundle/Items/Food/Potato_Baked/Animations.prefab
 - Assets/CoreMasterBundle/Items/Guns/Masterkey/Animations.prefab
 - Assets/CoreMasterBundle/Objects/Medium/Parks/Statue_2/Nav.prefab
-- Assets/CoreMasterBundle/Skins/Schofield/Combatia/Skin_Attachment.mat
+- Assets/CoreMasterBundle/Mythics/CA_Raising/System_First.prefab
 - Assets/CoreMasterBundle/Skins/Maplestrike/Amped/Skin_Secondary_364.mat
+- Assets/CoreMasterBundle/Skins/Schofield/Combatia/Skin_Attachment.mat
 - Assets/CoreMasterBundle/Objects/Large/Utilities/Gas_Sign_0/Nav.prefab
 - Assets/CoreMasterBundle/Items/Magazines/MP40_32/Magazine.prefab
 - Assets/CoreMasterBundle/Items/Kuwait2/Kuwait_Achievement_Nazar_Pin/Item.prefab
@@ -3293,7 +3303,7 @@ Assets:
 - Assets/CoreMasterBundle/Objects/Large/Buildings/Barracks_France_1/Nav.prefab
 - Assets/CoreMasterBundle/Items/Barricades/Fortification_Pine/Animations.prefab
 - Assets/CoreMasterBundle/Objects/Large/Buildings/Guns_0/Skybox.prefab
-- Assets/CoreMasterBundle/Items/Cali2/CA_Shorts_Sports_5/Pants.png
+- Assets/CoreMasterBundle/Items/Cali2/Complimentary/CA_Shorts_Sports_5/Pants.png
 - Assets/CoreMasterBundle/Items/Hats/ChristmasSnowGlobeHat/Item.prefab
 - Assets/CoreMasterBundle/Skins/Launcher_Rocket/Fire_Breather/Skin_Secondary_520.mat
 - Assets/CoreMasterBundle/Objects/Medium/Business/Wheel_6/Nav.prefab
@@ -3356,9 +3366,9 @@ Assets:
 - Assets/CoreMasterBundle/Objects/Large/Vehicles/Off_Roader_Purple/Object.prefab
 - Assets/CoreMasterBundle/Items/Vests/Parrot/Vest.prefab
 - Assets/CoreMasterBundle/Items/Throwables/Flare_Red/Use.mp3
-- Assets/Game/Sources/Models/Items/Cali2/Mythics/CA_Angry/System_Hook.prefab
+- Assets/CoreMasterBundle/Mythics/CA_Angry/System_Hook.prefab
 - Assets/CoreMasterBundle/Items/Medical/Tablets/Item.prefab
-- Assets/CoreMasterBundle/Items/Cali2/CA_Crimson_Bottom/Material.mat
+- Assets/CoreMasterBundle/Items/Cali2/Blue/CA_Crimson_Bottom/Material.mat
 - Assets/CoreMasterBundle/Items/Pants/Khaki_Pants/Item.prefab
 - Assets/CoreMasterBundle/Items/Food/Eggs/Item.prefab
 - Assets/CoreMasterBundle/Objects/Small/Quests/Tray_01/Object.prefab
@@ -3391,9 +3401,10 @@ Assets:
 - Assets/CoreMasterBundle/Items/Shirts/Tee_Boom/Metallic.png
 - Assets/CoreMasterBundle/Objects/Large/Buildings/Medic_0/Object.prefab
 - Assets/CoreMasterBundle/Items/Barricades/Plate_Small_Maple_Equilateral/Item.prefab
-- Assets/CoreMasterBundle/Items/Cali2/CA_Flight_Bottom/Pants.png
+- Assets/CoreMasterBundle/Items/Cali2/Red/CA_Flight_Bottom/Pants.png
 - Assets/CoreMasterBundle/Items/Pants/Jeans_Designer/Pants.png
 - Assets/CoreMasterBundle/Items/Vests/BelgiumPoacher_Ascot/Item.prefab
+- Assets/CoreMasterBundle/Mythics/CA_Starfall/System_Hook.prefab
 - Assets/CoreMasterBundle/Objects/Medium/Fences/Fence_Metal_3/Object.prefab
 - Assets/CoreMasterBundle/Effects/Physics/ShotgunShellBounce/Dirt/ShotgunShell_Land_Dirt_01.wav
 - Assets/CoreMasterBundle/Items/RioRemastered/Free/Rio_Soccer_Top_Croatia/Material.mat
@@ -3473,7 +3484,7 @@ Assets:
 - Assets/CoreMasterBundle/Effects/Physics/ShotgunShellBounce/Metal/ShotgunShell_Land_Metal_03.wav
 - Assets/CoreMasterBundle/Items/Beards/1/Beard.prefab
 - Assets/CoreMasterBundle/Items/Elver/Elver_Pant_Green/Item.prefab
-- Assets/CoreMasterBundle/Items/Cali2/CA_Beanie_Grey/Hat.prefab
+- Assets/CoreMasterBundle/Items/Cali2/Complimentary/CA_Beanie_Grey/Hat.prefab
 - Assets/CoreMasterBundle/Skins/Nightraider/Elver2_Obsidian/Skin_Attachment.mat
 - Assets/CoreMasterBundle/Sounds/Inventory/LightGrab/foley_soldier_gear_equipment_movement_grab_item_05.wav
 - Assets/CoreMasterBundle/Skins/Peacemaker/Symbiont/Skin_Secondary_1004.mat
@@ -3541,7 +3552,7 @@ Assets:
 - Assets/CoreMasterBundle/Items/PBS/PBS_Black_Button/Item.prefab
 - Assets/CoreMasterBundle/Objects/Large/Scenery/Monolith/Nav.prefab
 - Assets/CoreMasterBundle/Items/Outfits/Cali_Mercenary/Cali_Mercenary_Top/Shirt.png
-- Assets/CoreMasterBundle/Items/Cali2/CA_Jersey_Cali/Shirt.png
+- Assets/CoreMasterBundle/Items/Cali2/Complimentary/CA_Jersey_Cali/Shirt.png
 - Assets/CoreMasterBundle/Items/Anniversary_10/Classic_Stetson/Hat.prefab
 - Assets/CoreMasterBundle/Items/Boxes/Arid_Box/Item.prefab
 - Assets/CoreMasterBundle/Items/RioRemastered/Free/Rio_Sproutheads/Item.prefab
@@ -3632,7 +3643,7 @@ Assets:
 - Assets/CoreMasterBundle/Items/Tools/Vehicle_Spraypaint_ClassicGreen/Animations.prefab
 - Assets/CoreMasterBundle/Items/PBS/PBS_Frag_Goggles/Item.prefab
 - Assets/CoreMasterBundle/Skins/Empire/Overkill/Skin_Tertiary.mat
-- Assets/CoreMasterBundle/Items/Cali2/CA_Crimson_Top/Material.mat
+- Assets/CoreMasterBundle/Items/Cali2/Blue/CA_Crimson_Top/Material.mat
 - Assets/CoreMasterBundle/Items/Food/Canned_Beef/Equipable.prefab
 - Assets/CoreMasterBundle/Items/Food/Cake/Equipable.prefab
 - Assets/CoreMasterBundle/Objects/Large/Buildings/House_00_Burned/Skybox.prefab
@@ -3704,7 +3715,7 @@ Assets:
 - Assets/CoreMasterBundle/Objects/Large/Utilities/Billboard_3/Object.prefab
 - Assets/CoreMasterBundle/Trees/Bush_5/Stump.prefab
 - Assets/CoreMasterBundle/Trees/Cane_00/Debris.prefab
-- Assets/CoreMasterBundle/Items/Cali2/CA_Breacher_Jacket_Red/Shirt.png
+- Assets/CoreMasterBundle/Items/Cali2/Complimentary/CA_Breacher_Jacket_Red/Shirt.png
 - Assets/CoreMasterBundle/Items/Outfits/AnalogDetective/AnalogDetective_Shirt/Shirt.png
 - Assets/CoreMasterBundle/Items/Barricades/Cot_Green/Animations.prefab
 - Assets/CoreMasterBundle/Items/RioRemastered/Free/Rio_Soccer_Top_Sweden/Shirt.png
@@ -3736,8 +3747,10 @@ Assets:
 - Assets/CoreMasterBundle/Sounds/Inventory/MediumMetalEquipment/foley_soldier_gear_equipment_metal_cloth_heavy_movement_med_01.wav
 - Assets/CoreMasterBundle/UI/BlueprintCategoryTagIcons/Ammo.png
 - Assets/CoreMasterBundle/Items/Beards/7/Beard.prefab
+- Assets/CoreMasterBundle/Skins/Heartbreaker/CA_Sealine/Skin_Attachment.mat
 - Assets/CoreMasterBundle/Objects/Medium/Furniture/Couch_0/Object.prefab
 - Assets/CoreMasterBundle/Items/PBS/PBS_Fishing_Top_2/Shirt.png
+- Assets/CoreMasterBundle/Skins/Heartbreaker/CA_Sealine/Skin_Secondary_148.mat
 - Assets/CoreMasterBundle/Items/Buak/Buak_Pine_Hat_Red/Item.prefab
 - Assets/CoreMasterBundle/Items/Food/Sugarcane/Item.prefab
 - Assets/CoreMasterBundle/Items/Guns/Yuri/Shoot.mp3
@@ -3790,6 +3803,7 @@ Assets:
 - Assets/CoreMasterBundle/Items/Hats/Explorer_Hat/Item.prefab
 - Assets/CoreMasterBundle/Items/Guns/MP40/Item.prefab
 - Assets/CoreMasterBundle/Items/Magazines/Shells_8/Item.prefab
+- Assets/CoreMasterBundle/Mythics/RagdollMaterials/SoulCrystal_Green.mat
 - Assets/CoreMasterBundle/Objects/Large/Roads/Road_Line_Cap_0/Skybox.prefab
 - Assets/CoreMasterBundle/Items/Structures/Floor_Metal_Triangle/Structure.prefab
 - Assets/CoreMasterBundle/Effects/Explosions/Bomb_4/Effect.prefab
@@ -3842,6 +3856,7 @@ Assets:
 - Assets/CoreMasterBundle/Objects/Large/Utilities/Radar_1/Object.prefab
 - Assets/CoreMasterBundle/Items/Pants/Gingerbread_Bottom/Material.mat
 - Assets/CoreMasterBundle/Items/Barricades/XMAS_Castle_00/Animations.prefab
+- Assets/CoreMasterBundle/Skins/Heartbreaker/CA_Sealine/Skin_Secondary_152.mat
 - Assets/CoreMasterBundle/Effects/Impacts/Flesh_Dynamic/Material_0.mat
 - Assets/CoreMasterBundle/Items/RioRemastered/Free/Crop_Top/Rio_Crop_Yellow/Item.prefab
 - Assets/CoreMasterBundle/Items/Shirts/Shirt_Orange/Shirt.png
@@ -3945,7 +3960,7 @@ Assets:
 - Assets/CoreMasterBundle/Items/Shirts/Tee_EA/Shirt.png
 - Assets/CoreMasterBundle/Items/Barricades/DL_Carepackage/Item.prefab
 - Assets/CoreMasterBundle/Sounds/CarIgnition.mp3
-- Assets/CoreMasterBundle/Items/Cali2/CA_Chemical_Hood/Hat.prefab
+- Assets/CoreMasterBundle/Items/Cali2/Complimentary/CA_Chemical_Hood/Hat.prefab
 - Assets/CoreMasterBundle/Items/Buak/Buak_Scarf_White/Item.prefab
 - Assets/CoreMasterBundle/Sounds/EatMushroom.mp3
 - Assets/CoreMasterBundle/Effects/Explosions/Birch_0/Material.mat
@@ -3956,6 +3971,7 @@ Assets:
 - Assets/CoreMasterBundle/Items/Shirts/Coastguard_Top/Item.prefab
 - Assets/CoreMasterBundle/Effects/Impacts/Concrete_Dynamic/Effect.prefab
 - Assets/CoreMasterBundle/Effects/Impacts/Wood_WithDecal_NoAudio/Material.mat
+- Assets/CoreMasterBundle/Skins/Maplestrike/CA_Adamantine/Skin_Secondary_147.mat
 - Assets/CoreMasterBundle/Items/Pants/FranceHistorical_Crusader_Bottom/Material.mat
 - Assets/CoreMasterBundle/Effects/Weather/Lightning/LightningEffect.prefab
 - Assets/CoreMasterBundle/Effects/Physics/Footstep/Water_Run/footstep_water_run_01.wav
@@ -3988,6 +4004,7 @@ Assets:
 - Assets/CoreMasterBundle/Objects/Medium/Business/Quarry_Conveyor_2/Object.prefab
 - Assets/CoreMasterBundle/Items/PBS/PBS_SSamurai_Top/Shirt.png
 - Assets/CoreMasterBundle/Vehicles/Blimp/Vehicle.prefab
+- Assets/CoreMasterBundle/Mythics/CA_Chained_Red/System_Third.prefab
 - Assets/CoreMasterBundle/Trees/Quartz_Peaks_1/Stump.prefab
 - Assets/CoreMasterBundle/Items/Hats/Ushanka_Vintage/Hat.prefab
 - Assets/CoreMasterBundle/Objects/Large/Scenery/Boulder_00/Nav.prefab
@@ -4006,7 +4023,7 @@ Assets:
 - Assets/CoreMasterBundle/Items/Pants/Trunks_Orange/Material.mat
 - Assets/CoreMasterBundle/Effects/Volumes/Volume_Waterfall_Spray_0/Splat.psd
 - Assets/CoreMasterBundle/Items/Vests/Kratos_Shoulder/Item.prefab
-- Assets/CoreMasterBundle/Items/Cali2/CA_Hoodie_Split_2/Material.mat
+- Assets/CoreMasterBundle/Items/Cali2/Complimentary/CA_Hoodie_Split_2/Material.mat
 - Assets/CoreMasterBundle/Objects/Large/Roads/Road_Tee_Cap_0/Nav.prefab
 - Assets/CoreMasterBundle/Items/Pants/RCMP_Bottom/Pants.png
 - Assets/CoreMasterBundle/Objects/Large/Roads/Road_Turn_1/Nav.prefab
@@ -4135,7 +4152,7 @@ Assets:
 - Assets/CoreMasterBundle/Objects/Small/Overgrowth/Vines_2/Object.prefab
 - Assets/CoreMasterBundle/Skins/Snayperskya/Era/Skin_Secondary_296.mat
 - Assets/CoreMasterBundle/Items/Barricades/Plate_Large_Birch/Item.prefab
-- Assets/CoreMasterBundle/Items/Cali2/CA_Fish_Hat_0/Hat.prefab
+- Assets/CoreMasterBundle/Items/Cali2/Red/CA_Fish_Hat_0/Hat.prefab
 - Assets/CoreMasterBundle/Skins/Patterns/Royal_512x512/Skin_Tertiary.mat
 - Assets/CoreMasterBundle/Items/Elver2/Elver2_Bowtie_Green/Item.prefab
 - Assets/CoreMasterBundle/Items/Kuwait2/Kuwait_Free_Palm_Jammies_Top/Kuwait_Free_Palm_Jammies.mat
@@ -4173,7 +4190,7 @@ Assets:
 - Assets/CoreMasterBundle/Items/Structures/Ramp_Brick/Item.prefab
 - Assets/CoreMasterBundle/Items/Food/Roll_Lobster/Equipable.prefab
 - Assets/CoreMasterBundle/Objects/Medium/Utilities/Car_Lift_0/Nav.prefab
-- Assets/CoreMasterBundle/Items/Cali2/CA_Quilted_Jacket_Pink/Shirt.png
+- Assets/CoreMasterBundle/Items/Cali2/Complimentary/CA_Quilted_Jacket_Pink/Shirt.png
 - Assets/CoreMasterBundle/Items/Pants/Khaki_Pants/Material.mat
 - Assets/CoreMasterBundle/Items/Vests/Coalition_Vest/Item.prefab
 - Assets/CoreMasterBundle/Items/Keys/Ragdoll_Effect_SoulCrystal_Yellow/Item.prefab
@@ -4193,7 +4210,7 @@ Assets:
 - Assets/CoreMasterBundle/Items/PBS/PBS_Layered_Hoodie_2/Shirt.png
 - Assets/CoreMasterBundle/Skins/Bow_Compound/Bonesport/Model_0.fbx
 - Assets/CoreMasterBundle/Items/Barricades/Gate_Maple/Barricade.prefab
-- Assets/CoreMasterBundle/Items/Cali2/CA_Chemical_Top/Material.mat
+- Assets/CoreMasterBundle/Items/Cali2/Complimentary/CA_Chemical_Top/Material.mat
 - Assets/CoreMasterBundle/Items/Refills/Canteen/Item.prefab
 - Assets/CoreMasterBundle/Skins/Bluntforce/Rhino/Skin_Attachment.mat
 - Assets/CoreMasterBundle/Objects/Mooki/House_11/Object.prefab
@@ -4253,7 +4270,7 @@ Assets:
   01.wav
 - Assets/CoreMasterBundle/Items/Guns/Cobra/Item.prefab
 - Assets/CoreMasterBundle/Objects/Medium/Furniture/Chair_Car_1/Nav.prefab
-- Assets/CoreMasterBundle/Items/Cali2/CA_Breacher_Bottom_Blue/Pants.png
+- Assets/CoreMasterBundle/Items/Cali2/Complimentary/CA_Breacher_Bottom_Blue/Pants.png
 - Assets/CoreMasterBundle/Terrain/Foliage/Grass/Russia/Leaves_00_Albedo.png
 - Assets/CoreMasterBundle/Items/Outfits/GuanYu/GuanYuTop/Shirt.png
 - Assets/CoreMasterBundle/Items/RioRemastered/Free/Rio_Soccer_Top_Italy/Material.mat
@@ -4268,6 +4285,7 @@ Assets:
 - Assets/CoreMasterBundle/Skins/Eaglefire/Jackpot/Skin_Primary.mat
 - Assets/CoreMasterBundle/Items/Vests/Makeshift_Vest/Animations.prefab
 - Assets/CoreMasterBundle/Skins/Scalar/Aggressive_Revs/Skin_Tertiary.mat
+- Assets/CoreMasterBundle/Items/Keys/Ragdoll_Effect_Void/Item.prefab
 - Assets/CoreMasterBundle/Effects/Physics/MeleeImpact/MetalHeavy/MeleeImpact_MetalHeavy.asset
 - Assets/CoreMasterBundle/Items/Barricades/Oil/Item.prefab
 - Assets/CoreMasterBundle/Items/PBS/PBS_Turtleneck/Shirt.png
@@ -4327,7 +4345,7 @@ Assets:
 - Assets/CoreMasterBundle/Skins/Bow_Compound/Artemis/Override_Mesh_0.prefab
 - Assets/CoreMasterBundle/Items/Barricades/Fence_Barbedwire/Barricade.prefab
 - Assets/CoreMasterBundle/Items/Barricades/Sign_Picket/Nav.prefab
-- Assets/CoreMasterBundle/Items/Cali2/CA_Crystalmancy_Circlet/Mask.prefab
+- Assets/CoreMasterBundle/Items/Cali2/Cali2_Crystalmancer/CA_Crystalmancy_Circlet/Mask.prefab
 - Assets/CoreMasterBundle/Items/Beards/10/Texture.png
 - Assets/CoreMasterBundle/Skins/Maplestrike/Arid_Dissipator/Skin_Secondary_8.mat
 - Assets/CoreMasterBundle/Objects/Small/Quests/Tray_03/Object.prefab
@@ -4430,7 +4448,7 @@ Assets:
 - Assets/CoreMasterBundle/Items/Buak/Buak_Skeleton_Pants/Item.prefab
 - Assets/CoreMasterBundle/Items/Faces/20/Texture.png
 - Assets/CoreMasterBundle/Objects/Large/Buildings/ScopeMarkersTest/Object.prefab
-- Assets/CoreMasterBundle/Items/Cali2/CA_Breacher_Jacket_Desert/Material.mat
+- Assets/CoreMasterBundle/Items/Cali2/Complimentary/CA_Breacher_Jacket_Desert/Material.mat
 - Assets/CoreMasterBundle/Items/RioRemastered/Free/Rio_Soccer_Top_England/Shirt.png
 - Assets/CoreMasterBundle/Mythics/LS_Skeli/System_Area.prefab
 - Assets/CoreMasterBundle/Effects/Explosions/Television_0/Material.mat
@@ -4443,7 +4461,7 @@ Assets:
 - Assets/CoreMasterBundle/Objects/Large/Buildings/Police_0/Object.prefab
 - Assets/CoreMasterBundle/Items/Barricades/Table_Sqr_Metal/Barricade.prefab
 - Assets/CoreMasterBundle/Skins/Honeybadger/Toy/Skin_Secondary_153.mat
-- Assets/CoreMasterBundle/Items/Cali2/CA_Glasses_5/Glasses.prefab
+- Assets/CoreMasterBundle/Items/Cali2/Complimentary/CA_Glasses_5/Glasses.prefab
 - Assets/CoreMasterBundle/Skins/Scalar/Aggressive_Revs/Skin_Secondary_1448.mat
 - Assets/CoreMasterBundle/Effects/Physics/BipedLand/Gravel/BipedLand_Gravel.asset
 - Assets/CoreMasterBundle/Items/GlacierArena/GA_HunterBelt/Item.prefab
@@ -4453,7 +4471,7 @@ Assets:
 - Assets/CoreMasterBundle/Skins/Patterns/Aces/Skin_Attachment.mat
 - Assets/CoreMasterBundle/Skins/Zubeknakov/Fiery_Spectre/Skin_Secondary_124.mat
 - Assets/CoreMasterBundle/Objects/Large/Buildings/Hardware_0/Object.prefab
-- Assets/CoreMasterBundle/Items/Cali2/CA_Punk_Top/Material.mat
+- Assets/CoreMasterBundle/Items/Cali2/Blue/CA_Punk_Top/Material.mat
 - Assets/CoreMasterBundle/Objects/Medium/Furniture/Weights_1/Object.prefab
 - Assets/CoreMasterBundle/Items/Shirts/Hoodie_Feather/Item.prefab
 - Assets/CoreMasterBundle/Effects/Physics/Footstep/MetalHigh_Walk/footstep_metal_high_walk_01.wav
@@ -4531,6 +4549,7 @@ Assets:
 - Assets/CoreMasterBundle/Items/Magazines/Kryzkarek_12/Magazine.prefab
 - Assets/CoreMasterBundle/Items/Buak/Buak_Tinkerer/Item.prefab
 - Assets/CoreMasterBundle/Items/Barricades/Plaque_Pine/Nav.prefab
+- Assets/CoreMasterBundle/Skins/Maplestrike/CA_Adamantine/Skin_Secondary_22.mat
 - Assets/CoreMasterBundle/Skins/Grizzly/UMarine/Skin_Secondary_148.mat
 - Assets/CoreMasterBundle/Items/Kuwait2/Kuwait_Private_Eye_Camera/Item.prefab
 - Assets/CoreMasterBundle/Items/Masks/Bandana_Red/Item.prefab
@@ -4569,15 +4588,14 @@ Assets:
 - Assets/CoreMasterBundle/Items/Buak/Buak_Skeleton_Pants/Material.mat
 - Assets/CoreMasterBundle/Items/Detonators/Detonator/Animations.prefab
 - Assets/CoreMasterBundle/Items/Glasses/Rose_Tinted/Item.prefab
-- Assets/CoreMasterBundle/Items/Cali2/CA_Patriotic_Shirt/Material.mat
+- Assets/CoreMasterBundle/Items/Cali2/Complimentary/CA_Patriotic_Shirt/Material.mat
 - Assets/CoreMasterBundle/Items/Backpacks/BelgiumAcid_Canister/Backpack.prefab
 - Assets/CoreMasterBundle/Skins/Desert_Falcon/Constellation/Skin_Secondary_489.mat
 - Assets/CoreMasterBundle/Objects/Medium/Business/Computer_1/Nav.prefab
-- Assets/CoreMasterBundle/Skins/Axe_Fire/Marked/Albedo.png
 - Assets/CoreMasterBundle/Items/Shirts/Gingerbread_Top/Shirt.png
 - Assets/CoreMasterBundle/Skins/Kryzkarek/Spotted/Skin_Primary.mat
 - Assets/CoreMasterBundle/Skins/Cue/Bamboo/Skin_Primary.mat
-- Assets/CoreMasterBundle/Items/Cali2/CA_Patriotic_Shorts/Material.mat
+- Assets/CoreMasterBundle/Items/Cali2/Complimentary/CA_Patriotic_Shorts/Material.mat
 - Assets/CoreMasterBundle/Items/Tools/Vehicle_Spraypaint_DarkGreen/Item.prefab
 - Assets/CoreMasterBundle/Items/Arid/Arid_Suit_Top_0/Item.prefab
 - Assets/CoreMasterBundle/Effects/Explosions/Beach_0/Material.mat
@@ -4585,7 +4603,7 @@ Assets:
 - Assets/CoreMasterBundle/Items/Medical/Bloodbag/Use.mp3
 - Assets/CoreMasterBundle/Trees/Cane_00/Resource.prefab
 - Assets/CoreMasterBundle/Objects/Large/Buildings/Barracks_France_1/Object.prefab
-- Assets/CoreMasterBundle/Items/Cali2/CA_Beanie_White/Hat.prefab
+- Assets/CoreMasterBundle/Items/Cali2/Complimentary/CA_Beanie_White/Hat.prefab
 - Assets/CoreMasterBundle/Skins/Maplestrike/Voyager/Skin_Tertiary.mat
 - Assets/CoreMasterBundle/Items/Shirts/Carpat_Lastman_Shirt/Shirt.png
 - Assets/CoreMasterBundle/Mythics/Elver2_Spectral_Gems/System_First.prefab
@@ -4598,7 +4616,7 @@ Assets:
 - Assets/CoreMasterBundle/Items/Elver2/Elver2_Skater_Top_Gray/Shirt.png
 - Assets/CoreMasterBundle/Items/Barricades/Seed_Pumpkin/Animations.prefab
 - Assets/CoreMasterBundle/Mythics/Rio_CasinoChips/System_Area.prefab
-- Assets/CoreMasterBundle/Items/Cali2/CA_Antennas/Hat.prefab
+- Assets/CoreMasterBundle/Items/Cali2/Achievement/CA_Antennas/Hat.prefab
 - Assets/CoreMasterBundle/Items/Hats/Blueknight_Helmet/Material.mat
 - Assets/CoreMasterBundle/Items/Barricades/Plot/Item.prefab
 - Assets/CoreMasterBundle/Skins/Jackhammer/Swordfish/Skin_Primary.mat
@@ -4622,7 +4640,7 @@ Assets:
 - Assets/CoreMasterBundle/Items/Magazines/Missile_1/Item.prefab
 - Assets/CoreMasterBundle/Items/Food/Pork_Raw/Equipable.prefab
 - Assets/CoreMasterBundle/Sounds/Zombies/DL_Volatile/volatile00_attack_05.wav
-- Assets/Game/Sources/Models/Items/Cali2/Mythics/CA_Chained_Blue/System_First.prefab
+- Assets/CoreMasterBundle/Mythics/CA_Chained_Blue/System_First.prefab
 - Assets/CoreMasterBundle/Objects/Small/Rubble/Bricks_2/Object.prefab
 - Assets/CoreMasterBundle/Effects/Physics/BulletImpact/Water/bullet_impact_water_05.wav
 - Assets/CoreMasterBundle/Objects/Medium/Fences/Fence_Coalition_1/Nav.prefab
@@ -4653,7 +4671,7 @@ Assets:
 - Assets/CoreMasterBundle/Items/Hats/Rain_Hat/Item.prefab
 - Assets/CoreMasterBundle/Skins/Patterns/Paintbucket_512x512/Skin_Primary.mat
 - Assets/CoreMasterBundle/Items/Outfits/Hooligan/Hooligan_Tie/Item.prefab
-- Assets/CoreMasterBundle/Items/Cali2/CA_Hoodie_Split_1/Material.mat
+- Assets/CoreMasterBundle/Items/Cali2/Complimentary/CA_Hoodie_Split_1/Material.mat
 - Assets/CoreMasterBundle/Objects/Large/Scenery/Boulder_22_Peaks/Object.prefab
 - Assets/CoreMasterBundle/Skins/Masterkey/Duro/Skin_Tertiary.mat
 - Assets/CoreMasterBundle/Items/Sights/Makeshift_Scope/Sight.prefab
@@ -4694,7 +4712,7 @@ Assets:
 - Assets/CoreMasterBundle/Items/Guns/Bane/Hammer.mp3
 - Assets/CoreMasterBundle/Items/Guns/Maplestrike/Item.prefab
 - Assets/CoreMasterBundle/Items/Shirts/Tuxedo_Top_Gold/Item.prefab
-- Assets/CoreMasterBundle/Items/Cali2/CA_Quilted_Jacket_Black/Shirt.png
+- Assets/CoreMasterBundle/Items/Cali2/Complimentary/CA_Quilted_Jacket_Black/Shirt.png
 - Assets/CoreMasterBundle/Skins/Timberwolf/Era/Skin_Secondary_21.mat
 - Assets/CoreMasterBundle/Items/Hats/Crown/Hat.prefab
 - Assets/CoreMasterBundle/Items/Kuwait2/Kuwait_Assorted_Feline_Friend/Item.prefab
@@ -4789,7 +4807,7 @@ Assets:
 - Assets/CoreMasterBundle/Objects/Medium/Business/Dumpster_6/Object.prefab
 - Assets/CoreMasterBundle/Items/Shirts/Tee_Boom/Shirt.png
 - Assets/CoreMasterBundle/Skins/Augewehr/Era/Skin_Attachment.mat
-- Assets/CoreMasterBundle/Items/Cali2/CA_Navy_Jacket_0/Shirt.png
+- Assets/CoreMasterBundle/Items/Cali2/Red/CA_Navy_Jacket_0/Shirt.png
 - Assets/CoreMasterBundle/Items/Pants/Queen_Guard_Bottom/Item.prefab
 - Assets/CoreMasterBundle/Items/Shirts/Tee_Blaze/Shirt.png
 - Assets/CoreMasterBundle/Items/Hairs/16/Hair.prefab
@@ -4798,6 +4816,7 @@ Assets:
 - Assets/CoreMasterBundle/Objects/Medium/Business/Beer_Storage_0/Nav.prefab
 - Assets/CoreMasterBundle/Skins/Bluntforce/Dogfighter/Skin_Tertiary.mat
 - Assets/CoreMasterBundle/Items/Outfits/CanyonArena_Militia/Militia_Bandana/Item.prefab
+- Assets/CoreMasterBundle/Skins/Heartbreaker/CA_Sealine/Skin_Secondary_146.mat
 - Assets/CoreMasterBundle/Skins/Maplestrike/Amped/Skin_Primary.mat
 - Assets/CoreMasterBundle/Effects/Physics/BulletImpact/Mud/bullet_impact_mud_08.wav
 - Assets/CoreMasterBundle/Effects/Volumes/Volume_Waterfall_Sheets_0/Splat.mat
@@ -4813,7 +4832,7 @@ Assets:
 - Assets/CoreMasterBundle/Items/Structures/Wall_Ramp_Brick/Item.prefab
 - Assets/CoreMasterBundle/Items/Dango/Dango_DualKatanas/Item.prefab
 - Assets/CoreMasterBundle/Items/Hats/Ghillie_Hood/Item.prefab
-- Assets/CoreMasterBundle/Items/Cali2/CA_Tac_Shorts/Pants.png
+- Assets/CoreMasterBundle/Items/Cali2/Red/CA_Tac_Shorts/Pants.png
 - Assets/CoreMasterBundle/Items/Structures/Stairs_Brick/Structure.prefab
 - Assets/CoreMasterBundle/Items/Throwables/Smoke_Orange/Use.mp3
 - Assets/CoreMasterBundle/Skins/Eaglefire/Toy/Skin_Secondary_6.mat
@@ -4832,12 +4851,13 @@ Assets:
 - Assets/CoreMasterBundle/Items/Masks/Balaclava_Green/Mask.prefab
 - Assets/CoreMasterBundle/Objects/Large/Buildings/Construction_0/Object.prefab
 - Assets/CoreMasterBundle/Items/Magazines/Arrow_Explosive_1/Item.prefab
+- Assets/CoreMasterBundle/Skins/Heartbreaker/CA_Sealine/Skin_Secondary_21.mat
 - Assets/CoreMasterBundle/Skins/Schofield/Pool_Shark/Skin_Secondary_153.mat
-- Assets/CoreMasterBundle/Sounds/Inventory/MediumClothEquipment/foley_soldier_gear_equipment_rattle_movement_med_10.wav
 - Assets/CoreMasterBundle/Objects/Large/Buildings/Tower_Airport_1/Slots.prefab
+- Assets/CoreMasterBundle/Sounds/Inventory/MediumClothEquipment/foley_soldier_gear_equipment_rattle_movement_med_10.wav
 - Assets/CoreMasterBundle/Items/ComboCrate2024/CC24_BreacherBackpack/Backpack.prefab
 - Assets/CoreMasterBundle/Items/Structures/Rampart_Pine/Animations.prefab
-- Assets/CoreMasterBundle/Items/Cali2/CA_Checkered_Pants_5/Material.mat
+- Assets/CoreMasterBundle/Items/Cali2/Complimentary/CA_Checkered_Pants_5/Material.mat
 - Assets/CoreMasterBundle/Skins/Anniversary_10/Classic_Golf/Skin_Primary.mat
 - Assets/CoreMasterBundle/Items/Outfits/Artist/Artist_Shirt/Material.mat
 - Assets/CoreMasterBundle/Objects/Large/Roads/Sewer_Entrance_0/Object.prefab
@@ -4949,7 +4969,7 @@ Assets:
 - Assets/CoreMasterBundle/Effects/Physics/Footstep/MetalHigh_Run/footstep_metal_high_run_16.wav
 - Assets/CoreMasterBundle/Items/Shirts/Hoodie_Yellow/Shirt.png
 - Assets/CoreMasterBundle/Skins/Schofield/Veteran/Skin_Tertiary.mat
-- Assets/CoreMasterBundle/Items/Cali2/CA_Checkered_Pants_2/Pants.png
+- Assets/CoreMasterBundle/Items/Cali2/Complimentary/CA_Checkered_Pants_2/Pants.png
 - Assets/CoreMasterBundle/Vehicles/Tractor_1/Vehicle.prefab
 - Assets/CoreMasterBundle/Animals/Cow/Animal_Dedicated.prefab
 - Assets/CoreMasterBundle/Skins/Matamorez/Era/Skin_Attachment.mat
@@ -5017,7 +5037,7 @@ Assets:
 - Assets/CoreMasterBundle/Effects/Impacts/Flesh_Dynamic/Material_1_Decal.mat
 - Assets/CoreMasterBundle/Items/Frost/Frost_Pixel/Item.prefab
 - Assets/CoreMasterBundle/Vehicles/Train_Cargo_0/Horn.ogg
-- Assets/CoreMasterBundle/Items/Cali2/CA_Hoodie_Split_2/Shirt.png
+- Assets/CoreMasterBundle/Items/Cali2/Complimentary/CA_Hoodie_Split_2/Shirt.png
 - Assets/CoreMasterBundle/Objects/Medium/Furniture/Wardrobe_1/Object.prefab
 - Assets/CoreMasterBundle/Objects/Material_Palettes/House_Burned/House_09_Burned.mat
 - Assets/CoreMasterBundle/Items/Tools/Vehicle_Spraypaint_Cyan/Animations.prefab
@@ -5074,6 +5094,7 @@ Assets:
 - Assets/CoreMasterBundle/Items/Barricades/Couch_Purple/Item.prefab
 - Assets/CoreMasterBundle/Skins/Sledgehammer/Rio_Bionic/Override_Mesh_0.prefab
 - Assets/CoreMasterBundle/Items/Kuwait2/Kuwait_Free_Fish_Jammies_Top/Shirt.png
+- Assets/CoreMasterBundle/Skins/Maplestrike/CA_Adamantine/Skin_Secondary_146.mat
 - Assets/CoreMasterBundle/Items/Masks/Bolt/Mask.prefab
 - Assets/CoreMasterBundle/Items/Barricades/Ladder_Birch/Item.prefab
 - Assets/CoreMasterBundle/Skins/Cobra/Hot_Rod/Skin_Secondary_100.mat
@@ -5118,6 +5139,7 @@ Assets:
 - Assets/CoreMasterBundle/Items/Buak/Buak_Poncho_Black/Vest.prefab
 - Assets/CoreMasterBundle/Items/Barricades/Torch_Pine/Item.prefab
 - Assets/CoreMasterBundle/Items/Tools/Vehicle_Spraypaint_Military_Coalition/Item.prefab
+- Assets/CoreMasterBundle/Mythics/CA_Chained_Red/System_Area.prefab
 - Assets/CoreMasterBundle/Objects/Large/Utilities/Research_Sign_1/Object.prefab
 - Assets/CoreMasterBundle/Items/Melee/Axe_Pick/Albedo_Base.png
 - Assets/CoreMasterBundle/Objects/Medium/Signs/Yield_0/Object.prefab
@@ -5203,7 +5225,7 @@ Assets:
 - Assets/CoreMasterBundle/Objects/Large/Buildings/Hangar_1/Skybox.prefab
 - Assets/CoreMasterBundle/Items/Pants/Medic_Bottom/Item.prefab
 - Assets/CoreMasterBundle/Items/Melee/Makeshift_Bat/Animations.prefab
-- Assets/CoreMasterBundle/Items/Cali2/CA_Mullet_4/Hat.prefab
+- Assets/CoreMasterBundle/Items/Cali2/Complimentary/CA_Mullet_4/Hat.prefab
 - Assets/CoreMasterBundle/Items/Barricades/Plate_Small_Pine/Barricade.prefab
 - Assets/CoreMasterBundle/Items/Food/Sandwich_Tuna/Equipable.prefab
 - Assets/CoreMasterBundle/Items/Buak/Buak_Poncho_Purple/Vest.prefab
@@ -5225,8 +5247,7 @@ Assets:
 - Assets/CoreMasterBundle/Items/Medical/Heatstim/Animations.prefab
 - Assets/CoreMasterBundle/Items/Shirts/Tee_Green/Shirt.png
 - Assets/CoreMasterBundle/Mythics/Lovely/System_Third.prefab
-- Assets/CoreMasterBundle/Items/Cali2/CA_Operator_Bottom_0/Material.mat
-- Assets/CoreMasterBundle/Skins/Axe_Fire/Marked/Emission.png
+- Assets/CoreMasterBundle/Items/Cali2/Cali2_Operator/CA_Operator_Bottom_0/Material.mat
 - Assets/CoreMasterBundle/Items/Masks/Bandana_Green/Mask.prefab
 - Assets/CoreMasterBundle/Items/Food/GiantTrevally_Cooked/Animations.prefab
 - Assets/CoreMasterBundle/Objects/Large/Buildings/Medic_0/Nav.prefab
@@ -5242,7 +5263,7 @@ Assets:
 - Assets/CoreMasterBundle/Items/Guns/Bow_Birch/Aim.mp3
 - Assets/CoreMasterBundle/Skins/Yuri/Bloodsport/Skin_Primary.mat
 - Assets/CoreMasterBundle/Effects/Physics/LegacyImpact/LegacyImpact_Concrete.asset
-- Assets/CoreMasterBundle/Items/Cali2/CA_Mullet_5/Hat.prefab
+- Assets/CoreMasterBundle/Items/Cali2/Complimentary/CA_Mullet_5/Hat.prefab
 - Assets/CoreMasterBundle/Items/Water/Juice_Grape/Item.prefab
 - Assets/CoreMasterBundle/Skins/Patterns/Black/Skin_Primary.mat
 - Assets/CoreMasterBundle/Items/Buak/Buak_Wizard_Hat/Hat.prefab
@@ -5309,8 +5330,9 @@ Assets:
 - Assets/CoreMasterBundle/Items/Barricades/Cot_Yellow/Nav.prefab
 - Assets/CoreMasterBundle/Items/Shirts/Jersey_Russia/Shirt.png
 - Assets/CoreMasterBundle/Items/Barricades/Library_Pine/Item.prefab
-- Assets/CoreMasterBundle/Items/Cali2/CA_Punk_Vest/Vest.prefab
+- Assets/CoreMasterBundle/Items/Cali2/Blue/CA_Punk_Vest/Vest.prefab
 - Assets/CoreMasterBundle/Objects/Large/Utilities/Medic_Cover_0/Skybox.prefab
+- Assets/CoreMasterBundle/Items/Keys/Ragdoll_Effect_Rainbow/Item.prefab
 - Assets/CoreMasterBundle/Objects/Medium/Military/Door_Aircraft_Carrier/Nav.prefab
 - Assets/CoreMasterBundle/Items/Guns/Rifle_Maple/Item.prefab
 - Assets/CoreMasterBundle/Items/Tools/Tire/Item.prefab
@@ -5473,7 +5495,7 @@ Assets:
 - Assets/CoreMasterBundle/Effects/Explosions/Glass_Bulletproof/Material.mat
 - Assets/CoreMasterBundle/Items/Pants/BelgiumLilEBR_Pants/Pants.png
 - Assets/CoreMasterBundle/Items/GlacierArena/GA_HunterShirt/Material.mat
-- Assets/CoreMasterBundle/Items/Cali2/CA_Flight_Bottom/Pants2.png
+- Assets/CoreMasterBundle/Items/Cali2/Red/CA_Flight_Bottom/Pants2.png
 - Assets/CoreMasterBundle/Skins/Pitchfork/Poseidon/Override_Mesh_0.prefab
 - Assets/CoreMasterBundle/Items/Beards/1/Texture.png
 - Assets/CoreMasterBundle/Effects/Physics/Footstep/MetalHigh_Run/footstep_metal_high_run_09.wav
@@ -5490,8 +5512,8 @@ Assets:
 - Assets/CoreMasterBundle/Objects/Medium/Business/Machinery_3/Nav.prefab
 - Assets/CoreMasterBundle/Items/Vests/BelgiumAcid_Vest/Item.prefab
 - Assets/CoreMasterBundle/Items/Backpacks/Blueknight_Cape/Item.prefab
-- Assets/CoreMasterBundle/Items/Cali2/CA_Breacher_Jacket_Olive/Metallic.png
-- Assets/CoreMasterBundle/Items/Cali2/CA_Beanie_Tan/Hat.prefab
+- Assets/CoreMasterBundle/Items/Cali2/Complimentary/CA_Breacher_Jacket_Olive/Metallic.png
+- Assets/CoreMasterBundle/Items/Cali2/Complimentary/CA_Beanie_Tan/Hat.prefab
 - Assets/CoreMasterBundle/Items/Hairs/12/Texture.png
 - Assets/CoreMasterBundle/Items/Vests/Carpat_Traditional_Vest/Item.prefab
 - Assets/CoreMasterBundle/Items/Vests/Sweatervest_Yellow/Vest.prefab
@@ -5539,7 +5561,7 @@ Assets:
 - Assets/CoreMasterBundle/Objects/Large/Vehicles/Truck_Blue/Nav.prefab
 - Assets/CoreMasterBundle/Objects/Large/Buildings/Tent_2/Nav.prefab
 - Assets/CoreMasterBundle/Objects/Small/Quests/Ingredients_01_Off/Object.prefab
-- Assets/CoreMasterBundle/Items/Cali2/CA_Quilted_Jacket_Red/Shirt.png
+- Assets/CoreMasterBundle/Items/Cali2/Complimentary/CA_Quilted_Jacket_Red/Shirt.png
 - Assets/CoreMasterBundle/Effects/Explosions/Metal_1/Material.mat
 - Assets/CoreMasterBundle/Objects/Large/Vehicles/Heli_4/Object.prefab
 - Assets/CoreMasterBundle/Skins/Desert_Falcon/UMarine/Skin_Secondary_489.mat
@@ -5549,7 +5571,7 @@ Assets:
 - Assets/CoreMasterBundle/Items/Shirts/Jersey_Sweden/Material.mat
 - Assets/CoreMasterBundle/Items/Guns/Cobra/Emission_Base.png
 - Assets/CoreMasterBundle/Items/Outfits/AuroraSkier/Ski_Backpack/Item.prefab
-- Assets/CoreMasterBundle/Items/Cali2/CA_Punk_Top/Shirt.png
+- Assets/CoreMasterBundle/Items/Cali2/Blue/CA_Punk_Top/Shirt.png
 - Assets/CoreMasterBundle/Items/Buak/Buak_Scarf_Blue/Item.prefab
 - Assets/CoreMasterBundle/Items/Outfits/Demon/DemonPants/Item.prefab
 - Assets/CoreMasterBundle/Items/Shirts/Pilot_Top/Item.prefab
@@ -5609,6 +5631,7 @@ Assets:
 - Assets/CoreMasterBundle/Items/Pants/Military_Bottom_Arctic/Animations.prefab
 - Assets/CoreMasterBundle/Items/Pants/Tuxedo_Bottom_Mafia/Item.prefab
 - Assets/CoreMasterBundle/Items/Barricades/Generator_Small/Nav.prefab
+- Assets/CoreMasterBundle/Skins/Maplestrike/CA_Adamantine/Skin_Secondary_145.mat
 - Assets/CoreMasterBundle/Objects/Medium/Parks/Jetski_Blue/Object.prefab
 - Assets/CoreMasterBundle/Items/Outfits/Chicken/Chicken_Chick/Vest.prefab
 - Assets/CoreMasterBundle/Skins/Zubeknakov/Hammerstrike_Commando/Skin_Tertiary.mat
@@ -5638,6 +5661,7 @@ Assets:
 - Assets/CoreMasterBundle/Items/Pants/Robot_Bottom/Item.prefab
 - Assets/CoreMasterBundle/Items/Vests/Vest_Civilian/Vest.prefab
 - Assets/CoreMasterBundle/Skins/Maplestrike/Bomber/Skin_Secondary_6.mat
+- Assets/CoreMasterBundle/Skins/Heartbreaker/CA_Sealine/Skin_Secondary_22.mat
 - Assets/CoreMasterBundle/Items/Frost/Frost_Fox/Hat.prefab
 - Assets/CoreMasterBundle/Items/Food/Stew_Mushroom/Equipable.prefab
 - Assets/CoreMasterBundle/Skins/Ekho/Darkheart/Skin_Attachment.mat
@@ -5777,6 +5801,7 @@ Assets:
 - Assets/CoreMasterBundle/Items/RioRemastered/Free/Rio_Soccer_Bottom_Yellow/Item.prefab
 - Assets/CoreMasterBundle/Sounds/EatBag_MRE.mp3
 - Assets/CoreMasterBundle/Items/Kuwait/Kuwait_LettermanPants/Material.mat
+- Assets/CoreMasterBundle/Mythics/CA_Starfall/System_Third.prefab
 - Assets/CoreMasterBundle/Skins/Nightraider/BelgiumAcid/Override_Mesh_0.prefab
 - Assets/CoreMasterBundle/Items/Pants/Khaki_Shorts_Pro/Material.mat
 - Assets/CoreMasterBundle/Items/RioRemastered/Free/Crop_Top/Rio_Crop_Red/Shirt.png
@@ -5793,7 +5818,7 @@ Assets:
 - Assets/CoreMasterBundle/Objects/Large/Buildings/Research_1/Nav.prefab
 - Assets/CoreMasterBundle/Objects/Large/Buildings/Roundhouse_0/Nav.prefab
 - Assets/CoreMasterBundle/Objects/Material_Palettes/House/House_02.mat
-- Assets/CoreMasterBundle/Items/Cali2/CA_Stubble_2/Mask.prefab
+- Assets/CoreMasterBundle/Items/Cali2/Complimentary/CA_Stubble_2/Mask.prefab
 - Assets/CoreMasterBundle/Animals/Pig/Ragdoll.prefab
 - Assets/CoreMasterBundle/Items/Sights/Yuri_Iron_Sights/Sight.prefab
 - Assets/CoreMasterBundle/Items/Shirts/Hoodie_Hourglass/Shirt.png
@@ -5803,6 +5828,7 @@ Assets:
 - Assets/CoreMasterBundle/Effects/Physics/Footstep/Sand_Walk/footstep_sand_walk_13.wav
 - Assets/CoreMasterBundle/Effects/Physics/Footstep/Water_Run/footstep_water_run_04.wav
 - Assets/CoreMasterBundle/Items/Boxes/EI_Box_Open/Item.prefab
+- Assets/CoreMasterBundle/Skins/Maplestrike/CA_Adamantine/Skin_Secondary_17.mat
 - Assets/CoreMasterBundle/Items/Food/Taro_Ricecake/Animations.prefab
 - Assets/CoreMasterBundle/Effects/Physics/Footstep/MetalLow_Run/footstep_metal_low_run_03.wav
 - Assets/CoreMasterBundle/Items/Barrels/Ranger_Suppressor/Item.prefab
@@ -5814,7 +5840,7 @@ Assets:
 - Assets/CoreMasterBundle/Objects/Large/Buildings/House_06/Object.prefab
 - Assets/CoreMasterBundle/Objects/Medium/Business/AC_0/Nav.prefab
 - Assets/CoreMasterBundle/Skins/Patterns/Blue/Skin_Tertiary.mat
-- Assets/CoreMasterBundle/Items/Cali2/CA_Operator_Bandana_0/Vest.prefab
+- Assets/CoreMasterBundle/Items/Cali2/Cali2_Operator/CA_Operator_Bandana_0/Vest.prefab
 - Assets/CoreMasterBundle/Items/PBS/PBS_Wheat_Beard/Item.prefab
 - Assets/CoreMasterBundle/Items/Throwables/Flare_Purple/Use.mp3
 - Assets/CoreMasterBundle/Objects/Large/Buildings/School_0/Nav.prefab
@@ -5830,7 +5856,6 @@ Assets:
 - Assets/CoreMasterBundle/Skins/Cobra/UMarine/Skin_Secondary_1006.mat
 - Assets/CoreMasterBundle/Items/Barricades/Makeshift_Vehicle_6_Seats/Barricade.prefab
 - Assets/CoreMasterBundle/Items/Frost/Frost_Pengy/Vest.prefab
-- Assets/CoreMasterBundle/Skins/Grizzly/Zone_Defender/Model_0.fbx
 - Assets/CoreMasterBundle/Items/Vests/FirefighterZombiePlush/Item.prefab
 - Assets/CoreMasterBundle/Skins/Bulldog/Push/Skin_Secondary_145.mat
 - Assets/CoreMasterBundle/Items/Structures/Floor_Metal_Triangle/Animations.prefab
@@ -5902,7 +5927,7 @@ Assets:
 - Assets/CoreMasterBundle/Items/Backpacks/Windup/Item.prefab
 - Assets/CoreMasterBundle/Skins/Launcher_Rocket/Crayon/Skin_Attachment.mat
 - Assets/CoreMasterBundle/Effects/Explosions/Pine_6/Texture.png
-- Assets/CoreMasterBundle/Items/Cali2/CA_Shorts_Sports_3/Material.mat
+- Assets/CoreMasterBundle/Items/Cali2/Complimentary/CA_Shorts_Sports_3/Material.mat
 - Assets/CoreMasterBundle/Objects/Large/Scenery/Boulder_17/Object.prefab
 - Assets/CoreMasterBundle/Items/Shirts/Hoodie_Green/Shirt.png
 - Assets/CoreMasterBundle/Objects/Large/Buildings/Library_0/Skybox.prefab
@@ -5937,6 +5962,7 @@ Assets:
 - Assets/CoreMasterBundle/Items/RioRemastered/Free/Rio_Soccer_Bottom_Black/Item.prefab
 - Assets/CoreMasterBundle/Items/Outfits/Artist/Artist_Pants/Pants.png
 - Assets/CoreMasterBundle/Objects/Large/Buildings/Bank_0/Nav.prefab
+- Assets/CoreMasterBundle/Skins/Maplestrike/CA_Adamantine/Skin_Secondary_152.mat
 - Assets/CoreMasterBundle/Trees/Maple_2/Stump.prefab
 - Assets/CoreMasterBundle/Items/Kuwait/Kuwait_LettermanGlasses/Glasses.prefab
 - Assets/CoreMasterBundle/Items/Shirts/Tee_White/Shirt.png
@@ -5982,6 +6008,7 @@ Assets:
 - Assets/CoreMasterBundle/Items/Food/Potato/Item.prefab
 - Assets/CoreMasterBundle/Objects/Medium/Furniture/Cross/Nav.prefab
 - Assets/CoreMasterBundle/Objects/Large/Roads/Bridge_Line_Cap_4/Nav.prefab
+- Assets/CoreMasterBundle/Skins/Heartbreaker/CA_Sealine/Skin_Secondary_17.mat
 - Assets/CoreMasterBundle/Items/Outfits/Demon/DemonShirt/Emission.png
 - Assets/CoreMasterBundle/Items/Shirts/Aprix_Top/Shirt.png
 - Assets/CoreMasterBundle/Items/Shirts/Squid_Shirt/Item.prefab
@@ -5992,13 +6019,13 @@ Assets:
 - Assets/CoreMasterBundle/Items/ComboCrate2024/CC24_PizzaSweater/Shirt.png
 - Assets/CoreMasterBundle/Items/Backpacks/BelgiumPoacher_Backpack/Item.prefab
 - Assets/CoreMasterBundle/Items/Shirts/Hoodie_Blue/Item.prefab
-- Assets/CoreMasterBundle/Items/Cali2/CA_Chemical_Bottom/Material.mat
+- Assets/CoreMasterBundle/Items/Cali2/Complimentary/CA_Chemical_Bottom/Material.mat
 - Assets/CoreMasterBundle/Objects/Large/Buildings/Office_3/Nav.prefab
 - Assets/CoreMasterBundle/Objects/Material_Palettes/Book/Book_6.mat
 - Assets/CoreMasterBundle/Items/Backpacks/Backpack_Aprix_1/Item.prefab
 - Assets/CoreMasterBundle/Effects/Explosions/Zombie_3/Texture_2.png
 - Assets/CoreMasterBundle/Items/Shirts/Mechanic_Top/Shirt.png
-- Assets/CoreMasterBundle/Items/Cali2/CA_Checkered_Pants_4/Pants.png
+- Assets/CoreMasterBundle/Items/Cali2/Complimentary/CA_Checkered_Pants_4/Pants.png
 - Assets/CoreMasterBundle/Items/Hats/Cap_Coalition/Hat.prefab
 - Assets/CoreMasterBundle/Items/Hats/Coalition_Beret/Hat.prefab
 - Assets/CoreMasterBundle/Items/Shirts/Shirt_Black/Item.prefab
@@ -6048,6 +6075,7 @@ Assets:
 - Assets/CoreMasterBundle/Items/Outfits/LuBu/LuBuHat/Hat.prefab
 - Assets/CoreMasterBundle/Objects/Large/Scenery/Boulder_22/Object.prefab
 - Assets/CoreMasterBundle/Skins/Ekho/Jacky/Skin_Primary.mat
+- Assets/CoreMasterBundle/Skins/Heartbreaker/CA_Sealine/Skin_Secondary_143.mat
 - Assets/CoreMasterBundle/Objects/Large/Buildings/Bank_0/Object.prefab
 - Assets/CoreMasterBundle/Items/Barricades/Seed_Carrot/Animations.prefab
 - Assets/CoreMasterBundle/Items/Hats/Fedora_Mafia/Hat.prefab
@@ -6110,7 +6138,7 @@ Assets:
 - Assets/CoreMasterBundle/Items/Structures/Post_Birch/Animations.prefab
 - Assets/CoreMasterBundle/Items/Masks/Balaclava_Black/Animations.prefab
 - Assets/CoreMasterBundle/Trees/Pine_4/Stump.prefab
-- Assets/CoreMasterBundle/Items/Cali2/CA_Breacher_Jacket_White/Metallic.png
+- Assets/CoreMasterBundle/Items/Cali2/Complimentary/CA_Breacher_Jacket_White/Metallic.png
 - Assets/CoreMasterBundle/Items/Hats/Coalition_Captain_Hat/Item.prefab
 - Assets/CoreMasterBundle/Skins/Eaglefire/Retrowave/Skin_Tertiary.mat
 - Assets/CoreMasterBundle/Items/Food/Canned_Soup_Tomato/Animations.prefab
@@ -6159,12 +6187,12 @@ Assets:
 - Assets/CoreMasterBundle/Items/Tools/Vehicle_Spraypaint_ClassicBlack/Item.prefab
 - Assets/CoreMasterBundle/Items/Throwables/Grenade/Animations.prefab
 - Assets/CoreMasterBundle/Items/Buak/Buak_Skeleton_Hoodie/Emission.png
-- Assets/CoreMasterBundle/Items/Cali2/CA_Canine_Bangs/Hat.prefab
+- Assets/CoreMasterBundle/Items/Cali2/Blue/CA_Canine_Bangs/Hat.prefab
 - Assets/CoreMasterBundle/Skins/Katana/FranceHistoricalKatana/Skin_Primary.mat
 - Assets/CoreMasterBundle/Items/Outfits/LonelyMusician/LonelyMusician_Bottom/Item.prefab
 - Assets/CoreMasterBundle/Items/Outfits/LonelyMusician/LonelyMusician_Top/Item.prefab
 - Assets/CoreMasterBundle/Skins/Ekho/Toy/Skin_Secondary_1384.mat
-- Assets/CoreMasterBundle/Items/Cali2/CA_Checkered_Pants_4/Material.mat
+- Assets/CoreMasterBundle/Items/Cali2/Complimentary/CA_Checkered_Pants_4/Material.mat
 - Assets/CoreMasterBundle/Items/Vests/Crab_Companion/Vest.prefab
 - Assets/CoreMasterBundle/Items/Pants/Samurai_Bottom/Metallic.png
 - Assets/CoreMasterBundle/Skins/Teklowvka/Knitted_Sweater/Skin_Secondary_1361.mat
@@ -6194,7 +6222,7 @@ Assets:
 - Assets/CoreMasterBundle/Items/Barricades/Rack_Birch/Nav.prefab
 - Assets/CoreMasterBundle/Items/Kuwait2/Kuwait_Private_Eye_Top/Item.prefab
 - Assets/CoreMasterBundle/Items/Shirts/Jersey_Pirate/Item.prefab
-- Assets/CoreMasterBundle/Items/Cali2/CA_Shorts_Sports_4/Pants.png
+- Assets/CoreMasterBundle/Items/Cali2/Complimentary/CA_Shorts_Sports_4/Pants.png
 - Assets/CoreMasterBundle/Items/Barricades/Plate_Large_Pine_Right/Barricade.prefab
 - Assets/CoreMasterBundle/Trees/Quartz_Peaks_0/Resource.prefab
 - Assets/CoreMasterBundle/Items/Shirts/HalloSkullTop/Item.prefab
@@ -6210,7 +6238,7 @@ Assets:
 - Assets/CoreMasterBundle/Items/Shirts/CharacterMeshReplacementTest/Character_Material_Override.mat
 - Assets/CoreMasterBundle/Skins/Scalar/Insane/Skin_Secondary_7.mat
 - Assets/CoreMasterBundle/Items/Barricades/Cooler/Nav.prefab
-- Assets/CoreMasterBundle/Items/Cali2/CA_Ballistic_Shield_0/Backpack.prefab
+- Assets/CoreMasterBundle/Items/Cali2/Complimentary/CA_Ballistic_Shield_0/Backpack.prefab
 - Assets/CoreMasterBundle/Objects/Medium/Parks/Boat_5/Object.prefab
 - Assets/CoreMasterBundle/Items/Arid/Arid_Golf_Bag/Item.prefab
 - Assets/CoreMasterBundle/Items/Elver2/Elver2_Skater_Top_Red/Item.prefab
@@ -6337,7 +6365,7 @@ Assets:
 - Assets/CoreMasterBundle/Objects/Large/Buildings/Tutorial_0/Object.prefab
 - Assets/CoreMasterBundle/Skins/Cobra/Frost_Cobra/Override_Mesh_0.prefab
 - Assets/CoreMasterBundle/Skins/Bluntforce/CC24_DogTag/Skin_Attachment.mat
-- Assets/CoreMasterBundle/Items/Cali2/CA_Dual_Top_3/Material.mat
+- Assets/CoreMasterBundle/Items/Cali2/Complimentary/CA_Dual_Top_3/Material.mat
 - Assets/CoreMasterBundle/Items/Barricades/Glass_Weak/Nav.prefab
 - Assets/CoreMasterBundle/Objects/Large/Scenery/Snowman_Scaffhold_00/Object.prefab
 - Assets/CoreMasterBundle/Items/Guns/Kryzkarek/Item.prefab
@@ -6368,7 +6396,7 @@ Assets:
 - Assets/CoreMasterBundle/Items/RioRemastered/Free/Tank_Top/Rio_Tank_Top_Green/Shirt.png
 - Assets/CoreMasterBundle/Effects/Impacts/Paintball_Green_Dynamic/Material_1_Decal.mat
 - Assets/CoreMasterBundle/Items/Magazines/Paintballs_Green_35/Item.prefab
-- Assets/CoreMasterBundle/Items/Cali2/CA_Quilted_Jacket_Orange/Shirt.png
+- Assets/CoreMasterBundle/Items/Cali2/Complimentary/CA_Quilted_Jacket_Orange/Shirt.png
 - Assets/CoreMasterBundle/Trees/Bush_Amber_Snow/Stump.prefab
 - Assets/CoreMasterBundle/Objects/Large/Scenery/Grass_3/Object.prefab
 - Assets/CoreMasterBundle/Skins/MP40/Yellowcake/Skin_Primary.mat
@@ -6384,7 +6412,6 @@ Assets:
 - Assets/CoreMasterBundle/Items/Kuwait2/Kuwait_Private_Eye_Top/Shirt.mat
 - Assets/CoreMasterBundle/Effects/Physics/Swim/LightWading/footstep_water_splash_light_wading_07.wav
 - Assets/CoreMasterBundle/Effects/Weather/GentleSnowParticles.prefab
-- Assets/CoreMasterBundle/Skins/Grizzly/Zone_Defender/Albedo_21.png
 - Assets/CoreMasterBundle/Items/Barricades/Torch_Maple/Item.prefab
 - Assets/CoreMasterBundle/Objects/Small/Quests/Flour_01/Object.prefab
 - Assets/CoreMasterBundle/Skins/Zubeknakov/Bloodsport/Skin_Tertiary.mat
@@ -6437,6 +6464,7 @@ Assets:
 - Assets/CoreMasterBundle/Items/Hats/Spartan_Hat/Item.prefab
 - Assets/CoreMasterBundle/Skins/Eaglefire/Amped/Skin_Secondary_5.mat
 - Assets/CoreMasterBundle/Skins/Fury/CC24_Powertool/Skin_Attachment.mat
+- Assets/CoreMasterBundle/Skins/Heartbreaker/CA_Sealine/Skin_Secondary_153.mat
 - Assets/CoreMasterBundle/Objects/Large/Roads/Dam_0/Object.prefab
 - Assets/CoreMasterBundle/Items/Outfits/Pharaoh/Pharaoh_Hat/Item.prefab
 - Assets/CoreMasterBundle/Items/Barricades/Placard_Metal/Animations.prefab
@@ -6469,7 +6497,7 @@ Assets:
 - Assets/CoreMasterBundle/Objects/Large/Buildings/Diner_1/Skybox.prefab
 - Assets/CoreMasterBundle/Skins/Colt/Pearl/Skin_Tertiary.mat
 - Assets/CoreMasterBundle/Items/Backpacks/Rio_Tamer_Cage/Backpack.prefab
-- Assets/CoreMasterBundle/Items/Cali2/CA_Punk_Bottom/Material.mat
+- Assets/CoreMasterBundle/Items/Cali2/Blue/CA_Punk_Bottom/Material.mat
 - Assets/CoreMasterBundle/Items/Backpacks/Dufflebag_Green/Item.prefab
 - Assets/CoreMasterBundle/Items/Outfits/Arid_Scout/Arid_Scout_Top/Material.mat
 - Assets/CoreMasterBundle/Items/RioRemastered/Free/Tank_Top/Rio_Tank_Top_Orange/Item.prefab
@@ -6515,7 +6543,7 @@ Assets:
 - Assets/CoreMasterBundle/Terrain/Foliage/Test/Test_Material.mat
 - Assets/CoreMasterBundle/Items/Elver/Elver_Racing_Bottom/Item.prefab
 - Assets/CoreMasterBundle/Objects/Medium/Rubble/DL_Garbage/Nav.prefab
-- Assets/CoreMasterBundle/Items/Cali2/CA_Hoodie_Split_0/Shirt.png
+- Assets/CoreMasterBundle/Items/Cali2/Complimentary/CA_Hoodie_Split_0/Shirt.png
 - Assets/CoreMasterBundle/Items/Barricades/Cot/Barricade.prefab
 - Assets/CoreMasterBundle/Terrain/Foliage/Pebbles/Quartz_00_Albedo.png
 - Assets/CoreMasterBundle/Items/Outfits/LonelyMusician/LonelyMusician_Top/Material.mat
@@ -6543,7 +6571,7 @@ Assets:
 - Assets/CoreMasterBundle/Items/Elver2/Elver2_Skater_Top_Gray/Material.mat
 - Assets/CoreMasterBundle/Effects/Physics/Footstep/Wood_Run/footstep_wood_run_12.wav
 - Assets/CoreMasterBundle/Items/Pants/Swashbuckler_Bottom/Item.prefab
-- Assets/CoreMasterBundle/Items/Cali2/CA_Checkered_Pants_1/Material.mat
+- Assets/CoreMasterBundle/Items/Cali2/Complimentary/CA_Checkered_Pants_1/Material.mat
 - Assets/CoreMasterBundle/Objects/Large/Buildings/Research_3/Nav.prefab
 - Assets/CoreMasterBundle/Items/Blueprints/Blueprint_Dressing/Item.prefab
 - Assets/CoreMasterBundle/Skins/Maplestrike/Backyard/Skin_Primary.mat
@@ -6588,7 +6616,7 @@ Assets:
 - Assets/CoreMasterBundle/Effects/Physics/Footstep/Gravel_Run/footstep_gravel_run_05.wav
 - Assets/CoreMasterBundle/Skins/Patterns/Scrubbrush_512x512/Skin_Tertiary.mat
 - Assets/CoreMasterBundle/Items/Outfits/Artist/Artist_Shirt/Shirt.png
-- Assets/CoreMasterBundle/Items/Cali2/CA_Tommy_Top/Shirt.png
+- Assets/CoreMasterBundle/Items/Cali2/Red/CA_Tommy_Top/Shirt.png
 - Assets/CoreMasterBundle/Items/Hats/FranceRULA_Helmet/Item.prefab
 - Assets/CoreMasterBundle/Vehicles/Dumptruck/Vehicle.prefab
 - Assets/CoreMasterBundle/Skins/Viper/UMarine/Skin_Secondary_148.mat
@@ -6611,7 +6639,7 @@ Assets:
 - Assets/CoreMasterBundle/Items/Limestone/Extras/LS_FragGoggles_1/Item.prefab
 - Assets/CoreMasterBundle/Effects/Physics/Swim/HeavyWading/footstep_water_splash_heavy_wading_05.wav
 - Assets/CoreMasterBundle/Terrain/Foliage/Grass/Russia/Grass_01_Material.mat
-- Assets/CoreMasterBundle/Items/Cali2/CA_Mullet_2/Hat.prefab
+- Assets/CoreMasterBundle/Items/Cali2/Complimentary/CA_Mullet_2/Hat.prefab
 - Assets/CoreMasterBundle/Items/Barricades/Stack_Rope/Item.prefab
 - Assets/CoreMasterBundle/Effects/Physics/Footstep/Ice_Walk/footstep_ice_crunchy_walk_03.wav
 - Assets/CoreMasterBundle/Items/Guns/Hawkhound/Hammer.mp3
@@ -6676,14 +6704,14 @@ Assets:
 - Assets/CoreMasterBundle/Items/Outfits/Hooligan/Hooligan_Bottom/Item.prefab
 - Assets/CoreMasterBundle/Items/RioRemastered/Free/Rio_Chewing_Gum/Item.prefab
 - Assets/CoreMasterBundle/Objects/Large/Buildings/Tower_Military_2/Skybox.prefab
-- Assets/CoreMasterBundle/Items/Cali2/CA_Biker_Mask_0/Mask.prefab
+- Assets/CoreMasterBundle/Items/Cali2/Blue/CA_Biker_Mask_0/Mask.prefab
 - Assets/CoreMasterBundle/Objects/Medium/Signs/Crossing_0/Object.prefab
 - Assets/CoreMasterBundle/Objects/Large/Buildings/Tent_France_0/Slots.prefab
 - Assets/CoreMasterBundle/Items/Water/Bottled_Cola/Item.prefab
 - Assets/CoreMasterBundle/Effects/Impacts/Gravel_Dynamic/Material.mat
 - Assets/CoreMasterBundle/Items/Barricades/Cot_Yellow/Animations.prefab
 - Assets/CoreMasterBundle/Objects/Medium/Furniture/Grave_Swansong/Nav.prefab
-- Assets/CoreMasterBundle/Items/Cali2/CA_Dual_Top_1/Material.mat
+- Assets/CoreMasterBundle/Items/Cali2/Complimentary/CA_Dual_Top_1/Material.mat
 - Assets/CoreMasterBundle/Items/Barricades/Gate_Pine/Nav.prefab
 - Assets/CoreMasterBundle/Effects/Explosions/Maple_4/Material.mat
 - Assets/CoreMasterBundle/Items/Throwables/Smoke_Green/Use.mp3
@@ -6734,7 +6762,7 @@ Assets:
 - Assets/CoreMasterBundle/Items/Clouds/Umbrella_Yellow/Item.prefab
 - Assets/CoreMasterBundle/Items/Pants/Farmer_Bottom/Item.prefab
 - Assets/CoreMasterBundle/Items/Masks/Yeti/Materials/Yeti.mat
-- Assets/CoreMasterBundle/Items/Cali2/CA_Quilted_Jacket_White/Shirt.png
+- Assets/CoreMasterBundle/Items/Cali2/Complimentary/CA_Quilted_Jacket_White/Shirt.png
 - Assets/CoreMasterBundle/Items/Barricades/Garageframe_Birch/Barricade.prefab
 - Assets/CoreMasterBundle/Items/Limestone/Premium/LS_FlakVest/Item.prefab
 - Assets/CoreMasterBundle/Skins/Card/Comic/Skin_Primary.mat
@@ -6776,7 +6804,7 @@ Assets:
 - Assets/CoreMasterBundle/Items/Shirts/Firefighter_Top/Material.mat
 - Assets/CoreMasterBundle/Items/Boxes/Mystery_Box_7/Item.prefab
 - Assets/CoreMasterBundle/Terrain/Foliage/Grass/Flowers_00_Mesh.fbx
-- Assets/CoreMasterBundle/Items/Cali2/CA_Mullet_1/Hat.prefab
+- Assets/CoreMasterBundle/Items/Cali2/Complimentary/CA_Mullet_1/Hat.prefab
 - Assets/CoreMasterBundle/Skins/Snayperskya/Era/Skin_Attachment.mat
 - Assets/CoreMasterBundle/Items/Barricades/Plate_Large_Pine_Right/Nav.prefab
 - Assets/CoreMasterBundle/Items/Hats/Coalition_Helmet/Animations.prefab
@@ -6857,11 +6885,12 @@ Assets:
 - Assets/CoreMasterBundle/Items/Barricades/Umbrella_Orange/Nav.prefab
 - Assets/CoreMasterBundle/Items/Backpacks/Pack_Spec_Ops/Item.prefab
 - Assets/CoreMasterBundle/Items/Pants/Trouser_Pants/Pants.png
-- Assets/CoreMasterBundle/Items/Cali2/CA_Flight_Top/Material.mat
+- Assets/CoreMasterBundle/Items/Cali2/Red/CA_Flight_Top/Material.mat
 - Assets/CoreMasterBundle/Items/Shirts/Jersey_Denmark/Shirt.png
 - Assets/CoreMasterBundle/Objects/Large/Vehicles/Off_Roader_Blue/Nav.prefab
 - Assets/CoreMasterBundle/Items/Structures/Floor_Birch_Triangle/Nav.prefab
 - Assets/CoreMasterBundle/Items/Vests/Blueknight_Shoulders/KnightTexture.png
+- Assets/CoreMasterBundle/Skins/Heartbreaker/CA_Sealine/Skin_Tertiary.mat
 - Assets/CoreMasterBundle/Items/Tools/Vehicle_Spraypaint_ClassicRed/Item.prefab
 - Assets/CoreMasterBundle/Items/Throwables/Smoke_White/Item.prefab
 - Assets/CoreMasterBundle/Effects/Physics/ShotgunShellBounce/Carpet/ShotgunShell_Land_Carpet_04.wav
@@ -6918,6 +6947,7 @@ Assets:
 - Assets/CoreMasterBundle/Skins/Patterns/Rainbow_Horizontal/Skin_Tertiary.mat
 - Assets/CoreMasterBundle/Items/Pants/Farmer_Bottom/Material.mat
 - Assets/CoreMasterBundle/Skins/Dragonfang/UMarine/Skin_Secondary_134.mat
+- Assets/CoreMasterBundle/Mythics/CA_Chained_Red/System_First.prefab
 - Assets/CoreMasterBundle/Skins/Patterns/Swampmire_1024x1024/Skin_Attachment.mat
 - Assets/CoreMasterBundle/Skins/Heartbreaker/Overkill/Skin_Secondary_17.mat
 - Assets/CoreMasterBundle/Skins/Maplestrike/Equalizer/Skin_Tertiary.mat
@@ -6954,7 +6984,7 @@ Assets:
 - Assets/CoreMasterBundle/Vehicles/Snowmobile/Vehicle.prefab
 - Assets/CoreMasterBundle/Effects/General/Rip/Rip.mp3
 - Assets/CoreMasterBundle/Items/Sights/Shadowstalker_Scope/Sight.prefab
-- Assets/CoreMasterBundle/Items/Cali2/CA_Breacher_Jacket_Desert/Metallic.png
+- Assets/CoreMasterBundle/Items/Cali2/Complimentary/CA_Breacher_Jacket_Desert/Metallic.png
 - Assets/CoreMasterBundle/Objects/Large/Buildings/Police_1/Nav.prefab
 - Assets/CoreMasterBundle/Items/Barricades/Plate_Small_Pine_Right/Nav.prefab
 - Assets/CoreMasterBundle/Objects/Large/Buildings/Airport_4/Slots.prefab
@@ -7028,6 +7058,7 @@ Assets:
 - Assets/CoreMasterBundle/Objects/Large/Buildings/Clothes_0/Nav.prefab
 - Assets/CoreMasterBundle/Objects/Medium/Parks/Crop_0/Object.prefab
 - Assets/CoreMasterBundle/Items/Shirts/BelgiumInfantry_Shirt/Shirt.png
+- Assets/CoreMasterBundle/Mythics/CA_Raising/System_Third.prefab
 - Assets/CoreMasterBundle/Effects/Explosions/Metal_3/Texture.png
 - Assets/CoreMasterBundle/Skins/Zubeknakov/Nibbler/Skin_Secondary_123.mat
 - Assets/CoreMasterBundle/Items/Structures/Garage_Birch/Nav.prefab
@@ -7109,6 +7140,7 @@ Assets:
 - Assets/CoreMasterBundle/Items/Buak/Buak_Scarf_Red/Vest.prefab
 - Assets/CoreMasterBundle/Items/Anniversary_10/Classic_Poncho/Vest.prefab
 - Assets/CoreMasterBundle/Items/Kuwait/Kuwait_SweatPants_Purple/Item.prefab
+- Assets/CoreMasterBundle/Skins/Maplestrike/CA_Adamantine/Skin_Secondary_21.mat
 - Assets/CoreMasterBundle/Items/Outfits/Arid_Tourist/Arid_Oversized_Spectacles/Glasses.prefab
 - Assets/CoreMasterBundle/Items/Barricades/Plate_Small_Maple_Right/Nav.prefab
 - Assets/CoreMasterBundle/Items/Hats/Military_Helmet_Arctic/Animations.prefab
@@ -7128,11 +7160,11 @@ Assets:
 - Assets/CoreMasterBundle/Items/Shirts/Magic_Top/Item.prefab
 - Assets/CoreMasterBundle/Skins/Bluntforce/UMarine/Skin_Secondary_146.mat
 - Assets/CoreMasterBundle/Mythics/Radioactive/System_Third.prefab
-- Assets/CoreMasterBundle/Items/Cali2/CA_Plaster_0/Mask.prefab
+- Assets/CoreMasterBundle/Items/Cali2/Red/CA_Plaster_0/Mask.prefab
 - Assets/CoreMasterBundle/Skins/Peacemaker/Blueprint/Skin_Secondary_1026.mat
 - Assets/CoreMasterBundle/Items/PBS/PBS_Layered_Hoodie_1/Shirt.png
 - Assets/CoreMasterBundle/Objects/Mooki/Bridge_Cap_3/Object.prefab
-- Assets/CoreMasterBundle/Items/Cali2/CA_Shorts_Sports_1/Pants.png
+- Assets/CoreMasterBundle/Items/Cali2/Complimentary/CA_Shorts_Sports_1/Pants.png
 - Assets/CoreMasterBundle/Items/Shirts/Ireland_Knight_Top/Shirt.png
 - Assets/CoreMasterBundle/Items/Throwables/Smoke_Yellow/Use.mp3
 - Assets/CoreMasterBundle/Skins/Shadowstalker/Era/Skin_Tertiary.mat
@@ -7193,7 +7225,7 @@ Assets:
 - Assets/CoreMasterBundle/Items/Shirts/Shirt_Tornado/Item.prefab
 - Assets/CoreMasterBundle/Items/Barricades/Plate_Small_Metal/Item.prefab
 - Assets/CoreMasterBundle/Effects/Explosions/Zombie_5/Effect.prefab
-- Assets/CoreMasterBundle/Items/Cali2/CA_Jersey_Cali/Material.mat
+- Assets/CoreMasterBundle/Items/Cali2/Complimentary/CA_Jersey_Cali/Material.mat
 - Assets/CoreMasterBundle/Skins/Honeybadger/UMarine/Skin_Secondary_143.mat
 - Assets/CoreMasterBundle/Items/Outfits/Artist/Artist_Ripped/Vest.prefab
 - Assets/CoreMasterBundle/Items/Shirts/Hoodie_Power/Item.prefab
@@ -7238,6 +7270,7 @@ Assets:
 - Assets/CoreMasterBundle/Skins/Desert_Falcon/Old_Friend/Skin_Primary.mat
 - Assets/CoreMasterBundle/Skins/Timberwolf/Cryptic/Skin_Tertiary.mat
 - Assets/CoreMasterBundle/Items/Barricades/Generator_Large/Animations.prefab
+- Assets/CoreMasterBundle/Mythics/RagdollMaterials/Gold.mat
 - Assets/CoreMasterBundle/Items/Barricades/Kiln/Nav.prefab
 - Assets/CoreMasterBundle/Objects/Large/Buildings/Barn_2/Nav.prefab
 - Assets/CoreMasterBundle/Items/Barricades/Glass_Oneway/Item.prefab
@@ -7284,7 +7317,7 @@ Assets:
 - Assets/CoreMasterBundle/Items/Shirts/Shirt_Tornado/Material.mat
 - Assets/CoreMasterBundle/Effects/Physics/MeleeImpact/Ice/snow_digging_scooping_shoveling_03.wav
 - Assets/CoreMasterBundle/Items/Barricades/Flare_Yellow/Barricade.prefab
-- Assets/CoreMasterBundle/Items/Cali2/CA_Mask_W/Mask.prefab
+- Assets/CoreMasterBundle/Items/Cali2/Red/CA_Mask_W/Mask.prefab
 - Assets/CoreMasterBundle/Items/Barricades/Placard_Birch/Animations.prefab
 - Assets/CoreMasterBundle/Effects/Physics/Footstep/Mud_Walk/footstep_mud_walk_02.wav
 - Assets/CoreMasterBundle/Skins/Matamorez/Voyager/Skin_Secondary_1003.mat
@@ -7315,7 +7348,7 @@ Assets:
 - Assets/CoreMasterBundle/Items/Barricades/Fence_Barbedwire/Nav.prefab
 - Assets/CoreMasterBundle/Objects/Large/Buildings/Office_0/Nav.prefab
 - Assets/CoreMasterBundle/Objects/Large/Roads/Road_Tee_Hole/Skybox.prefab
-- Assets/CoreMasterBundle/Items/Cali2/CA_Wings_Moth/Backpack.prefab
+- Assets/CoreMasterBundle/Items/Cali2/Red/CA_Wings_Moth/Backpack.prefab
 - Assets/CoreMasterBundle/Objects/Large/Roads/Road_Line_1/Skybox.prefab
 - Assets/CoreMasterBundle/Items/Outfits/Hooligan/Hooligan_Top/Material.mat
 - Assets/CoreMasterBundle/Items/Sights/8x_Scope/Sight.prefab
@@ -7334,13 +7367,13 @@ Assets:
 - Assets/CoreMasterBundle/Objects/Large/Utilities/Silo_Grain_0/Skybox.prefab
 - Assets/CoreMasterBundle/Items/Structures/Pillar_Metal/Nav.prefab
 - Assets/CoreMasterBundle/Effects/Physics/Footstep/Mud_Walk/footstep_mud_walk_03.wav
-- Assets/CoreMasterBundle/Items/Cali2/CA_Checkered_Pants_1/Pants.png
+- Assets/CoreMasterBundle/Items/Cali2/Complimentary/CA_Checkered_Pants_1/Pants.png
 - Assets/CoreMasterBundle/Items/Dango/Dango_HannyaMask/Mask.prefab
 - Assets/CoreMasterBundle/Objects/Medium/Furniture/Throne_0/Nav.prefab
 - Assets/CoreMasterBundle/Items/Vests/Scarf_Red/Vest.prefab
 - Assets/CoreMasterBundle/Items/Barricades/Beach_Green/Nav.prefab
 - Assets/CoreMasterBundle/Effects/Explosions/Dead_3/Material.mat
-- Assets/CoreMasterBundle/Items/Cali2/CA_Quilted_Jacket_Yellow/Material.mat
+- Assets/CoreMasterBundle/Items/Cali2/Complimentary/CA_Quilted_Jacket_Yellow/Material.mat
 - Assets/CoreMasterBundle/Items/Hats/Squid_Hat/Hat.prefab
 - Assets/CoreMasterBundle/Objects/Large/Buildings/House_02/Nav.prefab
 - Assets/CoreMasterBundle/Skins/Zubeknakov/UMarine/Skin_Secondary_124.mat
@@ -7368,14 +7401,13 @@ Assets:
 - Assets/CoreMasterBundle/Objects/Large/Buildings/Greenhouse_0/Slots.prefab
 - Assets/CoreMasterBundle/Items/Barrels/Military_Suppressor/Barrel.prefab
 - Assets/CoreMasterBundle/Items/Pants/Trunks_Green/Animations.prefab
-- Assets/CoreMasterBundle/Skins/Bluntforce/Doorkicker/Secondary_Albedo.png
 - Assets/CoreMasterBundle/Skins/Augewehr/Milspec/Skin_Secondary_125.mat
 - Assets/CoreMasterBundle/Items/Buak/Buak_ADITS_Wheel/Hat.prefab
 - Assets/CoreMasterBundle/Items/Vests/Vest_Police/Vest.prefab
 - Assets/CoreMasterBundle/Items/Food/Eggs/Animations.prefab
 - Assets/CoreMasterBundle/Objects/Large/Scenery/Boulder_21/Object.prefab
 - Assets/CoreMasterBundle/Skins/Hawkhound/Stitched/Skin_Primary.mat
-- Assets/CoreMasterBundle/Items/Cali2/CA_Breacher_Jacket_Blue/Metallic.png
+- Assets/CoreMasterBundle/Items/Cali2/Complimentary/CA_Breacher_Jacket_Blue/Metallic.png
 - Assets/CoreMasterBundle/Items/Outfits/GuanYu/GuanYuMask/Item.prefab
 - Assets/CoreMasterBundle/Effects/Weather/Lightning/thunder_lightning_strike_rumble_04.wav
 - Assets/CoreMasterBundle/Items/Barricades/Rack_Birch/Item.prefab
@@ -7427,7 +7459,7 @@ Assets:
 - Assets/CoreMasterBundle/Objects/Large/Roads/Road_Tee_Hole/Nav.prefab
 - Assets/CoreMasterBundle/Items/Structures/Rampart_Birch/Structure.prefab
 - Assets/CoreMasterBundle/Skins/Augewehr/Air_Raider/Skin_Secondary_1363.mat
-- Assets/CoreMasterBundle/Items/Cali2/CA_Hoodie_Split_5/Shirt.png
+- Assets/CoreMasterBundle/Items/Cali2/Complimentary/CA_Hoodie_Split_5/Shirt.png
 - Assets/CoreMasterBundle/Skins/Patterns/Chamsai_1024x1024/Skin_Primary.mat
 - Assets/CoreMasterBundle/Effects/Physics/BulletImpact/Concrete/BulletImpact_Concrete.asset
 - Assets/CoreMasterBundle/Skins/Bulldog/Millennium/Skin_Attachment.mat
@@ -7459,7 +7491,7 @@ Assets:
 - Assets/CoreMasterBundle/Sounds/EatSquishy.mp3
 - Assets/CoreMasterBundle/Objects/Large/Roads/Bridge_Line_7/Nav.prefab
 - Assets/CoreMasterBundle/Items/Pants/Chef_Bottom/Item.prefab
-- Assets/CoreMasterBundle/Items/Cali2/CA_Checkered_Pants_2/Material.mat
+- Assets/CoreMasterBundle/Items/Cali2/Complimentary/CA_Checkered_Pants_2/Material.mat
 - Assets/CoreMasterBundle/Items/Throwables/Flare_Yellow/Throwable.prefab
 - Assets/CoreMasterBundle/Items/Barricades/Cover_Russia/Barricade.prefab
 - Assets/CoreMasterBundle/Items/Barricades/Beach_Green/Item.prefab
@@ -7467,7 +7499,7 @@ Assets:
 - Assets/CoreMasterBundle/Objects/Medium/Quests/Teleporter/Indicator_1_On/Object.prefab
 - Assets/CoreMasterBundle/Mythics/Rio_ThornyRoses/System_Hook.prefab
 - Assets/CoreMasterBundle/Items/Frost/Frost_Shirt_Blue/Item.prefab
-- Assets/CoreMasterBundle/Items/Cali2/CA_Beanie_Orange/Hat.prefab
+- Assets/CoreMasterBundle/Items/Cali2/Complimentary/CA_Beanie_Orange/Hat.prefab
 - Assets/CoreMasterBundle/Items/Glasses/Cyborg/Item.prefab
 - Assets/CoreMasterBundle/Items/Glasses/Blindfold/Item.prefab
 - Assets/CoreMasterBundle/Skins/Dragonfang/Abomination/Skin_Tertiary.mat
@@ -7508,7 +7540,7 @@ Assets:
 - Assets/CoreMasterBundle/Effects/TireMotion/TireMotion_Foliage_Russia_03/Particle.mat
 - Assets/CoreMasterBundle/Items/Shirts/Plaid_Shirt/Item.prefab
 - Assets/CoreMasterBundle/Items/Throwables/Grenade_Bounce/Use.mp3
-- Assets/CoreMasterBundle/Items/Cali2/CA_Dual_Top_6/Material.mat
+- Assets/CoreMasterBundle/Items/Cali2/Complimentary/CA_Dual_Top_6/Material.mat
 - Assets/CoreMasterBundle/Items/Barricades/Claim/Item.prefab
 - Assets/CoreMasterBundle/Objects/Medium/Parks/Jetski_Green/Object.prefab
 - Assets/CoreMasterBundle/Effects/Impacts/Paintball_Purple_Dynamic/Splatter_1.prefab
@@ -7522,13 +7554,13 @@ Assets:
 - Assets/CoreMasterBundle/Effects/Physics/BulletCasingBounce/Grass/BulletCasingBounce_Grass.asset
 - Assets/CoreMasterBundle/Items/Barricades/Flare_Blue/Barricade.prefab
 - Assets/CoreMasterBundle/Effects/Impacts/Paintball_Purple_Dynamic/Material_2.mat
-- Assets/CoreMasterBundle/Items/Cali2/CA_Crystalmancy_Top/Shirt.png
+- Assets/CoreMasterBundle/Items/Cali2/Cali2_Crystalmancer/CA_Crystalmancy_Top/Shirt.png
 - Assets/CoreMasterBundle/Items/RioRemastered/Premium/Rio_Pearl_Necklace/Vest.prefab
 - Assets/CoreMasterBundle/Items/Hats/Plague_Hat/Item.prefab
 - Assets/CoreMasterBundle/Trees/Quartz_Washington_1/Resource.prefab
 - Assets/CoreMasterBundle/Skins/Avenger/Sweet_Sprinkles/Skin_Secondary_1022.mat
 - Assets/CoreMasterBundle/Items/Outfits/WanderingWizard/WanderingWizard_Mask/Mask.prefab
-- Assets/CoreMasterBundle/Items/Cali2/CA_Guitar/Backpack.prefab
+- Assets/CoreMasterBundle/Items/Cali2/Blue/CA_Guitar/Backpack.prefab
 - Assets/CoreMasterBundle/Items/Guns/Kryzkarek/Reload.mp3
 - Assets/CoreMasterBundle/Objects/Medium/Business/Computer_2/Object.prefab
 - Assets/CoreMasterBundle/Effects/Explosions/Water_1/Particle.mat
@@ -7546,7 +7578,7 @@ Assets:
 - Assets/CoreMasterBundle/Items/Shirts/Rio_Tamer_Top/Shirt.png
 - Assets/CoreMasterBundle/Objects/Large/Buildings/House_08_Burned/Object.prefab
 - Assets/CoreMasterBundle/Objects/Medium/Parks/Inukshuk/Object.prefab
-- Assets/CoreMasterBundle/Items/Cali2/CA_Breacher_Jacket_Blue/Material.mat
+- Assets/CoreMasterBundle/Items/Cali2/Complimentary/CA_Breacher_Jacket_Blue/Material.mat
 - Assets/CoreMasterBundle/Items/Shirts/Tee_Orange/Material.mat
 - Assets/CoreMasterBundle/Items/RioRemastered/Free/Rio_Soccer_Top_Korea/Shirt.png
 - Assets/CoreMasterBundle/Items/Shirts/Coalition_Top_Sergant2/Animations.prefab
@@ -7593,11 +7625,13 @@ Assets:
 - Assets/CoreMasterBundle/Objects/Medium/Furniture/Grave_Keig/Object.prefab
 - Assets/CoreMasterBundle/Items/Outfits/LuBu/LuBuTop/Material.mat
 - Assets/CoreMasterBundle/Items/Pants/Firefighter_Bottom/Material.mat
+- Assets/CoreMasterBundle/Items/Boxes/CA_Box_Red/Item.prefab
 - Assets/CoreMasterBundle/Items/Throwables/Smoke_Red/Throwable.prefab
 - Assets/CoreMasterBundle/Skins/Fusilaut/Alien_Hunter/Skin_Primary.mat
 - Assets/CoreMasterBundle/Items/RioRemastered/Free/Rio_Soccer_Top_USA/Shirt.png
 - Assets/CoreMasterBundle/Items/Outfits/CanyonArena_Cowboy/Cowboy_Belt_0/Vest.prefab
 - Assets/CoreMasterBundle/Objects/Medium/Business/Quarry_Conveyor_0/Skybox.prefab
+- Assets/CoreMasterBundle/Mythics/RagdollMaterials/SoulCrystal_Magenta.mat
 - Assets/CoreMasterBundle/Items/Food/Bar_Energy/Item.prefab
 - Assets/CoreMasterBundle/Items/Backpacks/AthensAprix_Quiver/Item.prefab
 - Assets/CoreMasterBundle/Items/Food/Beef_Cooked/Equipable.prefab
@@ -7647,10 +7681,10 @@ Assets:
 - Assets/CoreMasterBundle/Items/Shirts/Coalition_Top_Ensign/Shirt.png
 - Assets/CoreMasterBundle/Vehicles/Blimp/Ignition.mp3
 - Assets/CoreMasterBundle/Items/Barricades/Crate_Birch/Nav.prefab
-- Assets/CoreMasterBundle/Items/Cali2/CA_Patriotic_Shorts/Pants.png
+- Assets/CoreMasterBundle/Items/Cali2/Complimentary/CA_Patriotic_Shorts/Pants.png
 - Assets/CoreMasterBundle/Items/Structures/Hole_Maple_Triangle/Nav.prefab
 - Assets/CoreMasterBundle/Objects/Medium/Furniture/Lamp_1/Object.prefab
-- Assets/CoreMasterBundle/Items/Cali2/CA_Flight_Top/Shirt2.png
+- Assets/CoreMasterBundle/Items/Cali2/Red/CA_Flight_Top/Shirt2.png
 - Assets/CoreMasterBundle/Items/Shirts/Parka_Yellow/Material.mat
 - Assets/CoreMasterBundle/Items/Barricades/Doubledoor_Pine/Animations.prefab
 - Assets/CoreMasterBundle/Effects/Physics/BipedLand/Dirt/footstep_dirt_land_v2_06.wav
@@ -7670,7 +7704,7 @@ Assets:
 - Assets/CoreMasterBundle/Effects/Impacts/Paintball_Green_Dynamic/Particle.mat
 - Assets/CoreMasterBundle/Items/Food/Sandwich_Cheese/Animations.prefab
 - Assets/CoreMasterBundle/Effects/Physics/Footstep/MetalLow_Run/footstep_metal_low_run_16.wav
-- Assets/CoreMasterBundle/Items/Cali2/CA_Quilted_Jacket_Blue/Shirt.png
+- Assets/CoreMasterBundle/Items/Cali2/Complimentary/CA_Quilted_Jacket_Blue/Shirt.png
 - Assets/CoreMasterBundle/Effects/Physics/MeleeImpact/Ice/MeleeImpact_Ice.asset
 - Assets/CoreMasterBundle/Skins/Grizzly/Era/Skin_Attachment.mat
 - Assets/CoreMasterBundle/Items/Throwables/Flare_Orange/Use.mp3
@@ -7695,7 +7729,7 @@ Assets:
 - Assets/CoreMasterBundle/Objects/Large/Roads/Bridge_Line_5/Object.prefab
 - Assets/CoreMasterBundle/Items/Barricades/Flare_Red/Item.prefab
 - Assets/CoreMasterBundle/Items/Barricades/FoodPrepStation/Animations.prefab
-- Assets/CoreMasterBundle/Items/Cali2/CA_Breacher_Bottom_Black/Pants.png
+- Assets/CoreMasterBundle/Items/Cali2/Complimentary/CA_Breacher_Bottom_Black/Pants.png
 - Assets/CoreMasterBundle/Objects/Large/Buildings/House_06_Burned/Skybox.prefab
 - Assets/CoreMasterBundle/Skins/Bulldog/Phoenix/Skin_Attachment.mat
 - Assets/CoreMasterBundle/Objects/Medium/Rubble/Debris_1/Object.prefab
@@ -7777,7 +7811,7 @@ Assets:
 - Assets/CoreMasterBundle/Effects/Physics/Footstep/Grass_Walk/footstep_grass_walk_02.wav
 - Assets/CoreMasterBundle/Items/Hats/Pineapple/Item.prefab
 - Assets/CoreMasterBundle/Skins/Nightraider/Maleficus/Skin_Attachment.mat
-- Assets/CoreMasterBundle/Items/Cali2/CA_Dual_Top_6/Shirt.png
+- Assets/CoreMasterBundle/Items/Cali2/Complimentary/CA_Dual_Top_6/Shirt.png
 - Assets/CoreMasterBundle/Skins/Matamorez/Era/Skin_Secondary_1201.mat
 - Assets/CoreMasterBundle/Objects/Large/Buildings/Clothes_0/Skybox.prefab
 - Assets/CoreMasterBundle/Items/Food/Mushroom_Brown/Animations.prefab
@@ -7802,7 +7836,6 @@ Assets:
 - Assets/CoreMasterBundle/Sounds/Popup/ui_menu_popup_01.wav
 - Assets/CoreMasterBundle/Trees/Pine_9/Skybox.prefab
 - Assets/CoreMasterBundle/Effects/Explosions/Teleporter/Splat.png
-- Assets/CoreMasterBundle/Items/Cali2/CA_Breacher_Helmet_0/Hat.prefab
 - Assets/CoreMasterBundle/Items/Magazines/Paintballs_Yellow_35/Item.prefab
 - Assets/CoreMasterBundle/Items/Guns/Dragonfang/Metallic_Base.png
 - Assets/CoreMasterBundle/Items/Buak/Buak_Skeleton_Hoodie/Item.prefab
@@ -7834,7 +7867,6 @@ Assets:
 - Assets/CoreMasterBundle/Objects/Medium/Furniture/Table_Wood_3/Nav.prefab
 - Assets/CoreMasterBundle/Items/Hats/Hermes_Helmet/Hat.prefab
 - Assets/CoreMasterBundle/Items/Food/Canned_Sardines/Animations.prefab
-- Assets/CoreMasterBundle/Skins/Grizzly/Zone_Defender/Albedo_Primary.png
 - Assets/CoreMasterBundle/Objects/Large/Vehicles/Sedan_Blue/Object.prefab
 - Assets/CoreMasterBundle/Objects/Medium/Furniture/Bed_3_Empty/Nav.prefab
 - Assets/CoreMasterBundle/Objects/Medium/Business/Pipe_1/Object.prefab
@@ -7854,7 +7886,7 @@ Assets:
 - Assets/CoreMasterBundle/Items/Structures/Floor_Brick/Structure.prefab
 - Assets/CoreMasterBundle/Items/Barricades/Door_Maple/Barricade.prefab
 - Assets/CoreMasterBundle/Effects/General/Note/Effect.prefab
-- Assets/CoreMasterBundle/Items/Cali2/CA_Breacher_Bottom_Desert/Pants.png
+- Assets/CoreMasterBundle/Items/Cali2/Complimentary/CA_Breacher_Bottom_Desert/Pants.png
 - Assets/CoreMasterBundle/Items/Food/Pie_Teal/Animations.prefab
 - Assets/CoreMasterBundle/Items/Outfits/Cali_Journalist/Cali_Journalist_Bottom/Item.prefab
 - Assets/CoreMasterBundle/Skins/Knife_Military/Cardboard/Skin_Primary.mat
@@ -7867,6 +7899,7 @@ Assets:
 - Assets/CoreMasterBundle/Items/Shirts/FranceHistorical_Crusader_Top/Shirt.png
 - Assets/CoreMasterBundle/Items/Outfits/PirateCaptain/PirateCaptainCannon/Item.prefab
 - Assets/CoreMasterBundle/Items/Pants/Biohazard_Bottom/Material.mat
+- Assets/CoreMasterBundle/Skins/Maplestrike/CA_Adamantine/Skin_Secondary_151.mat
 - Assets/CoreMasterBundle/Vehicles/Truck/Vehicle.prefab
 - Assets/CoreMasterBundle/Items/Elver2/Elver2_Skater_Top_Pink/Material.mat
 - Assets/CoreMasterBundle/Items/Pants/Khaki_Shorts/Animations.prefab
@@ -7878,7 +7911,7 @@ Assets:
 - Assets/CoreMasterBundle/Objects/Medium/Quests/Skeleton/Skeleton_On/Object.prefab
 - Assets/CoreMasterBundle/Effects/Physics/BulletImpact/MetalHeavy/bullet_impact_metal_heavy_03.wav
 - Assets/CoreMasterBundle/Items/Backpacks/Butterfly/Item.prefab
-- Assets/CoreMasterBundle/Items/Cali2/CA_Breacher_Jacket_Pink/Material.mat
+- Assets/CoreMasterBundle/Items/Cali2/Complimentary/CA_Breacher_Jacket_Pink/Material.mat
 - Assets/CoreMasterBundle/Objects/Large/Vehicles/Quad_Blue/Object.prefab
 - Assets/CoreMasterBundle/Effects/Explosions/Computer_0/Metal.mp3
 - Assets/CoreMasterBundle/Skins/Honeybadger/Toy/Skin_Secondary_21.mat
@@ -7899,6 +7932,7 @@ Assets:
 - Assets/CoreMasterBundle/Skins/Ekho/Compressor/Skin_Attachment.mat
 - Assets/CoreMasterBundle/Objects/Large/Buildings/House_02_Burned/Object.prefab
 - Assets/CoreMasterBundle/Skins/Teklowvka/Watermelon/Skin_Tertiary.mat
+- Assets/CoreMasterBundle/Mythics/RagdollMaterials/SoulCrystal_Yellow.mat
 - Assets/CoreMasterBundle/Items/Frost/Frost_Fanny/Item.prefab
 - Assets/CoreMasterBundle/Items/Pants/Rio_Tamer_Bottom/Animations.prefab
 - Assets/CoreMasterBundle/Skins/Vonya/Frostbite/Skin_Tertiary.mat
@@ -7946,9 +7980,10 @@ Assets:
 - Assets/CoreMasterBundle/Objects/Small/Quests/Shovel_00/Object.prefab
 - Assets/CoreMasterBundle/Skins/Crossbow/Crossbones/Skin_Primary.mat
 - Assets/CoreMasterBundle/Objects/Large/Buildings/Barracks_6/Skybox.prefab
+- Assets/CoreMasterBundle/Skins/Maplestrike/CA_Adamantine/Override_Mesh_0.prefab
 - Assets/CoreMasterBundle/Items/Shirts/Jersey_Canada/Material.mat
 - Assets/CoreMasterBundle/Skins/Maplestrike/Voyager/Skin_Secondary_6.mat
-- Assets/CoreMasterBundle/Items/Cali2/CA_Quilted_Jacket_Red/Material.mat
+- Assets/CoreMasterBundle/Items/Cali2/Complimentary/CA_Quilted_Jacket_Red/Material.mat
 - Assets/CoreMasterBundle/Mythics/LS_Skeli/System_Hook.prefab
 - Assets/CoreMasterBundle/Mythics/Meta/System_Third.prefab
 - Assets/CoreMasterBundle/Items/Vests/Poncho_Blue/Vest.prefab
@@ -7959,6 +7994,7 @@ Assets:
 - Assets/CoreMasterBundle/Skins/Zubeknakov/Constellation/Skin_Primary.mat
 - Assets/CoreMasterBundle/Effects/Impacts/Paintball_Green_Dynamic/Effect.prefab
 - Assets/CoreMasterBundle/Items/Faces/7/Texture.png
+- Assets/CoreMasterBundle/Mythics/CA_Raising/System_Area.prefab
 - Assets/CoreMasterBundle/Items/RioRemastered/Free/Tank_Top/Rio_Tank_Top_Yellow/Shirt.png
 - Assets/CoreMasterBundle/Items/Barricades/Umbrella/Nav.prefab
 - Assets/CoreMasterBundle/Objects/Large/Buildings/Apartment_1/Object.prefab
@@ -8013,7 +8049,6 @@ Assets:
 - Assets/CoreMasterBundle/Trees/Maple_1/Stump.prefab
 - Assets/CoreMasterBundle/Objects/Medium/Parks/Boat_3/Object.prefab
 - Assets/CoreMasterBundle/Objects/Large/Buildings/House_03/Triggers.prefab
-- Assets/CoreMasterBundle/Items/Cali2/CA_Punk_Top1/Material.mat
 - Assets/CoreMasterBundle/Objects/Medium/Business/Seedbank_0/Object.prefab
 - Assets/CoreMasterBundle/Skins/Determinator/Warfare/Skin_Tertiary.mat
 - Assets/CoreMasterBundle/Items/RioRemastered/Free/Rio_Soccer_Top_Iceland/Item.prefab
@@ -8041,6 +8076,7 @@ Assets:
 - Assets/CoreMasterBundle/Items/RioRemastered/Free/Crop_Top/Rio_Crop_Yellow/Shirt.png
 - Assets/CoreMasterBundle/Skins/Dragonfang/UMarine/Skin_Primary.mat
 - Assets/CoreMasterBundle/Items/Barricades/Gate_Maple/Animations.prefab
+- Assets/CoreMasterBundle/Mythics/RagdollMaterials/Zero_Kelvin.mat
 - Assets/CoreMasterBundle/Skins/Yuri/Bloodsport/Skin_Tertiary.mat
 - Assets/CoreMasterBundle/Items/Shirts/Hoodie_Black/Shirt.png
 - Assets/CoreMasterBundle/Items/Kuwait/Kuwait_SandstormCrusader/Hat.prefab
@@ -8049,7 +8085,7 @@ Assets:
 - Assets/CoreMasterBundle/Skins/Desert_Falcon/Sandstorm/Skin_Attachment.mat
 - Assets/CoreMasterBundle/Skins/Maplestrike/Hypertech/Skin_Secondary_364.mat
 - Assets/CoreMasterBundle/Items/Vests/Poncho_Green/Item.prefab
-- Assets/CoreMasterBundle/Items/Cali2/CA_Flight_Helmet/Hat.prefab
+- Assets/CoreMasterBundle/Items/Cali2/Red/CA_Flight_Helmet/Hat.prefab
 - Assets/CoreMasterBundle/Objects/Large/Buildings/Fire_0/Object.prefab
 - Assets/CoreMasterBundle/Skins/Bluntforce/Insanimus/Skin_Primary.mat
 - Assets/CoreMasterBundle/Effects/Explosions/XMAS_Present_00/Texture.png
@@ -8115,10 +8151,10 @@ Assets:
 - Assets/CoreMasterBundle/Items/Buak/Buak_Pine_Hat_Green/Item.prefab
 - Assets/CoreMasterBundle/Items/Barricades/Plate_Small_Maple/Animations.prefab
 - Assets/CoreMasterBundle/Items/Hairs/1/Texture.png
-- Assets/CoreMasterBundle/Items/Cali2/CA_Breacher_Bottom_White/Pants.png
+- Assets/CoreMasterBundle/Items/Cali2/Complimentary/CA_Breacher_Bottom_White/Pants.png
 - Assets/CoreMasterBundle/Items/Shirts/Scientist_Mad_Top/Animations.prefab
 - Assets/CoreMasterBundle/Trees/Pine_1/Debris.prefab
-- Assets/CoreMasterBundle/Items/Cali2/CA_Tac_Shorts/Material.mat
+- Assets/CoreMasterBundle/Items/Cali2/Red/CA_Tac_Shorts/Material.mat
 - Assets/CoreMasterBundle/Objects/Small/Overgrowth/Vines_4/Object.prefab
 - Assets/CoreMasterBundle/Objects/Large/Buildings/Warehouse_0/Skybox.prefab
 - Assets/CoreMasterBundle/Skins/Ekho/Jacky/Skin_Secondary_1383.mat
@@ -8166,7 +8202,7 @@ Assets:
 - Assets/CoreMasterBundle/Effects/Impacts/Snow_Static/Effect.prefab
 - Assets/CoreMasterBundle/Skins/Card/Comic/Skin_Secondary_1381.mat
 - Assets/CoreMasterBundle/Items/Anniversary_10/Classic_Rucksack/Item.prefab
-- Assets/CoreMasterBundle/Items/Cali2/CA_Hoodie_Split_4/Material.mat
+- Assets/CoreMasterBundle/Items/Cali2/Complimentary/CA_Hoodie_Split_4/Material.mat
 - Assets/CoreMasterBundle/Trees/Bush_0/Resource.prefab
 - Assets/CoreMasterBundle/Items/Throwables/Grenade/Use.mp3
 - Assets/CoreMasterBundle/Items/Limestone/Extras/LS_Hood_Green/Item.prefab
@@ -8189,7 +8225,7 @@ Assets:
 - Assets/CoreMasterBundle/Items/Shirts/RCMP_Top/Animations.prefab
 - Assets/CoreMasterBundle/Skins/Hawkhound/Moo/Skin_Primary.mat
 - Assets/CoreMasterBundle/Items/Kuwait2/Kuwait_Assorted_Briefcase/Item.prefab
-- Assets/CoreMasterBundle/Items/Cali2/CA_Quilted_Jacket_Blue/Material.mat
+- Assets/CoreMasterBundle/Items/Cali2/Complimentary/CA_Quilted_Jacket_Blue/Material.mat
 - Assets/CoreMasterBundle/Items/Tools/Vehicle_Spraypaint_Military_Russia/Item.prefab
 - Assets/CoreMasterBundle/Objects/Small/Overgrowth/Graffiti_6/Decal.png
 - Assets/CoreMasterBundle/Items/Vests/Vest_Civilian/Item.prefab
@@ -8214,7 +8250,7 @@ Assets:
 - Assets/CoreMasterBundle/Items/Throwables/Smoke_Orange/Throwable.prefab
 - Assets/CoreMasterBundle/Items/Outfits/WanderingWizard/WanderingWizard_Spellbook/Backpack.prefab
 - Assets/CoreMasterBundle/Items/Water/Crushed_Amber/Item.prefab
-- Assets/CoreMasterBundle/Items/Cali2/CA_Quilted_Jacket_Orange/Material.mat
+- Assets/CoreMasterBundle/Items/Cali2/Complimentary/CA_Quilted_Jacket_Orange/Material.mat
 - Assets/CoreMasterBundle/Skins/Matamorez/Agile/Skin_Secondary_1003.mat
 - Assets/CoreMasterBundle/Objects/Large/Roads/Road_Quad_0/Object.prefab
 - Assets/CoreMasterBundle/Skins/Eaglefire/Retrowave/Skin_Secondary_1177.mat
@@ -8284,7 +8320,7 @@ Assets:
 - Assets/CoreMasterBundle/Objects/Large/Vehicles/Volga_Blue/Object.prefab
 - Assets/CoreMasterBundle/Sounds/Vehicle_Spraypaint.wav
 - Assets/CoreMasterBundle/Items/Guns/Hawkhound/Reload.mp3
-- Assets/CoreMasterBundle/Items/Cali2/CA_Headaxe/Hat.prefab
+- Assets/CoreMasterBundle/Items/Cali2/Complimentary/CA_Headaxe/Hat.prefab
 - Assets/CoreMasterBundle/Effects/Impacts/Paintball_Yellow_Dynamic/Splatter_1.prefab
 - Assets/CoreMasterBundle/Effects/TireMotion/TireMotion_Foliage_Peaks_01/Particle.mat
 - Assets/CoreMasterBundle/Items/Hats/Beret_White/Hat.prefab
@@ -8303,18 +8339,19 @@ Assets:
 - Assets/CoreMasterBundle/Sounds/Inventory/LargeGunAttachment/gun_semi_auto_rifle_load_bullet_01.wav
 - Assets/CoreMasterBundle/Items/Food/Doughnut/Item.prefab
 - Assets/CoreMasterBundle/Items/Outfits/Executioner/Executioner_Bottom/Material.mat
-- Assets/CoreMasterBundle/Skins/Nightraider/Knitted_Sweater/Skin_Secondary_17.mat
+- Assets/CoreMasterBundle/Mythics/CA_Overloaded/System_First.prefab
+- Assets/CoreMasterBundle/Mythics/RagdollMaterials/Rainbow.mat
 - Assets/CoreMasterBundle/Items/Tools/Carjack/Use.mp3
 - Assets/CoreMasterBundle/Items/Halloween2024/HW2_Halo_White/Item.prefab
 - Assets/CoreMasterBundle/Items/Shirts/Shirt_Purple/Material.mat
 - Assets/CoreMasterBundle/Items/Vests/Ducky/Vest.prefab
+- Assets/CoreMasterBundle/Skins/Nightraider/Knitted_Sweater/Skin_Secondary_17.mat
 - Assets/CoreMasterBundle/Items/Elver/Elver_Ski_Sky/Glasses.prefab
 - Assets/CoreMasterBundle/Items/Outfits/Chicken/Chicken_Shirt/Material.mat
 - Assets/CoreMasterBundle/Effects/Explosions/Present_1/Material.mat
-- Assets/Game/Sources/Models/Items/Cali2/Mythics/CA_Overloaded/System_First.prefab
 - Assets/CoreMasterBundle/Items/Shirts/Tee_Boom/Material.mat
 - Assets/CoreMasterBundle/Objects/Large/Vehicles/Train_Engine_1/Nav.prefab
-- Assets/CoreMasterBundle/Items/Cali2/CA_Crimson_Top/Shirt.png
+- Assets/CoreMasterBundle/Items/Cali2/Blue/CA_Crimson_Top/Shirt.png
 - Assets/CoreMasterBundle/Mythics/Divine/System_Hook.prefab
 - Assets/CoreMasterBundle/Items/Barricades/Stack_Stick_Birch/Nav.prefab
 - Assets/CoreMasterBundle/Objects/Medium/Furniture/Note/Object.prefab
@@ -8347,7 +8384,7 @@ Assets:
 - Assets/CoreMasterBundle/Items/Shirts/Samurai_Top/Metallic.png
 - Assets/CoreMasterBundle/Items/Structures/Stairs_Brick/Animations.prefab
 - Assets/CoreMasterBundle/Skins/Grizzly/Knitted_Sweater/Skin_Attachment.mat
-- Assets/CoreMasterBundle/Items/Cali2/CA_RolledUp_Top/Material.mat
+- Assets/CoreMasterBundle/Items/Cali2/Red/CA_RolledUp_Top/Material.mat
 - Assets/CoreMasterBundle/Items/Structures/Window_Metal/Structure.prefab
 - Assets/CoreMasterBundle/Objects/Large/Buildings/Trailer_1/Object.prefab
 - Assets/CoreMasterBundle/Effects/Impacts/Alien_Dynamic/Texture_0.png
@@ -8426,6 +8463,7 @@ Assets:
 - Assets/CoreMasterBundle/Items/Barricades/Counter_Metal/Barricade.prefab
 - Assets/CoreMasterBundle/Items/Barricades/Library_Birch/Nav.prefab
 - Assets/CoreMasterBundle/Items/Kuwait2/Kuwait_Free_Camel_Nightcap/Item.prefab
+- Assets/CoreMasterBundle/Mythics/RagdollMaterials/Bronze.mat
 - Assets/CoreMasterBundle/Effects/Impacts/Gravel_Static/Gravel.mp3
 - Assets/CoreMasterBundle/Items/Outfits/PlagueHunter/PHShirt/Shirt.png
 - Assets/CoreMasterBundle/Objects/Material_Palettes/Apartment/Apartment_2.mat
@@ -8464,7 +8502,7 @@ Assets:
 - Assets/CoreMasterBundle/Items/Barricades/Garageframe_Pine/Item.prefab
 - Assets/CoreMasterBundle/Skins/Eaglefire/Jackpot/Skin_Tertiary.mat
 - Assets/CoreMasterBundle/Items/Barricades/Plate_Large_Maple/Barricade.prefab
-- Assets/CoreMasterBundle/Items/Cali2/CA_Dual_Top_1/Shirt.png
+- Assets/CoreMasterBundle/Items/Cali2/Complimentary/CA_Dual_Top_1/Shirt.png
 - Assets/CoreMasterBundle/Objects/Large/Vehicles/Volga_White/Nav.prefab
 - Assets/CoreMasterBundle/Skins/Bulldog/Comic/Skin_Primary.mat
 - Assets/CoreMasterBundle/Items/Kuwait/Kuwait_DunemanPants/Item.prefab
@@ -8503,7 +8541,7 @@ Assets:
 - Assets/CoreMasterBundle/Items/Hats/Festive_Hat/Hat.prefab
 - Assets/CoreMasterBundle/Objects/Large/Vehicles/Harbor_1/Object.prefab
 - Assets/CoreMasterBundle/Objects/Large/Buildings/Oktoberfest_0/Skybox.prefab
-- Assets/CoreMasterBundle/Items/Cali2/CA_Breacher_Jacket_Black/Material.mat
+- Assets/CoreMasterBundle/Items/Cali2/Complimentary/CA_Breacher_Jacket_Black/Material.mat
 - Assets/CoreMasterBundle/Items/Shirts/Hoodie_Red/Shirt.png
 - Assets/CoreMasterBundle/Sounds/Zombies/Roars/Roar_14.mp3
 - Assets/CoreMasterBundle/Effects/Physics/Footstep/Concrete_Run/footstep_concrete_run_12.wav
@@ -8549,7 +8587,7 @@ Assets:
 - Assets/CoreMasterBundle/Items/Shirts/Shirt_Flower/Item.prefab
 - Assets/CoreMasterBundle/Items/Frost/Frost_Pants_Spliced/Pants.png
 - Assets/CoreMasterBundle/Objects/Small/Quests/Bones/Bone_4/Object.prefab
-- Assets/CoreMasterBundle/Items/Cali2/CA_Enforcer_Gasmask/Mask.prefab
+- Assets/CoreMasterBundle/Items/Cali2/Blue/CA_Enforcer_Gasmask/Mask.prefab
 - Assets/CoreMasterBundle/Items/Hats/Anniversary_0_Rainbow/Item.prefab
 - Assets/CoreMasterBundle/Items/Guns/Masterkey/Metallic_Base.png
 - Assets/CoreMasterBundle/Effects/Physics/Footstep/Concrete_Run/footstep_concrete_run_01.wav
@@ -8567,7 +8605,7 @@ Assets:
 - Assets/CoreMasterBundle/Objects/Large/Buildings/Airport_1/Slots.prefab
 - Assets/CoreMasterBundle/Objects/Large/Buildings/Tent_0/Skybox.prefab
 - Assets/CoreMasterBundle/Effects/Explosions/Pine_1/Effect.prefab
-- Assets/CoreMasterBundle/Items/Cali2/CA_Breacher_Jacket_Pink/Shirt.png
+- Assets/CoreMasterBundle/Items/Cali2/Complimentary/CA_Breacher_Jacket_Pink/Shirt.png
 - Assets/CoreMasterBundle/Objects/Large/Scenery/Grass_France_0/Object.prefab
 - Assets/CoreMasterBundle/Items/Shirts/Jersey_Rainbow/Material.mat
 - Assets/CoreMasterBundle/Skins/Timberwolf/Sandstorm/Skin_Tertiary.mat
@@ -8602,6 +8640,7 @@ Assets:
 - Assets/CoreMasterBundle/Terrain/Foliage/Grass/Peaks/Brambles_01.png
 - Assets/CoreMasterBundle/Skins/Zubeknakov/Fiery_Spectre/Skin_Tertiary.mat
 - Assets/CoreMasterBundle/Skins/Zubeknakov/Elemental/Skin_Secondary_147.mat
+- Assets/CoreMasterBundle/Skins/Maplestrike/CA_Adamantine/Skin_Attachment.mat
 - Assets/CoreMasterBundle/Items/Glasses/Monocle_Platinum/Item.prefab
 - Assets/CoreMasterBundle/Objects/Large/Vehicles/Heli_1/Object.prefab
 - Assets/CoreMasterBundle/Effects/Physics/Footstep/Gravel_Walk/footstep_gravel_walk_01.wav
@@ -8617,7 +8656,7 @@ Assets:
 - Assets/CoreMasterBundle/Effects/Physics/BulletImpact/Concrete/bullet_impact_concrete_brick_01.wav
 - Assets/CoreMasterBundle/Objects/Large/Vehicles/Truck_Yellow/Object.prefab
 - Assets/CoreMasterBundle/Skins/Patterns/Dawn/Skin_Tertiary.mat
-- Assets/CoreMasterBundle/Items/Cali2/CA_Checkered_Pants_3/Pants.png
+- Assets/CoreMasterBundle/Items/Cali2/Complimentary/CA_Checkered_Pants_3/Pants.png
 - Assets/CoreMasterBundle/Skins/Patterns/Corrosive_1024x1024/Skin_Attachment.mat
 - Assets/CoreMasterBundle/Items/Elver2/Elver2_Headset/Mask.prefab
 - Assets/CoreMasterBundle/Items/Beards/2/Beard.prefab
@@ -8657,7 +8696,7 @@ Assets:
 - Assets/CoreMasterBundle/Items/Vests/Molt_Scarf/Vest.prefab
 - Assets/CoreMasterBundle/Items/Outfits/Hooligan/Hooligan_Cap/Hat.prefab
 - Assets/CoreMasterBundle/Items/Shirts/Tee_Admin/Emission.png
-- Assets/CoreMasterBundle/Items/Cali2/CA_Mullet_0/Hat.prefab
+- Assets/CoreMasterBundle/Items/Cali2/Complimentary/CA_Mullet_0/Hat.prefab
 - Assets/CoreMasterBundle/Items/Pants/AthensRomanBottom/Material.mat
 - Assets/CoreMasterBundle/Effects/Physics/Footstep/Sand_Run/footstep_sand_run_06.wav
 - Assets/CoreMasterBundle/Items/Outfits/Cultist/Cultist_Hat/Item.prefab
@@ -8682,7 +8721,7 @@ Assets:
 - Assets/CoreMasterBundle/Effects/Impacts/Paintball_Yellow_Dynamic/Material_1.mat
 - Assets/CoreMasterBundle/Items/RioRemastered/Free/Rio_Soccer_Top_Greece/Shirt.png
 - Assets/CoreMasterBundle/Sounds/Inventory/HeavyMetalEquipment/foley_soldier_gear_equipment_metal_cloth_heavy_movement_strong_08.wav
-- Assets/CoreMasterBundle/Items/Cali2/CA_Patriotic_Shirt/Shirt.png
+- Assets/CoreMasterBundle/Items/Cali2/Complimentary/CA_Patriotic_Shirt/Shirt.png
 - Assets/CoreMasterBundle/Items/Food/Taro_Poi/Equipable.prefab
 - Assets/CoreMasterBundle/Items/Shirts/Military_Top_Forest/Animations.prefab
 - Assets/CoreMasterBundle/Items/Structures/Doorway_Brick/Item.prefab
@@ -8719,7 +8758,7 @@ Assets:
 - Assets/CoreMasterBundle/Skins/Zubeknakov/Phantox/Skin_Attachment.mat
 - Assets/CoreMasterBundle/Effects/Impacts/Paintball_Red_Dynamic/Particle.mat
 - Assets/CoreMasterBundle/Trees/Bush_5/Resource.prefab
-- Assets/CoreMasterBundle/Items/Cali2/CA_Operator_Bottom_0/Pants.png
+- Assets/CoreMasterBundle/Items/Cali2/Cali2_Operator/CA_Operator_Bottom_0/Pants.png
 - Assets/CoreMasterBundle/Skins/Masterkey/Knitted_Sweater/Skin_Attachment.mat
 - Assets/CoreMasterBundle/Objects/Large/Buildings/Medic_2/Nav.prefab
 - Assets/CoreMasterBundle/Items/Structures/Doorway_Maple/Structure.prefab
@@ -8845,15 +8884,16 @@ Assets:
 - Assets/CoreMasterBundle/Items/Shirts/Skeleton_Top/Item.prefab
 - Assets/CoreMasterBundle/Items/Shirts/Shirt_White/Material.mat
 - Assets/CoreMasterBundle/Skins/Desert_Falcon/CC24_Kitty/Override_Mesh_0.prefab
-- Assets/CoreMasterBundle/Items/Cali2/CA_Tommy_Top/Shirt1.png
+- Assets/CoreMasterBundle/Items/Cali2/Red/CA_Tommy_Top/Shirt1.png
 - Assets/CoreMasterBundle/Items/Elver2/Elver2_Skater_Bottom_Beige/Pants.png
 - Assets/CoreMasterBundle/Skins/Kryzkarek/Spotted/Skin_Attachment.mat
 - Assets/CoreMasterBundle/Items/Structures/Rampart_Maple/Item.prefab
 - Assets/CoreMasterBundle/Items/Dango/Dango_HannyaMask/Item.prefab
 - Assets/CoreMasterBundle/Objects/Medium/Business/Quarry_Conveyor_2/Nav.prefab
-- Assets/CoreMasterBundle/Objects/Large/Buildings/House_04_Burned/Object.prefab
+- Assets/CoreMasterBundle/Mythics/RagdollMaterials/Jaded.mat
 - Assets/CoreMasterBundle/Effects/Explosions/Teleporter/Splat.mat
 - Assets/CoreMasterBundle/Items/Guns/Peacemaker/Shoot.mp3
+- Assets/CoreMasterBundle/Objects/Large/Buildings/House_04_Burned/Object.prefab
 - Assets/CoreMasterBundle/Objects/Medium/Parks/Fountain_0/Nav.prefab
 - Assets/CoreMasterBundle/Objects/Large/Utilities/Billboard_4/Object.prefab
 - Assets/CoreMasterBundle/Items/Buak/Buak_Dino_Shirt/Shirt.png
@@ -8898,7 +8938,7 @@ Assets:
 - Assets/CoreMasterBundle/Items/Food/Sandwich_Goatfish/Item.prefab
 - Assets/CoreMasterBundle/Items/Hats/Engineer_Hat/Hat.prefab
 - Assets/CoreMasterBundle/Items/Shirts/Shirt_Black/Shirt.png
-- Assets/CoreMasterBundle/Items/Cali2/CA_Tac_Cap_0/Hat.prefab
+- Assets/CoreMasterBundle/Items/Cali2/Blue/CA_Tac_Cap_0/Hat.prefab
 - Assets/CoreMasterBundle/Effects/Physics/BulletImpact/Dirt/BulletImpact_Dirt.asset
 - Assets/CoreMasterBundle/Items/Fishers/Rod_Fishing_Upgraded/Cast.mp3
 - Assets/CoreMasterBundle/Items/Shirts/HeadlessShirt/Shirt.png
@@ -8950,7 +8990,7 @@ Assets:
 - Assets/CoreMasterBundle/Objects/Large/Buildings/Airport_2/Skybox.prefab
 - Assets/CoreMasterBundle/Skins/Maplestrike/Arid_Dissipator/Skin_Secondary_1177.mat
 - Assets/CoreMasterBundle/Skins/Maplestrike/Bomber/Skin_Secondary_364.mat
-- Assets/CoreMasterBundle/Items/Cali2/CA_Phone_0/Mask.prefab
+- Assets/CoreMasterBundle/Items/Cali2/Achievement/CA_Phone_0/Mask.prefab
 - Assets/CoreMasterBundle/Items/Medical/Bandage/Item.prefab
 - Assets/CoreMasterBundle/Objects/Large/Buildings/Bunker_5/Slots.prefab
 - Assets/CoreMasterBundle/Items/Kuwait2/Kuwait_Free_Fish_Jammies_Bottom/Pants.png
@@ -9012,7 +9052,7 @@ Assets:
 - Assets/CoreMasterBundle/Objects/Large/Buildings/Barracks_3/Nav.prefab
 - Assets/CoreMasterBundle/Effects/Physics/Footstep/Water_Walk/footstep_water_walk_03.wav
 - Assets/CoreMasterBundle/Items/Shirts/Plaid_Orange_Shirt/Shirt.png
-- Assets/CoreMasterBundle/Items/Cali2/CA_Breacher_Jacket_White/Shirt.png
+- Assets/CoreMasterBundle/Items/Cali2/Complimentary/CA_Breacher_Jacket_White/Shirt.png
 - Assets/CoreMasterBundle/Roads/FourLane_TwoWay.png
 - Assets/CoreMasterBundle/Items/Barricades/Plaque_Pine/Barricade.prefab
 - Assets/CoreMasterBundle/Skins/Avenger/Toy/Skin_Secondary_1022.mat
@@ -9041,16 +9081,17 @@ Assets:
 - Assets/CoreMasterBundle/Items/Melee/XMAS_Saw/Item.prefab
 - Assets/CoreMasterBundle/Items/Hats/Hermes_Helmet/Item.prefab
 - Assets/CoreMasterBundle/Items/Vests/AthensRomanChestplate/Item.prefab
-- Assets/CoreMasterBundle/Skins/Yuri/Bloodsport/Skin_Attachment.mat
+- Assets/CoreMasterBundle/Skins/Heartbreaker/CA_Sealine/Skin_Secondary_296.mat
 - Assets/CoreMasterBundle/Objects/Medium/Quests/Propaganda_Coalition/Propaganda_Coalition_2_On/Object.prefab
 - Assets/CoreMasterBundle/Skins/Cue/Asclepius_Staff/Skin_Primary.mat
 - Assets/CoreMasterBundle/Sounds/Inventory/HeavyMetalEquipment/foley_soldier_gear_equipment_metal_cloth_heavy_movement_strong_02.wav
+- Assets/CoreMasterBundle/Skins/Yuri/Bloodsport/Skin_Attachment.mat
 - Assets/CoreMasterBundle/Objects/Medium/Parks/Hedge_0/Nav.prefab
 - Assets/CoreMasterBundle/Items/Keys/Ragdoll_Effect_SoulCrystal_Green/Item.prefab
 - Assets/CoreMasterBundle/Skins/Nykorev/Sandstorm/Skin_Secondary_127.mat
 - Assets/CoreMasterBundle/Items/Pants/Plague_Bottom/Pants.png
 - Assets/CoreMasterBundle/Items/Pants/Candyland_Ranger_Rootbeer_Bottom/Item.prefab
-- Assets/CoreMasterBundle/Items/Cali2/CA_Lilytop/Hat.prefab
+- Assets/CoreMasterBundle/Items/Cali2/Red/CA_Lilytop/Hat.prefab
 - Assets/CoreMasterBundle/Items/Elver2/Elver2_Tie_Plaid_2/Item.prefab
 - Assets/CoreMasterBundle/Objects/Medium/Military/Spotlight_1/Nav.prefab
 - Assets/CoreMasterBundle/Items/Water/Canned_Cola/Use.mp3
@@ -9175,7 +9216,9 @@ Assets:
 - Assets/CoreMasterBundle/Items/Kuwait/Kuwait_Mask_Tan/Mask.prefab
 - Assets/CoreMasterBundle/Items/Structures/Stairs_Brick/Item.prefab
 - Assets/CoreMasterBundle/Items/Barricades/Trophy_Birch/Animations.prefab
+- Assets/CoreMasterBundle/Skins/Heartbreaker/CA_Sealine/Override_Mesh_0.prefab
 - Assets/CoreMasterBundle/Objects/Medium/Parks/Directions_0/Nav.prefab
+- Assets/CoreMasterBundle/Skins/Heartbreaker/CA_Sealine/Skin_Primary.mat
 - Assets/CoreMasterBundle/Items/Vests/VampireHunter_Vest/Vest.prefab
 - Assets/CoreMasterBundle/Items/Elver/Elver_Tank_Hat/Hat.prefab
 - Assets/CoreMasterBundle/Items/Barricades/Kiln/Barricade.prefab
@@ -9290,9 +9333,9 @@ Assets:
 - Assets/CoreMasterBundle/Items/Structures/Wall_Pine/Item.prefab
 - Assets/CoreMasterBundle/Skins/Scalar/Cutter/Skin_Tertiary.mat
 - Assets/CoreMasterBundle/Items/Pants/Samurai_Bottom/Material.mat
-- Assets/CoreMasterBundle/Items/Cali2/CA_Dual_Top_2/Shirt.png
+- Assets/CoreMasterBundle/Items/Cali2/Complimentary/CA_Dual_Top_2/Shirt.png
 - Assets/CoreMasterBundle/Items/Barricades/Wardrobe_Maple/Animations.prefab
-- Assets/CoreMasterBundle/Items/Cali2/CA_Toaster_Hat_0/Hat.prefab
+- Assets/CoreMasterBundle/Items/Cali2/Blue/CA_Toaster_Hat_0/Hat.prefab
 - Assets/CoreMasterBundle/Items/Guns/Teklowvka/Animations.prefab
 - Assets/CoreMasterBundle/Items/Frost/Frost_Facemask/Item.prefab
 - Assets/CoreMasterBundle/Effects/Impacts/Concrete_Static/Effect.prefab
@@ -9343,7 +9386,7 @@ Assets:
 - Assets/CoreMasterBundle/Items/Barricades/Counter_Pine/Animations.prefab
 - Assets/CoreMasterBundle/Sounds/Inventory/MediumMetalEquipment/foley_soldier_gear_equipment_metal_cloth_heavy_movement_med_02.wav
 - Assets/CoreMasterBundle/Effects/Physics/Footstep/Water_Run/footstep_water_run_05.wav
-- Assets/CoreMasterBundle/Items/Cali2/CA_Bucket_Hat_0/Hat.prefab
+- Assets/CoreMasterBundle/Items/Cali2/Blue/CA_Bucket_Hat_0/Hat.prefab
 - Assets/CoreMasterBundle/Items/Pants/Engineer_Bottom/Pants.png
 - Assets/CoreMasterBundle/Objects/Large/Roads/Road_Tee_Hole/Object.prefab
 - Assets/CoreMasterBundle/Skins/Crossbow/Retro_Sport/Skin_Primary.mat
@@ -9392,7 +9435,7 @@ Assets:
 - Assets/CoreMasterBundle/Items/Outfits/Infernal/Infernal_Skull/Item.prefab
 - Assets/CoreMasterBundle/Items/Pants/Corduroy_Pants_Pro/Pants.png
 - Assets/CoreMasterBundle/Items/Throwables/Flashbang/Bang.mp3
-- Assets/CoreMasterBundle/Items/Cali2/CA_Glasses_7/Glasses.prefab
+- Assets/CoreMasterBundle/Items/Cali2/Complimentary/CA_Glasses_7/Glasses.prefab
 - Assets/CoreMasterBundle/Items/Kuwait/Kuwait_ReadingGlasses/Glasses.prefab
 - Assets/CoreMasterBundle/Items/Barricades/Trophy_Maple/Animations.prefab
 - Assets/CoreMasterBundle/Skins/Patterns/Orange/Skin_Attachment.mat
@@ -9486,7 +9529,7 @@ Assets:
 - Assets/CoreMasterBundle/Objects/Medium/Furniture/Chair_Wood_1/Object.prefab
 - Assets/CoreMasterBundle/Items/Pants/Medic_Bottom/Animations.prefab
 - Assets/CoreMasterBundle/Objects/Medium/Fences/Fence_Stone_0/Nav.prefab
-- Assets/CoreMasterBundle/Items/Cali2/CA_Hoodie_Split_6/Material.mat
+- Assets/CoreMasterBundle/Items/Cali2/Complimentary/CA_Hoodie_Split_6/Material.mat
 - Assets/CoreMasterBundle/Items/Melee/Pan/Item.prefab
 - Assets/CoreMasterBundle/Objects/Large/Vehicles/Moon_Lander/Nav.prefab
 - Assets/CoreMasterBundle/Items/Frost/Frost_Shirt_Black/Material.mat
@@ -9512,7 +9555,7 @@ Assets:
 - Assets/CoreMasterBundle/Items/Guns/Colt/Albedo_Base.png
 - Assets/CoreMasterBundle/Objects/Medium/Parks/Crop_2/Nav.prefab
 - Assets/CoreMasterBundle/Items/Outfits/Arid_Scout/Arid_Scout_Bandana/Item.prefab
-- Assets/CoreMasterBundle/Items/Cali2/CA_Breacher_Bottom_Black/Material.mat
+- Assets/CoreMasterBundle/Items/Cali2/Complimentary/CA_Breacher_Bottom_Black/Material.mat
 - Assets/CoreMasterBundle/Skins/Scalar/Cutter/Skin_Primary.mat
 - Assets/CoreMasterBundle/Objects/Medium/Fences/Fence_Wood_Broken_0/Nav.prefab
 - Assets/CoreMasterBundle/Items/Arid/Arid_Suit_Bottoms_0/Material.mat
@@ -9558,7 +9601,7 @@ Assets:
 - Assets/CoreMasterBundle/Items/Filters/Filter/Use.mp3
 - Assets/CoreMasterBundle/Effects/Physics/BipedLand/Water/footstep_water_land_06.wav
 - Assets/CoreMasterBundle/Items/Outfits/Arid_Scout/Arid_Scout_Pants/Pants.png
-- Assets/CoreMasterBundle/Items/Cali2/CA_Hoodie_Split_3/Material.mat
+- Assets/CoreMasterBundle/Items/Cali2/Complimentary/CA_Hoodie_Split_3/Material.mat
 - Assets/CoreMasterBundle/Effects/Physics/BipedLand/Concrete/BipedLand_Concrete.asset
 - Assets/CoreMasterBundle/Skins/Teklowvka/Blackwidow/Skin_Secondary_1361.mat
 - Assets/CoreMasterBundle/Items/Arid/Arid_Privateer_Top/Item.prefab
@@ -9599,9 +9642,8 @@ Assets:
 - Assets/CoreMasterBundle/Items/Supplies/Stick_Birch/Item.prefab
 - Assets/CoreMasterBundle/Items/Elver2/Elver2_Runic_Cape/Backpack.prefab
 - Assets/CoreMasterBundle/Skins/Kryzkarek/Spotted/Skin_Tertiary.mat
-- Assets/CoreMasterBundle/Items/Cali2/CA_Punk_Top1/Shirt.png
-- Assets/CoreMasterBundle/Items/Vests/Rio_Guard_Sash/Item.prefab
 - Assets/CoreMasterBundle/UI/BlueprintCategoryTagIcons/Supply.png
+- Assets/CoreMasterBundle/Items/Vests/Rio_Guard_Sash/Item.prefab
 - Assets/CoreMasterBundle/Items/Structures/Doorway_Metal/Item.prefab
 - Assets/CoreMasterBundle/Skins/Bluntforce/CC24_DogTag/Override_Mesh_0.prefab
 - Assets/CoreMasterBundle/Items/Barricades/Plate_Large_Birch/Animations.prefab
@@ -9660,11 +9702,11 @@ Assets:
 - Assets/CoreMasterBundle/Objects/Large/Vehicles/Heli_4/Nav.prefab
 - Assets/CoreMasterBundle/Items/Barricades/Spotlight/Barricade.prefab
 - Assets/CoreMasterBundle/Items/Barricades/Garageframe_Pine/Barricade.prefab
+- Assets/CoreMasterBundle/Mythics/CA_Chained_Blue/System_Third.prefab
 - Assets/CoreMasterBundle/Sounds/Inventory/RoughGrab/foley_object_grab_pickup_rough_03.wav
 - Assets/CoreMasterBundle/Objects/Medium/Traffic/Street_Light_0/Nav.prefab
 - Assets/CoreMasterBundle/Items/Pants/Nutcracker_Bottom/Pants.png
 - Assets/CoreMasterBundle/Items/Outfits/PirateCaptain/PirateCaptainBeard/Mask.prefab
-- Assets/Game/Sources/Models/Items/Cali2/Mythics/CA_Chained_Blue/System_Third.prefab
 - Assets/CoreMasterBundle/Items/Limestone/Bundles/LS_Warden/LS_Warden_Helm/Hat.prefab
 - Assets/CoreMasterBundle/Effects/Physics/BulletImpact/Mud/bullet_impact_mud_05.wav
 - Assets/CoreMasterBundle/Items/Hats/FranceRULA_Helmet/Hat.prefab
@@ -9682,7 +9724,7 @@ Assets:
 - Assets/CoreMasterBundle/Items/Pants/Ireland_Revolution_Bottom/Pants.png
 - Assets/CoreMasterBundle/Items/Sights/Red_Kobra_Sight/Metallic_Base.png
 - Assets/CoreMasterBundle/Skins/Ace/Accelerator/Skin_Primary.mat
-- Assets/CoreMasterBundle/Items/Cali2/CA_Dual_Top_4/Shirt.png
+- Assets/CoreMasterBundle/Items/Cali2/Complimentary/CA_Dual_Top_4/Shirt.png
 - Assets/CoreMasterBundle/Items/Shirts/Shirt_Yellow/Animations.prefab
 - Assets/CoreMasterBundle/Items/Elver/Elver_Ski_Green/Glasses.prefab
 - Assets/CoreMasterBundle/Skins/Maplestrike/Bomber/Skin_Secondary_7.mat
@@ -9692,6 +9734,7 @@ Assets:
 - Assets/CoreMasterBundle/Items/Arrest_Starts/Handcuffs_Lock/Use.mp3
 - Assets/CoreMasterBundle/Objects/Small/Quests/Ingredients_03/Object.prefab
 - Assets/CoreMasterBundle/Terrain/Materials/Peaks/Dirt_01.png
+- Assets/CoreMasterBundle/Mythics/CA_Ink_Flame/System_Area.prefab
 - Assets/CoreMasterBundle/Effects/Physics/BipedLand/Grass/footstep_grass_land_03.wav
 - Assets/CoreMasterBundle/Items/Guns/Timberwolf/Albedo_Base.png
 - Assets/CoreMasterBundle/Items/Hats/Viking/Item.prefab
@@ -9707,7 +9750,6 @@ Assets:
 - Assets/CoreMasterBundle/Objects/Large/Vehicles/Heli_2/Nav.prefab
 - Assets/CoreMasterBundle/Items/Vests/Scarf_Blue/Vest.prefab
 - Assets/CoreMasterBundle/Items/Barricades/Umbrella_Blue/Nav.prefab
-- Assets/Game/Sources/Models/Items/Cali2/Mythics/CA_UFO/System_Hook.prefab
 - Assets/CoreMasterBundle/Items/RioRemastered/Premium/Rio_Keyhead/Glasses.prefab
 - Assets/CoreMasterBundle/Items/Structures/Hole_Maple_Triangle/Item.prefab
 - Assets/CoreMasterBundle/Effects/Physics/BulletImpact/Ice/bullet_impact_ice_05.wav
@@ -9845,7 +9887,7 @@ Assets:
 - Assets/CoreMasterBundle/Objects/Large/Buildings/School_1/Skybox.prefab
 - Assets/CoreMasterBundle/Objects/Medium/Signs/Radiation_1/Object.prefab
 - Assets/CoreMasterBundle/Items/Shirts/HalloSkullTop/Material.mat
-- Assets/CoreMasterBundle/Items/Cali2/CA_Mullet_6/Hat.prefab
+- Assets/CoreMasterBundle/Items/Cali2/Complimentary/CA_Mullet_6/Hat.prefab
 - Assets/CoreMasterBundle/Objects/Large/Vehicles/Off_Roader_Orange/Object.prefab
 - Assets/CoreMasterBundle/Objects/Large/Vehicles/Plane_1/Object.prefab
 - Assets/CoreMasterBundle/Skins/Viper/CC24_DevTex/Skin_Secondary_7.mat
@@ -9882,7 +9924,7 @@ Assets:
 - Assets/CoreMasterBundle/Effects/TireMotion/TireMotion_Snow/Effect.prefab
 - Assets/CoreMasterBundle/Items/Barricades/Cot_Red/Item.prefab
 - Assets/CoreMasterBundle/Items/Structures/Post_Pine/Structure.prefab
-- Assets/CoreMasterBundle/Items/Cali2/CA_Checkered_Pants_0/Material.mat
+- Assets/CoreMasterBundle/Items/Cali2/Complimentary/CA_Checkered_Pants_0/Material.mat
 - Assets/CoreMasterBundle/Objects/Medium/Business/Wheel_6/Object.prefab
 - Assets/CoreMasterBundle/Items/Structures/Rampart_Metal/Item.prefab
 - Assets/CoreMasterBundle/Terrain/Foliage/Grass/Washington/Grass_01_Material.mat
@@ -9907,6 +9949,7 @@ Assets:
 - Assets/CoreMasterBundle/Items/Guns/Honeybadger/Hammer.mp3
 - Assets/CoreMasterBundle/Items/Water/Crushed_Amber/Animations.prefab
 - Assets/CoreMasterBundle/Items/Glasses/Monocle_Gold/Item.prefab
+- Assets/CoreMasterBundle/Skins/Heartbreaker/CA_Sealine/Skin_Secondary_147.mat
 - Assets/CoreMasterBundle/Objects/Medium/Parks/Boat_5/Nav.prefab
 - Assets/CoreMasterBundle/Items/Guns/Dragonfang/Albedo_Base.png
 - Assets/CoreMasterBundle/Items/Shirts/Tuxedo_Top_White/Shirt.png
@@ -9924,7 +9967,7 @@ Assets:
 - Assets/CoreMasterBundle/Objects/Large/Roads/Tunnel_Line_0/Skybox.prefab
 - Assets/CoreMasterBundle/Items/Guns/Bane/Animations.prefab
 - Assets/CoreMasterBundle/Items/Shirts/Ghillie_Top_Arctic/Item.prefab
-- Assets/CoreMasterBundle/Items/Cali2/CA_Tagalong_Terence/Vest.prefab
+- Assets/CoreMasterBundle/Items/Cali2/Red/CA_Tagalong_Terence/Vest.prefab
 - Assets/CoreMasterBundle/Objects/Medium/Furniture/Chair_Metal_1/Nav.prefab
 - Assets/CoreMasterBundle/Items/Backpacks/Daypack_Blue/Animations.prefab
 - Assets/CoreMasterBundle/Objects/Large/Vehicles/Racecar_Blue/Object.prefab
@@ -10131,7 +10174,7 @@ Assets:
 - Assets/CoreMasterBundle/Items/Pants/Coastguard_Bottom/Metallic.png
 - Assets/CoreMasterBundle/Effects/General/Drop/Effect.prefab
 - Assets/CoreMasterBundle/Items/Dango/Dango_CargoSalamander/Backpack.prefab
-- Assets/CoreMasterBundle/Items/Cali2/CA_Turtleneck_0/Material.mat
+- Assets/CoreMasterBundle/Items/Cali2/Blue/CA_Turtleneck_0/Material.mat
 - Assets/CoreMasterBundle/Skins/Bat/Candycane/Skin_Primary.mat
 - Assets/CoreMasterBundle/Items/Buak/Buak_S_7_Tee/Material.mat
 - Assets/CoreMasterBundle/Items/Shirts/Hoodie_Offbrand/Material.mat
@@ -10183,7 +10226,7 @@ Assets:
 - Assets/CoreMasterBundle/Items/Barricades/Library_Maple/Item.prefab
 - Assets/CoreMasterBundle/Items/Food/Sandwich_Lobster/Item.prefab
 - Assets/CoreMasterBundle/Sounds/Zombies/Roars/Roar_2.mp3
-- Assets/CoreMasterBundle/Items/Cali2/CA_Keycard_Necklace/Vest.prefab
+- Assets/CoreMasterBundle/Items/Cali2/Achievement/CA_Keycard_Necklace/Vest.prefab
 - Assets/CoreMasterBundle/Items/Beards/2/Texture.png
 - Assets/CoreMasterBundle/Items/Food/Sandwich_Lobster/Equipable.prefab
 - Assets/CoreMasterBundle/Items/Masks/Gingerbread_Mask/Material.mat
@@ -10200,6 +10243,7 @@ Assets:
 - Assets/CoreMasterBundle/Objects/Medium/Furniture/Luggage_Yellow/Nav.prefab
 - Assets/CoreMasterBundle/Objects/Large/Buildings/Tower_Military_1/Slots.prefab
 - Assets/CoreMasterBundle/Objects/Large/Roads/Bridge_Line_Broken_1/Skybox.prefab
+- Assets/CoreMasterBundle/Skins/Heartbreaker/CA_Sealine/Skin_Secondary_6.mat
 - Assets/CoreMasterBundle/Effects/Explosions/Computer_0/Material.mat
 - Assets/CoreMasterBundle/Objects/Large/Utilities/Silo_Grain_1/Skybox.prefab
 - Assets/CoreMasterBundle/Skins/Patterns/Swampmire_512x512/Skin_Primary.mat
@@ -10209,7 +10253,7 @@ Assets:
 - Assets/CoreMasterBundle/Skins/Maplestrike/Voyager/Skin_Secondary_1200.mat
 - Assets/CoreMasterBundle/Items/Throwables/Grenade_Makeshift/Use.mp3
 - Assets/CoreMasterBundle/Sounds/Zombies/Roars/Roar_13.mp3
-- Assets/CoreMasterBundle/Items/Cali2/CA_Glasses_3/Glasses.prefab
+- Assets/CoreMasterBundle/Items/Cali2/Complimentary/CA_Glasses_3/Glasses.prefab
 - Assets/CoreMasterBundle/Items/Elver/Elver_Top_1/Shirt.png
 - Assets/CoreMasterBundle/Items/Structures/Roof_Brick/Item.prefab
 - Assets/CoreMasterBundle/Items/Structures/Hole_Brick/Item.prefab
@@ -10257,18 +10301,18 @@ Assets:
 - Assets/CoreMasterBundle/Skins/Nightraider/Comic/Skin_Attachment.mat
 - Assets/CoreMasterBundle/Skins/Sledgehammer/Imperial_Might/Skin_Primary.mat
 - Assets/CoreMasterBundle/Items/Frost/Frost_Guitar/Backpack.prefab
-- Assets/CoreMasterBundle/Items/Cali2/CA_Breacher_Jacket_Blue/Shirt.png
+- Assets/CoreMasterBundle/Items/Cali2/Complimentary/CA_Breacher_Jacket_Blue/Shirt.png
 - Assets/CoreMasterBundle/Items/Food/Sandwich_Cheesesteak/Equipable.prefab
 - Assets/CoreMasterBundle/Objects/Medium/Business/Podium_1/Object.prefab
 - Assets/CoreMasterBundle/Skins/Heartbreaker/Knitted_Sweater/Skin_Primary.mat
 - Assets/CoreMasterBundle/Items/Backpacks/Diving_Tank/Item.prefab
 - Assets/CoreMasterBundle/Items/Barricades/Oven_Brick/Animations.prefab
 - Assets/CoreMasterBundle/Items/Barricades/Door_Metal/Nav.prefab
-- Assets/CoreMasterBundle/Items/Cali2/CA_Crystalmancy_Bottom/Material.mat
+- Assets/CoreMasterBundle/Items/Cali2/Cali2_Crystalmancer/CA_Crystalmancy_Bottom/Material.mat
 - Assets/CoreMasterBundle/Items/Elver2/Elver2_Tie_Plaid_1/Item.prefab
 - Assets/CoreMasterBundle/Skins/Eaglefire/Pumpkin_Patch/Skin_Attachment.mat
 - Assets/CoreMasterBundle/Items/Barricades/Plate_Large_Birch_Equilateral/Nav.prefab
-- Assets/CoreMasterBundle/Items/Cali2/CA_Breacher_Bottom_Olive/Pants.png
+- Assets/CoreMasterBundle/Items/Cali2/Complimentary/CA_Breacher_Bottom_Olive/Pants.png
 - Assets/CoreMasterBundle/Effects/Physics/BulletCasingBounce/Metal/bullet_shell_bounce_metal2_13.wav
 - Assets/CoreMasterBundle/Skins/Axe_Pick/Rio_Anchor_Pick/Skin_Primary.mat
 - Assets/CoreMasterBundle/Skins/Honeybadger/Taut/Skin_Secondary_148.mat
@@ -10380,7 +10424,6 @@ Assets:
 - Assets/CoreMasterBundle/Items/Elver2/Elver2_Tie_Red/Vest.prefab
 - Assets/CoreMasterBundle/Objects/Large/Vehicles/Ural_Desert/Nav.prefab
 - Assets/CoreMasterBundle/Items/Structures/Wall_Metal/Nav.prefab
-- Assets/CoreMasterBundle/Skins/Axe_Fire/Marked/Metallic.png
 - Assets/CoreMasterBundle/Skins/Bluntforce/Doorkicker/Override_Mesh_0.prefab
 - Assets/CoreMasterBundle/Skins/Peacemaker/Echolocation/Skin_Secondary_1026.mat
 - Assets/CoreMasterBundle/Items/Backpacks/Molt_Wings/Backpack.prefab
@@ -10424,7 +10467,7 @@ Assets:
 - Assets/CoreMasterBundle/Skins/Sabertooth/Era/Skin_Secondary_296.mat
 - Assets/CoreMasterBundle/Items/Outfits/Artist/Artist_Pants/Item.prefab
 - Assets/CoreMasterBundle/Items/Pants/SpringLoadedBoots/Pants_noshiny.png
-- Assets/Game/Sources/Models/Items/Cali2/Mythics/CA_Overloaded/System_Area.prefab
+- Assets/CoreMasterBundle/Mythics/CA_Overloaded/System_Area.prefab
 - Assets/CoreMasterBundle/Effects/Explosions/Metal_0/Texture.png
 - Assets/CoreMasterBundle/Effects/Impacts/Alien_Dynamic/Splatter_0.prefab
 - Assets/CoreMasterBundle/Items/Backpacks/Pack_Spec_Ops/Animations.prefab
@@ -10553,6 +10596,7 @@ Assets:
 - Assets/CoreMasterBundle/Items/Shirts/Ghillie_Top_Arctic/Shirt.png
 - Assets/CoreMasterBundle/Items/Throwables/Smoke_White/Throwable.prefab
 - Assets/CoreMasterBundle/Skins/Timberwolf/Dragon/Skin_Attachment.mat
+- Assets/CoreMasterBundle/Skins/Maplestrike/CA_Adamantine/Skin_Secondary_6.mat
 - Assets/CoreMasterBundle/Items/Limestone/Premium/LS_ImpHair/Hat.prefab
 - Assets/CoreMasterBundle/Effects/Impacts/Paintball_Blue_Dynamic/Splatter_1.prefab
 - Assets/CoreMasterBundle/Items/Food/Lobster_Cooked/Animations.prefab
@@ -10586,7 +10630,7 @@ Assets:
 - Assets/CoreMasterBundle/Items/Throwables/Smoke_Yellow/Animations.prefab
 - Assets/CoreMasterBundle/Skins/Maplestrike/Equalizer/Skin_Primary.mat
 - Assets/CoreMasterBundle/Effects/Explosions/Zombie_3/Effect.prefab
-- Assets/CoreMasterBundle/Items/Cali2/CA_Hoodie_Split_1/Shirt.png
+- Assets/CoreMasterBundle/Items/Cali2/Complimentary/CA_Hoodie_Split_1/Shirt.png
 - Assets/CoreMasterBundle/Items/Pants/Trunks_Green/Material.mat
 - Assets/CoreMasterBundle/Effects/Explosions/Bomb_3/Fire.mp3
 - Assets/CoreMasterBundle/Objects/Large/Roads/Road_Turn_0/Object.prefab
@@ -10645,6 +10689,7 @@ Assets:
 - Assets/CoreMasterBundle/Items/Shirts/Toga_Top/Shirt.png
 - Assets/CoreMasterBundle/Objects/Large/Buildings/Monument_0/Triggers.prefab
 - Assets/CoreMasterBundle/Skins/Heartbreaker/Constellation/Skin_Tertiary.mat
+- Assets/CoreMasterBundle/Skins/Maplestrike/CA_Adamantine/Skin_Secondary_296.mat
 - Assets/CoreMasterBundle/Objects/Medium/Military/Spotlight_0/Nav.prefab
 - Assets/CoreMasterBundle/Items/Barricades/Loom/Nav.prefab
 - Assets/CoreMasterBundle/Objects/Large/Quests/Lasers/Laser_0/Object.prefab
@@ -10657,7 +10702,7 @@ Assets:
 - Assets/CoreMasterBundle/Items/Shirts/Military_Top_Arctic/Item.prefab
 - Assets/CoreMasterBundle/Items/Glasses/Monocle_Gold/Glasses.prefab
 - Assets/CoreMasterBundle/Effects/Explosions/Zombie_6/Texture.png
-- Assets/CoreMasterBundle/Items/Cali2/CA_Mullet_3/Hat.prefab
+- Assets/CoreMasterBundle/Items/Cali2/Complimentary/CA_Mullet_3/Hat.prefab
 - Assets/CoreMasterBundle/Items/Throwables/Flare_Orange/Animations.prefab
 - Assets/CoreMasterBundle/Objects/Large/Vehicles/Van_Purple/Nav.prefab
 - Assets/CoreMasterBundle/Skins/Grizzly/Darkheart/Skin_Tertiary.mat
@@ -10760,7 +10805,7 @@ Assets:
 - Assets/CoreMasterBundle/Items/Barricades/Plaque_Metal/Nav.prefab
 - Assets/CoreMasterBundle/Items/Shirts/Coalition_Top_Private2/Animations.prefab
 - Assets/CoreMasterBundle/Skins/Eaglefire/Toy/Skin_Secondary_146.mat
-- Assets/CoreMasterBundle/Items/Cali2/CA_Shorts_Sports_4/Material.mat
+- Assets/CoreMasterBundle/Items/Cali2/Complimentary/CA_Shorts_Sports_4/Material.mat
 - Assets/CoreMasterBundle/Objects/Large/Buildings/Fire_1/Nav.prefab
 - Assets/CoreMasterBundle/Items/Buak/Buak_Angel_Devil/Item.prefab
 - Assets/CoreMasterBundle/Effects/Impacts/Alien_Dynamic/Material_0_Decal.mat
@@ -10773,7 +10818,7 @@ Assets:
 - Assets/CoreMasterBundle/Items/Barricades/Plate_Small_Birch_Right/Animations.prefab
 - Assets/CoreMasterBundle/Items/Food/Sandwich_Bass/Equipable.prefab
 - Assets/CoreMasterBundle/Trees/Ornament_0/Resource.prefab
-- Assets/CoreMasterBundle/Items/Cali2/CA_Flight_Top/Shirt3.png
+- Assets/CoreMasterBundle/Items/Cali2/Red/CA_Flight_Top/Shirt3.png
 - Assets/CoreMasterBundle/Effects/Explosions/Birch_5/Effect.prefab
 - Assets/CoreMasterBundle/Items/PBS/PBS_Fishing_Overalls_0/Item.prefab
 - Assets/CoreMasterBundle/Items/Pants/Aprix_Bottom/Pants.png
@@ -10798,7 +10843,7 @@ Assets:
 - Assets/CoreMasterBundle/Objects/Medium/Fences/Fence_Wood_0/Object.prefab
 - Assets/CoreMasterBundle/Items/Barricades/Plaque_Maple/Barricade.prefab
 - Assets/CoreMasterBundle/Items/Pants/Trunks_Purple/Material.mat
-- Assets/CoreMasterBundle/Items/Cali2/CA_Crystalmancy_Bottom/Pants.png
+- Assets/CoreMasterBundle/Items/Cali2/Cali2_Crystalmancer/CA_Crystalmancy_Bottom/Pants.png
 - Assets/CoreMasterBundle/Items/Barricades/Umbrella_Red/Animations.prefab
 - Assets/CoreMasterBundle/Items/Melee/Axe_Fire/Item.prefab
 - Assets/CoreMasterBundle/Items/Shirts/Elf_Top/Material.mat
@@ -10819,7 +10864,7 @@ Assets:
 - Assets/CoreMasterBundle/Objects/Large/Vehicles/Sedan_Orange/Object.prefab
 - Assets/CoreMasterBundle/Items/Barricades/Table_Cir_Metal/Barricade.prefab
 - Assets/CoreMasterBundle/Objects/Large/Buildings/Prison_0/Object.prefab
-- Assets/CoreMasterBundle/Items/Cali2/CA_Shorts_Sports_6/Pants.png
+- Assets/CoreMasterBundle/Items/Cali2/Complimentary/CA_Shorts_Sports_6/Pants.png
 - Assets/CoreMasterBundle/Trees/Snow_Pile_00/Resource.prefab
 - Assets/CoreMasterBundle/Items/Guns/Fury/Animations.prefab
 - Assets/CoreMasterBundle/Items/Structures/Floor_Birch/Animations.prefab
@@ -10832,7 +10877,7 @@ Assets:
 - Assets/CoreMasterBundle/Skins/Maplestrike/FranceRULA/Skin_Secondary_6.mat
 - Assets/CoreMasterBundle/Effects/Explosions/Beach_2/Texture.png
 - Assets/CoreMasterBundle/Items/Hats/Toque_Blue/Animations.prefab
-- Assets/CoreMasterBundle/Items/Cali2/CA_Shorts_Sports_0/Material.mat
+- Assets/CoreMasterBundle/Items/Cali2/Complimentary/CA_Shorts_Sports_0/Material.mat
 - Assets/CoreMasterBundle/Items/Pants/Candyland_Ranger_Rootbeer_Bottom/Animations.prefab
 - Assets/CoreMasterBundle/Skins/Scalar/Deimos/Skin_Tertiary.mat
 - Assets/CoreMasterBundle/Effects/Physics/Footstep/MetalLow_Walk/Footstep_MetalLow_Walk.asset
@@ -10922,7 +10967,7 @@ Assets:
 - Assets/CoreMasterBundle/Items/Barricades/Beach_Orange/Nav.prefab
 - Assets/CoreMasterBundle/Items/Shirts/Toga_Top/Item.prefab
 - Assets/CoreMasterBundle/Objects/Medium/Military/Hesco_2/Nav.prefab
-- Assets/CoreMasterBundle/Items/Cali2/CA_Punk_Bottom/Pants.png
+- Assets/CoreMasterBundle/Items/Cali2/Blue/CA_Punk_Bottom/Pants.png
 - Assets/CoreMasterBundle/Items/Barricades/Umbrella/Animations.prefab
 - Assets/CoreMasterBundle/Items/Barricades/Bedroll_Purple/Barricade.prefab
 - Assets/CoreMasterBundle/Mythics/EI_High_Tide/System_Hook.prefab
@@ -10951,10 +10996,10 @@ Assets:
 - Assets/CoreMasterBundle/Objects/Medium/Quests/Teleporter/Indicator_0_Off/Object.prefab
 - Assets/CoreMasterBundle/Effects/Physics/BipedLand/Ice/footstep_ice_crunchy_land_06.wav
 - Assets/CoreMasterBundle/Objects/Medium/Business/AC_1/Object.prefab
-- Assets/CoreMasterBundle/Items/Cali2/CA_Cape_0/Backpack.prefab
+- Assets/CoreMasterBundle/Items/Cali2/Blue/CA_Cape_0/Backpack.prefab
 - Assets/CoreMasterBundle/Items/Pants/Engineer_Bottom/Material.mat
 - Assets/CoreMasterBundle/Items/Shirts/VolcanoKnightTop/Item.prefab
-- Assets/CoreMasterBundle/Items/Cali2/CA_Stubble_1/Mask.prefab
+- Assets/CoreMasterBundle/Items/Cali2/Complimentary/CA_Stubble_1/Mask.prefab
 - Assets/CoreMasterBundle/Skins/Bow_Compound/Hawaii_Seaside/Skin_Primary.mat
 - Assets/CoreMasterBundle/Objects/Medium/Parks/Well_0/Nav.prefab
 - Assets/CoreMasterBundle/Items/Limestone/Premium/LS_AcidBurnShirt/Emission.png
@@ -10975,7 +11020,7 @@ Assets:
 - Assets/CoreMasterBundle/Items/Vests/Ghillie_Vest_Peaks/Item.prefab
 - Assets/CoreMasterBundle/Skins/Matamorez/Agile/Skin_Secondary_1001.mat
 - Assets/CoreMasterBundle/Skins/Pitchfork/Poseidon/Skin_Primary.mat
-- Assets/CoreMasterBundle/Items/Cali2/CA_Quilted_Jacket_Black/Material.mat
+- Assets/CoreMasterBundle/Items/Cali2/Complimentary/CA_Quilted_Jacket_Black/Material.mat
 - Assets/CoreMasterBundle/Skins/Bane/Steampunk/Skin_Attachment.mat
 - Assets/CoreMasterBundle/Skins/Yuri/Yellowcake/Skin_Secondary_1042.mat
 - Assets/CoreMasterBundle/Sounds/Inventory/LightCloth/foley_cloth_light_fast_movement_11.wav
@@ -11003,7 +11048,7 @@ Assets:
 - Assets/CoreMasterBundle/Items/Pants/Corduroy_Shorts/Item.prefab
 - Assets/CoreMasterBundle/Items/Masks/Bandana_Green/Animations.prefab
 - Assets/CoreMasterBundle/Objects/Small/Quests/Big_Snowman_01_Off/Object.prefab
-- Assets/CoreMasterBundle/Items/Cali2/CA_Turtleneck_0/Shirt.png
+- Assets/CoreMasterBundle/Items/Cali2/Blue/CA_Turtleneck_0/Shirt.png
 - Assets/CoreMasterBundle/Items/Barricades/Plate_Small_Birch_Equilateral/Animations.prefab
 - Assets/CoreMasterBundle/Items/Masks/HalloSkullMask/Item.prefab
 - Assets/CoreMasterBundle/Items/Elver2/Elver2_Skater_Top_Pink/Item.prefab
@@ -11018,7 +11063,7 @@ Assets:
 - Assets/CoreMasterBundle/Items/Barricades/Spikes_Maple/Item.prefab
 - Assets/CoreMasterBundle/Items/Buak/Buak_Poncho_Pink/Vest.prefab
 - Assets/CoreMasterBundle/Items/Limestone/Premium/LS_VRHeadset/Item.prefab
-- Assets/CoreMasterBundle/Items/Cali2/CA_Breacher_Bottom_Red/Material.mat
+- Assets/CoreMasterBundle/Items/Cali2/Complimentary/CA_Breacher_Bottom_Red/Material.mat
 - Assets/CoreMasterBundle/Objects/Medium/Furniture/Oven_0/Nav.prefab
 - Assets/CoreMasterBundle/Skins/Timberwolf/Phantox/Skin_Secondary_296.mat
 - Assets/CoreMasterBundle/Items/Masks/Tiki_Angry/Item.prefab
@@ -11027,14 +11072,13 @@ Assets:
 - Assets/CoreMasterBundle/Items/Barricades/Siding_Birch/Item.prefab
 - Assets/CoreMasterBundle/Objects/Small/Traffic/Block_Parking_0/Object.prefab
 - Assets/CoreMasterBundle/Items/Shirts/Coastguard_Top/Material.mat
-- Assets/CoreMasterBundle/Items/Cali2/CA_Breacher_Jacket_Pink/Metallic.png
+- Assets/CoreMasterBundle/Items/Cali2/Complimentary/CA_Breacher_Jacket_Pink/Metallic.png
 - Assets/CoreMasterBundle/Items/PBS/PBS_Fishing_Top_1/Shirt.png
 - Assets/CoreMasterBundle/Skins/Scalar/Insane/Skin_Primary.mat
 - Assets/CoreMasterBundle/Effects/Physics/BulletImpact/Rock/bullet_impact_rock_03.wav
 - Assets/CoreMasterBundle/Items/Magazines/Timberwolf_6/Item.prefab
 - Assets/CoreMasterBundle/Items/Sights/7x_Scope/Metallic_Base.png
 - Assets/CoreMasterBundle/Items/Structures/Pillar_Maple/Animations.prefab
-- Assets/CoreMasterBundle/Skins/Bluntforce/Doorkicker/Primary_Albedo.png
 - Assets/CoreMasterBundle/Effects/Physics/BulletImpact/Water/bullet_impact_water_07.wav
 - Assets/CoreMasterBundle/Objects/Material_Palettes/House_Burned/House_00_Burned.mat
 - Assets/CoreMasterBundle/Items/Pants/Trunks_Yellow/Item.prefab
@@ -11109,7 +11153,7 @@ Assets:
 - Assets/CoreMasterBundle/Items/Masks/Bandana_Web/Item.prefab
 - Assets/CoreMasterBundle/Items/Food/Pie_Vermillion/Equipable.prefab
 - Assets/CoreMasterBundle/Items/Medical/Vaccine/Animations.prefab
-- Assets/CoreMasterBundle/Items/Cali2/CA_Suitcase_0/Backpack.prefab
+- Assets/CoreMasterBundle/Items/Cali2/Achievement/CA_Suitcase_0/Backpack.prefab
 - Assets/CoreMasterBundle/Objects/Large/Buildings/Police_2/Slots.prefab
 - Assets/CoreMasterBundle/Skins/Scalar/UMarine/Skin_Secondary_1004.mat
 - Assets/CoreMasterBundle/Items/PBS/PBS_Cowboy_Hat/Hat.prefab
@@ -11165,7 +11209,7 @@ Assets:
 - Assets/CoreMasterBundle/Skins/Knife_Kitchen/FranceChef/Override_Mesh_0.prefab
 - Assets/CoreMasterBundle/Items/Backpacks/Daypack_Blue/Item.prefab
 - Assets/CoreMasterBundle/Items/Structures/Wall_Ramp_Maple/Structure.prefab
-- Assets/CoreMasterBundle/Items/Cali2/CA_Glasses_4/Glasses.prefab
+- Assets/CoreMasterBundle/Items/Cali2/Complimentary/CA_Glasses_4/Glasses.prefab
 - Assets/CoreMasterBundle/Effects/Physics/Footstep/DirtLoose_Walk/footstep_dirt_loose_walk_run_04.wav
 - Assets/CoreMasterBundle/Items/Barricades/Seed_Vermillion/Item.prefab
 - Assets/CoreMasterBundle/Items/Backpacks/BelgiumInfantry_Backpack/Backpack.prefab
@@ -11184,7 +11228,7 @@ Assets:
 - Assets/CoreMasterBundle/Objects/Medium/Furniture/Cross/Object.prefab
 - Assets/CoreMasterBundle/Effects/Physics/Footstep/MetalHigh_Run/footstep_metal_high_run_17.wav
 - Assets/CoreMasterBundle/Effects/Physics/ShotgunShellBounce/Concrete/ShotgunShell_Land_Concrete_04.wav
-- Assets/CoreMasterBundle/Items/Cali2/CA_Breacher_Bottom_Pink/Pants.png
+- Assets/CoreMasterBundle/Items/Cali2/Complimentary/CA_Breacher_Bottom_Pink/Pants.png
 - Assets/CoreMasterBundle/Items/Barricades/Tanktrap/Barricade.prefab
 - Assets/CoreMasterBundle/Items/Outfits/Shroomy/Shroomy_Hat/Hat.prefab
 - Assets/CoreMasterBundle/Effects/Physics/Footstep/DirtLoose_Walk/footstep_dirt_loose_walk_run_09.wav
@@ -11212,7 +11256,7 @@ Assets:
 - Assets/CoreMasterBundle/Trees/Dead_4/Stump.prefab
 - Assets/CoreMasterBundle/Items/Fishers/Rod_Fishing/Item.prefab
 - Assets/CoreMasterBundle/Items/Barricades/Barrel_Rain/Animations.prefab
-- Assets/CoreMasterBundle/Items/Cali2/CA_Study_Specs_0/Glasses.prefab
+- Assets/CoreMasterBundle/Items/Cali2/Red/CA_Study_Specs_0/Glasses.prefab
 - Assets/CoreMasterBundle/Items/Throwables/Smoke_White/Animations.prefab
 - Assets/CoreMasterBundle/Items/Melee/Knife_Butcher/Animations.prefab
 - Assets/CoreMasterBundle/Skins/Patterns/Honeycomb_1024x1024/Skin_Attachment.mat
@@ -11248,7 +11292,7 @@ Assets:
 - Assets/CoreMasterBundle/Items/Masks/Bowtie_Rainbow_Emission/Item.prefab
 - Assets/CoreMasterBundle/Objects/Mooki/House_12/Object.prefab
 - Assets/CoreMasterBundle/Items/Shirts/Ghillie_Top_Peaks/Shirt.png
-- Assets/CoreMasterBundle/Items/Cali2/CA_Cool_Glasses_0/Glasses.prefab
+- Assets/CoreMasterBundle/Items/Cali2/Blue/CA_Cool_Glasses_0/Glasses.prefab
 - Assets/CoreMasterBundle/Sounds/Inventory/LightClothEquipment/foley_soldier_gear_equipment_rattle_movement_light_05.wav
 - Assets/CoreMasterBundle/Trees/Pine_9/Resource.prefab
 - Assets/CoreMasterBundle/Objects/Small/Quests/Bones/Bone_0/Object.prefab
@@ -11311,7 +11355,7 @@ Assets:
 - Assets/CoreMasterBundle/Objects/Medium/Business/Wine_Storage_0/Nav.prefab
 - Assets/CoreMasterBundle/Items/Hats/P9nda_Hat/Item.prefab
 - Assets/CoreMasterBundle/Objects/Material_Palettes/Apartment/Apartment_3.mat
-- Assets/CoreMasterBundle/Items/Cali2/CA_Chain_G/Vest.prefab
+- Assets/CoreMasterBundle/Items/Cali2/Red/CA_Chain_G/Vest.prefab
 - Assets/CoreMasterBundle/Items/Outfits/Cali_Journalist/Cali_Journalist_Shirt/Shirt.png
 - Assets/CoreMasterBundle/Objects/Large/Roads/Bridge_Line_Cap_4/Skybox.prefab
 - Assets/CoreMasterBundle/Items/Outfits/CanyonArena_Cowboy/Cowboy_Backpack_0/Backpack.prefab
@@ -11395,7 +11439,7 @@ Assets:
 - Assets/CoreMasterBundle/Objects/Large/Roads/Tunnel_Line_Cap_0/Skybox.prefab
 - Assets/CoreMasterBundle/Objects/Large/Military/Door_Chamber/Nav.prefab
 - Assets/CoreMasterBundle/Items/Pants/Swashbuckler_Bottom/Material.mat
-- Assets/CoreMasterBundle/Items/Cali2/CA_Hoodie_Split_4/Shirt.png
+- Assets/CoreMasterBundle/Items/Cali2/Complimentary/CA_Hoodie_Split_4/Shirt.png
 - Assets/CoreMasterBundle/Items/Kuwait2/Kuwait_Free_Fish_Nightcap/Hat.prefab
 - Assets/CoreMasterBundle/Effects/Physics/ShotgunShellBounce/Carpet/ShotgunShellBounce_Carpet.asset
 - Assets/CoreMasterBundle/Objects/Medium/Quests/Propaganda_Coalition/Propaganda_Coalition_4_Off/Object.prefab
@@ -11613,25 +11657,25 @@ Assets:
 - Assets/CoreMasterBundle/Items/Hairs/4/Hair.prefab
 - Assets/CoreMasterBundle/Effects/Physics/BipedLand/Concrete/footstep_concrete_land_v2_05.wav
 - Assets/CoreMasterBundle/Effects/Physics/Footstep/Concrete_Run/footstep_concrete_run_09.wav
-- Assets/CoreMasterBundle/Skins/Hawkhound/Moo/Skin_Secondary_110.mat
+- Assets/CoreMasterBundle/Mythics/CA_Chained_Blue/System_Area.prefab
 - Assets/CoreMasterBundle/Effects/Physics/ShotgunShellBounce/Grass/ShotgunShell_Land_Grass_04.wav
 - Assets/CoreMasterBundle/Items/PBS/PBS_HPA_Pack/Item.prefab
-- Assets/CoreMasterBundle/Skins/Maplestrike/Toy/Skin_Secondary_153.mat
+- Assets/CoreMasterBundle/Skins/Hawkhound/Moo/Skin_Secondary_110.mat
 - Assets/CoreMasterBundle/Items/Hats/Ushanka/Item.prefab
 - Assets/CoreMasterBundle/Terrain/Materials/PEI/Dirt_01.png
 - Assets/CoreMasterBundle/Skins/Grizzly/Knitted_Sweater/Skin_Tertiary.mat
 - Assets/CoreMasterBundle/Skins/Maplestrike/Voyager/Skin_Secondary_1490.mat
 - Assets/CoreMasterBundle/Terrain/Materials/PEI/Stone_01.png
-- Assets/CoreMasterBundle/Skins/Snayperskya/Era/Skin_Secondary_1201.mat
+- Assets/CoreMasterBundle/Skins/Maplestrike/Toy/Skin_Secondary_153.mat
 - Assets/CoreMasterBundle/Items/Vests/Poncho_Purple/Animations.prefab
 - Assets/CoreMasterBundle/Items/Pants/Jeans_Outfit/Pants.png
-- Assets/Game/Sources/Models/Items/Cali2/Mythics/CA_Chained_Blue/System_Hook.prefab
+- Assets/CoreMasterBundle/Skins/Snayperskya/Era/Skin_Secondary_1201.mat
 - Assets/CoreMasterBundle/Effects/Physics/Footstep/Wood_Run/footstep_wood_run_10.wav
 - Assets/CoreMasterBundle/Items/Pants/Tracksuit_Bottom/Item.prefab
 - Assets/CoreMasterBundle/Objects/Medium/Parks/Umbrella_0/Object.prefab
 - Assets/CoreMasterBundle/Items/Barricades/Crate_Maple/Animations.prefab
 - Assets/CoreMasterBundle/Items/Elver2/Elver2_Tie_Navy/Item.prefab
-- Assets/CoreMasterBundle/Items/Cali2/CA_Shorts_Sports_2/Material.mat
+- Assets/CoreMasterBundle/Items/Cali2/Complimentary/CA_Shorts_Sports_2/Material.mat
 - Assets/CoreMasterBundle/Effects/TireMotion/TireMotion_Sand_00/Particle.png
 - Assets/CoreMasterBundle/Items/Guns/Bow_Birch/Item.prefab
 - Assets/CoreMasterBundle/Skins/Nightraider/Comic/Skin_Secondary_123.mat
@@ -11678,6 +11722,7 @@ Assets:
 - Assets/CoreMasterBundle/Objects/Large/Vehicles/Crane_0/Slots.prefab
 - Assets/CoreMasterBundle/Skins/MP40/Captured/Skin_Tertiary.mat
 - Assets/CoreMasterBundle/Objects/Medium/Military/Hesco_0/Nav.prefab
+- Assets/CoreMasterBundle/Skins/Maplestrike/CA_Adamantine/Skin_Secondary_143.mat
 - Assets/CoreMasterBundle/Items/Barricades/Beach_Purple/Barricade.prefab
 - Assets/CoreMasterBundle/Items/Sights/Bane_Iron_Sights/Sight.prefab
 - Assets/CoreMasterBundle/Items/Shirts/Jersey_Thailand/Material.mat
@@ -11750,9 +11795,10 @@ Assets:
 - Assets/CoreMasterBundle/Effects/Impacts/Paintball_Blue_Dynamic/Effect.prefab
 - Assets/CoreMasterBundle/Sounds/Zombies/Roars/Roar_1.mp3
 - Assets/CoreMasterBundle/Skins/Nykorev/CC24_Powertool/Skin_Secondary_128.mat
+- Assets/CoreMasterBundle/Mythics/RagdollMaterials/SoulCrystal_Red.mat
 - Assets/CoreMasterBundle/Items/Guns/Bulldog/Reload.mp3
 - Assets/CoreMasterBundle/Skins/Honeybadger/Insane/Skin_Secondary_17.mat
-- Assets/CoreMasterBundle/Items/Cali2/CA_Breacher_Bottom_Desert/Material.mat
+- Assets/CoreMasterBundle/Items/Cali2/Complimentary/CA_Breacher_Bottom_Desert/Material.mat
 - Assets/CoreMasterBundle/Skins/Katana/Sakura/Skin_Primary.mat
 - Assets/CoreMasterBundle/Items/Masks/Rio_Vacc_Hat/Mask.prefab
 - Assets/CoreMasterBundle/Objects/Material_Palettes/Cardboard/Cardboard_0.mat
@@ -11778,7 +11824,7 @@ Assets:
 - Assets/CoreMasterBundle/Items/Kuwait/Kuwait_Mask_Blue/Item.prefab
 - Assets/CoreMasterBundle/Skins/Bulldog/Phoenix/Skin_Tertiary.mat
 - Assets/CoreMasterBundle/Items/Masks/Balaclava_White/Mask.prefab
-- Assets/CoreMasterBundle/Items/Cali2/CA_Growth_Head/Hat.prefab
+- Assets/CoreMasterBundle/Items/Cali2/Achievement/CA_Growth_Head/Hat.prefab
 - Assets/CoreMasterBundle/Items/Pants/Pirate_Bottom/Material.mat
 - Assets/CoreMasterBundle/Items/Outfits/AutumnComforts/AutumnComforts_Pants/Item.prefab
 - Assets/CoreMasterBundle/Objects/Material_Palettes/House_Burned/House_03_Burned.mat
@@ -11827,10 +11873,10 @@ Assets:
 - Assets/CoreMasterBundle/Items/Barricades/Flag_Metal/Barricade.prefab
 - Assets/CoreMasterBundle/Trees/Clay_1/Stump.prefab
 - Assets/CoreMasterBundle/Items/Structures/Garage_Metal/Structure.prefab
-- Assets/CoreMasterBundle/Items/Cali2/CA_Dual_Top_5/Material.mat
+- Assets/CoreMasterBundle/Items/Cali2/Complimentary/CA_Dual_Top_5/Material.mat
 - Assets/CoreMasterBundle/Items/Shirts/Holiday_Sweater/Item.prefab
 - Assets/CoreMasterBundle/Skins/Determinator/CC24_Deco/Skin_Primary.mat
-- Assets/CoreMasterBundle/Items/Cali2/CA_Hoodie_Split_5/Material.mat
+- Assets/CoreMasterBundle/Items/Cali2/Complimentary/CA_Hoodie_Split_5/Material.mat
 - Assets/CoreMasterBundle/Skins/Bane/Native/Skin_Secondary_1485.mat
 - Assets/CoreMasterBundle/Objects/Large/Scenery/Boulder_22_PEI/Nav.prefab
 - Assets/CoreMasterBundle/Objects/Large/Buildings/Tent_France_1/Skybox.prefab
@@ -11843,7 +11889,6 @@ Assets:
 - Assets/CoreMasterBundle/Items/Outfits/Cali_Journalist/Cali_Journalist_Hat/Hat.prefab
 - Assets/CoreMasterBundle/Items/Hats/Beret_Bug_Report/Hat.prefab
 - Assets/CoreMasterBundle/Items/Halloween2024/HW2_Eye/Mask.prefab
-- Assets/CoreMasterBundle/Skins/Cobra/Bull/Model_0.fbx
 - Assets/CoreMasterBundle/Effects/Physics/Footstep/Concrete_Walk/footstep_concrete_walk_22.wav
 - Assets/CoreMasterBundle/Objects/Large/Buildings/Apartment_2/Slots.prefab
 - Assets/CoreMasterBundle/Items/Vests/Sweatervest_Blue/Animations.prefab
@@ -11917,6 +11962,7 @@ Assets:
 - Assets/CoreMasterBundle/Items/Water/Crushed_Russet/Animations.prefab
 - Assets/CoreMasterBundle/Items/Barricades/Crate_Pine/Animations.prefab
 - Assets/CoreMasterBundle/Items/Backpacks/Candyland_Cottontail_Ops_Tail/Item.prefab
+- Assets/CoreMasterBundle/Skins/Heartbreaker/CA_Sealine/Skin_Secondary_151.mat
 - Assets/CoreMasterBundle/Objects/Large/Buildings/Tent_France_0/Nav.prefab
 - Assets/CoreMasterBundle/Items/Food/Taro_Mooncake/Animations.prefab
 - Assets/CoreMasterBundle/Effects/Explosions/Bomb_0/Smoke.png
@@ -11944,7 +11990,7 @@ Assets:
 - Assets/CoreMasterBundle/Items/Backpacks/AthensRomanCloak/Item.prefab
 - Assets/CoreMasterBundle/Objects/Medium/Business/Control_5/Nav.prefab
 - Assets/CoreMasterBundle/Items/Pants/Thief_Bottom/Material.mat
-- Assets/CoreMasterBundle/Items/Cali2/CA_Glasses_6/Glasses.prefab
+- Assets/CoreMasterBundle/Items/Cali2/Complimentary/CA_Glasses_6/Glasses.prefab
 - Assets/CoreMasterBundle/Items/Keys/Stat_Tracker_Total_Kills/Item.prefab
 - Assets/CoreMasterBundle/Objects/Large/Buildings/School_1/Nav.prefab
 - Assets/CoreMasterBundle/Objects/Medium/Fences/Fence_Coalition_0/Object.prefab
@@ -11954,7 +12000,7 @@ Assets:
 - Assets/CoreMasterBundle/Items/Magazines/Military_30/Magazine.prefab
 - Assets/CoreMasterBundle/Effects/Explosions/Souls_2/Effect.prefab
 - Assets/CoreMasterBundle/Items/Vests/Ghillie_Vest_Arctic/Vest.prefab
-- Assets/CoreMasterBundle/Items/Cali2/CA_Jammer_Pack_0/Backpack.prefab
+- Assets/CoreMasterBundle/Items/Cali2/Blue/CA_Jammer_Pack_0/Backpack.prefab
 - Assets/CoreMasterBundle/Effects/Impacts/Wood_Dynamic/Particle.mat
 - Assets/CoreMasterBundle/Items/Tools/Vehicle_Spraypaint_Turquoise/Item.prefab
 - Assets/CoreMasterBundle/Items/RioRemastered/Free/Crop_Top/Rio_Crop_Orange/Shirt.png
@@ -12035,6 +12081,7 @@ Assets:
 - Assets/CoreMasterBundle/Items/Faces/17/Texture.png
 - Assets/CoreMasterBundle/Items/Food/Tomato/Animations.prefab
 - Assets/CoreMasterBundle/Items/Backpacks/Squid_Backpack/Backpack.prefab
+- Assets/CoreMasterBundle/Mythics/CA_Angry/System_Area.prefab
 - Assets/CoreMasterBundle/Items/Food/XMAS_Chicken/Item.prefab
 - Assets/CoreMasterBundle/Items/Barricades/Bedroll_White/Animations.prefab
 - Assets/CoreMasterBundle/Items/Masks/Bowtie_Gold/Item.prefab
@@ -12051,7 +12098,7 @@ Assets:
 - Assets/CoreMasterBundle/Terrain/Materials/Peaks/Dirt_02_Source.psd
 - Assets/CoreMasterBundle/Skins/Bulldog/Giftwrapped/Skin_Primary.mat
 - Assets/CoreMasterBundle/Objects/Medium/Furniture/Throne_0/Object.prefab
-- Assets/CoreMasterBundle/Items/Cali2/CA_Dual_Top_5/Shirt.png
+- Assets/CoreMasterBundle/Items/Cali2/Complimentary/CA_Dual_Top_5/Shirt.png
 - Assets/CoreMasterBundle/Items/Barricades/Barbedwire/Use.mp3
 - Assets/CoreMasterBundle/Objects/Large/Buildings/Research_1/Object.prefab
 - Assets/CoreMasterBundle/Items/Limestone/Extras/LS_SkiMask_2/Item.prefab
@@ -12068,13 +12115,13 @@ Assets:
 - Assets/CoreMasterBundle/Items/Barricades/FoodPrepStation/Nav.prefab
 - Assets/CoreMasterBundle/Terrain/Foliage/Grass/Washington/Grass_00_Material.mat
 - Assets/CoreMasterBundle/Items/Barricades/Beach_Green/Barricade.prefab
-- Assets/CoreMasterBundle/Items/Cali2/CA_Shorts_Sports_2/Pants.png
+- Assets/CoreMasterBundle/Items/Cali2/Complimentary/CA_Shorts_Sports_2/Pants.png
 - Assets/CoreMasterBundle/Items/Guns/Bulldog/Animations.prefab
 - Assets/CoreMasterBundle/Objects/Large/Buildings/Fire_0/Slots.prefab
 - Assets/CoreMasterBundle/Trees/Clay_4/Stump.prefab
 - Assets/CoreMasterBundle/Items/Barricades/Stack_Log_Maple/Nav.prefab
 - Assets/CoreMasterBundle/Skins/Snayperskya/Nativ/Skin_Primary.mat
-- Assets/CoreMasterBundle/Items/Cali2/CA_Quilted_Jacket_Green/Material.mat
+- Assets/CoreMasterBundle/Items/Cali2/Complimentary/CA_Quilted_Jacket_Green/Material.mat
 - Assets/CoreMasterBundle/Objects/Large/Scenery/Grass_France_0/Skybox.prefab
 - Assets/CoreMasterBundle/Effects/Explosions/Maple_1/Material.mat
 - Assets/CoreMasterBundle/Animals/Wolf/Animal_Client.prefab
@@ -12191,7 +12238,7 @@ Assets:
 - Assets/CoreMasterBundle/Items/Arid/Arid_Suit_Bottoms_3/Item.prefab
 - Assets/CoreMasterBundle/Items/Outfits/LuBu/LuBuTop/Item.prefab
 - Assets/CoreMasterBundle/Sounds/EatPizza.mp3
-- Assets/CoreMasterBundle/Items/Cali2/CA_Breacher_Jacket_Black/Metallic.png
+- Assets/CoreMasterBundle/Items/Cali2/Complimentary/CA_Breacher_Jacket_Black/Metallic.png
 - Assets/CoreMasterBundle/Items/Barricades/Stack_Log_Birch/Animations.prefab
 - Assets/CoreMasterBundle/Skins/Sabertooth/Era/Skin_Secondary_21.mat
 - Assets/CoreMasterBundle/Items/Arid/Arid_Fancy_Glasses/Glasses.prefab
@@ -12228,6 +12275,7 @@ Assets:
 - Assets/CoreMasterBundle/Effects/Explosions/Water_1/Particle.png
 - Assets/CoreMasterBundle/Effects/Impacts/Metal_Static/Texture.png
 - Assets/CoreMasterBundle/Items/Pants/Grocer_Bottom/Pants.png
+- Assets/CoreMasterBundle/Mythics/CA_Ink_Flame/System_Hook.prefab
 - Assets/CoreMasterBundle/Items/Outfits/PlagueHunter/PHMask/Item.prefab
 - Assets/CoreMasterBundle/Trees/Bush_4/Resource.prefab
 - Assets/CoreMasterBundle/Items/Food/Canned_Bacon/Equipable.prefab
@@ -12251,7 +12299,7 @@ Assets:
 - Assets/CoreMasterBundle/Skins/Viper/CC24_DevTex/Skin_Secondary_143.mat
 - Assets/CoreMasterBundle/Items/Pants/Cargo_Pants/Animations.prefab
 - Assets/CoreMasterBundle/Items/Barricades/Frame_Small_Maple/Item.prefab
-- Assets/CoreMasterBundle/Items/Cali2/CA_Punk_Hair_0/Hat.prefab
+- Assets/CoreMasterBundle/Items/Cali2/Blue/CA_Punk_Hair_0/Hat.prefab
 - Assets/CoreMasterBundle/Items/Barricades/Plate_Small_Maple/Nav.prefab
 - Assets/CoreMasterBundle/Items/Shirts/Coalition_Top_Lieutenant2/Material.mat
 - Assets/CoreMasterBundle/Skins/Grizzly/Aeon/Skin_Tertiary.mat
@@ -12280,7 +12328,6 @@ Assets:
 - Assets/CoreMasterBundle/Objects/Large/Utilities/Radar_0/Object.prefab
 - Assets/CoreMasterBundle/Objects/Large/Utilities/Silo_Grain_1/Triggers.prefab
 - Assets/CoreMasterBundle/Items/Guns/Grizzly/Hammer.mp3
-- Assets/CoreMasterBundle/Skins/Chainsaw/Bucket-wheel Excavator/Skin_Primary.mat
 - Assets/CoreMasterBundle/Items/Shirts/Coalition_Top_Lieutenant/Shirt.png
 - Assets/CoreMasterBundle/Items/Hats/Military_Helmet_Spec_Ops/Animations.prefab
 - Assets/CoreMasterBundle/Terrain/Foliage/Pebbles/Pebble_00_Material.mat
@@ -12296,7 +12343,7 @@ Assets:
 - Assets/CoreMasterBundle/Items/Guns/Empire/Animations.prefab
 - Assets/CoreMasterBundle/Effects/Physics/BulletImpact/Dirt/bullet_impact_dirt_01.wav
 - Assets/CoreMasterBundle/Skins/Nightraider/Element_A/Skin_Secondary_123.mat
-- Assets/CoreMasterBundle/Items/Cali2/CA_Dual_Top_0/Shirt.png
+- Assets/CoreMasterBundle/Items/Cali2/Complimentary/CA_Dual_Top_0/Shirt.png
 - Assets/CoreMasterBundle/Skins/Teklowvka/Powertool/Skin_Primary.mat
 - Assets/CoreMasterBundle/Effects/Impacts/Wood_Dynamic/Wood.mp3
 - Assets/CoreMasterBundle/Items/Outfits/Arid_Tourist/Arid_Tourist_Top/Item.prefab
@@ -12326,7 +12373,7 @@ Assets:
 - Assets/CoreMasterBundle/Items/Shirts/Carpat_Lastman_Shirt/Material.mat
 - Assets/CoreMasterBundle/Objects/Large/Utilities/Tower_Water_0/Object.prefab
 - Assets/CoreMasterBundle/Mythics/Ornamental/System_First.prefab
-- Assets/CoreMasterBundle/Items/Cali2/CA_Shorts_Sports_6/Material.mat
+- Assets/CoreMasterBundle/Items/Cali2/Complimentary/CA_Shorts_Sports_6/Material.mat
 - Assets/CoreMasterBundle/Items/Hats/Nutcracker_Hat/Item.prefab
 - Assets/CoreMasterBundle/Animals/Moose/Animal_Dedicated.prefab
 - Assets/CoreMasterBundle/Objects/Large/Buildings/Office_0/Object.prefab
@@ -12408,7 +12455,7 @@ Assets:
 - Assets/CoreMasterBundle/Skins/Zubeknakov/Spiritual/Override_Mesh_0.prefab
 - Assets/CoreMasterBundle/Items/Shirts/Hoodie_Elephant/Shirt.png
 - Assets/CoreMasterBundle/Animals/Cow/Ragdoll.prefab
-- Assets/CoreMasterBundle/Items/Cali2/CA_Breacher_Jacket_White/Material.mat
+- Assets/CoreMasterBundle/Items/Cali2/Complimentary/CA_Breacher_Jacket_White/Material.mat
 - Assets/CoreMasterBundle/Effects/Explosions/Bomb_6/Effect.prefab
 - Assets/CoreMasterBundle/Items/Frost/Frost_Jacket_Biker/Item.prefab
 - Assets/CoreMasterBundle/Items/Elver/Elver_Raccoon/Item.prefab
@@ -12431,7 +12478,7 @@ Assets:
 - Assets/CoreMasterBundle/Objects/Medium/Military/Hesco_0/Object.prefab
 - Assets/CoreMasterBundle/Objects/Small/Overgrowth/Icicle_1/Object.prefab
 - Assets/CoreMasterBundle/Items/Magazines/Teklowvka_15/Item.prefab
-- Assets/CoreMasterBundle/Items/Cali2/CA_Quilted_Jacket_White/Material.mat
+- Assets/CoreMasterBundle/Items/Cali2/Complimentary/CA_Quilted_Jacket_White/Material.mat
 - Assets/CoreMasterBundle/Objects/Material_Palettes/Bed/Bed_0.mat
 - Assets/CoreMasterBundle/Mythics/PBS_Purple_Hole_Aura/System_Hook.prefab
 - Assets/CoreMasterBundle/Items/Supplies/Log_Pine/Item.prefab
@@ -12505,7 +12552,7 @@ Assets:
 - Assets/CoreMasterBundle/Effects/Explosions/XMAS_Present_00/Present.mp3
 - Assets/CoreMasterBundle/Objects/Large/Buildings/Mechanic_1/Skybox.prefab
 - Assets/CoreMasterBundle/Skins/Eaglefire/Pumpkin_Patch/Skin_Secondary_5.mat
-- Assets/CoreMasterBundle/Items/Cali2/CA_Checkered_Pants_5/Pants.png
+- Assets/CoreMasterBundle/Items/Cali2/Complimentary/CA_Checkered_Pants_5/Pants.png
 - Assets/CoreMasterBundle/Items/Structures/Post_Brick/Structure.prefab
 - Assets/CoreMasterBundle/Skins/Bane/Nativ/Skin_Primary.mat
 - Assets/CoreMasterBundle/Effects/Physics/BipedLand/Wood/footstep_wood_land_v2_06.wav
@@ -12708,6 +12755,7 @@ Assets:
 - Assets/CoreMasterBundle/Mythics/Rio_Toxic/System_Area.prefab
 - Assets/CoreMasterBundle/Items/Kuwait/Kuwait_SandstormCrusader/Item.prefab
 - Assets/CoreMasterBundle/Effects/Explosions/Birch_0/Texture.png
+- Assets/CoreMasterBundle/Mythics/RagdollMaterials/Rosegold.mat
 - Assets/CoreMasterBundle/Items/Shirts/Coalition_Top_Colonel2/Animations.prefab
 - Assets/CoreMasterBundle/Items/Faces/30/Texture.png
 - Assets/CoreMasterBundle/Items/Hats/Reindeer_Beanie/Hat.prefab
@@ -12715,7 +12763,7 @@ Assets:
 - Assets/CoreMasterBundle/Items/Barricades/Stack_Sheet/Item.prefab
 - Assets/CoreMasterBundle/Items/Shirts/Shirt_Yellow/Shirt.png
 - Assets/CoreMasterBundle/Items/Sights/Maplestrike_Iron_Sights/Sight.prefab
-- Assets/CoreMasterBundle/Items/Cali2/CA_Glasses_0/Glasses.prefab
+- Assets/CoreMasterBundle/Items/Cali2/Complimentary/CA_Glasses_0/Glasses.prefab
 - Assets/CoreMasterBundle/Objects/Medium/Furniture/Ladder_Wood_0/Object.prefab
 - Assets/CoreMasterBundle/Objects/Small/Quests/Zweihander_Returnable/Object.prefab
 - Assets/CoreMasterBundle/Effects/Impacts/Paintball_Green_Dynamic/Material_0.mat
@@ -12777,7 +12825,7 @@ Assets:
 - Assets/CoreMasterBundle/Items/Hats/Crown/Item.prefab
 - Assets/CoreMasterBundle/Effects/Physics/Footstep/Wood_Walk/footstep_wood_walk_09.wav
 - Assets/CoreMasterBundle/Skins/Peacemaker/Insane/Skin_Secondary_296.mat
-- Assets/CoreMasterBundle/Items/Cali2/CA_Operator_Glasses_0/Glasses.prefab
+- Assets/CoreMasterBundle/Items/Cali2/Cali2_Operator/CA_Operator_Glasses_0/Glasses.prefab
 - Assets/CoreMasterBundle/Items/Shirts/Coalition_Top_Ensign/Item.prefab
 - Assets/CoreMasterBundle/Items/Vests/ChefZombiePlush/Vest.prefab
 - Assets/CoreMasterBundle/Items/Hats/Anniversary_0_Purple/Item.prefab
@@ -12800,6 +12848,7 @@ Assets:
 - Assets/CoreMasterBundle/Trees/Maple_2/Debris.prefab
 - Assets/CoreMasterBundle/Items/Barricades/Oven_Electric/Item.prefab
 - Assets/CoreMasterBundle/Items/Guns/Ekho/Animations.prefab
+- Assets/CoreMasterBundle/Mythics/CA_Starfall/System_First.prefab
 - Assets/CoreMasterBundle/Effects/Physics/Footstep/Dirt_Walk/footstep_dirt_walk_run_08.wav
 - Assets/CoreMasterBundle/Items/Outfits/CanyonArena_Militia/Militia_Bottoms/Item.prefab
 - Assets/CoreMasterBundle/Items/Beards/15/Beard.prefab
@@ -12808,6 +12857,7 @@ Assets:
 - Assets/CoreMasterBundle/Skins/Hawkhound/Overkill/Skin_Attachment.mat
 - Assets/CoreMasterBundle/Skins/Pan/Rio_Stop_Pan/Skin_Primary.mat
 - Assets/CoreMasterBundle/Items/Frost/Frost_Overalls_Black/Pants.png
+- Assets/CoreMasterBundle/Skins/Heartbreaker/CA_Sealine/Skin_Secondary_8.mat
 - Assets/CoreMasterBundle/Trees/Birch_4/Stump.prefab
 - Assets/CoreMasterBundle/Skins/Zubeknakov/East_2/Skin_Primary.mat
 - Assets/CoreMasterBundle/Items/Barricades/Oven_Brick/Item.prefab
@@ -12840,7 +12890,7 @@ Assets:
 - Assets/CoreMasterBundle/Items/Throwables/Flare_Purple/Item.prefab
 - Assets/CoreMasterBundle/Items/Arid/Arid_Hockey_Mask_Black/Mask.prefab
 - Assets/CoreMasterBundle/Effects/Physics/BipedLand/Snow/footstep_snow_land_05.wav
-- Assets/CoreMasterBundle/Items/Cali2/CA_Stubble_5/Mask.prefab
+- Assets/CoreMasterBundle/Items/Cali2/Complimentary/CA_Stubble_5/Mask.prefab
 - Assets/CoreMasterBundle/Items/RioRemastered/Free/Rio_Soccer_Top_Korea/Item.prefab
 - Assets/CoreMasterBundle/Objects/Large/Vehicles/Roadster_Orange/Object.prefab
 - Assets/CoreMasterBundle/Effects/Physics/Footstep/Dirt_Walk/footstep_dirt_walk_run_07.wav
@@ -12868,6 +12918,7 @@ Assets:
 - Assets/CoreMasterBundle/Items/Barricades/Table_Rect_Maple/Nav.prefab
 - Assets/CoreMasterBundle/Items/Barricades/Cot_Purple/Barricade.prefab
 - Assets/CoreMasterBundle/Objects/Large/Buildings/Gas_1/Slots.prefab
+- Assets/CoreMasterBundle/Skins/Maplestrike/CA_Adamantine/Skin_Tertiary.mat
 - Assets/CoreMasterBundle/Skins/Matamorez/Comic/Skin_Secondary_1003.mat
 - Assets/CoreMasterBundle/Objects/Large/Roads/Bridge_Line_Cap_5/Object.prefab
 - Assets/CoreMasterBundle/Items/Barricades/Fortification_Pine/Barricade.prefab
@@ -12898,8 +12949,8 @@ Assets:
 - Assets/CoreMasterBundle/Items/Boxes/Mystery_Box_3/Item.prefab
 - Assets/CoreMasterBundle/Mythics/Arid_Electrostatic/System_Area.prefab
 - Assets/CoreMasterBundle/Items/Pants/Lederhosen_Bottom/Item.prefab
-- Assets/CoreMasterBundle/Items/Cali2/CA_Stubble_0/Mask.prefab
-- Assets/CoreMasterBundle/Items/Cali2/CA_Chemical_Top/Shirt.png
+- Assets/CoreMasterBundle/Items/Cali2/Complimentary/CA_Stubble_0/Mask.prefab
+- Assets/CoreMasterBundle/Items/Cali2/Complimentary/CA_Chemical_Top/Shirt.png
 - Assets/CoreMasterBundle/Items/Barricades/Doorframe_Maple/Barricade.prefab
 - Assets/CoreMasterBundle/Items/Pants/Gray_Bottom_4/Material.mat
 - Assets/CoreMasterBundle/Objects/Large/Buildings/Office_2/Skybox.prefab
@@ -13007,7 +13058,7 @@ Assets:
 - Assets/CoreMasterBundle/Mythics/Bubbling/System_Third.prefab
 - Assets/CoreMasterBundle/Items/Buak/Buak_Poncho_Purple/Item.prefab
 - Assets/CoreMasterBundle/Sounds/Zombies/DL_Volatile/volatile00_death_00.wav
-- Assets/CoreMasterBundle/Items/Cali2/CA_Checkered_Pants_0/Pants.png
+- Assets/CoreMasterBundle/Items/Cali2/Complimentary/CA_Checkered_Pants_0/Pants.png
 - Assets/CoreMasterBundle/Items/Pants/Carpat_Traditional_Pants/Item.prefab
 - Assets/CoreMasterBundle/Items/Barricades/Plate_Small_Metal/Nav.prefab
 - Assets/CoreMasterBundle/Items/Barricades/Frame_Large_Birch/Item.prefab
@@ -13136,7 +13187,6 @@ Assets:
 - Assets/CoreMasterBundle/Objects/Large/Vehicles/Off_Roader_Green/Nav.prefab
 - Assets/CoreMasterBundle/Items/Pants/Jeans_Outfit_Pro/Material.mat
 - Assets/CoreMasterBundle/Items/Vests/Tie_Rainbow/Vest.prefab
-- Assets/CoreMasterBundle/Items/Cali2/CA_Soda_Cap_0/Hat.prefab
 - Assets/CoreMasterBundle/Sounds/Inventory/SmallMetal/metal_hit_small_03.wav
 - Assets/CoreMasterBundle/Effects/Explosions/Zombie_3/Material_2.mat
 - Assets/CoreMasterBundle/Effects/Impacts/Gravel_WithDecal_NoAudio/Texture.png
@@ -13240,10 +13290,11 @@ Assets:
 - Assets/CoreMasterBundle/Objects/Medium/Traffic/Fire_Hydrant_0/Object.prefab
 - Assets/CoreMasterBundle/Objects/Small/Furniture/Book_Green/Object.prefab
 - Assets/CoreMasterBundle/Items/Pants/Trunks_Blue/Pants.png
-- Assets/CoreMasterBundle/Items/Cali2/CA_Glasses_2/Glasses.prefab
+- Assets/CoreMasterBundle/Items/Cali2/Complimentary/CA_Glasses_2/Glasses.prefab
 - Assets/CoreMasterBundle/Objects/Large/Buildings/Tower_Airport_1/Skybox.prefab
 - Assets/CoreMasterBundle/Items/Hats/Anniversary_1_Red/Item.prefab
 - Assets/CoreMasterBundle/Skins/Augewehr/Milspec/Skin_Tertiary.mat
+- Assets/CoreMasterBundle/Skins/Heartbreaker/CA_Sealine/Skin_Secondary_1038.mat
 - Assets/CoreMasterBundle/Items/Barricades/Plate_Large_Maple/Item.prefab
 - Assets/CoreMasterBundle/Objects/Small/Quests/Quest_Present_04/Object.prefab
 - Assets/CoreMasterBundle/Skins/Maplestrike/Bomber/Skin_Secondary_17.mat
@@ -13317,6 +13368,7 @@ Assets:
 - Assets/CoreMasterBundle/Items/Glasses/Shades/Item.prefab
 - Assets/CoreMasterBundle/Objects/Small/Quests/Artifacts/Artifact_1/Object.prefab
 - Assets/CoreMasterBundle/Items/Barricades/Beach_Green/Animations.prefab
+- Assets/CoreMasterBundle/Skins/Maplestrike/CA_Adamantine/Skin_Primary.mat
 - Assets/CoreMasterBundle/Items/Pants/Thief_Bottom/Pants.png
 - Assets/CoreMasterBundle/Items/Outfits/Beekeeper/Beekeeper_Backpack/Backpack.prefab
 - Assets/CoreMasterBundle/Items/Hats/HalloSkullHat/Item.prefab
@@ -13359,7 +13411,6 @@ Assets:
 - Assets/CoreMasterBundle/Skins/Viper/UMarine/Skin_Secondary_1029.mat
 - Assets/CoreMasterBundle/Effects/Explosions/XMAS_Cane_00/Material.mat
 - Assets/CoreMasterBundle/Items/Shirts/Hoodie_Orange/Item.prefab
-- Assets/CoreMasterBundle/Skins/Bluntforce/Doorkicker/Model_0.fbx
 - Assets/CoreMasterBundle/Objects/Medium/Furniture/Tub_0/Nav.prefab
 - Assets/CoreMasterBundle/Skins/Honeybadger/Taut/Skin_Secondary_146.mat
 - Assets/CoreMasterBundle/Effects/Physics/Footstep/Sand_Run/footstep_sand_run_17.wav
@@ -13397,7 +13448,7 @@ Assets:
 - Assets/CoreMasterBundle/Skins/Fusilaut/Comic/Skin_Secondary_123.mat
 - Assets/CoreMasterBundle/Items/Masks/Headphones/Mask.prefab
 - Assets/CoreMasterBundle/Skins/Patterns/Swampmire_1024x1024/Skin_Tertiary.mat
-- Assets/CoreMasterBundle/Items/Cali2/CA_Breacher_Jacket_Red/Metallic.png
+- Assets/CoreMasterBundle/Items/Cali2/Complimentary/CA_Breacher_Jacket_Red/Metallic.png
 - Assets/CoreMasterBundle/Items/Pants/Jeans_Designer/Material.mat
 - Assets/CoreMasterBundle/Effects/Physics/Footstep/MetalHigh_Run/footstep_metal_high_run_01.wav
 - Assets/CoreMasterBundle/Items/Barricades/Stack_Log_Pine/Barricade.prefab
@@ -13448,7 +13499,7 @@ Assets:
 - Assets/CoreMasterBundle/Skins/Zubeknakov/Nibbler/Skin_Primary.mat
 - Assets/CoreMasterBundle/Trees/Dead_4/Debris.prefab
 - Assets/CoreMasterBundle/Items/Food/Canned_Beef/Item.prefab
-- Assets/CoreMasterBundle/Items/Cali2/CA_Flight_Top/Shirt.png
+- Assets/CoreMasterBundle/Items/Cali2/Red/CA_Flight_Top/Shirt.png
 - Assets/CoreMasterBundle/Items/Barricades/Caltrop/Use.mp3
 - Assets/CoreMasterBundle/Items/Barricades/Trophy_Birch/Barricade.prefab
 - Assets/CoreMasterBundle/Objects/Large/Buildings/Gas_2/Skybox.prefab
@@ -13514,8 +13565,9 @@ Assets:
 - Assets/CoreMasterBundle/Effects/Impacts/Paintball_Red_Dynamic/Texture_0.png
 - Assets/CoreMasterBundle/Items/Barricades/Shutter_Pine/Item.prefab
 - Assets/CoreMasterBundle/Items/Barricades/Sign_Pine/Barricade.prefab
-- Assets/CoreMasterBundle/Items/Cali2/CA_Breacher_Jacket_Olive/Material.mat
+- Assets/CoreMasterBundle/Items/Cali2/Complimentary/CA_Breacher_Jacket_Olive/Material.mat
 - Assets/CoreMasterBundle/Items/Barricades/Tanktrap/Item.prefab
+- Assets/CoreMasterBundle/Skins/Heartbreaker/CA_Sealine/Skin_Secondary_145.mat
 - Assets/CoreMasterBundle/Items/Sights/Maplestrike_Iron_Sights/Item.prefab
 - Assets/CoreMasterBundle/Effects/Physics/Footstep/MetalLow_Run/footstep_metal_low_run_11.wav
 - Assets/CoreMasterBundle/Items/Hats/Pickelhaube/Hat.prefab
@@ -13571,7 +13623,7 @@ Assets:
 - Assets/CoreMasterBundle/Items/Arid/Arid_Ponyhair/Item.prefab
 - Assets/CoreMasterBundle/Items/Buak/Buak_Scorpion/Item.prefab
 - Assets/CoreMasterBundle/Items/Tools/Vehicle_Spraypaint_Magenta/Animations.prefab
-- Assets/CoreMasterBundle/Items/Cali2/CA_Dual_Top_0/Material.mat
+- Assets/CoreMasterBundle/Items/Cali2/Complimentary/CA_Dual_Top_0/Material.mat
 - Assets/CoreMasterBundle/Items/Outfits/Demon/DemonShirt/Shirt.png
 - Assets/CoreMasterBundle/Effects/Explosions/Pine_3/Material.mat
 - Assets/CoreMasterBundle/Effects/General/Beep/Beep.mp3
@@ -13661,6 +13713,7 @@ Assets:
 - Assets/CoreMasterBundle/Items/Pants/Sneak_Bottom/Item.prefab
 - Assets/CoreMasterBundle/Objects/Medium/Quests/Barnacles/Barnacle_5/Object.prefab
 - Assets/CoreMasterBundle/Items/Tools/Vehicle_Spraypaint_Military_Forest/Animations.prefab
+- Assets/CoreMasterBundle/Items/Keys/Ragdoll_Effect_Rosegold/Item.prefab
 - Assets/CoreMasterBundle/Items/Medical/Antibiotics/Item.prefab
 - Assets/CoreMasterBundle/Skins/Grizzly/Brass/Skin_Secondary_298.mat
 - Assets/CoreMasterBundle/Vehicles/Fighter_Jet/Vehicle.prefab
@@ -13688,7 +13741,7 @@ Assets:
 - Assets/CoreMasterBundle/Items/Elver2/Elver2_Tie_Plaid_2/Vest.prefab
 - Assets/CoreMasterBundle/Skins/Crossbow/Era/Skin_Secondary_296.mat
 - Assets/CoreMasterBundle/Objects/Medium/Furniture/Chandelier_0/Object.prefab
-- Assets/CoreMasterBundle/Items/Cali2/CA_Operator_Pack_0/Backpack.prefab
+- Assets/CoreMasterBundle/Items/Cali2/Cali2_Operator/CA_Operator_Pack_0/Backpack.prefab
 - Assets/CoreMasterBundle/Objects/Large/Roads/Bridge_Line_Cap_0/Nav.prefab
 - Assets/CoreMasterBundle/Effects/Physics/BulletImpact/Rock/bullet_impact_rock_07.wav
 - Assets/CoreMasterBundle/Items/Guns/Honeybadger/Equip.mp3
@@ -13781,7 +13834,6 @@ Assets:
 - Assets/CoreMasterBundle/Items/Arid/Arid_Suit_Bottoms_2/Material.mat
 - Assets/CoreMasterBundle/Objects/Large/Buildings/Barracks_France_0/Nav.prefab
 - Assets/CoreMasterBundle/Items/Outfits/AuroraSkier/Ski_Pants/Pants.png
-- Assets/CoreMasterBundle/Skins/Cobra/Bull/Albedo_Primary.png
 - Assets/CoreMasterBundle/Effects/Physics/BulletImpact/Glass/bullet_impact_glass_04.wav
 - Assets/CoreMasterBundle/Objects/Large/Utilities/Radar_0/Skybox.prefab
 - Assets/CoreMasterBundle/Skins/Matamorez/Era/Skin_Secondary_296.mat
@@ -13794,6 +13846,7 @@ Assets:
 - Assets/CoreMasterBundle/Items/Masks/Balaclava_Blue/Mask.prefab
 - Assets/CoreMasterBundle/Items/RioRemastered/Free/Rio_Soccer_Bottom_Green/Material.mat
 - Assets/CoreMasterBundle/Objects/Large/Business/Container_5/Nav.prefab
+- Assets/CoreMasterBundle/Skins/Maplestrike/CA_Adamantine/Skin_Secondary_153.mat
 - Assets/CoreMasterBundle/Items/Blueprints/Blueprint_Bayonet/Item.prefab
 - Assets/CoreMasterBundle/Objects/Medium/Furniture/Shelf_0/Nav.prefab
 - Assets/CoreMasterBundle/Skins/Shadowstalker/CC24_Yellowcake/Skin_Tertiary.mat
@@ -13934,7 +13987,7 @@ Assets:
 - Assets/CoreMasterBundle/Effects/Physics/MeleeImpact/Ice/snow_digging_scooping_shoveling_15.wav
 - Assets/CoreMasterBundle/Items/Halloween2024/HW2_Paper_Bag/Mask.prefab
 - Assets/CoreMasterBundle/Objects/Large/Quests/Lasers/Laser_1/Object.prefab
-- Assets/CoreMasterBundle/Items/Cali2/CA_Beanie_Pink/Hat.prefab
+- Assets/CoreMasterBundle/Items/Cali2/Complimentary/CA_Beanie_Pink/Hat.prefab
 - Assets/CoreMasterBundle/Objects/Large/Scenery/Ice_1/Nav.prefab
 - Assets/CoreMasterBundle/Items/Beards/8/Texture.png
 - Assets/CoreMasterBundle/Objects/Large/Vehicles/Sedan_Black/Object.prefab
@@ -13963,7 +14016,7 @@ Assets:
 - Assets/CoreMasterBundle/Items/Masks/DL_Volatile_Jaw/Mask.prefab
 - Assets/CoreMasterBundle/Objects/Large/Buildings/House_04_Burned/Nav.prefab
 - Assets/CoreMasterBundle/Effects/Impacts/Concrete_WithDecal_NoAudio/Texture.png
-- Assets/Game/Sources/Models/Items/Cali2/Mythics/CA_Overloaded/System_Hook.prefab
+- Assets/CoreMasterBundle/Mythics/CA_Overloaded/System_Hook.prefab
 - Assets/CoreMasterBundle/Items/Structures/Garage_Birch/Animations.prefab
 - Assets/CoreMasterBundle/Skins/Crossbow/Insane/Skin_Secondary_153.mat
 - Assets/CoreMasterBundle/Effects/Impacts/Alien_Dynamic/Flesh.mp3
@@ -13980,7 +14033,7 @@ Assets:
 - Assets/CoreMasterBundle/Effects/Explosions/Maple_4/Effect.prefab
 - Assets/CoreMasterBundle/Skins/Peacemaker/Killcount/Skin_Primary.mat
 - Assets/CoreMasterBundle/Items/Barricades/Book/Use.mp3
-- Assets/CoreMasterBundle/Items/Cali2/CA_Shorts_Sports_7/Pants.png
+- Assets/CoreMasterBundle/Items/Cali2/Complimentary/CA_Shorts_Sports_7/Pants.png
 - Assets/CoreMasterBundle/Items/Arid/Arid_Skull_Bandana/Mask.prefab
 - Assets/CoreMasterBundle/Items/Magazines/Ace_6/Item.prefab
 - Assets/CoreMasterBundle/Items/Tacticals/Rangefinder/Tactical.prefab
@@ -13992,7 +14045,7 @@ Assets:
 - Assets/CoreMasterBundle/Items/Halloween2024/HW2_Cheese/Item.prefab
 - Assets/CoreMasterBundle/Items/Vests/AthensAprix_Vest/Vest.prefab
 - Assets/CoreMasterBundle/Items/Barricades/Stereo/Animations.prefab
-- Assets/CoreMasterBundle/Items/Cali2/CA_Midnight_Walkers/Pants.png
+- Assets/CoreMasterBundle/Items/Cali2/Red/CA_Midnight_Walkers/Pants.png
 - Assets/CoreMasterBundle/Items/Barricades/Door_Jail/Item.prefab
 - Assets/CoreMasterBundle/Skins/Hawkhound/Akali/Skin_Primary.mat
 - Assets/CoreMasterBundle/Items/Shirts/Tuxedo_Top_Mafia/Shirt.png
@@ -14025,14 +14078,14 @@ Assets:
 - Assets/CoreMasterBundle/Items/Structures/Rampart_Maple/Nav.prefab
 - Assets/CoreMasterBundle/Objects/Medium/Military/Airdrop/Nav.prefab
 - Assets/CoreMasterBundle/Skins/Matamorez/Voyager/Skin_Tertiary.mat
-- Assets/CoreMasterBundle/Items/Cali2/CA_Hoodie_Split_6/Shirt.png
+- Assets/CoreMasterBundle/Items/Cali2/Complimentary/CA_Hoodie_Split_6/Shirt.png
 - Assets/CoreMasterBundle/Items/Outfits/PirateCaptain/PirateCaptainHat/Item.prefab
 - Assets/CoreMasterBundle/Items/Barricades/Note/Animations.prefab
 - Assets/CoreMasterBundle/Items/Hats/XMAS_Bow/Item.prefab
 - Assets/CoreMasterBundle/Animals/Moose/Animal_Server.prefab
 - Assets/CoreMasterBundle/Effects/Physics/BulletImpact/Water/bullet_impact_water_08.wav
 - Assets/CoreMasterBundle/Items/Outfits/Artist/Artist_Canvas/Backpack.prefab
-- Assets/CoreMasterBundle/Items/Cali2/CA_Shorts_Sports_5/Material.mat
+- Assets/CoreMasterBundle/Items/Cali2/Complimentary/CA_Shorts_Sports_5/Material.mat
 - Assets/CoreMasterBundle/Skins/Grizzly/Era/Skin_Secondary_1201.mat
 - Assets/CoreMasterBundle/Sounds/Inventory/MediumClothEquipment/foley_soldier_gear_equipment_rattle_movement_med_09.wav
 - Assets/CoreMasterBundle/Objects/Large/Vehicles/Quad_Green/Object.prefab

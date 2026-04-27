@@ -1,0 +1,35 @@
+GUID ec558327e12c4ff99af078776b35659a
+Type Box
+
+Size_X 1
+Size_Y 1
+
+Generate 21095
+
+Probability_Model Equalized
+Contains_Bonus_Items True
+
+Drops 21
+Drop_0 -1
+Drop_1 "125101" // Popstar Ponytails
+Drop_2 "129501" // Adamantine Maplestrike
+Drop_3 "117301" // G Chain
+Drop_4 "120101" // Fish Hat
+Drop_5 "123201" // Midnight Walkers
+Drop_6 "123001" // Lilytop
+Drop_7 "125001" // Face Plaster
+Drop_8 "120301" // Flight Helmet
+Drop_9 "120501" // Sky Commander Jacket
+Drop_10 "120201" // Throttle Trousers
+Drop_11 "128401" // Study Specs
+Drop_12 "123101" // Face Mask
+Drop_13 "128901" // Tagalong Terence
+Drop_14 "122901" // Liberty Cap
+Drop_15 "129101" // Tommy Shirt
+Drop_16 "126701" // Rolled Up Top
+Drop_17 "124001" // Navy Jacket
+Drop_18 "129301" // Moth Wings
+Drop_19 "127601" // Street Bandana
+Drop_20 "128801" // Tactical Shorts
+
+Pro

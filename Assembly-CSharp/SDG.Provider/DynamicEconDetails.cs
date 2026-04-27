@@ -37,37 +37,60 @@ public struct DynamicEconDetails
                 ReadOnlySpan<char> span = tags.AsSpan(num, tags.Length - num);
                 if (span.StartsWith("zero_kelvin", StringComparison.Ordinal))
                 {
-                    effect = ERagdollEffect.ZERO_KELVIN;
+                    effect = ERagdollEffect.Zero_Kelvin;
                     return true;
                 }
                 if (span.StartsWith("jaded", StringComparison.Ordinal))
                 {
-                    effect = ERagdollEffect.JADED;
+                    effect = ERagdollEffect.Jaded;
                     return true;
                 }
-                if (span.StartsWith("soulcrystal_green", StringComparison.Ordinal))
+                if (span.StartsWith("soulcrystal_", StringComparison.Ordinal))
                 {
-                    effect = ERagdollEffect.SOUL_CRYSTAL_GREEN;
-                    return true;
+                    num += "soulcrystal_".Length;
+                    span = tags.AsSpan(num, tags.Length - num);
+                    if (span.StartsWith("green", StringComparison.Ordinal))
+                    {
+                        effect = ERagdollEffect.SoulCrystal_Green;
+                        return true;
+                    }
+                    if (span.StartsWith("magenta", StringComparison.Ordinal))
+                    {
+                        effect = ERagdollEffect.SoulCrystal_Magenta;
+                        return true;
+                    }
+                    if (span.StartsWith("red", StringComparison.Ordinal))
+                    {
+                        effect = ERagdollEffect.SoulCrystal_Red;
+                        return true;
+                    }
+                    if (span.StartsWith("yellow", StringComparison.Ordinal))
+                    {
+                        effect = ERagdollEffect.SoulCrystal_Yellow;
+                        return true;
+                    }
                 }
-                if (span.StartsWith("soulcrystal_magenta", StringComparison.Ordinal))
+                else
                 {
-                    effect = ERagdollEffect.SOUL_CRYSTAL_MAGENTA;
-                    return true;
-                }
-                if (span.StartsWith("soulcrystal_red", StringComparison.Ordinal))
-                {
-                    effect = ERagdollEffect.SOUL_CRYSTAL_RED;
-                    return true;
-                }
-                if (span.StartsWith("soulcrystal_yellow", StringComparison.Ordinal))
-                {
-                    effect = ERagdollEffect.SOUL_CRYSTAL_YELLOW;
-                    return true;
+                    if (span.StartsWith("rosegold", StringComparison.Ordinal))
+                    {
+                        effect = ERagdollEffect.Rosegold;
+                        return true;
+                    }
+                    if (span.StartsWith("void", StringComparison.Ordinal))
+                    {
+                        effect = ERagdollEffect.Void;
+                        return true;
+                    }
+                    if (span.StartsWith("rainbow", StringComparison.Ordinal))
+                    {
+                        effect = ERagdollEffect.Rainbow;
+                        return true;
+                    }
                 }
             }
         }
-        effect = ERagdollEffect.NONE;
+        effect = ERagdollEffect.None;
         return false;
     }
 

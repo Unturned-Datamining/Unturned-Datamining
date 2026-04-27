@@ -232,7 +232,7 @@ public class MenuSurvivorsClothingUI
             {
                 num3 = Provider.provider.economyService.getInventoryParticleEffect(instance);
             }
-            if (type == EStatTrackerType.NONE && effect == ERagdollEffect.NONE && num3 == 0)
+            if (type == EStatTrackerType.NONE && effect == ERagdollEffect.None && num3 == 0)
             {
                 MenuSurvivorsClothingDeleteUI.salvageItem(item, instance);
             }
@@ -548,7 +548,7 @@ public class MenuSurvivorsClothingUI
                 if (inventoryItemGuid2 != default(Guid) && inventorySkinID2 != 0)
                 {
                     Provider.provider.economyService.getInventoryRagdollEffect(item4.m_itemId.m_SteamItemInstanceID, out var effect2);
-                    if (effect2 == ERagdollEffect.NONE)
+                    if (effect2 == ERagdollEffect.None)
                     {
                         filteredItems.Add(item4);
                     }

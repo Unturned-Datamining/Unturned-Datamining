@@ -40,6 +40,10 @@ public class ZombieRegion
     /// </summary>
     private float lastBossTime = -1f;
 
+    private bool isInRegionsWithPlayersSet;
+
+    private int _playerCountInRegion;
+
     internal int aliveBossZombieCount;
 
     public List<Zombie> zombies => _zombies;
@@ -87,6 +91,35 @@ public class ZombieRegion
                 return false;
             }
             return true;
+        }
+    }
+
+    public int PlayerCountInRegion
+    {
+        get
+        {
+            return _playerCountInRegion;
+        }
+        internal set
+        {
+            if (value == _playerCountInRegion)
+            {
+                return;
+            }
+            _playerCountInRegion = value;
+            if (_playerCountInRegion < 1)
+            {
+                if (isInRegionsWithPlayersSet)
+                {
+                    isInRegionsWithPlayersSet = false;
+                    ZombieManager.regionsWithPlayers.Remove(nav);
+                }
+            }
+            else if (!isInRegionsWithPlayersSet)
+            {
+                isInRegionsWithPlayersSet = true;
+                ZombieManager.regionsWithPlayers.Add(nav);
+            }
         }
     }
 

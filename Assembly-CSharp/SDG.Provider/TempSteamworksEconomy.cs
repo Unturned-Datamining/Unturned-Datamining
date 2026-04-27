@@ -218,7 +218,7 @@ public class TempSteamworksEconomy
     {
         if (!dynamicInventoryDetails.TryGetValue(instance, out var value))
         {
-            effect = ERagdollEffect.NONE;
+            effect = ERagdollEffect.None;
             return false;
         }
         return value.getRagdollEffect(out effect);

@@ -52,7 +52,7 @@ public struct DamageAnimalParameters
         applyGlobalArmorMultiplier = true;
         limb = ELimb.SPINE;
         times = 1f;
-        ragdollEffect = ERagdollEffect.NONE;
+        ragdollEffect = ERagdollEffect.None;
         AlertPosition = null;
         instigator = null;
     }

@@ -154,29 +154,41 @@ public class SleekInventory : SleekWrapper
                 ragdollEffectLabel.IsVisible = true;
                 switch (effect)
                 {
-                case ERagdollEffect.ZERO_KELVIN:
+                case ERagdollEffect.Zero_Kelvin:
                     ragdollEffectLabel.TextColor = new Color(0f, 1f, 1f);
                     ragdollEffectLabel.Text = "0 Kelvin";
                     break;
-                case ERagdollEffect.JADED:
+                case ERagdollEffect.Jaded:
                     ragdollEffectLabel.TextColor = new Color32(76, 166, 90, byte.MaxValue);
                     ragdollEffectLabel.Text = "Jaded";
                     break;
-                case ERagdollEffect.SOUL_CRYSTAL_GREEN:
+                case ERagdollEffect.SoulCrystal_Green:
                     ragdollEffectLabel.TextColor = Palette.MYTHICAL;
                     ragdollEffectLabel.Text = "Green Soul Crystal";
                     break;
-                case ERagdollEffect.SOUL_CRYSTAL_MAGENTA:
+                case ERagdollEffect.SoulCrystal_Magenta:
                     ragdollEffectLabel.TextColor = Palette.MYTHICAL;
                     ragdollEffectLabel.Text = "Magenta Soul Crystal";
                     break;
-                case ERagdollEffect.SOUL_CRYSTAL_RED:
+                case ERagdollEffect.SoulCrystal_Red:
                     ragdollEffectLabel.TextColor = Palette.MYTHICAL;
                     ragdollEffectLabel.Text = "Red Soul Crystal";
                     break;
-                case ERagdollEffect.SOUL_CRYSTAL_YELLOW:
+                case ERagdollEffect.SoulCrystal_Yellow:
                     ragdollEffectLabel.TextColor = Palette.MYTHICAL;
                     ragdollEffectLabel.Text = "Yellow Soul Crystal";
+                    break;
+                case ERagdollEffect.Rosegold:
+                    ragdollEffectLabel.TextColor = Palette.MYTHICAL;
+                    ragdollEffectLabel.Text = "Rosegilded";
+                    break;
+                case ERagdollEffect.Void:
+                    ragdollEffectLabel.TextColor = Palette.MYTHICAL;
+                    ragdollEffectLabel.Text = "Voided";
+                    break;
+                case ERagdollEffect.Rainbow:
+                    ragdollEffectLabel.TextColor = Palette.MYTHICAL;
+                    ragdollEffectLabel.Text = "Rainbowblast";
                     break;
                 default:
                     ragdollEffectLabel.TextColor = Color.red;

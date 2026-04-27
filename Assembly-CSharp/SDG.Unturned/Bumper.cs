@@ -61,7 +61,7 @@ public class Bumper : MonoBehaviour
         }
         Player driverPlayer = vehicle.GetDriverPlayer();
         EPlayerKill kill = EPlayerKill.NONE;
-        ERagdollEffect ragdollEffect = ERagdollEffect.NONE;
+        ERagdollEffect ragdollEffect = ERagdollEffect.None;
         if (vehicle.isSkinned)
         {
             ragdollEffect = driverPlayer.movement.GetVehicleRagdollEffect();

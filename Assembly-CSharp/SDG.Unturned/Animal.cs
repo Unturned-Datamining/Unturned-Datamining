@@ -330,7 +330,7 @@ public class Animal : MonoBehaviour, IExplosionDamageable, IEquatable<IExplosion
         }
     }
 
-    public void askDamage(ushort amount, Vector3 newRagdoll, out EPlayerKill kill, out uint xp, bool trackKill = true, bool dropLoot = true, ERagdollEffect ragdollEffect = ERagdollEffect.NONE)
+    public void askDamage(ushort amount, Vector3 newRagdoll, out EPlayerKill kill, out uint xp, bool trackKill = true, bool dropLoot = true, ERagdollEffect ragdollEffect = ERagdollEffect.None)
     {
         kill = EPlayerKill.NONE;
         xp = 0u;

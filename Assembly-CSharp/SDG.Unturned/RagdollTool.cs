@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -13,85 +14,26 @@ public class RagdollTool
 
     private static List<Material> tempMaterials = new List<Material>();
 
-    private static Material bronzeMaterial;
-
-    private static Material silverMaterial;
-
-    private static Material goldMaterial;
-
-    private static Material zeroKelvinMaterial;
-
-    private static Material jadedMaterial;
-
-    private static Material soulCrystalGreenMaterial;
-
-    private static Material soulCrystalMagentaMaterial;
-
-    private static Material soulCrystalRedMaterial;
-
-    private static Material soulCrystalYellowMaterial;
+    private static Material[] loadedRagdollEffectMaterials = new Material[Enum.GetNames(typeof(ERagdollEffect)).Length - 1];
 
     private static Material getRagdollEffectMaterial(ERagdollEffect effect)
     {
-        switch (effect)
+        int num = (int)(effect - 1);
+        if (num >= 0 && num < loadedRagdollEffectMaterials.Length)
         {
-        case ERagdollEffect.BRONZE:
-            if (bronzeMaterial == null)
+            ref Material reference = ref loadedRagdollEffectMaterials[num];
+            if (reference == null)
             {
-                bronzeMaterial = Resources.Load<Material>("Characters/RagdollMaterials/Bronze");
+                string text = $"Mythics/RagdollMaterials/{effect}.mat";
+                reference = Assets.coreMasterBundle.LoadAsset<Material>(text);
+                if (reference == null)
+                {
+                    UnturnedLog.error($"Missing ragdoll effect {effect} material at {text}");
+                }
             }
-            return bronzeMaterial;
-        case ERagdollEffect.SILVER:
-            if (silverMaterial == null)
-            {
-                silverMaterial = Resources.Load<Material>("Characters/RagdollMaterials/Silver");
-            }
-            return silverMaterial;
-        case ERagdollEffect.GOLD:
-            if (goldMaterial == null)
-            {
-                goldMaterial = Resources.Load<Material>("Characters/RagdollMaterials/Gold");
-            }
-            return goldMaterial;
-        case ERagdollEffect.ZERO_KELVIN:
-            if (zeroKelvinMaterial == null)
-            {
-                zeroKelvinMaterial = Resources.Load<Material>("Characters/RagdollMaterials/Zero_Kelvin");
-            }
-            return zeroKelvinMaterial;
-        case ERagdollEffect.JADED:
-            if (jadedMaterial == null)
-            {
-                jadedMaterial = Resources.Load<Material>("Characters/RagdollMaterials/Jaded");
-            }
-            return jadedMaterial;
-        case ERagdollEffect.SOUL_CRYSTAL_GREEN:
-            if (soulCrystalGreenMaterial == null)
-            {
-                soulCrystalGreenMaterial = Resources.Load<Material>("Characters/RagdollMaterials/SoulCrystal_Green");
-            }
-            return soulCrystalGreenMaterial;
-        case ERagdollEffect.SOUL_CRYSTAL_MAGENTA:
-            if (soulCrystalMagentaMaterial == null)
-            {
-                soulCrystalMagentaMaterial = Resources.Load<Material>("Characters/RagdollMaterials/SoulCrystal_Magenta");
-            }
-            return soulCrystalMagentaMaterial;
-        case ERagdollEffect.SOUL_CRYSTAL_RED:
-            if (soulCrystalRedMaterial == null)
-            {
-                soulCrystalRedMaterial = Resources.Load<Material>("Characters/RagdollMaterials/SoulCrystal_Red");
-            }
-            return soulCrystalRedMaterial;
-        case ERagdollEffect.SOUL_CRYSTAL_YELLOW:
-            if (soulCrystalYellowMaterial == null)
-            {
-                soulCrystalYellowMaterial = Resources.Load<Material>("Characters/RagdollMaterials/SoulCrystal_Yellow");
-            }
-            return soulCrystalYellowMaterial;
-        default:
-            return null;
+            return reference;
         }
+        return null;
     }
 
     /// <summary>
@@ -99,7 +41,7 @@ public class RagdollTool
     /// </summary>
     private static void applyRagdollEffect(Transform root, ERagdollEffect effect)
     {
-        if (effect == ERagdollEffect.NONE)
+        if (effect == ERagdollEffect.None)
         {
             return;
         }
@@ -133,7 +75,7 @@ public class RagdollTool
         root.GetComponentsInChildren(tempJoints);
         foreach (CharacterJoint tempJoint in tempJoints)
         {
-            Object.Destroy(tempJoint);
+            UnityEngine.Object.Destroy(tempJoint);
         }
         tempRigidbodies.Clear();
         root.GetComponentsInChildren(tempRigidbodies);
@@ -141,7 +83,7 @@ public class RagdollTool
         {
             if (tempRigidbody != componentInChildren)
             {
-                Object.Destroy(tempRigidbody);
+                UnityEngine.Object.Destroy(tempRigidbody);
             }
         }
     }
@@ -173,10 +115,10 @@ public class RagdollTool
         if (GraphicsSettings.ragdolls)
         {
             ragdoll.y += 8f;
-            ragdoll.x += Random.Range(-16f, 16f);
-            ragdoll.z += Random.Range(-16f, 16f);
+            ragdoll.x += UnityEngine.Random.Range(-16f, 16f);
+            ragdoll.z += UnityEngine.Random.Range(-16f, 16f);
             ragdoll *= (float)((Player.LocalPlayer != null && Player.LocalPlayer.skills.boost == EPlayerBoost.FLIGHT) ? 256 : 32);
-            Transform transform = ((GameObject)Object.Instantiate(Resources.Load("Characters/Ragdoll_Player"), point + Vector3.up * 0.1f, rotation * Quaternion.Euler(90f, 0f, 0f))).transform;
+            Transform transform = ((GameObject)UnityEngine.Object.Instantiate(Resources.Load("Characters/Ragdoll_Player"), point + Vector3.up * 0.1f, rotation * Quaternion.Euler(90f, 0f, 0f))).transform;
             transform.name = "Ragdoll";
             EffectManager.RegisterDebris(transform.gameObject);
             if (skeleton != null)
@@ -184,7 +126,7 @@ public class RagdollTool
                 applySkeleton(skeleton, transform.Find("Skeleton"));
             }
             transform.Find("Skeleton")?.Find("Spine")?.GetComponent<Rigidbody>()?.AddForce(ragdoll);
-            Object.Destroy(transform.gameObject, GraphicsSettings.effect);
+            UnityEngine.Object.Destroy(transform.gameObject, GraphicsSettings.effect);
             if (clothes != null && clothes.thirdClothes != null)
             {
                 HumanClothes component = transform.GetComponent<HumanClothes>();
@@ -224,10 +166,10 @@ public class RagdollTool
             return null;
         }
         ragdoll.y += 8f;
-        ragdoll.x += Random.Range(-16f, 16f);
-        ragdoll.z += Random.Range(-16f, 16f);
+        ragdoll.x += UnityEngine.Random.Range(-16f, 16f);
+        ragdoll.z += UnityEngine.Random.Range(-16f, 16f);
         ragdoll *= (float)((Player.LocalPlayer != null && Player.LocalPlayer.skills.boost == EPlayerBoost.FLIGHT) ? 256 : 32);
-        Transform transform = ((GameObject)Object.Instantiate(Resources.Load("Characters/Ragdoll_Zombie"), point + Vector3.up * 0.1f, rotation * Quaternion.Euler(90f, 0f, 0f))).transform;
+        Transform transform = ((GameObject)UnityEngine.Object.Instantiate(Resources.Load("Characters/Ragdoll_Zombie"), point + Vector3.up * 0.1f, rotation * Quaternion.Euler(90f, 0f, 0f))).transform;
         transform.name = "Ragdoll";
         EffectManager.RegisterDebris(transform.gameObject);
         if (isMega)
@@ -243,7 +185,7 @@ public class RagdollTool
             applySkeleton(skeleton, transform.Find("Skeleton"));
         }
         transform.Find("Skeleton")?.Find("Spine")?.GetComponent<Rigidbody>()?.AddForce(ragdoll);
-        Object.Destroy(transform.gameObject, GraphicsSettings.effect);
+        UnityEngine.Object.Destroy(transform.gameObject, GraphicsSettings.effect);
         ZombieClothing.EApplyFlags eApplyFlags = ZombieClothing.EApplyFlags.Ragdoll;
         if (isMega)
         {
@@ -261,12 +203,12 @@ public class RagdollTool
             return;
         }
         ragdoll.y += 8f;
-        ragdoll.x += Random.Range(-16f, 16f);
-        ragdoll.z += Random.Range(-16f, 16f);
+        ragdoll.x += UnityEngine.Random.Range(-16f, 16f);
+        ragdoll.z += UnityEngine.Random.Range(-16f, 16f);
         ragdoll *= (float)((Player.LocalPlayer != null && Player.LocalPlayer.skills.boost == EPlayerBoost.FLIGHT) ? 256 : 32);
         if (Assets.find(EAssetType.ANIMAL, id) is AnimalAsset animalAsset)
         {
-            Transform transform = Object.Instantiate(animalAsset.ragdoll, point + Vector3.up * 0.1f, rotation * Quaternion.Euler(0f, 90f, 0f)).transform;
+            Transform transform = UnityEngine.Object.Instantiate(animalAsset.ragdoll, point + Vector3.up * 0.1f, rotation * Quaternion.Euler(0f, 90f, 0f)).transform;
             transform.name = "Ragdoll";
             EffectManager.RegisterDebris(transform.gameObject);
             if (skeleton != null)
@@ -274,7 +216,7 @@ public class RagdollTool
                 applySkeleton(skeleton, transform.Find("Skeleton"));
             }
             transform.Find("Skeleton")?.Find("Spine")?.GetComponent<Rigidbody>()?.AddForce(ragdoll);
-            Object.Destroy(transform.gameObject, GraphicsSettings.effect);
+            UnityEngine.Object.Destroy(transform.gameObject, GraphicsSettings.effect);
             applyRagdollEffect(transform, effect);
         }
     }

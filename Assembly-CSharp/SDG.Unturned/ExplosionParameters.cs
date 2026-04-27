@@ -61,7 +61,7 @@ public struct ExplosionParameters
         playImpactEffect = true;
         penetrateBuildables = false;
         damageOrigin = EDamageOrigin.Unknown;
-        ragdollEffect = ERagdollEffect.NONE;
+        ragdollEffect = ERagdollEffect.None;
         playerDamage = 0f;
         zombieDamage = 0f;
         animalDamage = 0f;

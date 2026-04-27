@@ -621,7 +621,7 @@ public class InteractableSentry : InteractableStorage
                                     if (attachments.magazineAsset != null && attachments.magazineAsset.isExplosive)
                                     {
                                         Vector3 position = raycastInfo.point + raycastInfo.normal * 0.25f;
-                                        UseableGun.DetonateExplosiveMagazine(attachments.magazineAsset, position, null, ERagdollEffect.NONE);
+                                        UseableGun.DetonateExplosiveMagazine(attachments.magazineAsset, position, null, ERagdollEffect.None);
                                     }
                                 }
                             }
@@ -683,7 +683,7 @@ public class InteractableSentry : InteractableStorage
                                 if (attachments.magazineAsset != null && attachments.magazineAsset.isExplosive)
                                 {
                                     Vector3 position2 = vector3 + aimTransform.forward * -0.25f;
-                                    UseableGun.DetonateExplosiveMagazine(attachments.magazineAsset, position2, null, ERagdollEffect.NONE);
+                                    UseableGun.DetonateExplosiveMagazine(attachments.magazineAsset, position2, null, ERagdollEffect.None);
                                 }
                             }
                         }

@@ -2,14 +2,17 @@ namespace SDG.Unturned;
 
 public enum ERagdollEffect
 {
-    NONE,
-    BRONZE,
-    SILVER,
-    GOLD,
-    ZERO_KELVIN,
-    JADED,
-    SOUL_CRYSTAL_GREEN,
-    SOUL_CRYSTAL_MAGENTA,
-    SOUL_CRYSTAL_RED,
-    SOUL_CRYSTAL_YELLOW
+    None,
+    Bronze,
+    Silver,
+    Gold,
+    Zero_Kelvin,
+    Jaded,
+    SoulCrystal_Green,
+    SoulCrystal_Magenta,
+    SoulCrystal_Red,
+    SoulCrystal_Yellow,
+    Rosegold,
+    Void,
+    Rainbow
 }

@@ -300,7 +300,7 @@ public class DamageTool
         }
     }
 
-    public static void damage(Player player, EDeathCause cause, ELimb limb, CSteamID killer, Vector3 direction, float damage, float times, out EPlayerKill kill, bool applyGlobalArmorMultiplier = true, bool trackKill = false, ERagdollEffect ragdollEffect = ERagdollEffect.NONE)
+    public static void damage(Player player, EDeathCause cause, ELimb limb, CSteamID killer, Vector3 direction, float damage, float times, out EPlayerKill kill, bool applyGlobalArmorMultiplier = true, bool trackKill = false, ERagdollEffect ragdollEffect = ERagdollEffect.None)
     {
         DamagePlayerParameters parameters = new DamagePlayerParameters(player);
         parameters.cause = cause;
@@ -473,7 +473,7 @@ public class DamageTool
         return 1f;
     }
 
-    public static void damage(Player player, EDeathCause cause, ELimb limb, CSteamID killer, Vector3 direction, IDamageMultiplier multiplier, float times, bool armor, out EPlayerKill kill, bool trackKill = false, ERagdollEffect ragdollEffect = ERagdollEffect.NONE)
+    public static void damage(Player player, EDeathCause cause, ELimb limb, CSteamID killer, Vector3 direction, IDamageMultiplier multiplier, float times, bool armor, out EPlayerKill kill, bool trackKill = false, ERagdollEffect ragdollEffect = ERagdollEffect.None)
     {
         DamagePlayerParameters parameters = DamagePlayerParameters.make(player, cause, direction, multiplier, limb);
         parameters.killer = killer;
@@ -549,7 +549,7 @@ public class DamageTool
     /// <summary>
     /// Legacy function replaced by damageZombie.
     /// </summary>
-    public static void damage(Zombie zombie, Vector3 direction, float damage, float times, out EPlayerKill kill, out uint xp, EZombieStunOverride zombieStunOverride = EZombieStunOverride.None, ERagdollEffect ragdollEffect = ERagdollEffect.NONE)
+    public static void damage(Zombie zombie, Vector3 direction, float damage, float times, out EPlayerKill kill, out uint xp, EZombieStunOverride zombieStunOverride = EZombieStunOverride.None, ERagdollEffect ragdollEffect = ERagdollEffect.None)
     {
         DamageZombieParameters parameters = new DamageZombieParameters(zombie, direction, damage);
         parameters.times = times;
@@ -561,7 +561,7 @@ public class DamageTool
     /// <summary>
     /// Legacy function replaced by damageZombie.
     /// </summary>
-    public static void damage(Zombie zombie, ELimb limb, Vector3 direction, IDamageMultiplier multiplier, float times, bool armor, out EPlayerKill kill, out uint xp, EZombieStunOverride zombieStunOverride = EZombieStunOverride.None, ERagdollEffect ragdollEffect = ERagdollEffect.NONE)
+    public static void damage(Zombie zombie, ELimb limb, Vector3 direction, IDamageMultiplier multiplier, float times, bool armor, out EPlayerKill kill, out uint xp, EZombieStunOverride zombieStunOverride = EZombieStunOverride.None, ERagdollEffect ragdollEffect = ERagdollEffect.None)
     {
         DamageZombieParameters parameters = DamageZombieParameters.make(zombie, direction, multiplier, limb);
         parameters.legacyArmor = armor;
@@ -616,7 +616,7 @@ public class DamageTool
     /// <summary>
     /// Legacy function replaced by damageAnimal.
     /// </summary>
-    public static void damage(Animal animal, Vector3 direction, float damage, float times, out EPlayerKill kill, out uint xp, ERagdollEffect ragdollEffect = ERagdollEffect.NONE)
+    public static void damage(Animal animal, Vector3 direction, float damage, float times, out EPlayerKill kill, out uint xp, ERagdollEffect ragdollEffect = ERagdollEffect.None)
     {
         DamageAnimalParameters parameters = new DamageAnimalParameters(animal, direction, damage);
         parameters.times = times;
@@ -627,7 +627,7 @@ public class DamageTool
     /// <summary>
     /// Legacy function replaced by damageAnimal.
     /// </summary>
-    public static void damage(Animal animal, ELimb limb, Vector3 direction, IDamageMultiplier multiplier, float times, out EPlayerKill kill, out uint xp, ERagdollEffect ragdollEffect = ERagdollEffect.NONE)
+    public static void damage(Animal animal, ELimb limb, Vector3 direction, IDamageMultiplier multiplier, float times, out EPlayerKill kill, out uint xp, ERagdollEffect ragdollEffect = ERagdollEffect.None)
     {
         DamageAnimalParameters parameters = DamageAnimalParameters.make(animal, direction, multiplier, limb);
         parameters.times = times;
@@ -725,7 +725,7 @@ public class DamageTool
     /// <summary>
     /// This unwieldy mess is the original explode function, but should be maintained for backwards compatibility with plugins.
     /// </summary>
-    public static void explode(Vector3 point, float damageRadius, EDeathCause cause, CSteamID killer, float playerDamage, float zombieDamage, float animalDamage, float barricadeDamage, float structureDamage, float vehicleDamage, float resourceDamage, float objectDamage, out List<EPlayerKill> kills, EExplosionDamageType damageType = EExplosionDamageType.CONVENTIONAL, float alertRadius = 32f, bool playImpactEffect = true, bool penetrateBuildables = false, EDamageOrigin damageOrigin = EDamageOrigin.Unknown, ERagdollEffect ragdollEffect = ERagdollEffect.NONE)
+    public static void explode(Vector3 point, float damageRadius, EDeathCause cause, CSteamID killer, float playerDamage, float zombieDamage, float animalDamage, float barricadeDamage, float structureDamage, float vehicleDamage, float resourceDamage, float objectDamage, out List<EPlayerKill> kills, EExplosionDamageType damageType = EExplosionDamageType.CONVENTIONAL, float alertRadius = 32f, bool playImpactEffect = true, bool penetrateBuildables = false, EDamageOrigin damageOrigin = EDamageOrigin.Unknown, ERagdollEffect ragdollEffect = ERagdollEffect.None)
     {
         ExplosionParameters parameters = new ExplosionParameters(point, damageRadius, cause, killer);
         parameters.playerDamage = playerDamage;

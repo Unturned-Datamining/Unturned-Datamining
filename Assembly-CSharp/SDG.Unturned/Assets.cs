@@ -1717,7 +1717,7 @@ public class Assets : MonoBehaviour
                     loadingStats.totalMasterBundlesLoaded++;
                     if (masterBundleConfig.assetBundle != null)
                     {
-                        if (masterBundleConfig.origin == coreOrigin)
+                        if (masterBundleConfig.origin == coreOrigin && string.Equals(masterBundleConfig.assetBundleName, "core.masterbundle", StringComparison.InvariantCulture))
                         {
                             coreMasterBundle = masterBundleConfig;
                         }

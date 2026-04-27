@@ -303,7 +303,7 @@ public class AnimalManager : SteamCaller
         SendAnimalAlive.InvokeAndLoopback(ENetReliability.Reliable, Provider.GatherRemoteClientConnections(), animal.index, newPosition, newAngle);
     }
 
-    public static void sendAnimalDead(Animal animal, Vector3 newRagdoll, ERagdollEffect newRagdollEffect = ERagdollEffect.NONE)
+    public static void sendAnimalDead(Animal animal, Vector3 newRagdoll, ERagdollEffect newRagdollEffect = ERagdollEffect.None)
     {
         SendAnimalDead.InvokeAndLoopback(ENetReliability.Reliable, Provider.GatherRemoteClientConnections(), animal.index, newRagdoll, newRagdollEffect);
     }

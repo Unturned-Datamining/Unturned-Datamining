@@ -546,21 +546,21 @@ public class PlayerLife : PlayerCaller
 
     public void askDamage(byte amount, Vector3 newRagdoll, EDeathCause newCause, ELimb newLimb, CSteamID newKiller, out EPlayerKill kill)
     {
-        askDamage(amount, newRagdoll, newCause, newLimb, newKiller, out kill, trackKill: false, ERagdollEffect.NONE, canCauseBleeding: true);
+        askDamage(amount, newRagdoll, newCause, newLimb, newKiller, out kill, trackKill: false, ERagdollEffect.None, canCauseBleeding: true);
     }
 
-    public void askDamage(byte amount, Vector3 newRagdoll, EDeathCause newCause, ELimb newLimb, CSteamID newKiller, out EPlayerKill kill, bool trackKill = false, ERagdollEffect newRagdollEffect = ERagdollEffect.NONE)
+    public void askDamage(byte amount, Vector3 newRagdoll, EDeathCause newCause, ELimb newLimb, CSteamID newKiller, out EPlayerKill kill, bool trackKill = false, ERagdollEffect newRagdollEffect = ERagdollEffect.None)
     {
         askDamage(amount, newRagdoll, newCause, newLimb, newKiller, out kill, trackKill, newRagdollEffect, canCauseBleeding: true);
     }
 
-    public void askDamage(byte amount, Vector3 newRagdoll, EDeathCause newCause, ELimb newLimb, CSteamID newKiller, out EPlayerKill kill, bool trackKill = false, ERagdollEffect newRagdollEffect = ERagdollEffect.NONE, bool canCauseBleeding = true)
+    public void askDamage(byte amount, Vector3 newRagdoll, EDeathCause newCause, ELimb newLimb, CSteamID newKiller, out EPlayerKill kill, bool trackKill = false, ERagdollEffect newRagdollEffect = ERagdollEffect.None, bool canCauseBleeding = true)
     {
         askDamage(amount, newRagdoll, newCause, newLimb, newKiller, out kill, trackKill, newRagdollEffect, canCauseBleeding, bypassSafezone: false);
     }
 
     /// <param name="bypassSafezone">Should damage be dealt even while inside safezone?</param>
-    public void askDamage(byte amount, Vector3 newRagdoll, EDeathCause newCause, ELimb newLimb, CSteamID newKiller, out EPlayerKill kill, bool trackKill = false, ERagdollEffect newRagdollEffect = ERagdollEffect.NONE, bool canCauseBleeding = true, bool bypassSafezone = false)
+    public void askDamage(byte amount, Vector3 newRagdoll, EDeathCause newCause, ELimb newLimb, CSteamID newKiller, out EPlayerKill kill, bool trackKill = false, ERagdollEffect newRagdollEffect = ERagdollEffect.None, bool canCauseBleeding = true, bool bypassSafezone = false)
     {
         kill = EPlayerKill.NONE;
         if (bypassSafezone || InternalCanDamage())
@@ -582,7 +582,7 @@ public class PlayerLife : PlayerCaller
         return true;
     }
 
-    private void doDamage(byte amount, Vector3 newRagdoll, EDeathCause newCause, ELimb newLimb, CSteamID newKiller, out EPlayerKill kill, bool trackKill = false, ERagdollEffect newRagdollEffect = ERagdollEffect.NONE, bool canCauseBleeding = true)
+    private void doDamage(byte amount, Vector3 newRagdoll, EDeathCause newCause, ELimb newLimb, CSteamID newKiller, out EPlayerKill kill, bool trackKill = false, ERagdollEffect newRagdollEffect = ERagdollEffect.None, bool canCauseBleeding = true)
     {
         kill = EPlayerKill.NONE;
         if (amount == 0 || isDead || !IsAlive)
@@ -1309,7 +1309,7 @@ public class PlayerLife : PlayerCaller
         else
         {
             byte amount2 = MathfEx.RoundAndClampToByte(0f - delta);
-            askDamage(amount2, Vector3.up, EDeathCause.SUICIDE, ELimb.SPINE, CSteamID.Nil, out var _, trackKill: false, ERagdollEffect.NONE, canCauseBleeding: false);
+            askDamage(amount2, Vector3.up, EDeathCause.SUICIDE, ELimb.SPINE, CSteamID.Nil, out var _, trackKill: false, ERagdollEffect.None, canCauseBleeding: false);
         }
     }
 

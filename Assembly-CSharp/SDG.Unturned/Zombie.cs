@@ -606,7 +606,7 @@ public class Zombie : MonoBehaviour, IExplosionDamageable, IEquatable<IExplosion
         {
             ragdoll = newRagdoll;
             Transform transform = RagdollTool.ragdollZombie(base.transform.position, base.transform.rotation, skeleton, ragdoll, type, shirt, pants, hat, gear, hatID, gearID, isMega, ragdollEffect);
-            if (transform != null && speciality.IsDLVolatile() && ragdollEffect == ERagdollEffect.NONE)
+            if (transform != null && speciality.IsDLVolatile() && ragdollEffect == ERagdollEffect.None)
             {
                 SkinnedMeshRenderer component = transform.Find("Model_1").GetComponent<SkinnedMeshRenderer>();
                 if (component != null)
@@ -1002,7 +1002,7 @@ public class Zombie : MonoBehaviour, IExplosionDamageable, IEquatable<IExplosion
         }
     }
 
-    public void askDamage(ushort amount, Vector3 newRagdoll, out EPlayerKill kill, out uint xp, bool trackKill = true, bool dropLoot = true, EZombieStunOverride stunOverride = EZombieStunOverride.None, ERagdollEffect ragdollEffect = ERagdollEffect.NONE)
+    public void askDamage(ushort amount, Vector3 newRagdoll, out EPlayerKill kill, out uint xp, bool trackKill = true, bool dropLoot = true, EZombieStunOverride stunOverride = EZombieStunOverride.None, ERagdollEffect ragdollEffect = ERagdollEffect.None)
     {
         kill = EPlayerKill.NONE;
         xp = 0u;
@@ -1856,7 +1856,7 @@ public class Zombie : MonoBehaviour, IExplosionDamageable, IEquatable<IExplosion
                 return;
             }
         }
-        else if (huntType == EHuntType.POINT && !isMoving && Time.time - lastHunted > 3f)
+        else if (huntType == EHuntType.POINT && (!isMoving || isStuck) && Time.time - lastHunted > 3f)
         {
             stop();
             return;
@@ -2372,7 +2372,12 @@ public class Zombie : MonoBehaviour, IExplosionDamageable, IEquatable<IExplosion
         }
     }
 
-    private void Update()
+    /// <summary>
+    /// 2026-04-24: this *was* Unity's Update monobehavior message, but for maps with large numbers of zombies
+    /// (2500+) it turned out to take a significant chunk of time. As a last-minute hack we now only update
+    /// zombies in regions with players in them.
+    /// </summary>
+    internal void OnUpdate()
     {
         if (isDead)
         {
@@ -2820,6 +2825,7 @@ public class Zombie : MonoBehaviour, IExplosionDamageable, IEquatable<IExplosion
         {
             UnityEngine.Object.Destroy(target.gameObject);
         }
+        ZombieManager.AllZombies?.RemoveFast(this);
     }
 
     private void PlayOneShot(AudioClip[] clips)

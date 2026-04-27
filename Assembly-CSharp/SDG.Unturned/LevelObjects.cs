@@ -583,7 +583,16 @@ public class LevelObjects : MonoBehaviour
                             int materialIndexOverride;
                             if (b3 >= 11)
                             {
-                                customMaterialOverride = new AssetReference<MaterialPaletteAsset>(river.readGUID());
+                                Guid guid2 = river.readGUID();
+                                if (flag)
+                                {
+                                    MaterialPaletteAsset materialPaletteAsset = EditorAssetRedirector.Redirect<MaterialPaletteAsset>(guid2);
+                                    if (materialPaletteAsset != null)
+                                    {
+                                        guid2 = materialPaletteAsset.GUID;
+                                    }
+                                }
+                                customMaterialOverride = new AssetReference<MaterialPaletteAsset>(guid2);
                                 materialIndexOverride = river.readInt32();
                             }
                             else

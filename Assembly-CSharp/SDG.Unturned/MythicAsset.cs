@@ -90,6 +90,10 @@ public class MythicAsset : Asset
             {
                 ReportAssetError("particle system " + transform.GetSceneHierarchyPath() + " collision mask includes unexpected layers");
             }
+            if (!component.useAutoRandomSeed)
+            {
+                ReportAssetError("particle system " + transform.GetSceneHierarchyPath() + " auto random seed is OFF");
+            }
         }
         foreach (Transform item in transform)
         {

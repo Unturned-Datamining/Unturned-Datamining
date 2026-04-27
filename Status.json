@@ -51,8 +51,8 @@
 	"Game":
 	{
 		"Major_Version": 26,
-		"Minor_Version": 2,
-		"Patch_Version": 3,
+		"Minor_Version": 3,
+		"Patch_Version": 107,
 		"GrantPackageIDs":
 		[
 			487
@@ -65,9 +65,9 @@
 	},
 	"Menu":
 	{
-		"PromoStart": "2025-09-20T12:00:00Z",
-		"PromoEnd": "2025-10-20T12:00:00Z",
-		"PromoLevel": "Menu_Limestone"
+		"PromoStart": "2026-04-01T12:00:00Z",
+		"PromoEnd": "2026-05-28T12:00:00Z",
+		"PromoLevel": "CaliforniaMenu"
 	},
 	"News":
 	{
@@ -85,6 +85,11 @@
 		],
 		"Curated_Map_Links":
 		[
+			{
+				"Name": "California 2",
+				"Workshop_File_Id": 3707778928,
+				"Visible_In_Singleplayer_Recommendations_List": true
+			},
 			{
 				"Name": "Limestone",
 				"Workshop_File_Id": 3565225438,
@@ -141,9 +146,9 @@
 				"Visible_In_Singleplayer_Recommendations_List": true
 			},
 			{
-				"Name": "California",
+				"Name": "California (Original)",
 				"Workshop_File_Id": 1905768396,
-				"Visible_In_Singleplayer_Recommendations_List": true
+				"Visible_In_Singleplayer_Recommendations_List": false
 			},
 			{
 				"Name": "Rio de Janeiro (Original)",

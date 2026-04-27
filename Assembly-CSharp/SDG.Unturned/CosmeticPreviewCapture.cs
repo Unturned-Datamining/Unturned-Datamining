@@ -298,7 +298,7 @@ public class CosmeticPreviewCapture : MonoBehaviour
 
     private Bounds GetWorldBounds(GameObject parent)
     {
-        Bounds result = default(Bounds);
+        Bounds bounds = default(Bounds);
         bool flag = false;
         ParticleSystem.Particle[] array = new ParticleSystem.Particle[1024];
         parent.GetComponentsInChildren(renderers);
@@ -306,17 +306,31 @@ public class CosmeticPreviewCapture : MonoBehaviour
         {
             if (renderer is ParticleSystemRenderer particleSystemRenderer)
             {
-                int particles = particleSystemRenderer.GetComponent<ParticleSystem>().GetParticles(array);
+                ParticleSystem component = particleSystemRenderer.GetComponent<ParticleSystem>();
+                Transform transform = null;
+                switch (component.main.simulationSpace)
+                {
+                case ParticleSystemSimulationSpace.Local:
+                    transform = component.transform;
+                    break;
+                case ParticleSystemSimulationSpace.World:
+                    transform = null;
+                    break;
+                case ParticleSystemSimulationSpace.Custom:
+                    transform = component.main.customSimulationSpace;
+                    break;
+                }
+                int particles = component.GetParticles(array);
                 for (int i = 0; i < particles; i++)
                 {
                     ParticleSystem.Particle particle = array[i];
-                    Vector3 center = renderer.transform.TransformPoint(particle.position);
+                    Vector3 center = ((transform != null) ? transform.TransformPoint(particle.position) : particle.position);
                     if (flag)
                     {
-                        result.Encapsulate(new Bounds(center, new Vector3(0.1f, 0.1f, 0.1f)));
+                        bounds.Encapsulate(new Bounds(center, new Vector3(0.1f, 0.1f, 0.1f)));
                         continue;
                     }
-                    result = new Bounds(center, Vector3.zero);
+                    bounds = new Bounds(center, Vector3.zero);
                     flag = true;
                 }
             }
@@ -324,14 +338,18 @@ public class CosmeticPreviewCapture : MonoBehaviour
             {
                 if (flag)
                 {
-                    result.Encapsulate(renderer.bounds);
+                    bounds.Encapsulate(renderer.bounds);
                     continue;
                 }
-                result = renderer.bounds;
+                bounds = renderer.bounds;
                 flag = true;
             }
         }
-        return result;
+        if (bounds.size.magnitude > 64f)
+        {
+            UnturnedLog.warn($"CosmeticPreviewCapture bounds {bounds} for {parent.GetSceneHierarchyPath()} are likely too big");
+        }
+        return bounds;
     }
 
     private void FitCameraToBounds(Camera cameraComponent, Bounds worldBounds)

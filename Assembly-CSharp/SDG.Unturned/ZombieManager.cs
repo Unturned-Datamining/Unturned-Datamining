@@ -108,6 +108,8 @@ public class ZombieManager : SteamCaller
 
     private static ZombieRegion[] _regions;
 
+    internal static HashSet<int> regionsWithPlayers;
+
     private static Dictionary<string, double> cooldowns = new Dictionary<string, double>(StringComparer.InvariantCultureIgnoreCase);
 
     public static int wanderingCount;
@@ -186,6 +188,8 @@ public class ZombieManager : SteamCaller
     public static ZombieRegion[] regions => _regions;
 
     public static List<Zombie> tickingZombies => _tickingZombies;
+
+    public static List<Zombie> AllZombies { get; private set; }
 
     public static bool canSpareWanderer
     {
@@ -602,7 +606,7 @@ public class ZombieManager : SteamCaller
         regions[zombie.bound].onZombieLifeUpdated?.Invoke(zombie);
     }
 
-    public static void sendZombieDead(Zombie zombie, Vector3 newRagdoll, ERagdollEffect newRagdollEffect = ERagdollEffect.NONE)
+    public static void sendZombieDead(Zombie zombie, Vector3 newRagdoll, ERagdollEffect newRagdollEffect = ERagdollEffect.None)
     {
         SendZombieDead.InvokeAndLoopback(ENetReliability.Reliable, GatherRemoteClientConnections(zombie.bound), zombie.bound, zombie.id, newRagdoll, newRagdollEffect);
         regions[zombie.bound].onZombieLifeUpdated?.Invoke(zombie);
@@ -735,6 +739,7 @@ public class ZombieManager : SteamCaller
         component.isDead = isDead;
         component.init();
         regions[bound].zombies.Add(component);
+        AllZombies.Add(component);
     }
 
     public static Zombie getZombie(Vector3 point, ushort id)
@@ -1124,11 +1129,19 @@ public class ZombieManager : SteamCaller
         {
             return;
         }
-        if (LevelNavigation.checkSafe(oldBound) && player.movement.loadedBounds[oldBound].isZombiesLoaded)
+        if (LevelNavigation.checkSafe(oldBound))
         {
-            player.movement.loadedBounds[oldBound].isZombiesLoaded = false;
+            if (player.movement.loadedBounds[oldBound].isZombiesLoaded)
+            {
+                player.movement.loadedBounds[oldBound].isZombiesLoaded = false;
+            }
+            regions[oldBound].PlayerCountInRegion = Mathf.Max(0, regions[oldBound].PlayerCountInRegion - 1);
         }
-        if (LevelNavigation.checkSafe(newBound) && !player.movement.loadedBounds[newBound].isZombiesLoaded)
+        if (!LevelNavigation.checkSafe(newBound))
+        {
+            return;
+        }
+        if (!player.movement.loadedBounds[newBound].isZombiesLoaded)
         {
             if (player.channel.IsLocalPlayer)
             {
@@ -1141,12 +1154,27 @@ public class ZombieManager : SteamCaller
             }
             player.movement.loadedBounds[newBound].isZombiesLoaded = true;
         }
+        regions[newBound].PlayerCountInRegion++;
     }
 
     private void onPlayerCreated(Player player)
     {
+        if (Provider.isServer && player.movement.bound < regions.Length)
+        {
+            regions[player.movement.bound].PlayerCountInRegion++;
+        }
         PlayerMovement movement = player.movement;
         movement.onBoundUpdated = (PlayerBoundUpdated)Delegate.Combine(movement.onBoundUpdated, new PlayerBoundUpdated(onBoundUpdated));
+    }
+
+    private void onPlayerDestroyed(Player player)
+    {
+        if (Provider.isServer && player.movement.bound < regions.Length)
+        {
+            regions[player.movement.bound].PlayerCountInRegion = Mathf.Max(0, regions[player.movement.bound].PlayerCountInRegion - 1);
+        }
+        PlayerMovement movement = player.movement;
+        movement.onBoundUpdated = (PlayerBoundUpdated)Delegate.Remove(movement.onBoundUpdated, new PlayerBoundUpdated(onBoundUpdated));
     }
 
     private void onLevelLoaded(int level)
@@ -1159,6 +1187,7 @@ public class ZombieManager : SteamCaller
                 return;
             }
             _regions = new ZombieRegion[LevelNavigation.bounds.Count];
+            regionsWithPlayers = new HashSet<int>();
             for (byte b = 0; b < regions.Length; b++)
             {
                 regions[b] = new ZombieRegion(b);
@@ -1169,6 +1198,7 @@ public class ZombieManager : SteamCaller
             wanderingCount = 0;
             tickIndex = 0;
             _tickingZombies = new List<Zombie>();
+            AllZombies = new List<Zombie>();
             respawnZombiesBound = 0;
             _waveReady = false;
             _waveIndex = 0;
@@ -1297,7 +1327,26 @@ public class ZombieManager : SteamCaller
 
     private void Update()
     {
-        if (!Level.isLoaded || !Provider.isServer || LevelNavigation.bounds == null || LevelNavigation.bounds.Count == 0 || LevelZombies.zombies == null || LevelZombies.zombies.Length == 0 || LevelNavigation.bounds.Count != LevelZombies.zombies.Length || regions == null || tickingZombies == null)
+        if (!Level.isLoaded)
+        {
+            return;
+        }
+        if (!Provider.isServer && AllZombies != null)
+        {
+            foreach (Zombie allZombie in AllZombies)
+            {
+                try
+                {
+                    allZombie?.OnUpdate();
+                }
+                catch (Exception e)
+                {
+                    UnturnedLog.exception(e, "Caught exception updating zombie:");
+                }
+            }
+            return;
+        }
+        if (LevelNavigation.bounds == null || LevelNavigation.bounds.Count == 0 || LevelZombies.zombies == null || LevelZombies.zombies.Length == 0 || LevelNavigation.bounds.Count != LevelZombies.zombies.Length || regions == null || tickingZombies == null)
         {
             return;
         }
@@ -1334,6 +1383,20 @@ public class ZombieManager : SteamCaller
                 zombie.tick();
             }
         }
+        foreach (int regionsWithPlayer in regionsWithPlayers)
+        {
+            foreach (Zombie zombie2 in regions[regionsWithPlayer].zombies)
+            {
+                try
+                {
+                    zombie2?.OnUpdate();
+                }
+                catch (Exception e2)
+                {
+                    UnturnedLog.exception(e2, "Caught exception updating zombie:");
+                }
+            }
+        }
         if (Time.realtimeSinceStartup - lastTick > Provider.UPDATE_TIME)
         {
             lastTick += Provider.UPDATE_TIME;
@@ -1358,6 +1421,7 @@ public class ZombieManager : SteamCaller
         Level.onLevelLoaded = (LevelLoaded)Delegate.Combine(Level.onLevelLoaded, new LevelLoaded(onLevelLoaded));
         Level.onPostLevelLoaded = (PostLevelLoaded)Delegate.Combine(Level.onPostLevelLoaded, new PostLevelLoaded(onPostLevelLoaded));
         Player.onPlayerCreated = (PlayerCreated)Delegate.Combine(Player.onPlayerCreated, new PlayerCreated(onPlayerCreated));
+        Player.onPlayerDestroyed = (PlayerCreated)Delegate.Combine(Player.onPlayerDestroyed, new PlayerCreated(onPlayerDestroyed));
         BeaconManager.onBeaconUpdated = (BeaconUpdated)Delegate.Combine(BeaconManager.onBeaconUpdated, new BeaconUpdated(onBeaconUpdated));
         if (!Dedicator.IsDedicatedServer)
         {
@@ -1423,6 +1487,10 @@ public class ZombieManager : SteamCaller
             num += zombieRegion.zombies?.Count ?? 0;
             num2 += zombieRegion.alive;
             num3 += zombieRegion.aliveBossZombieCount;
+        }
+        if (num != AllZombies.Count)
+        {
+            UnturnedLog.error($"AllZombies doesn't match per-region count! (AllZombies: {AllZombies.Count}, Total: {num})");
         }
         results.Add($"Zombies: {num}");
         results.Add($"Alive zombies: {num2}");

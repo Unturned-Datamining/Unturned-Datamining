@@ -81,7 +81,7 @@ public struct DamagePlayerParameters
         respectArmor = false;
         applyGlobalArmorMultiplier = true;
         trackKill = false;
-        ragdollEffect = ERagdollEffect.NONE;
+        ragdollEffect = ERagdollEffect.None;
         bleedingModifier = Bleeding.Default;
         bonesModifier = Bones.None;
         foodModifier = 0f;

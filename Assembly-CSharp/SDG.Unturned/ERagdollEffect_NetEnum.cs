@@ -8,12 +8,12 @@ public static class ERagdollEffect_NetEnum
     {
         uint value2;
         bool result = reader.ReadBits(4, out value2);
-        if (value2 <= 9)
+        if (value2 <= 12)
         {
             value = (ERagdollEffect)value2;
             return result;
         }
-        value = ERagdollEffect.NONE;
+        value = ERagdollEffect.None;
         return false;
     }
 

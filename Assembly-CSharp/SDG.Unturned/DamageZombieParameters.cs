@@ -65,7 +65,7 @@ public struct DamageZombieParameters
         limb = ELimb.SPINE;
         times = 1f;
         zombieStunOverride = EZombieStunOverride.None;
-        ragdollEffect = ERagdollEffect.NONE;
+        ragdollEffect = ERagdollEffect.None;
         RagdollForceMultiplier = 1f;
         AlertPosition = null;
         instigator = null;

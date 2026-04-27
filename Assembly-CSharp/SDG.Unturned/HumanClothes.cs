@@ -1239,6 +1239,10 @@ public class HumanClothes : MonoBehaviour
                         ushort inventoryMythicID3 = Provider.provider.economyService.getInventoryMythicID(visualHat);
                         if (inventoryMythicID3 != 0)
                         {
+                            if (itemHatAsset != visualHatAsset)
+                            {
+                                TransferEffectTransform(visualHatAsset.hat, hatModel);
+                            }
                             centerHeadEffect(skull, hatModel);
                             ItemTool.ApplyMythicalEffect(hatModel, inventoryMythicID3, EEffectType.HEAD_COSMETIC);
                         }
@@ -1279,6 +1283,10 @@ public class HumanClothes : MonoBehaviour
                         ushort inventoryMythicID4 = Provider.provider.economyService.getInventoryMythicID(visualBackpack);
                         if (inventoryMythicID4 != 0)
                         {
+                            if (itemBackpackAsset != visualBackpackAsset)
+                            {
+                                TransferEffectTransform(visualBackpackAsset.backpack, backpackModel);
+                            }
                             ItemTool.ApplyMythicalEffect(backpackModel, inventoryMythicID4, EEffectType.BODY_COSMETIC);
                         }
                     }
@@ -1317,6 +1325,10 @@ public class HumanClothes : MonoBehaviour
                         ushort inventoryMythicID5 = Provider.provider.economyService.getInventoryMythicID(visualVest);
                         if (inventoryMythicID5 != 0)
                         {
+                            if (itemVestAsset != visualVestAsset)
+                            {
+                                TransferEffectTransform(visualVestAsset.vest, vestModel);
+                            }
                             ItemTool.ApplyMythicalEffect(vestModel, inventoryMythicID5, EEffectType.BODY_COSMETIC);
                         }
                     }
@@ -1356,6 +1368,10 @@ public class HumanClothes : MonoBehaviour
                     }
                     if (num != 0)
                     {
+                        if (itemMaskAsset != visualMaskAsset && visualMaskAsset != null)
+                        {
+                            TransferEffectTransform(visualMaskAsset.mask, maskModel);
+                        }
                         centerHeadEffect(skull, maskModel);
                         ItemTool.ApplyMythicalEffect(maskModel, num, EEffectType.HEAD_COSMETIC);
                     }
@@ -1395,6 +1411,10 @@ public class HumanClothes : MonoBehaviour
                         ushort inventoryMythicID6 = Provider.provider.economyService.getInventoryMythicID(visualGlasses);
                         if (inventoryMythicID6 != 0)
                         {
+                            if (itemGlassesAsset != visualGlassesAsset)
+                            {
+                                TransferEffectTransform(visualGlassesAsset.glasses, glassesModel);
+                            }
                             centerHeadEffect(skull, glassesModel);
                             ItemTool.ApplyMythicalEffect(glassesModel, inventoryMythicID6, EEffectType.HEAD_COSMETIC);
                         }
@@ -1481,6 +1501,26 @@ public class HumanClothes : MonoBehaviour
             }
         }
         markAllDirty(isDirty: false);
+    }
+
+    /// <summary>
+    /// Used when item takes priority over cosmetic but mythical effect is still visible.
+    /// </summary>
+    private void TransferEffectTransform(GameObject prefab, Transform model)
+    {
+        Transform transform = prefab?.transform.Find("Effect");
+        if (!(transform == null))
+        {
+            Transform transform2 = model.Find("Effect");
+            if (transform2 == null)
+            {
+                transform2 = new GameObject("Effect").transform;
+                transform2.parent = model;
+                transform2.localScale = Vector3.one;
+            }
+            transform.GetLocalPositionAndRotation(out var localPosition, out var localRotation);
+            transform2.SetLocalPositionAndRotation(localPosition, localRotation);
+        }
     }
 
     /// <summary>

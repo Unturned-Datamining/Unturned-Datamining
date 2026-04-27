@@ -423,7 +423,7 @@ public class PlayerEquipment : PlayerCaller
         {
             return skinRagdollEffect;
         }
-        return ERagdollEffect.NONE;
+        return ERagdollEffect.None;
     }
 
     internal AudioReference GetUseableSpecialAudioOverride()
@@ -1196,7 +1196,7 @@ public class PlayerEquipment : PlayerCaller
         firstEventComponent = null;
         thirdEventComponent = null;
         characterEventComponent = null;
-        skinRagdollEffect = ERagdollEffect.NONE;
+        skinRagdollEffect = ERagdollEffect.None;
         useableSkin = null;
         if (firstModel != null)
         {
@@ -1267,7 +1267,7 @@ public class PlayerEquipment : PlayerCaller
             }
         }
         useableSkin = Assets.find(EAssetType.SKIN, id) as SkinAsset;
-        skinRagdollEffect = ERagdollEffect.NONE;
+        skinRagdollEffect = ERagdollEffect.None;
         if (!base.channel.owner.getRagdollEffect(asset.sharedSkinLookupID, out skinRagdollEffect) && useableSkin != null)
         {
             skinRagdollEffect = useableSkin.ragdollEffect;

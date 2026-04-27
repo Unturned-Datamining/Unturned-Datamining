@@ -349,7 +349,7 @@ public class SteamPlayer : SteamConnectedClientBase
     {
         if (!getDynamicEconDetails(itemID, out var details))
         {
-            effect = ERagdollEffect.NONE;
+            effect = ERagdollEffect.None;
             return false;
         }
         return details.getRagdollEffect(out effect);
@@ -359,7 +359,7 @@ public class SteamPlayer : SteamConnectedClientBase
     {
         if (!getDynamicEconDetailsForItemDef(itemDefId, out var details))
         {
-            effect = ERagdollEffect.NONE;
+            effect = ERagdollEffect.None;
             return false;
         }
         return details.getRagdollEffect(out effect);

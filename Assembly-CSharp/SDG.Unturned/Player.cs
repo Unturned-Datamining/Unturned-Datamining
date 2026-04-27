@@ -18,6 +18,8 @@ public class Player : MonoBehaviour, IDialogueTarget, IExplosionDamageable, IEqu
 
     public static PlayerCreated onPlayerCreated;
 
+    public static PlayerCreated onPlayerDestroyed;
+
     public PlayerTeleported onPlayerTeleported;
 
     public PlayerSpyReady onPlayerSpyReady;
@@ -1501,6 +1503,14 @@ public class Player : MonoBehaviour, IDialogueTarget, IExplosionDamageable, IEqu
             isLoadingLife = false;
             isLoadingClothing = false;
             channel.owner.commitModifiedDynamicProps();
+        }
+        try
+        {
+            onPlayerDestroyed?.Invoke(this);
+        }
+        catch (Exception e)
+        {
+            UnturnedLog.exception(e, "Caught exception in onPlayerDestroyed:");
         }
     }
 

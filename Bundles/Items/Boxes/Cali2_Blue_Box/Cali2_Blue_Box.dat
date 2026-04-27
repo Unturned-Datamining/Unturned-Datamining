@@ -1,0 +1,35 @@
+GUID c379656425f04a6da86ac6f4ac7cbb68
+Type Box
+
+Size_X 1
+Size_Y 1
+
+Generate 21091
+
+Probability_Model Equalized
+Contains_Bonus_Items True
+
+Drops 21
+Drop_0 -1
+Drop_1 "119201" // Drone Goggles
+Drop_2 "129401" // Sealine Heartbreaker
+Drop_3 "115501" // Bike Mask
+Drop_4 "122601" // Jammer Pack
+Drop_5 "117001" // Shopkeeper Hat
+Drop_6 "120001" // Enforcer Gas Mask
+Drop_7 "125501" // Rebel Roots Hair
+Drop_8 "125701" // Patchwork Vest
+Drop_9 "128701" // Tac Cap
+Drop_10 "129001" // Toaster Head
+Drop_11 "125601" // Inferno Tank
+Drop_12 "125401" // Punk Trousers
+Drop_13 "125301" // Press Vest
+Drop_14 "117201" // Star Spangled Cape
+Drop_15 "129201" // Innovator Turtleneck
+Drop_16 "117101" // Canine Bangs Hair
+Drop_17 "121701" // Guitar Riff Pack
+Drop_18 "118501" // Rouge Blazer
+Drop_19 "118401" // Cardinal Trousers
+Drop_20 "118301" // Cool Glasses
+
+Pro

@@ -476,7 +476,7 @@ public class PlayerMovement : PlayerCaller
                 return skinAsset.ragdollEffect;
             }
         }
-        return ERagdollEffect.NONE;
+        return ERagdollEffect.None;
     }
 
     internal void ApplyPendingVehicleChange()

@@ -471,7 +471,7 @@ public class LevelManager : SteamCaller
                     {
                         float num2 = Provider.modeConfigData.Events.Arena_Compactor_Extra_Damage_Per_Second * arenaPlayer.timeOutsideArea;
                         byte amount = MathfEx.RoundAndClampToByte((float)Provider.modeConfigData.Events.Arena_Compactor_Damage + num2);
-                        arenaPlayer.steamPlayer.player.life.askDamage(amount, Vector3.up * 10f, EDeathCause.ARENA, ELimb.SPINE, CSteamID.Nil, out var _, trackKill: false, ERagdollEffect.NONE, canCauseBleeding: true, bypassSafezone: true);
+                        arenaPlayer.steamPlayer.player.life.askDamage(amount, Vector3.up * 10f, EDeathCause.ARENA, ELimb.SPINE, CSteamID.Nil, out var _, trackKill: false, ERagdollEffect.None, canCauseBleeding: true, bypassSafezone: true);
                         arenaPlayer.lastAreaDamage = time;
                     }
                     arenaPlayer.timeOutsideArea += deltaTime;
@@ -510,7 +510,7 @@ public class LevelManager : SteamCaller
             if (!arenaPlayer.hasDied && arenaPlayer.steamPlayer != null && !(arenaPlayer.steamPlayer.player == null))
             {
                 arenaPlayer.steamPlayer.player.sendStat(EPlayerStat.ARENA_WINS);
-                arenaPlayer.steamPlayer.player.life.askDamage(101, Vector3.up * 101f, EDeathCause.ARENA, ELimb.SPINE, CSteamID.Nil, out var _, trackKill: false, ERagdollEffect.NONE, canCauseBleeding: true, bypassSafezone: true);
+                arenaPlayer.steamPlayer.player.life.askDamage(101, Vector3.up * 101f, EDeathCause.ARENA, ELimb.SPINE, CSteamID.Nil, out var _, trackKill: false, ERagdollEffect.None, canCauseBleeding: true, bypassSafezone: true);
             }
         }
     }
