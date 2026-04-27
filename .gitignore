@@ -1,40 +1,40 @@
-steamapps/
-appcache/
-BattlEye/
-config/
-Content/
-CuratedMapIcons/
-depotcache/
-Extras/
-LoadingScreens/
-Logs/
-Modules/
-MonoBleedingEdge/
-Sandbox/
-Servers/
-userdata/
-Unturned_Data/
-Unturned_Headless_Data/
-Bundles/Sources/
+/steamapps/
+/appcache/
+/BattlEye/
+/config/
+/Content/
+/CuratedMapIcons/
+/depotcache/
+/Extras/
+/LoadingScreens/
+/Logs/
+/Modules/
+/MonoBleedingEdge/
+/Sandbox/
+/Servers/
+/userdata/
+/Unturned_Data/
+/Unturned_Headless_Data/
+/Bundles/Sources/
 
-install.vdf
-Licenses.txt
-ServerHelper.*
-steamclient.*
-steamclient64.*
-StreamerNames.json
-tier0_s.*
-tier0_s64.*
-UnityPlayer.*
-UnityCrashHandler64.*
-Unturned_Headless.*
-vstdlib_s.*
-vstdlib_s64.*
-ExampleServer.*
+/install.vdf
+/Licenses.txt
+/ServerHelper.*
+/steamclient.*
+/steamclient64.*
+/StreamerNames.json
+/tier0_s.*
+/tier0_s64.*
+/UnityPlayer.*
+/UnityCrashHandler64.*
+/Unturned_Headless.*
+/vstdlib_s.*
+/vstdlib_s64.*
+/ExampleServer.*
 
-**/Landscape
-**/Editor
-**/Terrain
+**/Landscape/
+**/Editor/
+**/Terrain/
 
 *.masterbundle
 *.hash
@@ -57,9 +57,9 @@ ExampleServer.*
 *.blob
 *.commit
 
-SteamCMD/
-tools/
-steamcmd/
+/SteamCMD/
+/tools/
+/steamcmd/
 
 .vs/
 
@@ -69,3 +69,4 @@ steamcmd/
 /scout-on-soldier-entry-point-v2
 /toolmanifest.vdf
 /VERSIONS.txt
+/steam-runtime/
