@@ -52,7 +52,7 @@
 	{
 		"Major_Version": 26,
 		"Minor_Version": 3,
-		"Patch_Version": 107,
+		"Patch_Version": 0,
 		"GrantPackageIDs":
 		[
 			487
@@ -65,8 +65,8 @@
 	},
 	"Menu":
 	{
-		"PromoStart": "2026-04-01T12:00:00Z",
-		"PromoEnd": "2026-05-28T12:00:00Z",
+		"PromoStart": "2026-04-30T16:00:00Z",
+		"PromoEnd": "2026-05-28T16:00:00Z",
 		"PromoLevel": "CaliforniaMenu"
 	},
 	"News":
@@ -78,16 +78,29 @@
 		"Auto_Subscribe":
 		[
 			{
-				"Workshop_File_Id": 3565225438,
-				"Start": "2025-09-20T16:00:00Z",
-				"End": "2026-09-20T16:00:00Z"
+				"Workshop_File_Id": 3707778928,
+				"Start": "2026-04-30T16:00:00Z",
+				"End": "2026-05-28T16:00:00Z"
+			},
+			{
+				"Workshop_File_Id": 3711646503,
+				"Start": "2026-04-30T16:00:00Z",
+				"End": "2026-05-28T16:00:00Z"
 			}
+		],
+		"Auto_Unsubscribe":
+		[
+			1905768396
 		],
 		"Curated_Map_Links":
 		[
 			{
 				"Name": "California 2",
 				"Workshop_File_Id": 3707778928,
+				"Required_Workshop_File_Ids":
+				[
+					3711646503
+				],
 				"Visible_In_Singleplayer_Recommendations_List": true
 			},
 			{

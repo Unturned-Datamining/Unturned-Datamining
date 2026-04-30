@@ -5523,6 +5523,19 @@ public class Provider : MonoBehaviour
                 provider.workshopService.setSubscribed(item.Workshop_File_Id, subscribe: true);
             }
         }
+        if (statusData.Maps.Auto_Unsubscribe != null)
+        {
+            IConvenientSavedata convenientSavedata = ConvenientSavedata.get();
+            foreach (ulong item2 in statusData.Maps.Auto_Unsubscribe)
+            {
+                string flag = $"Auto_Unsubscribed_Workshop_Item_{item2}";
+                if (!convenientSavedata.hasFlag(flag))
+                {
+                    convenientSavedata.setFlag(flag);
+                    provider.workshopService.setSubscribed(item2, subscribe: false);
+                }
+            }
+        }
         ConvenientSavedata.SaveIfDirty();
     }
 

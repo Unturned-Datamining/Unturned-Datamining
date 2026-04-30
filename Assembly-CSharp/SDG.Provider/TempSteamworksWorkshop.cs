@@ -79,6 +79,8 @@ public class TempSteamworksWorkshop
 
     private static readonly PublishedFileId_t FRANCE = new PublishedFileId_t(1975500516uL);
 
+    private static readonly PublishedFileId_t CALIFORNIA = new PublishedFileId_t(1905768396uL);
+
     private CallResult<CreateItemResult_t> createItemResult;
 
     private CallResult<SubmitItemUpdateResult_t> submitItemUpdateResult;
@@ -272,9 +274,18 @@ public class TempSteamworksWorkshop
     /// </summary>
     public static bool shouldIgnoreFile(PublishedFileId_t fileId, out string explanation)
     {
-        if (fileId == FRANCE && ReadWrite.fileExists("/Maps/France/Config.json", useCloud: false, usePath: true))
+        if (fileId == FRANCE)
         {
-            explanation = "non-Workshop version of France is still installed";
+            if (ReadWrite.fileExists("/Maps/France/Config.json", useCloud: false, usePath: true))
+            {
+                explanation = "non-Workshop version of France is still installed";
+                return true;
+            }
+        }
+        else if (fileId == CALIFORNIA && !Dedicator.IsDedicatedServer && !ConvenientSavedata.get().hasFlag("Skipped_Cali1"))
+        {
+            ConvenientSavedata.get().setFlag("Skipped_Cali1");
+            explanation = "skipped loading California 1 in case California 2 is about to install";
             return true;
         }
         explanation = null;

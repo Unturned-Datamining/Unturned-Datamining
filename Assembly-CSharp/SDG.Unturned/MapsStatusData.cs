@@ -15,9 +15,17 @@ public class MapsStatusData
     /// </summary>
     public List<AutoSubscribeMap> Auto_Subscribe;
 
+    /// <summary>
+    /// Workshop files to unsubscribe from during starutp.
+    /// If the file is not currently subscribed it won't be unsubscribed from again.
+    /// Only happens once per workshop file. I.e., re-subscribing will be respected.
+    /// </summary>
+    public List<ulong> Auto_Unsubscribe;
+
     public MapsStatusData()
     {
         Curated_Map_Links = new List<CuratedMapLink>();
         Auto_Subscribe = new List<AutoSubscribeMap>();
+        Auto_Unsubscribe = new List<ulong>();
     }
 }

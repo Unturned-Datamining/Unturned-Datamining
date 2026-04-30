@@ -139971,7 +139971,7 @@
     "1451": {
       "name": "Cali2_DevBundle",
       "display_type": "Bundle",
-      "description": "<i>Contains all of the following 13 items:</i>\n<color=#d2bf22>California 2 Blue Mystery Box</color>\n<color=#d2bf22>California 2 Red Mystery Box</color>\n<color=#64c819>California 2 Blue Bundle</color>\n<color=#64c819>California 2 Red Bundle</color>\n<color=#64c819>California 2 Crystalmancer Bundle</color>\n<color=#64c819>California 2 Operator Bundle</color>\n<color=#>Cali2_FreeItems_Bundle</color>\n<color=#fa6419>Hands-Free Telephony</color> <i><color=#767676>Mask</color></i>\n<color=#fa6419>Keycard Necklace</color> <i><color=#767676>Vest</color></i>\n<color=#fa6419>Little Gromm</color> <i><color=#767676>Vest</color></i>\n<color=#fa6419>Head Growths</color> <i><color=#767676>Hat</color></i>\n<color=#fa6419>Peacemaker Suitcase</color> <i><color=#767676>Backpack</color></i>\n<color=#fa6419>Alien Antennas</color> <i><color=#767676>Hat</color></i>",
+      "description": "<i>Contains all of the following 6 items:</i>\n<color=#d2bf22>California 2 Blue Mystery Box</color>\n<color=#d2bf22>California 2 Red Mystery Box</color>\n<color=#64c819>California 2 Blue Bundle</color>\n<color=#64c819>California 2 Red Bundle</color>\n<color=#64c819>California 2 Crystalmancer Bundle</color>\n<color=#64c819>California 2 Operator Bundle</color>",
       "name_color": "",
       "itemdefid": 1451,
       "marketable": false,
@@ -172035,7 +172035,7 @@
     "1138": {
       "name": "Double Experienced Beret",
       "display_type": "Achievement Hat",
-      "description": "Owned by experienced players with more than 5,000 hours in-game.\n\nWhen equipped this applies the cosmetic <color=#fa6419>Double Experienced Beret</color> to your character in-game.",
+      "description": "Owned by experienced players with more than 4,800 hours in-game.\n\nWhen equipped this applies the cosmetic <color=#fa6419>Double Experienced Beret</color> to your character in-game.",
       "name_color": "fa6419",
       "itemdefid": 1138,
       "marketable": false,
@@ -172051,7 +172051,7 @@
     "1139": {
       "name": "Triple Experienced Beret",
       "display_type": "Achievement Hat",
-      "description": "Owned by experienced players with more than 10,000 hours in-game.\n\nWhen equipped this applies the cosmetic <color=#fa6419>Triple Experienced Beret</color> to your character in-game.",
+      "description": "Owned by experienced players with more than 7,200 hours in-game.\n\nWhen equipped this applies the cosmetic <color=#fa6419>Triple Experienced Beret</color> to your character in-game.",
       "name_color": "fa6419",
       "itemdefid": 1139,
       "marketable": false,
@@ -172067,7 +172067,7 @@
     "1450": {
       "name": "Quadruple Experienced Beret",
       "display_type": "Achievement Hat",
-      "description": "Owned by experienced players with more than 20,000 hours in-game.\n\nWhen equipped this applies the cosmetic <color=#fa6419>Quadruple Experienced Beret</color> to your character in-game.",
+      "description": "Owned by experienced players with more than 9,600 hours in-game.\n\nWhen equipped this applies the cosmetic <color=#fa6419>Quadruple Experienced Beret</color> to your character in-game.",
       "name_color": "fa6419",
       "itemdefid": 1450,
       "marketable": false,
@@ -260076,14 +260076,7 @@
       2001,
       2002,
       2003,
-      2004,
-      2005,
-      124900,
-      122800,
-      121500,
-      121600,
-      128600,
-      114300
+      2004
     ],
     "2004": [
       124100,
