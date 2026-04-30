@@ -15,7 +15,22 @@ MainMenuWorkshop
 	AllowNews true
 	Featured
 	{
-		Id 1000
+		Id 1001
+		FileIds
+		[
+			3707778928
+		]
+		Status New
+		Type Curated
+		AssociatedStockpileItems
+		[
+			21090
+			2001
+			21094
+			2002
+			2003
+			2004
+		]
 	}
 	Popular
 	{
@@ -25,9 +40,24 @@ MainMenuWorkshop
 }
 ItemStore
 {
-	PromotionId 1000
+	PromotionId 1001
+	NewItems
+	[
+		21090
+		2001
+		21094
+		2002
+		2003
+		2004
+	]
 	FeaturedItems
 	[
+		21090
+		2001
+		21094
+		2002
+		2003
+		2004
 		1987
 		1994
 		1995
@@ -63,14 +93,6 @@ ItemCrafting
 		{
 			ItemDefId 19043
 			Materials 750
-		}
-		{
-			ItemDefId 21077
-			Materials 40
-		}
-		{
-			ItemDefId 1447
-			Materials 400
 		}
 	]
 }
@@ -214,5 +236,6 @@ ServerCuration
 }
 ShouldAllowJoiningInternetServersWithoutGslt false
 ShouldServersWithoutMonetizationTagBeVisibleInInternetServerList true
+PlaytimeGeneratorItemDefId 10000
 QueryPingWarningOffsetMs 50
 PingMismatchWarningThresholdMs 50
