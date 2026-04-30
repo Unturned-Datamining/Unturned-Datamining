@@ -787,7 +787,7 @@ public class PlayerInventory : PlayerCaller
             }
             base.player.equipment.dequip();
         }
-        if (page < 0 || page >= PAGES - 1 || items[page] == null || items == null)
+        if (page < 0 || page >= PAGES - 1 || items == null || items[page] == null)
         {
             return;
         }

@@ -386,6 +386,7 @@ public class Player : MonoBehaviour, IDialogueTarget, IExplosionDamageable, IEqu
         NetPakReader reader = context.reader;
         if (screenshotsExpected < 1)
         {
+            context.Kick("server was not expecting a screenshot");
             return;
         }
         screenshotsExpected--;
