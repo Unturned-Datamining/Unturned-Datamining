@@ -138,13 +138,80 @@ public class MenuSurvivorsClothingInspectUI
         }
         else
         {
-            if (itemAsset.item == null && itemAsset is ItemClothingAsset { ClothingPrefab: var clothingPrefab } && clothingPrefab != null)
+            if (itemAsset.item == null && itemAsset is ItemClothingAsset { type: var type } itemClothingAsset)
             {
-                GameObject gameObject = Object.Instantiate(clothingPrefab);
-                if (gameObject != null)
+                switch (type)
                 {
-                    model = gameObject.transform;
-                    flag = true;
+                case EItemType.SHIRT:
+                {
+                    model = ItemTool.getItem(3, 0, 100, itemAsset.getState(), viewmodel: false, getInspectedItemStatTrackerValue);
+                    ItemShirtAsset itemShirtAsset = (ItemShirtAsset)itemAsset;
+                    Material material2 = new Material(Shader.Find("Standard"));
+                    material2.mainTexture = itemShirtAsset.shirt;
+                    material2.EnableKeyword("_ALPHATEST_ON");
+                    material2.SetFloat("_Mode", 1f);
+                    if (itemShirtAsset.metallic != null)
+                    {
+                        material2.EnableKeyword("_METALLICGLOSSMAP");
+                        material2.SetTexture("_MetallicGlossMap", itemShirtAsset.metallic);
+                        material2.SetFloat("_Glossiness", 1f);
+                    }
+                    else
+                    {
+                        material2.SetFloat("_Glossiness", 0f);
+                    }
+                    if (itemShirtAsset.emission != null)
+                    {
+                        material2.EnableKeyword("_EMISSION");
+                        material2.SetTexture("_EmissionMap", itemShirtAsset.emission);
+                        material2.SetColor("_EmissionColor", new Color(2f, 2f, 2f));
+                    }
+                    model.GetComponent<Renderer>().material = material2;
+                    model.gameObject.AddComponent<DestroyMaterialOnDestroy>().instantiatedMaterial = material2;
+                    break;
+                }
+                case EItemType.PANTS:
+                {
+                    model = ItemTool.getItem(2, 0, 100, itemAsset.getState(), viewmodel: false, getInspectedItemStatTrackerValue);
+                    ItemPantsAsset itemPantsAsset = (ItemPantsAsset)itemAsset;
+                    Material material = new Material(Shader.Find("Standard"));
+                    material.mainTexture = itemPantsAsset.pants;
+                    material.EnableKeyword("_ALPHATEST_ON");
+                    material.SetFloat("_Mode", 1f);
+                    if (itemPantsAsset.metallic != null)
+                    {
+                        material.EnableKeyword("_METALLICGLOSSMAP");
+                        material.SetTexture("_MetallicGlossMap", itemPantsAsset.metallic);
+                        material.SetFloat("_Glossiness", 1f);
+                    }
+                    else
+                    {
+                        material.SetFloat("_Glossiness", 0f);
+                    }
+                    if (itemPantsAsset.emission != null)
+                    {
+                        material.EnableKeyword("_EMISSION");
+                        material.SetTexture("_EmissionMap", itemPantsAsset.emission);
+                        material.SetColor("_EmissionColor", new Color(2f, 2f, 2f));
+                    }
+                    model.GetComponent<Renderer>().material = material;
+                    model.gameObject.AddComponent<DestroyMaterialOnDestroy>().instantiatedMaterial = material;
+                    break;
+                }
+                default:
+                {
+                    GameObject clothingPrefab = itemClothingAsset.ClothingPrefab;
+                    if (clothingPrefab != null)
+                    {
+                        GameObject gameObject = Object.Instantiate(clothingPrefab);
+                        if (gameObject != null)
+                        {
+                            model = gameObject.transform;
+                            flag = true;
+                        }
+                    }
+                    break;
+                }
                 }
             }
             if (model == null)
@@ -153,8 +220,8 @@ public class MenuSurvivorsClothingInspectUI
             }
             if (num != 0)
             {
-                EEffectType type = ((itemAsset.type == EItemType.BACKPACK || itemAsset.type == EItemType.VEST) ? EEffectType.BODY_COSMETIC : EEffectType.HEAD_COSMETIC);
-                ItemTool.ApplyMythicalEffect(model, num, type);
+                EEffectType type2 = ((itemAsset.type == EItemType.BACKPACK || itemAsset.type == EItemType.VEST) ? EEffectType.BODY_COSMETIC : EEffectType.HEAD_COSMETIC);
+                ItemTool.ApplyMythicalEffect(model, num, type2);
             }
         }
         model.parent = inspect;

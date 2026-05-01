@@ -315,6 +315,8 @@ public class UseableGun : Useable
 
     private static int ScopeMaterialAlphaId = Shader.PropertyToID("_Alpha");
 
+    private static int ReticuleTextureId = Shader.PropertyToID("_ReticuleTexture");
+
     public bool isAiming { get; protected set; }
 
     private int AimAccuracy
@@ -4391,15 +4393,16 @@ public class UseableGun : Useable
             {
                 if (base.player.look.IsUsing2DScope && firstAttachments.sightModel != null && firstAttachments.scopeHook != null && firstAttachments.scopeHook.Find("Reticule") != null)
                 {
-                    Texture mainTexture = firstAttachments.scopeHook.Find("Reticule").GetComponent<Renderer>().sharedMaterial.mainTexture;
-                    if (mainTexture.width <= 64)
+                    Material sharedMaterial = firstAttachments.scopeHook.Find("Reticule").GetComponent<Renderer>().sharedMaterial;
+                    Texture texture = ((!sharedMaterial.HasProperty(ReticuleTextureId)) ? sharedMaterial.mainTexture : sharedMaterial.GetTexture(ReticuleTextureId));
+                    if (texture.width <= 64)
                     {
-                        PlayerLifeUI.scopeOverlay.scopeImage.PositionOffset_X = -mainTexture.width / 2;
-                        PlayerLifeUI.scopeOverlay.scopeImage.PositionOffset_Y = -mainTexture.height / 2;
+                        PlayerLifeUI.scopeOverlay.scopeImage.PositionOffset_X = -texture.width / 2;
+                        PlayerLifeUI.scopeOverlay.scopeImage.PositionOffset_Y = -texture.height / 2;
                         PlayerLifeUI.scopeOverlay.scopeImage.PositionScale_X = 0.5f;
                         PlayerLifeUI.scopeOverlay.scopeImage.PositionScale_Y = 0.5f;
-                        PlayerLifeUI.scopeOverlay.scopeImage.SizeOffset_X = mainTexture.width;
-                        PlayerLifeUI.scopeOverlay.scopeImage.SizeOffset_Y = mainTexture.height;
+                        PlayerLifeUI.scopeOverlay.scopeImage.SizeOffset_X = texture.width;
+                        PlayerLifeUI.scopeOverlay.scopeImage.SizeOffset_Y = texture.height;
                         PlayerLifeUI.scopeOverlay.scopeImage.SizeScale_X = 0f;
                         PlayerLifeUI.scopeOverlay.scopeImage.SizeScale_Y = 0f;
                     }
@@ -4413,8 +4416,8 @@ public class UseableGun : Useable
                         PlayerLifeUI.scopeOverlay.scopeImage.SizeOffset_Y = 0f;
                         if (firstAttachments.sightAsset.shouldOffsetScopeOverlayByOneTexel)
                         {
-                            PlayerLifeUI.scopeOverlay.scopeImage.SizeScale_X = 1f + 1f / (float)mainTexture.width;
-                            PlayerLifeUI.scopeOverlay.scopeImage.SizeScale_Y = 1f + 1f / (float)mainTexture.height;
+                            PlayerLifeUI.scopeOverlay.scopeImage.SizeScale_X = 1f + 1f / (float)texture.width;
+                            PlayerLifeUI.scopeOverlay.scopeImage.SizeScale_Y = 1f + 1f / (float)texture.height;
                         }
                         else
                         {
@@ -4422,7 +4425,7 @@ public class UseableGun : Useable
                             PlayerLifeUI.scopeOverlay.scopeImage.SizeScale_Y = 1f;
                         }
                     }
-                    PlayerLifeUI.scopeOverlay.scopeImage.Texture = mainTexture;
+                    PlayerLifeUI.scopeOverlay.scopeImage.Texture = texture;
                     if (firstAttachments.aimHook.parent.Find("Reticule") != null)
                     {
                         Color criticalHitmarkerColor = OptionsSettings.criticalHitmarkerColor;
