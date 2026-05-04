@@ -87,7 +87,7 @@ public class PlayerPauseUI
             {
                 return false;
             }
-            if (Player.LocalPlayer.movement.isSafe && Player.LocalPlayer.movement.isSafeInfo.noWeapons)
+            if (Player.LocalPlayer.movement.isSafe && Player.LocalPlayer.movement.isSafeInfo.noIncomingDamage)
             {
                 return false;
             }
@@ -222,7 +222,7 @@ public class PlayerPauseUI
 
     private static void onClickedSuicideButton(SleekButtonIconConfirm button)
     {
-        if (((Level.info != null && Level.info.type == ELevelType.SURVIVAL) || !Player.LocalPlayer.movement.isSafe || !Player.LocalPlayer.movement.isSafeInfo.noWeapons) && Provider.modeConfigData.Gameplay.Can_Suicide)
+        if (((Level.info != null && Level.info.type == ELevelType.SURVIVAL) || !Player.LocalPlayer.movement.isSafe || !Player.LocalPlayer.movement.isSafeInfo.noIncomingDamage) && Provider.modeConfigData.Gameplay.Can_Suicide)
         {
             closeAndGotoAppropriateHUD();
             Player.LocalPlayer.life.sendSuicide();

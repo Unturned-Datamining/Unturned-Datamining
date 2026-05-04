@@ -126,6 +126,7 @@ public class LevelNodes
                 SafezoneVolume safezoneVolume = gameObject5.AddComponent<SafezoneVolume>();
                 safezoneVolume.noWeapons = safezoneNode.noWeapons;
                 safezoneVolume.noBuildables = safezoneNode.noBuildables;
+                safezoneVolume.noIncomingDamage = safezoneNode.noWeapons;
                 LevelHierarchy.AssignInstanceIdAndMarkDirty(safezoneVolume);
                 if (safezoneNode.isHeight)
                 {

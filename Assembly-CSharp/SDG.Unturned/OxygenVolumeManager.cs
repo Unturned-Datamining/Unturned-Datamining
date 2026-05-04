@@ -19,16 +19,20 @@ public class OxygenVolumeManager : VolumeManager<OxygenVolume, OxygenVolumeManag
     {
         bool result = false;
         maxAlpha = 0f;
-        foreach (OxygenVolume breathableVolume in breathableVolumes)
+        List<OxygenVolume> list = ((regionalVolumes == null) ? breathableVolumes : regionalVolumes.GetList(position));
+        if (list != null)
         {
-            if (breathableVolume.IsPositionInsideVolumeWithAlpha(position, out var alpha))
+            foreach (OxygenVolume item in list)
             {
-                result = true;
-                maxAlpha = Mathf.Max(maxAlpha, alpha);
-                if (maxAlpha > 0.9999f)
+                if (item.isBreathable && item.IsPositionInsideVolumeWithAlpha(position, out var alpha))
                 {
-                    maxAlpha = 1f;
-                    break;
+                    result = true;
+                    maxAlpha = Mathf.Max(maxAlpha, alpha);
+                    if (maxAlpha > 0.9999f)
+                    {
+                        maxAlpha = 1f;
+                        break;
+                    }
                 }
             }
         }
@@ -42,16 +46,20 @@ public class OxygenVolumeManager : VolumeManager<OxygenVolume, OxygenVolumeManag
     {
         bool result = false;
         maxAlpha = 0f;
-        foreach (OxygenVolume nonBreathableVolume in nonBreathableVolumes)
+        List<OxygenVolume> list = ((regionalVolumes == null) ? nonBreathableVolumes : regionalVolumes.GetList(position));
+        if (list != null)
         {
-            if (nonBreathableVolume.IsPositionInsideVolumeWithAlpha(position, out var alpha))
+            foreach (OxygenVolume item in list)
             {
-                result = true;
-                maxAlpha = Mathf.Max(maxAlpha, alpha);
-                if (maxAlpha > 0.9999f)
+                if (!item.isBreathable && item.IsPositionInsideVolumeWithAlpha(position, out var alpha))
                 {
-                    maxAlpha = 1f;
-                    break;
+                    result = true;
+                    maxAlpha = Mathf.Max(maxAlpha, alpha);
+                    if (maxAlpha > 0.9999f)
+                    {
+                        maxAlpha = 1f;
+                        break;
+                    }
                 }
             }
         }
@@ -91,5 +99,6 @@ public class OxygenVolumeManager : VolumeManager<OxygenVolume, OxygenVolumeManag
         supportsFalloff = true;
         breathableVolumes = new List<OxygenVolume>();
         nonBreathableVolumes = new List<OxygenVolume>();
+        benefitsFromStaticVolumes = true;
     }
 }

@@ -571,7 +571,7 @@ public class PlayerLife : PlayerCaller
 
     internal bool InternalCanDamage()
     {
-        if (base.player.movement.isSafe && base.player.movement.isSafeInfo.noWeapons)
+        if (base.player.movement.isSafe && base.player.movement.isSafeInfo.noIncomingDamage)
         {
             return false;
         }
@@ -1512,7 +1512,7 @@ public class PlayerLife : PlayerCaller
     [SteamCall(ESteamCallValidation.ONLY_FROM_OWNER, ratelimitHz = 2, legacyName = "askSuicide")]
     public void ReceiveSuicideRequest()
     {
-        if (IsAlive && ((Level.info != null && Level.info.type == ELevelType.SURVIVAL) || !base.player.movement.isSafe || !base.player.movement.isSafeInfo.noWeapons) && Provider.modeConfigData.Gameplay.Can_Suicide)
+        if (IsAlive && ((Level.info != null && Level.info.type == ELevelType.SURVIVAL) || !base.player.movement.isSafe || !base.player.movement.isSafeInfo.noIncomingDamage) && Provider.modeConfigData.Gameplay.Can_Suicide)
         {
             doDamage(100, Vector3.up * 10f, EDeathCause.SUICIDE, ELimb.SKULL, base.channel.owner.playerID.steamID, out var _);
         }

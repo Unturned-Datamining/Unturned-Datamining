@@ -9,5 +9,6 @@ public class UndergroundWhitelistVolumeManager : VolumeManager<UndergroundWhitel
     {
         base.FriendlyName = "Underground Whitelist";
         SetDebugColor(new Color32(63, 63, 63, byte.MaxValue));
+        benefitsFromStaticVolumes = true;
     }
 }

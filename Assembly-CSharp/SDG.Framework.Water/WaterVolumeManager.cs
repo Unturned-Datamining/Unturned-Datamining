@@ -34,19 +34,24 @@ public class WaterVolumeManager : VolumeManager<WaterVolume, WaterVolumeManager>
     /// </summary>
     public WaterVolume GetFishingVolume(Vector3 position)
     {
-        tempVolumes.Clear();
-        foreach (WaterVolume allVolume in allVolumes)
+        List<WaterVolume> overlapTestVolumes = GetOverlapTestVolumes(position);
+        if (overlapTestVolumes == null)
         {
-            if (allVolume.GetFishSpawnTable() != null)
+            return null;
+        }
+        tempVolumes.Clear();
+        foreach (WaterVolume item in overlapTestVolumes)
+        {
+            if (item.GetFishSpawnTable() != null)
             {
-                if (allVolume.IsPositionInsideVolume(position))
+                if (item.IsPositionInsideVolume(position))
                 {
-                    return allVolume;
+                    return item;
                 }
             }
             else
             {
-                tempVolumes.Add(allVolume);
+                tempVolumes.Add(item);
             }
         }
         foreach (WaterVolume tempVolume in tempVolumes)
@@ -63,6 +68,7 @@ public class WaterVolumeManager : VolumeManager<WaterVolume, WaterVolumeManager>
     {
         base.FriendlyName = "Water";
         SetDebugColor(new Color32(50, 200, 200, byte.MaxValue));
+        benefitsFromStaticVolumes = true;
         if (!Dedicator.IsDedicatedServer)
         {
             oldWaterQuality = GraphicsSettings.waterQuality;

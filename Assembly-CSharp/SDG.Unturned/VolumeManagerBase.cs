@@ -19,4 +19,6 @@ public abstract class VolumeManagerBase
     public abstract void InstantiateVolume(Vector3 position, Quaternion rotation, Vector3 scale);
 
     public abstract IEnumerable<VolumeBase> EnumerateAllVolumes();
+
+    internal abstract void EnableStaticVolumes();
 }

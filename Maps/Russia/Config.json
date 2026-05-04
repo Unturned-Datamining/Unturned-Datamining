@@ -35,5 +35,6 @@
 		"GUID": "341a12e4ec1d424ca56876b4e9a722ac"
 	},
 	"Batching_Version": 2,
-	"Enable_Clutter_Option": true
+	"Enable_Clutter_Option": true,
+	"Enable_Static_Volumes": true
 }

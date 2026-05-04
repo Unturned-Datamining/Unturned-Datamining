@@ -9,5 +9,6 @@ public class KillVolumeManager : VolumeManager<KillVolume, KillVolumeManager>
     {
         base.FriendlyName = "Kill";
         SetDebugColor(new Color32(220, 100, 20, byte.MaxValue));
+        benefitsFromStaticVolumes = true;
     }
 }

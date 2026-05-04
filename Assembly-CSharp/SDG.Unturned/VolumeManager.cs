@@ -22,9 +22,21 @@ public class VolumeManager<TVolume, TManager> : VolumeManagerBase where TVolume 
     /// </summary>
     protected bool allowInstantiation = true;
 
+    /// <summary>
+    /// Static volumes optimization is only useful for volume types which frequently lookup volume(s)
+    /// overlapping a given position.
+    /// </summary>
+    protected bool benefitsFromStaticVolumes;
+
     protected bool supportsFalloff;
 
     protected List<TVolume> allVolumes;
+
+    /// <summary>
+    /// Ideally this might be a BVH or octree/quadtree or something, but RegionList is simple and
+    /// already works / will be good enough for a quick patch.
+    /// </summary>
+    internal RegionList<TVolume> regionalVolumes;
 
     private static TManager instance;
 
@@ -85,13 +97,27 @@ public class VolumeManager<TVolume, TManager> : VolumeManagerBase where TVolume 
         }
     }
 
+    protected List<TVolume> GetOverlapTestVolumes(Vector3 position)
+    {
+        if (regionalVolumes != null)
+        {
+            return regionalVolumes.GetList(position);
+        }
+        return allVolumes;
+    }
+
     public TVolume GetFirstOverlappingVolume(Vector3 position)
     {
-        foreach (TVolume allVolume in allVolumes)
+        List<TVolume> overlapTestVolumes = GetOverlapTestVolumes(position);
+        if (overlapTestVolumes == null)
         {
-            if (allVolume.IsPositionInsideVolume(position))
+            return null;
+        }
+        foreach (TVolume item in overlapTestVolumes)
+        {
+            if (item.IsPositionInsideVolume(position))
             {
-                return allVolume;
+                return item;
             }
         }
         return null;
@@ -105,11 +131,16 @@ public class VolumeManager<TVolume, TManager> : VolumeManagerBase where TVolume 
     public void GetOverlappingVolumesWithAlpha(Vector3 position, List<VolumeAlphaPair<TVolume>> results)
     {
         results.Clear();
-        foreach (TVolume allVolume in allVolumes)
+        List<TVolume> overlapTestVolumes = GetOverlapTestVolumes(position);
+        if (overlapTestVolumes == null)
         {
-            if (allVolume.IsPositionInsideVolumeWithAlpha(position, out var alpha))
+            return;
+        }
+        foreach (TVolume item in overlapTestVolumes)
+        {
+            if (item.IsPositionInsideVolumeWithAlpha(position, out var alpha))
             {
-                results.Add(new VolumeAlphaPair<TVolume>(allVolume, alpha));
+                results.Add(new VolumeAlphaPair<TVolume>(item, alpha));
             }
         }
     }
@@ -135,6 +166,24 @@ public class VolumeManager<TVolume, TManager> : VolumeManagerBase where TVolume 
     public override IEnumerable<VolumeBase> EnumerateAllVolumes()
     {
         return allVolumes;
+    }
+
+    /// <summary>
+    /// Called in play mode if level has asserted that volumes do not move.
+    /// </summary>
+    internal override void EnableStaticVolumes()
+    {
+        if (allVolumes.Count < 4 || !benefitsFromStaticVolumes)
+        {
+            return;
+        }
+        regionalVolumes = new RegionList<TVolume>(8);
+        foreach (TVolume allVolume in allVolumes)
+        {
+            Bounds bounds = allVolume.CalculateWorldBounds();
+            regionalVolumes.Add(bounds, allVolume);
+        }
+        UnturnedLog.info($"{base.FriendlyName} manager using regional lookup for {allVolumes.Count} volumes");
     }
 
     public bool Raycast(Ray ray, out RaycastHit hitInfo, out TVolume hitVolume, float maxDistance)

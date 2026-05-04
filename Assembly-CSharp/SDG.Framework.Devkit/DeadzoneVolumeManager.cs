@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using SDG.Unturned;
 using UnityEngine;
 
@@ -7,12 +8,17 @@ public class DeadzoneVolumeManager : VolumeManager<DeadzoneVolume, DeadzoneVolum
 {
     public DeadzoneVolume GetMostDangerousOverlappingVolume(Vector3 position)
     {
-        DeadzoneVolume deadzoneVolume = null;
-        foreach (DeadzoneVolume allVolume in allVolumes)
+        List<DeadzoneVolume> overlapTestVolumes = GetOverlapTestVolumes(position);
+        if (overlapTestVolumes == null)
         {
-            if ((deadzoneVolume == null || allVolume.DeadzoneType > deadzoneVolume.DeadzoneType) && allVolume.IsPositionInsideVolume(position))
+            return null;
+        }
+        DeadzoneVolume deadzoneVolume = null;
+        foreach (DeadzoneVolume item in overlapTestVolumes)
+        {
+            if ((deadzoneVolume == null || item.DeadzoneType > deadzoneVolume.DeadzoneType) && item.IsPositionInsideVolume(position))
             {
-                deadzoneVolume = allVolume;
+                deadzoneVolume = item;
                 if (deadzoneVolume.DeadzoneType == EDeadzoneType.FullSuitRadiation)
                 {
                     break;
@@ -27,10 +33,15 @@ public class DeadzoneVolumeManager : VolumeManager<DeadzoneVolume, DeadzoneVolum
     /// </summary>
     public bool IsNavmeshCenterInsideAnyVolume(Vector3 position)
     {
-        foreach (DeadzoneVolume allVolume in allVolumes)
+        List<DeadzoneVolume> overlapTestVolumes = GetOverlapTestVolumes(position);
+        if (overlapTestVolumes == null)
         {
-            Vector3 position2 = new Vector3(position.x, allVolume.transform.position.y, position.z);
-            if (allVolume.IsPositionInsideVolume(position2))
+            return false;
+        }
+        foreach (DeadzoneVolume item in overlapTestVolumes)
+        {
+            Vector3 position2 = new Vector3(position.x, item.transform.position.y, position.z);
+            if (item.IsPositionInsideVolume(position2))
             {
                 return true;
             }
@@ -42,5 +53,6 @@ public class DeadzoneVolumeManager : VolumeManager<DeadzoneVolume, DeadzoneVolum
     {
         base.FriendlyName = "Deadzone";
         SetDebugColor(new Color32(byte.MaxValue, 0, 0, byte.MaxValue));
+        benefitsFromStaticVolumes = true;
     }
 }

@@ -9,5 +9,6 @@ public class PlayerClipVolumeManager : VolumeManager<PlayerClipVolume, PlayerCli
     {
         base.FriendlyName = "Player Clip";
         SetDebugColor(new Color32(63, 0, 0, byte.MaxValue));
+        benefitsFromStaticVolumes = true;
     }
 }

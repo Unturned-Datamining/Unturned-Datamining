@@ -29,6 +29,11 @@ public static class CharacterControllerExtension
     private static List<PendingEnableRigidbody> pendingChanges;
 
     /// <summary>
+    /// Refer to PlayerMovement's comment.
+    /// </summary>
+    public static CommandLineFlag EnableOverlapRecovery;
+
+    /// <summary>
     /// Does initialOverlaps array contain hit collider?
     /// </summary>
     private static bool wasHitInitialOverlap(RaycastHit hit, int initialOverlapCount)
@@ -66,6 +71,11 @@ public static class CharacterControllerExtension
     /// </summary>
     public static void CheckedMove(this CharacterController component, Vector3 motion)
     {
+        if ((bool)EnableOverlapRecovery)
+        {
+            component.Move(motion);
+            return;
+        }
         Vector3 position = component.transform.position;
         component.Move(motion);
         Vector3 vector = component.transform.position - position;
@@ -172,6 +182,7 @@ public static class CharacterControllerExtension
         initialOverlaps = new Collider[8];
         results = new RaycastHit[8];
         pendingChanges = new List<PendingEnableRigidbody>();
+        EnableOverlapRecovery = new CommandLineFlag(defaultValue: false, "-EnableCharacterControllerOverlapRecovery");
         TimeUtility.updated += OnUpdate;
         CommandLogMemoryUsage.OnExecuted = (Action<List<string>>)Delegate.Combine(CommandLogMemoryUsage.OnExecuted, new Action<List<string>>(OnLogMemoryUsage));
     }

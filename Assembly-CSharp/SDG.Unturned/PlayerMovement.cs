@@ -1606,7 +1606,7 @@ public class PlayerMovement : PlayerCaller
         if (Provider.isServer || base.channel.IsLocalPlayer)
         {
             controller = GetComponent<CharacterController>();
-            controller.enableOverlapRecovery = false;
+            controller.enableOverlapRecovery = CharacterControllerExtension.EnableOverlapRecovery;
         }
         if (Provider.isServer)
         {

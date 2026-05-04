@@ -8,5 +8,6 @@ public class NoStructuresVolumeManager : VolumeManager<NoStructuresVolume, NoStr
     {
         base.FriendlyName = "No Structures";
         SetDebugColor(new Color32(150, 125, 175, byte.MaxValue));
+        benefitsFromStaticVolumes = true;
     }
 }

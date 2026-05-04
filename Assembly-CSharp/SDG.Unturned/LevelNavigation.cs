@@ -36,6 +36,10 @@ public class LevelNavigation
     /// </summary>
     private static List<Bounds> nonExpandedNavmeshBounds;
 
+    private static RegionList<int> regionalBounds;
+
+    private static RegionList<int> regionalNonExpandedNavmeshBounds;
+
     [Obsolete("Was the parent of misc objects in the past, but now empty for TransformHierarchy performance.")]
     public static Transform models
     {
@@ -58,10 +62,36 @@ public class LevelNavigation
 
     public static List<FlagData> flagData { get; private set; }
 
+    private static bool TryGetRegionalBoundsIndex(RegionList<int> regionalInput, List<Bounds> actualBounds, Vector3 position, out int result)
+    {
+        List<int> list = regionalInput.GetList(position);
+        if (list != null)
+        {
+            foreach (int item in list)
+            {
+                if (actualBounds[item].ContainsXZ(position))
+                {
+                    result = item;
+                    return true;
+                }
+            }
+        }
+        result = -1;
+        return false;
+    }
+
     public static bool tryGetBounds(Vector3 point, out byte bound)
     {
         bound = byte.MaxValue;
-        if (bounds != null)
+        if (regionalBounds != null)
+        {
+            if (TryGetRegionalBoundsIndex(regionalBounds, bounds, point, out var result))
+            {
+                bound = (byte)result;
+                return true;
+            }
+        }
+        else if (bounds != null)
         {
             for (byte b = 0; b < bounds.Count; b++)
             {
@@ -79,7 +109,15 @@ public class LevelNavigation
     {
         nav = byte.MaxValue;
         bool result = false;
-        if (nonExpandedNavmeshBounds != null)
+        if (regionalNonExpandedNavmeshBounds != null)
+        {
+            if (TryGetRegionalBoundsIndex(regionalNonExpandedNavmeshBounds, nonExpandedNavmeshBounds, point, out var result2))
+            {
+                nav = (byte)result2;
+                result = true;
+            }
+        }
+        else if (nonExpandedNavmeshBounds != null)
         {
             for (int i = 0; i < nonExpandedNavmeshBounds.Count; i++)
             {
@@ -109,6 +147,11 @@ public class LevelNavigation
         {
             return false;
         }
+        int result;
+        if (regionalBounds != null)
+        {
+            return TryGetRegionalBoundsIndex(regionalBounds, bounds, point, out result);
+        }
         for (byte b = 0; b < bounds.Count; b++)
         {
             if (bounds[b].ContainsXZ(point))
@@ -121,6 +164,11 @@ public class LevelNavigation
 
     public static bool checkSafeFakeNav(Vector3 point)
     {
+        int result;
+        if (regionalNonExpandedNavmeshBounds != null)
+        {
+            return TryGetRegionalBoundsIndex(regionalNonExpandedNavmeshBounds, nonExpandedNavmeshBounds, point, out result);
+        }
         if (nonExpandedNavmeshBounds != null)
         {
             for (int i = 0; i < nonExpandedNavmeshBounds.Count; i++)
@@ -136,6 +184,11 @@ public class LevelNavigation
 
     public static bool checkNavigation(Vector3 point)
     {
+        int result;
+        if (regionalNonExpandedNavmeshBounds != null)
+        {
+            return TryGetRegionalBoundsIndex(regionalNonExpandedNavmeshBounds, nonExpandedNavmeshBounds, point, out result);
+        }
         if (nonExpandedNavmeshBounds != null)
         {
             for (int i = 0; i < nonExpandedNavmeshBounds.Count; i++)
@@ -229,6 +282,8 @@ public class LevelNavigation
     {
         _bounds = new List<Bounds>();
         nonExpandedNavmeshBounds = new List<Bounds>();
+        regionalBounds = null;
+        regionalNonExpandedNavmeshBounds = null;
         flagData = new List<FlagData>();
         if (ReadWrite.fileExists(Level.info.path + "/Environment/Bounds.dat", useCloud: false, usePath: false))
         {
@@ -240,11 +295,26 @@ public class LevelNavigation
                 {
                     Vector3 center = river.readSingleVector3();
                     Vector3 vector = river.readSingleVector3();
-                    bounds.Add(new Bounds(center, vector));
+                    LevelNavigation.bounds.Add(new Bounds(center, vector));
                     nonExpandedNavmeshBounds.Add(new Bounds(center, vector - BOUNDS_SIZE));
                 }
             }
             river.closeRiver();
+        }
+        if (!Level.isEditor)
+        {
+            regionalBounds = new RegionList<int>(8);
+            for (int i = 0; i < _bounds.Count; i++)
+            {
+                Bounds bounds = _bounds[i];
+                regionalBounds.Add(bounds, i);
+            }
+            regionalNonExpandedNavmeshBounds = new RegionList<int>(8);
+            for (int j = 0; j < nonExpandedNavmeshBounds.Count; j++)
+            {
+                Bounds bounds2 = nonExpandedNavmeshBounds[j];
+                regionalNonExpandedNavmeshBounds.Add(bounds2, j);
+            }
         }
         if (ReadWrite.fileExists(Level.info.path + "/Environment/Flags_Data.dat", useCloud: false, usePath: false))
         {
@@ -281,9 +351,9 @@ public class LevelNavigation
             }
             river2.closeRiver();
         }
-        if (flagData.Count < bounds.Count)
+        if (flagData.Count < LevelNavigation.bounds.Count)
         {
-            for (int i = flagData.Count; i < bounds.Count; i++)
+            for (int k = flagData.Count; k < LevelNavigation.bounds.Count; k++)
             {
                 flagData.Add(new FlagData("", 64));
             }
@@ -301,7 +371,7 @@ public class LevelNavigation
                     if (flagData.Count < b7)
                     {
                         UnturnedLog.error($"Navigation flag data count ({flagData.Count}) does not match flags count ({b7}) during editor load, fixing");
-                        for (int j = flagData.Count; j < b7; j++)
+                        for (int l = flagData.Count; l < b7; l++)
                         {
                             flagData.Add(new FlagData("", 64));
                         }
@@ -331,9 +401,9 @@ public class LevelNavigation
                 }
                 river3.closeRiver();
             }
-            if (bounds.Count != flags.Count)
+            if (LevelNavigation.bounds.Count != flags.Count)
             {
-                UnturnedLog.error("Navigation bounds count ({0}) does not match flags count ({1}) during editor load, fixing", bounds.Count, flags.Count);
+                UnturnedLog.error("Navigation bounds count ({0}) does not match flags count ({1}) during editor load, fixing", LevelNavigation.bounds.Count, flags.Count);
                 updateBounds();
             }
         }

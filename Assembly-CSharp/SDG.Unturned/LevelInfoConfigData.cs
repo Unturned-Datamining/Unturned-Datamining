@@ -143,6 +143,11 @@ public class LevelInfoConfigData
     /// </summary>
     public bool Enable_Clutter_Option;
 
+    /// <summary>
+    /// If true, map creator has verified that volumes are ONLY placed in the level editor (not Unity prefabs).
+    /// </summary>
+    public bool Enable_Static_Volumes;
+
     public bool Use_Arena_Compactor;
 
     public List<ArenaLoadout> Arena_Loadouts;

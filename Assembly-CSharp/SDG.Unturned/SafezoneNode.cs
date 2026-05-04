@@ -12,6 +12,9 @@ public class SafezoneNode : Node
 
     public bool isHeight;
 
+    /// <summary>
+    /// If true, players inside the safezone cannot use items categorized as "weapons" (/hostile).
+    /// </summary>
     public bool noWeapons;
 
     /// <summary>
@@ -20,6 +23,12 @@ public class SafezoneNode : Node
     /// Gameplay config's Bypass_Building_In_Safezones option.
     /// </summary>
     public bool noBuildables;
+
+    /// <summary>
+    /// If true, players inside the safezone cannot take damage. (Unless damage's bypassSafezone parameter is true.)
+    /// For backwards compatibility this is true if noWeapons was true.
+    /// </summary>
+    public bool noIncomingDamage;
 
     /// <summary>
     /// This value is confusing because in the level editor it is the normalized radius, but in-game it is the square radius.
@@ -79,6 +88,7 @@ public class SafezoneNode : Node
         isHeight = newHeight;
         noWeapons = newNoWeapons;
         noBuildables = newNoBuildables;
+        noIncomingDamage = noWeapons;
         _type = ENodeType.SAFEZONE;
     }
 }

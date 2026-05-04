@@ -8,5 +8,6 @@ public class HordePurchaseVolumeManager : VolumeManager<HordePurchaseVolume, Hor
     {
         base.FriendlyName = "Horde Purchase";
         SetDebugColor(new Color32(20, 50, 20, byte.MaxValue));
+        benefitsFromStaticVolumes = true;
     }
 }

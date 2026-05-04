@@ -365,7 +365,7 @@ public class InteractableVehicle : Interactable, IExplosionDamageable, IEquatabl
         {
             if (insideSafezoneNode != null)
             {
-                return insideSafezoneNode.noWeapons;
+                return insideSafezoneNode.noIncomingDamage;
             }
             return false;
         }

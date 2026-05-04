@@ -8,5 +8,6 @@ public class SafezoneVolumeManager : VolumeManager<SafezoneVolume, SafezoneVolum
     {
         base.FriendlyName = "Safezone";
         SetDebugColor(new Color32(205, 145, 205, byte.MaxValue));
+        benefitsFromStaticVolumes = true;
     }
 }

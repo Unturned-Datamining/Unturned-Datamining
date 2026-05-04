@@ -18,13 +18,33 @@ internal class RegionList<T>
     /// (GRID_SIZE * GRID_SIZE) % LIST_POOL_SIZE should be zero leftover.
     /// Reduces constructor performance cost. (public issue #4209)
     /// </summary>
-    private const int LIST_POOL_SIZE = 1024;
+    private int listPoolSize = 1024;
 
     public void Add(Vector3 position, T item)
     {
         int cellIndex = GetCellIndex(position.x);
         int cellIndex2 = GetCellIndex(position.z);
         GetOrAddList(cellIndex, cellIndex2).Add(item);
+    }
+
+    /// <summary>
+    /// Add item to every cell within bounds.
+    /// </summary>
+    public void Add(Bounds bounds, T item)
+    {
+        Vector3 min = bounds.min;
+        Vector3 max = bounds.max;
+        int cellIndex = GetCellIndex(min.x);
+        int cellIndex2 = GetCellIndex(min.z);
+        int cellIndex3 = GetCellIndex(max.x);
+        int cellIndex4 = GetCellIndex(max.z);
+        for (int i = cellIndex2; i <= cellIndex4; i++)
+        {
+            for (int j = cellIndex; j <= cellIndex3; j++)
+            {
+                GetOrAddList(j, i).Add(item);
+            }
+        }
     }
 
     public bool RemoveFast(Vector3 position, T item, float tolerance)
@@ -125,10 +145,16 @@ internal class RegionList<T>
     }
 
     public RegionList()
+        : this(1024)
     {
+    }
+
+    public RegionList(int listPoolSize)
+    {
+        this.listPoolSize = listPoolSize;
         grid = new List<T>[512, 512];
-        listPool = new List<List<T>>(1024);
-        for (int i = 0; i < 1024; i++)
+        listPool = new List<List<T>>(listPoolSize);
+        for (int i = 0; i < listPoolSize; i++)
         {
             listPool.Add(new List<T>());
         }
@@ -143,7 +169,7 @@ internal class RegionList<T>
         }
         if (listPool.IsEmpty())
         {
-            for (int i = 0; i < 1024; i++)
+            for (int i = 0; i < listPoolSize; i++)
             {
                 listPool.Add(new List<T>());
             }
