@@ -8,6 +8,8 @@ namespace SDG.Unturned;
 
 public class VolumeManager<TVolume, TManager> : VolumeManagerBase where TVolume : LevelVolume<TVolume, TManager> where TManager : VolumeManager<TVolume, TManager>
 {
+    private List<TVolume> tempOverlapTestVolumes;
+
     private ELevelVolumeVisibility visibility;
 
     internal Color debugColor;
@@ -38,6 +40,11 @@ public class VolumeManager<TVolume, TManager> : VolumeManagerBase where TVolume 
     /// </summary>
     internal RegionList<TVolume> regionalVolumes;
 
+    /// <summary>
+    /// Volumes added AFTER regionalVolumes was initialized.
+    /// </summary>
+    internal List<TVolume> dynamicVolumes;
+
     private static TManager instance;
 
     private static Shader solidShader = Shader.Find("Standard (Specular setup)");
@@ -64,6 +71,22 @@ public class VolumeManager<TVolume, TManager> : VolumeManagerBase where TVolume 
             {
                 allVolume.UpdateEditorVisibility(visibility);
             }
+        }
+    }
+
+    internal override bool WantsStaticVolumes
+    {
+        get
+        {
+            if (allVolumes.Count < 4)
+            {
+                return false;
+            }
+            if (!benefitsFromStaticVolumes)
+            {
+                return false;
+            }
+            return true;
         }
     }
 
@@ -97,11 +120,29 @@ public class VolumeManager<TVolume, TManager> : VolumeManagerBase where TVolume 
         }
     }
 
+    protected List<TVolume> GetRegionalAndDynamicVolumes(Vector3 position)
+    {
+        tempOverlapTestVolumes.Clear();
+        List<TVolume> list = regionalVolumes.GetList(position);
+        if (list != null)
+        {
+            foreach (TVolume item in list)
+            {
+                if (item != null && item.enabled)
+                {
+                    tempOverlapTestVolumes.Add(item);
+                }
+            }
+        }
+        tempOverlapTestVolumes.AddRange(dynamicVolumes);
+        return tempOverlapTestVolumes;
+    }
+
     protected List<TVolume> GetOverlapTestVolumes(Vector3 position)
     {
         if (regionalVolumes != null)
         {
-            return regionalVolumes.GetList(position);
+            return GetRegionalAndDynamicVolumes(position);
         }
         return allVolumes;
     }
@@ -171,18 +212,16 @@ public class VolumeManager<TVolume, TManager> : VolumeManagerBase where TVolume 
     /// <summary>
     /// Called in play mode if level has asserted that volumes do not move.
     /// </summary>
-    internal override void EnableStaticVolumes()
+    internal override void InitStaticVolumes()
     {
-        if (allVolumes.Count < 4 || !benefitsFromStaticVolumes)
-        {
-            return;
-        }
         regionalVolumes = new RegionList<TVolume>(8);
         foreach (TVolume allVolume in allVolumes)
         {
             Bounds bounds = allVolume.CalculateWorldBounds();
             regionalVolumes.Add(bounds, allVolume);
         }
+        dynamicVolumes = new List<TVolume>();
+        tempOverlapTestVolumes = new List<TVolume>();
         UnturnedLog.info($"{base.FriendlyName} manager using regional lookup for {allVolumes.Count} volumes");
     }
 
@@ -210,11 +249,21 @@ public class VolumeManager<TVolume, TManager> : VolumeManagerBase where TVolume 
             volume.UpdateEditorVisibility(visibility);
         }
         allVolumes.Add(volume);
+        if (dynamicVolumes != null)
+        {
+            dynamicVolumes.Add(volume);
+            volume.inDynamicVolumesList = true;
+        }
     }
 
     public virtual void RemoveVolume(TVolume volume)
     {
         allVolumes.RemoveFast(volume);
+        if (volume.inDynamicVolumesList && dynamicVolumes != null)
+        {
+            dynamicVolumes.RemoveFast(volume);
+            volume.inDynamicVolumesList = false;
+        }
     }
 
     public VolumeManager()

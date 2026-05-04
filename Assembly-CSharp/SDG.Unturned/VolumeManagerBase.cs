@@ -14,11 +14,13 @@ public abstract class VolumeManagerBase
 
     public virtual ELevelVolumeVisibility Visibility { get; set; }
 
+    internal abstract bool WantsStaticVolumes { get; }
+
     public abstract bool Raycast(Ray ray, out RaycastHit hitInfo, float maxDistance);
 
     public abstract void InstantiateVolume(Vector3 position, Quaternion rotation, Vector3 scale);
 
     public abstract IEnumerable<VolumeBase> EnumerateAllVolumes();
 
-    internal abstract void EnableStaticVolumes();
+    internal abstract void InitStaticVolumes();
 }

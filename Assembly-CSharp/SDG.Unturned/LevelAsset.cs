@@ -273,6 +273,7 @@ public class LevelAsset : Asset
 
     /// <summary>
     /// Allows level to override skill max levels.
+    /// Can be turned off with config Prevent_Level_Skill_Overrides true.
     /// Null if empty, otherwise matches 1:1 with PlayerSkills._skills.
     /// </summary>
     public SkillRule[][] skillRules;

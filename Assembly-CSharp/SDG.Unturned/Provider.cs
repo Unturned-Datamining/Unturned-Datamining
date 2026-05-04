@@ -4509,6 +4509,7 @@ public class Provider : MonoBehaviour
             writer.WriteUInt8((byte)modeConfigData.Gameplay.Repair_Level_Max);
             writer.WriteFloat(modeConfigData.Players.Skill_Cost_Multiplier);
             writer.WriteBit(modeConfigData.Players.Skillset_Reduces_Skill_Cost);
+            writer.WriteBit(modeConfigData.Players.Prevent_Level_Skill_Overrides);
             writer.WriteBit(modeConfigData.Gameplay.Hitmarkers);
             writer.WriteBit(modeConfigData.Gameplay.Crosshair);
             writer.WriteBit(modeConfigData.Gameplay.Ballistics);

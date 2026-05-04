@@ -235,6 +235,11 @@ public class PlayersConfigData
     public bool Skillset_Prevents_Skill_Loss = true;
 
     /// <summary>
+    /// If true, prevent levels from modifying skill starting levels, costs, and max levels.
+    /// </summary>
+    public bool Prevent_Level_Skill_Overrides;
+
+    /// <summary>
     /// Should guns with Instakill Headshots (snipers) bypass armor?
     /// </summary>
     public bool Allow_Instakill_Headshots;

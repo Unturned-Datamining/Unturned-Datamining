@@ -1578,7 +1578,10 @@ public class Level : MonoBehaviour
         {
             foreach (VolumeManagerBase allManager in VolumeManagerBase.allManagers)
             {
-                allManager.EnableStaticVolumes();
+                if (allManager.WantsStaticVolumes)
+                {
+                    allManager.InitStaticVolumes();
+                }
             }
         }
         includeHash("Level.dat", info.hash);

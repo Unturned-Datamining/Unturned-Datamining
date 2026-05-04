@@ -19,7 +19,7 @@ public class OxygenVolumeManager : VolumeManager<OxygenVolume, OxygenVolumeManag
     {
         bool result = false;
         maxAlpha = 0f;
-        List<OxygenVolume> list = ((regionalVolumes == null) ? breathableVolumes : regionalVolumes.GetList(position));
+        List<OxygenVolume> list = ((regionalVolumes == null) ? breathableVolumes : GetRegionalAndDynamicVolumes(position));
         if (list != null)
         {
             foreach (OxygenVolume item in list)
@@ -46,7 +46,7 @@ public class OxygenVolumeManager : VolumeManager<OxygenVolume, OxygenVolumeManag
     {
         bool result = false;
         maxAlpha = 0f;
-        List<OxygenVolume> list = ((regionalVolumes == null) ? nonBreathableVolumes : regionalVolumes.GetList(position));
+        List<OxygenVolume> list = ((regionalVolumes == null) ? nonBreathableVolumes : GetRegionalAndDynamicVolumes(position));
         if (list != null)
         {
             foreach (OxygenVolume item in list)

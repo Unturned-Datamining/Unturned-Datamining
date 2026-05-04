@@ -111,6 +111,7 @@ internal static class ClientMessageHandler_Accepted
         Provider._modeConfigData.Gameplay.Repair_Level_Max = value3;
         reader.ReadFloat(out Provider._modeConfigData.Players.Skill_Cost_Multiplier);
         reader.ReadBit(out Provider._modeConfigData.Players.Skillset_Reduces_Skill_Cost);
+        reader.ReadBit(out Provider._modeConfigData.Players.Prevent_Level_Skill_Overrides);
         reader.ReadBit(out Provider._modeConfigData.Gameplay.Hitmarkers);
         reader.ReadBit(out Provider._modeConfigData.Gameplay.Crosshair);
         reader.ReadBit(out Provider._modeConfigData.Gameplay.Ballistics);

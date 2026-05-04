@@ -743,7 +743,7 @@ public class PlayerSkills : PlayerCaller
         skills[2][6] = new Skill(0, 5, 10u, 0.5f);
         skills[2][7] = new Skill(0, 3, 20u, 1.5f);
         LevelAsset asset = Level.getAsset();
-        if (asset != null && asset.skillRules != null)
+        if (asset != null && asset.skillRules != null && !(Provider.modeConfigData?.Players?.Prevent_Level_Skill_Overrides).GetValueOrDefault())
         {
             for (int i = 0; i < skills.Length; i++)
             {
@@ -873,7 +873,7 @@ public class PlayerSkills : PlayerCaller
         else
         {
             LevelAsset asset = Level.getAsset();
-            if (asset != null && asset.skillRules != null)
+            if (asset != null && asset.skillRules != null && !(Provider.modeConfigData?.Players?.Prevent_Level_Skill_Overrides).GetValueOrDefault())
             {
                 for (int i = 0; i < skills.Length; i++)
                 {
