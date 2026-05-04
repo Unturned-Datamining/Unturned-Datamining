@@ -1,14 +1,14 @@
 MainMenuAlert
 {
-	Id 81
-	Header Community Organized Event: Spring Labor Day Tournament 2026 | 2026年春季五一劳动节锦标赛
-	Body From the organizers: "Sign up for a PvP tournament hosted by BlackFlags-黑旗战队 and NoName Server! Servers are located in China / East Asia, with limits on ping to encourage fair play."
-	Color #73FF00
-	Link https://www.bilibili.com/video/BV1BXd8B9EtU
-	IconURL cdn.smartlydressedgames.com/Images/SpringLaborDayTournament2026.png
+	Id 82
+	Header Community Organized Event: Sign up for the EU 3v3 Qualifier with trophy skins!
+	Body From the organizers: "More information regarding the event can be found in the PeekSeek Discord server."
+	Color #ff0000
+	Link https://pksk.to/1x4s26-sdg
+	IconURL https://cdn.smartlydressedgames.com/Images/PeekSeek.png
 	UseTimeWindow true
-	StartTime 2026-04-23 16:00:00
-	EndTime 2026-04-27 16:00:00
+	StartTime 2026-05-04 16:00:00
+	EndTime 2026-05-08 16:00:00
 }
 MainMenuWorkshop
 {
