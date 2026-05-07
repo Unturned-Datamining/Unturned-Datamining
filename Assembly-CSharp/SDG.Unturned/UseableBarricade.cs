@@ -171,6 +171,18 @@ public class UseableBarricade : Useable
         }
     }
 
+    private bool IsPlacementInsideClipVolumesAllowed
+    {
+        get
+        {
+            if (!equippedBarricadeAsset.AllowPlacementInsideClipVolumes)
+            {
+                return Provider.modeConfigData.Gameplay.Bypass_No_Building_Zones;
+            }
+            return true;
+        }
+    }
+
     [Obsolete]
     public void askBarricadeVehicle(CSteamID steamID, Vector3 newPoint, float newAngle_X, float newAngle_Y, float newAngle_Z, ushort plant)
     {
@@ -365,7 +377,7 @@ public class UseableBarricade : Useable
                 return false;
             }
         }
-        if (!equippedBarricadeAsset.AllowPlacementInsideClipVolumes && !Provider.modeConfigData.Gameplay.Bypass_No_Building_Zones && VolumeManager<PlayerClipVolume, PlayerClipVolumeManager>.Get().IsPositionInsideAnyVolume(pointInWorldSpace))
+        if (!IsPlacementInsideClipVolumesAllowed && VolumeManager<PlayerClipVolume, PlayerClipVolumeManager>.Get().IsPositionInsideAnyVolume(pointInWorldSpace))
         {
             if (base.channel.IsLocalPlayer)
             {
@@ -560,7 +572,7 @@ public class UseableBarricade : Useable
                     {
                         point = transform.position - hit.normal * equippedBarricadeAsset.offset;
                     }
-                    if (!equippedBarricadeAsset.AllowPlacementInsideClipVolumes && !Level.checkSafeIncludingClipVolumes(point))
+                    if (!IsPlacementInsideClipVolumesAllowed && !Level.checkSafeIncludingClipVolumes(point))
                     {
                         if (base.channel.IsLocalPlayer)
                         {
@@ -628,7 +640,7 @@ public class UseableBarricade : Useable
                     }
                     return false;
                 }
-                if (!equippedBarricadeAsset.AllowPlacementInsideClipVolumes && !Level.checkSafeIncludingClipVolumes(point))
+                if (!IsPlacementInsideClipVolumesAllowed && !Level.checkSafeIncludingClipVolumes(point))
                 {
                     if (base.channel.IsLocalPlayer)
                     {
@@ -666,7 +678,7 @@ public class UseableBarricade : Useable
             if (hit.transform != null)
             {
                 point = hit.point + hit.normal * equippedBarricadeAsset.offset;
-                if (!equippedBarricadeAsset.AllowPlacementInsideClipVolumes && !Level.checkSafeIncludingClipVolumes(point))
+                if (!IsPlacementInsideClipVolumesAllowed && !Level.checkSafeIncludingClipVolumes(point))
                 {
                     if (base.channel.IsLocalPlayer)
                     {
@@ -742,7 +754,7 @@ public class UseableBarricade : Useable
                         return false;
                     }
                 }
-                if (!equippedBarricadeAsset.AllowPlacementInsideClipVolumes && !Level.checkSafeIncludingClipVolumes(point))
+                if (!IsPlacementInsideClipVolumesAllowed && !Level.checkSafeIncludingClipVolumes(point))
                 {
                     if (base.channel.IsLocalPlayer)
                     {
@@ -788,7 +800,7 @@ public class UseableBarricade : Useable
                             angle_y += 180f;
                         }
                     }
-                    if (!equippedBarricadeAsset.AllowPlacementInsideClipVolumes && !Level.checkSafeIncludingClipVolumes(point))
+                    if (!IsPlacementInsideClipVolumesAllowed && !Level.checkSafeIncludingClipVolumes(point))
                     {
                         if (base.channel.IsLocalPlayer)
                         {
@@ -849,7 +861,7 @@ public class UseableBarricade : Useable
                         angle_y = num + 270f;
                     }
                     angle_y += 180f;
-                    if (!equippedBarricadeAsset.AllowPlacementInsideClipVolumes && !Level.checkSafeIncludingClipVolumes(point))
+                    if (!IsPlacementInsideClipVolumesAllowed && !Level.checkSafeIncludingClipVolumes(point))
                     {
                         if (base.channel.IsLocalPlayer)
                         {
@@ -905,7 +917,7 @@ public class UseableBarricade : Useable
                             angle_y += 180f;
                         }
                     }
-                    if (!equippedBarricadeAsset.AllowPlacementInsideClipVolumes && !Level.checkSafeIncludingClipVolumes(point))
+                    if (!IsPlacementInsideClipVolumesAllowed && !Level.checkSafeIncludingClipVolumes(point))
                     {
                         if (base.channel.IsLocalPlayer)
                         {
@@ -1013,7 +1025,7 @@ public class UseableBarricade : Useable
                             return false;
                         }
                     }
-                    if (!equippedBarricadeAsset.AllowPlacementInsideClipVolumes && !Level.checkSafeIncludingClipVolumes(point))
+                    if (!IsPlacementInsideClipVolumesAllowed && !Level.checkSafeIncludingClipVolumes(point))
                     {
                         if (base.channel.IsLocalPlayer)
                         {
@@ -1042,7 +1054,7 @@ public class UseableBarricade : Useable
                     }
                     return false;
                 }
-                if (!equippedBarricadeAsset.AllowPlacementInsideClipVolumes && !Level.checkSafeIncludingClipVolumes(point))
+                if (!IsPlacementInsideClipVolumesAllowed && !Level.checkSafeIncludingClipVolumes(point))
                 {
                     if (base.channel.IsLocalPlayer)
                     {
@@ -1068,7 +1080,7 @@ public class UseableBarricade : Useable
                 quaternion *= Quaternion.Euler(-90f + angle_x + rotate_x, 0f, 0f);
                 quaternion *= Quaternion.Euler(0f, angle_z + rotate_z, 0f);
                 point = hit.point + hit.normal * -0.125f + quaternion * Vector3.forward * equippedBarricadeAsset.offset;
-                if (!equippedBarricadeAsset.AllowPlacementInsideClipVolumes && !Level.checkSafeIncludingClipVolumes(point))
+                if (!IsPlacementInsideClipVolumesAllowed && !Level.checkSafeIncludingClipVolumes(point))
                 {
                     if (base.channel.IsLocalPlayer)
                     {
