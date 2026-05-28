@@ -41,15 +41,6 @@ MainMenuWorkshop
 ItemStore
 {
 	PromotionId 1001
-	NewItems
-	[
-		21090
-		2001
-		21094
-		2002
-		2003
-		2004
-	]
 	FeaturedItems
 	[
 		21090
@@ -236,6 +227,5 @@ ServerCuration
 }
 ShouldAllowJoiningInternetServersWithoutGslt false
 ShouldServersWithoutMonetizationTagBeVisibleInInternetServerList true
-PlaytimeGeneratorItemDefId 10000
 QueryPingWarningOffsetMs 50
 PingMismatchWarningThresholdMs 50
