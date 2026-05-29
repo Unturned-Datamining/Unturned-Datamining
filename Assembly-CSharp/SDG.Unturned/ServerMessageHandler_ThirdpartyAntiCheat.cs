@@ -4,7 +4,7 @@ using SDG.NetTransport;
 
 namespace SDG.Unturned;
 
-internal static class ServerMessageHandler_BattlEye
+internal static class ServerMessageHandler_ThirdpartyAntiCheat
 {
     internal unsafe static void ReadMessage(ITransportConnection transportConnection, NetPakReader reader)
     {
@@ -19,7 +19,7 @@ internal static class ServerMessageHandler_BattlEye
                     fixed (byte* ptr = source)
                     {
                         IntPtr pvPacket = new IntPtr(ptr + bufferOffset);
-                        Provider.battlEyeServerRunData.pfnReceivedPacket(steamPlayer.battlEyeId, pvPacket, (int)value);
+                        Provider.battlEyeServerRunData.pfnReceivedPacket(steamPlayer.thirdpartyAntiCheatId, pvPacket, (int)value);
                     }
                 }
                 else

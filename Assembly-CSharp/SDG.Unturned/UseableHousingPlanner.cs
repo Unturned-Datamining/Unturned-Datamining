@@ -444,9 +444,7 @@ public class UseableHousingPlanner : Useable
             selectedItemBox.AddChild(selectedItemCraftableAmountLabel);
             selectedItemCraftableAmountLabel.TextContrastContext = ETextContrastContext.InconspicuousBackdrop;
             localization = Localization.read("/Player/Useable/PlayerUseableHousingPlanner.dat");
-            Bundle bundle = Bundles.getBundle("/Bundles/Textures/Player/Icons/Useable/PlayerUseableHousingPlanner/PlayerUseableHousingPlanner.unity3d");
-            Texture texture = bundle.load<Texture>("RadialMenu");
-            bundle.unload();
+            Texture texture = Bundles.getIconsBundle("UI/Player/Icons/Useable/PlayerUseableHousingPlanner").load<Texture>("RadialMenu");
             itemSelectionContainer = Glazier.Get().CreateFrame();
             itemSelectionContainer.SizeScale_X = 1f;
             itemSelectionContainer.SizeScale_Y = 1f;

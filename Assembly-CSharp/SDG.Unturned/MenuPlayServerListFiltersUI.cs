@@ -6,7 +6,7 @@ public class MenuPlayServerListFiltersUI : SleekFullscreenBox
 {
     public Local localization;
 
-    public Bundle icons;
+    public IconsBundle icons;
 
     public bool active;
 
@@ -48,7 +48,7 @@ public class MenuPlayServerListFiltersUI : SleekFullscreenBox
 
     private SleekButtonState VACProtectionButtonState;
 
-    private SleekButtonState battlEyeProtectionButtonState;
+    private SleekButtonState thirdpartyAntiCheatProtectionButtonState;
 
     private SleekButtonState combatButtonState;
 
@@ -110,7 +110,7 @@ public class MenuPlayServerListFiltersUI : SleekFullscreenBox
         attendanceButtonState.state = (int)FilterSettings.activeFilters.attendance;
         notFullButtonState.state = (FilterSettings.activeFilters.notFull ? 1 : 0);
         VACProtectionButtonState.state = (int)FilterSettings.activeFilters.vacProtection;
-        battlEyeProtectionButtonState.state = (int)FilterSettings.activeFilters.battlEyeProtection;
+        thirdpartyAntiCheatProtectionButtonState.state = (int)FilterSettings.activeFilters.thirdpartyAntiCheatProtection;
         combatButtonState.state = (int)FilterSettings.activeFilters.combat;
         goldFilterButtonState.state = (int)FilterSettings.activeFilters.gold;
         cameraButtonState.state = (int)FilterSettings.activeFilters.camera;
@@ -192,9 +192,9 @@ public class MenuPlayServerListFiltersUI : SleekFullscreenBox
         FilterSettings.MarkActiveFilterModified();
     }
 
-    private void onSwappedBattlEyeProtectionState(SleekButtonState button, int index)
+    private void onSwappedThirdpartyAntiCheatProtectionState(SleekButtonState button, int index)
     {
-        FilterSettings.activeFilters.battlEyeProtection = (EBattlEyeProtectionFilter)index;
+        FilterSettings.activeFilters.thirdpartyAntiCheatProtection = (EThirdpartyAntiCheatProtectionFilter)index;
         FilterSettings.MarkActiveFilterModified();
     }
 
@@ -563,16 +563,16 @@ public class MenuPlayServerListFiltersUI : SleekFullscreenBox
         VACProtectionButtonState.AddLabel(localization.format("VAC_Filter_Label"), ESleekSide.RIGHT);
         filtersScrollView.AddChild(VACProtectionButtonState);
         num2 += VACProtectionButtonState.SizeOffset_Y + 10f;
-        battlEyeProtectionButtonState = new SleekButtonState(20, new GUIContent(localization.format("BattlEye_Secure_Button"), icons.load<Texture>("BattlEye"), localization.format("BattlEye_Filter_Secure_Tooltip")), new GUIContent(localization.format("BattlEye_Insecure_Button"), icons.load<Texture2D>("BattlEye_Off"), localization.format("BattlEye_Filter_Insecure_Tooltip")), new GUIContent(localization.format("BattlEye_Any_Button"), icons.load<Texture2D>("AnyFilter"), localization.format("BattlEye_Filter_Any_Tooltip")));
-        battlEyeProtectionButtonState.PositionOffset_Y = num2;
-        battlEyeProtectionButtonState.SizeOffset_X = 200f;
-        battlEyeProtectionButtonState.SizeOffset_Y = 30f;
-        battlEyeProtectionButtonState.onSwappedState = onSwappedBattlEyeProtectionState;
-        battlEyeProtectionButtonState.button.iconColor = ESleekTint.FOREGROUND;
-        battlEyeProtectionButtonState.UseContentTooltip = true;
-        battlEyeProtectionButtonState.AddLabel(localization.format("BattlEye_Filter_Label"), ESleekSide.RIGHT);
-        filtersScrollView.AddChild(battlEyeProtectionButtonState);
-        num2 += battlEyeProtectionButtonState.SizeOffset_Y + 10f;
+        thirdpartyAntiCheatProtectionButtonState = new SleekButtonState(20, new GUIContent(localization.format("BattlEye_Secure_Button"), icons.load<Texture>("BattlEye"), localization.format("BattlEye_Filter_Secure_Tooltip")), new GUIContent(localization.format("BattlEye_Insecure_Button"), icons.load<Texture2D>("BattlEye_Off"), localization.format("BattlEye_Filter_Insecure_Tooltip")), new GUIContent(localization.format("BattlEye_Any_Button"), icons.load<Texture2D>("AnyFilter"), localization.format("BattlEye_Filter_Any_Tooltip")));
+        thirdpartyAntiCheatProtectionButtonState.PositionOffset_Y = num2;
+        thirdpartyAntiCheatProtectionButtonState.SizeOffset_X = 200f;
+        thirdpartyAntiCheatProtectionButtonState.SizeOffset_Y = 30f;
+        thirdpartyAntiCheatProtectionButtonState.onSwappedState = onSwappedThirdpartyAntiCheatProtectionState;
+        thirdpartyAntiCheatProtectionButtonState.button.iconColor = ESleekTint.FOREGROUND;
+        thirdpartyAntiCheatProtectionButtonState.UseContentTooltip = true;
+        thirdpartyAntiCheatProtectionButtonState.AddLabel(localization.format("BattlEye_Filter_Label"), ESleekSide.RIGHT);
+        filtersScrollView.AddChild(thirdpartyAntiCheatProtectionButtonState);
+        num2 += thirdpartyAntiCheatProtectionButtonState.SizeOffset_Y + 10f;
         maxPingField = Glazier.Get().CreateInt32Field();
         maxPingField.PositionOffset_Y = num2;
         maxPingField.SizeOffset_X = 200f;

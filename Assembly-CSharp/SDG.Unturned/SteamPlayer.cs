@@ -26,9 +26,9 @@ public class SteamPlayer : SteamConnectedClientBase
     private int _channel;
 
     /// <summary>
-    /// Not an actual Steam ID or BattlEye ID, instead this is used to map player references to and from BE.
+    /// Not an actual external ID, instead this is used to map player references to and from thirdparty anti-cheat systems.
     /// </summary>
-    internal int battlEyeId;
+    internal int thirdpartyAntiCheatId;
 
     private bool _isAdmin;
 

@@ -161,7 +161,7 @@ public class MenuPlayLobbiesUI
     public MenuPlayLobbiesUI()
     {
         localization = Localization.read("/Menu/Play/MenuPlayLobbies.dat");
-        Bundle bundle = Bundles.getBundle("/Bundles/Textures/Menu/Icons/Play/MenuPlayLobbies/MenuPlayLobbies.unity3d");
+        Bundles.getIconsBundle("UI/Menu/Icons/Play/MenuPlayLobbies");
         container = new SleekFullscreenBox();
         container.PositionOffset_X = 10f;
         container.PositionOffset_Y = 10f;
@@ -172,7 +172,6 @@ public class MenuPlayLobbiesUI
         container.SizeScale_Y = 1f;
         MenuUI.container.AddChild(container);
         active = false;
-        bundle.unload();
         membersLabel = Glazier.Get().CreateLabel();
         membersLabel.PositionOffset_X = -200f;
         membersLabel.PositionOffset_Y = 100f;

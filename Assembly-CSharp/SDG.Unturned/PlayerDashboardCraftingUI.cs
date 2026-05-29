@@ -14,7 +14,7 @@ public class PlayerDashboardCraftingUI
 
     private static SleekFullscreenBox container;
 
-    public static Bundle icons;
+    public static IconsBundle icons;
 
     public static bool active;
 
@@ -841,12 +841,8 @@ public class PlayerDashboardCraftingUI
 
     public PlayerDashboardCraftingUI()
     {
-        if (icons != null)
-        {
-            icons.unload();
-        }
         localization = Localization.read("/Player/PlayerDashboardCrafting.dat");
-        icons = Bundles.getBundle("/Bundles/Textures/Player/Icons/PlayerDashboardCrafting/PlayerDashboardCrafting.unity3d");
+        icons = Bundles.getIconsBundle("UI/Player/Icons/PlayerDashboardCrafting");
         container = new SleekFullscreenBox();
         container.PositionScale_Y = 1f;
         container.PositionOffset_X = 10f;

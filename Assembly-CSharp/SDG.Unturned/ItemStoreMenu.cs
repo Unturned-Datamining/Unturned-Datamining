@@ -84,7 +84,7 @@ internal class ItemStoreMenu : SleekFullscreenBox
 
     public Local localization { get; private set; }
 
-    public Bundle icons { get; private set; }
+    public IconsBundle icons { get; private set; }
 
     public bool IsOpen { get; private set; }
 
@@ -124,7 +124,7 @@ internal class ItemStoreMenu : SleekFullscreenBox
     public ItemStoreMenu()
     {
         localization = Localization.read("/Menu/Survivors/ItemStoreMenu.dat");
-        icons = Bundles.getBundle("/Bundles/Textures/Menu/Icons/Survivors/ItemStore/ItemStore.unity3d");
+        icons = Bundles.getIconsBundle("UI/Menu/Icons/Survivors/ItemStore");
         instance = this;
         base.PositionScale_Y = 1f;
         base.PositionOffset_X = 10f;

@@ -995,7 +995,7 @@ public class BarricadeManager : SteamCaller
                 continue;
             }
             InteractableBed interactableBed = drop.interactable as InteractableBed;
-            if (!(interactableBed != null) || !(interactableBed.owner == owner) || !Level.checkSafeIncludingClipVolumes(interactableBed.transform.position))
+            if (!(interactableBed != null) || !(interactableBed.owner == owner) || (!Provider.modeConfigData.Gameplay.Bypass_No_Building_Zones && !Level.checkSafeIncludingClipVolumes(interactableBed.transform.position)))
             {
                 continue;
             }

@@ -18,9 +18,9 @@ public enum EServerMessage
     /// </summary>
     Authenticate,
     /// <summary>
-    /// Client sending BattlEye payload to server.
+    /// Client sending thirdparty anti-cheat payload to server.
     /// </summary>
-    BattlEye,
+    ThirdPartyAntiCheat,
     /// <summary>
     /// Client sent a ping.
     /// </summary>

@@ -114,8 +114,6 @@ public class Player : MonoBehaviour, IDialogueTarget, IExplosionDamageable, IEqu
 
     private static readonly ServerInstanceMethod<uint> SendAdminUsageFlags = ServerInstanceMethod<uint>.Get(typeof(Player), "ReceiveAdminUsageFlags");
 
-    private static readonly ServerInstanceMethod SendBattlEyeLogsRequest = ServerInstanceMethod.Get(typeof(Player), "ReceiveBattlEyeLogsRequest");
-
     private static readonly ClientInstanceMethod<string> SendTerminalRelay = ClientInstanceMethod<string>.Get(typeof(Player), "ReceiveTerminalRelay");
 
     internal const float TELEPORT_VERTICAL_OFFSET = 0.5f;
@@ -261,7 +259,10 @@ public class Player : MonoBehaviour, IDialogueTarget, IExplosionDamageable, IEqu
     /// </summary>
     public EPlayerAdminUsageFlags AdminUsageFlags => _adminUsageFlags;
 
-    public bool wantsBattlEyeLogs { get; protected set; }
+    /// <summary>
+    /// Older versions had a console command to request enabling this. It's only kept in case plugins were setting it.
+    /// </summary>
+    public bool WantsThirdPartyAnticheatDebugMessages { get; set; }
 
     /// <summary>
     /// How many rate limited actions have been performed recently.
@@ -758,21 +759,6 @@ public class Player : MonoBehaviour, IDialogueTarget, IExplosionDamageable, IEqu
         else
         {
             ClientSetAdminUsageFlags(_adminUsageFlags & ~flag);
-        }
-    }
-
-    [Obsolete]
-    public void askRequestBattlEyeLogs(CSteamID steamID)
-    {
-        ReceiveBattlEyeLogsRequest();
-    }
-
-    [SteamCall(ESteamCallValidation.ONLY_FROM_OWNER, ratelimitHz = 1, legacyName = "askRequestBattlEyeLogs")]
-    public void ReceiveBattlEyeLogsRequest()
-    {
-        if (channel.owner.isAdmin)
-        {
-            wantsBattlEyeLogs = !wantsBattlEyeLogs;
         }
     }
 
@@ -1312,7 +1298,8 @@ public class Player : MonoBehaviour, IDialogueTarget, IExplosionDamageable, IEqu
             _third = base.transform.Find("Third");
             first.gameObject.SetActive(value: true);
             third.gameObject.SetActive(value: true);
-            _character = ((GameObject)UnityEngine.Object.Instantiate(Resources.Load("Characters/Inspect"))).transform;
+            string path = "Characters_NoRedist/Inspect";
+            _character = UnityEngine.Object.Instantiate(Resources.Load<GameObject>(path)).transform;
             character.name = "Inspect";
             character.transform.position = new Vector3(256f, -256f, 0f);
             character.transform.rotation = Quaternion.Euler(90f, 0f, 0f);

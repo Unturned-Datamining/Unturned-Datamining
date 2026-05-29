@@ -11,11 +11,6 @@ public class ServerConfigData
     public bool VAC_Secure;
 
     /// <summary>
-    /// Whether to enable BattlEye Anti-Cheat.
-    /// </summary>
-    public bool BattlEye_Secure;
-
-    /// <summary>
     /// Players with a ping higher than this are kicked.
     /// </summary>
     public uint Max_Ping_Milliseconds;
@@ -180,10 +175,14 @@ public class ServerConfigData
     /// </summary>
     internal const float CLIENT_TIMEOUT_QUEUE_SECONDS = 30f;
 
+    /// <summary>
+    /// Whether to enable BattlEye Anti-Cheat.
+    /// </summary>
+    public bool BattlEye_Secure = true;
+
     public ServerConfigData()
     {
         VAC_Secure = true;
-        BattlEye_Secure = true;
         Max_Ping_Milliseconds = 750u;
         Timeout_Queue_Seconds = 15f;
         Timeout_Game_Seconds = 30f;

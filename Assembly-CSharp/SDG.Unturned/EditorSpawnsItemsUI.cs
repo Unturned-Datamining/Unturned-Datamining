@@ -389,7 +389,7 @@ public class EditorSpawnsItemsUI
     public EditorSpawnsItemsUI()
     {
         Local local = Localization.read("/Editor/EditorSpawnsItems.dat");
-        Bundle bundle = Bundles.getBundle("/Bundles/Textures/Edit/Icons/EditorSpawnsItems/EditorSpawnsItems.unity3d");
+        IconsBundle iconsBundle = Bundles.getIconsBundle("UI/Edit/Icons/EditorSpawnsItems");
         container = new SleekFullscreenBox();
         container.PositionOffset_X = 10f;
         container.PositionOffset_Y = 10f;
@@ -418,7 +418,7 @@ public class EditorSpawnsItemsUI
         tableNameField.AddLabel(local.format("TableNameFieldLabelText"), ESleekSide.LEFT);
         tableNameField.OnTextChanged += onTypedTableNameField;
         container.AddChild(tableNameField);
-        addTableButton = new SleekButtonIcon(bundle.load<Texture2D>("Add"));
+        addTableButton = new SleekButtonIcon(iconsBundle.load<Texture2D>("Add"));
         addTableButton.PositionOffset_X = -230f;
         addTableButton.PositionOffset_Y = 370f;
         addTableButton.PositionScale_X = 1f;
@@ -428,7 +428,7 @@ public class EditorSpawnsItemsUI
         addTableButton.tooltip = local.format("AddTableButtonTooltip");
         addTableButton.onClickedButton += onClickedAddTableButton;
         container.AddChild(addTableButton);
-        removeTableButton = new SleekButtonIcon(bundle.load<Texture2D>("Remove"));
+        removeTableButton = new SleekButtonIcon(iconsBundle.load<Texture2D>("Remove"));
         removeTableButton.PositionOffset_X = -110f;
         removeTableButton.PositionOffset_Y = 370f;
         removeTableButton.PositionScale_X = 1f;
@@ -470,7 +470,7 @@ public class EditorSpawnsItemsUI
         tierNameField.AddLabel(local.format("TierNameFieldLabelText"), ESleekSide.LEFT);
         tierNameField.OnTextChanged += onTypedTierNameField;
         spawnsScrollBox.AddChild(tierNameField);
-        addTierButton = new SleekButtonIcon(bundle.load<Texture2D>("Add"));
+        addTierButton = new SleekButtonIcon(iconsBundle.load<Texture2D>("Add"));
         addTierButton.PositionOffset_X = 240f;
         addTierButton.SizeOffset_X = 95f;
         addTierButton.SizeOffset_Y = 30f;
@@ -478,7 +478,7 @@ public class EditorSpawnsItemsUI
         addTierButton.tooltip = local.format("AddTierButtonTooltip");
         addTierButton.onClickedButton += onClickedAddTierButton;
         spawnsScrollBox.AddChild(addTierButton);
-        removeTierButton = new SleekButtonIcon(bundle.load<Texture2D>("Remove"));
+        removeTierButton = new SleekButtonIcon(iconsBundle.load<Texture2D>("Remove"));
         removeTierButton.PositionOffset_X = 345f;
         removeTierButton.SizeOffset_X = 95f;
         removeTierButton.SizeOffset_Y = 30f;
@@ -492,7 +492,7 @@ public class EditorSpawnsItemsUI
         itemIDField.SizeOffset_Y = 30f;
         itemIDField.AddLabel(local.format("ItemIDFieldLabelText"), ESleekSide.LEFT);
         spawnsScrollBox.AddChild(itemIDField);
-        addItemButton = new SleekButtonIcon(bundle.load<Texture2D>("Add"));
+        addItemButton = new SleekButtonIcon(iconsBundle.load<Texture2D>("Add"));
         addItemButton.PositionOffset_X = 240f;
         addItemButton.SizeOffset_X = 95f;
         addItemButton.SizeOffset_Y = 30f;
@@ -500,7 +500,7 @@ public class EditorSpawnsItemsUI
         addItemButton.tooltip = local.format("AddItemButtonTooltip");
         addItemButton.onClickedButton += onClickedAddItemButton;
         spawnsScrollBox.AddChild(addItemButton);
-        removeItemButton = new SleekButtonIcon(bundle.load<Texture2D>("Remove"));
+        removeItemButton = new SleekButtonIcon(iconsBundle.load<Texture2D>("Remove"));
         removeItemButton.PositionOffset_X = 345f;
         removeItemButton.SizeOffset_X = 95f;
         removeItemButton.SizeOffset_Y = 30f;
@@ -529,7 +529,7 @@ public class EditorSpawnsItemsUI
         radiusSlider.AddLabel(local.format("RadiusSliderLabelText"), ESleekSide.RIGHT);
         radiusSlider.OnValueChanged += onDraggedRadiusSlider;
         container.AddChild(radiusSlider);
-        addButton = new SleekButtonIcon(bundle.load<Texture2D>("Add"));
+        addButton = new SleekButtonIcon(iconsBundle.load<Texture2D>("Add"));
         addButton.PositionOffset_Y = -70f;
         addButton.PositionScale_Y = 1f;
         addButton.SizeOffset_X = 200f;
@@ -538,7 +538,7 @@ public class EditorSpawnsItemsUI
         addButton.tooltip = local.format("AddButtonTooltip");
         addButton.onClickedButton += onClickedAddButton;
         container.AddChild(addButton);
-        removeButton = new SleekButtonIcon(bundle.load<Texture2D>("Remove"));
+        removeButton = new SleekButtonIcon(iconsBundle.load<Texture2D>("Remove"));
         removeButton.PositionOffset_Y = -30f;
         removeButton.PositionScale_Y = 1f;
         removeButton.SizeOffset_X = 200f;
@@ -547,6 +547,5 @@ public class EditorSpawnsItemsUI
         removeButton.tooltip = local.format("RemoveButtonTooltip");
         removeButton.onClickedButton += onClickedRemoveButton;
         container.AddChild(removeButton);
-        bundle.unload();
     }
 }

@@ -12,7 +12,7 @@ public class GameMode
         }
         if (playerID.steamID == Provider.client)
         {
-            return Object.Instantiate(Resources.Load<GameObject>("Characters/Player_Server"));
+            return Object.Instantiate(Resources.Load<GameObject>("Characters_NoRedist/Player_Server"));
         }
         return Object.Instantiate(Resources.Load<GameObject>("Characters/Player_Client"));
     }

@@ -824,7 +824,7 @@ public class LevelObject
                 }
             }
             bool flag2 = false;
-            if (asset.conditions != null && asset.conditions.Length != 0 && !Level.isEditor && !Dedicator.IsDedicatedServer)
+            if (!asset.visibilityConditionsList.IsEmpty && !Level.isEditor && !Dedicator.IsDedicatedServer)
             {
                 areConditionsMet = false;
                 flag2 = true;

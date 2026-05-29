@@ -253,37 +253,6 @@ public static class Player_NetMethods
         writer.WriteUInt32(newFlagsBitmask);
     }
 
-    [NetInvokableGeneratedMethod("ReceiveBattlEyeLogsRequest", ENetInvokableGeneratedMethodPurpose.Read)]
-    public static void ReceiveBattlEyeLogsRequest_Read(in ServerInvocationContext context)
-    {
-        if (!context.reader.ReadNetId(out var value))
-        {
-            return;
-        }
-        object obj = NetIdRegistry.Get(value);
-        if (obj == null)
-        {
-            return;
-        }
-        Player player = obj as Player;
-        if (!(player == null))
-        {
-            if (!context.IsOwnerOf(player.channel))
-            {
-                context.Kick($"not owner of {player}");
-            }
-            else
-            {
-                player.ReceiveBattlEyeLogsRequest();
-            }
-        }
-    }
-
-    [NetInvokableGeneratedMethod("ReceiveBattlEyeLogsRequest", ENetInvokableGeneratedMethodPurpose.Write)]
-    public static void ReceiveBattlEyeLogsRequest_Write(NetPakWriter writer)
-    {
-    }
-
     [NetInvokableGeneratedMethod("ReceiveTerminalRelay", ENetInvokableGeneratedMethodPurpose.Read)]
     public static void ReceiveTerminalRelay_Read(in ClientInvocationContext context)
     {

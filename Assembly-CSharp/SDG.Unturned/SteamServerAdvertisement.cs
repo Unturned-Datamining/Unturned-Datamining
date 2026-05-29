@@ -146,7 +146,7 @@ public class SteamServerAdvertisement
 
     public bool IsVACSecure { get; private set; }
 
-    public bool IsBattlEyeSecure { get; private set; }
+    public bool IsThirdpartyAntiCheatEnabled { get; private set; }
 
     public bool isPro => _isPro;
 
@@ -332,7 +332,7 @@ public class SteamServerAdvertisement
                 monetization = EServerMonetizationTag.Unspecified;
             }
             _isPro = hasTagKey(gameTags, "GLD", thumbnailIndex);
-            IsBattlEyeSecure = hasTagKey(gameTags, "BEy", thumbnailIndex);
+            IsThirdpartyAntiCheatEnabled = hasTagKey(gameTags, "BEy", thumbnailIndex);
             if (hasTagKey(gameTags, "ACP", thumbnailIndex))
             {
                 anycastProxyMode = EAnycastProxyMode.TaggedByHost;
@@ -391,7 +391,7 @@ public class SteamServerAdvertisement
             _cameraMode = ECameraMode.FIRST;
             monetization = EServerMonetizationTag.Unspecified;
             _isPro = true;
-            IsBattlEyeSecure = false;
+            IsThirdpartyAntiCheatEnabled = false;
             networkTransport = null;
             pluginFramework = EPluginFramework.None;
             thumbnailURL = null;

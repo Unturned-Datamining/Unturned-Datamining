@@ -100,7 +100,7 @@ public static class FilterSettings
 
         public bool vacProtection;
 
-        public bool battlEyeProtection;
+        public bool thirdpartyAntiCheatProtection;
 
         public bool combat = true;
 
@@ -126,7 +126,7 @@ public static class FilterSettings
             attendance = block.readBoolean();
             notFull = block.readBoolean();
             vacProtection = block.readBoolean();
-            battlEyeProtection = block.readBoolean();
+            thirdpartyAntiCheatProtection = block.readBoolean();
             combat = block.readBoolean();
             cheats = block.readBoolean();
             camera = block.readBoolean();
@@ -153,7 +153,7 @@ public static class FilterSettings
             block.writeBoolean(attendance);
             block.writeBoolean(notFull);
             block.writeBoolean(vacProtection);
-            block.writeBoolean(battlEyeProtection);
+            block.writeBoolean(thirdpartyAntiCheatProtection);
             block.writeBoolean(combat);
             block.writeBoolean(cheats);
             block.writeBoolean(camera);
@@ -364,11 +364,11 @@ public static class FilterSettings
                     activeFilters.vacProtection = (EVACProtectionFilter)block.readByte();
                     if (b > 10)
                     {
-                        activeFilters.battlEyeProtection = (EBattlEyeProtectionFilter)block.readByte();
+                        activeFilters.thirdpartyAntiCheatProtection = (EThirdpartyAntiCheatProtectionFilter)block.readByte();
                     }
                     else
                     {
-                        activeFilters.battlEyeProtection = EBattlEyeProtectionFilter.Secure;
+                        activeFilters.thirdpartyAntiCheatProtection = EThirdpartyAntiCheatProtectionFilter.Secure;
                     }
                     activeFilters.combat = (ECombat)block.readByte();
                     if (b < 8)
@@ -524,25 +524,25 @@ public static class FilterSettings
         defaultPresetLAN.listSource = ESteamServerList.LAN;
         defaultPresetLAN.password = EPassword.ANY;
         defaultPresetLAN.vacProtection = EVACProtectionFilter.Any;
-        defaultPresetLAN.battlEyeProtection = EBattlEyeProtectionFilter.Any;
+        defaultPresetLAN.thirdpartyAntiCheatProtection = EThirdpartyAntiCheatProtectionFilter.Any;
         defaultPresetLAN.maxPing = 0;
         defaultPresetHistory.presetId = -4;
         defaultPresetHistory.listSource = ESteamServerList.HISTORY;
         defaultPresetHistory.password = EPassword.ANY;
         defaultPresetHistory.vacProtection = EVACProtectionFilter.Any;
-        defaultPresetHistory.battlEyeProtection = EBattlEyeProtectionFilter.Any;
+        defaultPresetHistory.thirdpartyAntiCheatProtection = EThirdpartyAntiCheatProtectionFilter.Any;
         defaultPresetHistory.maxPing = 0;
         defaultPresetFavorites.presetId = -5;
         defaultPresetFavorites.listSource = ESteamServerList.FAVORITES;
         defaultPresetFavorites.password = EPassword.ANY;
         defaultPresetFavorites.vacProtection = EVACProtectionFilter.Any;
-        defaultPresetFavorites.battlEyeProtection = EBattlEyeProtectionFilter.Any;
+        defaultPresetFavorites.thirdpartyAntiCheatProtection = EThirdpartyAntiCheatProtectionFilter.Any;
         defaultPresetFavorites.maxPing = 0;
         defaultPresetFriends.presetId = -6;
         defaultPresetFriends.listSource = ESteamServerList.FRIENDS;
         defaultPresetFriends.password = EPassword.ANY;
         defaultPresetFriends.vacProtection = EVACProtectionFilter.Any;
-        defaultPresetFriends.battlEyeProtection = EBattlEyeProtectionFilter.Any;
+        defaultPresetFriends.thirdpartyAntiCheatProtection = EThirdpartyAntiCheatProtectionFilter.Any;
         defaultPresetFriends.maxPing = 0;
     }
 }

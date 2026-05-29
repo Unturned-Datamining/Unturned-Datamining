@@ -91,7 +91,7 @@ internal class BuiltinAutoShutdown : MonoBehaviour
 
     private void InitUpdateShutdown()
     {
-        if (!Provider.configData.Server.Enable_Update_Shutdown)
+        if (!Provider.configData.Server.Enable_Update_Shutdown || Provider.GetModInfo() != null)
         {
             return;
         }

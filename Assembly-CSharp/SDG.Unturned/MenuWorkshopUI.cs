@@ -220,7 +220,7 @@ public class MenuWorkshopUI
     public MenuWorkshopUI()
     {
         localization = Localization.read("/Menu/Workshop/MenuWorkshop.dat");
-        Bundle bundle = Bundles.getBundle("/Bundles/Textures/Menu/Icons/Workshop/MenuWorkshop/MenuWorkshop.unity3d");
+        IconsBundle iconsBundle = Bundles.getIconsBundle("UI/Menu/Icons/Workshop/MenuWorkshop");
         container = new SleekFullscreenBox();
         container.PositionOffset_X = 10f;
         container.PositionOffset_Y = 10f;
@@ -231,7 +231,7 @@ public class MenuWorkshopUI
         container.SizeScale_Y = 1f;
         MenuUI.container.AddChild(container);
         active = false;
-        browseButton = new SleekButtonIcon(bundle.load<Texture2D>("Browse"));
+        browseButton = new SleekButtonIcon(iconsBundle.load<Texture2D>("Browse"));
         browseButton.PositionOffset_X = -205f;
         browseButton.PositionOffset_Y = -115f;
         browseButton.PositionScale_X = 0.5f;
@@ -244,7 +244,7 @@ public class MenuWorkshopUI
         browseButton.fontSize = ESleekFontSize.Medium;
         browseButton.iconColor = ESleekTint.FOREGROUND;
         container.AddChild(browseButton);
-        submitButton = new SleekButtonIcon(bundle.load<Texture2D>("Submit"));
+        submitButton = new SleekButtonIcon(iconsBundle.load<Texture2D>("Submit"));
         submitButton.PositionOffset_X = -205f;
         submitButton.PositionOffset_Y = -55f;
         submitButton.PositionScale_X = 0.5f;
@@ -257,7 +257,7 @@ public class MenuWorkshopUI
         submitButton.fontSize = ESleekFontSize.Medium;
         submitButton.iconColor = ESleekTint.FOREGROUND;
         container.AddChild(submitButton);
-        editorButton = new SleekButtonIcon(bundle.load<Texture2D>("Editor"));
+        editorButton = new SleekButtonIcon(iconsBundle.load<Texture2D>("Editor"));
         editorButton.PositionOffset_X = 5f;
         editorButton.PositionOffset_Y = -55f;
         editorButton.PositionScale_X = 0.5f;
@@ -270,7 +270,7 @@ public class MenuWorkshopUI
         editorButton.fontSize = ESleekFontSize.Medium;
         editorButton.iconColor = ESleekTint.FOREGROUND;
         container.AddChild(editorButton);
-        errorButton = new SleekButtonIcon(bundle.load<Texture2D>("Error"));
+        errorButton = new SleekButtonIcon(iconsBundle.load<Texture2D>("Error"));
         errorButton.PositionOffset_X = -205f;
         errorButton.PositionOffset_Y = 5f;
         errorButton.PositionScale_X = 0.5f;
@@ -283,7 +283,7 @@ public class MenuWorkshopUI
         errorButton.fontSize = ESleekFontSize.Medium;
         errorButton.iconColor = ESleekTint.FOREGROUND;
         container.AddChild(errorButton);
-        localizationButton = new SleekButtonIcon(bundle.load<Texture2D>("Localization"));
+        localizationButton = new SleekButtonIcon(iconsBundle.load<Texture2D>("Localization"));
         localizationButton.PositionOffset_X = 5f;
         localizationButton.PositionOffset_Y = 65f;
         localizationButton.PositionScale_X = 0.5f;
@@ -296,7 +296,7 @@ public class MenuWorkshopUI
         localizationButton.fontSize = ESleekFontSize.Medium;
         localizationButton.iconColor = ESleekTint.FOREGROUND;
         container.AddChild(localizationButton);
-        spawnsButton = new SleekButtonIcon(bundle.load<Texture2D>("Spawns"));
+        spawnsButton = new SleekButtonIcon(iconsBundle.load<Texture2D>("Spawns"));
         spawnsButton.PositionOffset_X = -205f;
         spawnsButton.PositionOffset_Y = 65f;
         spawnsButton.PositionScale_X = 0.5f;
@@ -309,7 +309,7 @@ public class MenuWorkshopUI
         spawnsButton.fontSize = ESleekFontSize.Medium;
         spawnsButton.iconColor = ESleekTint.FOREGROUND;
         container.AddChild(spawnsButton);
-        subscriptionsButton = new SleekButtonIcon(bundle.load<Texture2D>("Subscriptions"));
+        subscriptionsButton = new SleekButtonIcon(iconsBundle.load<Texture2D>("Subscriptions"));
         subscriptionsButton.PositionOffset_X = 5f;
         subscriptionsButton.PositionOffset_Y = -115f;
         subscriptionsButton.PositionScale_X = 0.5f;
@@ -322,7 +322,7 @@ public class MenuWorkshopUI
         subscriptionsButton.fontSize = ESleekFontSize.Medium;
         subscriptionsButton.iconColor = ESleekTint.FOREGROUND;
         container.AddChild(subscriptionsButton);
-        docsButton = new SleekButtonIcon(bundle.load<Texture2D>("Docs"));
+        docsButton = new SleekButtonIcon(iconsBundle.load<Texture2D>("Docs"));
         docsButton.PositionOffset_X = 5f;
         docsButton.PositionOffset_Y = 5f;
         docsButton.PositionScale_X = 0.5f;
@@ -348,7 +348,6 @@ public class MenuWorkshopUI
         backButton.fontSize = ESleekFontSize.Medium;
         backButton.iconColor = ESleekTint.FOREGROUND;
         container.AddChild(backButton);
-        bundle.unload();
         iconToolsContainer = Glazier.Get().CreateFrame();
         iconToolsContainer.PositionOffset_X = 40f;
         iconToolsContainer.PositionOffset_Y = 40f;

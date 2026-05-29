@@ -9,7 +9,7 @@ public class PlayerLifeUI
 {
     public static Local localization;
 
-    public static Bundle icons;
+    public static IconsBundle icons;
 
     private static SleekFullscreenBox _container;
 
@@ -1454,12 +1454,8 @@ public class PlayerLifeUI
 
     public PlayerLifeUI()
     {
-        if (icons != null)
-        {
-            icons.unload();
-        }
         localization = Localization.read("/Player/PlayerLife.dat");
-        icons = Bundles.getBundle("/Bundles/Textures/Player/Icons/PlayerLife/PlayerLife.unity3d");
+        icons = Bundles.getIconsBundle("UI/Player/Icons/PlayerLife");
         _container = new SleekFullscreenBox();
         container.PositionOffset_X = 10f;
         container.PositionOffset_Y = 10f;
@@ -1726,12 +1722,13 @@ public class PlayerLifeUI
         statTrackerLabel.FontSize = ESleekFontSize.Default;
         container.AddChild(statTrackerLabel);
         statTrackerLabel.IsVisible = false;
-        scopeOverlay = new SleekScopeOverlay();
+        IconsBundle iconsBundle = Bundles.getIconsBundle("UI/Player/Overlay");
+        scopeOverlay = new SleekScopeOverlay(iconsBundle);
         scopeOverlay.SizeScale_X = 1f;
         scopeOverlay.SizeScale_Y = 1f;
         scopeOverlay.IsVisible = false;
         PlayerUI.window.AddChild(scopeOverlay);
-        binocularsOverlay = Glazier.Get().CreateImage((Texture2D)Resources.Load("Overlay/Binoculars"));
+        binocularsOverlay = Glazier.Get().CreateImage(iconsBundle.load<Texture2D>("Binoculars"));
         binocularsOverlay.SizeScale_X = 1f;
         binocularsOverlay.SizeScale_Y = 1f;
         PlayerUI.window.AddChild(binocularsOverlay);
@@ -1779,7 +1776,7 @@ public class PlayerLifeUI
                 else
                 {
                     sleekButton.BackgroundColor = SleekColor.BackgroundIfLight(Palette.PRO);
-                    Bundle bundle = Bundles.getBundle("/Bundles/Textures/Menu/Icons/Pro/Pro.unity3d");
+                    IconsBundle iconsBundle2 = Bundles.getIconsBundle("UI/Menu/Icons/Pro");
                     ISleekImage sleekImage3 = Glazier.Get().CreateImage();
                     sleekImage3.PositionOffset_X = -10f;
                     sleekImage3.PositionOffset_Y = -10f;
@@ -1787,9 +1784,8 @@ public class PlayerLifeUI
                     sleekImage3.PositionScale_Y = 0.5f;
                     sleekImage3.SizeOffset_X = 20f;
                     sleekImage3.SizeOffset_Y = 20f;
-                    sleekImage3.Texture = bundle.load<Texture2D>("Lock_Small");
+                    sleekImage3.Texture = iconsBundle2.load<Texture2D>("Lock_Small");
                     sleekButton.AddChild(sleekImage3);
-                    bundle.unload();
                 }
             }
             else

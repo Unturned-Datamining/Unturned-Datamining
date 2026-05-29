@@ -952,7 +952,7 @@ public class MenuConfigurationOptionsUI
         }
         else
         {
-            Bundle bundle = Bundles.getBundle("/Bundles/Textures/Menu/Icons/Pro/Pro.unity3d");
+            IconsBundle iconsBundle = Bundles.getIconsBundle("UI/Menu/Icons/Pro");
             ISleekImage sleekImage = Glazier.Get().CreateImage();
             sleekImage.PositionOffset_X = -40f;
             sleekImage.PositionOffset_Y = -40f;
@@ -960,9 +960,8 @@ public class MenuConfigurationOptionsUI
             sleekImage.PositionScale_Y = 0.5f;
             sleekImage.SizeOffset_X = 80f;
             sleekImage.SizeOffset_Y = 80f;
-            sleekImage.Texture = bundle.load<Texture2D>("Lock_Large");
+            sleekImage.Texture = iconsBundle.load<Texture2D>("Lock_Large");
             backgroundColorPicker.AddChild(sleekImage);
-            bundle.unload();
         }
         optionsBox.AddChild(backgroundColorPicker);
         num += 130f;
@@ -981,7 +980,7 @@ public class MenuConfigurationOptionsUI
         }
         else
         {
-            Bundle bundle2 = Bundles.getBundle("/Bundles/Textures/Menu/Icons/Pro/Pro.unity3d");
+            IconsBundle iconsBundle2 = Bundles.getIconsBundle("UI/Menu/Icons/Pro");
             ISleekImage sleekImage2 = Glazier.Get().CreateImage();
             sleekImage2.PositionOffset_X = -40f;
             sleekImage2.PositionOffset_Y = -40f;
@@ -989,9 +988,8 @@ public class MenuConfigurationOptionsUI
             sleekImage2.PositionScale_Y = 0.5f;
             sleekImage2.SizeOffset_X = 80f;
             sleekImage2.SizeOffset_Y = 80f;
-            sleekImage2.Texture = bundle2.load<Texture2D>("Lock_Large");
+            sleekImage2.Texture = iconsBundle2.load<Texture2D>("Lock_Large");
             foregroundColorPicker.AddChild(sleekImage2);
-            bundle2.unload();
         }
         optionsBox.AddChild(foregroundColorPicker);
         num += 130f;
@@ -1010,7 +1008,7 @@ public class MenuConfigurationOptionsUI
         }
         else
         {
-            Bundle bundle3 = Bundles.getBundle("/Bundles/Textures/Menu/Icons/Pro/Pro.unity3d");
+            IconsBundle iconsBundle3 = Bundles.getIconsBundle("UI/Menu/Icons/Pro");
             ISleekImage sleekImage3 = Glazier.Get().CreateImage();
             sleekImage3.PositionOffset_X = -40f;
             sleekImage3.PositionOffset_Y = -40f;
@@ -1018,9 +1016,8 @@ public class MenuConfigurationOptionsUI
             sleekImage3.PositionScale_Y = 0.5f;
             sleekImage3.SizeOffset_X = 80f;
             sleekImage3.SizeOffset_Y = 80f;
-            sleekImage3.Texture = bundle3.load<Texture2D>("Lock_Large");
+            sleekImage3.Texture = iconsBundle3.load<Texture2D>("Lock_Large");
             fontColorPicker.AddChild(sleekImage3);
-            bundle3.unload();
         }
         optionsBox.AddChild(fontColorPicker);
         num += 130f;
@@ -1039,7 +1036,7 @@ public class MenuConfigurationOptionsUI
         }
         else
         {
-            Bundle bundle4 = Bundles.getBundle("/Bundles/Textures/Menu/Icons/Pro/Pro.unity3d");
+            IconsBundle iconsBundle4 = Bundles.getIconsBundle("UI/Menu/Icons/Pro");
             ISleekImage sleekImage4 = Glazier.Get().CreateImage();
             sleekImage4.PositionOffset_X = -40f;
             sleekImage4.PositionOffset_Y = -40f;
@@ -1047,9 +1044,8 @@ public class MenuConfigurationOptionsUI
             sleekImage4.PositionScale_Y = 0.5f;
             sleekImage4.SizeOffset_X = 80f;
             sleekImage4.SizeOffset_Y = 80f;
-            sleekImage4.Texture = bundle4.load<Texture2D>("Lock_Large");
+            sleekImage4.Texture = iconsBundle4.load<Texture2D>("Lock_Large");
             shadowColorPicker.AddChild(sleekImage4);
-            bundle4.unload();
         }
         optionsBox.AddChild(shadowColorPicker);
         num += shadowColorPicker.SizeOffset_Y + 10f;
@@ -1068,7 +1064,7 @@ public class MenuConfigurationOptionsUI
         }
         else
         {
-            Bundle bundle5 = Bundles.getBundle("/Bundles/Textures/Menu/Icons/Pro/Pro.unity3d");
+            IconsBundle iconsBundle5 = Bundles.getIconsBundle("UI/Menu/Icons/Pro");
             ISleekImage sleekImage5 = Glazier.Get().CreateImage();
             sleekImage5.PositionOffset_X = -40f;
             sleekImage5.PositionOffset_Y = -40f;
@@ -1076,9 +1072,8 @@ public class MenuConfigurationOptionsUI
             sleekImage5.PositionScale_Y = 0.5f;
             sleekImage5.SizeOffset_X = 80f;
             sleekImage5.SizeOffset_Y = 80f;
-            sleekImage5.Texture = bundle5.load<Texture2D>("Lock_Large");
+            sleekImage5.Texture = iconsBundle5.load<Texture2D>("Lock_Large");
             badColorPicker.AddChild(sleekImage5);
-            bundle5.unload();
         }
         optionsBox.AddChild(badColorPicker);
         num += badColorPicker.SizeOffset_Y;

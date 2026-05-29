@@ -9,7 +9,7 @@ namespace SDG.Unturned;
 
 public class MenuPlayConnectUI
 {
-    public static Bundle icons;
+    public static IconsBundle icons;
 
     public static Local localization;
 
@@ -377,12 +377,8 @@ public class MenuPlayConnectUI
 
     public MenuPlayConnectUI()
     {
-        if (icons != null)
-        {
-            icons.unload();
-        }
         localization = Localization.read("/Menu/Play/MenuPlayConnect.dat");
-        icons = Bundles.getBundle("/Bundles/Textures/Menu/Icons/Play/MenuPlayConnect/MenuPlayConnect.unity3d");
+        icons = Bundles.getIconsBundle("UI/Menu/Icons/Play/MenuPlayConnect");
         container = new SleekFullscreenBox();
         container.PositionOffset_X = 10f;
         container.PositionOffset_Y = 10f;

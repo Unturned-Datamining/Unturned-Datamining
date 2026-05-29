@@ -1,6 +1,6 @@
 namespace SDG.Unturned;
 
-public enum EBattlEyeProtectionFilter
+public enum EThirdpartyAntiCheatProtectionFilter
 {
     Secure,
     Insecure,

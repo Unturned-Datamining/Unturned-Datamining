@@ -4,9 +4,9 @@ public class ServerListComparer_AnticheatDefault : ServerListComparer_Base
 {
     protected override int CompareDetails(SteamServerAdvertisement lhs, SteamServerAdvertisement rhs)
     {
-        if (lhs.IsBattlEyeSecure != rhs.IsBattlEyeSecure)
+        if (lhs.IsThirdpartyAntiCheatEnabled != rhs.IsThirdpartyAntiCheatEnabled)
         {
-            if (!lhs.IsBattlEyeSecure)
+            if (!lhs.IsThirdpartyAntiCheatEnabled)
             {
                 return 1;
             }

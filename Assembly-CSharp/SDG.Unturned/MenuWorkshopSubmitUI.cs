@@ -57,13 +57,35 @@ public class MenuWorkshopSubmitUI
 
     private static List<PublishedFileUpdateButton> publishedButtons;
 
+    private static readonly string[] mapTypeKeys = new string[4] { "Map_Type_Survival", "Map_Type_Horde", "Map_Type_Arena", "Map_Type_Custom" };
+
+    private static readonly string[] itemTypeKeys = new string[25]
+    {
+        "Item_Type_Backpack", "Item_Type_Barrel", "Item_Type_Barricade", "Item_Type_Fisher", "Item_Type_Food", "Item_Type_Fuel", "Item_Type_Glasses", "Item_Type_Grip", "Item_Type_Grower", "Item_Type_Gun",
+        "Item_Type_Hat", "Item_Type_Magazine", "Item_Type_Mask", "Item_Type_Medical", "Item_Type_Melee", "Item_Type_Optic", "Item_Type_Shirt", "Item_Type_Sight", "Item_Type_Structure", "Item_Type_Supply",
+        "Item_Type_Tactical", "Item_Type_Throwable", "Item_Type_Tool", "Item_Type_Vest", "Item_Type_Water"
+    };
+
+    private static readonly string[] vehicleTypeKeys = new string[6] { "Vehicle_Type_Wheels_2", "Vehicle_Type_Wheels_4", "Vehicle_Type_Plane", "Vehicle_Type_Helicopter", "Vehicle_Type_Boat", "Vehicle_Type_Train" };
+
+    private static readonly string[] skinTypeKeys = new string[46]
+    {
+        "Skin_Type_Generic_Pattern", "Skin_Type_Ace", "Skin_Type_Augewehr", "Skin_Type_Avenger", "Skin_Type_Bluntforce", "Skin_Type_Bulldog", "Skin_Type_Butterfly_Knife", "Skin_Type_Calling_Card", "Skin_Type_Cobra", "Skin_Type_Colt",
+        "Skin_Type_Compound_Bow", "Skin_Type_Crossbow", "Skin_Type_Desert_Falcon", "Skin_Type_Dragonfang", "Skin_Type_Eaglefire", "Skin_Type_Ekho", "Skin_Type_Fusilaut", "Skin_Type_Grizzly", "Skin_Type_Hawkhound", "Skin_Type_Heartbreaker",
+        "Skin_Type_Hell_Fury", "Skin_Type_Honeybadger", "Skin_Type_Katana", "Skin_Type_Kryzkarek", "Skin_Type_Machete", "Skin_Type_Maplestrike", "Skin_Type_Maschinengewehr", "Skin_Type_Masterkey", "Skin_Type_Matamorez", "Skin_Type_Military_Knife",
+        "Skin_Type_Nightraider", "Skin_Type_Nykorev", "Skin_Type_Peacemaker", "Skin_Type_Rocket_Launcher", "Skin_Type_Sabertooth", "Skin_Type_Scalar", "Skin_Type_Schofield", "Skin_Type_Shadowstalker", "Skin_Type_Snayperskya", "Skin_Type_Sportshot",
+        "Skin_Type_Teklowvka", "Skin_Type_Timberwolf", "Skin_Type_Viper", "Skin_Type_Vonya", "Skin_Type_Yuri", "Skin_Type_Zubeknakov"
+    };
+
+    private static readonly string[] objectTypeKeys = new string[4] { "Object_Type_Model", "Object_Type_Resource", "Object_Type_Effect", "Object_Type_Animal" };
+
     private static string ExtraTag => (EWorkshopMenuSubmissionMode)typeState.state switch
     {
-        EWorkshopMenuSubmissionMode.Map => mapTypeState.states[mapTypeState.state].text, 
-        EWorkshopMenuSubmissionMode.Item => itemTypeState.states[itemTypeState.state].text, 
-        EWorkshopMenuSubmissionMode.Vehicle => vehicleTypeState.states[vehicleTypeState.state].text, 
-        EWorkshopMenuSubmissionMode.Skin => skinTypeState.states[skinTypeState.state].text, 
-        EWorkshopMenuSubmissionMode.Object => objectTypeState.states[objectTypeState.state].text, 
+        EWorkshopMenuSubmissionMode.Map => localization.FormatEnglishOrEmpty(mapTypeKeys[mapTypeState.state]), 
+        EWorkshopMenuSubmissionMode.Item => localization.FormatEnglishOrEmpty(itemTypeKeys[itemTypeState.state]), 
+        EWorkshopMenuSubmissionMode.Vehicle => localization.FormatEnglishOrEmpty(vehicleTypeKeys[vehicleTypeState.state]), 
+        EWorkshopMenuSubmissionMode.Skin => localization.FormatEnglishOrEmpty(skinTypeKeys[skinTypeState.state]), 
+        EWorkshopMenuSubmissionMode.Object => localization.FormatEnglishOrEmpty(objectTypeKeys[objectTypeState.state]), 
         _ => "", 
     };
 
@@ -404,7 +426,7 @@ public class MenuWorkshopSubmitUI
     public MenuWorkshopSubmitUI()
     {
         localization = Localization.read("/Menu/Workshop/MenuWorkshopSubmit.dat");
-        Bundle bundle = Bundles.getBundle("/Bundles/Textures/Menu/Icons/Workshop/MenuWorkshopSubmit/MenuWorkshopSubmit.unity3d");
+        IconsBundle iconsBundle = Bundles.getIconsBundle("UI/Menu/Icons/Workshop/MenuWorkshopSubmit");
         publishedButtons = new List<PublishedFileUpdateButton>();
         TempSteamworksWorkshop workshopService = Provider.provider.workshopService;
         workshopService.onPublishedAdded = (TempSteamworksWorkshop.PublishedAdded)Delegate.Combine(workshopService.onPublishedAdded, new TempSteamworksWorkshop.PublishedAdded(onPublishedAdded));
@@ -495,7 +517,12 @@ public class MenuWorkshopSubmitUI
         typeState.SizeOffset_Y = 30f;
         typeState.onSwappedState = onSwappedTypeState;
         container.AddChild(typeState);
-        mapTypeState = new SleekButtonState(new GUIContent(localization.format("Map_Type_Survival")), new GUIContent(localization.format("Map_Type_Horde")), new GUIContent(localization.format("Map_Type_Arena")), new GUIContent(localization.format("Map_Type_Custom")));
+        GUIContent[] array = new GUIContent[mapTypeKeys.Length];
+        for (int i = 0; i < array.Length; i++)
+        {
+            array[i] = new GUIContent(localization.format(mapTypeKeys[i]));
+        }
+        mapTypeState = new SleekButtonState(array);
         mapTypeState.PositionOffset_X = 5f;
         mapTypeState.PositionOffset_Y = 300f;
         mapTypeState.PositionScale_X = 0.5f;
@@ -503,7 +530,12 @@ public class MenuWorkshopSubmitUI
         mapTypeState.SizeOffset_Y = 30f;
         container.AddChild(mapTypeState);
         mapTypeState.IsVisible = true;
-        itemTypeState = new SleekButtonState(new GUIContent(localization.format("Item_Type_Backpack")), new GUIContent(localization.format("Item_Type_Barrel")), new GUIContent(localization.format("Item_Type_Barricade")), new GUIContent(localization.format("Item_Type_Fisher")), new GUIContent(localization.format("Item_Type_Food")), new GUIContent(localization.format("Item_Type_Fuel")), new GUIContent(localization.format("Item_Type_Glasses")), new GUIContent(localization.format("Item_Type_Grip")), new GUIContent(localization.format("Item_Type_Grower")), new GUIContent(localization.format("Item_Type_Gun")), new GUIContent(localization.format("Item_Type_Hat")), new GUIContent(localization.format("Item_Type_Magazine")), new GUIContent(localization.format("Item_Type_Mask")), new GUIContent(localization.format("Item_Type_Medical")), new GUIContent(localization.format("Item_Type_Melee")), new GUIContent(localization.format("Item_Type_Optic")), new GUIContent(localization.format("Item_Type_Shirt")), new GUIContent(localization.format("Item_Type_Sight")), new GUIContent(localization.format("Item_Type_Structure")), new GUIContent(localization.format("Item_Type_Supply")), new GUIContent(localization.format("Item_Type_Tactical")), new GUIContent(localization.format("Item_Type_Throwable")), new GUIContent(localization.format("Item_Type_Tool")), new GUIContent(localization.format("Item_Type_Vest")), new GUIContent(localization.format("Item_Type_Water")));
+        GUIContent[] array2 = new GUIContent[itemTypeKeys.Length];
+        for (int j = 0; j < array2.Length; j++)
+        {
+            array2[j] = new GUIContent(localization.format(itemTypeKeys[j]));
+        }
+        itemTypeState = new SleekButtonState(array2);
         itemTypeState.PositionOffset_X = 5f;
         itemTypeState.PositionOffset_Y = 300f;
         itemTypeState.PositionScale_X = 0.5f;
@@ -511,7 +543,12 @@ public class MenuWorkshopSubmitUI
         itemTypeState.SizeOffset_Y = 30f;
         container.AddChild(itemTypeState);
         itemTypeState.IsVisible = false;
-        vehicleTypeState = new SleekButtonState(new GUIContent(localization.format("Vehicle_Type_Wheels_2")), new GUIContent(localization.format("Vehicle_Type_Wheels_4")), new GUIContent(localization.format("Vehicle_Type_Plane")), new GUIContent(localization.format("Vehicle_Type_Helicopter")), new GUIContent(localization.format("Vehicle_Type_Boat")), new GUIContent(localization.format("Vehicle_Type_Train")));
+        GUIContent[] array3 = new GUIContent[vehicleTypeKeys.Length];
+        for (int k = 0; k < array3.Length; k++)
+        {
+            array3[k] = new GUIContent(localization.format(vehicleTypeKeys[k]));
+        }
+        vehicleTypeState = new SleekButtonState(array3);
         vehicleTypeState.PositionOffset_X = 5f;
         vehicleTypeState.PositionOffset_Y = 300f;
         vehicleTypeState.PositionScale_X = 0.5f;
@@ -519,7 +556,12 @@ public class MenuWorkshopSubmitUI
         vehicleTypeState.SizeOffset_Y = 30f;
         container.AddChild(vehicleTypeState);
         vehicleTypeState.IsVisible = false;
-        skinTypeState = new SleekButtonState(new GUIContent(localization.format("Skin_Type_Generic_Pattern")), new GUIContent(localization.format("Skin_Type_Ace")), new GUIContent(localization.format("Skin_Type_Augewehr")), new GUIContent(localization.format("Skin_Type_Avenger")), new GUIContent(localization.format("Skin_Type_Bluntforce")), new GUIContent(localization.format("Skin_Type_Bulldog")), new GUIContent(localization.format("Skin_Type_Butterfly_Knife")), new GUIContent(localization.format("Skin_Type_Calling_Card")), new GUIContent(localization.format("Skin_Type_Cobra")), new GUIContent(localization.format("Skin_Type_Colt")), new GUIContent(localization.format("Skin_Type_Compound_Bow")), new GUIContent(localization.format("Skin_Type_Crossbow")), new GUIContent(localization.format("Skin_Type_Desert_Falcon")), new GUIContent(localization.format("Skin_Type_Dragonfang")), new GUIContent(localization.format("Skin_Type_Eaglefire")), new GUIContent(localization.format("Skin_Type_Ekho")), new GUIContent(localization.format("Skin_Type_Fusilaut")), new GUIContent(localization.format("Skin_Type_Grizzly")), new GUIContent(localization.format("Skin_Type_Hawkhound")), new GUIContent(localization.format("Skin_Type_Heartbreaker")), new GUIContent(localization.format("Skin_Type_Hell_Fury")), new GUIContent(localization.format("Skin_Type_Honeybadger")), new GUIContent(localization.format("Skin_Type_Katana")), new GUIContent(localization.format("Skin_Type_Kryzkarek")), new GUIContent(localization.format("Skin_Type_Machete")), new GUIContent(localization.format("Skin_Type_Maplestrike")), new GUIContent(localization.format("Skin_Type_Maschinengewehr")), new GUIContent(localization.format("Skin_Type_Masterkey")), new GUIContent(localization.format("Skin_Type_Matamorez")), new GUIContent(localization.format("Skin_Type_Military_Knife")), new GUIContent(localization.format("Skin_Type_Nightraider")), new GUIContent(localization.format("Skin_Type_Nykorev")), new GUIContent(localization.format("Skin_Type_Peacemaker")), new GUIContent(localization.format("Skin_Type_Rocket_Launcher")), new GUIContent(localization.format("Skin_Type_Sabertooth")), new GUIContent(localization.format("Skin_Type_Scalar")), new GUIContent(localization.format("Skin_Type_Schofield")), new GUIContent(localization.format("Skin_Type_Shadowstalker")), new GUIContent(localization.format("Skin_Type_Snayperskya")), new GUIContent(localization.format("Skin_Type_Sportshot")), new GUIContent(localization.format("Skin_Type_Teklowvka")), new GUIContent(localization.format("Skin_Type_Timberwolf")), new GUIContent(localization.format("Skin_Type_Viper")), new GUIContent(localization.format("Skin_Type_Vonya")), new GUIContent(localization.format("Skin_Type_Yuri")), new GUIContent(localization.format("Skin_Type_Zubeknakov")));
+        GUIContent[] array4 = new GUIContent[skinTypeKeys.Length];
+        for (int l = 0; l < array4.Length; l++)
+        {
+            array4[l] = new GUIContent(localization.format(skinTypeKeys[l]));
+        }
+        skinTypeState = new SleekButtonState(array4);
         skinTypeState.PositionOffset_X = 5f;
         skinTypeState.PositionOffset_Y = 300f;
         skinTypeState.PositionScale_X = 0.5f;
@@ -527,7 +569,12 @@ public class MenuWorkshopSubmitUI
         skinTypeState.SizeOffset_Y = 30f;
         container.AddChild(skinTypeState);
         skinTypeState.IsVisible = false;
-        objectTypeState = new SleekButtonState(new GUIContent(localization.format("Object_Type_Model")), new GUIContent(localization.format("Object_Type_Resource")), new GUIContent(localization.format("Object_Type_Effect")), new GUIContent(localization.format("Object_Type_Animal")));
+        GUIContent[] array5 = new GUIContent[objectTypeKeys.Length];
+        for (int m = 0; m < array5.Length; m++)
+        {
+            array5[m] = new GUIContent(localization.format(objectTypeKeys[m]));
+        }
+        objectTypeState = new SleekButtonState(array5);
         objectTypeState.PositionOffset_X = 5f;
         objectTypeState.PositionOffset_Y = 300f;
         objectTypeState.PositionScale_X = 0.5f;
@@ -560,7 +607,7 @@ public class MenuWorkshopSubmitUI
         allowedIPsField.PlaceholderText = localization.format("Allowed_IPs_Hint");
         allowedIPsField.AddLabel(localization.format("Allowed_IPs_Label"), ESleekSide.RIGHT);
         container.AddChild(allowedIPsField);
-        createButton = new SleekButtonIcon(bundle.load<Texture2D>("Create"));
+        createButton = new SleekButtonIcon(iconsBundle.load<Texture2D>("Create"));
         createButton.PositionOffset_X = -200f;
         createButton.PositionOffset_Y = 420f;
         createButton.PositionScale_X = 0.5f;
@@ -603,6 +650,5 @@ public class MenuWorkshopSubmitUI
         backButton.iconColor = ESleekTint.FOREGROUND;
         container.AddChild(backButton);
         onPublishedAdded();
-        bundle.unload();
     }
 }

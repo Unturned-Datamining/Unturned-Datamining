@@ -3,7 +3,7 @@ using SDG.NetPak;
 
 namespace SDG.Unturned;
 
-internal static class ClientMessageHandler_BattlEye
+internal static class ClientMessageHandler_ThirdpartyAntiCheat
 {
     internal unsafe static void ReadMessage(NetPakReader reader)
     {

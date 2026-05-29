@@ -316,6 +316,17 @@ public class TempSteamworksMatchmaking
         }
         item7.m_szValue += ",GAME_VERSION_";
         item7.m_szValue += VersionUtils.binaryToHexadecimal(SDG.Unturned.Provider.APP_VERSION_PACKED);
+        if (SDG.Unturned.Provider._modInfo != null)
+        {
+            item7.m_szValue += ",MOD_NAME_";
+            item7.m_szValue += SDG.Unturned.Provider._modInfo.FormatServerListName();
+            item7.m_szValue += ",MOD_VERSION_";
+            item7.m_szValue += VersionUtils.binaryToHexadecimal(SDG.Unturned.Provider._modInfo.GetPackedVersion());
+        }
+        else
+        {
+            item7.m_szValue += ",MOD_NAME_NA,MOD_VERSION_NA";
+        }
         if (!string.IsNullOrEmpty(item7.m_szValue))
         {
             filters.Add(item7);
@@ -390,11 +401,11 @@ public class TempSteamworksMatchmaking
         {
             item9.m_szValue += ",F2P";
         }
-        if (inputFilters.battlEyeProtection == EBattlEyeProtectionFilter.Secure)
+        if (inputFilters.thirdpartyAntiCheatProtection == EThirdpartyAntiCheatProtectionFilter.Secure)
         {
             item9.m_szValue += ",BEy";
         }
-        else if (inputFilters.battlEyeProtection == EBattlEyeProtectionFilter.Insecure)
+        else if (inputFilters.thirdpartyAntiCheatProtection == EThirdpartyAntiCheatProtectionFilter.Insecure)
         {
             item9.m_szValue += ",BEn";
         }

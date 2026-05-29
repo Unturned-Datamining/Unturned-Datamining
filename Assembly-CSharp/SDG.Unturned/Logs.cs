@@ -37,7 +37,7 @@ public class Logs : MonoBehaviour
     /// *ATTEMPTS* to replace IPv4 address(es) with <see cref="P:SDG.Unturned.Logs.RedactionReplacement" />.
     /// Should only be called if <see cref="P:SDG.Unturned.Logs.ShouldRedactLogs" /> is enabled.
     /// Case-by-case redaction should be preferred for performance reasons over using this function. This function
-    /// is intended for third-party messages (e.g., BattlEye) that we don't have control over.
+    /// is intended for third-party messages (e.g., anti-cheat) that we don't have control over.
     /// </summary>
     /// <returns>True if message was modified.</returns>
     public static bool RedactIPv4Addresses(ref string message)

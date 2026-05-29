@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using SDG.Unturned;
 using UnityEngine;
 
@@ -55,17 +56,21 @@ public class WaterUtility
     {
         bool flag = false;
         float num = -1024f;
-        foreach (WaterVolume item in VolumeManager<WaterVolume, WaterVolumeManager>.Get().InternalGetAllVolumes())
+        List<WaterVolume> overlapTestVolumes = VolumeManager<WaterVolume, WaterVolumeManager>.Get().GetOverlapTestVolumes(point);
+        if (overlapTestVolumes != null)
         {
-            if (item.IsPositionInsideVolume(point))
+            foreach (WaterVolume item in overlapTestVolumes)
             {
-                return getWaterSurfaceElevation(item, point);
-            }
-            Ray ray = new Ray(point, new Vector3(0f, -1f, 0f));
-            if (item.volumeCollider.Raycast(ray, out var hitInfo, 2048f) && hitInfo.point.y > num)
-            {
-                num = hitInfo.point.y;
-                flag = true;
+                if (item.IsPositionInsideVolume(point))
+                {
+                    return getWaterSurfaceElevation(item, point);
+                }
+                Ray ray = new Ray(point, new Vector3(0f, -1f, 0f));
+                if (item.volumeCollider.Raycast(ray, out var hitInfo, 2048f) && hitInfo.point.y > num)
+                {
+                    num = hitInfo.point.y;
+                    flag = true;
+                }
             }
         }
         if (flag)

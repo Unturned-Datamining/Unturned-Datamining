@@ -108,6 +108,10 @@ public class SteamworksProvider : IProvider
         {
             achievementsService.initialize();
         }
+        if (economyService != null)
+        {
+            economyService.initialize();
+        }
         if (multiplayerService != null)
         {
             multiplayerService.initialize();

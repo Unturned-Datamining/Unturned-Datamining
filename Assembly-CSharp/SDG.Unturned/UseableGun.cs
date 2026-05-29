@@ -44,7 +44,7 @@ public class UseableGun : Useable
 
     private Local localization;
 
-    private Bundle icons;
+    private IconsBundle icons;
 
     private SleekButtonIcon sightButton;
 
@@ -2552,10 +2552,11 @@ public class UseableGun : Useable
             {
                 gunshotAudioSource = base.player.equipment.thirdModel.gameObject.AddComponent<AudioSource>();
             }
+            GameObject gameObject = Assets.coreMasterBundle.LoadAsset<GameObject>("Guns/Rolloff.prefab");
             gunshotAudioSource.clip = null;
             gunshotAudioSource.spatialBlend = 1f;
             gunshotAudioSource.rolloffMode = AudioRolloffMode.Custom;
-            gunshotAudioSource.SetCustomCurve(AudioSourceCurveType.CustomRolloff, (Resources.Load("Guns/Rolloff") as GameObject).GetComponent<AudioSource>().GetCustomCurve(AudioSourceCurveType.CustomRolloff));
+            gunshotAudioSource.SetCustomCurve(AudioSourceCurveType.CustomRolloff, gameObject.GetComponent<AudioSource>().GetCustomCurve(AudioSourceCurveType.CustomRolloff));
             gunshotAudioSource.volume = 1f;
             gunshotAudioSource.playOnAwake = false;
             gunshotAudioSource.dopplerLevel = 0f;
@@ -2750,11 +2751,7 @@ public class UseableGun : Useable
                 originalReticuleHookLocalPosition = Vector3.zero;
             }
             localization = Localization.read("/Player/Useable/PlayerUseableGun.dat");
-            if (icons != null)
-            {
-                icons.unload();
-            }
-            icons = Bundles.getBundle("/Bundles/Textures/Player/Icons/Useable/PlayerUseableGun/PlayerUseableGun.unity3d");
+            icons = Bundles.getIconsBundle("UI/Player/Icons/Useable/PlayerUseableGun");
             if (equippedGunAsset.hasSight)
             {
                 sightButton = new SleekButtonIcon(icons.load<Texture2D>("Sight"));
@@ -2849,7 +2846,6 @@ public class UseableGun : Useable
                 magazineButton.AddChild(magazineQualityImage);
                 magazineQualityImage.IsVisible = false;
             }
-            icons.unload();
             infoBox = Glazier.Get().CreateBox();
             infoBox.PositionOffset_Y = -70f;
             infoBox.PositionScale_X = 0.7f;
@@ -3714,7 +3710,8 @@ public class UseableGun : Useable
             {
                 if (laserGameObject == null)
                 {
-                    laserGameObject = UnityEngine.Object.Instantiate(Resources.Load<GameObject>("Guns/Laser"));
+                    GameObject original = Assets.coreMasterBundle.LoadAsset<GameObject>("Guns/Laser.prefab");
+                    laserGameObject = UnityEngine.Object.Instantiate(original);
                     laserTransform = laserGameObject.transform;
                     laserTransform.name = "Laser";
                     laserTransform.position = Vector3.zero;

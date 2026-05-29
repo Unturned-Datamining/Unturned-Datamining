@@ -195,6 +195,10 @@ SteamNetworkingSockets_EndReason_Misc_SteamConnectivity Steam is experiencing co
 SteamNetworkingSockets_EndReason_Misc_Unknown Unknown miscellaneous connection error: {0}
 SteamNetworkingSockets_EndReason_Unknown Connected ended for unknown reason: {0}
 
+Mod_Name_Mismatch This server is playing "{0}", whereas you are playing "{1}".
+Mod_Name_Server This server is playing a custom build of the game "{0}", whereas you are playing vanilla Unturned.
+Mod_Version_Mismatch This server is running version {0} of {1}, whereas you are running version {2}.
+
 UGC_NeedsToAcceptWorkshopLegalAgreement Failed to create or update item because you need to accept the newest Steam Workshop legal agreement.
 UGC_UnknownResult Failed to create or update item. Steam error code: {0}
 UGC_IOError Failed to create or update item because of an unknown I/O issue.

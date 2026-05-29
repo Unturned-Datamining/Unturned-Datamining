@@ -29,7 +29,7 @@ internal static class ClientMessageHandler_DownloadWorkshopFiles
         reader.ReadBit(out var value6);
         UnturnedLog.info($"Server is VAC secure: {value6}");
         reader.ReadBit(out var value7);
-        UnturnedLog.info($"Server is BattlEye secure: {value7}");
+        UnturnedLog.info($"Server has (official) third-party anti-cheat enabled: {value7}");
         reader.ReadBit(out var value8);
         UnturnedLog.info($"Server requires gold: {value8}");
         reader.ReadEnum(out var value9);
@@ -71,7 +71,7 @@ internal static class ClientMessageHandler_DownloadWorkshopFiles
         cachedWorkshopResponse.isPvP = value4;
         cachedWorkshopResponse.allowAdminCheatCodes = value5;
         cachedWorkshopResponse.isVACSecure = value6;
-        cachedWorkshopResponse.isBattlEyeSecure = value7;
+        cachedWorkshopResponse.isThirdpartyAntiCheatEnabled = value7;
         cachedWorkshopResponse.isGold = value8;
         cachedWorkshopResponse.gameMode = value9;
         cachedWorkshopResponse.cameraMode = value10;

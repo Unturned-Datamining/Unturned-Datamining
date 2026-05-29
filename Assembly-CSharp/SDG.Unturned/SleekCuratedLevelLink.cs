@@ -1,3 +1,4 @@
+using System.IO;
 using UnityEngine;
 
 namespace SDG.Unturned;
@@ -115,8 +116,8 @@ public class SleekCuratedLevelLink : SleekWrapper
         backdrop.SizeScale_X = 1f;
         backdrop.SizeScale_Y = 1f;
         AddChild(backdrop);
-        string path = "/CuratedMapIcons/" + curatedMap.Workshop_File_Id + ".png";
-        if (ReadWrite.fileExists(path, useCloud: false, usePath: true))
+        string text = Path.Join(Path.Join(ReadWrite.PATH, "CuratedMapIcons"), curatedMap.Workshop_File_Id + ".png");
+        if (ReadWrite.fileExists(text, useCloud: false, usePath: false))
         {
             icon = Glazier.Get().CreateImage();
             icon.PositionOffset_X = 10f;
@@ -125,7 +126,7 @@ public class SleekCuratedLevelLink : SleekWrapper
             icon.SizeOffset_Y = -20f;
             icon.SizeScale_X = 1f;
             icon.SizeScale_Y = 1f;
-            icon.Texture = ReadWrite.readTextureFromFile(path, useBasePath: true);
+            icon.Texture = ReadWrite.readTextureFromFile(text);
             icon.ShouldDestroyTexture = true;
             backdrop.AddChild(icon);
         }

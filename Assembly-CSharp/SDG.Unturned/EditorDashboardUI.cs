@@ -63,7 +63,7 @@ public class EditorDashboardUI
     public EditorDashboardUI()
     {
         localization = Localization.read("/Editor/EditorDashboard.dat");
-        Bundle bundle = Bundles.getBundle("/Bundles/Textures/Edit/Icons/EditorDashboard/EditorDashboard.unity3d");
+        IconsBundle iconsBundle = Bundles.getIconsBundle("UI/Edit/Icons/EditorDashboard");
         container = new SleekFullscreenBox();
         container.PositionOffset_X = 10f;
         container.PositionOffset_Y = 10f;
@@ -72,7 +72,7 @@ public class EditorDashboardUI
         container.SizeScale_X = 1f;
         container.SizeScale_Y = 1f;
         EditorUI.window.AddChild(container);
-        terrainButton = new SleekButtonIcon(bundle.load<Texture2D>("Terrain"));
+        terrainButton = new SleekButtonIcon(iconsBundle.load<Texture2D>("Terrain"));
         terrainButton.SizeOffset_X = -5f;
         terrainButton.SizeOffset_Y = 30f;
         terrainButton.SizeScale_X = 0.25f;
@@ -80,7 +80,7 @@ public class EditorDashboardUI
         terrainButton.tooltip = localization.format("TerrainButtonTooltip");
         terrainButton.onClickedButton += onClickedTerrainButton;
         container.AddChild(terrainButton);
-        environmentButton = new SleekButtonIcon(bundle.load<Texture2D>("Environment"));
+        environmentButton = new SleekButtonIcon(iconsBundle.load<Texture2D>("Environment"));
         environmentButton.PositionOffset_X = 5f;
         environmentButton.PositionScale_X = 0.25f;
         environmentButton.SizeOffset_X = -10f;
@@ -90,7 +90,7 @@ public class EditorDashboardUI
         environmentButton.tooltip = localization.format("EnvironmentButtonTooltip");
         environmentButton.onClickedButton += onClickedEnvironmentButton;
         container.AddChild(environmentButton);
-        spawnsButton = new SleekButtonIcon(bundle.load<Texture2D>("Spawns"));
+        spawnsButton = new SleekButtonIcon(iconsBundle.load<Texture2D>("Spawns"));
         spawnsButton.PositionOffset_X = 5f;
         spawnsButton.PositionScale_X = 0.5f;
         spawnsButton.SizeOffset_X = -10f;
@@ -100,7 +100,7 @@ public class EditorDashboardUI
         spawnsButton.tooltip = localization.format("SpawnsButtonTooltip");
         spawnsButton.onClickedButton += onClickedSpawnsButton;
         container.AddChild(spawnsButton);
-        levelButton = new SleekButtonIcon(bundle.load<Texture2D>("Level"));
+        levelButton = new SleekButtonIcon(iconsBundle.load<Texture2D>("Level"));
         levelButton.PositionOffset_X = 5f;
         levelButton.PositionScale_X = 0.75f;
         levelButton.SizeOffset_X = -5f;
@@ -110,7 +110,6 @@ public class EditorDashboardUI
         levelButton.tooltip = localization.format("LevelButtonTooltip");
         levelButton.onClickedButton += onClickedLevelButton;
         container.AddChild(levelButton);
-        bundle.unload();
         new EditorPauseUI();
         terrainMenu = new EditorTerrainUI();
         environmentUI = new EditorEnvironmentUI();

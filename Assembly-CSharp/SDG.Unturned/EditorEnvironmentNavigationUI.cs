@@ -140,7 +140,7 @@ public class EditorEnvironmentNavigationUI
     public EditorEnvironmentNavigationUI()
     {
         Local local = Localization.read("/Editor/EditorEnvironmentNavigation.dat");
-        Bundle bundle = Bundles.getBundle("/Bundles/Textures/Edit/Icons/EditorEnvironmentNavigation/EditorEnvironmentNavigation.unity3d");
+        IconsBundle iconsBundle = Bundles.getIconsBundle("UI/Edit/Icons/EditorEnvironmentNavigation");
         container = new SleekFullscreenBox();
         container.PositionOffset_X = 10f;
         container.PositionOffset_Y = 10f;
@@ -233,7 +233,7 @@ public class EditorEnvironmentNavigationUI
         hyperAgroToggle.AddLabel(local.format("Hyper_Agro_Label"), ESleekSide.RIGHT);
         container.AddChild(hyperAgroToggle);
         hyperAgroToggle.IsVisible = false;
-        bakeNavigationButton = new SleekButtonIcon(bundle.load<Texture2D>("Navigation"));
+        bakeNavigationButton = new SleekButtonIcon(iconsBundle.load<Texture2D>("Navigation"));
         bakeNavigationButton.PositionOffset_X = -200f;
         bakeNavigationButton.PositionOffset_Y = -30f;
         bakeNavigationButton.PositionScale_X = 1f;
@@ -245,6 +245,5 @@ public class EditorEnvironmentNavigationUI
         bakeNavigationButton.onClickedButton += onClickedBakeNavigationButton;
         container.AddChild(bakeNavigationButton);
         bakeNavigationButton.IsVisible = false;
-        bundle.unload();
     }
 }

@@ -135,7 +135,7 @@ public class EditorPauseUI
     public EditorPauseUI()
     {
         Local local = Localization.read("/Editor/EditorPause.dat");
-        Bundle bundle = Bundles.getBundle("/Bundles/Textures/Edit/Icons/EditorPause/EditorPause.unity3d");
+        IconsBundle iconsBundle = Bundles.getIconsBundle("UI/Edit/Icons/EditorPause");
         container = new SleekFullscreenBox();
         container.PositionOffset_X = 10f;
         container.PositionOffset_Y = 10f;
@@ -146,7 +146,7 @@ public class EditorPauseUI
         container.SizeScale_Y = 1f;
         EditorUI.window.AddChild(container);
         active = false;
-        saveButton = new SleekButtonIcon(bundle.load<Texture2D>("Save"));
+        saveButton = new SleekButtonIcon(iconsBundle.load<Texture2D>("Save"));
         saveButton.PositionOffset_X = -100f;
         saveButton.PositionOffset_Y = -115f;
         saveButton.PositionScale_X = 0.5f;
@@ -157,7 +157,7 @@ public class EditorPauseUI
         saveButton.tooltip = local.format("Save_Button_Tooltip");
         saveButton.onClickedButton += onClickedSaveButton;
         container.AddChild(saveButton);
-        mapButton = new SleekButtonIcon(bundle.load<Texture2D>("Map"));
+        mapButton = new SleekButtonIcon(iconsBundle.load<Texture2D>("Map"));
         mapButton.PositionOffset_X = -100f;
         mapButton.PositionOffset_Y = -75f;
         mapButton.PositionScale_X = 0.5f;
@@ -168,7 +168,7 @@ public class EditorPauseUI
         mapButton.tooltip = local.format("Map_Button_Tooltip");
         mapButton.onClickedButton += onClickedMapButton;
         container.AddChild(mapButton);
-        chartButton = new SleekButtonIcon(bundle.load<Texture2D>("Chart"));
+        chartButton = new SleekButtonIcon(iconsBundle.load<Texture2D>("Chart"));
         chartButton.PositionOffset_X = -100f;
         chartButton.PositionOffset_Y = -35f;
         chartButton.PositionScale_X = 0.5f;
@@ -218,8 +218,8 @@ public class EditorPauseUI
         proxyButton.OnClicked += onClickedProxyButton;
         container.AddChild(proxyButton);
         Local local2 = Localization.read("/Player/PlayerPause.dat");
-        Bundle bundle2 = Bundles.getBundle("/Bundles/Textures/Player/Icons/PlayerPause/PlayerPause.unity3d");
-        optionsButton = new SleekButtonIcon(bundle2.load<Texture2D>("Options"));
+        IconsBundle iconsBundle2 = Bundles.getIconsBundle("UI/Player/Icons/PlayerPause");
+        optionsButton = new SleekButtonIcon(iconsBundle2.load<Texture2D>("Options"));
         optionsButton.PositionOffset_X = 110f;
         optionsButton.PositionOffset_Y = -115f;
         optionsButton.PositionScale_X = 0.5f;
@@ -232,7 +232,7 @@ public class EditorPauseUI
         optionsButton.iconColor = ESleekTint.FOREGROUND;
         optionsButton.fontSize = ESleekFontSize.Medium;
         container.AddChild(optionsButton);
-        displayButton = new SleekButtonIcon(bundle2.load<Texture2D>("Display"));
+        displayButton = new SleekButtonIcon(iconsBundle2.load<Texture2D>("Display"));
         displayButton.PositionOffset_X = 110f;
         displayButton.PositionOffset_Y = -55f;
         displayButton.PositionScale_X = 0.5f;
@@ -245,7 +245,7 @@ public class EditorPauseUI
         displayButton.onClickedButton += onClickedDisplayButton;
         displayButton.fontSize = ESleekFontSize.Medium;
         container.AddChild(displayButton);
-        graphicsButton = new SleekButtonIcon(bundle2.load<Texture2D>("Graphics"));
+        graphicsButton = new SleekButtonIcon(iconsBundle2.load<Texture2D>("Graphics"));
         graphicsButton.PositionOffset_X = 110f;
         graphicsButton.PositionOffset_Y = 5f;
         graphicsButton.PositionScale_X = 0.5f;
@@ -258,7 +258,7 @@ public class EditorPauseUI
         graphicsButton.onClickedButton += onClickedGraphicsButton;
         graphicsButton.fontSize = ESleekFontSize.Medium;
         container.AddChild(graphicsButton);
-        controlsButton = new SleekButtonIcon(bundle2.load<Texture2D>("Controls"));
+        controlsButton = new SleekButtonIcon(iconsBundle2.load<Texture2D>("Controls"));
         controlsButton.PositionOffset_X = 110f;
         controlsButton.PositionOffset_Y = 65f;
         controlsButton.PositionScale_X = 0.5f;
@@ -271,7 +271,7 @@ public class EditorPauseUI
         controlsButton.onClickedButton += onClickedControlsButton;
         controlsButton.fontSize = ESleekFontSize.Medium;
         container.AddChild(controlsButton);
-        audioButton = new SleekButtonIcon(bundle2.load<Texture2D>("Audio"));
+        audioButton = new SleekButtonIcon(iconsBundle2.load<Texture2D>("Audio"));
         audioButton.PositionOffset_X = 110f;
         audioButton.PositionOffset_Y = 125f;
         audioButton.PositionScale_X = 0.5f;
@@ -284,8 +284,7 @@ public class EditorPauseUI
         audioButton.onClickedButton += onClickedAudioButton;
         audioButton.fontSize = ESleekFontSize.Medium;
         container.AddChild(audioButton);
-        bundle2.unload();
-        exitButton = new SleekButtonIconConfirm(bundle.load<Texture2D>("Exit"), local.format("Exit_Button"), local.format("Exit_Button_Tooltip"), "Cancel", string.Empty);
+        exitButton = new SleekButtonIconConfirm(iconsBundle.load<Texture2D>("Exit"), local.format("Exit_Button"), local.format("Exit_Button_Tooltip"), "Cancel", string.Empty);
         exitButton.PositionOffset_X = -100f;
         exitButton.PositionOffset_Y = 85f;
         exitButton.PositionScale_X = 0.5f;
@@ -324,6 +323,5 @@ public class EditorPauseUI
         audioMenu.SizeScale_X = 1f;
         audioMenu.SizeScale_Y = 1f;
         EditorUI.window.AddChild(audioMenu);
-        bundle.unload();
     }
 }

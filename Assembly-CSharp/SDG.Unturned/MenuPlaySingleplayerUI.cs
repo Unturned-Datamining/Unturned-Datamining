@@ -484,7 +484,7 @@ public class MenuPlaySingleplayerUI
     public MenuPlaySingleplayerUI()
     {
         localization = Localization.read("/Menu/Play/MenuPlaySingleplayer.dat");
-        Bundle bundle = Bundles.getBundle("/Bundles/Textures/Menu/Icons/Play/MenuPlaySingleplayer/MenuPlaySingleplayer.unity3d");
+        IconsBundle iconsBundle = Bundles.getIconsBundle("UI/Menu/Icons/Play/MenuPlaySingleplayer");
         selectedLevel = null;
         container = new SleekFullscreenBox();
         container.PositionOffset_X = 10f;
@@ -624,7 +624,7 @@ public class MenuPlaySingleplayerUI
         newsButton.OnClicked += onClickedNewsButton;
         container.AddChild(newsButton);
         newsButton.IsVisible = false;
-        playButton = new SleekButtonIcon(bundle.load<Texture2D>("Play"));
+        playButton = new SleekButtonIcon(iconsBundle.load<Texture2D>("Play"));
         playButton.PositionOffset_X = -305f;
         playButton.PositionOffset_Y = 290f;
         playButton.PositionScale_X = 0.5f;
@@ -645,7 +645,7 @@ public class MenuPlaySingleplayerUI
         browseServersButton.TooltipText = localization.format("Browse_Servers_Tooltip");
         browseServersButton.OnClicked += onClickedBrowseServersButton;
         container.AddChild(browseServersButton);
-        modeButtonState = new SleekButtonState(new GUIContent(localization.format("Easy_Button"), bundle.load<Texture>("Easy")), new GUIContent(localization.format("Normal_Button"), bundle.load<Texture>("Normal")), new GUIContent(localization.format("Hard_Button"), bundle.load<Texture>("Hard")));
+        modeButtonState = new SleekButtonState(new GUIContent(localization.format("Easy_Button"), iconsBundle.load<Texture>("Easy")), new GUIContent(localization.format("Normal_Button"), iconsBundle.load<Texture>("Normal")), new GUIContent(localization.format("Hard_Button"), iconsBundle.load<Texture>("Hard")));
         modeButtonState.PositionOffset_X = -305f;
         modeButtonState.PositionOffset_Y = 330f;
         modeButtonState.PositionScale_X = 0.5f;
@@ -684,7 +684,6 @@ public class MenuPlaySingleplayerUI
         resetButton.tooltip = localization.format("Reset_Button_Tooltip");
         resetButton.onConfirmed = onClickedResetButton;
         container.AddChild(resetButton);
-        bundle.unload();
         refreshLevels();
         Level.onLevelsRefreshed = (LevelsRefreshed)Delegate.Combine(Level.onLevelsRefreshed, new LevelsRefreshed(onLevelsRefreshed));
         backButton = new SleekButtonIcon(MenuDashboardUI.icons.load<Texture2D>("Exit"));

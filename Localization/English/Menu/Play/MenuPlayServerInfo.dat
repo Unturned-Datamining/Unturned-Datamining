@@ -84,3 +84,12 @@ ServerBlacklisted_Label This server is banned.
 ServerBlacklisted_Tooltip Cannot join because the server has been banned.
 NotLoggedInBlock_Label This server is not logged in.
 NotLoggedInBlock_Tooltip Cannot join over the internet because GSLT is not set.
+
+ServerNotModded_Label Server playing vanilla Unturned.
+ServerNotModded_Tooltip Cannot join because you are playing a custom build of the game.
+ServerIsModded_Label Server playing "{0}".
+ServerIsModded_Tooltip Cannot join because the server is running a custom build of the game.
+SeverDifferentMod_Label Different mod: "{0}"
+ServerDifferentMod_Tooltip Cannot join because you are playing different custom builds of the game.
+ServerDifferentModVersion_Label Server running a different mod version: {0}
+ServerDifferentModVersion_Tooltip Cannot join because this server is running a different version of your installed mod.

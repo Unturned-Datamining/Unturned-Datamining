@@ -400,7 +400,7 @@ public class SleekServer : SleekWrapper
         sleekImage2.SizeOffset_Y = 20f;
         sleekImage2.TintColor = ESleekTint.FOREGROUND;
         anticheatBox.AddChild(sleekImage2);
-        if (info.IsBattlEyeSecure)
+        if (info.IsThirdpartyAntiCheatEnabled)
         {
             sleekImage2.Texture = MenuPlayUI.serverListUI.icons.load<Texture2D>("BattlEye");
         }
@@ -423,11 +423,11 @@ public class SleekServer : SleekWrapper
         {
             sleekImage3.Texture = MenuPlayUI.serverListUI.icons.load<Texture2D>("VAC_Off");
         }
-        if (info.IsBattlEyeSecure && info.IsVACSecure)
+        if (info.IsThirdpartyAntiCheatEnabled && info.IsVACSecure)
         {
             anticheatBox.TooltipText = MenuPlayUI.serverListUI.localization.format("Anticheat_Column_Both_Tooltip");
         }
-        else if (info.IsBattlEyeSecure)
+        else if (info.IsThirdpartyAntiCheatEnabled)
         {
             anticheatBox.TooltipText = MenuPlayUI.serverListUI.localization.format("Anticheat_Column_BattlEye_Tooltip");
         }

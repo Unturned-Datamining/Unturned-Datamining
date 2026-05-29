@@ -7,7 +7,7 @@ public class MenuPauseUI
 {
     public static Local localization;
 
-    public static Bundle icons;
+    public static IconsBundle icons;
 
     private static SleekFullscreenBox container;
 
@@ -142,12 +142,7 @@ public class MenuPauseUI
     public MenuPauseUI()
     {
         localization = Localization.read("/Menu/MenuPause.dat");
-        if (icons != null)
-        {
-            icons.unload();
-            icons = null;
-        }
-        icons = Bundles.getBundle("/Bundles/Textures/Menu/Icons/MenuPause/MenuPause.unity3d");
+        icons = Bundles.getIconsBundle("UI/Menu/Icons/MenuPause");
         container = new SleekFullscreenBox();
         container.PositionOffset_X = 10f;
         container.PositionOffset_Y = 10f;

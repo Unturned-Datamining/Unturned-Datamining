@@ -115,14 +115,14 @@ public class SleekScopeOverlay : SleekWrapper
         OptionsSettings.OnUnitSystemChanged -= SyncMarkerLabels;
     }
 
-    public SleekScopeOverlay()
+    public SleekScopeOverlay(IconsBundle overlayBundle)
     {
         scopeFrame = Glazier.Get().CreateConstraintFrame();
         scopeFrame.SizeScale_X = 1f;
         scopeFrame.SizeScale_Y = 1f;
         scopeFrame.Constraint = ESleekConstraint.FitInParent;
         AddChild(scopeFrame);
-        scopeOverlay = Glazier.Get().CreateImage((Texture2D)Resources.Load("Overlay/Scope"));
+        scopeOverlay = Glazier.Get().CreateImage(overlayBundle.load<Texture2D>("Scope"));
         scopeOverlay.PositionScale_X = 0.1f;
         scopeOverlay.PositionScale_Y = 0.1f;
         scopeOverlay.SizeScale_X = 0.8f;

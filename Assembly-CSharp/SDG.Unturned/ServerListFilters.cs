@@ -39,7 +39,7 @@ public class ServerListFilters
 
     public EVACProtectionFilter vacProtection;
 
-    public EBattlEyeProtectionFilter battlEyeProtection;
+    public EThirdpartyAntiCheatProtectionFilter thirdpartyAntiCheatProtection;
 
     public ECombat combat = ECombat.ANY;
 
@@ -118,7 +118,7 @@ public class ServerListFilters
         attendance = source.attendance;
         notFull = source.notFull;
         vacProtection = source.vacProtection;
-        battlEyeProtection = source.battlEyeProtection;
+        thirdpartyAntiCheatProtection = source.thirdpartyAntiCheatProtection;
         combat = source.combat;
         cheats = source.cheats;
         camera = source.camera;
@@ -156,7 +156,7 @@ public class ServerListFilters
         attendance = (EAttendance)block.readByte();
         notFull = block.readBoolean();
         vacProtection = (EVACProtectionFilter)block.readByte();
-        battlEyeProtection = (EBattlEyeProtectionFilter)block.readByte();
+        thirdpartyAntiCheatProtection = (EThirdpartyAntiCheatProtectionFilter)block.readByte();
         combat = (ECombat)block.readByte();
         cheats = (ECheats)block.readByte();
         camera = (ECameraMode)block.readByte();
@@ -193,7 +193,7 @@ public class ServerListFilters
         block.writeByte((byte)attendance);
         block.writeBoolean(notFull);
         block.writeByte((byte)vacProtection);
-        block.writeByte((byte)battlEyeProtection);
+        block.writeByte((byte)thirdpartyAntiCheatProtection);
         block.writeByte((byte)combat);
         block.writeByte((byte)cheats);
         block.writeByte((byte)camera);

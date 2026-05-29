@@ -341,7 +341,7 @@ public class EditorLevelObjectsUI : SleekFullscreenBox
     public EditorLevelObjectsUI()
     {
         Local local = Localization.read("/Editor/EditorLevelObjects.dat");
-        Bundle bundle = Bundles.getBundle("/Bundles/Textures/Edit/Icons/EditorLevelObjects/EditorLevelObjects.unity3d");
+        IconsBundle iconsBundle = Bundles.getIconsBundle("UI/Edit/Icons/EditorLevelObjects");
         container = this;
         active = false;
         assets = new List<Asset>();
@@ -497,7 +497,7 @@ public class EditorLevelObjectsUI : SleekFullscreenBox
         snapRotationField.AddLabel(local.format("SnapRotationLabelText"), ESleekSide.RIGHT);
         snapRotationField.OnValueChanged += onTypedSnapRotationField;
         AddChild(snapRotationField);
-        transformButton = new SleekButtonIcon(bundle.load<Texture2D>("Transform"));
+        transformButton = new SleekButtonIcon(iconsBundle.load<Texture2D>("Transform"));
         transformButton.PositionOffset_Y = -150f;
         transformButton.PositionScale_Y = 1f;
         transformButton.SizeOffset_X = 200f;
@@ -506,7 +506,7 @@ public class EditorLevelObjectsUI : SleekFullscreenBox
         transformButton.tooltip = local.format("TransformButtonTooltip");
         transformButton.onClickedButton += onClickedTransformButton;
         AddChild(transformButton);
-        rotateButton = new SleekButtonIcon(bundle.load<Texture2D>("Rotate"));
+        rotateButton = new SleekButtonIcon(iconsBundle.load<Texture2D>("Rotate"));
         rotateButton.PositionOffset_Y = -110f;
         rotateButton.PositionScale_Y = 1f;
         rotateButton.SizeOffset_X = 200f;
@@ -515,7 +515,7 @@ public class EditorLevelObjectsUI : SleekFullscreenBox
         rotateButton.tooltip = local.format("RotateButtonTooltip");
         rotateButton.onClickedButton += onClickedRotateButton;
         AddChild(rotateButton);
-        scaleButton = new SleekButtonIcon(bundle.load<Texture2D>("Scale"));
+        scaleButton = new SleekButtonIcon(iconsBundle.load<Texture2D>("Scale"));
         scaleButton.PositionOffset_Y = -70f;
         scaleButton.PositionScale_Y = 1f;
         scaleButton.SizeOffset_X = 200f;
@@ -524,7 +524,7 @@ public class EditorLevelObjectsUI : SleekFullscreenBox
         scaleButton.tooltip = local.format("ScaleButtonTooltip");
         scaleButton.onClickedButton += onClickedScaleButton;
         AddChild(scaleButton);
-        coordinateButton = new SleekButtonState(new GUIContent(local.format("CoordinateButtonTextGlobal"), bundle.load<Texture>("Global")), new GUIContent(local.format("CoordinateButtonTextLocal"), bundle.load<Texture>("Local")));
+        coordinateButton = new SleekButtonState(new GUIContent(local.format("CoordinateButtonTextGlobal"), iconsBundle.load<Texture>("Global")), new GUIContent(local.format("CoordinateButtonTextLocal"), iconsBundle.load<Texture>("Local")));
         coordinateButton.PositionOffset_Y = -30f;
         coordinateButton.PositionScale_Y = 1f;
         coordinateButton.SizeOffset_X = 200f;
@@ -532,7 +532,6 @@ public class EditorLevelObjectsUI : SleekFullscreenBox
         coordinateButton.tooltip = local.format("CoordinateButtonTooltip");
         coordinateButton.onSwappedState = onSwappedStateCoordinate;
         AddChild(coordinateButton);
-        bundle.unload();
         onAssetsRefreshed();
         Assets.onAssetsRefreshed = (AssetsRefreshed)Delegate.Combine(Assets.onAssetsRefreshed, new AssetsRefreshed(onAssetsRefreshed));
     }

@@ -13,7 +13,7 @@ public class PlayerNPCDialogueUI
 
     private static Local localization;
 
-    public static Bundle icons;
+    public static IconsBundle icons;
 
     public static bool active;
 
@@ -476,12 +476,8 @@ public class PlayerNPCDialogueUI
 
     public PlayerNPCDialogueUI()
     {
-        if (icons != null)
-        {
-            icons.unload();
-        }
         localization = Localization.read("/Player/PlayerNPCDialogue.dat");
-        icons = Bundles.getBundle("/Bundles/Textures/Player/Icons/PlayerNPCDialogue/PlayerNPCDialogue.unity3d");
+        icons = Bundles.getIconsBundle("UI/Player/Icons/PlayerNPCDialogue");
         container = new SleekFullscreenBox();
         container.PositionScale_Y = 1f;
         container.PositionOffset_X = 10f;

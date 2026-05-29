@@ -10,7 +10,7 @@ public class PlayerPauseUI
 
     public static Local localization;
 
-    private static Bundle icons;
+    private static IconsBundle icons;
 
     public static bool active;
 
@@ -110,7 +110,7 @@ public class PlayerPauseUI
             if (!Provider.isServer)
             {
                 text = ((!Provider.IsVacActiveOnCurrentServer) ? localization.format("VAC_Insecure") : localization.format("VAC_Secure"));
-                text = ((!Provider.IsBattlEyeActiveOnCurrentServer) ? (text + " + " + localization.format("BattlEye_Insecure")) : (text + " + " + localization.format("BattlEye_Secure")));
+                text = ((!Provider.IsThirdpartyAntiCheatActiveOnCurrentServer) ? (text + " + " + localization.format("BattlEye_Insecure")) : (text + " + " + localization.format("BattlEye_Secure")));
             }
             else
             {
@@ -326,12 +326,7 @@ public class PlayerPauseUI
     {
         inviteFriendsButton = null;
         localization = Localization.read("/Player/PlayerPause.dat");
-        if (icons != null)
-        {
-            icons.unload();
-            icons = null;
-        }
-        icons = Bundles.getBundle("/Bundles/Textures/Player/Icons/PlayerPause/PlayerPause.unity3d");
+        icons = Bundles.getIconsBundle("UI/Player/Icons/PlayerPause");
         container = new SleekFullscreenBox();
         container.PositionScale_Y = 1f;
         container.PositionOffset_X = 10f;

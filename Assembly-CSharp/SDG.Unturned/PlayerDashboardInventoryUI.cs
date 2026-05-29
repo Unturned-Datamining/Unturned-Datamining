@@ -12,7 +12,7 @@ public class PlayerDashboardInventoryUI
 
     public static Local localization;
 
-    public static Bundle icons;
+    public static IconsBundle icons;
 
     public static bool active;
 
@@ -2019,13 +2019,9 @@ public class PlayerDashboardInventoryUI
 
     public PlayerDashboardInventoryUI()
     {
-        if (icons != null)
-        {
-            icons.unload();
-        }
         pendingItemsInRadius = new List<InteractableItem>();
         localization = Localization.read("/Player/PlayerDashboardInventory.dat");
-        icons = Bundles.getBundle("/Bundles/Textures/Player/Icons/PlayerDashboardInventory/PlayerDashboardInventory.unity3d");
+        icons = Bundles.getIconsBundle("UI/Player/Icons/PlayerDashboardInventory");
         _selectedPage = byte.MaxValue;
         _selected_x = byte.MaxValue;
         _selected_y = byte.MaxValue;

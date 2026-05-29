@@ -48,6 +48,19 @@ public class Local
         return string.Empty;
     }
 
+    /// <summary>
+    /// If active language is not English always reads from English fallback.
+    /// </summary>
+    public string FormatEnglishOrEmpty(string key)
+    {
+        IDatDictionary datDictionary = (Provider.languageIsEnglish ? data : fallbackData);
+        if (datDictionary != null && datDictionary.TryGetString(key, out var value))
+        {
+            return value;
+        }
+        return string.Empty;
+    }
+
     public string format(string key, object arg0)
     {
         if (TryReadString(key, out var text))

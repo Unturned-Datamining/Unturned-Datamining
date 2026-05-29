@@ -93,7 +93,7 @@ public class EditorTerrainUI
     public EditorTerrainUI()
     {
         Local local = Localization.read("/Editor/EditorTerrain.dat");
-        Bundle bundle = Bundles.getBundle("/Bundles/Textures/Edit/Icons/EditorTerrain/EditorTerrain.unity3d");
+        IconsBundle iconsBundle = Bundles.getIconsBundle("UI/Edit/Icons/EditorTerrain");
         container = new SleekFullscreenBox();
         container.PositionOffset_X = 10f;
         container.PositionOffset_Y = 10f;
@@ -104,7 +104,7 @@ public class EditorTerrainUI
         container.SizeScale_Y = 1f;
         EditorUI.window.AddChild(container);
         active = false;
-        SleekButtonIcon sleekButtonIcon = new SleekButtonIcon(bundle.load<Texture2D>("Height"));
+        SleekButtonIcon sleekButtonIcon = new SleekButtonIcon(iconsBundle.load<Texture2D>("Height"));
         sleekButtonIcon.PositionOffset_Y = 40f;
         sleekButtonIcon.SizeOffset_X = -5f;
         sleekButtonIcon.SizeOffset_Y = 30f;
@@ -113,7 +113,7 @@ public class EditorTerrainUI
         sleekButtonIcon.tooltip = local.format("HeightButtonTooltip");
         sleekButtonIcon.onClickedButton += onClickedHeightButton;
         container.AddChild(sleekButtonIcon);
-        SleekButtonIcon sleekButtonIcon2 = new SleekButtonIcon(bundle.load<Texture2D>("Materials"));
+        SleekButtonIcon sleekButtonIcon2 = new SleekButtonIcon(iconsBundle.load<Texture2D>("Materials"));
         sleekButtonIcon2.PositionOffset_X = 5f;
         sleekButtonIcon2.PositionOffset_Y = 40f;
         sleekButtonIcon2.PositionScale_X = 0.25f;
@@ -124,7 +124,7 @@ public class EditorTerrainUI
         sleekButtonIcon2.tooltip = local.format("MaterialsButtonTooltip");
         sleekButtonIcon2.onClickedButton += onClickedMaterialsButton;
         container.AddChild(sleekButtonIcon2);
-        SleekButtonIcon sleekButtonIcon3 = new SleekButtonIcon(bundle.load<Texture2D>("Details"));
+        SleekButtonIcon sleekButtonIcon3 = new SleekButtonIcon(iconsBundle.load<Texture2D>("Details"));
         sleekButtonIcon3.PositionOffset_X = 5f;
         sleekButtonIcon3.PositionOffset_Y = 40f;
         sleekButtonIcon3.PositionScale_X = 0.5f;
@@ -182,6 +182,5 @@ public class EditorTerrainUI
         tiles.SizeScale_X = 1f;
         tiles.SizeScale_Y = 1f;
         EditorUI.window.AddChild(tiles);
-        bundle.unload();
     }
 }

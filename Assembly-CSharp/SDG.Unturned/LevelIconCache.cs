@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
-using Unturned.SystemEx;
 
 namespace SDG.Unturned;
 
@@ -47,21 +46,22 @@ public static class LevelIconCache
 
     private static Texture2D LoadIcon(string name)
     {
-        foreach (CuratedMapLink curated_Map_Link in Provider.statusData.Maps.Curated_Map_Links)
-        {
-            if (string.Equals(curated_Map_Link.Name, name, StringComparison.OrdinalIgnoreCase))
-            {
-                string text = PathEx.Join(UnturnedPaths.RootDirectory, "CuratedMapIcons", $"{curated_Map_Link.Workshop_File_Id}.png");
-                if (ReadWrite.fileExists(text, useCloud: false, usePath: false))
-                {
-                    return ReadWrite.readTextureFromFile(text);
-                }
-            }
-        }
         LevelInfo level = Level.getLevel(name);
         if (level != null)
         {
             return LoadIcon(level);
+        }
+        string text = Path.Join(ReadWrite.PATH, "CuratedMapIcons");
+        foreach (CuratedMapLink curated_Map_Link in Provider.statusData.Maps.Curated_Map_Links)
+        {
+            if (string.Equals(curated_Map_Link.Name, name, StringComparison.OrdinalIgnoreCase))
+            {
+                string text2 = Path.Join(text, $"{curated_Map_Link.Workshop_File_Id}.png");
+                if (ReadWrite.fileExists(text2, useCloud: false, usePath: false))
+                {
+                    return ReadWrite.readTextureFromFile(text2);
+                }
+            }
         }
         return null;
     }

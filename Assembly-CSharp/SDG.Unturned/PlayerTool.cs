@@ -59,7 +59,7 @@ public class PlayerTool
 
     public static Texture2D getRepTexture(int rep)
     {
-        return (Texture2D)Resources.Load("Reputation/" + getRepKey(rep));
+        return Bundles.getIconsBundle("UI/Player/Icons/Reputation").load<Texture2D>(getRepKey(rep));
     }
 
     public static string getRepTitle(int rep)

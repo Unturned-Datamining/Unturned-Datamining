@@ -1825,7 +1825,8 @@ public class Assets : MonoBehaviour
         ResourceHash.Initialize();
         if ((bool)shouldLoadAnyAssets)
         {
-            AddSearchLocation(Path.Combine(ReadWrite.PATH, "Bundles"), coreOrigin);
+            string path = Path.Combine(ReadWrite.PATH, "Bundles");
+            AddSearchLocation(path, coreOrigin);
             if (Dedicator.IsDedicatedServer)
             {
                 AddDedicatedServerUgcSearchLocations();

@@ -9,7 +9,7 @@ public class PlayerNPCQuestUI
 
     public static Local localization;
 
-    public static Bundle icons;
+    public static IconsBundle icons;
 
     public static bool active;
 
@@ -284,12 +284,8 @@ public class PlayerNPCQuestUI
 
     public PlayerNPCQuestUI()
     {
-        if (icons != null)
-        {
-            icons.unload();
-        }
         localization = Localization.read("/Player/PlayerNPCQuest.dat");
-        icons = Bundles.getBundle("/Bundles/Textures/Player/Icons/PlayerNPCQuest/PlayerNPCQuest.unity3d");
+        icons = Bundles.getIconsBundle("UI/Player/Icons/PlayerNPCQuest");
         container = new SleekFullscreenBox();
         container.PositionScale_Y = 1f;
         container.PositionOffset_X = 10f;

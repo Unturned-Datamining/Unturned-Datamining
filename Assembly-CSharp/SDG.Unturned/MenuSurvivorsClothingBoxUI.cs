@@ -70,7 +70,7 @@ public class MenuSurvivorsClothingBoxUI
 
     private static readonly float BONUS_ITEM_RARITY = 0.1f;
 
-    private static Bundle icons;
+    private static IconsBundle icons;
 
     private static Local localization;
 
@@ -637,11 +637,7 @@ public class MenuSurvivorsClothingBoxUI
     public MenuSurvivorsClothingBoxUI()
     {
         localization = Localization.read("/Menu/Survivors/MenuSurvivorsClothingBox.dat");
-        if (icons != null)
-        {
-            icons.unload();
-        }
-        icons = Bundles.getBundle("/Bundles/Textures/Menu/Icons/Survivors/MenuSurvivorsClothingBox/MenuSurvivorsClothingBox.unity3d");
+        icons = Bundles.getIconsBundle("UI/Menu/Icons/Survivors/MenuSurvivorsClothingBox");
         container = new SleekFullscreenBox();
         container.PositionOffset_X = 10f;
         container.PositionOffset_Y = 10f;

@@ -9,7 +9,7 @@ public class StatTracker : MonoBehaviour
 
     protected int oldStatValue = -1;
 
-    private static StaticResourceRef<GameObject> statTrackerRef = new StaticResourceRef<GameObject>("Economy/Attachments/Stat_Tracker");
+    private static GameObject statTrackerPrefab;
 
     public TextMeshPro statTrackerText { get; protected set; }
 
@@ -17,11 +17,20 @@ public class StatTracker : MonoBehaviour
 
     public void updateStatTracker(bool viewmodel)
     {
+        if (statTrackerPrefab == null)
+        {
+            statTrackerPrefab = Assets.coreMasterBundle?.LoadAsset<GameObject>("Economy/Attachments/Stat_Tracker.prefab");
+            if (statTrackerPrefab == null)
+            {
+                base.enabled = false;
+                return;
+            }
+        }
         InstantiateParameters instantiateParameters = default(InstantiateParameters);
         instantiateParameters.parent = statTrackerHook;
         instantiateParameters.worldSpace = false;
         InstantiateParameters parameters = instantiateParameters;
-        GameObject gameObject = Object.Instantiate((GameObject)statTrackerRef, Vector3.zero, Quaternion.identity, parameters);
+        GameObject gameObject = Object.Instantiate(statTrackerPrefab, Vector3.zero, Quaternion.identity, parameters);
         statTrackerText = gameObject.GetComponentInChildren<TextMeshPro>();
         if (viewmodel)
         {

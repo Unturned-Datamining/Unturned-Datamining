@@ -197,13 +197,20 @@ public class MenuTitleUI
         titleLabel.SizeScale_X = 1f;
         titleLabel.SizeOffset_Y = 70f;
         titleLabel.FontSize = ESleekFontSize.Title;
-        titleLabel.Text = Provider.APP_NAME;
+        titleLabel.Text = ((Provider._modInfo != null) ? Provider._modInfo.Name : Provider.APP_NAME);
         titleBox.AddChild(titleLabel);
         authorLabel = Glazier.Get().CreateLabel();
         authorLabel.PositionOffset_Y = 60f;
         authorLabel.SizeScale_X = 1f;
         authorLabel.SizeOffset_Y = 30f;
-        authorLabel.Text = localization.format("Author_Label", Provider.APP_VERSION, Provider.APP_AUTHOR);
+        if (Provider._modInfo != null)
+        {
+            authorLabel.Text = localization.format("Author_Label", Provider._modInfo.FormatModVersion(), Provider._modInfo.Creators);
+        }
+        else
+        {
+            authorLabel.Text = localization.format("Author_Label", Provider.APP_VERSION, Provider.APP_AUTHOR);
+        }
         titleBox.AddChild(authorLabel);
         statButton = Glazier.Get().CreateButton();
         statButton.PositionOffset_Y = 110f;

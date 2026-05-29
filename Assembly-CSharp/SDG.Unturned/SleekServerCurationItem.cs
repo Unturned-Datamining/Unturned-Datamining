@@ -158,7 +158,7 @@ public class SleekServerCurationItem : SleekWrapper
         item.OnDataChanged -= SynchronizeDetails;
     }
 
-    internal SleekServerCurationItem(Local localization, Bundle icons, ServerCurationItem item)
+    internal SleekServerCurationItem(Local localization, IconsBundle icons, ServerCurationItem item)
     {
         this.localization = localization;
         this.item = item;

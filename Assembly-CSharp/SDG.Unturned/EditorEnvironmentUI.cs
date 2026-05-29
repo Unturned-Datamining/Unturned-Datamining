@@ -80,7 +80,7 @@ public class EditorEnvironmentUI
     public EditorEnvironmentUI()
     {
         Local local = Localization.read("/Editor/EditorEnvironment.dat");
-        Bundle bundle = Bundles.getBundle("/Bundles/Textures/Edit/Icons/EditorEnvironment/EditorEnvironment.unity3d");
+        IconsBundle iconsBundle = Bundles.getIconsBundle("UI/Edit/Icons/EditorEnvironment");
         container = new SleekFullscreenBox();
         container.PositionOffset_X = 10f;
         container.PositionOffset_Y = 10f;
@@ -91,7 +91,7 @@ public class EditorEnvironmentUI
         container.SizeScale_Y = 1f;
         EditorUI.window.AddChild(container);
         active = false;
-        lightingButton = new SleekButtonIcon(bundle.load<Texture2D>("Lighting"));
+        lightingButton = new SleekButtonIcon(iconsBundle.load<Texture2D>("Lighting"));
         lightingButton.PositionOffset_Y = 40f;
         lightingButton.SizeOffset_X = -5f;
         lightingButton.SizeOffset_Y = 30f;
@@ -100,7 +100,7 @@ public class EditorEnvironmentUI
         lightingButton.tooltip = local.format("LightingButtonTooltip");
         lightingButton.onClickedButton += onClickedLightingButton;
         container.AddChild(lightingButton);
-        roadsButton = new SleekButtonIcon(bundle.load<Texture2D>("Roads"));
+        roadsButton = new SleekButtonIcon(iconsBundle.load<Texture2D>("Roads"));
         roadsButton.PositionOffset_X = 5f;
         roadsButton.PositionOffset_Y = 40f;
         roadsButton.PositionScale_X = 0.25f;
@@ -111,7 +111,7 @@ public class EditorEnvironmentUI
         roadsButton.tooltip = local.format("RoadsButtonTooltip");
         roadsButton.onClickedButton += onClickedRoadsButton;
         container.AddChild(roadsButton);
-        navigationButton = new SleekButtonIcon(bundle.load<Texture2D>("Navigation"));
+        navigationButton = new SleekButtonIcon(iconsBundle.load<Texture2D>("Navigation"));
         navigationButton.PositionOffset_X = 5f;
         navigationButton.PositionOffset_Y = 40f;
         navigationButton.PositionScale_X = 0.5f;
@@ -122,7 +122,7 @@ public class EditorEnvironmentUI
         navigationButton.tooltip = local.format("NavigationButtonTooltip");
         navigationButton.onClickedButton += onClickedNavigationButton;
         container.AddChild(navigationButton);
-        nodesButton = new SleekButtonIcon(bundle.load<Texture2D>("Nodes"));
+        nodesButton = new SleekButtonIcon(iconsBundle.load<Texture2D>("Nodes"));
         nodesButton.PositionOffset_X = 5f;
         nodesButton.PositionOffset_Y = 40f;
         nodesButton.PositionScale_X = 0.75f;
@@ -133,7 +133,6 @@ public class EditorEnvironmentUI
         nodesButton.tooltip = local.format("NodesButtonTooltip");
         nodesButton.onClickedButton += onClickedNodesButton;
         container.AddChild(nodesButton);
-        bundle.unload();
         new EditorEnvironmentLightingUI();
         new EditorEnvironmentRoadsUI();
         new EditorEnvironmentNavigationUI();

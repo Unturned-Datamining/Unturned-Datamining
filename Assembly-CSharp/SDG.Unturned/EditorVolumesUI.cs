@@ -108,7 +108,7 @@ internal class EditorVolumesUI : SleekFullscreenBox
         tool = new VolumesEditor();
         localization = Localization.read("/Editor/EditorLevelVolumes.dat");
         Local local = Localization.read("/Editor/EditorLevelObjects.dat");
-        Bundle bundle = Bundles.getBundle("/Bundles/Textures/Edit/Icons/EditorLevelObjects/EditorLevelObjects.unity3d");
+        IconsBundle iconsBundle = Bundles.getIconsBundle("UI/Edit/Icons/EditorLevelObjects");
         List<VolumeManagerBase> list = new List<VolumeManagerBase>(VolumeManagerBase.allManagers);
         list.Sort((VolumeManagerBase lhs, VolumeManagerBase rhs) => lhs.FriendlyName.CompareTo(rhs.FriendlyName));
         float num = 0f;
@@ -122,7 +122,7 @@ internal class EditorVolumesUI : SleekFullscreenBox
         surfaceMaskField.AddLabel("Surface Mask (sorry this is not user-friendly at the moment)", ESleekSide.RIGHT);
         surfaceMaskField.OnValueChanged += OnSurfaceMaskTyped;
         AddChild(surfaceMaskField);
-        coordinateButton = new SleekButtonState(new GUIContent(local.format("CoordinateButtonTextGlobal"), bundle.load<Texture>("Global")), new GUIContent(local.format("CoordinateButtonTextLocal"), bundle.load<Texture>("Local")));
+        coordinateButton = new SleekButtonState(new GUIContent(local.format("CoordinateButtonTextGlobal"), iconsBundle.load<Texture>("Global")), new GUIContent(local.format("CoordinateButtonTextLocal"), iconsBundle.load<Texture>("Local")));
         coordinateButton.PositionScale_Y = 1f;
         coordinateButton.SizeOffset_X = 200f;
         coordinateButton.SizeOffset_Y = 30f;
@@ -132,7 +132,7 @@ internal class EditorVolumesUI : SleekFullscreenBox
         coordinateButton.tooltip = local.format("CoordinateButtonTooltip");
         coordinateButton.onSwappedState = OnSwappedStateCoordinate;
         AddChild(coordinateButton);
-        scaleButton = new SleekButtonIcon(bundle.load<Texture2D>("Scale"));
+        scaleButton = new SleekButtonIcon(iconsBundle.load<Texture2D>("Scale"));
         scaleButton.PositionScale_Y = 1f;
         scaleButton.SizeOffset_X = 200f;
         scaleButton.SizeOffset_Y = 30f;
@@ -143,7 +143,7 @@ internal class EditorVolumesUI : SleekFullscreenBox
         scaleButton.tooltip = local.format("ScaleButtonTooltip");
         scaleButton.onClickedButton += OnScaleClicked;
         AddChild(scaleButton);
-        rotateButton = new SleekButtonIcon(bundle.load<Texture2D>("Rotate"));
+        rotateButton = new SleekButtonIcon(iconsBundle.load<Texture2D>("Rotate"));
         rotateButton.PositionScale_Y = 1f;
         rotateButton.SizeOffset_X = 200f;
         rotateButton.SizeOffset_Y = 30f;
@@ -154,7 +154,7 @@ internal class EditorVolumesUI : SleekFullscreenBox
         rotateButton.tooltip = local.format("RotateButtonTooltip");
         rotateButton.onClickedButton += OnRotateClicked;
         AddChild(rotateButton);
-        transformButton = new SleekButtonIcon(bundle.load<Texture2D>("Transform"));
+        transformButton = new SleekButtonIcon(iconsBundle.load<Texture2D>("Transform"));
         transformButton.PositionScale_Y = 1f;
         transformButton.SizeOffset_X = 200f;
         transformButton.SizeOffset_Y = 30f;
@@ -192,7 +192,6 @@ internal class EditorVolumesUI : SleekFullscreenBox
         focusedItemScrollView.IsVisible = false;
         focusedItemScrollView.AlignContentToBottom = true;
         AddChild(focusedItemScrollView);
-        bundle.unload();
         enableUnderwaterEffectsToggle = Glazier.Get().CreateToggle();
         enableUnderwaterEffectsToggle.PositionOffset_X = 400f;
         enableUnderwaterEffectsToggle.PositionOffset_Y = -40f;

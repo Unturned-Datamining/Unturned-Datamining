@@ -60,9 +60,9 @@ public enum EClientMessage
     /// </summary>
     Unadmined,
     /// <summary>
-    /// Server sending BattlEye payload to client.
+    /// Server sending thirdparty anti-cheat payload to client.
     /// </summary>
-    BattlEye,
+    ThirdpartyAntiCheat,
     /// <summary>
     /// Infrequent notification of queue position.
     /// </summary>

@@ -90,7 +90,7 @@ public class PlayerWorkzoneUI
     public PlayerWorkzoneUI()
     {
         Local local = Localization.read("/Editor/EditorLevelObjects.dat");
-        Bundle bundle = Bundles.getBundle("/Bundles/Textures/Edit/Icons/EditorLevelObjects/EditorLevelObjects.unity3d");
+        IconsBundle iconsBundle = Bundles.getIconsBundle("UI/Edit/Icons/EditorLevelObjects");
         container = new SleekFullscreenBox();
         container.PositionOffset_X = 10f;
         container.PositionOffset_Y = 10f;
@@ -125,7 +125,7 @@ public class PlayerWorkzoneUI
         snapRotationField.AddLabel(local.format("SnapRotationLabelText"), ESleekSide.RIGHT);
         snapRotationField.OnValueChanged += onTypedSnapRotationField;
         container.AddChild(snapRotationField);
-        transformButton = new SleekButtonIcon(bundle.load<Texture2D>("Transform"));
+        transformButton = new SleekButtonIcon(iconsBundle.load<Texture2D>("Transform"));
         transformButton.PositionOffset_Y = -110f;
         transformButton.PositionScale_Y = 1f;
         transformButton.SizeOffset_X = 200f;
@@ -134,7 +134,7 @@ public class PlayerWorkzoneUI
         transformButton.tooltip = local.format("TransformButtonTooltip");
         transformButton.onClickedButton += onClickedTransformButton;
         container.AddChild(transformButton);
-        rotateButton = new SleekButtonIcon(bundle.load<Texture2D>("Rotate"));
+        rotateButton = new SleekButtonIcon(iconsBundle.load<Texture2D>("Rotate"));
         rotateButton.PositionOffset_Y = -70f;
         rotateButton.PositionScale_Y = 1f;
         rotateButton.SizeOffset_X = 200f;
@@ -143,7 +143,7 @@ public class PlayerWorkzoneUI
         rotateButton.tooltip = local.format("RotateButtonTooltip");
         rotateButton.onClickedButton += onClickedRotateButton;
         container.AddChild(rotateButton);
-        coordinateButton = new SleekButtonState(new GUIContent(local.format("CoordinateButtonTextGlobal"), bundle.load<Texture>("Global")), new GUIContent(local.format("CoordinateButtonTextLocal"), bundle.load<Texture>("Local")));
+        coordinateButton = new SleekButtonState(new GUIContent(local.format("CoordinateButtonTextGlobal"), iconsBundle.load<Texture>("Global")), new GUIContent(local.format("CoordinateButtonTextLocal"), iconsBundle.load<Texture>("Local")));
         coordinateButton.PositionOffset_Y = -30f;
         coordinateButton.PositionScale_Y = 1f;
         coordinateButton.SizeOffset_X = 200f;
@@ -151,6 +151,5 @@ public class PlayerWorkzoneUI
         coordinateButton.tooltip = local.format("CoordinateButtonTooltip");
         coordinateButton.onSwappedState = onSwappedStateCoordinate;
         container.AddChild(coordinateButton);
-        bundle.unload();
     }
 }

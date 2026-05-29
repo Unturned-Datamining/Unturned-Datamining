@@ -5,7 +5,7 @@ namespace SDG.Unturned;
 
 public class MenuWorkshopEditorUI
 {
-    public static Bundle icons;
+    public static IconsBundle icons;
 
     private static SleekFullscreenBox container;
 
@@ -191,14 +191,9 @@ public class MenuWorkshopEditorUI
 
     public MenuWorkshopEditorUI()
     {
-        if (icons != null)
-        {
-            icons.unload();
-            icons = null;
-        }
         selectedLevel = null;
         Local local = Localization.read("/Menu/Workshop/MenuWorkshopEditor.dat");
-        icons = Bundles.getBundle("/Bundles/Textures/Menu/Icons/Workshop/MenuWorkshopEditor/MenuWorkshopEditor.unity3d");
+        icons = Bundles.getIconsBundle("UI/Menu/Icons/Workshop/MenuWorkshopEditor");
         container = new SleekFullscreenBox();
         container.PositionOffset_X = 10f;
         container.PositionOffset_Y = 10f;

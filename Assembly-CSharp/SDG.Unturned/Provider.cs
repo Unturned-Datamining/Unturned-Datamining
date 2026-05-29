@@ -27,8 +27,6 @@ namespace SDG.Unturned;
 
 public class Provider : MonoBehaviour
 {
-    public delegate void BattlEyeKickCallback(SteamPlayer client, string reason);
-
     internal struct ServerRequiredWorkshopFile
     {
         public ulong fileId;
@@ -92,7 +90,7 @@ public class Provider : MonoBehaviour
 
         public bool isVACSecure;
 
-        public bool isBattlEyeSecure;
+        public bool isThirdpartyAntiCheatEnabled;
 
         public bool isGold;
 
@@ -228,6 +226,8 @@ public class Provider : MonoBehaviour
         public bool shouldCache;
     }
 
+    public delegate void BattlEyeKickCallback(SteamPlayer client, string reason);
+
     public static readonly string STEAM_IC = "Steam";
 
     public static readonly string STEAM_DC = "<color=#2784c6>Steam</color>";
@@ -257,22 +257,6 @@ public class Provider : MonoBehaviour
     private static string _path;
 
     public static Local localization;
-
-    internal static IntPtr battlEyeClientHandle = IntPtr.Zero;
-
-    internal static BEClient.BECL_GAME_DATA battlEyeClientInitData = null;
-
-    internal static BEClient.BECL_BE_DATA battlEyeClientRunData = null;
-
-    private static bool battlEyeHasRequiredRestart = false;
-
-    internal static readonly NetLength battlEyeBufferSize = new NetLength(4095u);
-
-    internal static IntPtr battlEyeServerHandle = IntPtr.Zero;
-
-    internal static BEServer.BESV_GAME_DATA battlEyeServerInitData = null;
-
-    internal static BEServer.BESV_BE_DATA battlEyeServerRunData = null;
 
     private static uint _bytesSent;
 
@@ -368,7 +352,7 @@ public class Provider : MonoBehaviour
 
     private static StringBuilder modBuilder = new StringBuilder();
 
-    private static int nextBattlEyePlayerId = 1;
+    private static int nextThirdpartyAntiCheatPlayerId = 1;
 
     /// <summary>
     /// Called when determining spawnpoint during player login.
@@ -449,13 +433,13 @@ public class Provider : MonoBehaviour
     internal static bool isVacActive;
 
     /// <summary>
-    /// Set on the server when initializing BattlEye API.
-    /// Used to notify pending clients whether BE is active.
+    /// Set on the server when initializing thirdparty anti-cheat API.
+    /// Used to notify pending clients whether thirdparty anti-cheat is active.
     /// Set on clients after initial response is received.
     /// </summary>
-    internal static bool isBattlEyeActive;
+    internal static bool isThirdpartyAntiCheatActive;
 
-    private static bool hasSetIsBattlEyeActive;
+    private static bool hasSetIsThirdpartyAntiCheatActive;
 
     private static bool isServerConnectedToSteam;
 
@@ -574,6 +558,8 @@ public class Provider : MonoBehaviour
     public static ECameraMode cameraMode;
 
     private static StatusData _statusData;
+
+    internal static ModInfo _modInfo;
 
     private static PreferenceData _preferenceData;
 
@@ -706,6 +692,22 @@ public class Provider : MonoBehaviour
     /// </summary>
     private static CommandLineFlag clUnlockSteamAchievements = new CommandLineFlag(defaultValue: false, "-UnlockSteamAchievements");
 
+    internal static IntPtr battlEyeClientHandle = IntPtr.Zero;
+
+    internal static BEClient.BECL_GAME_DATA battlEyeClientInitData = null;
+
+    internal static BEClient.BECL_BE_DATA battlEyeClientRunData = null;
+
+    private static bool battlEyeHasRequiredRestart = false;
+
+    internal static readonly NetLength battlEyeBufferSize = new NetLength(4095u);
+
+    internal static IntPtr battlEyeServerHandle = IntPtr.Zero;
+
+    internal static BEServer.BESV_GAME_DATA battlEyeServerInitData = null;
+
+    internal static BEServer.BESV_BE_DATA battlEyeServerRunData = null;
+
     public static string APP_VERSION { get; protected set; }
 
     /// <summary>
@@ -761,10 +763,10 @@ public class Provider : MonoBehaviour
     internal static bool IsVacActiveOnCurrentServer => isVacActive;
 
     /// <summary>
-    /// On client, is current server protected by BattlEye?
+    /// On client, is current server protected by thirdparty anti-cheat?
     /// Set after initial response is received.
     /// </summary>
-    internal static bool IsBattlEyeActiveOnCurrentServer => isBattlEyeActive;
+    internal static bool IsThirdpartyAntiCheatActiveOnCurrentServer => isThirdpartyAntiCheatActive;
 
     public static CSteamID server => _server;
 
@@ -838,18 +840,6 @@ public class Provider : MonoBehaviour
                 return pending.Count < queueSize;
             }
             return true;
-        }
-    }
-
-    internal static bool IsBattlEyeEnabled
-    {
-        get
-        {
-            if (configData != null && configData.Server.BattlEye_Secure)
-            {
-                return !Dedicator.offlineOnly;
-            }
-            return false;
         }
     }
 
@@ -1063,10 +1053,17 @@ public class Provider : MonoBehaviour
     /// </summary>
     public static bool isApplicationQuitting { get; private set; }
 
-    /// <summary>
-    /// Event for plugins when BattlEye wants to kick a player.
-    /// </summary>
-    public static event BattlEyeKickCallback onBattlEyeKick;
+    internal static bool IsServerThirdpartyAntiCheatEnabled
+    {
+        get
+        {
+            if (configData != null && configData.Server.BattlEye_Secure)
+            {
+                return !Dedicator.offlineOnly;
+            }
+            return false;
+        }
+    }
 
     /// <summary>
     /// Event for plugins prior to kicking players during shutdown.
@@ -1077,6 +1074,11 @@ public class Provider : MonoBehaviour
     /// Event for plugins when rejecting a player.
     /// </summary>
     public static event RejectingPlayerCallback onRejectingPlayer;
+
+    /// <summary>
+    /// Event for plugins when BattlEye wants to kick a player.
+    /// </summary>
+    public static event BattlEyeKickCallback onBattlEyeKick;
 
     private IEnumerator CaptureScreenshot()
     {
@@ -1211,119 +1213,139 @@ public class Provider : MonoBehaviour
         RequestScreenshot();
     }
 
-    internal static void battlEyeClientPrintMessage(string message)
+    private static void AddClientToThirdpartyAntiCheat(ITransportConnection clientId, SteamPlayerID playerID, SteamPlayer newClient)
     {
-        UnturnedLog.info("BattlEye client message: {0}", message);
-    }
-
-    internal static void battlEyeClientRequestRestart(int reason)
-    {
-        switch (reason)
+        if (battlEyeServerHandle != IntPtr.Zero && battlEyeServerRunData != null && battlEyeServerRunData.pfnAddPlayer != null && battlEyeServerRunData.pfnReceivedPlayerGUID != null)
         {
-        case 0:
-            _connectionFailureInfo = ESteamConnectionFailureInfo.BATTLEYE_BROKEN;
-            break;
-        case 1:
-            _connectionFailureInfo = ESteamConnectionFailureInfo.BATTLEYE_UPDATE;
-            break;
-        default:
-            _connectionFailureInfo = ESteamConnectionFailureInfo.BATTLEYE_UNKNOWN;
-            break;
+            uint iPv4AddressOrZero = newClient.getIPv4AddressOrZero();
+            clientId.TryGetPort(out var num);
+            uint ulAddress = ((iPv4AddressOrZero & 0xFF) << 24) | ((iPv4AddressOrZero & 0xFF00) << 8) | ((iPv4AddressOrZero & 0xFF0000) >> 8) | ((iPv4AddressOrZero & 0xFF000000u) >> 24);
+            ushort usPort = (ushort)((uint)((num & 0xFF) << 8) | ((uint)(num & 0xFF00) >> 8));
+            battlEyeServerRunData.pfnAddPlayer(newClient.thirdpartyAntiCheatId, ulAddress, usPort, playerID.playerName);
+            GCHandle gCHandle = GCHandle.Alloc(playerID.steamID.m_SteamID, GCHandleType.Pinned);
+            IntPtr pvGUID = gCHandle.AddrOfPinnedObject();
+            battlEyeServerRunData.pfnReceivedPlayerGUID(newClient.thirdpartyAntiCheatId, pvGUID, 8);
+            gCHandle.Free();
         }
-        battlEyeHasRequiredRestart = true;
-        UnturnedLog.info("BattlEye client requested restart with reason: " + reason);
     }
 
-    /// <summary>
-    /// Called clientside by BattlEye when it needs us to send a packet to the server.
-    /// </summary>
-    internal static void battlEyeClientSendPacket(IntPtr packetHandle, int length)
+    private static void RemoveClientFromThirdpartyAntiCheat(SteamPlayer clientToRemove)
     {
-        NetMessages.SendMessageToServer(EServerMessage.BattlEye, ENetReliability.Unreliable, delegate(NetPakWriter writer)
+        if (battlEyeServerHandle != IntPtr.Zero && battlEyeServerRunData != null && battlEyeServerRunData.pfnChangePlayerStatus != null)
         {
-            writer.WriteBits((uint)length, battlEyeBufferSize.bitCount);
-            if (!writer.WriteBytes(packetHandle, length))
+            battlEyeServerRunData.pfnChangePlayerStatus(clientToRemove.thirdpartyAntiCheatId, -1);
+        }
+    }
+
+    private static void ShutdownThirdpartyAntiCheatServer()
+    {
+        if (battlEyeServerHandle != IntPtr.Zero)
+        {
+            if (battlEyeServerRunData != null && battlEyeServerRunData.pfnExit != null)
             {
-                UnturnedLog.error("Unable to write BattlEye packet ({0} bytes)", length);
+                UnturnedLog.info("Shutting down BattlEye server");
+                bool flag = battlEyeServerRunData.pfnExit();
+                UnturnedLog.info("BattlEye server shutdown result: {0}", flag);
             }
-        });
+            BEServer.dlclose(battlEyeServerHandle);
+            battlEyeServerHandle = IntPtr.Zero;
+        }
     }
 
-    private static void battlEyeServerPrintMessage(string message)
+    private static void ShutdownThirdpartyAntiCheatClient()
     {
-        if (Logs.ShouldRedactLogs)
+        if (battlEyeClientHandle != IntPtr.Zero)
         {
-            Logs.RedactIPv4Addresses(ref message);
-        }
-        for (int i = 0; i < clients.Count; i++)
-        {
-            SteamPlayer steamPlayer = clients[i];
-            if (steamPlayer != null && !(steamPlayer.player == null) && steamPlayer.player.wantsBattlEyeLogs)
+            if (battlEyeClientRunData != null && battlEyeClientRunData.pfnExit != null)
             {
-                steamPlayer.player.sendTerminalRelay(message);
+                UnturnedLog.info("Shutting down BattlEye client");
+                bool flag = battlEyeClientRunData.pfnExit();
+                UnturnedLog.info("BattlEye client shutdown result: {0}", flag);
             }
+            BEClient.dlclose(battlEyeClientHandle);
+            battlEyeClientHandle = IntPtr.Zero;
         }
-        if (CommandWindow.shouldLogAnticheat)
-        {
-            CommandWindow.Log("BattlEye Server: " + message);
-            return;
-        }
-        UnturnedLog.info("BattlEye Print: {0}", message);
     }
 
-    private static void broadcastBattlEyeKick(SteamPlayer client, string reason)
+    private static bool InitThirdpartyAntiCheatServer()
     {
+        string text = ReadWrite.PATH + "/BattlEye/BEServer_x64.so";
+        if (!File.Exists(text))
+        {
+            text = ReadWrite.PATH + "/BattlEye/BEServer.so";
+        }
+        if (!File.Exists(text))
+        {
+            UnturnedLog.error("Missing BattlEye server library! (" + text + ")");
+            return false;
+        }
+        UnturnedLog.info("Loading BattlEye server library from: " + text);
         try
         {
-            Provider.onBattlEyeKick?.Invoke(client, reason);
+            battlEyeServerHandle = BEServer.dlopen(text, 2);
+            if (battlEyeServerHandle != IntPtr.Zero)
+            {
+                if (Marshal.GetDelegateForFunctionPointer(BEServer.dlsym(battlEyeServerHandle, "Init"), typeof(BEServer.BEServerInitFn)) is BEServer.BEServerInitFn bEServerInitFn)
+                {
+                    battlEyeServerInitData = new BEServer.BESV_GAME_DATA();
+                    if (_modInfo != null)
+                    {
+                        battlEyeServerInitData.pstrGameVersion = _modInfo.Name + " " + _modInfo.FormatModVersion();
+                    }
+                    else
+                    {
+                        battlEyeServerInitData.pstrGameVersion = APP_NAME + " " + APP_VERSION;
+                    }
+                    battlEyeServerInitData.pfnPrintMessage = battlEyeServerPrintMessage;
+                    battlEyeServerInitData.pfnKickPlayer = battlEyeServerKickPlayer;
+                    battlEyeServerInitData.pfnSendPacket = battlEyeServerSendPacket;
+                    battlEyeServerRunData = new BEServer.BESV_BE_DATA();
+                    if (bEServerInitFn(0, battlEyeServerInitData, battlEyeServerRunData))
+                    {
+                        return true;
+                    }
+                    BEServer.dlclose(battlEyeServerHandle);
+                    battlEyeServerHandle = IntPtr.Zero;
+                    UnturnedLog.error("Failed to call BattlEye server init!");
+                    return false;
+                }
+                BEServer.dlclose(battlEyeServerHandle);
+                battlEyeServerHandle = IntPtr.Zero;
+                UnturnedLog.error("Failed to get BattlEye server init delegate!");
+                return false;
+            }
+            UnturnedLog.error("Failed to load BattlEye server library!");
+            return false;
         }
         catch (Exception e)
         {
-            UnturnedLog.warn("Plugin raised an exception from onBattlEyeKick:");
+            UnturnedLog.error("Unhandled exception when loading BattlEye server library!");
             UnturnedLog.exception(e);
+            return false;
         }
     }
 
-    private static void battlEyeServerKickPlayer(int playerID, string reason)
+    private static void RunThirdpartyAntiCheatFrame()
     {
-        foreach (SteamPlayer client in clients)
+        if (battlEyeClientHandle != IntPtr.Zero && battlEyeClientRunData != null && battlEyeClientRunData.pfnRun != null)
         {
-            if (client.battlEyeId != playerID)
-            {
-                continue;
-            }
-            if (!client.playerID.BypassIntegrityChecks)
-            {
-                broadcastBattlEyeKick(client, reason);
-                UnturnedLog.info("BattlEye Kick {0} Reason: {1}", client.playerID.steamID, reason);
-                if (reason.Length == 18 && reason.StartsWith("Global Ban #"))
-                {
-                    ChatManager.say(client.playerID.playerName + " got banned by BattlEye", Color.yellow);
-                }
-                kick(client.playerID.steamID, "BattlEye: " + reason);
-                SteamBlacklist.ban(client.playerID.steamID, client.getIPv4AddressOrZero(), client.playerID.GetHwids(), CSteamID.Nil, "(Temporary) BattlEye: " + reason, 60u);
-            }
-            break;
+            battlEyeClientRunData.pfnRun();
+        }
+        if (battlEyeServerHandle != IntPtr.Zero && battlEyeServerRunData != null && battlEyeServerRunData.pfnRun != null)
+        {
+            battlEyeServerRunData.pfnRun();
         }
     }
 
-    /// <summary>
-    /// Called serverside by BattlEye when it needs us to send a packet to a player.
-    /// </summary>
-    private static void battlEyeServerSendPacket(int playerID, IntPtr packetHandle, int length)
+    private static bool CheckThirdpartyAntiCheatWantsRestart()
     {
-        for (int i = 0; i < clients.Count; i++)
+        if (battlEyeHasRequiredRestart)
         {
-            if (clients[i].battlEyeId == playerID)
-            {
-                NetMessages.SendMessageToClient(EClientMessage.BattlEye, ENetReliability.Unreliable, clients[i].transportConnection, delegate(NetPakWriter writer)
-                {
-                    writer.WriteBits((uint)length, battlEyeBufferSize.bitCount);
-                    writer.WriteBytes(packetHandle, length);
-                });
-                break;
-            }
+            battlEyeHasRequiredRestart = false;
+            RequestDisconnect("BattlEye required restart");
+            return true;
         }
+        return false;
     }
 
     /// <summary>
@@ -1526,7 +1548,7 @@ public class Provider : MonoBehaviour
         cameraMode = response.cameraMode;
         maxPlayers = response.maxPlayers;
         isVacActive = response.isVACSecure;
-        isBattlEyeActive = response.isBattlEyeSecure;
+        isThirdpartyAntiCheatActive = response.isThirdpartyAntiCheatEnabled;
         ServerBookmarkDetails serverBookmarkDetails = ServerBookmarksManager.FindBookmarkDetails(response.server);
         if (serverBookmarkDetails != null)
         {
@@ -1550,10 +1572,10 @@ public class Provider : MonoBehaviour
                 RequestDisconnect("server map advertisement mismatch (Advertisement: \"" + CurrentServerAdvertisement.map + "\" Response: \"" + response.levelName + "\")");
                 return;
             }
-            if (CurrentServerAdvertisement.IsBattlEyeSecure != response.isBattlEyeSecure)
+            if (CurrentServerAdvertisement.IsThirdpartyAntiCheatEnabled != response.isThirdpartyAntiCheatEnabled)
             {
-                _connectionFailureInfo = ESteamConnectionFailureInfo.SERVER_BATTLEYE_ADVERTISEMENT_MISMATCH;
-                RequestDisconnect($"server BE advertisement mismatch (Advertisement: {CurrentServerAdvertisement.IsBattlEyeSecure} Response: {response.isBattlEyeSecure})");
+                _connectionFailureInfo = ESteamConnectionFailureInfo.SERVER_THIRDPARTYAC_ADVERTISEMENT_MISMATCH;
+                RequestDisconnect($"server third-party anti-cheat advertisement mismatch (Advertisement: {CurrentServerAdvertisement.IsThirdpartyAntiCheatEnabled} Response: {response.isThirdpartyAntiCheatEnabled})");
                 return;
             }
             if (CurrentServerAdvertisement.maxPlayers != response.maxPlayers)
@@ -1651,10 +1673,10 @@ public class Provider : MonoBehaviour
         return 2;
     }
 
-    private static int allocBattlEyePlayerId()
+    private static int AllocThirdpartyAntiCheatPlayerId()
     {
-        int result = nextBattlEyePlayerId;
-        nextBattlEyePlayerId++;
+        int result = nextThirdpartyAntiCheatPlayerId;
+        nextThirdpartyAntiCheatPlayerId++;
         return result;
     }
 
@@ -1892,10 +1914,7 @@ public class Provider : MonoBehaviour
             UnturnedLog.warn($"RemoveClient called but not in list: {clientToRemove}");
             return;
         }
-        if (battlEyeServerHandle != IntPtr.Zero && battlEyeServerRunData != null && battlEyeServerRunData.pfnChangePlayerStatus != null)
-        {
-            battlEyeServerRunData.pfnChangePlayerStatus(clientToRemove.battlEyeId, -1);
-        }
+        RemoveClientFromThirdpartyAntiCheat(clientToRemove);
         if (Dedicator.IsDedicatedServer)
         {
             clientToRemove.transportConnection.CloseConnection();
@@ -2194,6 +2213,16 @@ public class Provider : MonoBehaviour
             writer.WriteBytes(ResourceHash.localHash, 20);
             writer.WriteEnum(clientPlatform);
             writer.WriteUInt32(APP_VERSION_PACKED);
+            if (_modInfo != null)
+            {
+                writer.WriteString(_modInfo.Name, 8);
+                writer.WriteUInt32(_modInfo.GetPackedVersion());
+            }
+            else
+            {
+                writer.WriteString(null, 8);
+                writer.WriteUInt32(uint.MaxValue);
+            }
             writer.WriteBit(isPro);
             writer.WriteUInt16(MathfEx.ClampToUShort(CurrentServerAdvertisement?.PingMs ?? 1));
             writer.WriteString(Characters.active.nick);
@@ -2246,7 +2275,7 @@ public class Provider : MonoBehaviour
         _currentServerAdvertisement = advertisement;
         isWhitelisted = false;
         isVacActive = false;
-        isBattlEyeActive = false;
+        isThirdpartyAntiCheatActive = false;
         _isConnected = true;
         _queuePosition = 0;
         resetChannels();
@@ -2504,7 +2533,7 @@ public class Provider : MonoBehaviour
         serverName = "Singleplayer #" + (Characters.selected + 1);
         serverPassword = "Singleplayer";
         isVacActive = false;
-        isBattlEyeActive = false;
+        isThirdpartyAntiCheatActive = false;
         ip = 0u;
         port = 25000;
         timeLastPacketWasReceivedFromServer = Time.realtimeSinceStartup;
@@ -2911,16 +2940,9 @@ public class Provider : MonoBehaviour
         }
         if (isServer)
         {
-            if (isBattlEyeActive && battlEyeServerHandle != IntPtr.Zero)
+            if (isThirdpartyAntiCheatActive)
             {
-                if (battlEyeServerRunData != null && battlEyeServerRunData.pfnExit != null)
-                {
-                    UnturnedLog.info("Shutting down BattlEye server");
-                    bool flag = battlEyeServerRunData.pfnExit();
-                    UnturnedLog.info("BattlEye server shutdown result: {0}", flag);
-                }
-                BEServer.dlclose(battlEyeServerHandle);
-                battlEyeServerHandle = IntPtr.Zero;
+                ShutdownThirdpartyAntiCheatServer();
             }
             if (serverTransport != null)
             {
@@ -2944,17 +2966,7 @@ public class Provider : MonoBehaviour
         }
         else if (isClient)
         {
-            if (battlEyeClientHandle != IntPtr.Zero)
-            {
-                if (battlEyeClientRunData != null && battlEyeClientRunData.pfnExit != null)
-                {
-                    UnturnedLog.info("Shutting down BattlEye client");
-                    bool flag2 = battlEyeClientRunData.pfnExit();
-                    UnturnedLog.info("BattlEye client shutdown result: {0}", flag2);
-                }
-                BEClient.dlclose(battlEyeClientHandle);
-                battlEyeClientHandle = IntPtr.Zero;
-            }
+            ShutdownThirdpartyAntiCheatClient();
             NetMessages.SendMessageToServer(EServerMessage.GracefullyDisconnect, ENetReliability.Reliable, delegate
             {
             });
@@ -2989,57 +3001,6 @@ public class Provider : MonoBehaviour
     public static void sendGUIDTable(SteamPending player)
     {
         accept(player);
-    }
-
-    private static bool initializeBattlEyeServer()
-    {
-        string text = ReadWrite.PATH + "/BattlEye/BEServer_x64.so";
-        if (!File.Exists(text))
-        {
-            text = ReadWrite.PATH + "/BattlEye/BEServer.so";
-        }
-        if (!File.Exists(text))
-        {
-            UnturnedLog.error("Missing BattlEye server library! (" + text + ")");
-            return false;
-        }
-        UnturnedLog.info("Loading BattlEye server library from: " + text);
-        try
-        {
-            battlEyeServerHandle = BEServer.dlopen(text, 2);
-            if (battlEyeServerHandle != IntPtr.Zero)
-            {
-                if (Marshal.GetDelegateForFunctionPointer(BEServer.dlsym(battlEyeServerHandle, "Init"), typeof(BEServer.BEServerInitFn)) is BEServer.BEServerInitFn bEServerInitFn)
-                {
-                    battlEyeServerInitData = new BEServer.BESV_GAME_DATA();
-                    battlEyeServerInitData.pstrGameVersion = APP_NAME + " " + APP_VERSION;
-                    battlEyeServerInitData.pfnPrintMessage = battlEyeServerPrintMessage;
-                    battlEyeServerInitData.pfnKickPlayer = battlEyeServerKickPlayer;
-                    battlEyeServerInitData.pfnSendPacket = battlEyeServerSendPacket;
-                    battlEyeServerRunData = new BEServer.BESV_BE_DATA();
-                    if (bEServerInitFn(0, battlEyeServerInitData, battlEyeServerRunData))
-                    {
-                        return true;
-                    }
-                    BEServer.dlclose(battlEyeServerHandle);
-                    battlEyeServerHandle = IntPtr.Zero;
-                    UnturnedLog.error("Failed to call BattlEye server init!");
-                    return false;
-                }
-                BEServer.dlclose(battlEyeServerHandle);
-                battlEyeServerHandle = IntPtr.Zero;
-                UnturnedLog.error("Failed to get BattlEye server init delegate!");
-                return false;
-            }
-            UnturnedLog.error("Failed to load BattlEye server library!");
-            return false;
-        }
-        catch (Exception e)
-        {
-            UnturnedLog.error("Unhandled exception when loading BattlEye server library!");
-            UnturnedLog.exception(e);
-            return false;
-        }
     }
 
     /// <summary>
@@ -3212,40 +3173,63 @@ public class Provider : MonoBehaviour
             {
                 registerServerUsingWorkshopFileId(result3);
             }
-            SteamGameServer.SetGameData(string.Concat(string.Concat(string.Concat(string.Concat(string.Concat(((serverPassword != "") ? "PASS" : "SSAP") + ",", configData.Server.VAC_Secure ? "VAC_ON" : "VAC_OFF"), ",GAME_VERSION_"), VersionUtils.binaryToHexadecimal(APP_VERSION_PACKED)), ",MAP_VERSION_"), VersionUtils.binaryToHexadecimal(Level.packedVersion)));
+            string text6 = ((serverPassword != "") ? "PASS" : "SSAP");
+            text6 += ",";
+            text6 += (configData.Server.VAC_Secure ? "VAC_ON" : "VAC_OFF");
+            text6 += ",GAME_VERSION_";
+            text6 += VersionUtils.binaryToHexadecimal(APP_VERSION_PACKED);
+            text6 += ",MAP_VERSION_";
+            text6 += VersionUtils.binaryToHexadecimal(Level.packedVersion);
+            if (_modInfo != null)
+            {
+                text6 += ",MOD_NAME_";
+                text6 += _modInfo.FormatServerListName();
+                text6 += ",MOD_VERSION_";
+                text6 += VersionUtils.binaryToHexadecimal(_modInfo.GetPackedVersion());
+            }
+            else
+            {
+                text6 += ",MOD_NAME_NA,MOD_VERSION_NA";
+            }
+            SteamGameServer.SetGameData(text6);
             SteamGameServer.SetKeyValue("GameVersion", APP_VERSION);
+            if (_modInfo != null)
+            {
+                SteamGameServer.SetKeyValue("ModName", _modInfo.Name);
+                SteamGameServer.SetKeyValue("ModVersion", _modInfo.FormatModVersion());
+            }
             int num = 128;
-            string text6 = (isPvP ? "PVP" : "PVE") + "," + (hasCheats ? "CHy" : "CHn") + "," + getModeTagAbbreviation(mode) + "," + getCameraModeTagAbbreviation(cameraMode) + "," + ((getServerWorkshopFileIDs().Count > 0) ? "WSy" : "WSn") + "," + (isGold ? "GLD" : "F2P");
+            string text7 = (isPvP ? "PVP" : "PVE") + "," + (hasCheats ? "CHy" : "CHn") + "," + getModeTagAbbreviation(mode) + "," + getCameraModeTagAbbreviation(cameraMode) + "," + ((getServerWorkshopFileIDs().Count > 0) ? "WSy" : "WSn") + "," + (isGold ? "GLD" : "F2P");
             if (configData.Browser.Is_Using_Anycast_Proxy)
             {
-                text6 += ",ACP";
+                text7 += ",ACP";
             }
-            text6 = text6 + "," + (isBattlEyeActive ? "BEy" : "BEn");
-            if (!hasSetIsBattlEyeActive)
+            text7 = text7 + "," + (isThirdpartyAntiCheatActive ? "BEy" : "BEn");
+            if (!hasSetIsThirdpartyAntiCheatActive)
             {
-                CommandWindow.LogError("Order of things is messed up! isBattlEyeActive should have been set before advertising game server.");
+                CommandWindow.LogError("Order of things is messed up! isThirdpartyAntiCheatActive should have been set before advertising game server.");
             }
             string monetizationTagAbbreviation = GetMonetizationTagAbbreviation(configData.Browser.Monetization);
             if (!string.IsNullOrEmpty(monetizationTagAbbreviation))
             {
-                text6 = text6 + "," + monetizationTagAbbreviation;
+                text7 = text7 + "," + monetizationTagAbbreviation;
             }
             if (!string.IsNullOrEmpty(configData.Browser.Thumbnail))
             {
-                text6 = text6 + ",<tn>" + configData.Browser.Thumbnail + "</tn>";
+                text7 = text7 + ",<tn>" + configData.Browser.Thumbnail + "</tn>";
             }
-            text6 += $",<net>{NetTransportFactory.GetTag(serverTransport)}</net>";
+            text7 += $",<net>{NetTransportFactory.GetTag(serverTransport)}</net>";
             string pluginFrameworkTag = SteamPluginAdvertising.Get().PluginFrameworkTag;
             if (!string.IsNullOrEmpty(pluginFrameworkTag))
             {
-                text6 += $",<pf>{pluginFrameworkTag}</pf>";
+                text7 += $",<pf>{pluginFrameworkTag}</pf>";
             }
-            if (text6.Length > num)
+            if (text7.Length > num)
             {
-                CommandWindow.LogWarning("Server browser thumbnail URL is " + (text6.Length - num) + " characters over budget!");
+                CommandWindow.LogWarning("Server browser thumbnail URL is " + (text7.Length - num) + " characters over budget!");
                 CommandWindow.LogWarning("Server will not list properly until this URL is adjusted!");
             }
-            SteamGameServer.SetGameTags(text6);
+            SteamGameServer.SetGameTags(text7);
             int num2 = 64;
             if (configData.Browser.Desc_Server_List.Length > num2)
             {
@@ -3258,26 +3242,26 @@ public class Provider : MonoBehaviour
             AdvertiseFullDescription(configData.Browser.Desc_Full);
             if (getServerWorkshopFileIDs().Count > 0)
             {
-                string text7 = string.Empty;
+                string text8 = string.Empty;
                 for (int k = 0; k < getServerWorkshopFileIDs().Count; k++)
                 {
-                    if (text7.Length > 0)
+                    if (text8.Length > 0)
                     {
-                        text7 += ",";
+                        text8 += ",";
                     }
-                    text7 += getServerWorkshopFileIDs()[k];
+                    text8 += getServerWorkshopFileIDs()[k];
                 }
-                int num3 = (text7.Length - 1) / 127 + 1;
+                int num3 = (text8.Length - 1) / 127 + 1;
                 int num4 = 0;
                 SteamGameServer.SetKeyValue("Mod_Count", num3.ToString());
-                for (int l = 0; l < text7.Length; l += 127)
+                for (int l = 0; l < text8.Length; l += 127)
                 {
                     int num5 = 127;
-                    if (l + num5 > text7.Length)
+                    if (l + num5 > text8.Length)
                     {
-                        num5 = text7.Length - l;
+                        num5 = text8.Length - l;
                     }
-                    string pValue = text7.Substring(l, num5);
+                    string pValue = text8.Substring(l, num5);
                     SteamGameServer.SetKeyValue("Mod_" + num4, pValue);
                     num4++;
                 }
@@ -3865,26 +3849,26 @@ public class Provider : MonoBehaviour
         {
             _connectionFailureInfo = ESteamConnectionFailureInfo.TIMED_OUT;
             RequestDisconnect($"it has been {num4}s without a message from the server");
-            return;
         }
-        if (battlEyeHasRequiredRestart)
+        else
         {
-            battlEyeHasRequiredRestart = false;
-            RequestDisconnect("BattlEye required restart");
-            return;
-        }
-        if (catPouncingMechanism > -0.5f)
-        {
-            catPouncingMechanism -= Time.deltaTime;
-            if (catPouncingMechanism < 0.01f)
+            if (CheckThirdpartyAntiCheatWantsRestart())
             {
-                catPouncingMechanism = -66f;
-                _connectionFailureInfo = ESteamConnectionFailureInfo.HWID_MODIFIED;
-                RequestDisconnect("HWID Modified");
                 return;
             }
+            if (catPouncingMechanism > -0.5f)
+            {
+                catPouncingMechanism -= Time.deltaTime;
+                if (catPouncingMechanism < 0.01f)
+                {
+                    catPouncingMechanism = -66f;
+                    _connectionFailureInfo = ESteamConnectionFailureInfo.HWID_MODIFIED;
+                    RequestDisconnect("HWID Modified");
+                    return;
+                }
+            }
+            ClientAssetIntegrity.SendRequests();
         }
-        ClientAssetIntegrity.SendRequests();
     }
 
     private static void broadcastServerDisconnected(CSteamID steamID)
@@ -4223,6 +4207,14 @@ public class Provider : MonoBehaviour
         return (ushort)(port + 1);
     }
 
+    /// <summary>
+    /// Non-null if this is a custom build of the game.
+    /// </summary>
+    public static ModInfo GetModInfo()
+    {
+        return _modInfo;
+    }
+
     private static void applyLevelConfigOverride(FieldInfo field, object targetObject, KeyValuePair<string, object> levelOverride)
     {
         Type fieldType = field.FieldType;
@@ -4476,7 +4468,7 @@ public class Provider : MonoBehaviour
         int channel = allocPlayerChannelId();
         NetId netId = ClaimNetIdBlockForNewPlayer();
         SteamPlayer newClient = addPlayer(transportConnection, netId, playerID, point, angle, isPro, isAdmin, channel, face, hair, beard, skin, color, markerColor, beardColor, hand, shirtItem, pantsItem, hatItem, backpackItem, vestItem, maskItem, glassesItem, skinItems, skinTags, skinDynamicProps, skillset, language, lobbyID, clientPlatform);
-        newClient.battlEyeId = allocBattlEyePlayerId();
+        newClient.thirdpartyAntiCheatId = AllocThirdpartyAntiCheatPlayerId();
         PlayerStance component = newClient.player.GetComponent<PlayerStance>();
         if (component != null)
         {
@@ -4557,18 +4549,7 @@ public class Provider : MonoBehaviour
             writer.WriteFloat(modeConfigData.Gameplay.Max_Fishing_Bite_Interval);
             writer.WriteFloat(modeConfigData.Gameplay.Fishing_MaxStrength_Bite_Interval_Multiplier);
         });
-        if (battlEyeServerHandle != IntPtr.Zero && battlEyeServerRunData != null && battlEyeServerRunData.pfnAddPlayer != null && battlEyeServerRunData.pfnReceivedPlayerGUID != null)
-        {
-            uint iPv4AddressOrZero = newClient.getIPv4AddressOrZero();
-            transportConnection.TryGetPort(out var num2);
-            uint ulAddress = ((iPv4AddressOrZero & 0xFF) << 24) | ((iPv4AddressOrZero & 0xFF00) << 8) | ((iPv4AddressOrZero & 0xFF0000) >> 8) | ((iPv4AddressOrZero & 0xFF000000u) >> 24);
-            ushort usPort = (ushort)((uint)((num2 & 0xFF) << 8) | ((uint)(num2 & 0xFF00) >> 8));
-            battlEyeServerRunData.pfnAddPlayer(newClient.battlEyeId, ulAddress, usPort, playerID.playerName);
-            GCHandle gCHandle = GCHandle.Alloc(playerID.steamID.m_SteamID, GCHandleType.Pinned);
-            IntPtr pvGUID = gCHandle.AddrOfPinnedObject();
-            battlEyeServerRunData.pfnReceivedPlayerGUID(newClient.battlEyeId, pvGUID, 8);
-            gCHandle.Free();
-        }
+        AddClientToThirdpartyAntiCheat(transportConnection, playerID, newClient);
         foreach (SteamPlayer forClient in clients)
         {
             if (forClient == newClient)
@@ -4694,7 +4675,8 @@ public class Provider : MonoBehaviour
                 }
                 else if (rejection == ESteamRejection.AUTH_PUB_BAN)
                 {
-                    ChatManager.say(pending[i].playerID.playerName + " was banned by BattlEye", Color.yellow);
+                    string text = " was banned by BattlEye";
+                    ChatManager.say(pending[i].playerID.playerName + text, Color.yellow);
                 }
                 if (pending[i].inventoryResult != SteamInventoryResult_t.Invalid)
                 {
@@ -4897,20 +4879,20 @@ public class Provider : MonoBehaviour
         catch
         {
         }
-        if (IsBattlEyeEnabled && eSecurityMode == ESecurityMode.SECURE)
+        if (IsServerThirdpartyAntiCheatEnabled && eSecurityMode == ESecurityMode.SECURE)
         {
-            if (!initializeBattlEyeServer())
+            if (!InitThirdpartyAntiCheatServer())
             {
-                QuitGame("BattlEye server init failed");
+                QuitGame("anti-cheat server init failed");
                 return;
             }
-            isBattlEyeActive = true;
+            isThirdpartyAntiCheatActive = true;
         }
         else
         {
-            isBattlEyeActive = false;
+            isThirdpartyAntiCheatActive = false;
         }
-        hasSetIsBattlEyeActive = true;
+        hasSetIsThirdpartyAntiCheatActive = true;
         bool flag = !Dedicator.offlineOnly;
         if (flag)
         {
@@ -5441,14 +5423,7 @@ public class Provider : MonoBehaviour
         {
             UnturnedLog.info("Long delay between Updates: {0}s", Time.unscaledDeltaTime);
         }
-        if (battlEyeClientHandle != IntPtr.Zero && battlEyeClientRunData != null && battlEyeClientRunData.pfnRun != null)
-        {
-            battlEyeClientRunData.pfnRun();
-        }
-        if (battlEyeServerHandle != IntPtr.Zero && battlEyeServerRunData != null && battlEyeServerRunData.pfnRun != null)
-        {
-            battlEyeServerRunData.pfnRun();
-        }
+        RunThirdpartyAntiCheatFrame();
         if (isConnected)
         {
             listen();
@@ -5591,6 +5566,22 @@ public class Provider : MonoBehaviour
         return null;
     }
 
+    private ModInfo LoadModInfo()
+    {
+        if (ReadWrite.fileExists("/ModInfo.json", useCloud: false, usePath: true))
+        {
+            try
+            {
+                return ReadWrite.deserializeJSON<ModInfo>("/ModInfo.json", useCloud: false, usePath: true);
+            }
+            catch (Exception e)
+            {
+                UnturnedLog.exception(e, "Unable to parse ModInfo.json! consider validating with a JSON linter");
+            }
+        }
+        return null;
+    }
+
     private void LoadPreferences()
     {
         string text = PathEx.Join(UnturnedPaths.RootDirectory, "Preferences.json");
@@ -5635,6 +5626,7 @@ public class Provider : MonoBehaviour
         {
             _statusData = new StatusData();
         }
+        _modInfo = LoadModInfo();
         HolidayUtil.scheduleHolidays(statusData.Holidays);
         APP_VERSION = statusData.Game.FormatApplicationVersion();
         APP_VERSION_PACKED = Parser.getUInt32FromIP(APP_VERSION);
@@ -5657,9 +5649,10 @@ public class Provider : MonoBehaviour
                 provider = new SDG.SteamworksProvider.SteamworksProvider(new SteamworksAppInfo(APP_ID.m_AppId, APP_NAME, APP_VERSION, newIsDedicated: true));
                 provider.intialize();
             }
-            catch (Exception ex)
+            catch (Exception e)
             {
-                QuitGame("Steam init exception (" + ex.Message + ")");
+                UnturnedLog.exception(e, "Steam init exception:");
+                QuitGame("Steam init exception");
                 return;
             }
             if (!CommandLine.tryGetLanguage(out var local, out _path))
@@ -5675,6 +5668,10 @@ public class Provider : MonoBehaviour
             clientGroupStatus = Callback<GSClientGroupStatus_t>.CreateGameServer(onClientGroupStatus);
             _isPro = true;
             CommandWindow.Log("Game version: " + APP_VERSION + " Engine version: " + Application.unityVersion);
+            if (_modInfo != null)
+            {
+                CommandWindow.Log("Mod name: \"" + _modInfo.Name + "\" Mod version: " + _modInfo.FormatModVersion());
+            }
             maxPlayers = 8;
             queueSize = 8;
             serverName = "Unturned";
@@ -5772,9 +5769,10 @@ public class Provider : MonoBehaviour
             provider = new SDG.SteamworksProvider.SteamworksProvider(new SteamworksAppInfo(APP_ID.m_AppId, APP_NAME, APP_VERSION, newIsDedicated: false));
             provider.intialize();
         }
-        catch (Exception ex2)
+        catch (Exception e2)
         {
-            QuitGame("Steam init exception (" + ex2.Message + ")");
+            UnturnedLog.exception(e2, "Steam init exception:");
+            QuitGame("Steam init exception");
             return;
         }
         SteamLaunchArguments.Init();
@@ -5832,6 +5830,10 @@ public class Provider : MonoBehaviour
             _isPro = SteamApps.BIsSubscribedApp(PRO_ID);
         }
         UnturnedLog.info("Game version: " + APP_VERSION + " Engine version: " + Application.unityVersion);
+        if (_modInfo != null)
+        {
+            UnturnedLog.info("Mod name: \"" + _modInfo.Name + "\" Mod version: " + _modInfo.FormatModVersion());
+        }
         isLoadingInventory = true;
         provider.economyService.GrantPromoItems();
         SteamNetworkingSockets.InitAuthentication();
@@ -5918,9 +5920,9 @@ public class Provider : MonoBehaviour
             {
                 streamerNames = ReadWrite.deserializeJSON<List<string>>("/StreamerNames.json", useCloud: false, usePath: true);
             }
-            catch (Exception e)
+            catch (Exception e3)
             {
-                UnturnedLog.exception(e, "Unable to parse StreamerNames.json! consider validating with a JSON linter");
+                UnturnedLog.exception(e3, "Unable to parse StreamerNames.json! consider validating with a JSON linter");
                 streamerNames = null;
             }
             if (streamerNames == null)
@@ -6014,5 +6016,120 @@ public class Provider : MonoBehaviour
     [Obsolete("Removed", true)]
     public static void resetConfig()
     {
+    }
+
+    internal static void battlEyeClientPrintMessage(string message)
+    {
+        UnturnedLog.info("BattlEye client message: {0}", message);
+    }
+
+    internal static void battlEyeClientRequestRestart(int reason)
+    {
+        switch (reason)
+        {
+        case 0:
+            _connectionFailureInfo = ESteamConnectionFailureInfo.THIRDPARTYAC_BROKEN;
+            break;
+        case 1:
+            _connectionFailureInfo = ESteamConnectionFailureInfo.THIRDPARTYAC_UPDATE;
+            break;
+        default:
+            _connectionFailureInfo = ESteamConnectionFailureInfo.THIRDPARTYAC_UNKNOWN;
+            break;
+        }
+        battlEyeHasRequiredRestart = true;
+        UnturnedLog.info("BattlEye client requested restart with reason: " + reason);
+    }
+
+    /// <summary>
+    /// Called clientside by BattlEye when it needs us to send a packet to the server.
+    /// </summary>
+    internal static void battlEyeClientSendPacket(IntPtr packetHandle, int length)
+    {
+        NetMessages.SendMessageToServer(EServerMessage.ThirdPartyAntiCheat, ENetReliability.Unreliable, delegate(NetPakWriter writer)
+        {
+            writer.WriteBits((uint)length, battlEyeBufferSize.bitCount);
+            if (!writer.WriteBytes(packetHandle, length))
+            {
+                UnturnedLog.error("Unable to write BattlEye packet ({0} bytes)", length);
+            }
+        });
+    }
+
+    private static void battlEyeServerPrintMessage(string message)
+    {
+        if (Logs.ShouldRedactLogs)
+        {
+            Logs.RedactIPv4Addresses(ref message);
+        }
+        for (int i = 0; i < clients.Count; i++)
+        {
+            SteamPlayer steamPlayer = clients[i];
+            if (steamPlayer != null && !(steamPlayer.player == null) && steamPlayer.player.WantsThirdPartyAnticheatDebugMessages)
+            {
+                steamPlayer.player.sendTerminalRelay(message);
+            }
+        }
+        if (CommandWindow.shouldLogAnticheat)
+        {
+            CommandWindow.Log("BattlEye Server: " + message);
+            return;
+        }
+        UnturnedLog.info("BattlEye Print: {0}", message);
+    }
+
+    private static void broadcastBattlEyeKick(SteamPlayer client, string reason)
+    {
+        try
+        {
+            Provider.onBattlEyeKick?.Invoke(client, reason);
+        }
+        catch (Exception e)
+        {
+            UnturnedLog.warn("Plugin raised an exception from onBattlEyeKick:");
+            UnturnedLog.exception(e);
+        }
+    }
+
+    private static void battlEyeServerKickPlayer(int playerID, string reason)
+    {
+        foreach (SteamPlayer client in clients)
+        {
+            if (client.thirdpartyAntiCheatId != playerID)
+            {
+                continue;
+            }
+            if (!client.playerID.BypassIntegrityChecks)
+            {
+                broadcastBattlEyeKick(client, reason);
+                UnturnedLog.info("BattlEye Kick {0} Reason: {1}", client.playerID.steamID, reason);
+                if (reason.Length == 18 && reason.StartsWith("Global Ban #"))
+                {
+                    ChatManager.say(client.playerID.playerName + " got banned by BattlEye", Color.yellow);
+                }
+                kick(client.playerID.steamID, "BattlEye: " + reason);
+                SteamBlacklist.ban(client.playerID.steamID, client.getIPv4AddressOrZero(), client.playerID.GetHwids(), CSteamID.Nil, "(Temporary) BattlEye: " + reason, 60u);
+            }
+            break;
+        }
+    }
+
+    /// <summary>
+    /// Called serverside by BattlEye when it needs us to send a packet to a player.
+    /// </summary>
+    private static void battlEyeServerSendPacket(int playerID, IntPtr packetHandle, int length)
+    {
+        for (int i = 0; i < clients.Count; i++)
+        {
+            if (clients[i].thirdpartyAntiCheatId == playerID)
+            {
+                NetMessages.SendMessageToClient(EClientMessage.ThirdpartyAntiCheat, ENetReliability.Unreliable, clients[i].transportConnection, delegate(NetPakWriter writer)
+                {
+                    writer.WriteBits((uint)length, battlEyeBufferSize.bitCount);
+                    writer.WriteBytes(packetHandle, length);
+                });
+                break;
+            }
+        }
     }
 }

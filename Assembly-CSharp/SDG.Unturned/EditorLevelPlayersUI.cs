@@ -67,7 +67,7 @@ public class EditorLevelPlayersUI
     public EditorLevelPlayersUI()
     {
         Local local = Localization.read("/Editor/EditorLevelPlayers.dat");
-        Bundle bundle = Bundles.getBundle("/Bundles/Textures/Edit/Icons/EditorLevelPlayers/EditorLevelPlayers.unity3d");
+        IconsBundle iconsBundle = Bundles.getIconsBundle("UI/Edit/Icons/EditorLevelPlayers");
         container = new SleekFullscreenBox();
         container.PositionOffset_X = 10f;
         container.PositionOffset_Y = 10f;
@@ -107,7 +107,7 @@ public class EditorLevelPlayersUI
         rotationSlider.AddLabel(local.format("RotationSliderLabelText"), ESleekSide.RIGHT);
         rotationSlider.OnValueChanged += onDraggedRotationSlider;
         container.AddChild(rotationSlider);
-        addButton = new SleekButtonIcon(bundle.load<Texture2D>("Add"));
+        addButton = new SleekButtonIcon(iconsBundle.load<Texture2D>("Add"));
         addButton.PositionOffset_Y = -70f;
         addButton.PositionScale_Y = 1f;
         addButton.SizeOffset_X = 200f;
@@ -116,7 +116,7 @@ public class EditorLevelPlayersUI
         addButton.tooltip = local.format("AddButtonTooltip");
         addButton.onClickedButton += onClickedAddButton;
         container.AddChild(addButton);
-        removeButton = new SleekButtonIcon(bundle.load<Texture2D>("Remove"));
+        removeButton = new SleekButtonIcon(iconsBundle.load<Texture2D>("Remove"));
         removeButton.PositionOffset_Y = -30f;
         removeButton.PositionScale_Y = 1f;
         removeButton.SizeOffset_X = 200f;
@@ -125,6 +125,5 @@ public class EditorLevelPlayersUI
         removeButton.tooltip = local.format("RemoveButtonTooltip");
         removeButton.onClickedButton += onClickedRemoveButton;
         container.AddChild(removeButton);
-        bundle.unload();
     }
 }

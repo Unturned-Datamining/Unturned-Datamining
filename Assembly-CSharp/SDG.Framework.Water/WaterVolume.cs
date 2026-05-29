@@ -303,7 +303,7 @@ public class WaterVolume : LevelVolume<WaterVolume, WaterVolumeManager>
         instantiateParameters.parent = base.transform;
         instantiateParameters.worldSpace = false;
         InstantiateParameters parameters = instantiateParameters;
-        waterPlane = UnityEngine.Object.Instantiate(Resources.Load<GameObject>("Level/Water_Plane"), new Vector3(0f, 0.5f, 0f), Quaternion.identity, parameters);
+        waterPlane = UnityEngine.Object.Instantiate(Resources.Load<GameObject>("Level_NoRedist/Water_Plane"), new Vector3(0f, 0.5f, 0f), Quaternion.identity, parameters);
         waterPlane.name = "Plane";
         waterPlane.transform.localScale = Vector3.one;
         planarReflection = waterPlane.GetComponent<PlanarReflection>();
@@ -315,7 +315,7 @@ public class WaterVolume : LevelVolume<WaterVolume, WaterVolumeManager>
         {
             for (int j = 0; j < num2; j++)
             {
-                GameObject gameObject = UnityEngine.Object.Instantiate(Resources.Load<GameObject>("Level/Water_Tile"));
+                GameObject gameObject = UnityEngine.Object.Instantiate(Resources.Load<GameObject>("Level_NoRedist/Water_Tile"));
                 gameObject.name = "Tile_" + i + "_" + j;
                 gameObject.transform.parent = waterPlane.transform;
                 gameObject.transform.localPosition = new Vector3(-0.5f + num3 / 2f + (float)i * num3, 0f, -0.5f + num4 / 2f + (float)j * num4);

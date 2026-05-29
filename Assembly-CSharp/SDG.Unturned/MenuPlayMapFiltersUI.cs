@@ -8,7 +8,7 @@ public class MenuPlayMapFiltersUI : SleekFullscreenBox
 {
     public Local localization;
 
-    public Bundle icons;
+    public IconsBundle icons;
 
     public bool active;
 

@@ -8,7 +8,7 @@ public class SleekDefaultServerListPresetButton : SleekWrapper
 
     private ServerListFilters preset;
 
-    public SleekDefaultServerListPresetButton(ServerListFilters preset, Local localization, Bundle icons)
+    public SleekDefaultServerListPresetButton(ServerListFilters preset, Local localization, IconsBundle icons)
     {
         this.preset = preset;
         Texture2D newIcon;

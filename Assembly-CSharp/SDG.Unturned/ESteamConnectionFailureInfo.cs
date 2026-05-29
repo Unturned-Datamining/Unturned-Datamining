@@ -50,9 +50,9 @@ public enum ESteamConnectionFailureInfo
     VEHICLE,
     CLIENT_MODULE_DESYNC,
     SERVER_MODULE_DESYNC,
-    BATTLEYE_BROKEN,
-    BATTLEYE_UPDATE,
-    BATTLEYE_UNKNOWN,
+    THIRDPARTYAC_BROKEN,
+    THIRDPARTYAC_UPDATE,
+    THIRDPARTYAC_UNKNOWN,
     LEVEL_VERSION,
     /// <summary>
     /// EconInfo.json hash does not match.
@@ -119,9 +119,9 @@ public enum ESteamConnectionFailureInfo
     /// </summary>
     SERVER_VAC_ADVERTISEMENT_MISMATCH,
     /// <summary>
-    /// BattlEye status advertised on server list does not match during connect.
+    /// Third-party anti-cheat status advertised on server list does not match during connect.
     /// </summary>
-    SERVER_BATTLEYE_ADVERTISEMENT_MISMATCH,
+    SERVER_THIRDPARTYAC_ADVERTISEMENT_MISMATCH,
     /// <summary>
     /// Max players advertised on server list does not match during connect.
     /// </summary>
@@ -160,5 +160,13 @@ public enum ESteamConnectionFailureInfo
     /// Server limits how many clients are joining from the same IP address.
     /// (public issue #5001)
     /// </summary>
-    TOO_MANY_CLIENTS_WITH_SAME_IP_ADDRESS
+    TOO_MANY_CLIENTS_WITH_SAME_IP_ADDRESS,
+    /// <summary>
+    /// Provider.GetModInfo().Name did not match between client and server.
+    /// </summary>
+    MOD_NAME_MISMATCH,
+    /// <summary>
+    /// Provider.GetModInfo().Version did not match between client and server.
+    /// </summary>
+    MOD_VERSION_MISMATCH
 }

@@ -412,7 +412,7 @@ public class MenuConfigurationGraphicsUI
     public MenuConfigurationGraphicsUI()
     {
         localization = Localization.read("/Menu/Configuration/MenuConfigurationGraphics.dat");
-        Bundle bundle = Bundles.getBundle("/Bundles/Textures/Menu/Icons/Configuration/MenuConfigurationGraphics/MenuConfigurationGraphics.unity3d");
+        IconsBundle iconsBundle = Bundles.getIconsBundle("UI/Menu/Icons/Configuration/MenuConfigurationGraphics");
         container = new SleekFullscreenBox();
         container.PositionOffset_X = 10f;
         container.PositionOffset_Y = 10f;
@@ -700,7 +700,7 @@ public class MenuConfigurationGraphicsUI
         foliageButton.tooltip = localization.format("Foliage_Button_Tooltip");
         foliageButton.onSwappedState = onSwappedFoliageState;
         graphicsBox.AddChild(foliageButton);
-        foliagePerf = new SleekBoxIcon(bundle.load<Texture2D>("Perf"));
+        foliagePerf = new SleekBoxIcon(iconsBundle.load<Texture2D>("Perf"));
         foliagePerf.PositionOffset_X = 175f;
         foliagePerf.PositionOffset_Y = num;
         foliagePerf.SizeOffset_X = 30f;
@@ -748,7 +748,7 @@ public class MenuConfigurationGraphicsUI
         waterButton.tooltip = localization.format("Water_Button_Tooltip");
         waterButton.onSwappedState = onSwappedWaterState;
         graphicsBox.AddChild(waterButton);
-        waterPerf = new SleekBoxIcon(bundle.load<Texture2D>("Perf"));
+        waterPerf = new SleekBoxIcon(iconsBundle.load<Texture2D>("Perf"));
         waterPerf.PositionOffset_X = 175f;
         waterPerf.PositionOffset_Y = num;
         waterPerf.SizeOffset_X = 30f;
@@ -776,7 +776,7 @@ public class MenuConfigurationGraphicsUI
         scopeButton.tooltip = localization.format("Scope_Button_Tooltip");
         scopeButton.onSwappedState = onSwappedScopeState;
         graphicsBox.AddChild(scopeButton);
-        scopePerf = new SleekBoxIcon(bundle.load<Texture2D>("Perf"));
+        scopePerf = new SleekBoxIcon(iconsBundle.load<Texture2D>("Perf"));
         scopePerf.PositionOffset_X = 175f;
         scopePerf.PositionOffset_Y = num;
         scopePerf.SizeOffset_X = 30f;

@@ -149,7 +149,7 @@ public class MenuPlayOnlineSafetyUI : SleekFullscreenBox
     {
         active = false;
         localization = Localization.read("/Menu/Play/MenuPlayOnlineSafety.dat");
-        Bundle bundle = Bundles.getBundle("/Bundles/Textures/Menu/Icons/Play/MenuPlayOnlineSafety/MenuPlayOnlineSafety.unity3d");
+        IconsBundle iconsBundle = Bundles.getIconsBundle("UI/Menu/Icons/Play/MenuPlayOnlineSafety");
         ISleekBox sleekBox = Glazier.Get().CreateBox();
         sleekBox.SizeScale_X = 1f;
         sleekBox.SizeScale_Y = 1f;
@@ -164,7 +164,7 @@ public class MenuPlayOnlineSafetyUI : SleekFullscreenBox
         sleekScrollView.ScaleContentToWidth = true;
         AddChild(sleekScrollView);
         float num = 0f;
-        ISleekImage sleekImage = Glazier.Get().CreateImage(bundle.load<Texture2D>("OnlineSafetyAlert"));
+        ISleekImage sleekImage = Glazier.Get().CreateImage(iconsBundle.load<Texture2D>("OnlineSafetyAlert"));
         sleekImage.PositionScale_X = 0.5f;
         sleekImage.PositionOffset_X = -64f;
         sleekImage.PositionOffset_Y = num;
@@ -351,6 +351,5 @@ public class MenuPlayOnlineSafetyUI : SleekFullscreenBox
         sleekScrollView.AddChild(dontShowAgainToggle);
         num += 50f;
         sleekScrollView.ContentSizeOffset = new Vector2(0f, num - 10f);
-        bundle.unload();
     }
 }

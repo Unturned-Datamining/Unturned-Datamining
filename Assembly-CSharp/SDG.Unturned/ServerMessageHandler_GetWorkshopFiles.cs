@@ -53,7 +53,7 @@ internal static class ServerMessageHandler_GetWorkshopFiles
             writer.WriteBit(Provider.isPvP);
             writer.WriteBit(Provider.hasCheats);
             writer.WriteBit(Provider.isVacActive);
-            writer.WriteBit(Provider.isBattlEyeActive);
+            writer.WriteBit(Provider.isThirdpartyAntiCheatActive);
             writer.WriteBit(Provider.isGold);
             writer.WriteEnum(Provider.mode);
             writer.WriteEnum(Provider.cameraMode);

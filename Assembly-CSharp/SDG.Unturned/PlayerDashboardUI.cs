@@ -170,7 +170,7 @@ public class PlayerDashboardUI
     public PlayerDashboardUI()
     {
         Local local = Localization.read("/Player/PlayerDashboard.dat");
-        Bundle bundle = Bundles.getBundle("/Bundles/Textures/Player/Icons/PlayerDashboard/PlayerDashboard.unity3d");
+        IconsBundle iconsBundle = Bundles.getIconsBundle("UI/Player/Icons/PlayerDashboard");
         container = new SleekFullscreenBox();
         container.PositionScale_Y = -1f;
         container.PositionOffset_X = 10f;
@@ -181,7 +181,7 @@ public class PlayerDashboardUI
         container.SizeScale_Y = 1f;
         PlayerUI.container.AddChild(container);
         active = false;
-        inventoryButton = new SleekButtonIcon(bundle.load<Texture2D>("Inventory"));
+        inventoryButton = new SleekButtonIcon(iconsBundle.load<Texture2D>("Inventory"));
         inventoryButton.SizeOffset_X = -5f;
         inventoryButton.SizeOffset_Y = 50f;
         inventoryButton.SizeScale_X = 0.25f;
@@ -191,7 +191,7 @@ public class PlayerDashboardUI
         inventoryButton.fontSize = ESleekFontSize.Medium;
         inventoryButton.iconColor = ESleekTint.FOREGROUND;
         container.AddChild(inventoryButton);
-        craftingButton = new SleekButtonIcon(bundle.load<Texture2D>("Crafting"));
+        craftingButton = new SleekButtonIcon(iconsBundle.load<Texture2D>("Crafting"));
         craftingButton.PositionOffset_X = 5f;
         craftingButton.PositionScale_X = 0.25f;
         craftingButton.SizeOffset_X = -10f;
@@ -210,7 +210,7 @@ public class PlayerDashboardUI
         {
             craftingButton.onClickedButton += onClickedCraftingButton;
         }
-        skillsButton = new SleekButtonIcon(bundle.load<Texture2D>("Skills"));
+        skillsButton = new SleekButtonIcon(iconsBundle.load<Texture2D>("Skills"));
         skillsButton.PositionOffset_X = 5f;
         skillsButton.PositionScale_X = 0.5f;
         skillsButton.SizeOffset_X = -10f;
@@ -229,7 +229,7 @@ public class PlayerDashboardUI
         {
             skillsButton.onClickedButton += onClickedSkillsButton;
         }
-        informationButton = new SleekButtonIcon(bundle.load<Texture2D>("Information"));
+        informationButton = new SleekButtonIcon(iconsBundle.load<Texture2D>("Information"));
         informationButton.PositionOffset_X = 5f;
         informationButton.PositionScale_X = 0.75f;
         informationButton.SizeOffset_X = -5f;
@@ -256,7 +256,6 @@ public class PlayerDashboardUI
             informationButton.PositionScale_X = 0.5f;
             informationButton.SizeScale_X = 0.5f;
         }
-        bundle.unload();
         new PlayerDashboardInventoryUI();
         craftingUI = new PlayerDashboardCraftingUI();
         new PlayerDashboardSkillsUI();

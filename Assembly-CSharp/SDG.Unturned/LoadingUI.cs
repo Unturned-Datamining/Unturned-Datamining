@@ -505,7 +505,7 @@ public class LoadingUI : MonoBehaviour
                 if (!Provider.isServer)
                 {
                     text = ((!Provider.IsVacActiveOnCurrentServer) ? localization.format("VAC_Insecure") : localization.format("VAC_Secure"));
-                    text = ((!Provider.IsBattlEyeActiveOnCurrentServer) ? (text + " + " + localization.format("BattlEye_Insecure")) : (text + " + " + localization.format("BattlEye_Secure")));
+                    text = ((!Provider.IsThirdpartyAntiCheatActiveOnCurrentServer) ? (text + " + " + localization.format("BattlEye_Insecure")) : (text + " + " + localization.format("BattlEye_Secure")));
                 }
                 else
                 {

@@ -118,7 +118,7 @@ public class MenuPlayUI
     public MenuPlayUI()
     {
         Local local = Localization.read("/Menu/Play/MenuPlay.dat");
-        Bundle bundle = Bundles.getBundle("/Bundles/Textures/Menu/Icons/Play/MenuPlay/MenuPlay.unity3d");
+        IconsBundle iconsBundle = Bundles.getIconsBundle("UI/Menu/Icons/Play/MenuPlay");
         container = new SleekFullscreenBox();
         container.PositionOffset_X = 10f;
         container.PositionOffset_Y = 10f;
@@ -136,7 +136,7 @@ public class MenuPlayUI
         sleekElement.PositionScale_Y = 0.5f;
         sleekElement.SizeOffset_X = 200f;
         container.AddChild(sleekElement);
-        tutorialButton = new SleekButtonIconConfirm(bundle.load<Texture2D>("Tutorial"), local.format("Tutorial_Confirm_Label"), local.format("Tutorial_Confirm_Tooltip"), local.format("Tutorial_Deny_Label"), local.format("Tutorial_Deny_Tooltip"), 40);
+        tutorialButton = new SleekButtonIconConfirm(iconsBundle.load<Texture2D>("Tutorial"), local.format("Tutorial_Confirm_Label"), local.format("Tutorial_Confirm_Tooltip"), local.format("Tutorial_Deny_Label"), local.format("Tutorial_Deny_Tooltip"), 40);
         tutorialButton.PositionOffset_Y = num;
         tutorialButton.SizeOffset_X = 200f;
         tutorialButton.SizeOffset_Y = 50f;
@@ -149,7 +149,7 @@ public class MenuPlayUI
         sleekElement.AddChild(tutorialButton);
         num += tutorialButton.SizeOffset_Y;
         num += 10f;
-        singleplayerButton = new SleekButtonIcon(bundle.load<Texture2D>("Singleplayer"));
+        singleplayerButton = new SleekButtonIcon(iconsBundle.load<Texture2D>("Singleplayer"));
         singleplayerButton.PositionOffset_Y = num;
         singleplayerButton.SizeOffset_X = 200f;
         singleplayerButton.SizeOffset_Y = 50f;
@@ -161,7 +161,7 @@ public class MenuPlayUI
         sleekElement.AddChild(singleplayerButton);
         num += singleplayerButton.SizeOffset_Y;
         num += 10f;
-        serversButton = new SleekButtonIcon(bundle.load<Texture2D>("Servers"));
+        serversButton = new SleekButtonIcon(iconsBundle.load<Texture2D>("Servers"));
         serversButton.PositionOffset_Y = num;
         serversButton.SizeOffset_X = 200f;
         serversButton.SizeOffset_Y = 50f;
@@ -173,7 +173,7 @@ public class MenuPlayUI
         sleekElement.AddChild(serversButton);
         num += serversButton.SizeOffset_Y;
         num += 10f;
-        connectButton = new SleekButtonIcon(bundle.load<Texture2D>("Connect"));
+        connectButton = new SleekButtonIcon(iconsBundle.load<Texture2D>("Connect"));
         connectButton.PositionOffset_Y = num;
         connectButton.SizeOffset_X = 200f;
         connectButton.SizeOffset_Y = 50f;
@@ -185,7 +185,7 @@ public class MenuPlayUI
         sleekElement.AddChild(connectButton);
         num += connectButton.SizeOffset_Y;
         num += 10f;
-        serverBookmarksButton = new SleekButtonIcon(bundle.load<Texture2D>("Bookmarks"), 40);
+        serverBookmarksButton = new SleekButtonIcon(iconsBundle.load<Texture2D>("Bookmarks"), 40);
         serverBookmarksButton.PositionOffset_Y = num;
         serverBookmarksButton.SizeOffset_X = 200f;
         serverBookmarksButton.SizeOffset_Y = 50f;
@@ -197,7 +197,7 @@ public class MenuPlayUI
         sleekElement.AddChild(serverBookmarksButton);
         num += serverBookmarksButton.SizeOffset_Y;
         num += 10f;
-        lobbiesButton = new SleekButtonIcon(bundle.load<Texture2D>("Lobbies"));
+        lobbiesButton = new SleekButtonIcon(iconsBundle.load<Texture2D>("Lobbies"));
         lobbiesButton.PositionOffset_Y = num;
         lobbiesButton.SizeOffset_X = 200f;
         lobbiesButton.SizeOffset_Y = 50f;
@@ -220,7 +220,6 @@ public class MenuPlayUI
         backButton.iconColor = ESleekTint.FOREGROUND;
         sleekElement.AddChild(backButton);
         sleekElement.PositionOffset_Y = 0f - (sleekElement.SizeOffset_Y = num + backButton.SizeOffset_Y) / 2f;
-        bundle.unload();
         connectUI = new MenuPlayConnectUI();
         serverListUI = new MenuPlayServersUI();
         serverListUI.PositionOffset_X = 10f;

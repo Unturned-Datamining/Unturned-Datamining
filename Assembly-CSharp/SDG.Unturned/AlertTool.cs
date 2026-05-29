@@ -36,10 +36,10 @@ public class AlertTool
     /// <param name="sneak">Whether or not to hide.</param>
     public static void alert(Player player, Vector3 position, float radius, bool sneak, Vector3 spotDir, bool isSpotOn)
     {
-        _ = Level.getAsset()?.minStealthRadius;
-        float min = Mathf.Max(1f, radius);
+        float b = Level.getAsset()?.minStealthRadius ?? 0f;
+        b = Mathf.Max(1f, b);
         radius *= Provider.modeConfigData.Players.Detect_Radius_Multiplier;
-        radius = Mathf.Clamp(radius, min, 64f);
+        radius = Mathf.Clamp(radius, b, 64f);
         if (player == null)
         {
             return;

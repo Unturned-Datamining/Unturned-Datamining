@@ -16,7 +16,7 @@ public class SleekYouTubeVideoButton : SleekWrapper
         webImage.Refresh(url2, shouldCache: false);
     }
 
-    public SleekYouTubeVideoButton(Bundle icons)
+    public SleekYouTubeVideoButton(IconsBundle icons)
     {
         base.SizeOffset_X = 980f;
         base.SizeOffset_Y = 560f;

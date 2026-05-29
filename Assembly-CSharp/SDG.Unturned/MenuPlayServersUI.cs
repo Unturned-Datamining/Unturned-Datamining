@@ -9,7 +9,7 @@ public class MenuPlayServersUI : SleekFullscreenBox
 {
     public Local localization;
 
-    public Bundle icons;
+    public IconsBundle icons;
 
     /// <summary>
     /// Contains presetsScrollView which contains customPresetsContainer and defaultPresetsContainer.
@@ -93,7 +93,7 @@ public class MenuPlayServersUI : SleekFullscreenBox
 
     private SleekButtonState VACProtectionButtonState;
 
-    private SleekButtonState battlEyeProtectionButtonState;
+    private SleekButtonState thirdpartyAntiCheatButtonState;
 
     private SleekButtonState combatButtonState;
 
@@ -139,7 +139,7 @@ public class MenuPlayServersUI : SleekFullscreenBox
 
     private ISleekToggle vacToggle;
 
-    private ISleekToggle battlEyeToggle;
+    private ISleekToggle thirdpartyAntiCheatToggle;
 
     private ISleekToggle maxPingToggle;
 
@@ -642,9 +642,9 @@ public class MenuPlayServersUI : SleekFullscreenBox
         SynchronizeVisibleFilters();
     }
 
-    private void OnBattlEyeFilterToggled(ISleekToggle toggle, bool value)
+    private void OnThirdpartyAntiCheatFilterToggled(ISleekToggle toggle, bool value)
     {
-        FilterSettings.filterVisibility.battlEyeProtection = value;
+        FilterSettings.filterVisibility.thirdpartyAntiCheatProtection = value;
         SynchronizeVisibleFilters();
     }
 
@@ -725,9 +725,9 @@ public class MenuPlayServersUI : SleekFullscreenBox
         FilterSettings.MarkActiveFilterModified();
     }
 
-    private void onSwappedBattlEyeProtectionState(SleekButtonState button, int index)
+    private void onSwappedThirdpartyAntiCheatProtectionState(SleekButtonState button, int index)
     {
-        FilterSettings.activeFilters.battlEyeProtection = (EBattlEyeProtectionFilter)index;
+        FilterSettings.activeFilters.thirdpartyAntiCheatProtection = (EThirdpartyAntiCheatProtectionFilter)index;
         FilterSettings.MarkActiveFilterModified();
     }
 
@@ -852,7 +852,7 @@ public class MenuPlayServersUI : SleekFullscreenBox
         attendanceButtonState.state = (int)FilterSettings.activeFilters.attendance;
         notFullButtonState.state = (FilterSettings.activeFilters.notFull ? 1 : 0);
         VACProtectionButtonState.state = (int)FilterSettings.activeFilters.vacProtection;
-        battlEyeProtectionButtonState.state = (int)FilterSettings.activeFilters.battlEyeProtection;
+        thirdpartyAntiCheatButtonState.state = (int)FilterSettings.activeFilters.thirdpartyAntiCheatProtection;
         combatButtonState.state = (int)FilterSettings.activeFilters.combat;
         goldFilterButtonState.state = (int)FilterSettings.activeFilters.gold;
         cameraButtonState.state = (int)FilterSettings.activeFilters.camera;
@@ -1005,13 +1005,13 @@ public class MenuPlayServersUI : SleekFullscreenBox
         VACProtectionButtonState.button.iconColor = ESleekTint.FOREGROUND;
         VACProtectionButtonState.UseContentTooltip = true;
         filtersEditorContainer.AddChild(VACProtectionButtonState);
-        battlEyeProtectionButtonState = new SleekButtonState(20, new GUIContent(localization.format("BattlEye_Secure_Button"), icons.load<Texture>("BattlEye"), localization.format("BattlEye_Filter_Secure_Tooltip")), new GUIContent(localization.format("BattlEye_Insecure_Button"), icons.load<Texture2D>("BattlEye_Off"), localization.format("BattlEye_Filter_Insecure_Tooltip")), new GUIContent(localization.format("BattlEye_Any_Button"), icons.load<Texture2D>("AnyFilter"), localization.format("BattlEye_Filter_Any_Tooltip")));
-        battlEyeProtectionButtonState.SizeScale_X = 0.2f;
-        battlEyeProtectionButtonState.SizeOffset_Y = 30f;
-        battlEyeProtectionButtonState.onSwappedState = onSwappedBattlEyeProtectionState;
-        battlEyeProtectionButtonState.button.iconColor = ESleekTint.FOREGROUND;
-        battlEyeProtectionButtonState.UseContentTooltip = true;
-        filtersEditorContainer.AddChild(battlEyeProtectionButtonState);
+        thirdpartyAntiCheatButtonState = new SleekButtonState(20, new GUIContent(localization.format("BattlEye_Secure_Button"), icons.load<Texture>("BattlEye"), localization.format("BattlEye_Filter_Secure_Tooltip")), new GUIContent(localization.format("BattlEye_Insecure_Button"), icons.load<Texture2D>("BattlEye_Off"), localization.format("BattlEye_Filter_Insecure_Tooltip")), new GUIContent(localization.format("BattlEye_Any_Button"), icons.load<Texture2D>("AnyFilter"), localization.format("BattlEye_Filter_Any_Tooltip")));
+        thirdpartyAntiCheatButtonState.SizeScale_X = 0.2f;
+        thirdpartyAntiCheatButtonState.SizeOffset_Y = 30f;
+        thirdpartyAntiCheatButtonState.onSwappedState = onSwappedThirdpartyAntiCheatProtectionState;
+        thirdpartyAntiCheatButtonState.button.iconColor = ESleekTint.FOREGROUND;
+        thirdpartyAntiCheatButtonState.UseContentTooltip = true;
+        filtersEditorContainer.AddChild(thirdpartyAntiCheatButtonState);
         maxPingField = Glazier.Get().CreateInt32Field();
         maxPingField.SizeScale_X = 0.2f;
         maxPingField.SizeOffset_Y = 30f;
@@ -1140,12 +1140,12 @@ public class MenuPlayServersUI : SleekFullscreenBox
         vacToggle.TooltipText = localization.format("VAC_Filter_Toggle_Tooltip");
         vacToggle.OnValueChanged += OnVACFilterToggled;
         filtersEditorContainer.AddChild(vacToggle);
-        battlEyeToggle = Glazier.Get().CreateToggle();
-        battlEyeToggle.Value = FilterSettings.filterVisibility.battlEyeProtection;
-        battlEyeToggle.AddLabel(localization.format("BattlEye_Filter_Label"), ESleekSide.RIGHT);
-        battlEyeToggle.TooltipText = localization.format("BattlEye_Filter_Toggle_Tooltip");
-        battlEyeToggle.OnValueChanged += OnBattlEyeFilterToggled;
-        filtersEditorContainer.AddChild(battlEyeToggle);
+        thirdpartyAntiCheatToggle = Glazier.Get().CreateToggle();
+        thirdpartyAntiCheatToggle.Value = FilterSettings.filterVisibility.thirdpartyAntiCheatProtection;
+        thirdpartyAntiCheatToggle.AddLabel(localization.format("BattlEye_Filter_Label"), ESleekSide.RIGHT);
+        thirdpartyAntiCheatToggle.TooltipText = localization.format("BattlEye_Filter_Toggle_Tooltip");
+        thirdpartyAntiCheatToggle.OnValueChanged += OnThirdpartyAntiCheatFilterToggled;
+        filtersEditorContainer.AddChild(thirdpartyAntiCheatToggle);
         maxPingToggle = Glazier.Get().CreateToggle();
         maxPingToggle.Value = FilterSettings.filterVisibility.maxPing;
         maxPingToggle.AddLabel(localization.format("MaxPing_Filter_Label"), ESleekSide.RIGHT);
@@ -1527,15 +1527,15 @@ public class MenuPlayServersUI : SleekFullscreenBox
             VACProtectionButtonState.PositionOffset_Y = num4 + (float)(num / 5) * num2 + num3;
             num++;
         }
-        battlEyeToggle.IsVisible = isQuickFiltersVisibilityEditorOpen;
-        battlEyeProtectionButtonState.IsVisible = isQuickFiltersVisibilityEditorOpen || FilterSettings.filterVisibility.battlEyeProtection;
-        battlEyeProtectionButtonState.isInteractable = FilterSettings.filterVisibility.battlEyeProtection;
-        if (battlEyeProtectionButtonState.IsVisible)
+        thirdpartyAntiCheatToggle.IsVisible = isQuickFiltersVisibilityEditorOpen;
+        thirdpartyAntiCheatButtonState.IsVisible = isQuickFiltersVisibilityEditorOpen || FilterSettings.filterVisibility.thirdpartyAntiCheatProtection;
+        thirdpartyAntiCheatButtonState.isInteractable = FilterSettings.filterVisibility.thirdpartyAntiCheatProtection;
+        if (thirdpartyAntiCheatButtonState.IsVisible)
         {
-            battlEyeToggle.PositionScale_X = (float)(num % 5) * 0.2f;
-            battlEyeToggle.PositionOffset_Y = num4 + (float)(num / 5) * num2;
-            battlEyeProtectionButtonState.PositionScale_X = (float)(num % 5) * 0.2f;
-            battlEyeProtectionButtonState.PositionOffset_Y = num4 + (float)(num / 5) * num2 + num3;
+            thirdpartyAntiCheatToggle.PositionScale_X = (float)(num % 5) * 0.2f;
+            thirdpartyAntiCheatToggle.PositionOffset_Y = num4 + (float)(num / 5) * num2;
+            thirdpartyAntiCheatButtonState.PositionScale_X = (float)(num % 5) * 0.2f;
+            thirdpartyAntiCheatButtonState.PositionOffset_Y = num4 + (float)(num / 5) * num2 + num3;
             num++;
         }
         maxPingToggle.IsVisible = isQuickFiltersVisibilityEditorOpen;
@@ -1617,12 +1617,8 @@ public class MenuPlayServersUI : SleekFullscreenBox
 
     public MenuPlayServersUI()
     {
-        if (icons != null)
-        {
-            icons.unload();
-        }
         localization = Localization.read("/Menu/Play/MenuPlayServers.dat");
-        icons = Bundles.getBundle("/Bundles/Textures/Menu/Icons/Play/MenuPlayServers/MenuPlayServers.unity3d");
+        icons = Bundles.getIconsBundle("UI/Menu/Icons/Play/MenuPlayServers");
         active = false;
         columnTogglesContainer = Glazier.Get().CreateFrame();
         columnTogglesContainer.PositionOffset_X = 20f;
@@ -2003,7 +1999,7 @@ public class MenuPlayServersUI : SleekFullscreenBox
         ISleekLabel sleekLabel = Glazier.Get().CreateLabel();
         sleekLabel.SizeScale_X = 1f;
         sleekLabel.SizeOffset_Y = 30f;
-        sleekLabel.Text = localization.format("No_Servers", Provider.APP_VERSION);
+        sleekLabel.Text = localization.format("No_Servers", (Provider._modInfo != null) ? Provider._modInfo.FormatModVersion() : Provider.APP_VERSION);
         sleekLabel.FontSize = ESleekFontSize.Medium;
         infoBox.AddChild(sleekLabel);
         ISleekLabel sleekLabel2 = Glazier.Get().CreateLabel();

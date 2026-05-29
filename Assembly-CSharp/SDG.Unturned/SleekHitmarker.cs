@@ -17,11 +17,11 @@ public class SleekHitmarker : SleekWrapper
 
     private ISleekImage nwImage;
 
-    private static StaticResourceRef<Texture2D> hitEntityTexture = new StaticResourceRef<Texture2D>("Bundles/Textures/Player/Icons/PlayerLife/Hit_Entity");
+    private static StaticIconRef<Texture2D> hitEntityTexture = new StaticIconRef<Texture2D>("UI/Player/Icons/PlayerLife", "Hit_Entity");
 
-    private static StaticResourceRef<Texture2D> hitBuildTexture = new StaticResourceRef<Texture2D>("Bundles/Textures/Player/Icons/PlayerLife/Hit_Build");
+    private static StaticIconRef<Texture2D> hitBuildTexture = new StaticIconRef<Texture2D>("UI/Player/Icons/PlayerLife", "Hit_Build");
 
-    private static StaticResourceRef<Texture2D> hitGhostTexture = new StaticResourceRef<Texture2D>("Bundles/Textures/Player/Icons/PlayerLife/Hit_Ghost");
+    private static StaticIconRef<Texture2D> hitGhostTexture = new StaticIconRef<Texture2D>("UI/Player/Icons/PlayerLife", "Hit_Ghost");
 
     public void SetStyle(EPlayerHit hit)
     {

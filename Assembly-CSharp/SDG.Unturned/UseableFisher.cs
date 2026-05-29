@@ -304,7 +304,7 @@ public class UseableFisher : Useable
         if (!Dedicator.IsDedicatedServer)
         {
             Quaternion rotation = Quaternion.Euler(-90f, UnityEngine.Random.Range(0f, 360f), 0f);
-            Transform obj = UnityEngine.Object.Instantiate(Resources.Load<GameObject>("Fishers/Splash"), waterSurfacePosition, rotation).transform;
+            Transform obj = UnityEngine.Object.Instantiate(Assets.coreMasterBundle.LoadAsset<GameObject>("Fishers/Splash.prefab"), waterSurfacePosition, rotation).transform;
             obj.name = "Splash";
             EffectManager.RegisterDebris(obj.gameObject);
             UnityEngine.Object.Destroy(obj.gameObject, 8f);
@@ -758,7 +758,8 @@ public class UseableFisher : Useable
                 {
                     position += forward;
                 }
-                bobberTransform = UnityEngine.Object.Instantiate(Resources.Load<GameObject>("Fishers/Bob"), position, Quaternion.identity).transform;
+                GameObject original = Assets.coreMasterBundle.LoadAsset<GameObject>("Fishers/Bob.prefab");
+                bobberTransform = UnityEngine.Object.Instantiate(original, position, Quaternion.identity).transform;
                 bobberTransform.name = "Bob";
                 bobberRigidbody = bobberTransform.GetComponent<Rigidbody>();
                 if (bobberRigidbody != null)

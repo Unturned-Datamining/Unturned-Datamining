@@ -559,7 +559,7 @@ public class SleekSelectedBlueprint : SleekWrapper
     public SleekSelectedBlueprint()
     {
         Local localization = PlayerDashboardCraftingUI.localization;
-        Bundle icons = PlayerDashboardCraftingUI.icons;
+        IconsBundle icons = PlayerDashboardCraftingUI.icons;
         bool flag = !Glazier.Get().SupportsAutomaticLayout;
         detailScrollView = Glazier.Get().CreateScrollView();
         detailScrollView.SizeScale_X = 1f;

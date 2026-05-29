@@ -80,7 +80,7 @@ public class MenuConfigurationUI
     public MenuConfigurationUI()
     {
         Local local = Localization.read("/Menu/Configuration/MenuConfiguration.dat");
-        Bundle bundle = Bundles.getBundle("/Bundles/Textures/Menu/Icons/Configuration/MenuConfiguration/MenuConfiguration.unity3d");
+        IconsBundle iconsBundle = Bundles.getIconsBundle("UI/Menu/Icons/Configuration/MenuConfiguration");
         container = new SleekFullscreenBox();
         container.PositionOffset_X = 10f;
         container.PositionOffset_Y = 10f;
@@ -92,7 +92,7 @@ public class MenuConfigurationUI
         MenuUI.container.AddChild(container);
         active = false;
         int num = -185;
-        optionsButton = new SleekButtonIcon(bundle.load<Texture2D>("Options"));
+        optionsButton = new SleekButtonIcon(iconsBundle.load<Texture2D>("Options"));
         optionsButton.PositionOffset_X = -100f;
         optionsButton.PositionOffset_Y = num;
         optionsButton.PositionScale_X = 0.5f;
@@ -106,7 +106,7 @@ public class MenuConfigurationUI
         optionsButton.iconColor = ESleekTint.FOREGROUND;
         container.AddChild(optionsButton);
         num += 60;
-        displayButton = new SleekButtonIcon(bundle.load<Texture2D>("Display"));
+        displayButton = new SleekButtonIcon(iconsBundle.load<Texture2D>("Display"));
         displayButton.PositionOffset_X = -100f;
         displayButton.PositionOffset_Y = num;
         displayButton.PositionScale_X = 0.5f;
@@ -120,7 +120,7 @@ public class MenuConfigurationUI
         displayButton.iconColor = ESleekTint.FOREGROUND;
         container.AddChild(displayButton);
         num += 60;
-        graphicsButton = new SleekButtonIcon(bundle.load<Texture2D>("Graphics"));
+        graphicsButton = new SleekButtonIcon(iconsBundle.load<Texture2D>("Graphics"));
         graphicsButton.PositionOffset_X = -100f;
         graphicsButton.PositionOffset_Y = num;
         graphicsButton.PositionScale_X = 0.5f;
@@ -134,7 +134,7 @@ public class MenuConfigurationUI
         graphicsButton.iconColor = ESleekTint.FOREGROUND;
         container.AddChild(graphicsButton);
         num += 60;
-        controlsButton = new SleekButtonIcon(bundle.load<Texture2D>("Controls"));
+        controlsButton = new SleekButtonIcon(iconsBundle.load<Texture2D>("Controls"));
         controlsButton.PositionOffset_X = -100f;
         controlsButton.PositionOffset_Y = num;
         controlsButton.PositionScale_X = 0.5f;
@@ -148,7 +148,7 @@ public class MenuConfigurationUI
         controlsButton.iconColor = ESleekTint.FOREGROUND;
         container.AddChild(controlsButton);
         num += 60;
-        audioButton = new SleekButtonIcon(bundle.load<Texture2D>("Audio"));
+        audioButton = new SleekButtonIcon(iconsBundle.load<Texture2D>("Audio"));
         audioButton.PositionOffset_X = -100f;
         audioButton.PositionOffset_Y = num;
         audioButton.PositionScale_X = 0.5f;
@@ -175,7 +175,6 @@ public class MenuConfigurationUI
         backButton.fontSize = ESleekFontSize.Medium;
         backButton.iconColor = ESleekTint.FOREGROUND;
         container.AddChild(backButton);
-        bundle.unload();
         new MenuConfigurationOptionsUI();
         new MenuConfigurationDisplayUI();
         new MenuConfigurationGraphicsUI();

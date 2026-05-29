@@ -420,7 +420,7 @@ public class EditorSpawnsZombiesUI
     public EditorSpawnsZombiesUI()
     {
         localization = Localization.read("/Editor/EditorSpawnsZombies.dat");
-        Bundle bundle = Bundles.getBundle("/Bundles/Textures/Edit/Icons/EditorSpawnsZombies/EditorSpawnsZombies.unity3d");
+        IconsBundle iconsBundle = Bundles.getIconsBundle("UI/Edit/Icons/EditorSpawnsZombies");
         container = new SleekFullscreenBox();
         container.PositionOffset_X = 10f;
         container.PositionOffset_Y = 10f;
@@ -448,7 +448,7 @@ public class EditorSpawnsZombiesUI
         tableNameField.AddLabel(localization.format("TableNameFieldLabelText"), ESleekSide.LEFT);
         tableNameField.OnTextChanged += onTypedNameField;
         container.AddChild(tableNameField);
-        addTableButton = new SleekButtonIcon(bundle.load<Texture2D>("Add"));
+        addTableButton = new SleekButtonIcon(iconsBundle.load<Texture2D>("Add"));
         addTableButton.PositionOffset_X = -230f;
         addTableButton.PositionOffset_Y = 370f;
         addTableButton.PositionScale_X = 1f;
@@ -458,7 +458,7 @@ public class EditorSpawnsZombiesUI
         addTableButton.tooltip = localization.format("AddTableButtonTooltip");
         addTableButton.onClickedButton += onClickedAddTableButton;
         container.AddChild(addTableButton);
-        removeTableButton = new SleekButtonIcon(bundle.load<Texture2D>("Remove"));
+        removeTableButton = new SleekButtonIcon(iconsBundle.load<Texture2D>("Remove"));
         removeTableButton.PositionOffset_X = -110f;
         removeTableButton.PositionOffset_Y = 370f;
         removeTableButton.PositionScale_X = 1f;
@@ -555,7 +555,7 @@ public class EditorSpawnsZombiesUI
         itemIDField.SizeOffset_Y = 30f;
         itemIDField.AddLabel(localization.format("ItemIDFieldLabelText"), ESleekSide.LEFT);
         spawnsScrollBox.AddChild(itemIDField);
-        addItemButton = new SleekButtonIcon(bundle.load<Texture2D>("Add"));
+        addItemButton = new SleekButtonIcon(iconsBundle.load<Texture2D>("Add"));
         addItemButton.PositionOffset_X = 240f;
         addItemButton.SizeOffset_X = 95f;
         addItemButton.SizeOffset_Y = 30f;
@@ -563,7 +563,7 @@ public class EditorSpawnsZombiesUI
         addItemButton.tooltip = localization.format("AddItemButtonTooltip");
         addItemButton.onClickedButton += onClickedAddItemButton;
         spawnsScrollBox.AddChild(addItemButton);
-        removeItemButton = new SleekButtonIcon(bundle.load<Texture2D>("Remove"));
+        removeItemButton = new SleekButtonIcon(iconsBundle.load<Texture2D>("Remove"));
         removeItemButton.PositionOffset_X = 345f;
         removeItemButton.SizeOffset_X = 95f;
         removeItemButton.SizeOffset_Y = 30f;
@@ -592,7 +592,7 @@ public class EditorSpawnsZombiesUI
         radiusSlider.AddLabel(localization.format("RadiusSliderLabelText"), ESleekSide.RIGHT);
         radiusSlider.OnValueChanged += onDraggedRadiusSlider;
         container.AddChild(radiusSlider);
-        addButton = new SleekButtonIcon(bundle.load<Texture2D>("Add"));
+        addButton = new SleekButtonIcon(iconsBundle.load<Texture2D>("Add"));
         addButton.PositionOffset_Y = -70f;
         addButton.PositionScale_Y = 1f;
         addButton.SizeOffset_X = 200f;
@@ -601,7 +601,7 @@ public class EditorSpawnsZombiesUI
         addButton.tooltip = localization.format("AddButtonTooltip");
         addButton.onClickedButton += onClickedAddButton;
         container.AddChild(addButton);
-        removeButton = new SleekButtonIcon(bundle.load<Texture2D>("Remove"));
+        removeButton = new SleekButtonIcon(iconsBundle.load<Texture2D>("Remove"));
         removeButton.PositionOffset_Y = -30f;
         removeButton.PositionScale_Y = 1f;
         removeButton.SizeOffset_X = 200f;
@@ -610,6 +610,5 @@ public class EditorSpawnsZombiesUI
         removeButton.tooltip = localization.format("RemoveButtonTooltip");
         removeButton.onClickedButton += onClickedRemoveButton;
         container.AddChild(removeButton);
-        bundle.unload();
     }
 }

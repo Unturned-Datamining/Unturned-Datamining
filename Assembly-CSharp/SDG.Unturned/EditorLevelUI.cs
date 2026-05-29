@@ -83,7 +83,7 @@ public class EditorLevelUI
     public EditorLevelUI()
     {
         Local local = Localization.read("/Editor/EditorLevel.dat");
-        Bundle bundle = Bundles.getBundle("/Bundles/Textures/Edit/Icons/EditorLevel/EditorLevel.unity3d");
+        IconsBundle iconsBundle = Bundles.getIconsBundle("UI/Edit/Icons/EditorLevel");
         container = new SleekFullscreenBox();
         container.PositionOffset_X = 10f;
         container.PositionOffset_Y = 10f;
@@ -94,7 +94,7 @@ public class EditorLevelUI
         container.SizeScale_Y = 1f;
         EditorUI.window.AddChild(container);
         active = false;
-        objectsButton = new SleekButtonIcon(bundle.load<Texture2D>("Objects"));
+        objectsButton = new SleekButtonIcon(iconsBundle.load<Texture2D>("Objects"));
         objectsButton.PositionOffset_Y = 40f;
         objectsButton.SizeOffset_X = -5f;
         objectsButton.SizeOffset_Y = 30f;
@@ -103,7 +103,7 @@ public class EditorLevelUI
         objectsButton.tooltip = local.format("ObjectsButtonTooltip");
         objectsButton.onClickedButton += onClickedObjectsButton;
         container.AddChild(objectsButton);
-        visibilityButton = new SleekButtonIcon(bundle.load<Texture2D>("Visibility"));
+        visibilityButton = new SleekButtonIcon(iconsBundle.load<Texture2D>("Visibility"));
         visibilityButton.PositionOffset_X = 5f;
         visibilityButton.PositionOffset_Y = 40f;
         visibilityButton.PositionScale_X = 0.25f;
@@ -114,7 +114,7 @@ public class EditorLevelUI
         visibilityButton.tooltip = local.format("VisibilityButtonTooltip");
         visibilityButton.onClickedButton += onClickedVisibilityButton;
         container.AddChild(visibilityButton);
-        playersButton = new SleekButtonIcon(bundle.load<Texture2D>("Players"));
+        playersButton = new SleekButtonIcon(iconsBundle.load<Texture2D>("Players"));
         playersButton.PositionOffset_Y = 40f;
         playersButton.PositionOffset_X = 5f;
         playersButton.PositionScale_X = 0.5f;
@@ -136,7 +136,6 @@ public class EditorLevelUI
         volumesButton.tooltip = local.format("VolumesButtonTooltip");
         volumesButton.onClickedButton += OnClickedVolumesButton;
         container.AddChild(volumesButton);
-        bundle.unload();
         objectsUI = new EditorLevelObjectsUI();
         objectsUI.PositionOffset_X = 10f;
         objectsUI.PositionOffset_Y = 90f;

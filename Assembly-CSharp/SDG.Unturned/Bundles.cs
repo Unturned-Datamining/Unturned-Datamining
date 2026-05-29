@@ -9,6 +9,18 @@ public class Bundles : MonoBehaviour
 
     public static bool isInitialized => _isInitialized;
 
+    /// <summary>
+    /// 2026-05-11: previously, code using this called getBundle(path, true). If an asset bundle
+    /// matching path existed on disk it allowed customizing UI icons, but in practice nobody
+    /// used this (likely in part because it was undocumented). If an asset bundle *didn't*
+    /// exist, icons were loaded from the Resources folder. Now this returns a wrapper object
+    /// to load icons from the core asset bundle.
+    /// </summary>
+    public static IconsBundle getIconsBundle(string path)
+    {
+        return new IconsBundle(path);
+    }
+
     public static Bundle getBundle(string path)
     {
         return getBundle(path, prependRoot: true);

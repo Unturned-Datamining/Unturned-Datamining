@@ -87,7 +87,7 @@ public class MenuSurvivorsUI
     public MenuSurvivorsUI()
     {
         Local local = Localization.read("/Menu/Survivors/MenuSurvivors.dat");
-        Bundle bundle = Bundles.getBundle("/Bundles/Textures/Menu/Icons/Survivors/MenuSurvivors/MenuSurvivors.unity3d");
+        IconsBundle iconsBundle = Bundles.getIconsBundle("UI/Menu/Icons/Survivors/MenuSurvivors");
         container = new SleekFullscreenBox();
         container.PositionOffset_X = 10f;
         container.PositionOffset_Y = 10f;
@@ -98,7 +98,7 @@ public class MenuSurvivorsUI
         container.SizeScale_Y = 1f;
         MenuUI.container.AddChild(container);
         active = false;
-        characterButton = new SleekButtonIcon(bundle.load<Texture2D>("Character"));
+        characterButton = new SleekButtonIcon(iconsBundle.load<Texture2D>("Character"));
         characterButton.PositionOffset_X = -100f;
         characterButton.PositionOffset_Y = -145f;
         characterButton.PositionScale_X = 0.5f;
@@ -111,7 +111,7 @@ public class MenuSurvivorsUI
         characterButton.fontSize = ESleekFontSize.Medium;
         characterButton.iconColor = ESleekTint.FOREGROUND;
         container.AddChild(characterButton);
-        appearanceButton = new SleekButtonIcon(bundle.load<Texture2D>("Appearance"));
+        appearanceButton = new SleekButtonIcon(iconsBundle.load<Texture2D>("Appearance"));
         appearanceButton.PositionOffset_X = -100f;
         appearanceButton.PositionOffset_Y = -85f;
         appearanceButton.PositionScale_X = 0.5f;
@@ -124,7 +124,7 @@ public class MenuSurvivorsUI
         appearanceButton.fontSize = ESleekFontSize.Medium;
         appearanceButton.iconColor = ESleekTint.FOREGROUND;
         container.AddChild(appearanceButton);
-        groupButton = new SleekButtonIcon(bundle.load<Texture2D>("Group"));
+        groupButton = new SleekButtonIcon(iconsBundle.load<Texture2D>("Group"));
         groupButton.PositionOffset_X = -100f;
         groupButton.PositionOffset_Y = -25f;
         groupButton.PositionScale_X = 0.5f;
@@ -137,7 +137,7 @@ public class MenuSurvivorsUI
         groupButton.iconColor = ESleekTint.FOREGROUND;
         groupButton.fontSize = ESleekFontSize.Medium;
         container.AddChild(groupButton);
-        clothingButton = new SleekButtonIcon(bundle.load<Texture2D>("Clothing"));
+        clothingButton = new SleekButtonIcon(iconsBundle.load<Texture2D>("Clothing"));
         clothingButton.PositionOffset_X = -100f;
         clothingButton.PositionOffset_Y = 35f;
         clothingButton.PositionScale_X = 0.5f;
@@ -163,7 +163,6 @@ public class MenuSurvivorsUI
         backButton.fontSize = ESleekFontSize.Medium;
         backButton.iconColor = ESleekTint.FOREGROUND;
         container.AddChild(backButton);
-        bundle.unload();
         characterUI = new MenuSurvivorsCharacterUI();
         appearanceUI = new MenuSurvivorsAppearanceUI();
         groupUI = new MenuSurvivorsGroupUI();

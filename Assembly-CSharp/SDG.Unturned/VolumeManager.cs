@@ -138,7 +138,11 @@ public class VolumeManager<TVolume, TManager> : VolumeManagerBase where TVolume 
         return tempOverlapTestVolumes;
     }
 
-    protected List<TVolume> GetOverlapTestVolumes(Vector3 position)
+    /// <summary>
+    /// Note: some caller code (e.g., getWaterSurfaceElevation) assumes this returns all results
+    /// on the Y axis. (I.e., that regionalVolumes only sorts on the XZ plane.)
+    /// </summary>
+    internal List<TVolume> GetOverlapTestVolumes(Vector3 position)
     {
         if (regionalVolumes != null)
         {

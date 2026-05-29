@@ -18,7 +18,7 @@ public class Dedicator : MonoBehaviour
     /// </summary>
     public static CommandLineFlag offlineOnly = new CommandLineFlag(defaultValue: false, "-OfflineOnly");
 
-    private static bool _hasBattlEye;
+    private static bool _hasThirdpartyAntiCheat;
 
     public static CommandWindow commandWindow { get; protected set; }
 
@@ -37,7 +37,7 @@ public class Dedicator : MonoBehaviour
     /// </summary>
     public static bool isStandaloneDedicatedServer => false;
 
-    public static bool hasBattlEye => _hasBattlEye;
+    public static bool hasThirdpartyAntiCheat => _hasThirdpartyAntiCheat;
 
     private void Update()
     {
@@ -50,7 +50,7 @@ public class Dedicator : MonoBehaviour
     public void awake()
     {
         _isDedicated = CommandLine.tryGetServer(out serverVisibility, out serverID);
-        _hasBattlEye = CommandLine.Get().IndexOf("-BattlEye", StringComparison.OrdinalIgnoreCase) != -1;
+        _hasThirdpartyAntiCheat = CommandLine.Get().IndexOf("-BattlEye", StringComparison.OrdinalIgnoreCase) != -1;
         UnturnedMasterVolume.mutedByDedicatedServer = IsDedicatedServer;
         if (IsDedicatedServer)
         {

@@ -866,6 +866,18 @@ public class Landscape : DevkitHierarchyItemBase
         }
     }
 
+    private void SubscribePlanarReflectionEvents()
+    {
+        PlanarReflection.preRender += handlePlanarReflectionPreRender;
+        PlanarReflection.postRender += handlePlanarReflectionPostRender;
+    }
+
+    private void UnsubscribePlanarReflectionEvents()
+    {
+        PlanarReflection.preRender -= handlePlanarReflectionPreRender;
+        PlanarReflection.postRender -= handlePlanarReflectionPostRender;
+    }
+
     protected void handlePlanarReflectionPreRender()
     {
         foreach (KeyValuePair<LandscapeCoord, LandscapeTile> tile in tiles)
@@ -938,8 +950,7 @@ public class Landscape : DevkitHierarchyItemBase
                 LandscapeHoleCopyPool.warmup(DevkitTransactionManager.historyLength);
             }
             GraphicsSettings.graphicsSettingsApplied += handleGraphicsSettingsApplied;
-            PlanarReflection.preRender += handlePlanarReflectionPreRender;
-            PlanarReflection.postRender += handlePlanarReflectionPostRender;
+            SubscribePlanarReflectionEvents();
             Level.bindSatelliteCaptureInEditor(onSatellitePreCapture, onSatellitePostCapture);
         }
     }
@@ -957,8 +968,7 @@ public class Landscape : DevkitHierarchyItemBase
         if (instance == this)
         {
             GraphicsSettings.graphicsSettingsApplied -= handleGraphicsSettingsApplied;
-            PlanarReflection.preRender -= handlePlanarReflectionPreRender;
-            PlanarReflection.postRender -= handlePlanarReflectionPostRender;
+            UnsubscribePlanarReflectionEvents();
             Level.unbindSatelliteCapture(onSatellitePreCapture, onSatellitePostCapture);
             instance = null;
             clearTiles();

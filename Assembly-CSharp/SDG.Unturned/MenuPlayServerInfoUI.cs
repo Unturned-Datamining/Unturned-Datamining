@@ -509,7 +509,7 @@ public class MenuPlayServerInfoUI
         serverPerspectiveLabel.IsVisible = !string.IsNullOrEmpty(text);
         num += (serverPerspectiveLabel.IsVisible ? 20 : 0);
         string text2 = ((!serverInfo.IsVACSecure) ? localization.format("VAC_Insecure") : localization.format("VAC_Secure"));
-        text2 = ((!serverInfo.IsBattlEyeSecure) ? (text2 + " + " + localization.format("BattlEye_Insecure")) : (text2 + " + " + localization.format("BattlEye_Secure")));
+        text2 = ((!serverInfo.IsThirdpartyAntiCheatEnabled) ? (text2 + " + " + localization.format("BattlEye_Insecure")) : (text2 + " + " + localization.format("BattlEye_Secure")));
         serverSecurityLabel.PositionOffset_Y = num;
         serverSecurityLabel.Text = localization.format("Security", text2);
         num += 20;
@@ -989,6 +989,43 @@ public class MenuPlayServerInfoUI
                 joinDisabledBox.Text = localization.format("ServerOlderVersion_Label", value14);
                 joinDisabledBox.TooltipText = localization.format("ServerOlderVersion_Tooltip");
             }
+        }
+        if (rulesMap.TryGetValue("ModName", out var value16))
+        {
+            if (Provider._modInfo != null)
+            {
+                if (string.Equals(Provider._modInfo.Name, value16, StringComparison.Ordinal))
+                {
+                    if (rulesMap.TryGetValue("ModVersion", out var value17) && !string.Equals(value17, Provider._modInfo.FormatModVersion()))
+                    {
+                        joinButton.IsVisible = false;
+                        joinDisabledBox.IsVisible = true;
+                        joinDisabledBox.Text = localization.format("ServerDifferentModVersion_Label", value17);
+                        joinDisabledBox.TooltipText = localization.format("ServerDifferentModVersion_Tooltip");
+                    }
+                }
+                else
+                {
+                    joinButton.IsVisible = false;
+                    joinDisabledBox.IsVisible = true;
+                    joinDisabledBox.Text = localization.format("SeverDifferentMod_Label", value16);
+                    joinDisabledBox.TooltipText = localization.format("SeverDifferentMod_Tooltip");
+                }
+            }
+            else
+            {
+                joinButton.IsVisible = false;
+                joinDisabledBox.IsVisible = true;
+                joinDisabledBox.Text = localization.format("ServerIsModded_Label", value16);
+                joinDisabledBox.TooltipText = localization.format("ServerIsModded_Tooltip");
+            }
+        }
+        else if (Provider._modInfo != null)
+        {
+            joinButton.IsVisible = false;
+            joinDisabledBox.IsVisible = true;
+            joinDisabledBox.Text = localization.format("ServerNotModded_Label");
+            joinDisabledBox.TooltipText = localization.format("ServerNotModded_Tooltip");
         }
         updateDetails();
     }

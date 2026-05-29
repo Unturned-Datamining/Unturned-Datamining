@@ -7,7 +7,7 @@ public class MenuPlayServerCurationUI : SleekFullscreenBox
 {
     public Local localization;
 
-    public Bundle icons;
+    public IconsBundle icons;
 
     public bool active;
 

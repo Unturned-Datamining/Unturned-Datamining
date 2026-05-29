@@ -74,7 +74,7 @@ public class ModuleHook : MonoBehaviour
             {
                 return true;
             }
-            return !Dedicator.hasBattlEye;
+            return !Dedicator.hasThirdpartyAntiCheat;
         }
     }
 
@@ -616,7 +616,7 @@ public class ModuleHook : MonoBehaviour
         }
         else
         {
-            UnturnedLog.info("Disabling module loading because BattlEye is enabled");
+            UnturnedLog.info("Disabling module loading because third-party anti-cheat is enabled");
         }
     }
 

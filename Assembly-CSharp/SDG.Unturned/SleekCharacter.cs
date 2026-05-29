@@ -73,7 +73,7 @@ public class SleekCharacter : SleekWrapper
         button.AddChild(skillsetLabel);
         if (!Provider.isPro && index >= Customization.FREE_CHARACTERS)
         {
-            Bundle bundle = Bundles.getBundle("/Bundles/Textures/Menu/Icons/Pro/Pro.unity3d");
+            IconsBundle iconsBundle = Bundles.getIconsBundle("UI/Menu/Icons/Pro");
             ISleekImage sleekImage = Glazier.Get().CreateImage();
             sleekImage.PositionOffset_X = -20f;
             sleekImage.PositionOffset_Y = -20f;
@@ -81,9 +81,8 @@ public class SleekCharacter : SleekWrapper
             sleekImage.PositionScale_Y = 0.5f;
             sleekImage.SizeOffset_X = 40f;
             sleekImage.SizeOffset_Y = 40f;
-            sleekImage.Texture = bundle.load<Texture2D>("Lock_Medium");
+            sleekImage.Texture = iconsBundle.load<Texture2D>("Lock_Medium");
             button.AddChild(sleekImage);
-            bundle.unload();
         }
         updateCharacter(Characters.list[index]);
     }

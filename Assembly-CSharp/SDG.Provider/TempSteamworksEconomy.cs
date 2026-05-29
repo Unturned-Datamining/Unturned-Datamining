@@ -1035,9 +1035,11 @@ public class TempSteamworksEconomy
         initCountryRestrictions();
     }
 
-    public TempSteamworksEconomy(SteamworksAppInfo newAppInfo)
+    /// <summary>
+    /// Moved out of constructor so that it can access Provider.steamAppInstallDirectory.
+    /// </summary>
+    public void initialize()
     {
-        appInfo = newAppInfo;
         string path = ((UnityPaths.ProjectDirectory == null) ? PathEx.Join(UnturnedPaths.RootDirectory, "EconInfo.bin") : PathEx.Join(UnityPaths.ProjectDirectory, "Builds", "Shared_Release", "EconInfo.bin"));
         econInfo = new Dictionary<int, UnturnedEconInfo>();
         bundleContents = new Dictionary<int, List<int>>();
@@ -1053,21 +1055,19 @@ public class TempSteamworksEconomy
                     int num2 = binaryReader.ReadInt32();
                     for (int i = 0; i < num2; i++)
                     {
-                        UnturnedEconInfo unturnedEconInfo = new UnturnedEconInfo
-                        {
-                            name = binaryReader.ReadString(),
-                            display_type = binaryReader.ReadString(),
-                            description = binaryReader.ReadString(),
-                            name_color = binaryReader.ReadString(),
-                            itemdefid = binaryReader.ReadInt32(),
-                            marketable = binaryReader.ReadBoolean(),
-                            scraps = binaryReader.ReadInt32(),
-                            target_game_asset_guid = new Guid(binaryReader.ReadBytes(16)),
-                            item_skin = binaryReader.ReadInt32(),
-                            item_effect = binaryReader.ReadInt32(),
-                            quality = (UnturnedEconInfo.EQuality)binaryReader.ReadInt32(),
-                            econ_type = binaryReader.ReadInt32()
-                        };
+                        UnturnedEconInfo unturnedEconInfo = new UnturnedEconInfo();
+                        unturnedEconInfo.name = binaryReader.ReadString();
+                        unturnedEconInfo.display_type = binaryReader.ReadString();
+                        unturnedEconInfo.description = binaryReader.ReadString();
+                        unturnedEconInfo.name_color = binaryReader.ReadString();
+                        unturnedEconInfo.itemdefid = binaryReader.ReadInt32();
+                        unturnedEconInfo.marketable = binaryReader.ReadBoolean();
+                        unturnedEconInfo.scraps = binaryReader.ReadInt32();
+                        unturnedEconInfo.target_game_asset_guid = new Guid(binaryReader.ReadBytes(16));
+                        unturnedEconInfo.item_skin = binaryReader.ReadInt32();
+                        unturnedEconInfo.item_effect = binaryReader.ReadInt32();
+                        unturnedEconInfo.quality = (UnturnedEconInfo.EQuality)binaryReader.ReadInt32();
+                        unturnedEconInfo.econ_type = binaryReader.ReadInt32();
                         if (num >= 2)
                         {
                             unturnedEconInfo.creationTimeUtc = DateTime.FromBinary(binaryReader.ReadInt64());
@@ -1121,5 +1121,10 @@ public class TempSteamworksEconomy
         {
             inventoryResultReady = Callback<SteamInventoryResultReady_t>.Create(onInventoryResultReady);
         }
+    }
+
+    public TempSteamworksEconomy(SteamworksAppInfo newAppInfo)
+    {
+        appInfo = newAppInfo;
     }
 }

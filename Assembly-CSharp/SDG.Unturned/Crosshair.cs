@@ -11,7 +11,7 @@ public class Crosshair : SleekWrapper
 
     private bool isGunCrosshairVisible;
 
-    private Bundle icons;
+    private IconsBundle icons;
 
     private ISleekImage crosshairLeftImage;
 
@@ -164,7 +164,7 @@ public class Crosshair : SleekWrapper
         crosshairDownImage.PositionScale_Y = vector2.y + num6;
     }
 
-    public Crosshair(Bundle icons)
+    public Crosshair(IconsBundle icons)
     {
         this.icons = icons;
         centerDotImage = Glazier.Get().CreateImage();

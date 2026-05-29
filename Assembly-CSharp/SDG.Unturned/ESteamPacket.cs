@@ -54,7 +54,7 @@ public enum ESteamPacket
     [Obsolete("Unused and will kick sender.")]
     UPDATE_UNRELIABLE_CHUNK_INSTANT,
     [Obsolete]
-    BATTLEYE,
+    THIRDPARTYAC,
     [Obsolete]
     GUIDTABLE,
     /// <summary>

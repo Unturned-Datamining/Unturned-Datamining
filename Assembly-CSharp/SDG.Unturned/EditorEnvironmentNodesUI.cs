@@ -75,7 +75,7 @@ internal class EditorEnvironmentNodesUI : SleekFullscreenBox
         tool = new NodesEditor();
         localization = Localization.read("/Editor/EditorLevelNodes.dat");
         Local local = Localization.read("/Editor/EditorLevelObjects.dat");
-        Bundle bundle = Bundles.getBundle("/Bundles/Textures/Edit/Icons/EditorLevelObjects/EditorLevelObjects.unity3d");
+        IconsBundle iconsBundle = Bundles.getIconsBundle("UI/Edit/Icons/EditorLevelObjects");
         float num = 0f;
         surfaceMaskField = Glazier.Get().CreateUInt32Field();
         surfaceMaskField.PositionScale_Y = 1f;
@@ -87,7 +87,7 @@ internal class EditorEnvironmentNodesUI : SleekFullscreenBox
         surfaceMaskField.AddLabel("Surface Mask (sorry this is not user-friendly at the moment)", ESleekSide.RIGHT);
         surfaceMaskField.OnValueChanged += OnSurfaceMaskTyped;
         AddChild(surfaceMaskField);
-        coordinateButton = new SleekButtonState(new GUIContent(local.format("CoordinateButtonTextGlobal"), bundle.load<Texture>("Global")), new GUIContent(local.format("CoordinateButtonTextLocal"), bundle.load<Texture>("Local")));
+        coordinateButton = new SleekButtonState(new GUIContent(local.format("CoordinateButtonTextGlobal"), iconsBundle.load<Texture>("Global")), new GUIContent(local.format("CoordinateButtonTextLocal"), iconsBundle.load<Texture>("Local")));
         coordinateButton.PositionScale_Y = 1f;
         coordinateButton.SizeOffset_X = 200f;
         coordinateButton.SizeOffset_Y = 30f;
@@ -97,7 +97,7 @@ internal class EditorEnvironmentNodesUI : SleekFullscreenBox
         coordinateButton.tooltip = local.format("CoordinateButtonTooltip");
         coordinateButton.onSwappedState = OnSwappedStateCoordinate;
         AddChild(coordinateButton);
-        scaleButton = new SleekButtonIcon(bundle.load<Texture2D>("Scale"));
+        scaleButton = new SleekButtonIcon(iconsBundle.load<Texture2D>("Scale"));
         scaleButton.PositionScale_Y = 1f;
         scaleButton.SizeOffset_X = 200f;
         scaleButton.SizeOffset_Y = 30f;
@@ -108,7 +108,7 @@ internal class EditorEnvironmentNodesUI : SleekFullscreenBox
         scaleButton.tooltip = local.format("ScaleButtonTooltip");
         scaleButton.onClickedButton += OnScaleClicked;
         AddChild(scaleButton);
-        rotateButton = new SleekButtonIcon(bundle.load<Texture2D>("Rotate"));
+        rotateButton = new SleekButtonIcon(iconsBundle.load<Texture2D>("Rotate"));
         rotateButton.PositionScale_Y = 1f;
         rotateButton.SizeOffset_X = 200f;
         rotateButton.SizeOffset_Y = 30f;
@@ -119,7 +119,7 @@ internal class EditorEnvironmentNodesUI : SleekFullscreenBox
         rotateButton.tooltip = local.format("RotateButtonTooltip");
         rotateButton.onClickedButton += OnRotateClicked;
         AddChild(rotateButton);
-        transformButton = new SleekButtonIcon(bundle.load<Texture2D>("Transform"));
+        transformButton = new SleekButtonIcon(iconsBundle.load<Texture2D>("Transform"));
         transformButton.PositionScale_Y = 1f;
         transformButton.SizeOffset_X = 200f;
         transformButton.SizeOffset_Y = 30f;
@@ -149,7 +149,6 @@ internal class EditorEnvironmentNodesUI : SleekFullscreenBox
         snapTransformField.AddLabel(local.format("SnapTransformLabelText"), ESleekSide.RIGHT);
         snapTransformField.OnValueChanged += OnTypedSnapTransformField;
         AddChild(snapTransformField);
-        bundle.unload();
         float num2 = 0f;
         ISleekElement sleekElement = Glazier.Get().CreateFrame();
         sleekElement.PositionScale_X = 1f;

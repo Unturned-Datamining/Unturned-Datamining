@@ -7,7 +7,7 @@ public class MenuSurvivorsCharacterUI
 {
     public static Local localization;
 
-    public static Bundle icons;
+    public static IconsBundle icons;
 
     private static SleekFullscreenBox container;
 
@@ -52,9 +52,17 @@ public class MenuSurvivorsCharacterUI
             nameField.Text = character.name;
             nickField.Text = character.nick;
             SleekBoxIcon sleekBoxIcon = skillsetBox;
-            Bundle bundle = icons;
-            int skillset = (int)character.skillset;
-            sleekBoxIcon.icon = bundle.load<Texture2D>("Skillset_" + skillset);
+            object icon;
+            if (character.skillset <= EPlayerSkillset.NONE)
+            {
+                icon = null;
+            }
+            else
+            {
+                int skillset = (int)character.skillset;
+                icon = icons.load<Texture2D>("Skillset_" + skillset);
+            }
+            sleekBoxIcon.icon = (Texture2D)icon;
             skillsetBox.text = localization.format("Skillset_" + (byte)character.skillset);
         }
         characterButtons[index].updateCharacter(character);
@@ -93,12 +101,8 @@ public class MenuSurvivorsCharacterUI
 
     public MenuSurvivorsCharacterUI()
     {
-        if (icons != null)
-        {
-            icons.unload();
-        }
         localization = Localization.read("/Menu/Survivors/MenuSurvivorsCharacter.dat");
-        icons = Bundles.getBundle("/Bundles/Textures/Menu/Icons/Survivors/MenuSurvivorsCharacter/MenuSurvivorsCharacter.unity3d");
+        icons = Bundles.getIconsBundle("UI/Menu/Icons/Survivors/MenuSurvivorsCharacter");
         container = new SleekFullscreenBox();
         container.PositionOffset_X = 10f;
         container.PositionOffset_Y = 10f;
@@ -174,7 +178,7 @@ public class MenuSurvivorsCharacterUI
         container.AddChild(skillsetsBox);
         for (int i = 0; i < Customization.SKILLSETS; i++)
         {
-            SleekButtonIcon sleekButtonIcon = new SleekButtonIcon(icons.load<Texture2D>("Skillset_" + i));
+            SleekButtonIcon sleekButtonIcon = new SleekButtonIcon((i > 0) ? icons.load<Texture2D>("Skillset_" + i) : null);
             sleekButtonIcon.PositionOffset_Y = i * 40;
             sleekButtonIcon.SizeOffset_X = 200f;
             sleekButtonIcon.SizeOffset_Y = 30f;

@@ -13,7 +13,7 @@ public class MenuDashboardUI
 {
     public static Local localization;
 
-    public static Bundle icons;
+    public static IconsBundle icons;
 
     private static SleekFullscreenBox container;
 
@@ -36,14 +36,6 @@ public class MenuDashboardUI
     private static ISleekLabel proLabel;
 
     private static ISleekLabel featureLabel;
-
-    private static ISleekButton battlEyeButton;
-
-    private static ISleekImage battlEyeIcon;
-
-    private static ISleekLabel battlEyeHeaderLabel;
-
-    private static ISleekLabel battlEyeBodyLabel;
 
     private static ISleekButton alertBox;
 
@@ -1177,13 +1169,9 @@ public class MenuDashboardUI
 
     public MenuDashboardUI()
     {
-        if (icons != null)
-        {
-            icons.unload();
-        }
         localization = Localization.read("/Menu/MenuDashboard.dat");
         TransportBase.OnGetMessage = localization.format;
-        icons = Bundles.getBundle("/Bundles/Textures/Menu/Icons/MenuDashboard/MenuDashboard.unity3d");
+        icons = Bundles.getIconsBundle("UI/Menu/Icons/MenuDashboard");
         MenuUI.copyNotificationButton.icon = icons.load<Texture2D>("Clipboard");
         MenuUI.copyNotificationButton.text = localization.format("Copy_Notification_Label");
         MenuUI.copyNotificationButton.tooltip = localization.format("Copy_Notification_Tooltip");
@@ -1195,7 +1183,10 @@ public class MenuDashboardUI
         itemStoreSaleNews = null;
         if (SteamUser.BLoggedOn())
         {
-            MenuUI.instance.StartCoroutine(MenuUI.instance.CheckForUpdates(OnUpdateDetected));
+            if (Provider.GetModInfo() == null)
+            {
+                MenuUI.instance.StartCoroutine(MenuUI.instance.CheckForUpdates(OnUpdateDetected));
+            }
             if (steamUGCQueryCompletedPopular == null)
             {
                 steamUGCQueryCompletedPopular = CallResult<SteamUGCQueryCompleted_t>.Create(onSteamUGCQueryCompleted);
@@ -1509,13 +1500,13 @@ public class MenuDashboardUI
             case ESteamConnectionFailureInfo.SERVER_MODULE_DESYNC:
                 text = localization.format("Server_Module_Desync");
                 break;
-            case ESteamConnectionFailureInfo.BATTLEYE_BROKEN:
+            case ESteamConnectionFailureInfo.THIRDPARTYAC_BROKEN:
                 text = localization.format("BattlEye_Broken");
                 break;
-            case ESteamConnectionFailureInfo.BATTLEYE_UPDATE:
+            case ESteamConnectionFailureInfo.THIRDPARTYAC_UPDATE:
                 text = localization.format("BattlEye_Update");
                 break;
-            case ESteamConnectionFailureInfo.BATTLEYE_UNKNOWN:
+            case ESteamConnectionFailureInfo.THIRDPARTYAC_UNKNOWN:
                 text = localization.format("BattlEye_Unknown");
                 break;
             case ESteamConnectionFailureInfo.LEVEL_VERSION:
@@ -1589,7 +1580,7 @@ public class MenuDashboardUI
             case ESteamConnectionFailureInfo.SERVER_VAC_ADVERTISEMENT_MISMATCH:
                 text = localization.format("Server_VAC_Advertisement_Mismatch");
                 break;
-            case ESteamConnectionFailureInfo.SERVER_BATTLEYE_ADVERTISEMENT_MISMATCH:
+            case ESteamConnectionFailureInfo.SERVER_THIRDPARTYAC_ADVERTISEMENT_MISMATCH:
                 text = localization.format("Server_BattlEye_Advertisement_Mismatch");
                 break;
             case ESteamConnectionFailureInfo.SERVER_MAXPLAYERS_ADVERTISEMENT_MISMATCH:
@@ -1603,6 +1594,13 @@ public class MenuDashboardUI
                 break;
             case ESteamConnectionFailureInfo.HWID_MODIFIED:
                 text = localization.format("HWID_Modified");
+                break;
+            case ESteamConnectionFailureInfo.MOD_NAME_MISMATCH:
+                text = ((Provider._modInfo == null) ? localization.format("Mod_Name_Server", connectionFailureReason) : localization.format("Mod_Name_Mismatch", connectionFailureReason, Provider._modInfo.Name));
+                break;
+            case ESteamConnectionFailureInfo.MOD_VERSION_MISMATCH:
+                text = localization.format("Mod_Version_Mismatch", connectionFailureReason, Provider._modInfo?.Name ?? "???", Provider._modInfo?.FormatModVersion() ?? "???");
+                flag = true;
                 break;
             default:
                 text = localization.format("Failure_Unknown", eSteamConnectionFailureInfo, connectionFailureReason);

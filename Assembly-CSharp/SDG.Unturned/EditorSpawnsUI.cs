@@ -73,7 +73,7 @@ public class EditorSpawnsUI
     public EditorSpawnsUI()
     {
         Local local = Localization.read("/Editor/EditorSpawns.dat");
-        Bundle bundle = Bundles.getBundle("/Bundles/Textures/Edit/Icons/EditorSpawns/EditorSpawns.unity3d");
+        IconsBundle iconsBundle = Bundles.getIconsBundle("UI/Edit/Icons/EditorSpawns");
         container = new SleekFullscreenBox();
         container.PositionOffset_X = 10f;
         container.PositionOffset_Y = 10f;
@@ -84,7 +84,7 @@ public class EditorSpawnsUI
         container.SizeScale_Y = 1f;
         EditorUI.window.AddChild(container);
         active = false;
-        animalsButton = new SleekButtonIcon(bundle.load<Texture2D>("Animals"));
+        animalsButton = new SleekButtonIcon(iconsBundle.load<Texture2D>("Animals"));
         animalsButton.PositionOffset_Y = 40f;
         animalsButton.SizeOffset_X = -5f;
         animalsButton.SizeOffset_Y = 30f;
@@ -93,7 +93,7 @@ public class EditorSpawnsUI
         animalsButton.tooltip = local.format("AnimalsButtonTooltip");
         animalsButton.onClickedButton += onClickedAnimalsButton;
         container.AddChild(animalsButton);
-        itemsButton = new SleekButtonIcon(bundle.load<Texture2D>("Items"));
+        itemsButton = new SleekButtonIcon(iconsBundle.load<Texture2D>("Items"));
         itemsButton.PositionOffset_X = 5f;
         itemsButton.PositionOffset_Y = 40f;
         itemsButton.PositionScale_X = 0.25f;
@@ -104,7 +104,7 @@ public class EditorSpawnsUI
         itemsButton.tooltip = local.format("ItemsButtonTooltip");
         itemsButton.onClickedButton += onClickItemsButton;
         container.AddChild(itemsButton);
-        zombiesButton = new SleekButtonIcon(bundle.load<Texture2D>("Zombies"));
+        zombiesButton = new SleekButtonIcon(iconsBundle.load<Texture2D>("Zombies"));
         zombiesButton.PositionOffset_X = 5f;
         zombiesButton.PositionOffset_Y = 40f;
         zombiesButton.PositionScale_X = 0.5f;
@@ -115,7 +115,7 @@ public class EditorSpawnsUI
         zombiesButton.tooltip = local.format("ZombiesButtonTooltip");
         zombiesButton.onClickedButton += onClickedZombiesButton;
         container.AddChild(zombiesButton);
-        vehiclesButton = new SleekButtonIcon(bundle.load<Texture2D>("Vehicles"));
+        vehiclesButton = new SleekButtonIcon(iconsBundle.load<Texture2D>("Vehicles"));
         vehiclesButton.PositionOffset_X = 5f;
         vehiclesButton.PositionOffset_Y = 40f;
         vehiclesButton.PositionScale_X = 0.75f;
@@ -126,7 +126,6 @@ public class EditorSpawnsUI
         vehiclesButton.tooltip = local.format("VehiclesButtonTooltip");
         vehiclesButton.onClickedButton += onClickedVehiclesButton;
         container.AddChild(vehiclesButton);
-        bundle.unload();
         new EditorSpawnsAnimalsUI();
         new EditorSpawnsItemsUI();
         new EditorSpawnsZombiesUI();

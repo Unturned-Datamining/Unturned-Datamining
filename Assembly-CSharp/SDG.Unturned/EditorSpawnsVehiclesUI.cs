@@ -398,7 +398,7 @@ public class EditorSpawnsVehiclesUI
     public EditorSpawnsVehiclesUI()
     {
         Local local = Localization.read("/Editor/EditorSpawnsVehicles.dat");
-        Bundle bundle = Bundles.getBundle("/Bundles/Textures/Edit/Icons/EditorSpawnsVehicles/EditorSpawnsVehicles.unity3d");
+        IconsBundle iconsBundle = Bundles.getIconsBundle("UI/Edit/Icons/EditorSpawnsVehicles");
         container = new SleekFullscreenBox();
         container.PositionOffset_X = 10f;
         container.PositionOffset_Y = 10f;
@@ -427,7 +427,7 @@ public class EditorSpawnsVehiclesUI
         tableNameField.AddLabel(local.format("TableNameFieldLabelText"), ESleekSide.LEFT);
         tableNameField.OnTextChanged += onTypedNameField;
         container.AddChild(tableNameField);
-        addTableButton = new SleekButtonIcon(bundle.load<Texture2D>("Add"));
+        addTableButton = new SleekButtonIcon(iconsBundle.load<Texture2D>("Add"));
         addTableButton.PositionOffset_X = -230f;
         addTableButton.PositionOffset_Y = 370f;
         addTableButton.PositionScale_X = 1f;
@@ -437,7 +437,7 @@ public class EditorSpawnsVehiclesUI
         addTableButton.tooltip = local.format("AddTableButtonTooltip");
         addTableButton.onClickedButton += onClickedAddTableButton;
         container.AddChild(addTableButton);
-        removeTableButton = new SleekButtonIcon(bundle.load<Texture2D>("Remove"));
+        removeTableButton = new SleekButtonIcon(iconsBundle.load<Texture2D>("Remove"));
         removeTableButton.PositionOffset_X = -110f;
         removeTableButton.PositionOffset_Y = 370f;
         removeTableButton.PositionScale_X = 1f;
@@ -479,7 +479,7 @@ public class EditorSpawnsVehiclesUI
         tierNameField.AddLabel(local.format("TierNameFieldLabelText"), ESleekSide.LEFT);
         tierNameField.OnTextChanged += onTypedTierNameField;
         spawnsScrollBox.AddChild(tierNameField);
-        addTierButton = new SleekButtonIcon(bundle.load<Texture2D>("Add"));
+        addTierButton = new SleekButtonIcon(iconsBundle.load<Texture2D>("Add"));
         addTierButton.PositionOffset_X = 240f;
         addTierButton.SizeOffset_X = 95f;
         addTierButton.SizeOffset_Y = 30f;
@@ -487,7 +487,7 @@ public class EditorSpawnsVehiclesUI
         addTierButton.tooltip = local.format("AddTierButtonTooltip");
         addTierButton.onClickedButton += onClickedAddTierButton;
         spawnsScrollBox.AddChild(addTierButton);
-        removeTierButton = new SleekButtonIcon(bundle.load<Texture2D>("Remove"));
+        removeTierButton = new SleekButtonIcon(iconsBundle.load<Texture2D>("Remove"));
         removeTierButton.PositionOffset_X = 345f;
         removeTierButton.SizeOffset_X = 95f;
         removeTierButton.SizeOffset_Y = 30f;
@@ -501,7 +501,7 @@ public class EditorSpawnsVehiclesUI
         vehicleIDField.SizeOffset_Y = 30f;
         vehicleIDField.AddLabel(local.format("VehicleIDFieldLabelText"), ESleekSide.LEFT);
         spawnsScrollBox.AddChild(vehicleIDField);
-        addVehicleButton = new SleekButtonIcon(bundle.load<Texture2D>("Add"));
+        addVehicleButton = new SleekButtonIcon(iconsBundle.load<Texture2D>("Add"));
         addVehicleButton.PositionOffset_X = 240f;
         addVehicleButton.SizeOffset_X = 95f;
         addVehicleButton.SizeOffset_Y = 30f;
@@ -509,7 +509,7 @@ public class EditorSpawnsVehiclesUI
         addVehicleButton.tooltip = local.format("AddVehicleButtonTooltip");
         addVehicleButton.onClickedButton += onClickedAddVehicleButton;
         spawnsScrollBox.AddChild(addVehicleButton);
-        removeVehicleButton = new SleekButtonIcon(bundle.load<Texture2D>("Remove"));
+        removeVehicleButton = new SleekButtonIcon(iconsBundle.load<Texture2D>("Remove"));
         removeVehicleButton.PositionOffset_X = 345f;
         removeVehicleButton.SizeOffset_X = 95f;
         removeVehicleButton.SizeOffset_Y = 30f;
@@ -548,7 +548,7 @@ public class EditorSpawnsVehiclesUI
         rotationSlider.AddLabel(local.format("RotationSliderLabelText"), ESleekSide.RIGHT);
         rotationSlider.OnValueChanged += onDraggedRotationSlider;
         container.AddChild(rotationSlider);
-        addButton = new SleekButtonIcon(bundle.load<Texture2D>("Add"));
+        addButton = new SleekButtonIcon(iconsBundle.load<Texture2D>("Add"));
         addButton.PositionOffset_Y = -70f;
         addButton.PositionScale_Y = 1f;
         addButton.SizeOffset_X = 200f;
@@ -557,7 +557,7 @@ public class EditorSpawnsVehiclesUI
         addButton.tooltip = local.format("AddButtonTooltip");
         addButton.onClickedButton += onClickedAddButton;
         container.AddChild(addButton);
-        removeButton = new SleekButtonIcon(bundle.load<Texture2D>("Remove"));
+        removeButton = new SleekButtonIcon(iconsBundle.load<Texture2D>("Remove"));
         removeButton.PositionOffset_Y = -30f;
         removeButton.PositionScale_Y = 1f;
         removeButton.SizeOffset_X = 200f;
@@ -566,6 +566,5 @@ public class EditorSpawnsVehiclesUI
         removeButton.tooltip = local.format("RemoveButtonTooltip");
         removeButton.onClickedButton += onClickedRemoveButton;
         container.AddChild(removeButton);
-        bundle.unload();
     }
 }

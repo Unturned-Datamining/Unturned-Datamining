@@ -184,6 +184,14 @@ internal static class ClientMessageHandler_Rejected
         case ESteamRejection.TOO_MANY_CLIENTS_WITH_SAME_IP_ADDRESS:
             Provider._connectionFailureInfo = ESteamConnectionFailureInfo.TOO_MANY_CLIENTS_WITH_SAME_IP_ADDRESS;
             break;
+        case ESteamRejection.MOD_NAME_MISMATCH:
+            Provider._connectionFailureInfo = ESteamConnectionFailureInfo.MOD_NAME_MISMATCH;
+            Provider._connectionFailureReason = value2;
+            break;
+        case ESteamRejection.MOD_VERSION_MISMATCH:
+            Provider._connectionFailureInfo = ESteamConnectionFailureInfo.MOD_VERSION_MISMATCH;
+            Provider._connectionFailureReason = value2;
+            break;
         default:
             Provider._connectionFailureInfo = ESteamConnectionFailureInfo.REJECT_UNKNOWN;
             Provider._connectionFailureReason = value.ToString();

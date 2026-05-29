@@ -260,7 +260,7 @@ public class PlayerDeathUI
     public PlayerDeathUI()
     {
         localization = Localization.read("/Player/PlayerDeath.dat");
-        Bundle bundle = Bundles.getBundle("/Bundles/Textures/Player/Icons/PlayerDeath/PlayerDeath.unity3d");
+        IconsBundle iconsBundle = Bundles.getIconsBundle("UI/Player/Icons/PlayerDeath");
         container = new SleekFullscreenBox();
         container.PositionScale_Y = 1f;
         container.PositionOffset_X = 10f;
@@ -278,7 +278,7 @@ public class PlayerDeathUI
         causeBox.SizeOffset_Y = 50f;
         causeBox.SizeScale_X = 1f;
         container.AddChild(causeBox);
-        homeButton = new SleekButtonIcon(bundle.load<Texture2D>("Home"));
+        homeButton = new SleekButtonIcon(iconsBundle.load<Texture2D>("Home"));
         homeButton.PositionOffset_X = -205f;
         homeButton.PositionOffset_Y = 35f;
         homeButton.PositionScale_X = 0.5f;
@@ -290,7 +290,7 @@ public class PlayerDeathUI
         homeButton.iconColor = ESleekTint.FOREGROUND;
         homeButton.onClickedButton += onClickedHomeButton;
         container.AddChild(homeButton);
-        respawnButton = new SleekButtonIcon(bundle.load<Texture2D>("Respawn"));
+        respawnButton = new SleekButtonIcon(iconsBundle.load<Texture2D>("Respawn"));
         respawnButton.PositionOffset_X = 5f;
         respawnButton.PositionOffset_Y = 35f;
         respawnButton.PositionScale_X = 0.5f;
@@ -302,6 +302,5 @@ public class PlayerDeathUI
         respawnButton.iconColor = ESleekTint.FOREGROUND;
         respawnButton.onClickedButton += onClickedRespawnButton;
         container.AddChild(respawnButton);
-        bundle.unload();
     }
 }

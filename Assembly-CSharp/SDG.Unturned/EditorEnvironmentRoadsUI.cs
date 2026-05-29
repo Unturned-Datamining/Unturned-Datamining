@@ -287,7 +287,7 @@ public class EditorEnvironmentRoadsUI
     public EditorEnvironmentRoadsUI()
     {
         Local local = Localization.read("/Editor/EditorEnvironmentRoads.dat");
-        Bundle bundle = Bundles.getBundle("/Bundles/Textures/Edit/Icons/EditorEnvironmentRoads/EditorEnvironmentRoads.unity3d");
+        IconsBundle iconsBundle = Bundles.getIconsBundle("UI/Edit/Icons/EditorEnvironmentRoads");
         searchAssets = new List<RoadAsset>();
         container = new SleekFullscreenBox();
         container.PositionOffset_X = 10f;
@@ -424,7 +424,7 @@ public class EditorEnvironmentRoadsUI
         assetScrollView.SizeOffset_Y = -154f;
         assetScrollView.ScaleContentToWidth = true;
         assetContainer.AddChild(assetScrollView);
-        bakeRoadsButton = new SleekButtonIcon(bundle.load<Texture2D>("Roads"));
+        bakeRoadsButton = new SleekButtonIcon(iconsBundle.load<Texture2D>("Roads"));
         bakeRoadsButton.PositionOffset_X = -200f;
         bakeRoadsButton.PositionOffset_Y = -30f;
         bakeRoadsButton.PositionScale_X = 1f;
@@ -491,6 +491,5 @@ public class EditorEnvironmentRoadsUI
         container.AddChild(roadAssetField);
         RefreshListMode();
         RefreshLegacySelection();
-        bundle.unload();
     }
 }

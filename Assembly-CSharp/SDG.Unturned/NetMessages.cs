@@ -138,14 +138,14 @@ internal static class NetMessages
         clientReadCallbacks[12] = ClientMessageHandler_Kicked.ReadMessage;
         clientReadCallbacks[13] = ClientMessageHandler_Admined.ReadMessage;
         clientReadCallbacks[14] = ClientMessageHandler_Unadmined.ReadMessage;
-        clientReadCallbacks[15] = ClientMessageHandler_BattlEye.ReadMessage;
+        clientReadCallbacks[15] = ClientMessageHandler_ThirdpartyAntiCheat.ReadMessage;
         clientReadCallbacks[16] = ClientMessageHandler_QueuePositionChanged.ReadMessage;
         clientReadCallbacks[17] = ClientMessageHandler_InvokeMethod.ReadMessage;
         serverReadCallbacks = new ServerReadHandler[Enum.GetNames(typeof(EServerMessage)).Length];
         serverReadCallbacks[0] = ServerMessageHandler_GetWorkshopFiles.ReadMessage;
         serverReadCallbacks[1] = ServerMessageHandler_ReadyToConnect.ReadMessage;
         serverReadCallbacks[2] = ServerMessageHandler_Authenticate.ReadMessage;
-        serverReadCallbacks[3] = ServerMessageHandler_BattlEye.ReadMessage;
+        serverReadCallbacks[3] = ServerMessageHandler_ThirdpartyAntiCheat.ReadMessage;
         serverReadCallbacks[4] = ServerMessageHandler_PingRequest.ReadMessage;
         serverReadCallbacks[5] = ServerMessageHandler_PingResponse.ReadMessage;
         serverReadCallbacks[6] = ServerMessageHandler_InvokeMethod.ReadMessage;

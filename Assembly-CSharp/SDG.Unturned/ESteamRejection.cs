@@ -123,5 +123,13 @@ public enum ESteamRejection
     /// Server limits how many clients are joining from the same IP address.
     /// (public issue #5001)
     /// </summary>
-    TOO_MANY_CLIENTS_WITH_SAME_IP_ADDRESS
+    TOO_MANY_CLIENTS_WITH_SAME_IP_ADDRESS,
+    /// <summary>
+    /// Provider.GetModInfo().Name did not match between client and server.
+    /// </summary>
+    MOD_NAME_MISMATCH,
+    /// <summary>
+    /// Provider.GetModInfo().Version did not match between client and server.
+    /// </summary>
+    MOD_VERSION_MISMATCH
 }

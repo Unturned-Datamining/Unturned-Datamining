@@ -7,7 +7,7 @@ public class PlayerDashboardSkillsUI
 {
     public static Local localization;
 
-    public static Bundle icons;
+    public static IconsBundle icons;
 
     private static SleekFullscreenBox container;
 
@@ -121,12 +121,8 @@ public class PlayerDashboardSkillsUI
 
     public PlayerDashboardSkillsUI()
     {
-        if (icons != null)
-        {
-            icons.unload();
-        }
         localization = Localization.read("/Player/PlayerDashboardSkills.dat");
-        icons = Bundles.getBundle("/Bundles/Textures/Player/Icons/PlayerDashboardSkills/PlayerDashboardSkills.unity3d");
+        icons = Bundles.getIconsBundle("UI/Player/Icons/PlayerDashboardSkills");
         container = new SleekFullscreenBox();
         container.PositionScale_Y = 1f;
         container.PositionOffset_X = 10f;

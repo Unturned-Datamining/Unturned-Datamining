@@ -18,7 +18,7 @@ public class MenuSurvivorsClothingUI
 
     public static Local localization;
 
-    public static Bundle icons;
+    public static IconsBundle icons;
 
     private static SleekFullscreenBox container;
 
@@ -767,12 +767,7 @@ public class MenuSurvivorsClothingUI
     public MenuSurvivorsClothingUI()
     {
         localization = Localization.read("/Menu/Survivors/MenuSurvivorsClothing.dat");
-        if (icons != null)
-        {
-            icons.unload();
-            icons = null;
-        }
-        icons = Bundles.getBundle("/Bundles/Textures/Menu/Icons/Survivors/MenuSurvivorsClothing/MenuSurvivorsClothing.unity3d");
+        icons = Bundles.getIconsBundle("UI/Menu/Icons/Survivors/MenuSurvivorsClothing");
         container = new SleekFullscreenBox();
         container.PositionOffset_X = 10f;
         container.PositionOffset_Y = 10f;

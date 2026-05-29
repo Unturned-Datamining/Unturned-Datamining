@@ -242,7 +242,7 @@ public class MenuSurvivorsAppearanceUI
                 else
                 {
                     sleekButton.BackgroundColor = SleekColor.BackgroundIfLight(Palette.PRO);
-                    Bundle bundle = Bundles.getBundle("/Bundles/Textures/Menu/Icons/Pro/Pro.unity3d");
+                    IconsBundle iconsBundle = Bundles.getIconsBundle("UI/Menu/Icons/Pro");
                     ISleekImage sleekImage3 = Glazier.Get().CreateImage();
                     sleekImage3.PositionOffset_X = -10f;
                     sleekImage3.PositionOffset_Y = -10f;
@@ -250,9 +250,8 @@ public class MenuSurvivorsAppearanceUI
                     sleekImage3.PositionScale_Y = 0.5f;
                     sleekImage3.SizeOffset_X = 20f;
                     sleekImage3.SizeOffset_Y = 20f;
-                    sleekImage3.Texture = bundle.load<Texture2D>("Lock_Small");
+                    sleekImage3.Texture = iconsBundle.load<Texture2D>("Lock_Small");
                     sleekButton.AddChild(sleekImage3);
-                    bundle.unload();
                 }
             }
             else
@@ -295,7 +294,7 @@ public class MenuSurvivorsAppearanceUI
                 else
                 {
                     sleekButton2.BackgroundColor = SleekColor.BackgroundIfLight(Palette.PRO);
-                    Bundle bundle2 = Bundles.getBundle("/Bundles/Textures/Menu/Icons/Pro/Pro.unity3d");
+                    IconsBundle iconsBundle2 = Bundles.getIconsBundle("UI/Menu/Icons/Pro");
                     ISleekImage sleekImage5 = Glazier.Get().CreateImage();
                     sleekImage5.PositionOffset_X = -10f;
                     sleekImage5.PositionOffset_Y = -10f;
@@ -303,9 +302,8 @@ public class MenuSurvivorsAppearanceUI
                     sleekImage5.PositionScale_Y = 0.5f;
                     sleekImage5.SizeOffset_X = 20f;
                     sleekImage5.SizeOffset_Y = 20f;
-                    sleekImage5.Texture = bundle2.load<Texture2D>("Lock_Small");
+                    sleekImage5.Texture = iconsBundle2.load<Texture2D>("Lock_Small");
                     sleekButton2.AddChild(sleekImage5);
-                    bundle2.unload();
                 }
             }
             else
@@ -348,7 +346,7 @@ public class MenuSurvivorsAppearanceUI
                 else
                 {
                     sleekButton3.BackgroundColor = SleekColor.BackgroundIfLight(Palette.PRO);
-                    Bundle bundle3 = Bundles.getBundle("/Bundles/Textures/Menu/Icons/Pro/Pro.unity3d");
+                    IconsBundle iconsBundle3 = Bundles.getIconsBundle("UI/Menu/Icons/Pro");
                     ISleekImage sleekImage7 = Glazier.Get().CreateImage();
                     sleekImage7.PositionOffset_X = -10f;
                     sleekImage7.PositionOffset_Y = -10f;
@@ -356,9 +354,8 @@ public class MenuSurvivorsAppearanceUI
                     sleekImage7.PositionScale_Y = 0.5f;
                     sleekImage7.SizeOffset_X = 20f;
                     sleekImage7.SizeOffset_Y = 20f;
-                    sleekImage7.Texture = bundle3.load<Texture2D>("Lock_Small");
+                    sleekImage7.Texture = iconsBundle3.load<Texture2D>("Lock_Small");
                     sleekButton3.AddChild(sleekImage7);
-                    bundle3.unload();
                 }
             }
             else
@@ -407,7 +404,7 @@ public class MenuSurvivorsAppearanceUI
         }
         else
         {
-            Bundle bundle4 = Bundles.getBundle("/Bundles/Textures/Menu/Icons/Pro/Pro.unity3d");
+            IconsBundle iconsBundle4 = Bundles.getIconsBundle("UI/Menu/Icons/Pro");
             ISleekImage sleekImage9 = Glazier.Get().CreateImage();
             sleekImage9.PositionOffset_X = -40f;
             sleekImage9.PositionOffset_Y = -40f;
@@ -415,9 +412,8 @@ public class MenuSurvivorsAppearanceUI
             sleekImage9.PositionScale_Y = 0.5f;
             sleekImage9.SizeOffset_X = 80f;
             sleekImage9.SizeOffset_Y = 80f;
-            sleekImage9.Texture = bundle4.load<Texture2D>("Lock_Large");
+            sleekImage9.Texture = iconsBundle4.load<Texture2D>("Lock_Large");
             skinColorPicker.AddChild(sleekImage9);
-            bundle4.unload();
         }
         hairColorBox = Glazier.Get().CreateBox();
         hairColorBox.PositionOffset_Y = num;
@@ -458,7 +454,7 @@ public class MenuSurvivorsAppearanceUI
         }
         else
         {
-            Bundle bundle5 = Bundles.getBundle("/Bundles/Textures/Menu/Icons/Pro/Pro.unity3d");
+            IconsBundle iconsBundle5 = Bundles.getIconsBundle("UI/Menu/Icons/Pro");
             ISleekImage sleekImage11 = Glazier.Get().CreateImage();
             sleekImage11.PositionOffset_X = -40f;
             sleekImage11.PositionOffset_Y = -40f;
@@ -466,9 +462,8 @@ public class MenuSurvivorsAppearanceUI
             sleekImage11.PositionScale_Y = 0.5f;
             sleekImage11.SizeOffset_X = 80f;
             sleekImage11.SizeOffset_Y = 80f;
-            sleekImage11.Texture = bundle5.load<Texture2D>("Lock_Large");
+            sleekImage11.Texture = iconsBundle5.load<Texture2D>("Lock_Large");
             hairColorPicker.AddChild(sleekImage11);
-            bundle5.unload();
         }
         beardColorBox = Glazier.Get().CreateBox();
         beardColorBox.PositionOffset_Y = num;
@@ -488,7 +483,7 @@ public class MenuSurvivorsAppearanceUI
         }
         else
         {
-            Bundle bundle6 = Bundles.getBundle("/Bundles/Textures/Menu/Icons/Pro/Pro.unity3d");
+            IconsBundle iconsBundle6 = Bundles.getIconsBundle("UI/Menu/Icons/Pro");
             ISleekImage sleekImage12 = Glazier.Get().CreateImage();
             sleekImage12.PositionOffset_X = -40f;
             sleekImage12.PositionOffset_Y = -40f;
@@ -496,9 +491,8 @@ public class MenuSurvivorsAppearanceUI
             sleekImage12.PositionScale_Y = 0.5f;
             sleekImage12.SizeOffset_X = 80f;
             sleekImage12.SizeOffset_Y = 80f;
-            sleekImage12.Texture = bundle6.load<Texture2D>("Lock_Large");
+            sleekImage12.Texture = iconsBundle6.load<Texture2D>("Lock_Large");
             beardColorPicker.AddChild(sleekImage12);
-            bundle6.unload();
         }
         customizationBox.ScaleContentToWidth = true;
         customizationBox.ContentSizeOffset = new Vector2(0f, num - 10f);

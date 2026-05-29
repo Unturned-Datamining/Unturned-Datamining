@@ -21,6 +21,10 @@ public class Level : MonoBehaviour
 
     private const float STEPS = 19f;
 
+    /// <summary>
+    /// The main/entry scene was originally called "Setup" in the same folder as other scenes
+    /// but has been moved to the project root and renamed "GameStartup" to be easier to find.
+    /// </summary>
     public static readonly int BUILD_INDEX_SETUP = 0;
 
     public static readonly int BUILD_INDEX_MENU = 1;
@@ -1613,7 +1617,7 @@ public class Level : MonoBehaviour
             satelliteCaptureTransform = satelliteCaptureGameObject.transform;
             satelliteCaptureTransform.parent = editing;
             satelliteCaptureCamera = satelliteCaptureGameObject.GetComponent<Camera>();
-            Transform obj = UnityEngine.Object.Instantiate(Resources.Load<GameObject>("Edit/Editor")).transform;
+            Transform obj = UnityEngine.Object.Instantiate(Resources.Load<GameObject>("Edit_NoRedist/Editor")).transform;
             obj.name = "Editor";
             obj.parent = editing;
             obj.tag = "Logic";
