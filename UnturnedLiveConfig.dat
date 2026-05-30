@@ -15,22 +15,7 @@ MainMenuWorkshop
 	AllowNews true
 	Featured
 	{
-		Id 1001
-		FileIds
-		[
-			3707778928
-		]
-		Status New
-		Type Curated
-		AssociatedStockpileItems
-		[
-			21090
-			2001
-			21094
-			2002
-			2003
-			2004
-		]
+		Id 0
 	}
 	Popular
 	{
