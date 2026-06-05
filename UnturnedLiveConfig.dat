@@ -1,14 +1,14 @@
 MainMenuAlert
 {
-	Id 82
-	Header Community Organized Event: Sign up for the EU 3v3 Qualifier with trophy skins!
+	Id 83
+	Header Community Organized Event: Sign up for the PeekSeek Solo EU event with trophy skins!
 	Body From the organizers: "More information regarding the event can be found in the PeekSeek Discord server."
 	Color #ff0000
 	Link https://pksk.to/1x4s26-sdg
 	IconURL https://cdn.smartlydressedgames.com/Images/PeekSeek.png
 	UseTimeWindow true
-	StartTime 2026-05-04 16:00:00
-	EndTime 2026-05-08 16:00:00
+	StartTime 2026-06-08 16:00:00
+	EndTime 2026-06-12 16:00:00
 }
 MainMenuWorkshop
 {
