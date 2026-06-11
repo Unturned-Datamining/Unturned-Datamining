@@ -576,16 +576,22 @@ public class Level : MonoBehaviour
             block.writeByte((byte)size);
             block.writeByte((byte)type);
             ReadWrite.writeBlock("/Maps/" + name + "/Level.dat", useCloud: false, block);
-            ReadWrite.copyFile("/Extras/LevelTemplate/Charts.unity3d", "/Maps/" + name + "/Charts.unity3d");
-            ReadWrite.copyFile("/Extras/LevelTemplate/Details.unity3d", "/Maps/" + name + "/Terrain/Details.unity3d");
-            ReadWrite.copyFile("/Extras/LevelTemplate/Details.dat", "/Maps/" + name + "/Terrain/Details.dat");
-            ReadWrite.copyFile("/Extras/LevelTemplate/Materials.unity3d", "/Maps/" + name + "/Terrain/Materials.unity3d");
-            ReadWrite.copyFile("/Extras/LevelTemplate/Materials.dat", "/Maps/" + name + "/Terrain/Materials.dat");
-            ReadWrite.copyFile("/Extras/LevelTemplate/Resources.dat", "/Maps/" + name + "/Terrain/Resources.dat");
-            ReadWrite.copyFile("/Extras/LevelTemplate/Lighting.dat", "/Maps/" + name + "/Environment/Lighting.dat");
-            ReadWrite.copyFile("/Extras/LevelTemplate/Roads.unity3d", "/Maps/" + name + "/Environment/Roads.unity3d");
-            ReadWrite.copyFile("/Extras/LevelTemplate/Roads.dat", "/Maps/" + name + "/Environment/Roads.dat");
-            ReadWrite.copyFile("/Extras/LevelTemplate/Ambience.unity3d", "/Maps/" + name + "/Environment/Ambience.unity3d");
+            string text = Path.Join(ReadWrite.PATH, "Extras", "LevelTemplate");
+            string text2 = Path.Join(ReadWrite.PATH, "Maps", name);
+            File.Copy(Path.Join(text, "Charts.unity3d"), Path.Join(text2, "Charts.unity3d"));
+            string text3 = Path.Join(text2, "Terrain");
+            Directory.CreateDirectory(text3);
+            File.Copy(Path.Join(text, "Details.unity3d"), Path.Join(text3, "Details.unity3d"));
+            File.Copy(Path.Join(text, "Details.dat"), Path.Join(text3, "Details.dat"));
+            File.Copy(Path.Join(text, "Materials.unity3d"), Path.Join(text3, "Materials.unity3d"));
+            File.Copy(Path.Join(text, "Materials.dat"), Path.Join(text3, "Materials.dat"));
+            File.Copy(Path.Join(text, "Resources.dat"), Path.Join(text3, "Resources.dat"));
+            string text4 = Path.Join(text2, "Environment");
+            Directory.CreateDirectory(text4);
+            File.Copy(Path.Join(text, "Lighting.dat"), Path.Join(text4, "Lighting.dat"));
+            File.Copy(Path.Join(text, "Roads.unity3d"), Path.Join(text4, "Roads.unity3d"));
+            File.Copy(Path.Join(text, "Roads.dat"), Path.Join(text4, "Roads.dat"));
+            File.Copy(Path.Join(text, "Ambience.unity3d"), Path.Join(text4, "Ambience.unity3d"));
             broadcastLevelsRefreshed();
         }
     }

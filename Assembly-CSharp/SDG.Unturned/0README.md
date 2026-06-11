@@ -284,6 +284,7 @@
 - [CullingVolumeManager.cs](CullingVolumeManager.cs)
 - [CuratedMapLink.cs](CuratedMapLink.cs)
 - [Customization.cs](Customization.cs)
+- [CustomMenuLink.cs](CustomMenuLink.cs)
 - [CustomWeatherComponent.cs](CustomWeatherComponent.cs)
 - [CustomWeatherEventHook.cs](CustomWeatherEventHook.cs)
 - [DamageAnimalParameters.cs](DamageAnimalParameters.cs)

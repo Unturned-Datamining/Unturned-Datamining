@@ -8,9 +8,9 @@ public class Localization
 {
     private static List<string> _messages;
 
-    private static List<string> keys = new List<string>();
+    private static List<string> keys;
 
-    private static string englishLocalizationRoot = Path.Combine(ReadWrite.PATH, "Localization", "English");
+    private static string englishLocalizationRoot;
 
     public static List<string> messages => _messages;
 
@@ -63,7 +63,7 @@ public class Localization
 
     private static void scanFile(string path)
     {
-        IDatDictionary datDictionary = ReadWrite.ReadDataWithoutHash(ReadWrite.PATH + "/Localization/English/" + path);
+        IDatDictionary datDictionary = ReadWrite.ReadDataWithoutHash(Path.Join(englishLocalizationRoot, path));
         IDatDictionary datDictionary2 = ReadWrite.ReadDataWithoutHash(Provider.localizationRoot + path);
         List<KeyValuePair<string, string>> list = new List<KeyValuePair<string, string>>();
         foreach (KeyValuePair<string, IDatNode> item in datDictionary)
@@ -112,7 +112,7 @@ public class Localization
 
     private static void scanFolder(string path)
     {
-        string[] files = ReadWrite.getFiles("/Localization/English/" + path, usePath: true);
+        string[] files = ReadWrite.getFiles(Path.Join(englishLocalizationRoot, path), usePath: false);
         string[] files2 = ReadWrite.getFiles(Provider.localizationRoot + path, usePath: false);
         for (int i = 0; i < files.Length; i++)
         {
@@ -136,7 +136,7 @@ public class Localization
                 messages.Add("New file \"" + fileName + "\" in " + path);
             }
         }
-        string[] folders = ReadWrite.getFolders("/Localization/English/" + path, usePath: true);
+        string[] folders = ReadWrite.getFolders(Path.Join(englishLocalizationRoot, path), usePath: false);
         string[] folders2 = ReadWrite.getFolders(Provider.localizationRoot + path, usePath: false);
         for (int k = 0; k < folders.Length; k++)
         {
@@ -179,5 +179,11 @@ public class Localization
             scanFolder("/Server");
             scanFolder("/Editor");
         }
+    }
+
+    static Localization()
+    {
+        keys = new List<string>();
+        englishLocalizationRoot = Path.Combine(ReadWrite.PATH, "Localization", "English");
     }
 }

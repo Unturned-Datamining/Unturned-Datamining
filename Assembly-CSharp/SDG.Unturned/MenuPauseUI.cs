@@ -5,6 +5,22 @@ namespace SDG.Unturned;
 
 public class MenuPauseUI
 {
+    private class CustomMenuLinkButton : SleekButtonIcon
+    {
+        public string url;
+
+        public void OnClickedLink(ISleekElement element)
+        {
+            Provider.provider.browserService.open(url);
+        }
+
+        public CustomMenuLinkButton(Texture2D icon, int newSize)
+            : base(icon, newSize)
+        {
+            base.onClickedButton += OnClickedLink;
+        }
+    }
+
     public static Local localization;
 
     public static IconsBundle icons;
@@ -17,19 +33,7 @@ public class MenuPauseUI
 
     private static SleekButtonIconConfirm quitButton;
 
-    private static SleekButtonIcon supportButton;
-
-    private static SleekButtonIcon bskyButton;
-
-    private static SleekButtonIcon steamButton;
-
     private static SleekButtonIcon creditsButton;
-
-    private static SleekButtonIcon forumButton;
-
-    private static SleekButtonIcon blogButton;
-
-    private static SleekButtonIcon wikiButton;
 
     public static void open()
     {
@@ -61,82 +65,10 @@ public class MenuPauseUI
         Provider.QuitGame("clicked quit in main menu");
     }
 
-    private static void onClickedSupportButton(ISleekElement button)
-    {
-        if (!Provider.provider.browserService.canOpenBrowser)
-        {
-            MenuUI.alert(localization.format("Overlay"));
-        }
-        else
-        {
-            Provider.provider.browserService.open("https://support.smartlydressedgames.com/hc/en-us");
-        }
-    }
-
-    private static void onClickedBskyButton(ISleekElement button)
-    {
-        if (!Provider.provider.browserService.canOpenBrowser)
-        {
-            MenuUI.alert(localization.format("Overlay"));
-        }
-        else
-        {
-            Provider.provider.browserService.open("https://bsky.app/profile/smartlydressedgames.com");
-        }
-    }
-
-    private static void onClickedSteamButton(ISleekElement button)
-    {
-        if (!Provider.provider.browserService.canOpenBrowser)
-        {
-            MenuUI.alert(localization.format("Overlay"));
-        }
-        else
-        {
-            Provider.provider.browserService.open("https://steamcommunity.com/app/304930/announcements/");
-        }
-    }
-
     private static void onClickedCreditsButton(ISleekElement button)
     {
         close();
         MenuCreditsUI.open();
-    }
-
-    private static void onClickedForumButton(ISleekElement button)
-    {
-        if (!Provider.provider.browserService.canOpenBrowser)
-        {
-            MenuUI.alert(localization.format("Overlay"));
-        }
-        else
-        {
-            Provider.provider.browserService.open("https://steamcommunity.com/app/304930/discussions/");
-        }
-    }
-
-    private static void onClickedBlogButton(ISleekElement button)
-    {
-        if (!Provider.provider.browserService.canOpenBrowser)
-        {
-            MenuUI.alert(localization.format("Overlay"));
-        }
-        else
-        {
-            Provider.provider.browserService.open("https://blog.smartlydressedgames.com/");
-        }
-    }
-
-    private static void onClickedWikiButton(ISleekElement button)
-    {
-        if (!Provider.provider.browserService.canOpenBrowser)
-        {
-            MenuUI.alert(localization.format("Overlay"));
-        }
-        else
-        {
-            Provider.provider.browserService.open("https://unturned.wiki.gg");
-        }
     }
 
     public MenuPauseUI()
@@ -153,11 +85,14 @@ public class MenuPauseUI
         container.SizeScale_Y = 1f;
         MenuUI.container.AddChild(container);
         active = false;
+        ISleekElement sleekElement = Glazier.Get().CreateFrame();
+        sleekElement.PositionScale_X = 0.5f;
+        sleekElement.PositionScale_Y = 0.5f;
+        int num = 0;
         quitButton = new SleekButtonIconConfirm(icons.load<Texture2D>("Quit"), localization.format("Exit_Button"), localization.format("Exit_Button_Tooltip"), localization.format("Return_Button"), string.Empty);
         quitButton.PositionOffset_X = -100f;
-        quitButton.PositionOffset_Y = -265f;
+        quitButton.PositionOffset_Y = num;
         quitButton.PositionScale_X = 0.5f;
-        quitButton.PositionScale_Y = 0.5f;
         quitButton.SizeOffset_X = 200f;
         quitButton.SizeOffset_Y = 50f;
         quitButton.text = localization.format("Exit_Button");
@@ -166,12 +101,12 @@ public class MenuPauseUI
         sleekButtonIconConfirm.onConfirmed = (Confirm)Delegate.Combine(sleekButtonIconConfirm.onConfirmed, new Confirm(onClickedQuitButton));
         quitButton.fontSize = ESleekFontSize.Medium;
         quitButton.iconColor = ESleekTint.FOREGROUND;
-        container.AddChild(quitButton);
+        sleekElement.AddChild(quitButton);
+        num += 60;
         returnButton = new SleekButtonIcon(icons.load<Texture2D>("Return"));
         returnButton.PositionOffset_X = -100f;
-        returnButton.PositionOffset_Y = -205f;
+        returnButton.PositionOffset_Y = num;
         returnButton.PositionScale_X = 0.5f;
-        returnButton.PositionScale_Y = 0.5f;
         returnButton.SizeOffset_X = 200f;
         returnButton.SizeOffset_Y = 50f;
         returnButton.text = localization.format("Return_Button");
@@ -179,88 +114,29 @@ public class MenuPauseUI
         returnButton.onClickedButton += onClickedReturnButton;
         returnButton.fontSize = ESleekFontSize.Medium;
         returnButton.iconColor = ESleekTint.FOREGROUND;
-        container.AddChild(returnButton);
-        supportButton = new SleekButtonIcon(icons.load<Texture2D>("Support"));
-        supportButton.PositionOffset_X = -100f;
-        supportButton.PositionOffset_Y = -145f;
-        supportButton.PositionScale_X = 0.5f;
-        supportButton.PositionScale_Y = 0.5f;
-        supportButton.SizeOffset_X = 200f;
-        supportButton.SizeOffset_Y = 50f;
-        supportButton.text = localization.format("Support_Label");
-        supportButton.tooltip = localization.format("Support_Tooltip");
-        supportButton.onClickedButton += onClickedSupportButton;
-        supportButton.fontSize = ESleekFontSize.Medium;
-        supportButton.iconColor = ESleekTint.FOREGROUND;
-        container.AddChild(supportButton);
-        bskyButton = new SleekButtonIcon(icons.load<Texture2D>("Bsky"), 40);
-        bskyButton.PositionOffset_X = -100f;
-        bskyButton.PositionOffset_Y = -85f;
-        bskyButton.PositionScale_X = 0.5f;
-        bskyButton.PositionScale_Y = 0.5f;
-        bskyButton.SizeOffset_X = 200f;
-        bskyButton.SizeOffset_Y = 50f;
-        bskyButton.text = localization.format("Bsky_Button");
-        bskyButton.tooltip = localization.format("Bsky_Button_Tooltip");
-        bskyButton.onClickedButton += onClickedBskyButton;
-        bskyButton.fontSize = ESleekFontSize.Medium;
-        container.AddChild(bskyButton);
-        steamButton = new SleekButtonIcon(icons.load<Texture2D>("Steam"));
-        steamButton.PositionOffset_X = -100f;
-        steamButton.PositionOffset_Y = -25f;
-        steamButton.PositionScale_X = 0.5f;
-        steamButton.PositionScale_Y = 0.5f;
-        steamButton.SizeOffset_X = 200f;
-        steamButton.SizeOffset_Y = 50f;
-        steamButton.text = localization.format("Steam_Button");
-        steamButton.tooltip = localization.format("Steam_Button_Tooltip");
-        steamButton.onClickedButton += onClickedSteamButton;
-        steamButton.fontSize = ESleekFontSize.Medium;
-        steamButton.iconColor = ESleekTint.FOREGROUND;
-        container.AddChild(steamButton);
-        forumButton = new SleekButtonIcon(icons.load<Texture2D>("Forum"));
-        forumButton.PositionOffset_X = -100f;
-        forumButton.PositionOffset_Y = 35f;
-        forumButton.PositionScale_X = 0.5f;
-        forumButton.PositionScale_Y = 0.5f;
-        forumButton.SizeOffset_X = 200f;
-        forumButton.SizeOffset_Y = 50f;
-        forumButton.text = localization.format("Forum_Button");
-        forumButton.tooltip = localization.format("Forum_Button_Tooltip");
-        forumButton.onClickedButton += onClickedForumButton;
-        forumButton.fontSize = ESleekFontSize.Medium;
-        forumButton.iconColor = ESleekTint.FOREGROUND;
-        container.AddChild(forumButton);
-        blogButton = new SleekButtonIcon(icons.load<Texture2D>("Blog"));
-        blogButton.PositionOffset_X = -100f;
-        blogButton.PositionOffset_Y = 95f;
-        blogButton.PositionScale_X = 0.5f;
-        blogButton.PositionScale_Y = 0.5f;
-        blogButton.SizeOffset_X = 200f;
-        blogButton.SizeOffset_Y = 50f;
-        blogButton.text = localization.format("Blog_Button");
-        blogButton.tooltip = localization.format("Blog_Button_Tooltip");
-        blogButton.onClickedButton += onClickedBlogButton;
-        blogButton.fontSize = ESleekFontSize.Medium;
-        container.AddChild(blogButton);
-        wikiButton = new SleekButtonIcon(icons.load<Texture2D>("Wiki"));
-        wikiButton.PositionOffset_X = -100f;
-        wikiButton.PositionOffset_Y = 155f;
-        wikiButton.PositionScale_X = 0.5f;
-        wikiButton.PositionScale_Y = 0.5f;
-        wikiButton.SizeOffset_X = 200f;
-        wikiButton.SizeOffset_Y = 50f;
-        wikiButton.text = localization.format("Wiki_Button");
-        wikiButton.tooltip = localization.format("Wiki_Button_Tooltip");
-        wikiButton.onClickedButton += onClickedWikiButton;
-        wikiButton.fontSize = ESleekFontSize.Medium;
-        wikiButton.iconColor = ESleekTint.FOREGROUND;
-        container.AddChild(wikiButton);
+        sleekElement.AddChild(returnButton);
+        num += 60;
+        foreach (CustomMenuLink custom_Menu_Link in Provider.statusData.Menu.Custom_Menu_Links)
+        {
+            sleekElement.AddChild(new CustomMenuLinkButton(icons.load<Texture2D>(custom_Menu_Link.Icon), 40)
+            {
+                PositionOffset_X = -100f,
+                PositionOffset_Y = num,
+                PositionScale_X = 0.5f,
+                SizeOffset_X = 200f,
+                SizeOffset_Y = 50f,
+                text = localization.format(custom_Menu_Link.Label_Key),
+                tooltip = localization.format(custom_Menu_Link.Tooltip_Key),
+                url = custom_Menu_Link.Web_Link,
+                fontSize = ESleekFontSize.Medium,
+                iconColor = ESleekTint.FOREGROUND
+            });
+            num += 60;
+        }
         creditsButton = new SleekButtonIcon(icons.load<Texture2D>("Credits"));
         creditsButton.PositionOffset_X = -100f;
-        creditsButton.PositionOffset_Y = 215f;
+        creditsButton.PositionOffset_Y = num;
         creditsButton.PositionScale_X = 0.5f;
-        creditsButton.PositionScale_Y = 0.5f;
         creditsButton.SizeOffset_X = 200f;
         creditsButton.SizeOffset_Y = 50f;
         creditsButton.text = localization.format("Credits_Button");
@@ -268,6 +144,10 @@ public class MenuPauseUI
         creditsButton.onClickedButton += onClickedCreditsButton;
         creditsButton.fontSize = ESleekFontSize.Medium;
         creditsButton.iconColor = ESleekTint.FOREGROUND;
-        container.AddChild(creditsButton);
+        sleekElement.AddChild(creditsButton);
+        num += 60;
+        sleekElement.SizeOffset_Y = num - 10;
+        sleekElement.PositionOffset_Y = sleekElement.SizeOffset_Y * -0.5f;
+        container.AddChild(sleekElement);
     }
 }

@@ -50,7 +50,7 @@ public class Bumper : MonoBehaviour
         {
             return;
         }
-        float num = Mathf.Clamp(vehicle.ReplicatedSpeed * vehicle.asset.bumperMultiplier, -10f, 10f);
+        float num = Mathf.Clamp(vehicle.ReplicatedForwardVelocity * vehicle.asset.bumperMultiplier, -10f, 10f);
         if (reverse)
         {
             num = 0f - num;

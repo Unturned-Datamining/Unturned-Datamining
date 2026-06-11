@@ -51,8 +51,8 @@
 	"Game":
 	{
 		"Major_Version": 26,
-		"Minor_Version": 4,
-		"Patch_Version": 100,
+		"Minor_Version": 3,
+		"Patch_Version": 3,
 		"GrantPackageIDs":
 		[
 			487
@@ -67,7 +67,27 @@
 	{
 		"PromoStart": "2026-04-30T16:00:00Z",
 		"PromoEnd": "2026-05-28T16:00:00Z",
-		"PromoLevel": "CaliforniaMenu"
+		"PromoLevel": "CaliforniaMenu",
+		"Custom_Menu_Links": [
+			{
+				"Label_Key": "Support_Label",
+				"Tooltip_Key": "Support_Tooltip",
+				"Icon": "Support",
+				"Web_Link": "https://support.smartlydressedgames.com/hc/en-us"
+			},
+			{
+				"Label_Key": "Blog_Button",
+				"Tooltip_Key": "Blog_Button_Tooltip",
+				"Icon": "Blog",
+				"Web_Link": "https://blog.smartlydressedgames.com/"
+			},
+			{
+				"Label_Key": "Bsky_Button",
+				"Tooltip_Key": "Bsky_Button_Tooltip",
+				"Icon": "Bsky",
+				"Web_Link": "https://bsky.app/profile/smartlydressedgames.com"
+			}
+		]
 	},
 	"News":
 	{
