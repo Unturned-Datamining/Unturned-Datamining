@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using SDG.NetPak;
 using SDG.NetTransport;
 using Steamworks;
@@ -955,6 +956,12 @@ public class VehicleManager : SteamCaller
             }
             SendDestroyAllVehicles.InvokeAndLoopback(ENetReliability.Reliable, Provider.GatherRemoteClientConnections());
         }
+    }
+
+    [Conditional("LOG_RECEIVE_VEHICLE")]
+    private static void LogReceiveVehicle(string name, object message)
+    {
+        UnturnedLog.info($"ReceiveVehicle {name}: {message}");
     }
 
     [SteamCall(ESteamCallValidation.ONLY_FROM_SERVER)]

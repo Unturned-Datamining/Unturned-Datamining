@@ -1053,6 +1053,8 @@ public class Provider : MonoBehaviour
     /// </summary>
     public static bool isApplicationQuitting { get; private set; }
 
+    public static bool WasQuitGameCalled => wasQuitGameCalled;
+
     internal static bool IsServerThirdpartyAntiCheatEnabled
     {
         get
@@ -4461,43 +4463,8 @@ public class Provider : MonoBehaviour
             return;
         }
         UnturnedLog.info($"Accepting queued player {playerID}");
-        string characterName = playerID.characterName;
-        uint uScore = (isPro ? 1u : 0u);
-        SteamGameServer.BUpdateUserData(playerID.steamID, characterName, uScore);
-        loadPlayerSpawn(playerID, out var point, out var angle, out var initialStance);
-        int channel = allocPlayerChannelId();
-        NetId netId = ClaimNetIdBlockForNewPlayer();
-        SteamPlayer newClient = addPlayer(transportConnection, netId, playerID, point, angle, isPro, isAdmin, channel, face, hair, beard, skin, color, markerColor, beardColor, hand, shirtItem, pantsItem, hatItem, backpackItem, vestItem, maskItem, glassesItem, skinItems, skinTags, skinDynamicProps, skillset, language, lobbyID, clientPlatform);
-        newClient.thirdpartyAntiCheatId = AllocThirdpartyAntiCheatPlayerId();
-        PlayerStance component = newClient.player.GetComponent<PlayerStance>();
-        if (component != null)
+        NetMessages.SendMessageToClient(EClientMessage.ReplicateConfig, ENetReliability.Reliable, transportConnection, delegate(NetPakWriter writer)
         {
-            component.initialStance = initialStance;
-        }
-        else
-        {
-            UnturnedLog.warn("Was unable to get PlayerStance for new connection!");
-        }
-        foreach (SteamPlayer aboutClient in _clients)
-        {
-            try
-            {
-                NetMessages.SendMessageToClient(EClientMessage.PlayerConnected, ENetReliability.Reliable, newClient.transportConnection, delegate(NetPakWriter writer)
-                {
-                    WriteConnectedMessage(writer, aboutClient, newClient);
-                });
-            }
-            catch (Exception e)
-            {
-                UnturnedLog.exception(e, $"Caught exception sending PlayerConnected message about {aboutClient} to new client {newClient}:");
-                UnturnedLog.error("This is likely a fatal error!");
-            }
-        }
-        GetAddressAndPortForClientAdvertisement(out var ipForClient, out var queryPortForClient);
-        NetMessages.SendMessageToClient(EClientMessage.Accepted, ENetReliability.Reliable, transportConnection, delegate(NetPakWriter writer)
-        {
-            writer.WriteUInt32(ipForClient);
-            writer.WriteUInt16(queryPortForClient);
             writer.WriteUInt8((byte)modeConfigData.Gameplay.Repair_Level_Max);
             writer.WriteFloat(modeConfigData.Players.Skill_Cost_Multiplier);
             writer.WriteBit(modeConfigData.Players.Skillset_Reduces_Skill_Cost);
@@ -4548,6 +4515,44 @@ public class Provider : MonoBehaviour
             writer.WriteFloat(modeConfigData.Gameplay.Min_Fishing_Bite_Interval);
             writer.WriteFloat(modeConfigData.Gameplay.Max_Fishing_Bite_Interval);
             writer.WriteFloat(modeConfigData.Gameplay.Fishing_MaxStrength_Bite_Interval_Multiplier);
+        });
+        string characterName = playerID.characterName;
+        uint uScore = (isPro ? 1u : 0u);
+        SteamGameServer.BUpdateUserData(playerID.steamID, characterName, uScore);
+        loadPlayerSpawn(playerID, out var point, out var angle, out var initialStance);
+        int channel = allocPlayerChannelId();
+        NetId netId = ClaimNetIdBlockForNewPlayer();
+        SteamPlayer newClient = addPlayer(transportConnection, netId, playerID, point, angle, isPro, isAdmin, channel, face, hair, beard, skin, color, markerColor, beardColor, hand, shirtItem, pantsItem, hatItem, backpackItem, vestItem, maskItem, glassesItem, skinItems, skinTags, skinDynamicProps, skillset, language, lobbyID, clientPlatform);
+        newClient.thirdpartyAntiCheatId = AllocThirdpartyAntiCheatPlayerId();
+        PlayerStance component = newClient.player.GetComponent<PlayerStance>();
+        if (component != null)
+        {
+            component.initialStance = initialStance;
+        }
+        else
+        {
+            UnturnedLog.warn("Was unable to get PlayerStance for new connection!");
+        }
+        foreach (SteamPlayer aboutClient in _clients)
+        {
+            try
+            {
+                NetMessages.SendMessageToClient(EClientMessage.PlayerConnected, ENetReliability.Reliable, newClient.transportConnection, delegate(NetPakWriter writer)
+                {
+                    WriteConnectedMessage(writer, aboutClient, newClient);
+                });
+            }
+            catch (Exception e)
+            {
+                UnturnedLog.exception(e, $"Caught exception sending PlayerConnected message about {aboutClient} to new client {newClient}:");
+                UnturnedLog.error("This is likely a fatal error!");
+            }
+        }
+        GetAddressAndPortForClientAdvertisement(out var ipForClient, out var queryPortForClient);
+        NetMessages.SendMessageToClient(EClientMessage.Accepted, ENetReliability.Reliable, transportConnection, delegate(NetPakWriter writer)
+        {
+            writer.WriteUInt32(ipForClient);
+            writer.WriteUInt16(queryPortForClient);
         });
         AddClientToThirdpartyAntiCheat(transportConnection, playerID, newClient);
         foreach (SteamPlayer forClient in clients)

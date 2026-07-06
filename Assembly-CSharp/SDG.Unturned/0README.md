@@ -145,6 +145,7 @@
 - [ClientMessageHandler_PlayerDisconnected.cs](ClientMessageHandler_PlayerDisconnected.cs)
 - [ClientMessageHandler_QueuePositionChanged.cs](ClientMessageHandler_QueuePositionChanged.cs)
 - [ClientMessageHandler_Rejected.cs](ClientMessageHandler_Rejected.cs)
+- [ClientMessageHandler_ReplicateConfig.cs](ClientMessageHandler_ReplicateConfig.cs)
 - [ClientMessageHandler_Shutdown.cs](ClientMessageHandler_Shutdown.cs)
 - [ClientMessageHandler_ThirdpartyAntiCheat.cs](ClientMessageHandler_ThirdpartyAntiCheat.cs)
 - [ClientMessageHandler_Unadmined.cs](ClientMessageHandler_Unadmined.cs)

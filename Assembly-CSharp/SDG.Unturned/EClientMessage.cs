@@ -70,5 +70,9 @@ public enum EClientMessage
     /// <summary>
     /// Server calling an RPC.
     /// </summary>
-    InvokeMethod
+    InvokeMethod,
+    /// <summary>
+    /// Setup Provider.modeConfigData and set values the client needs to know.
+    /// </summary>
+    ReplicateConfig
 }

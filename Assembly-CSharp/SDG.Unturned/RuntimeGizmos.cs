@@ -388,6 +388,35 @@ public class RuntimeGizmos : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Draw an arrow along circumference visualizing rotation of angleDegrees around axis.
+    /// </summary>
+    public void RotationAxisAngle(Vector3 center, Vector3 axis, float angleDegrees, float radius, Color color, float lifespan = 0f, EGizmoLayer layer = EGizmoLayer.World)
+    {
+        Vector3 vector = ((!(Vector3.Dot(axis, Vector3.up) > 0.9f)) ? Vector3.Cross(axis, Vector3.up).normalized : Vector3.Cross(axis, Vector3.forward).normalized);
+        Vector3 normalized = Vector3.Cross(axis, vector).normalized;
+        float num = angleDegrees * (MathF.PI / 180f);
+        Vector3 begin = center + vector * radius;
+        int num2 = Mathf.Max(1, Mathf.CeilToInt(angleDegrees / 15f));
+        float num3 = num / (float)num2;
+        for (int i = 1; i <= num2; i++)
+        {
+            float f = num3 * (float)i;
+            float num4 = Mathf.Cos(f);
+            float num5 = Mathf.Sin(f);
+            Vector3 vector2 = center + vector * num4 * radius + normalized * num5 * radius;
+            if (i == num2)
+            {
+                ArrowFromTo(begin, vector2, color, lifespan, layer);
+            }
+            else
+            {
+                Line(begin, vector2, color, lifespan, layer);
+            }
+            begin = vector2;
+        }
+    }
+
     public void Render()
     {
         if (!Dedicator.IsDedicatedServer)

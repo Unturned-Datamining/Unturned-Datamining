@@ -8,7 +8,7 @@ public static class EClientMessage_NetEnum
     {
         uint value2;
         bool result = reader.ReadBits(5, out value2);
-        if (value2 <= 17)
+        if (value2 <= 18)
         {
             value = (EClientMessage)value2;
             return result;

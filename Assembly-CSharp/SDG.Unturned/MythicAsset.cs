@@ -86,9 +86,16 @@ public class MythicAsset : Asset
         if (component != null)
         {
             ParticleSystem.CollisionModule collision = component.collision;
-            if (collision.enabled && (int)collision.collidesWith != 471449600)
+            if (collision.enabled)
             {
-                ReportAssetError("particle system " + transform.GetSceneHierarchyPath() + " collision mask includes unexpected layers");
+                if ((int)collision.collidesWith != 471449600)
+                {
+                    ReportAssetError("particle system " + transform.GetSceneHierarchyPath() + " collision mask includes unexpected layers");
+                }
+                if (!MathfEx.IsNearlyZero(collision.colliderForce))
+                {
+                    ReportAssetError("particle system " + transform.GetSceneHierarchyPath() + " should have zero collider force scale");
+                }
             }
             if (!component.useAutoRandomSeed)
             {

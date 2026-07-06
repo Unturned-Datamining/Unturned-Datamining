@@ -13,6 +13,7 @@ public class UnturnedCanvasScaler : MonoBehaviour
         if (scaler == null)
         {
             scaler = GetComponent<CanvasScaler>();
+            Update();
         }
     }
 

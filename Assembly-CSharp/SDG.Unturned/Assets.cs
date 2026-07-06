@@ -1879,18 +1879,22 @@ public class Assets : MonoBehaviour
         hasFinishedInitialStartupLoading = true;
         if ((bool)shouldLoadAnyAssets && coreMasterBundle == null)
         {
-            Provider.QuitGame("Missing core asset bundle. By default this is loaded from the Steam install.");
-            yield break;
+            if (!Provider.WasQuitGameCalled)
+            {
+                Provider.QuitGame("Missing core asset bundle. By default this is loaded from the Steam install.");
+            }
         }
-        if (Dedicator.IsDedicatedServer)
+        else if (Dedicator.IsDedicatedServer)
         {
             Provider.host();
-            yield break;
         }
-        LoadingUI.SetLoadingText("Loading_MainMenu");
-        yield return null;
-        UnturnedLog.info("Launching main menu");
-        SceneManager.LoadScene("Menu");
+        else
+        {
+            LoadingUI.SetLoadingText("Loading_MainMenu");
+            yield return null;
+            UnturnedLog.info("Launching main menu");
+            SceneManager.LoadScene("Menu");
+        }
     }
 
     private void ResaveAssets()

@@ -141,6 +141,7 @@ internal static class NetMessages
         clientReadCallbacks[15] = ClientMessageHandler_ThirdpartyAntiCheat.ReadMessage;
         clientReadCallbacks[16] = ClientMessageHandler_QueuePositionChanged.ReadMessage;
         clientReadCallbacks[17] = ClientMessageHandler_InvokeMethod.ReadMessage;
+        clientReadCallbacks[18] = ClientMessageHandler_ReplicateConfig.ReadMessage;
         serverReadCallbacks = new ServerReadHandler[Enum.GetNames(typeof(EServerMessage)).Length];
         serverReadCallbacks[0] = ServerMessageHandler_GetWorkshopFiles.ReadMessage;
         serverReadCallbacks[1] = ServerMessageHandler_ReadyToConnect.ReadMessage;
