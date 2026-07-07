@@ -1,14 +1,6 @@
 MainMenuAlert
 {
 	Id 84
-	Header Community Organized Event: Sign up - TopUnturned.com 3v3 Summer Cup Qualifier 2/2 with trophy skins!
-	Body From the organizers: "More information regarding the event can be found in the PeekSeek Discord server."
-	Color #ff0000
-	Link https://pksk.to/sc26q2-sdg
-	IconURL https://cdn.smartlydressedgames.com/Images/PeekSeek.png
-	UseTimeWindow true
-	StartTime 2026-06-29 16:00:00
-	EndTime 2026-07-04 16:00:00
 }
 MainMenuWorkshop
 {
