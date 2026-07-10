@@ -1,6 +1,14 @@
 MainMenuAlert
 {
-	Id 84
+	Id 85
+	Header Community Organized Event: Sign-ups for 3v3 California 2 Championship
+	Body From the organizers: "Sign up for a South American 3v3 tournament hosted by Rocha Events. Compete for trophy skins as prizes. Join the Discord to participate and get full details!"
+	Color #3a90f2
+	Link https://discord.gg/qTwfQtq3yp
+	IconURL https://cdn.smartlydressedgames.com/Images/RochaEvents_Icon.png
+	UseTimeWindow true
+	StartTime 2026-07-10 16:00:00
+	EndTime 2026-07-12 22:00:00
 }
 MainMenuWorkshop
 {
