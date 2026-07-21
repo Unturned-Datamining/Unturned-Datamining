@@ -197,6 +197,24 @@ LinkFiltering
 			]
 			Path (?i).*(bebrix)
 		}
+		{
+			Action Deny
+			Hosts
+			[
+				discord.com
+				www.discord.com
+			]
+			Path (?i)^\\/invite\\/4duWtwUtE9
+		}
+		{
+			Action Deny
+			Hosts
+			[
+				youtube.com
+				www.youtube.com
+			]
+			Path (?i)^\\/\\@lalepuCheats
+		}
 	]
 	DefaultAction UseSteamLinkFilter
 }
