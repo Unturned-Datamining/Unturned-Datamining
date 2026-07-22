@@ -3,6 +3,7 @@
 ## IPv4 filters
 | Address        | BanFlags                     |
 | -------------- | ---------------------------- |
+| 216.173.70.154 | HiddenFromInternetServerList |
 | 15.204.133.203 | HiddenFromInternetServerList |
 | 155.117.255.21 | QueryPingWarning             |
 
@@ -13,23 +14,25 @@
 | (?i)(Auschwitz&#124;Nazi&#124;Nazista&#124;Anti-Negro&#124;Anti-Jew&#124;Anti-Judeus) | HiddenFromAllServerLists, Blocked |
 | (?i)(nigger)                                                                          | HiddenFromAllServerLists, Blocked |
 | (?i)(cheat)                                                                           | HiddenFromAllServerLists, Blocked |
-| (?i)(CHЕАТ)                                                                           | HiddenFromAllServerLists, Blocked |
 | (?i)(hack)                                                                            | HiddenFromAllServerLists, Blocked |
 | (?i)(HypnoticClient)                                                                  | HiddenFromAllServerLists, Blocked |
-| (?i)(ЛУЧШИЙ БECПЛAТНЫЙ ЧИT)                                                           | HiddenFromAllServerLists, Blocked |
+| (?i)(CHЕАТ)                                                                           | HiddenFromInternetServerList      |
+| (?i)(ЛУЧШИЙ БECПЛAТНЫЙ ЧИT)                                                           | HiddenFromInternetServerList      |
 | (?i)(no\s*-*\s*lag)                                                                   | HiddenFromInternetServerList      |
 | (?i)(Hardline)                                                                        | HiddenFromInternetServerList      |
 | (?i)(Hardӏine)                                                                        | HiddenFromInternetServerList      |
 | (?i)(Wasabi)                                                                          | QueryPingWarning                  |
 
 ## Description filters
-| Regex | BanFlags |
-| ----- | -------- |
+| Regex               | BanFlags                     |
+| ------------------- | ---------------------------- |
+| (?i)(nightmaresoft) | HiddenFromInternetServerList |
 
 ## Thumbnail filters
 | Regex                                 | IconPreview                                                                 | BanFlags                     |
 | ------------------------------------- | --------------------------------------------------------------------------- | ---------------------------- |
 | (https://r.resimlink.com/GXZ0gP2.jpg) | ![https://r.resimlink.com/GXZ0gP2.jpg](https://r.resimlink.com/GXZ0gP2.jpg) | HiddenFromInternetServerList |
+| (?i)(nightmaresoft)                   |                                                                             | HiddenFromInternetServerList |
 | (?i)(playhardline.com)                |                                                                             | HiddenFromInternetServerList |
 | (https://i.imgur.com/3iedNHu.png)     | ![https://i.imgur.com/3iedNHu.png](https://i.imgur.com/3iedNHu.png)         | HiddenFromInternetServerList |
 
