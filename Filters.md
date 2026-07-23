@@ -4,6 +4,7 @@
 | Address        | BanFlags                     |
 | -------------- | ---------------------------- |
 | 216.173.70.154 | HiddenFromInternetServerList |
+| 216.57.106.76  | HiddenFromInternetServerList |
 | 15.204.133.203 | HiddenFromInternetServerList |
 | 155.117.255.21 | QueryPingWarning             |
 

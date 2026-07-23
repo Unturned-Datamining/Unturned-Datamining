@@ -204,7 +204,11 @@ LinkFiltering
 				discord.com
 				www.discord.com
 			]
-			Path (?i)^\\/invite\\/4duWtwUtE9
+			Paths
+			[
+				(?i)^\\/invite\\/4duWtwUtE9
+				(?i)^\\/4duWtwUtE9
+			]
 		}
 		{
 			Action Deny
@@ -213,7 +217,11 @@ LinkFiltering
 				youtube.com
 				www.youtube.com
 			]
-			Path (?i)^\\/\\@lalepuCheats
+			Paths
+			[
+				(?i)^\\/\\@lalepuCheats
+				(?i)^\\/watch?v=JftgGJFDQ5c
+			]
 		}
 	]
 	DefaultAction UseSteamLinkFilter
