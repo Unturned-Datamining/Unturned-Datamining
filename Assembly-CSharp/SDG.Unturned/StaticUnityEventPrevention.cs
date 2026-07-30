@@ -30,6 +30,10 @@ public static class StaticUnityEventPrevention
         gameObject.GetComponentsInChildren(includeInactive: true, components);
         foreach (MonoBehaviour component in components)
         {
+            if (component == null)
+            {
+                continue;
+            }
             Type type = component.GetType();
             TypeInfo typeInfo = GetTypeInfo(type);
             if (typeInfo.unityEventFields == null)
@@ -45,19 +49,22 @@ public static class StaticUnityEventPrevention
                     continue;
                 }
                 int num = 0;
+                string persistentMethodName;
                 while (num < unityEventBase.GetPersistentEventCount())
                 {
-                    if (!(unityEventBase.GetPersistentTarget(num) == null))
+                    UnityEngine.Object persistentTarget = unityEventBase.GetPersistentTarget(num);
+                    persistentMethodName = unityEventBase.GetPersistentMethodName(num);
+                    if (!(persistentTarget == null) || string.IsNullOrEmpty(persistentMethodName))
                     {
                         num++;
                         continue;
                     }
-                    goto IL_008c;
+                    goto IL_00af;
                 }
                 continue;
-                IL_008c:
+                IL_00af:
                 flag = true;
-                UnturnedLog.warn($"Found call to static method in {component.GetSceneHierarchyPath()} {type} {fieldInfo.Name}, deleting component");
+                UnturnedLog.warn($"Found call to method \"{persistentMethodName}\" without target in {component.GetSceneHierarchyPath()} {type} {fieldInfo.Name}, deleting component (may be attempting to call a static method, or target is unassigned)");
                 break;
             }
             if (flag)
@@ -89,6 +96,7 @@ public static class StaticUnityEventPrevention
         {
             value.unityEventFields = tempFields.ToArray();
         }
+        cachedTypeInfo.Add(type, value);
         return value;
     }
 }
