@@ -20,6 +20,8 @@ public class MainMenuAlert
 
     public bool shouldTintIcon;
 
+    public bool isRelevantForSDK;
+
     public bool useTimeWindow;
 
     public DateTime startTime;
@@ -36,6 +38,7 @@ public class MainMenuAlert
         iconName = data.GetString("IconName");
         iconURL = data.GetString("IconURL");
         shouldTintIcon = data.ParseBool("TintIcon");
+        isRelevantForSDK = data.ParseBool("RelevantForSDK");
         useTimeWindow = data.ParseBool("UseTimeWindow");
         startTime = data.ParseDateTimeUtc("StartTime");
         endTime = data.ParseDateTimeUtc("EndTime");

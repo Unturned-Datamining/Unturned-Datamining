@@ -1641,6 +1641,7 @@
 - [StateUpdated.cs](StateUpdated.cs)
 - [StaticIconRef.cs](StaticIconRef.cs)
 - [StaticResourceRef.cs](StaticResourceRef.cs)
+- [StaticUnityEventPrevention.cs](StaticUnityEventPrevention.cs)
 - [StatTracker.cs](StatTracker.cs)
 - [StatusData.cs](StatusData.cs)
 - [SteamAdminID.cs](SteamAdminID.cs)

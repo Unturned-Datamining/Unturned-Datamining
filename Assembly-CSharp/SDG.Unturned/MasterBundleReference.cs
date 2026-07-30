@@ -137,6 +137,11 @@ public struct MasterBundleReference<T> : IFormattedFileReadable, IFormattedFileW
                     if (val is GameObject gameObject)
                     {
                         Bundle.FixupGameObjectAudio(gameObject);
+                        if (!StaticUnityEventPrevention.Validate(gameObject))
+                        {
+                            UnturnedLog.warn("Canceling load asset '{0}' from master bundle '{1}' because it failed UnityEvent checks", text, name);
+                            val = null;
+                        }
                     }
                 }
                 else if (logWarnings)

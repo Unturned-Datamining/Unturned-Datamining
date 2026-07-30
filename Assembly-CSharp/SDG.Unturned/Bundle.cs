@@ -79,8 +79,13 @@ public class Bundle
         }
     }
 
-    protected virtual void processLoadedGameObject(GameObject gameObject)
+    protected virtual void processLoadedGameObject(ref GameObject gameObject)
     {
+        if (!StaticUnityEventPrevention.Validate(gameObject))
+        {
+            gameObject = null;
+            return;
+        }
         if (!Dedicator.IsDedicatedServer)
         {
             FixupGameObjectAudio(gameObject);
@@ -130,11 +135,13 @@ public class Bundle
         StandardShaderUtils.maybeFixupMaterial(material);
     }
 
-    protected virtual void processLoadedObject<T>(T loadedObject) where T : UnityEngine.Object
+    protected virtual void processLoadedObject<T>(ref T loadedObject) where T : UnityEngine.Object
     {
         if (typeof(T) == typeof(GameObject))
         {
-            processLoadedGameObject(loadedObject as GameObject);
+            GameObject gameObject = loadedObject as GameObject;
+            processLoadedGameObject(ref gameObject);
+            loadedObject = gameObject as T;
         }
         else if (typeof(T) == typeof(AudioClip))
         {
@@ -172,9 +179,9 @@ public class Bundle
         }
         if (asset.Contains(name))
         {
-            T val = asset.LoadAsset<T>(name);
-            processLoadedObject(val);
-            return val;
+            T loadedObject = asset.LoadAsset<T>(name);
+            processLoadedObject(ref loadedObject);
+            return loadedObject;
         }
         return null;
     }
