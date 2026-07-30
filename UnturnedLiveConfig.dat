@@ -1,12 +1,16 @@
 MainMenuAlert
 {
-	Id 86
-	Header Internet Server List Temporarily Disabled
-	Body This evening (2026-07-29) we received report of a potential remote code execution exploit (RCE) in a malicious server's workshop mod. Out of an abundance of caution, we're temporarily disabling all Internet server listings. We will release a patch as soon as possible.
+	Id 87
+	Header Update to v3.26.3.5
+	Body If your game hasn't updated yet, please ensure you update to version 3.26.3.5. More details in the linked patch notes.
 	Color #ffbb00
+	Link https://store.steampowered.com/news/app/304930/view/717912016810934951
 	IconName Alert_Triangle
 	TintIcon true
 	RelevantForSDK true
+	UseTimeWindow true
+	StartTime 2026-07-29
+	EndTime 2026-08-01
 }
 MainMenuWorkshop
 {
