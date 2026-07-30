@@ -24,6 +24,7 @@
 | (?i)(Hardline)                                                                        | HiddenFromInternetServerList      |
 | (?i)(Hardӏine)                                                                        | HiddenFromInternetServerList      |
 | (?i)(Wasabi)                                                                          | QueryPingWarning                  |
+| .*                                                                                    | HiddenFromInternetServerList      |
 
 ## Description filters
 | Regex               | BanFlags                     |

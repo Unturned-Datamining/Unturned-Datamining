@@ -1,14 +1,12 @@
 MainMenuAlert
 {
-	Id 85
-	Header Community Organized Event: Sign-ups for 3v3 California 2 Championship
-	Body From the organizers: "Sign up for a South American 3v3 tournament hosted by Rocha Events. Compete for trophy skins as prizes. Join the Discord to participate and get full details!"
-	Color #3a90f2
-	Link https://discord.gg/qTwfQtq3yp
-	IconURL https://cdn.smartlydressedgames.com/Images/RochaEvents_Icon.png
-	UseTimeWindow true
-	StartTime 2026-07-10 16:00:00
-	EndTime 2026-07-12 22:00:00
+	Id 86
+	Header Internet Server List Temporarily Disabled
+	Body This evening (2026-07-29) we received report of a potential remote code execution exploit (RCE) in a malicious server's workshop mod. Out of an abundance of caution, we're temporarily disabling all Internet server listings. We will release a patch as soon as possible.
+	Color #ffbb00
+	IconName Alert_Triangle
+	TintIcon true
+	RelevantForSDK true
 }
 MainMenuWorkshop
 {
