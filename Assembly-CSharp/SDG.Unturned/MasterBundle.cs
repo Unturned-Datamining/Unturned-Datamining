@@ -73,11 +73,11 @@ public class MasterBundle : Bundle
         string[] array = value;
         foreach (string text2 in array)
         {
-            T loadedObject = cfg.assetBundle.LoadAsset<T>(text + text2);
-            if (loadedObject != null)
+            T val = cfg.assetBundle.LoadAsset<T>(text + text2);
+            if (val != null)
             {
-                processLoadedObject(ref loadedObject);
-                return loadedObject;
+                processLoadedObject(val);
+                return val;
             }
         }
         return null;

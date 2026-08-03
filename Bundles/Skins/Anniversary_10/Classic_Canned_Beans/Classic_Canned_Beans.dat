@@ -3,3 +3,5 @@ Type Skin
 ID 304
 
 Override_Meshes 1
+
+Is_Legacy_Canned_Beans true

@@ -259,6 +259,11 @@ public class MasterBundleConfig
         return assetBundle.LoadAsset<T>(name2);
     }
 
+    /// <summary>
+    /// TODO: if adding additional calls, result should ideally wrap AssetBundleRequest so that
+    /// bundle.processLoadedObject runs before returning the result. Should be consolidated with
+    /// MasterBundleReference.LoadAssetAsync, too.
+    /// </summary>
     public AssetBundleRequest LoadAssetAsync<T>(string name) where T : UnityEngine.Object
     {
         string name2 = formatAssetPath(name);

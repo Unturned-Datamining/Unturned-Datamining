@@ -44,12 +44,25 @@ internal static class ServerPrefabUtil
             }
             return true;
         });
-        workingComponents.Sort((Component lhs, Component rhs) => (lhs is TextMeshPro || lhs is TextMesh || lhs is LODGroupAdditionalData || lhs is EnableDopplerEffect || lhs is MusicAudioSource) ? (-1) : 0);
+        workingComponents.Sort(CompareRemovedComponents);
         foreach (Component workingComponent in workingComponents)
         {
             UnityEngine.Object.DestroyImmediate(workingComponent, allowDestroyingAssets: true);
         }
         workingComponents.Clear();
+    }
+
+    private static int CompareRemovedComponents(Component lhs, Component rhs)
+    {
+        if (lhs.GetType() == rhs.GetType())
+        {
+            return lhs.GetInstanceID().CompareTo(rhs.GetInstanceID());
+        }
+        if (!(lhs is TextMeshPro) && !(lhs is TextMesh) && !(lhs is LODGroupAdditionalData) && !(lhs is EnableDopplerEffect) && !(lhs is MusicAudioSource))
+        {
+            return 0;
+        }
+        return -1;
     }
 
     static ServerPrefabUtil()

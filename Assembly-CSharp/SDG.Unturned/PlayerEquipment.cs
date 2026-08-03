@@ -1196,6 +1196,7 @@ public class PlayerEquipment : PlayerCaller
         firstEventComponent = null;
         thirdEventComponent = null;
         characterEventComponent = null;
+        AnimationClip[] array = useableSkin?.overrideAnimations ?? asset?.animations;
         skinRagdollEffect = ERagdollEffect.None;
         useableSkin = null;
         if (firstModel != null)
@@ -1219,11 +1220,11 @@ public class PlayerEquipment : PlayerCaller
         characterSkinned = false;
         tempCharacterMaterial = null;
         characterMythic = null;
-        if (asset != null && asset.animations != null && asset.animations.Length != 0)
+        if (array != null && array.Length != 0)
         {
-            for (int i = 0; i < asset.animations.Length; i++)
+            for (int i = 0; i < array.Length; i++)
             {
-                base.player.animator.removeAnimation(asset.animations[i]);
+                base.player.animator.removeAnimation(array[i]);
             }
         }
         isBusy = false;
@@ -1273,6 +1274,11 @@ public class PlayerEquipment : PlayerCaller
             skinRagdollEffect = useableSkin.ragdollEffect;
         }
         GameObject prefabOverride = ((asset.equipablePrefab != null) ? asset.equipablePrefab : asset.item);
+        SkinAsset skinAsset = useableSkin;
+        if (skinAsset != null && skinAsset.overrideAnimations?.Length > 0)
+        {
+            prefabOverride = asset.item;
+        }
         if (base.channel.IsLocalPlayer)
         {
             ClientAssetIntegrity.QueueRequest(_asset);
@@ -1375,11 +1381,12 @@ public class PlayerEquipment : PlayerCaller
         {
             thirdMythic.IsMythicalEffectEnabled = base.player.clothing.isSkinned && base.player.clothing.isMythic;
         }
-        if (asset.animations != null && asset.animations.Length != 0)
+        AnimationClip[] array2 = useableSkin?.overrideAnimations ?? asset?.animations;
+        if (array2 != null && array2.Length != 0)
         {
-            for (int j = 0; j < asset.animations.Length; j++)
+            for (int j = 0; j < array2.Length; j++)
             {
-                base.player.animator.AddEquippedItemAnimation(asset.animations[j], _firstModel, _thirdModel, _characterModel);
+                base.player.animator.AddEquippedItemAnimation(array2[j], _firstModel, _thirdModel, _characterModel);
             }
         }
         _useable = base.gameObject.AddComponent(asset.useableType) as Useable;

@@ -116,6 +116,7 @@ public class LightningWeatherComponent : MonoBehaviour
             GameObject gameObject = request4.asset as GameObject;
             if (gameObject != null)
             {
+                StaticUnityEventPrevention.Validate(gameObject);
                 effectInstance = Object.Instantiate(gameObject);
                 effectInstance.SetActive(value: false);
                 lineRenderer = effectInstance.GetComponent<LineRenderer>();

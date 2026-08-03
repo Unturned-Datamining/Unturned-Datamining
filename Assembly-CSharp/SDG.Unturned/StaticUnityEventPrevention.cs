@@ -40,7 +40,6 @@ public static class StaticUnityEventPrevention
             {
                 continue;
             }
-            bool flag = false;
             FieldInfo[] unityEventFields = typeInfo.unityEventFields;
             foreach (FieldInfo fieldInfo in unityEventFields)
             {
@@ -48,29 +47,20 @@ public static class StaticUnityEventPrevention
                 {
                     continue;
                 }
-                int num = 0;
-                string persistentMethodName;
-                while (num < unityEventBase.GetPersistentEventCount())
+                for (int j = 0; j < unityEventBase.GetPersistentEventCount(); j++)
                 {
-                    UnityEngine.Object persistentTarget = unityEventBase.GetPersistentTarget(num);
-                    persistentMethodName = unityEventBase.GetPersistentMethodName(num);
-                    if (!(persistentTarget == null) || string.IsNullOrEmpty(persistentMethodName))
+                    UnityEngine.Object persistentTarget = unityEventBase.GetPersistentTarget(j);
+                    string persistentMethodName = unityEventBase.GetPersistentMethodName(j);
+                    if (persistentTarget == null && !string.IsNullOrEmpty(persistentMethodName))
                     {
-                        num++;
-                        continue;
+                        if ((bool)Assets.shouldValidateAssets && (Assets.currentAsset != null || Assets.currentMasterBundle != null))
+                        {
+                            UnturnedLog.warn($"Found call to method \"{persistentMethodName}\" without target in {component.GetSceneHierarchyPath()} {type} {fieldInfo.Name} (Asset: {Assets.currentAsset?.FriendlyNameWithFriendlyType} Bundle: {Assets.currentMasterBundle?.assetBundleName}), deactivating (may be attempting to call a static method, or target is unassigned)");
+                        }
+                        unityEventBase.SetPersistentListenerState(j, UnityEventCallState.Off);
+                        result = false;
                     }
-                    goto IL_00af;
                 }
-                continue;
-                IL_00af:
-                flag = true;
-                UnturnedLog.warn($"Found call to method \"{persistentMethodName}\" without target in {component.GetSceneHierarchyPath()} {type} {fieldInfo.Name}, deleting component (may be attempting to call a static method, or target is unassigned)");
-                break;
-            }
-            if (flag)
-            {
-                UnityEngine.Object.DestroyImmediate(component, allowDestroyingAssets: true);
-                result = false;
             }
         }
         return result;

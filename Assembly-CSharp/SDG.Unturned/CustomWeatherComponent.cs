@@ -182,6 +182,7 @@ public class CustomWeatherComponent : WeatherComponentBase
         {
             yield break;
         }
+        StaticUnityEventPrevention.Validate(gameObject);
         GameObject gameObject2 = Object.Instantiate(gameObject, Vector3.zero, Quaternion.identity);
         gameObject2.name = $"{asset.name}_Effect_{gameObject.name}";
         ParticleSystem componentInChildren = gameObject2.GetComponentInChildren<ParticleSystem>();

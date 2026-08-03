@@ -153,6 +153,11 @@ public struct MasterBundleReference<T> : IFormattedFileReadable, IFormattedFileW
         return val;
     }
 
+    /// <summary>
+    /// TODO: if adding additional calls, result should ideally wrap AssetBundleRequest so that
+    /// bundle.processLoadedObject runs before returning the result. Should be consolidated with
+    /// MasterBundleConfig.LoadAssetAsync, too.
+    /// </summary>
     public AssetBundleRequest LoadAssetAsync(bool logWarnings = true)
     {
         if (isNull)

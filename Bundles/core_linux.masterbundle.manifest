@@ -1,15 +1,15 @@
 ManifestFileVersion: 0
-CRC: 3365924476
+CRC: 2934569216
 Hashes:
   AssetFileHash:
     serializedVersion: 2
-    Hash: dc5e9dfede02b86a671befdd88d6fda8
+    Hash: 03324385957c0922c43eafafd8bfdc28
   TypeTreeHash:
     serializedVersion: 2
     Hash: b3bd1abe65776cbb59c897ed342fab2b
   IncrementalBuildHash:
     serializedVersion: 2
-    Hash: dc5e9dfede02b86a671befdd88d6fda8
+    Hash: 03324385957c0922c43eafafd8bfdc28
 HashAppended: 0
 ClassTypes:
 - Class: 1
@@ -12575,6 +12575,7 @@ Assets:
 - Assets/CoreMasterBundle/Objects/Medium/Furniture/Oven_1/Nav.prefab
 - Assets/CoreMasterBundle/Items/Barricades/Table_Cir_Maple/Nav.prefab
 - Assets/CoreMasterBundle/Items/Barricades/Flare_Orange/Item.prefab
+- Assets/CoreMasterBundle/Skins/Anniversary_10/Classic_Canned_Beans/Animations.prefab
 - Assets/CoreMasterBundle/Items/Vests/Chain/Item.prefab
 - Assets/CoreMasterBundle/Items/Barricades/Seed_Taro/Barricade.prefab
 - Assets/CoreMasterBundle/Items/Outfits/Goth/Goth_Raven/Item.prefab
