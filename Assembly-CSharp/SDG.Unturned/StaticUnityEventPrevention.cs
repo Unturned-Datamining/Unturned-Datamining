@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Reflection;
 using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.EventSystems;
 
 namespace SDG.Unturned;
 
@@ -25,7 +26,7 @@ public static class StaticUnityEventPrevention
     /// <returns>True if nothing was found.</returns>
     public static bool Validate(GameObject gameObject)
     {
-        bool result = true;
+        bool flag = true;
         components.Clear();
         gameObject.GetComponentsInChildren(includeInactive: true, components);
         foreach (MonoBehaviour component in components)
@@ -35,6 +36,16 @@ public static class StaticUnityEventPrevention
                 continue;
             }
             Type type = component.GetType();
+            if (typeof(EventTrigger).IsAssignableFrom(type))
+            {
+                EventTrigger eventTrigger = component as EventTrigger;
+                if (eventTrigger != null)
+                {
+                    bool flag2 = ValidateEventTrigger(eventTrigger);
+                    flag = flag && flag2;
+                    continue;
+                }
+            }
             TypeInfo typeInfo = GetTypeInfo(type);
             if (typeInfo.unityEventFields == null)
             {
@@ -58,8 +69,36 @@ public static class StaticUnityEventPrevention
                             UnturnedLog.warn($"Found call to method \"{persistentMethodName}\" without target in {component.GetSceneHierarchyPath()} {type} {fieldInfo.Name} (Asset: {Assets.currentAsset?.FriendlyNameWithFriendlyType} Bundle: {Assets.currentMasterBundle?.assetBundleName}), deactivating (may be attempting to call a static method, or target is unassigned)");
                         }
                         unityEventBase.SetPersistentListenerState(j, UnityEventCallState.Off);
-                        result = false;
+                        flag = false;
                     }
+                }
+            }
+        }
+        return flag;
+    }
+
+    private static bool ValidateEventTrigger(EventTrigger eventTrigger)
+    {
+        bool result = true;
+        foreach (EventTrigger.Entry trigger in eventTrigger.triggers)
+        {
+            UnityEventBase callback = trigger.callback;
+            if (callback == null)
+            {
+                continue;
+            }
+            for (int i = 0; i < callback.GetPersistentEventCount(); i++)
+            {
+                UnityEngine.Object persistentTarget = callback.GetPersistentTarget(i);
+                string persistentMethodName = callback.GetPersistentMethodName(i);
+                if (persistentTarget == null && !string.IsNullOrEmpty(persistentMethodName))
+                {
+                    if ((bool)Assets.shouldValidateAssets && (Assets.currentAsset != null || Assets.currentMasterBundle != null))
+                    {
+                        UnturnedLog.warn($"Found call to method \"{persistentMethodName}\" without target in {eventTrigger.GetSceneHierarchyPath()} EventTrigger {trigger.eventID} (Asset: {Assets.currentAsset?.FriendlyNameWithFriendlyType} Bundle: {Assets.currentMasterBundle?.assetBundleName}), deactivating (may be attempting to call a static method, or target is unassigned)");
+                    }
+                    callback.SetPersistentListenerState(i, UnityEventCallState.Off);
+                    result = false;
                 }
             }
         }
