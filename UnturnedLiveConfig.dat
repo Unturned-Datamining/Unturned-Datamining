@@ -1,6 +1,14 @@
 MainMenuAlert
 {
-	Id 87
+	Id 88
+	Header Watch the finals - TopUnturned.com 3v3 Summer Cup
+	Body From the organizers: "More information regarding the event can be found in the PeekSeek Discord server @ https://peekseek.net/discord"
+	Color #ff0000
+	Link https://link.kcvdh.com/sc26finals
+	IconURL https://cdn.smartlydressedgames.com/Images/PeekSeek.png
+	UseTimeWindow true
+	StartTime 2026-08-21 17:00:00
+	EndTime 2026-08-22 23:00:00
 }
 MainMenuWorkshop
 {
