@@ -11,6 +11,6 @@ public class SteamworksWorkshopService : Service, IWorkshopService, IService
 
     public void open(PublishedFileId_t id)
     {
-        SDG.Unturned.Provider.openURL("https://steamcommunity.com/sharedfiles/filedetails/?id=" + id.m_PublishedFileId);
+        WebUtils.OpenURL("https://steamcommunity.com/sharedfiles/filedetails/?id=" + id.m_PublishedFileId);
     }
 }

@@ -55,7 +55,7 @@ public class SteamworksEconomyService : Service, IEconomyService, IService
 
     public void open(ulong id)
     {
-        SDG.Unturned.Provider.openURL("https://steamcommunity.com/profiles/" + SteamUser.GetSteamID().ToString() + "/inventory/?sellOnLoad=1#" + SteamUtils.GetAppID().ToString() + "_2_" + id);
+        WebUtils.OpenURL("https://steamcommunity.com/profiles/" + SteamUser.GetSteamID().ToString() + "/inventory/?sellOnLoad=1#" + SteamUtils.GetAppID().ToString() + "_2_" + id);
     }
 
     private SteamworksEconomyRequestHandle findSteamworksEconomyRequestHandles(SteamInventoryResult_t steamInventoryResult)

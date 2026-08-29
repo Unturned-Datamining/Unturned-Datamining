@@ -10,6 +10,6 @@ public class SteamworksBrowserService : Service, IBrowserService, IService
 
     public void open(string url)
     {
-        SDG.Unturned.Provider.openURL(url);
+        WebUtils.OpenURL(url);
     }
 }

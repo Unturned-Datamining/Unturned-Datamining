@@ -1,4 +1,6 @@
 using System;
+using System.Diagnostics;
+using Steamworks;
 using UnityEngine.Networking;
 
 namespace SDG.Unturned;
@@ -58,5 +60,24 @@ internal static class WebUtils
     {
         string result;
         return ParseThirdPartyUrl(uriString, out result, autoPrefix, useLinkFiltering);
+    }
+
+    /// <summary>
+    /// Open URL in the Steam overlay, or if disabled use the default browser instead.
+    /// </summary>
+    public static void OpenURL(string url)
+    {
+        if (!ParseThirdPartyUrl(url, out var result))
+        {
+            UnturnedLog.error("Ignoring call to WebUtils.OpenURL, malicious URL? " + url);
+        }
+        else if (SteamUtils.IsOverlayEnabled())
+        {
+            SteamFriends.ActivateGameOverlayToWebPage(result);
+        }
+        else
+        {
+            Process.Start(result);
+        }
     }
 }

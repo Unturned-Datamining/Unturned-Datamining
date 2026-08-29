@@ -73,7 +73,7 @@ public class SleekWebLinkButton : SleekWrapper
         }
         if (WebUtils.ParseThirdPartyUrl(_url, out var result2, autoPrefix: true, useLinkFiltering))
         {
-            Provider.openURL(result2);
+            WebUtils.OpenURL(result2);
             return;
         }
         UnturnedLog.warn("Ignoring potentially unsafe web link button url {0}", _url);

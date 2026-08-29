@@ -4997,20 +4997,9 @@ public class Provider : MonoBehaviour
         }
     }
 
-    /// <summary>
-    /// Open URL in the steam overlay, or if disabled use the default browser instead.
-    /// Warning: any third party url should be checked by WebUtils.ParseThirdPartyUrl.
-    /// </summary>
+    [Obsolete("Please use WebUtils.OpenURL instead.")]
     public static void openURL(string url)
     {
-        if (SteamUtils.IsOverlayEnabled())
-        {
-            SteamFriends.ActivateGameOverlayToWebPage(url);
-        }
-        else
-        {
-            Process.Start(url);
-        }
     }
 
     /// <summary>

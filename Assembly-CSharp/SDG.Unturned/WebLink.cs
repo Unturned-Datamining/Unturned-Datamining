@@ -13,7 +13,7 @@ public class WebLink : MonoBehaviour
     {
         if (WebUtils.ParseThirdPartyUrl(url, out var result))
         {
-            Provider.openURL(result);
+            WebUtils.OpenURL(result);
             return;
         }
         UnturnedLog.warn("Ignoring potentially unsafe web link component url {0}", url);

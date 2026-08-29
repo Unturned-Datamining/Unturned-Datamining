@@ -18,7 +18,7 @@ public class SteamworksStoreService : Service, IStoreService, IService
         }
         else
         {
-            SDG.Unturned.Provider.openURL("https://store.steampowered.com/app/" + appID.m_AppId);
+            WebUtils.OpenURL("https://store.steampowered.com/app/" + appID.m_AppId);
         }
     }
 

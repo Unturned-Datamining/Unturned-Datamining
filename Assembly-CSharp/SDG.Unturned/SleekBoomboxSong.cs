@@ -54,7 +54,7 @@ public class SleekBoomboxSong : SleekWrapper
     {
         if (WebUtils.ParseThirdPartyUrl(songAsset.linkURL, out var result))
         {
-            Provider.openURL(result);
+            WebUtils.OpenURL(result);
             return;
         }
         UnturnedLog.warn("Ignoring potentially unsafe song link url {0}", songAsset.linkURL);

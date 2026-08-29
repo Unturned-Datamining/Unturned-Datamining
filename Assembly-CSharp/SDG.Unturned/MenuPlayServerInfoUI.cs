@@ -1134,17 +1134,17 @@ public class MenuPlayServerInfoUI
     private static void OnClickedLinkButton(ISleekElement button)
     {
         int index = linksFrame.FindIndexOfChild(button);
-        Provider.openURL(linkUrls[index]);
+        WebUtils.OpenURL(linkUrls[index]);
     }
 
     private static void OnClickedHostBanWarning(ISleekElement button)
     {
-        Provider.openURL("https://docs.smartlydressedgames.com/en/stable/servers/server-hosting-rules.html");
+        WebUtils.OpenURL("https://docs.smartlydressedgames.com/en/stable/servers/server-hosting-rules.html");
     }
 
     private static void OnClickedNotLoggedInWarning(ISleekElement button)
     {
-        Provider.openURL("https://docs.smartlydressedgames.com/en/stable/servers/game-server-login-tokens.html");
+        WebUtils.OpenURL("https://docs.smartlydressedgames.com/en/stable/servers/game-server-login-tokens.html");
     }
 
     public void OnDestroy()
