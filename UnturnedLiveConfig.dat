@@ -77,15 +77,6 @@ LinkFiltering
 	Rules
 	[
 		{
-			Action Deny
-			Hosts
-			[
-				steamcommunity.com
-				www.steamcommunity.com
-			]
-			Path (?i)^\\/linkfilter
-		}
-		{
 			Action Allow
 			Hosts
 			[
