@@ -1,14 +1,11 @@
 MainMenuAlert
 {
-	Id 89
-	Header MapMania 2026
-	Body From the organizers: "Join MapMania 2026, a community map-making event hosted by cucuycharles! Click to join the Discord server for more information and sign-up details."
-	Color #ee1010
-	Link https://discord.gg/vCdCqZceMa
-	IconURL https://cdn.smartlydressedgames.com/Images/MapMania.jpg
-	UseTimeWindow true
-	StartTime 2026-09-04 17:00:00
-	EndTime 2026-09-11 17:00:00
+	Id 90
+	Header 2026-08-31 Security Alert
+	Body We have confirmed a new potential security vulnerability that can be exploited through malicious Workshop content. Until we have investigated further, please avoid accepting server invites or joining servers from people you do not trust. We are continuing to investigate the issue and will provide further updates as more information becomes available.
+	Color #ff9900
+	IconName Alert_Triangle
+	RelevantForSDK true
 }
 MainMenuWorkshop
 {
