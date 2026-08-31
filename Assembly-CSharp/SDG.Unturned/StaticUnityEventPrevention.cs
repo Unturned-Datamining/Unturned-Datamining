@@ -14,11 +14,21 @@ public static class StaticUnityEventPrevention
         public FieldInfo[] unityEventFields;
     }
 
-    private static List<MonoBehaviour> components = new List<MonoBehaviour>();
+    private static List<MonoBehaviour> components;
 
-    private static Dictionary<Type, TypeInfo> cachedTypeInfo = new Dictionary<Type, TypeInfo>();
+    private static Dictionary<Type, TypeInfo> cachedTypeInfo;
 
-    private static List<FieldInfo> tempFields = new List<FieldInfo>();
+    private static List<FieldInfo> tempFields;
+
+    private static FieldInfo m_PersistentCalls;
+
+    private static MethodInfo GetListener;
+
+    private static MethodInfo FindMethod;
+
+    private static object[] oneArgument;
+
+    private static FieldInfo m_TargetAssemblyTypeName;
 
     /// <summary>
     /// Check gameObject (and children) components for any unity events calling static methods (exploitable).
@@ -58,15 +68,14 @@ public static class StaticUnityEventPrevention
                 {
                     continue;
                 }
+                object value = m_PersistentCalls.GetValue(unityEventBase);
                 for (int j = 0; j < unityEventBase.GetPersistentEventCount(); j++)
                 {
-                    UnityEngine.Object persistentTarget = unityEventBase.GetPersistentTarget(j);
-                    string persistentMethodName = unityEventBase.GetPersistentMethodName(j);
-                    if (persistentTarget == null && !string.IsNullOrEmpty(persistentMethodName))
+                    if (!ValidateUnityEvent(unityEventBase, value, j, out var reason))
                     {
-                        if ((bool)Assets.shouldValidateAssets && (Assets.currentAsset != null || Assets.currentMasterBundle != null))
+                        if (!string.IsNullOrEmpty(reason) && (bool)Assets.shouldValidateAssets && (Assets.currentAsset != null || Assets.currentMasterBundle != null))
                         {
-                            UnturnedLog.warn($"Found call to method \"{persistentMethodName}\" without target in {component.GetSceneHierarchyPath()} {type} {fieldInfo.Name} (Asset: {Assets.currentAsset?.FriendlyNameWithFriendlyType} Bundle: {Assets.currentMasterBundle?.assetBundleName}), deactivating (may be attempting to call a static method, or target is unassigned)");
+                            UnturnedLog.warn($"Deactivating UnityEvent {component.GetSceneHierarchyPath()} {type} {fieldInfo.Name} Reason: {reason} (Asset: {Assets.currentAsset?.FriendlyNameWithFriendlyType} Bundle: {Assets.currentMasterBundle?.assetBundleName})");
                         }
                         unityEventBase.SetPersistentListenerState(j, UnityEventCallState.Off);
                         flag = false;
@@ -87,15 +96,14 @@ public static class StaticUnityEventPrevention
             {
                 continue;
             }
+            object value = m_PersistentCalls.GetValue(callback);
             for (int i = 0; i < callback.GetPersistentEventCount(); i++)
             {
-                UnityEngine.Object persistentTarget = callback.GetPersistentTarget(i);
-                string persistentMethodName = callback.GetPersistentMethodName(i);
-                if (persistentTarget == null && !string.IsNullOrEmpty(persistentMethodName))
+                if (!ValidateUnityEvent(callback, value, i, out var reason))
                 {
-                    if ((bool)Assets.shouldValidateAssets && (Assets.currentAsset != null || Assets.currentMasterBundle != null))
+                    if (!string.IsNullOrEmpty(reason) && (bool)Assets.shouldValidateAssets && (Assets.currentAsset != null || Assets.currentMasterBundle != null))
                     {
-                        UnturnedLog.warn($"Found call to method \"{persistentMethodName}\" without target in {eventTrigger.GetSceneHierarchyPath()} EventTrigger {trigger.eventID} (Asset: {Assets.currentAsset?.FriendlyNameWithFriendlyType} Bundle: {Assets.currentMasterBundle?.assetBundleName}), deactivating (may be attempting to call a static method, or target is unassigned)");
+                        UnturnedLog.warn($"Deactivating UnityEvent {eventTrigger.GetSceneHierarchyPath()} EventTrigger {trigger.eventID} Reason: {reason} (Asset: {Assets.currentAsset?.FriendlyNameWithFriendlyType} Bundle: {Assets.currentMasterBundle?.assetBundleName})");
                     }
                     callback.SetPersistentListenerState(i, UnityEventCallState.Off);
                     result = false;
@@ -103,6 +111,81 @@ public static class StaticUnityEventPrevention
             }
         }
         return result;
+    }
+
+    private static bool IsTypeAllowed(Type type)
+    {
+        if (!typeof(Component).IsAssignableFrom(type) && !(type == typeof(Transform)) && !(type == typeof(GameObject)))
+        {
+            return type == typeof(Material);
+        }
+        return true;
+    }
+
+    private static bool ValidateUnityEvent(UnityEventBase unityEvent, object persistentCallGroup, int index, out string reason)
+    {
+        try
+        {
+            UnityEngine.Object persistentTarget = unityEvent.GetPersistentTarget(index);
+            if (persistentTarget == null)
+            {
+                reason = "null target object";
+                return false;
+            }
+            string persistentMethodName = unityEvent.GetPersistentMethodName(index);
+            if (string.IsNullOrEmpty(persistentMethodName))
+            {
+                reason = "empty method name";
+                return false;
+            }
+            Type type = persistentTarget.GetType();
+            if (!IsTypeAllowed(type))
+            {
+                reason = $"target type {type} is not allowed (if valid, please open an issue)";
+                return false;
+            }
+            oneArgument[0] = index;
+            object obj = GetListener.Invoke(persistentCallGroup, oneArgument);
+            if (obj == null)
+            {
+                reason = "null persistent call (shouldn't happen?)";
+                return false;
+            }
+            string text = m_TargetAssemblyTypeName.GetValue(obj) as string;
+            if (!string.IsNullOrEmpty(text))
+            {
+                Type type2 = Type.GetType(text, throwOnError: false);
+                if (type2 == null)
+                {
+                    reason = "unable to resolve target type \"" + text + "\"";
+                    return false;
+                }
+                if (!IsTypeAllowed(type2))
+                {
+                    reason = $"serialized target type {type2} is not allowed (if valid, please open an issue)";
+                    return false;
+                }
+            }
+            oneArgument[0] = obj;
+            MethodInfo methodInfo = FindMethod.Invoke(unityEvent, oneArgument) as MethodInfo;
+            if (methodInfo == null)
+            {
+                reason = "unable to find target method \"" + persistentMethodName + "\"";
+                return false;
+            }
+            if (methodInfo.IsStatic)
+            {
+                reason = $"target method is static ({methodInfo})";
+                return false;
+            }
+            reason = null;
+            return true;
+        }
+        catch
+        {
+            reason = "threw an exception";
+            return false;
+        }
     }
 
     private static TypeInfo GetTypeInfo(Type type)
@@ -127,5 +210,18 @@ public static class StaticUnityEventPrevention
         }
         cachedTypeInfo.Add(type, value);
         return value;
+    }
+
+    static StaticUnityEventPrevention()
+    {
+        components = new List<MonoBehaviour>();
+        cachedTypeInfo = new Dictionary<Type, TypeInfo>();
+        tempFields = new List<FieldInfo>();
+        m_PersistentCalls = typeof(UnityEventBase).GetField("m_PersistentCalls", BindingFlags.Instance | BindingFlags.NonPublic);
+        GetListener = Type.GetType("UnityEngine.Events.PersistentCallGroup, UnityEngine.CoreModule, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null", throwOnError: true).GetMethod("GetListener", new Type[1] { typeof(int) });
+        oneArgument = new object[1];
+        Type type = Type.GetType("UnityEngine.Events.PersistentCall, UnityEngine.CoreModule, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null");
+        m_TargetAssemblyTypeName = type.GetField("m_TargetAssemblyTypeName", BindingFlags.Instance | BindingFlags.NonPublic);
+        FindMethod = typeof(UnityEventBase).GetMethod("FindMethod", BindingFlags.Instance | BindingFlags.NonPublic, null, new Type[1] { type }, null);
     }
 }
