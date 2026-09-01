@@ -1,11 +1,11 @@
 MainMenuAlert
 {
 	Id 90
-	Header 2026-08-31 Security Alert
-	Body We have confirmed a new potential security vulnerability that can be exploited through malicious Workshop content. Until we have investigated further, please avoid accepting server invites or joining servers from people you do not trust. We are continuing to investigate the issue and will provide further updates as more information becomes available.
+	Header Security Reminder
+	Body Please use caution when accepting unexpected server invites or joining servers from people you do not trust. We have recently seen an increase in reports involving malicious Workshop content.
 	Color #ff9900
 	IconName Alert_Triangle
-	RelevantForSDK true
+	TintIcon true
 }
 MainMenuWorkshop
 {
