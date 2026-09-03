@@ -196,14 +196,20 @@ public static class StaticUnityEventPrevention
         }
         value = new TypeInfo();
         tempFields.Clear();
-        FieldInfo[] fields = type.GetFields(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
-        foreach (FieldInfo fieldInfo in fields)
+        Type type2 = type;
+        do
         {
-            if (typeof(UnityEventBase).IsAssignableFrom(fieldInfo.FieldType))
+            FieldInfo[] fields = type2.GetFields(BindingFlags.DeclaredOnly | BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
+            foreach (FieldInfo fieldInfo in fields)
             {
-                tempFields.Add(fieldInfo);
+                if (typeof(UnityEventBase).IsAssignableFrom(fieldInfo.FieldType))
+                {
+                    tempFields.Add(fieldInfo);
+                }
             }
+            type2 = type2.BaseType;
         }
+        while (type2 != null);
         if (tempFields.Count > 0)
         {
             value.unityEventFields = tempFields.ToArray();
