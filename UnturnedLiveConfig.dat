@@ -1,11 +1,14 @@
 MainMenuAlert
 {
-	Id 90
-	Header Security Reminder
-	Body Please use caution when accepting unexpected server invites or joining servers from people you do not trust. We have recently seen an increase in reports involving malicious Workshop content.
-	Color #ff9900
-	IconName Alert_Triangle
-	TintIcon true
+	Id 93
+	Header MapMania 2026
+	Body From the organizers: "Join MapMania 2026, a community map-making event hosted by cucuycharles! Click to join the Discord server for more information and sign-up details."
+	Color #ee1010
+	Link https://discord.gg/vCdCqZceMa
+	IconURL https://cdn.smartlydressedgames.com/Images/MapMania.jpg
+	UseTimeWindow true
+	StartTime 2026-09-04 17:00:00
+	EndTime 2026-09-11 17:00:00
 }
 MainMenuWorkshop
 {
