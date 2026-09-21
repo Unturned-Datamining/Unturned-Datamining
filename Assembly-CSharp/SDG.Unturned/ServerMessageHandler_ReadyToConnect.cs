@@ -103,6 +103,10 @@ internal static class ServerMessageHandler_ReadyToConnect
         reader.ReadString(out var value28);
         reader.ReadString(out var value29);
         reader.ReadSteamID(out CSteamID value30);
+        if (!value30.IsLobby())
+        {
+            value30 = CSteamID.Nil;
+        }
         reader.ReadUInt32(out var value31);
         reader.ReadUInt8(out var value32);
         if (value32 > 8)
