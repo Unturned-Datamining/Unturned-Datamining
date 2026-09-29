@@ -10,5 +10,5 @@ Asset
 		MasterBundle core.masterbundle
 		AssetPath Level/Dropship.prefab
 	}
-	Airdrop { "GUID" "229440c249dc490ba26ce71e8a59d5c6" }
+	Airdrop 229440c249dc490ba26ce71e8a59d5c6
 }
