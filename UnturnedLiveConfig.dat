@@ -1,14 +1,14 @@
 MainMenuAlert
 {
-	Id 93
-	Header MapMania 2026
-	Body From the organizers: "Join MapMania 2026, a community map-making event hosted by cucuycharles! Click to join the Discord server for more information and sign-up details."
-	Color #ee1010
-	Link https://discord.gg/vCdCqZceMa
-	IconURL https://cdn.smartlydressedgames.com/Images/MapMania.jpg
+	Id 94
+	Header Community organized event: FangHosting.com RAID 2v2 EU
+	Body From the organizers: "Join a 2v2 event for the newest PeekSeek.net gamemode, and compete for trophy skins! Join our game server for more information."
+	Color #ff0000
+	Link https://peekseek.net/esports/fhraid2v2eu?join=85568392936415589
+	IconURL https://cdn.smartlydressedgames.com/Images/PeekSeek.png
 	UseTimeWindow true
-	StartTime 2026-09-04 17:00:00
-	EndTime 2026-09-11 17:00:00
+	StartTime 2026-10-05
+	EndTime 2026-10-10
 }
 MainMenuWorkshop
 {
@@ -58,9 +58,9 @@ ItemStore
 		1383
 		1394
 	]
-	SaleTitle Steam Summer Sale 2026
-	SaleStart 2026-06-25 16:55:00
-	SaleEnd 2026-07-09 17:05:00
+	SaleTitle Steam Autumn Sale 2026
+	SaleStart 2026-10-01 16:55:00
+	SaleEnd 2026-10-08 17:05:00
 }
 ItemCrafting
 {
