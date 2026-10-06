@@ -21,6 +21,7 @@
 | (?i)(CHЕАТ)                                                                           | HiddenFromInternetServerList      |
 | (?i)(ЛУЧШИЙ БECПЛAТНЫЙ ЧИT)                                                           | HiddenFromInternetServerList      |
 | (?i)(no\s*-*\s*lag)                                                                   | HiddenFromInternetServerList      |
+| (?i)(Bebrix)                                                                          | HiddenFromAllServerLists          |
 | (?i)(Hardline)                                                                        | HiddenFromInternetServerList      |
 | (?i)(Hardӏine)                                                                        | HiddenFromInternetServerList      |
 | (?i)(Wasabi)                                                                          | QueryPingWarning                  |
