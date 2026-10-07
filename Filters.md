@@ -22,9 +22,11 @@
 | (?i)(ЛУЧШИЙ БECПЛAТНЫЙ ЧИT)                                                           | HiddenFromInternetServerList      |
 | (?i)(no\s*-*\s*lag)                                                                   | HiddenFromInternetServerList      |
 | (?i)(Bebrix)                                                                          | HiddenFromAllServerLists          |
+| (?i)(Bebriх)                                                                          | HiddenFromAllServerLists          |
 | (?i)(Hardline)                                                                        | HiddenFromInternetServerList      |
 | (?i)(Hardӏine)                                                                        | HiddenFromInternetServerList      |
 | (?i)(Wasabi)                                                                          | QueryPingWarning                  |
+| (?i)(疯狂水世界)                                                                           | HiddenFromInternetServerList      |
 
 ## Description filters
 | Regex               | BanFlags                     |
@@ -48,3 +50,4 @@
 | 85568392935919577 | HiddenFromInternetServerList |
 | 85568392935919669 | HiddenFromInternetServerList |
 | 85568392936404707 | HiddenFromInternetServerList |
+| 85568392936620062 | HiddenFromInternetServerList |
