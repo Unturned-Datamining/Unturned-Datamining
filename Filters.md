@@ -23,22 +23,25 @@
 | (?i)(ЛУЧШИЙ БECПЛAТНЫЙ ЧИT)                                                           | HiddenFromInternetServerList      |
 | (?i)(no\s*-*\s*lag)                                                                   | HiddenFromInternetServerList      |
 | (?i)[bƅƁΒВＢ][eеẹėéè][bƅƁΒВＢ][rгᴦΓＲ][iіíï][xхҳẋˣ×Ｘ]                                    | HiddenFromAllServerLists          |
+| УБИВАЙ БОМЖЕЙ                                                                         | HiddenFromAllServerLists          |
 | (?i)(Hardline)                                                                        | HiddenFromInternetServerList      |
 | (?i)(Hardӏine)                                                                        | HiddenFromInternetServerList      |
 | (?i)(Wasabi)                                                                          | QueryPingWarning                  |
 | (?i)(疯狂水世界)                                                                           | HiddenFromInternetServerList      |
+| (?i)(Zive PVP)                                                                        | HiddenFromInternetServerList      |
 
 ## Description filters
-| Regex               | BanFlags                     |
-| ------------------- | ---------------------------- |
-| (?i)(nightmaresoft) | HiddenFromInternetServerList |
+| Regex                                              | BanFlags                     |
+| -------------------------------------------------- | ---------------------------- |
+| (?i)(nightmaresoft)                                | HiddenFromInternetServerList |
+| (?i)[bƅƁΒВＢ][eеẹėéè][bƅƁΒВＢ][rгᴦΓＲ][iіíï][xхҳẋˣ×Ｘ] | HiddenFromAllServerLists     |
 
 ## Thumbnail filters
 | Regex                                 | IconPreview                                                                 | BanFlags                     |
 | ------------------------------------- | --------------------------------------------------------------------------- | ---------------------------- |
 | (https://r.resimlink.com/GXZ0gP2.jpg) | ![https://r.resimlink.com/GXZ0gP2.jpg](https://r.resimlink.com/GXZ0gP2.jpg) | HiddenFromInternetServerList |
 | (?i)(nightmaresoft)                   |                                                                             | HiddenFromInternetServerList |
-| (?i)(admin.bebrix.shop)               |                                                                             | HiddenFromAllServerLists     |
+| (?i)(bebrix.shop)                     |                                                                             | HiddenFromAllServerLists     |
 | (?i)(playhardline.com)                |                                                                             | HiddenFromInternetServerList |
 | (https://i.imgur.com/3iedNHu.png)     | ![https://i.imgur.com/3iedNHu.png](https://i.imgur.com/3iedNHu.png)         | HiddenFromInternetServerList |
 
@@ -50,9 +53,16 @@
 | 85568392936826021 | HiddenFromAllServerLists     |
 | 85568392936826022 | HiddenFromAllServerLists     |
 | 85568392936826019 | HiddenFromAllServerLists     |
+| 85568392936806261 | HiddenFromAllServerLists     |
+| 85568392936806262 | HiddenFromAllServerLists     |
+| 85568392936806263 | HiddenFromAllServerLists     |
 | 85568392925961914 | HiddenFromInternetServerList |
 | 85568392935880681 | HiddenFromInternetServerList |
 | 85568392935919577 | HiddenFromInternetServerList |
 | 85568392935919669 | HiddenFromInternetServerList |
 | 85568392936404707 | HiddenFromInternetServerList |
 | 85568392936620062 | HiddenFromInternetServerList |
+| 85568392924684242 | HiddenFromInternetServerList |
+| 85568392936833752 | HiddenFromInternetServerList |
+| 85568392929096239 | HiddenFromInternetServerList |
+| 85568392936833753 | HiddenFromInternetServerList |
