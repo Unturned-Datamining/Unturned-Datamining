@@ -23,7 +23,7 @@
 | (?i)(ЛУЧШИЙ БECПЛAТНЫЙ ЧИT)                                                           | HiddenFromInternetServerList      |
 | (?i)(no\s*-*\s*lag)                                                                   | HiddenFromInternetServerList      |
 | (?i)[bƅƁΒВＢ][eеẹėéè][bƅƁΒВＢ][rгᴦΓＲ][iіíï][xхҳẋˣ×Ｘ]                                    | HiddenFromAllServerLists          |
-| УБИВАЙ БОМЖЕЙ                                                                         | HiddenFromAllServerLists          |
+| [УY][БB6][ИN][ВB][АA][ЙN] [БB6][ОO0][МM][ЖX][ЕE][ЙN]                                  | HiddenFromAllServerLists          |
 | (?i)(Hardline)                                                                        | HiddenFromInternetServerList      |
 | (?i)(Hardӏine)                                                                        | HiddenFromInternetServerList      |
 | (?i)(Wasabi)                                                                          | QueryPingWarning                  |
@@ -56,6 +56,9 @@
 | 85568392936806261 | HiddenFromAllServerLists     |
 | 85568392936806262 | HiddenFromAllServerLists     |
 | 85568392936806263 | HiddenFromAllServerLists     |
+| 85568392936834038 | HiddenFromAllServerLists     |
+| 85568392936834042 | HiddenFromAllServerLists     |
+| 85568392936834044 | HiddenFromAllServerLists     |
 | 85568392925961914 | HiddenFromInternetServerList |
 | 85568392935880681 | HiddenFromInternetServerList |
 | 85568392935919577 | HiddenFromInternetServerList |
