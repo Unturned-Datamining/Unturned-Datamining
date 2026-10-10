@@ -36,8 +36,10 @@
 | (?i)(БЕБРА)                                                                           | HiddenFromAllServerLists, Blocked |
 | (?i)(БЕБRА)                                                                           | HiddenFromAllServerLists, Blocked |
 | (?i)(АНАРХИЯ \[KITS,TPA,HOME\])                                                       | HiddenFromAllServerLists, Blocked |
+| (?i)(АНAРХИЯ \[KITS,TPA,HOME\])                                                       | HiddenFromAllServerLists, Blocked |
 | (?i)(ТИШИНА UPGRADER)                                                                 | HiddenFromAllServerLists, Blocked |
 | (?i)(БОМЖИ \&#124; KITS)                                                              | HiddenFromAllServerLists, Blocked |
+| (?i)(БОМЖ \&#124; KITS)                                                               | HiddenFromAllServerLists, Blocked |
 | (?i)(Hardline)                                                                        | HiddenFromInternetServerList      |
 | (?i)(Hardӏine)                                                                        | HiddenFromInternetServerList      |
 | (?i)(Wasabi)                                                                          | QueryPingWarning                  |
@@ -90,6 +92,8 @@
 | 85568392936837316 | HiddenFromAllServerLists, Blocked |
 | 85568392936837317 | HiddenFromAllServerLists, Blocked |
 | 85568392936837326 | HiddenFromAllServerLists, Blocked |
+| 85568392936837399 | HiddenFromAllServerLists, Blocked |
+| 85568392936837400 | HiddenFromAllServerLists, Blocked |
 | 85568392925961914 | HiddenFromInternetServerList      |
 | 85568392935880681 | HiddenFromInternetServerList      |
 | 85568392935919577 | HiddenFromInternetServerList      |
