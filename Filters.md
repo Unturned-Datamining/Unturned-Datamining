@@ -12,6 +12,7 @@
 | 94.228.166.245  | HiddenFromAllServerLists, Blocked |
 | 169.254.114.72  | HiddenFromAllServerLists, Blocked |
 | 151.248.116.141 | HiddenFromAllServerLists, Blocked |
+| 151.248.116.22  | HiddenFromAllServerLists, Blocked |
 | 15.204.133.203  | HiddenFromInternetServerList      |
 | 155.117.255.21  | QueryPingWarning                  |
 
@@ -43,6 +44,7 @@
 | (?i)(ТИШИНА UPGRADER)                                                                 | HiddenFromAllServerLists, Blocked |
 | (?i)(БОМЖИ \&#124; KITS)                                                              | HiddenFromAllServerLists, Blocked |
 | (?i)(БОМЖ \&#124; KITS)                                                               | HiddenFromAllServerLists, Blocked |
+| Russia \[UPGRADER\&#124;                                                              | HiddenFromAllServerLists, Blocked |
 | (?i)(Hardline)                                                                        | HiddenFromInternetServerList      |
 | (?i)(Hardӏine)                                                                        | HiddenFromInternetServerList      |
 | (?i)(Wasabi)                                                                          | QueryPingWarning                  |
