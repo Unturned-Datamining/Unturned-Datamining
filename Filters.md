@@ -1,17 +1,19 @@
 # Host bans
 
 ## IPv4 filters
-| Address        | BanFlags                          |
-| -------------- | --------------------------------- |
-| 216.173.70.154 | HiddenFromInternetServerList      |
-| 216.57.106.76  | HiddenFromInternetServerList      |
-| 82.97.246.13   | HiddenFromInternetServerList      |
-| 89.108.81.88   | HiddenFromAllServerLists, Blocked |
-| 37.230.162.223 | HiddenFromAllServerLists, Blocked |
-| 92.242.60.208  | HiddenFromAllServerLists, Blocked |
-| 94.228.166.245 | HiddenFromAllServerLists, Blocked |
-| 15.204.133.203 | HiddenFromInternetServerList      |
-| 155.117.255.21 | QueryPingWarning                  |
+| Address         | BanFlags                          |
+| --------------- | --------------------------------- |
+| 216.173.70.154  | HiddenFromInternetServerList      |
+| 216.57.106.76   | HiddenFromInternetServerList      |
+| 82.97.246.13    | HiddenFromInternetServerList      |
+| 89.108.81.88    | HiddenFromAllServerLists, Blocked |
+| 37.230.162.223  | HiddenFromAllServerLists, Blocked |
+| 92.242.60.208   | HiddenFromAllServerLists, Blocked |
+| 94.228.166.245  | HiddenFromAllServerLists, Blocked |
+| 169.254.114.72  | HiddenFromAllServerLists, Blocked |
+| 151.248.116.141 | HiddenFromAllServerLists, Blocked |
+| 15.204.133.203  | HiddenFromInternetServerList      |
+| 155.117.255.21  | QueryPingWarning                  |
 
 ## Name filters
 | Regex                                                                                 | BanFlags                          |
@@ -35,6 +37,7 @@
 | (Бeбpиks)                                                                             | HiddenFromAllServerLists, Blocked |
 | (?i)(БЕБРА)                                                                           | HiddenFromAllServerLists, Blocked |
 | (?i)(БЕБRА)                                                                           | HiddenFromAllServerLists, Blocked |
+| (?i)(Бебикс)                                                                          | HiddenFromAllServerLists, Blocked |
 | (?i)(АНАРХИЯ \[KITS,TPA,HOME\])                                                       | HiddenFromAllServerLists, Blocked |
 | (?i)(АНAРХИЯ \[KITS,TPA,HOME\])                                                       | HiddenFromAllServerLists, Blocked |
 | (?i)(ТИШИНА UPGRADER)                                                                 | HiddenFromAllServerLists, Blocked |
@@ -60,6 +63,7 @@
 | (Бeбpиks)                                                | HiddenFromAllServerLists, Blocked |
 | (?i)(БЕБРА)                                              | HiddenFromAllServerLists, Blocked |
 | (?i)(БЕБRА)                                              | HiddenFromAllServerLists, Blocked |
+| (?i)(Бебикс)                                             | HiddenFromAllServerLists, Blocked |
 
 ## Thumbnail filters
 | Regex                                 | IconPreview                                                                 | BanFlags                          |
@@ -94,6 +98,7 @@
 | 85568392936837326 | HiddenFromAllServerLists, Blocked |
 | 85568392936837399 | HiddenFromAllServerLists, Blocked |
 | 85568392936837400 | HiddenFromAllServerLists, Blocked |
+| 85568392936842414 | HiddenFromAllServerLists, Blocked |
 | 85568392925961914 | HiddenFromInternetServerList      |
 | 85568392935880681 | HiddenFromInternetServerList      |
 | 85568392935919577 | HiddenFromInternetServerList      |
