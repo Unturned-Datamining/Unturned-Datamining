@@ -13,6 +13,10 @@
 | 169.254.114.72  | HiddenFromAllServerLists, Blocked |
 | 151.248.116.141 | HiddenFromAllServerLists, Blocked |
 | 151.248.116.22  | HiddenFromAllServerLists, Blocked |
+| 194.226.112.127 | HiddenFromAllServerLists, Blocked |
+| 194.58.118.131  | HiddenFromAllServerLists, Blocked |
+| 169.254.70.107  | HiddenFromAllServerLists, Blocked |
+| 89.108.70.5     | HiddenFromAllServerLists, Blocked |
 | 15.204.133.203  | HiddenFromInternetServerList      |
 | 155.117.255.21  | QueryPingWarning                  |
 
@@ -28,7 +32,7 @@
 | (?i)(CHЕАТ)                                                                           | HiddenFromInternetServerList      |
 | (?i)(ЛУЧШИЙ БECПЛAТНЫЙ ЧИT)                                                           | HiddenFromInternetServerList      |
 | (?i)(no\s*-*\s*lag)                                                                   | HiddenFromInternetServerList      |
-| (?i)[bƅƁΒВＢ][eеẹėéè][bƅƁΒВＢ][rгᴦΓＲ][iіíï][xхҳẋˣ×Ｘ]                                    | HiddenFromAllServerLists, Blocked |
+| (?i)[bƅƁΒВＢ][eеẹėéèＥ][bƅƁΒВＢ][rгᴦΓＲ][iіíïＩⒾ][xхҳẋˣ×Ｘ]                                 | HiddenFromAllServerLists, Blocked |
 | (?i)[УY][БB6][ИN][ВB][АA][ЙN] [БB6][ОO0][МM][ЖX][ЕE][ЙN]                              | HiddenFromAllServerLists, Blocked |
 | (?i)(Бебри)                                                                           | HiddenFromAllServerLists, Blocked |
 | (?i)(Бебri)                                                                           | HiddenFromAllServerLists, Blocked |
@@ -40,11 +44,13 @@
 | (?i)(БЕБRА)                                                                           | HiddenFromAllServerLists, Blocked |
 | (?i)(Бебикс)                                                                          | HiddenFromAllServerLists, Blocked |
 | (?i)(АНАРХИЯ \[KITS,TPA,HOME\])                                                       | HiddenFromAllServerLists, Blocked |
-| (?i)(АНAРХИЯ \[KITS,TPA,HOME\])                                                       | HiddenFromAllServerLists, Blocked |
+| (?i)((АНAРХИЯ&#124;ANARCHY) \[KITS,TPA,HOME\])                                        | HiddenFromAllServerLists, Blocked |
 | (?i)(ТИШИНА UPGRADER)                                                                 | HiddenFromAllServerLists, Blocked |
 | (?i)(БОМЖИ \&#124; KITS)                                                              | HiddenFromAllServerLists, Blocked |
 | (?i)(БОМЖ \&#124; KITS)                                                               | HiddenFromAllServerLists, Blocked |
-| Russia \[UPGRADER\&#124;                                                              | HiddenFromAllServerLists, Blocked |
+| (?i)(Russia \[UPGRADER\&#124;)                                                        | HiddenFromAllServerLists, Blocked |
+| (?i)(BOMJ \&#124; KITS \&#124; HOME)                                                  | HiddenFromAllServerLists, Blocked |
+| (?i)(BERⒾX)                                                                           | HiddenFromAllServerLists, Blocked |
 | (?i)(Hardline)                                                                        | HiddenFromInternetServerList      |
 | (?i)(Hardӏine)                                                                        | HiddenFromInternetServerList      |
 | (?i)(Wasabi)                                                                          | QueryPingWarning                  |
@@ -55,7 +61,7 @@
 | Regex                                                    | BanFlags                          |
 | -------------------------------------------------------- | --------------------------------- |
 | (?i)(nightmaresoft)                                      | HiddenFromInternetServerList      |
-| (?i)[bƅƁΒВＢ][eеẹėéè][bƅƁΒВＢ][rгᴦΓＲ][iіíï][xхҳẋˣ×Ｘ]       | HiddenFromAllServerLists, Blocked |
+| (?i)[bƅƁΒВＢ][eеẹėéèＥ][bƅƁΒВＢ][rгᴦΓＲ][iіíïＩⒾ][xхҳẋˣ×Ｘ]    | HiddenFromAllServerLists, Blocked |
 | (?i)[УY][БB6][ИN][ВB][АA][ЙN] [БB6][ОO0][МM][ЖX][ЕE][ЙN] | HiddenFromAllServerLists, Blocked |
 | (?i)(Бебри)                                              | HiddenFromAllServerLists, Blocked |
 | (?i)(Бебri)                                              | HiddenFromAllServerLists, Blocked |
@@ -101,6 +107,9 @@
 | 85568392936837399 | HiddenFromAllServerLists, Blocked |
 | 85568392936837400 | HiddenFromAllServerLists, Blocked |
 | 85568392936842414 | HiddenFromAllServerLists, Blocked |
+| 85568392936845347 | HiddenFromAllServerLists, Blocked |
+| 85568392936845348 | HiddenFromAllServerLists, Blocked |
+| 85568392936845404 | HiddenFromAllServerLists, Blocked |
 | 85568392925961914 | HiddenFromInternetServerList      |
 | 85568392935880681 | HiddenFromInternetServerList      |
 | 85568392935919577 | HiddenFromInternetServerList      |
