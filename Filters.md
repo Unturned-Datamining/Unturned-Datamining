@@ -20,6 +20,7 @@
 | 151.248.116.208 | HiddenFromAllServerLists, Blocked |
 | 169.254.31.251  | HiddenFromAllServerLists, Blocked |
 | 89.108.70.62    | HiddenFromAllServerLists, Blocked |
+| 95.163.223.70   | HiddenFromAllServerLists, Blocked |
 | 15.204.133.203  | HiddenFromInternetServerList      |
 | 155.117.255.21  | QueryPingWarning                  |
 
@@ -35,7 +36,7 @@
 | (?i)(CHЕАТ)                                                                           | HiddenFromInternetServerList      |
 | (?i)(ЛУЧШИЙ БECПЛAТНЫЙ ЧИT)                                                           | HiddenFromInternetServerList      |
 | (?i)(no\s*-*\s*lag)                                                                   | HiddenFromInternetServerList      |
-| (?i)[bƅƁΒВＢБ][eеẹėéèＥ][bƅƁΒВＢБ]?[rгᴦΓＲ][iіíïＩⒾ][xхҳẋˣ×Ｘ]                              | HiddenFromAllServerLists, Blocked |
+| (?i)[bƅƁΒВＢБᴮ][eеẹėéèＥ][bƅƁΒВＢБᴮ]?[rгᴦΓＲ][iіíïＩⒾ][xхҳẋˣ×Ｘ]                            | HiddenFromAllServerLists, Blocked |
 | (?i)[УY][БB6][ИN][ВB][АA][ЙN] [БB6][ОO0][МM][ЖX][ЕE][ЙN]                              | HiddenFromAllServerLists, Blocked |
 | (?i)(Бе)[бb][rр][иi]                                                                  | HiddenFromAllServerLists, Blocked |
 | (?i)(Бeбpиks)                                                                         | HiddenFromAllServerLists, Blocked |
@@ -45,8 +46,7 @@
 | (?i)(ТИШИНА UPGRADER)                                                                 | HiddenFromAllServerLists, Blocked |
 | (?i)(БОМЖ \&#124; KITS)                                                               | HiddenFromAllServerLists, Blocked |
 | (?i)(Russia \[UPGRADER\&#124;)                                                        | HiddenFromAllServerLists, Blocked |
-| (?i)[bƅƁΒВＢБ]((OMJ&#124;ОМЖ) \&#124; KITS)                                            | HiddenFromAllServerLists, Blocked |
-| (?i)(Soup)                                                                            | HiddenFromAllServerLists, Blocked |
+| (?i)[bƅƁΒВＢБᴮ]((OMJ&#124;ОМЖ) \&#124; KITS)                                           | HiddenFromAllServerLists, Blocked |
 | (?i)(Hardline)                                                                        | HiddenFromInternetServerList      |
 | (?i)(Hardӏine)                                                                        | HiddenFromInternetServerList      |
 | (?i)(Wasabi)                                                                          | QueryPingWarning                  |
@@ -75,6 +75,7 @@
 | (https://r.resimlink.com/GXZ0gP2.jpg) | ![https://r.resimlink.com/GXZ0gP2.jpg](https://r.resimlink.com/GXZ0gP2.jpg) | HiddenFromInternetServerList      |
 | (?i)(nightmaresoft)                   |                                                                             | HiddenFromInternetServerList      |
 | (?i)(bebrix.shop)                     |                                                                             | HiddenFromAllServerLists, Blocked |
+| https://i.imgur.com/u1fAEcB.png       | ![https://i.imgur.com/u1fAEcB.png](https://i.imgur.com/u1fAEcB.png)         | HiddenFromAllServerLists, Blocked |
 | (?i)(playhardline.com)                |                                                                             | HiddenFromInternetServerList      |
 | (https://i.imgur.com/3iedNHu.png)     | ![https://i.imgur.com/3iedNHu.png](https://i.imgur.com/3iedNHu.png)         | HiddenFromInternetServerList      |
 
