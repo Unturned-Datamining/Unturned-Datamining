@@ -22,6 +22,7 @@
 | 89.108.70.62    | HiddenFromAllServerLists, Blocked |
 | 95.163.223.70   | HiddenFromAllServerLists, Blocked |
 | 91.197.98.0/24  | HiddenFromAllServerLists, Blocked |
+| 79.174.81.9     | HiddenFromAllServerLists, Blocked |
 | 15.204.133.203  | HiddenFromInternetServerList      |
 | 155.117.255.21  | QueryPingWarning                  |
 
@@ -37,17 +38,17 @@
 | (?i)(CHЕАТ)                                                                           | HiddenFromInternetServerList      |
 | (?i)(ЛУЧШИЙ БECПЛAТНЫЙ ЧИT)                                                           | HiddenFromInternetServerList      |
 | (?i)(no\s*-*\s*lag)                                                                   | HiddenFromInternetServerList      |
-| (?i)[bƅƁΒВＢБᴮ][eеẹėéèＥ][bƅƁΒВＢБᴮ]?[rгᴦΓＲЯ][iіíïＩⒾ][xхҳẋˣ×Ｘ🅇]                         | HiddenFromAllServerLists, Blocked |
+| (?i)[bƅƁΒВＢБᴮ฿][eеẹėéèＥ][bƅƁΒВＢБᴮ฿]?[rгᴦΓＲЯ][iіíïＩⒾ][xхҳẋˣ×Ｘ🅇]                       | HiddenFromAllServerLists, Blocked |
 | (?i)[УY][БB6][ИN][ВB][АA][ЙN] [БB6][ОO0][МM][ЖX][ЕE][ЙN]                              | HiddenFromAllServerLists, Blocked |
 | (?i)(Бе)[бb][rр][иi]                                                                  | HiddenFromAllServerLists, Blocked |
 | (?i)(Бeбpиks)                                                                         | HiddenFromAllServerLists, Blocked |
 | (?i)(БЕБ)[РR](А)                                                                      | HiddenFromAllServerLists, Blocked |
 | (?i)(Бебикс)                                                                          | HiddenFromAllServerLists, Blocked |
-| (?i)((АНAРХИЯ&#124;ANARCHY&#124;АNARCHY&#124;АNAЯCHY&#124;АНАРХИЯ) \[KITS)            | HiddenFromAllServerLists, Blocked |
+| (?i)((АНA&#124;ANA&#124;АNA&#124;АНА)(РХ&#124;RC&#124;ЯC)(ИЯ&#124;HY)(\s*)\[KITS)     | HiddenFromAllServerLists, Blocked |
 | (?i)(ТИШИНА UPGRADER)                                                                 | HiddenFromAllServerLists, Blocked |
 | (?i)(БОМЖ \&#124; KITS)                                                               | HiddenFromAllServerLists, Blocked |
 | (?i)(Russia \[UPGRADER\&#124;)                                                        | HiddenFromAllServerLists, Blocked |
-| (?i)[bƅƁΒВＢБᴮ][ОO0][МMW][JЖX]( \&#124; KITS)                                          | HiddenFromAllServerLists, Blocked |
+| (?i)[bƅƁΒВＢБᴮ฿][ОO0][МMW][JЖXЭ]( \&#124; KITS)                                        | HiddenFromAllServerLists, Blocked |
 | (?i)(BEBRI-X)                                                                         | HiddenFromAllServerLists, Blocked |
 | (?i)(Hardline)                                                                        | HiddenFromInternetServerList      |
 | (?i)(Hardӏine)                                                                        | HiddenFromInternetServerList      |
@@ -56,22 +57,22 @@
 | (?i)(Zive PVP)                                                                        | HiddenFromInternetServerList      |
 
 ## Description filters
-| Regex                                                       | BanFlags                          |
-| ----------------------------------------------------------- | --------------------------------- |
-| (?i)(nightmaresoft)                                         | HiddenFromInternetServerList      |
-| (?i)[bƅƁΒВＢБ][eеẹėéèＥ][bƅƁΒВＢБ]?[rгᴦΓＲЯ][iіíïＩⒾ][xхҳẋˣ×Ｘ🅇] | HiddenFromAllServerLists, Blocked |
-| (?i)[УY][БB6][ИN][ВB][АA][ЙN] [БB6][ОO0][МM][ЖX][ЕE][ЙN]    | HiddenFromAllServerLists, Blocked |
-| (?i)(Бебри)                                                 | HiddenFromAllServerLists, Blocked |
-| (?i)(Бебri)                                                 | HiddenFromAllServerLists, Blocked |
-| (?i)(Бебrи)                                                 | HiddenFromAllServerLists, Blocked |
-| (?i)(Беbrи)                                                 | HiddenFromAllServerLists, Blocked |
-| (?i)(Беbриks)                                               | HiddenFromAllServerLists, Blocked |
-| (?i)(Бeбpиks)                                               | HiddenFromAllServerLists, Blocked |
-| (?i)(БЕБРА)                                                 | HiddenFromAllServerLists, Blocked |
-| (?i)(БЕБRА)                                                 | HiddenFromAllServerLists, Blocked |
-| (?i)(Бебикс)                                                | HiddenFromAllServerLists, Blocked |
-| (?i)(bebrix.shop)                                           | HiddenFromAllServerLists, Blocked |
-| (?i)(discord.gg/FaMfByzqY2)                                 | HiddenFromAllServerLists, Blocked |
+| Regex                                                         | BanFlags                          |
+| ------------------------------------------------------------- | --------------------------------- |
+| (?i)(nightmaresoft)                                           | HiddenFromInternetServerList      |
+| (?i)[bƅƁΒВＢБ฿][eеẹėéèＥ][bƅƁΒВＢБ฿]?[rгᴦΓＲЯ][iіíïＩⒾ][xхҳẋˣ×Ｘ🅇] | HiddenFromAllServerLists, Blocked |
+| (?i)[УY][БB6][ИN][ВB][АA][ЙN] [БB6][ОO0][МM][ЖX][ЕE][ЙN]      | HiddenFromAllServerLists, Blocked |
+| (?i)(Бебри)                                                   | HiddenFromAllServerLists, Blocked |
+| (?i)(Бебri)                                                   | HiddenFromAllServerLists, Blocked |
+| (?i)(Бебrи)                                                   | HiddenFromAllServerLists, Blocked |
+| (?i)(Беbrи)                                                   | HiddenFromAllServerLists, Blocked |
+| (?i)(Беbриks)                                                 | HiddenFromAllServerLists, Blocked |
+| (?i)(Бeбpиks)                                                 | HiddenFromAllServerLists, Blocked |
+| (?i)(БЕБРА)                                                   | HiddenFromAllServerLists, Blocked |
+| (?i)(БЕБRА)                                                   | HiddenFromAllServerLists, Blocked |
+| (?i)(Бебикс)                                                  | HiddenFromAllServerLists, Blocked |
+| (?i)(bebrix.shop)                                             | HiddenFromAllServerLists, Blocked |
+| (?i)(discord.gg/FaMfByzqY2)                                   | HiddenFromAllServerLists, Blocked |
 
 ## Thumbnail filters
 | Regex                                 | IconPreview                                                                 | BanFlags                          |
