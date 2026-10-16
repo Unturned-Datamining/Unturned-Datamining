@@ -45,12 +45,15 @@
 | (?i)(ЛУЧШИЙ БECПЛAТНЫЙ ЧИT)                                                                                | HiddenFromInternetServerList      |
 | (?i)(no\s*-*\s*lag)                                                                                        | HiddenFromInternetServerList      |
 | (?i)(?:[bƅƁΒВＢБᴮ฿]&#124;🄱)[eеẹėéèＥЭ](?:[bƅƁΒВＢБᴮ฿]&#124;🄱)?[rгᴦΓＲЯ][iіíïＩⒾ]-?(?:[xхҳẋˣ×Ｘ]&#124;🅇)       | HiddenFromAllServerLists, Blocked |
+| (?i)(🄱RIX)                                                                                                | HiddenFromAllServerLists, Blocked |
 | (?i)[УY][БB6][ИN][ВB][АA][ЙN] [БB6][ОO0][МM][ЖX][ЕE][ЙN]                                                   | HiddenFromAllServerLists, Blocked |
 | (?i)(Бе)[бb][rрP][иiaА]                                                                                    | HiddenFromAllServerLists, Blocked |
 | (?i)(Бeбpиks)                                                                                              | HiddenFromAllServerLists, Blocked |
 | (?i)(Бебикс)                                                                                               | HiddenFromAllServerLists, Blocked |
 | (?i)((АНA&#124;ANA&#124;АNA&#124;АНА&#124;АНЭ)(РХ&#124;PХ&#124;RC&#124;ЯC)(ИЯ&#124;ИR&#124;HY)(\s*)\[KITS) | HiddenFromAllServerLists, Blocked |
 | (?i)(ТИШИНА UPGRADER)                                                                                      | HiddenFromAllServerLists, Blocked |
+| (?i)(ТАЙЛЕР ДЕРДЕН)                                                                                        | HiddenFromAllServerLists, Blocked |
+| (?i)(ТРОЛЛ \&#124; KITS)                                                                                   | HiddenFromAllServerLists, Blocked |
 | (?i)(Russia \[UPGRADER\&#124;)                                                                             | HiddenFromAllServerLists, Blocked |
 | (?i)[bƅƁΒВＢБᴮ฿🄱][ОO0][МMW]([JЖXЭ]&#124;\)\&#124;\()( \&#124; KITS)                                        | HiddenFromAllServerLists, Blocked |
 | (?i)(БАМЖЭ \&#124; KITS)                                                                                   | HiddenFromAllServerLists, Blocked |
@@ -127,6 +130,8 @@
 | 85568392936853147 | HiddenFromAllServerLists, Blocked |
 | 85568392936853316 | HiddenFromAllServerLists, Blocked |
 | 85568392936853317 | HiddenFromAllServerLists, Blocked |
+| 85568392936853335 | HiddenFromAllServerLists, Blocked |
+| 85568392936853336 | HiddenFromAllServerLists, Blocked |
 | 85568392925961914 | HiddenFromInternetServerList      |
 | 85568392935880681 | HiddenFromInternetServerList      |
 | 85568392935919577 | HiddenFromInternetServerList      |
