@@ -29,6 +29,7 @@
 | 95.163.223.207  | HiddenFromAllServerLists, Blocked |
 | 169.254.70.23   | HiddenFromAllServerLists, Blocked |
 | 169.254.10.227  | HiddenFromAllServerLists, Blocked |
+| 95.163.231.92   | HiddenFromAllServerLists, Blocked |
 | 15.204.133.203  | HiddenFromInternetServerList      |
 | 155.117.255.21  | QueryPingWarning                  |
 
@@ -46,6 +47,7 @@
 | (?i)(no\s*-*\s*lag)                                                                                        | HiddenFromInternetServerList      |
 | (?i)(?:[bƅƁΒВＢБᴮ฿]&#124;🄱)[eеẹėéèＥЭ](?:[bƅƁΒВＢБᴮ฿]&#124;🄱)?[rгᴦΓＲЯ][iіíïＩⒾ]-?(?:[xхҳẋˣ×Ｘ]&#124;🅇)       | HiddenFromAllServerLists, Blocked |
 | (?i)(🄱RIX)                                                                                                | HiddenFromAllServerLists, Blocked |
+| (?i)(🄱-RIX)                                                                                               | HiddenFromAllServerLists, Blocked |
 | (?i)[УY][БB6][ИN][ВB][АA][ЙN] [БB6][ОO0][МM][ЖX][ЕE][ЙN]                                                   | HiddenFromAllServerLists, Blocked |
 | (?i)(Бе)[бb][rрP][иiaА]                                                                                    | HiddenFromAllServerLists, Blocked |
 | (?i)(Бeбpиks)                                                                                              | HiddenFromAllServerLists, Blocked |
@@ -132,6 +134,7 @@
 | 85568392936853317 | HiddenFromAllServerLists, Blocked |
 | 85568392936853335 | HiddenFromAllServerLists, Blocked |
 | 85568392936853336 | HiddenFromAllServerLists, Blocked |
+| 85568392936864710 | HiddenFromAllServerLists, Blocked |
 | 85568392925961914 | HiddenFromInternetServerList      |
 | 85568392935880681 | HiddenFromInternetServerList      |
 | 85568392935919577 | HiddenFromInternetServerList      |
