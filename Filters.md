@@ -32,6 +32,7 @@
 | 95.163.231.92   | HiddenFromAllServerLists, Blocked |
 | 95.163.223.243  | HiddenFromAllServerLists, Blocked |
 | 91.197.97.26    | HiddenFromAllServerLists, Blocked |
+| 95.163.229.145  | HiddenFromAllServerLists, Blocked |
 | 15.204.133.203  | HiddenFromInternetServerList      |
 | 155.117.255.21  | QueryPingWarning                  |
 
@@ -62,6 +63,7 @@
 | (?i)[bƅƁΒВＢБᴮ฿🄱][ОO0][МMW]([JЖXЭ]&#124;\)\&#124;\()( \&#124; KITS)                                          | HiddenFromAllServerLists, Blocked |
 | (?i)(БАМЖЭ \&#124; KITS)                                                                                     | HiddenFromAllServerLists, Blocked |
 | (?i)(БУМЖЭ\&#124; KITS)                                                                                      | HiddenFromAllServerLists, Blocked |
+| (?i)(Лех заходи)                                                                                             | HiddenFromAllServerLists, Blocked |
 | (?i)(Hardline)                                                                                               | HiddenFromInternetServerList      |
 | (?i)(Hardӏine)                                                                                               | HiddenFromInternetServerList      |
 | (?i)(Wasabi)                                                                                                 | QueryPingWarning                  |
