@@ -1,14 +1,14 @@
 MainMenuAlert
 {
-	Id 94
-	Header Community organized event: FangHosting.com RAID 2v2 EU
+	Id 95
+	Header Community organized event: MountHost.com.br RAID 2v2 SA
 	Body From the organizers: "Join a 2v2 event for the newest PeekSeek.net gamemode, and compete for trophy skins! Join our game server for more information."
 	Color #ff0000
-	Link https://peekseek.net/esports/fhraid2v2eu?join=85568392936415589
+	Link https://peekseek.net/esports/sa26raid?join=85568392936415589
 	IconURL https://cdn.smartlydressedgames.com/Images/PeekSeek.png
 	UseTimeWindow true
-	StartTime 2026-10-05
-	EndTime 2026-10-10
+	StartTime 2026-10-19
+	EndTime 2026-10-24
 }
 MainMenuWorkshop
 {
