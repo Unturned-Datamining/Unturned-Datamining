@@ -39,6 +39,7 @@
 | 194.58.126.228  | HiddenFromAllServerLists, Blocked |
 | 79.174.86.156   | HiddenFromAllServerLists          |
 | 79.174.83.20    | HiddenFromAllServerLists          |
+| 95.163.229.228  | HiddenFromAllServerLists          |
 | 15.204.133.203  | HiddenFromInternetServerList      |
 | 155.117.255.21  | QueryPingWarning                  |
 
@@ -62,6 +63,7 @@
 | (?i)(Бeбpиks)                                                                                                            | HiddenFromAllServerLists, Blocked |
 | (?i)(Бебикс)                                                                                                             | HiddenFromAllServerLists, Blocked |
 | (?i)((АНA&#124;ANA&#124;АNA&#124;АНА&#124;АНЭ&#124;4НА)(РХ&#124;PХ&#124;RC&#124;ЯC)(ИЯ&#124;ИR&#124;HY)(\s*)\[KITS)      | HiddenFromAllServerLists, Blocked |
+| (?i)(А♥НАРХИЯ)                                                                                                           | HiddenFromAllServerLists, Blocked |
 | (?i)(ТИШИНА UPGRADER)                                                                                                    | HiddenFromAllServerLists, Blocked |
 | (?i)(ТАЙЛЕР ДЕРДЕН)                                                                                                      | HiddenFromAllServerLists, Blocked |
 | (?i)(ТРОЛЛ \&#124; KITS)                                                                                                 | HiddenFromAllServerLists, Blocked |
@@ -152,6 +154,7 @@
 | 85568392936879333 | HiddenFromAllServerLists, Blocked |
 | 85568392936879368 | HiddenFromAllServerLists, Blocked |
 | 85568392936879679 | HiddenFromAllServerLists          |
+| 85568392936882148 | HiddenFromAllServerLists          |
 | 85568392925961914 | HiddenFromInternetServerList      |
 | 85568392935880681 | HiddenFromInternetServerList      |
 | 85568392935919577 | HiddenFromInternetServerList      |
