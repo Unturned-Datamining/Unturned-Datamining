@@ -37,47 +37,49 @@
 | 95.163.220.33   | HiddenFromAllServerLists, Blocked |
 | 79.174.78.223   | HiddenFromAllServerLists, Blocked |
 | 194.58.126.228  | HiddenFromAllServerLists, Blocked |
+| 95.163.229.126  | HiddenFromAllServerLists, Blocked |
 | 79.174.86.156   | HiddenFromAllServerLists          |
 | 79.174.83.20    | HiddenFromAllServerLists          |
 | 95.163.229.228  | HiddenFromAllServerLists          |
 | 79.174.80.119   | HiddenFromAllServerLists          |
+| 89.108.81.121   | HiddenFromAllServerLists          |
 | 15.204.133.203  | HiddenFromInternetServerList      |
 | 155.117.255.21  | QueryPingWarning                  |
 
 ## Name filters
-| Regex                                                                                                                    | BanFlags                          |
-| ------------------------------------------------------------------------------------------------------------------------ | --------------------------------- |
-| (?i)(pandahut&#124;panda hut)(?!.* )                                                                                     | HiddenFromAllServerLists          |
-| (?i)(Auschwitz&#124;Nazi&#124;Nazista&#124;Anti-Negro&#124;Anti-Jew&#124;Anti-Judeus)                                    | HiddenFromAllServerLists, Blocked |
-| (?i)(nigger)                                                                                                             | HiddenFromAllServerLists, Blocked |
-| (?i)(cheat)                                                                                                              | HiddenFromAllServerLists, Blocked |
-| (?i)(hack)                                                                                                               | HiddenFromAllServerLists, Blocked |
-| (?i)(HypnoticClient)                                                                                                     | HiddenFromAllServerLists, Blocked |
-| (?i)(CHЕАТ)                                                                                                              | HiddenFromInternetServerList      |
-| (?i)(ЛУЧШИЙ БECПЛAТНЫЙ ЧИT)                                                                                              | HiddenFromInternetServerList      |
-| (?i)(no\s*-*\s*lag)                                                                                                      | HiddenFromInternetServerList      |
-| (?i)(?:[bƅƁΒВＢБᴮ฿]&#124;🄱)-?(?:[eеẹėéèＥЭ]&#124;🄴)-?(?:[bƅƁΒВＢБᴮ฿]&#124;🄱)?-?[rгᴦΓＲЯ]-?[iіíïＩⒾ]-?(?:[xхҳẋˣ×Ｘ]&#124;🅇) | HiddenFromAllServerLists, Blocked |
-| (?i)(🄱RIX)                                                                                                              | HiddenFromAllServerLists, Blocked |
-| (?i)(🄱-RIX)                                                                                                             | HiddenFromAllServerLists, Blocked |
-| (?i)[УY][БB6][ИN][ВB][АA][ЙN] [БB6][ОO0][МM][ЖX][ЕE][ЙN]                                                                 | HiddenFromAllServerLists, Blocked |
-| (?i)(Бе)[бb][rрP][иiaА]                                                                                                  | HiddenFromAllServerLists, Blocked |
-| (?i)(Бeбpиks)                                                                                                            | HiddenFromAllServerLists, Blocked |
-| (?i)(Бебикс)                                                                                                             | HiddenFromAllServerLists, Blocked |
-| (?i)((АНA&#124;ANA&#124;АNA&#124;АНА&#124;АНЭ&#124;4НА)(РХ&#124;PХ&#124;RC&#124;ЯC)(ИЯ&#124;ИR&#124;HY)(\s*)\[KITS)      | HiddenFromAllServerLists, Blocked |
-| (?i)(А♥НАРХИЯ)                                                                                                           | HiddenFromAllServerLists, Blocked |
-| (?i)(ТИШИНА UPGRADER)                                                                                                    | HiddenFromAllServerLists, Blocked |
-| (?i)(ТАЙЛЕР ДЕРДЕН)                                                                                                      | HiddenFromAllServerLists, Blocked |
-| (?i)(ТРОЛЛ \&#124; KITS)                                                                                                 | HiddenFromAllServerLists, Blocked |
-| (?i)(Russia \[UPGRADER\&#124;)                                                                                           | HiddenFromAllServerLists, Blocked |
-| (?i)[bƅƁΒВＢБᴮ฿🄱][ОO0][МMW]([JЖXЭ]&#124;\)\&#124;\()(\s*\&#124; KITS)                                                    | HiddenFromAllServerLists, Blocked |
-| (?i)(БАМЖЭ \&#124; KITS)                                                                                                 | HiddenFromAllServerLists, Blocked |
-| (?i)(БУМЖЭ\&#124; KITS)                                                                                                  | HiddenFromAllServerLists, Blocked |
-| (?i)(БОМЭЖ\&#124; KITS)                                                                                                  | HiddenFromAllServerLists, Blocked |
-| (?i)(Лех заходи)                                                                                                         | HiddenFromAllServerLists, Blocked |
-| (?i)(Hardline)                                                                                                           | HiddenFromInternetServerList      |
-| (?i)(Hardӏine)                                                                                                           | HiddenFromInternetServerList      |
-| (?i)(Wasabi)                                                                                                             | QueryPingWarning                  |
-| (?i)(疯狂水世界)                                                                                                              | HiddenFromInternetServerList      |
+| Regex                                                                                                                      | BanFlags                          |
+| -------------------------------------------------------------------------------------------------------------------------- | --------------------------------- |
+| (?i)(pandahut&#124;panda hut)(?!.* )                                                                                       | HiddenFromAllServerLists          |
+| (?i)(Auschwitz&#124;Nazi&#124;Nazista&#124;Anti-Negro&#124;Anti-Jew&#124;Anti-Judeus)                                      | HiddenFromAllServerLists, Blocked |
+| (?i)(nigger)                                                                                                               | HiddenFromAllServerLists, Blocked |
+| (?i)(cheat)                                                                                                                | HiddenFromAllServerLists, Blocked |
+| (?i)(hack)                                                                                                                 | HiddenFromAllServerLists, Blocked |
+| (?i)(HypnoticClient)                                                                                                       | HiddenFromAllServerLists, Blocked |
+| (?i)(CHЕАТ)                                                                                                                | HiddenFromInternetServerList      |
+| (?i)(ЛУЧШИЙ БECПЛAТНЫЙ ЧИT)                                                                                                | HiddenFromInternetServerList      |
+| (?i)(no\s*-*\s*lag)                                                                                                        | HiddenFromInternetServerList      |
+| (?i)(?:[bƅƁΒВＢБᴮ฿Ⓑ]&#124;🄱)-?(?:[eеẹėéèＥЭ]&#124;🄴)-?(?:[bƅƁΒВＢБᴮ฿Ⓑ]&#124;🄱)?-?[rгᴦΓＲЯ]-?[iіíïＩⒾ]-?(?:[xхҳẋˣ×Ｘ]&#124;🅇) | HiddenFromAllServerLists, Blocked |
+| (?i)(🄱RIX)                                                                                                                | HiddenFromAllServerLists, Blocked |
+| (?i)(🄱-RIX)                                                                                                               | HiddenFromAllServerLists, Blocked |
+| (?i)[УY][БB6][ИN][ВB][АA][ЙN] [БB6][ОO0][МM][ЖX][ЕE][ЙN]                                                                   | HiddenFromAllServerLists, Blocked |
+| (?i)(Бе)[бb][rрP][иiaА]                                                                                                    | HiddenFromAllServerLists, Blocked |
+| (?i)(Бeбpиks)                                                                                                              | HiddenFromAllServerLists, Blocked |
+| (?i)(Бебикс)                                                                                                               | HiddenFromAllServerLists, Blocked |
+| (?i)((АНA&#124;ANA&#124;АNA&#124;АНА&#124;АНЭ&#124;4НА)(РХ&#124;PХ&#124;RC&#124;ЯC)(ИЯ&#124;ИR&#124;HY)(\s*)\[KITS)        | HiddenFromAllServerLists, Blocked |
+| (?i)(А♥НАРХИЯ&#124;АНАРХИ♥Я)                                                                                               | HiddenFromAllServerLists, Blocked |
+| (?i)(ТИШИНА UPGRADER)                                                                                                      | HiddenFromAllServerLists, Blocked |
+| (?i)(ТАЙЛЕР ДЕРДЕН)                                                                                                        | HiddenFromAllServerLists, Blocked |
+| (?i)(ТРОЛЛ \&#124; KITS)                                                                                                   | HiddenFromAllServerLists, Blocked |
+| (?i)(Russia \[UPGRADER\&#124;)                                                                                             | HiddenFromAllServerLists, Blocked |
+| (?i)[bƅƁΒВＢБᴮ฿🄱][ОO0][МMW]([JЖXЭ]&#124;\)\&#124;\()(\s*\&#124; KITS)                                                      | HiddenFromAllServerLists, Blocked |
+| (?i)(БАМЖЭ \&#124; KITS)                                                                                                   | HiddenFromAllServerLists, Blocked |
+| (?i)(БУМЖЭ\&#124; KITS)                                                                                                    | HiddenFromAllServerLists, Blocked |
+| (?i)(БОМЭЖ\&#124; KITS)                                                                                                    | HiddenFromAllServerLists, Blocked |
+| (?i)(Лех заходи)                                                                                                           | HiddenFromAllServerLists, Blocked |
+| (?i)(Hardline)                                                                                                             | HiddenFromInternetServerList      |
+| (?i)(Hardӏine)                                                                                                             | HiddenFromInternetServerList      |
+| (?i)(Wasabi)                                                                                                               | QueryPingWarning                  |
+| (?i)(疯狂水世界)                                                                                                                | HiddenFromInternetServerList      |
 
 ## Description filters
 | Regex                                                          | BanFlags                          |
