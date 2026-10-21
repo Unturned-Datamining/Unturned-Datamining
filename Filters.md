@@ -40,6 +40,7 @@
 | 79.174.86.156   | HiddenFromAllServerLists          |
 | 79.174.83.20    | HiddenFromAllServerLists          |
 | 95.163.229.228  | HiddenFromAllServerLists          |
+| 79.174.80.119   | HiddenFromAllServerLists          |
 | 15.204.133.203  | HiddenFromInternetServerList      |
 | 155.117.255.21  | QueryPingWarning                  |
 
@@ -155,6 +156,12 @@
 | 85568392936879368 | HiddenFromAllServerLists, Blocked |
 | 85568392936879679 | HiddenFromAllServerLists          |
 | 85568392936882148 | HiddenFromAllServerLists          |
+| 85568392936882869 | HiddenFromAllServerLists          |
+| 85568392936882870 | HiddenFromAllServerLists          |
+| 85568392936882874 | HiddenFromAllServerLists          |
+| 85568392936882873 | HiddenFromAllServerLists          |
+| 85568392936882872 | HiddenFromAllServerLists          |
+| 85568392936882871 | HiddenFromAllServerLists          |
 | 85568392925961914 | HiddenFromInternetServerList      |
 | 85568392935880681 | HiddenFromInternetServerList      |
 | 85568392935919577 | HiddenFromInternetServerList      |
