@@ -38,11 +38,13 @@
 | 79.174.78.223   | HiddenFromAllServerLists, Blocked |
 | 194.58.126.228  | HiddenFromAllServerLists, Blocked |
 | 95.163.229.126  | HiddenFromAllServerLists, Blocked |
-| 79.174.86.156   | HiddenFromAllServerLists          |
-| 79.174.83.20    | HiddenFromAllServerLists          |
-| 95.163.229.228  | HiddenFromAllServerLists          |
-| 79.174.80.119   | HiddenFromAllServerLists          |
-| 89.108.81.121   | HiddenFromAllServerLists          |
+| 79.174.86.156   | HiddenFromAllServerLists, Blocked |
+| 79.174.83.20    | HiddenFromAllServerLists, Blocked |
+| 95.163.229.228  | HiddenFromAllServerLists, Blocked |
+| 79.174.80.119   | HiddenFromAllServerLists, Blocked |
+| 89.108.81.121   | HiddenFromAllServerLists, Blocked |
+| 79.174.81.189   | HiddenFromAllServerLists, Blocked |
+| 194.67.102.147  | HiddenFromAllServerLists, Blocked |
 | 15.204.133.203  | HiddenFromInternetServerList      |
 | 155.117.255.21  | QueryPingWarning                  |
 
@@ -156,14 +158,16 @@
 | 85568392936879296 | HiddenFromAllServerLists, Blocked |
 | 85568392936879333 | HiddenFromAllServerLists, Blocked |
 | 85568392936879368 | HiddenFromAllServerLists, Blocked |
-| 85568392936879679 | HiddenFromAllServerLists          |
-| 85568392936882148 | HiddenFromAllServerLists          |
-| 85568392936882869 | HiddenFromAllServerLists          |
-| 85568392936882870 | HiddenFromAllServerLists          |
-| 85568392936882874 | HiddenFromAllServerLists          |
-| 85568392936882873 | HiddenFromAllServerLists          |
-| 85568392936882872 | HiddenFromAllServerLists          |
-| 85568392936882871 | HiddenFromAllServerLists          |
+| 85568392936879679 | HiddenFromAllServerLists, Blocked |
+| 85568392936882148 | HiddenFromAllServerLists, Blocked |
+| 85568392936882869 | HiddenFromAllServerLists, Blocked |
+| 85568392936882870 | HiddenFromAllServerLists, Blocked |
+| 85568392936882874 | HiddenFromAllServerLists, Blocked |
+| 85568392936882873 | HiddenFromAllServerLists, Blocked |
+| 85568392936882872 | HiddenFromAllServerLists, Blocked |
+| 85568392936882871 | HiddenFromAllServerLists, Blocked |
+| 85568392936885670 | HiddenFromAllServerLists, Blocked |
+| 85568392936885668 | HiddenFromAllServerLists, Blocked |
 | 85568392925961914 | HiddenFromInternetServerList      |
 | 85568392935880681 | HiddenFromInternetServerList      |
 | 85568392935919577 | HiddenFromInternetServerList      |
