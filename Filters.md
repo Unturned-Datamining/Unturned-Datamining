@@ -45,6 +45,7 @@
 | 89.108.81.121   | HiddenFromAllServerLists, Blocked |
 | 79.174.81.189   | HiddenFromAllServerLists, Blocked |
 | 194.67.102.147  | HiddenFromAllServerLists, Blocked |
+| 79.174.85.197   | HiddenFromAllServerLists, Blocked |
 | 15.204.133.203  | HiddenFromInternetServerList      |
 | 155.117.255.21  | QueryPingWarning                  |
 
@@ -67,8 +68,10 @@
 | (?i)(Бе)[бb][rрP][иiaА]                                                                                                    | HiddenFromAllServerLists, Blocked |
 | (?i)(Бeбpиks)                                                                                                              | HiddenFromAllServerLists, Blocked |
 | (?i)(Бебикс)                                                                                                               | HiddenFromAllServerLists, Blocked |
+| (?i)(Бебрикс)                                                                                                              | HiddenFromAllServerLists, Blocked |
+| (?i)(ⒷЕБРИКС)                                                                                                              | HiddenFromAllServerLists, Blocked |
 | (?i)((АНA&#124;ANA&#124;АNA&#124;АНА&#124;АНЭ&#124;4НА)(РХ&#124;PХ&#124;RC&#124;ЯC)(ИЯ&#124;ИR&#124;HY)(\s*)\[KITS)        | HiddenFromAllServerLists, Blocked |
-| (?i)(А♥НАРХИЯ&#124;АНАРХИ♥Я)                                                                                               | HiddenFromAllServerLists, Blocked |
+| (?i)(А♥?Н♥?А♥?Р♥?Х♥?И♥?Я)                                                                                                  | HiddenFromAllServerLists, Blocked |
 | (?i)(ТИШИНА UPGRADER)                                                                                                      | HiddenFromAllServerLists, Blocked |
 | (?i)(ТАЙЛЕР ДЕРДЕН)                                                                                                        | HiddenFromAllServerLists, Blocked |
 | (?i)(ТРОЛЛ \&#124; KITS)                                                                                                   | HiddenFromAllServerLists, Blocked |
@@ -168,6 +171,7 @@
 | 85568392936882871 | HiddenFromAllServerLists, Blocked |
 | 85568392936885670 | HiddenFromAllServerLists, Blocked |
 | 85568392936885668 | HiddenFromAllServerLists, Blocked |
+| 85568392936885769 | HiddenFromAllServerLists, Blocked |
 | 85568392925961914 | HiddenFromInternetServerList      |
 | 85568392935880681 | HiddenFromInternetServerList      |
 | 85568392935919577 | HiddenFromInternetServerList      |
