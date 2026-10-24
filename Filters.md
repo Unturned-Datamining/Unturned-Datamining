@@ -47,6 +47,7 @@
 | 194.67.102.147  | HiddenFromAllServerLists, Blocked |
 | 79.174.85.197   | HiddenFromAllServerLists, Blocked |
 | 79.174.86.183   | HiddenFromAllServerLists, Blocked |
+| 194.58.126.226  | HiddenFromAllServerLists, Blocked |
 | 15.204.133.203  | HiddenFromInternetServerList      |
 | 155.117.255.21  | QueryPingWarning                  |
 
