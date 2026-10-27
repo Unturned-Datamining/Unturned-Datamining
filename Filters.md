@@ -9,11 +9,8 @@
 | 15.204.133.203  | HiddenFromInternetServerList      |
 | 155.117.255.21  | QueryPingWarning                  |
 | 120.220.76.83   | HiddenFromInternetServerList      |
-| 169.254.114.72  | HiddenFromAllServerLists, Blocked |
-| 151.248.116.141 | HiddenFromAllServerLists, Blocked |
-| 151.248.116.22  | HiddenFromAllServerLists, Blocked |
-| 194.226.112.127 | HiddenFromAllServerLists, Blocked |
-| 194.58.118.131  | HiddenFromAllServerLists, Blocked |
+| 120.220.76.203  | HiddenFromInternetServerList      |
+| 110.42.10.221   | HiddenFromInternetServerList      |
 | 169.254.70.107  | HiddenFromAllServerLists, Blocked |
 | 89.108.70.5     | HiddenFromAllServerLists, Blocked |
 | 151.248.116.208 | HiddenFromAllServerLists, Blocked |
@@ -39,6 +36,12 @@
 | 95.163.229.126  | HiddenFromAllServerLists, Blocked |
 | 95.163.228.150  | HiddenFromAllServerLists, Blocked |
 | 91.197.99.110   | HiddenFromAllServerLists, Blocked |
+| 79.174.84.72    | HiddenFromAllServerLists, Blocked |
+| 169.254.114.72  | HiddenFromAllServerLists, Blocked |
+| 151.248.116.141 | HiddenFromAllServerLists, Blocked |
+| 151.248.116.22  | HiddenFromAllServerLists, Blocked |
+| 194.226.112.127 | HiddenFromAllServerLists, Blocked |
+| 194.58.118.131  | HiddenFromAllServerLists, Blocked |
 | 89.108.81.88    | HiddenFromAllServerLists, Blocked |
 | 37.230.162.223  | HiddenFromAllServerLists, Blocked |
 | 92.242.60.208   | HiddenFromAllServerLists, Blocked |
@@ -76,7 +79,12 @@
 | (?i)(【ZY臭鱼】)                                                                                                                | HiddenFromInternetServerList      |
 | (?i)(【ZY臭鱼五服】)                                                                                                              | HiddenFromInternetServerList      |
 | (?i)(【ZY臭鱼二服】)                                                                                                              | HiddenFromInternetServerList      |
-| (?i)(?:[bƅƁΒВＢБᴮ฿Ⓑ]&#124;🄱)-?(?:[eеẹėéèＥЭ]&#124;🄴)-?(?:[bƅƁΒВＢБᴮ฿Ⓑ]&#124;🄱)?-?[rгᴦΓＲЯ]-?[iіíïＩⒾ]-?(?:[xхҳẋˣ×Ｘ]&#124;🅇)  | HiddenFromAllServerLists, Blocked |
+| (?i)(【酋源一服】)                                                                                                                | HiddenFromInternetServerList      |
+| (?i)(QY酋源一服】)                                                                                                               | HiddenFromInternetServerList      |
+| (?i)(【QY酋源五服】)                                                                                                              | HiddenFromInternetServerList      |
+| (?i)(QQ群：194684295)                                                                                                         | HiddenFromInternetServerList      |
+| (?i)(\[冰与火\])                                                                                                               | HiddenFromInternetServerList      |
+| (?i)(?:[bƅƁΒВＢБᴮ฿Ⓑ]&#124;🄱)-?(?:[eеẹėéèＥЭ]&#124;🄴)-?(?:[bƅƁΒВＢБᴮ฿Ⓑ]&#124;🄱)?-?[rгᴦΓＲЯ]-?[iіíïＩⒾ]-?(?:[xхҳẋˣ×Ｘₓ]&#124;🅇) | HiddenFromAllServerLists, Blocked |
 | (?i)(🄱RIX)                                                                                                                 | HiddenFromAllServerLists, Blocked |
 | (?i)(🄱-RIX)                                                                                                                | HiddenFromAllServerLists, Blocked |
 | (?i)[УY][БB6][ИN][ВB][АA][ЙN] [БB6][ОO0][МM][ЖX][ЕE][ЙN]                                                                    | HiddenFromAllServerLists, Blocked |
@@ -85,8 +93,8 @@
 | (?i)(Бебикс)                                                                                                                | HiddenFromAllServerLists, Blocked |
 | (?i)(?:[bƅƁΒВＢБᴮ฿Ⓑ]&#124;🄱)-?(?:[eеẹėéèＥЭ]&#124;🄴)-?(?:[bƅƁΒВＢБᴮ฿Ⓑ]&#124;🄱)-?[рp]-?[ийn]-?[КK]-?[СC]                     | HiddenFromAllServerLists, Blocked |
 | (?i)([Asia] 纯)                                                                                                              | HiddenFromAllServerLists, Blocked |
-| (?i)((АНA&#124;ANA&#124;АNA&#124;АНА&#124;АНЭ&#124;4НА)(РХ&#124;PХ&#124;RC&#124;ЯC&#124;ЛХ)(ИЯ&#124;ИR&#124;HY)(\s*)\[KITS) | HiddenFromAllServerLists, Blocked |
-| (?i)(А♥?Н♥?А♥?Р♥?Х♥?И♥?Я)                                                                                                   | HiddenFromAllServerLists, Blocked |
+| (?i)((ANA&#124;АNA&#124;АНЭ&#124;4НА)(RC&#124;ЯC)(HY)(\s*)\[KITS)                                                           | HiddenFromAllServerLists, Blocked |
+| (?i)[АA][♥-]?[НH][♥-]?[АAЭ][♥-]?[РPЛ][♥-]?(?:[xхҳẋˣ×Ｘₓ]&#124;🅇)[♥-]?[ИN][♥-]?[ЯR](\s*)\[KITS                               | HiddenFromAllServerLists, Blocked |
 | (?i)(ТИШИНА UPGRADER)                                                                                                       | HiddenFromAllServerLists, Blocked |
 | (?i)(ТАЙЛЕР ДЕРДЕН)                                                                                                         | HiddenFromAllServerLists, Blocked |
 | (?i)(ТРОЛЛ \&#124; KITS)                                                                                                    | HiddenFromAllServerLists, Blocked |
@@ -139,6 +147,8 @@
 | 85568392936891964 | HiddenFromInternetServerList      |
 | 85568392936763985 | HiddenFromInternetServerList      |
 | 85568392936746042 | HiddenFromInternetServerList      |
+| 85568392936900568 | HiddenFromInternetServerList      |
+| 85568392936525711 | HiddenFromInternetServerList      |
 | 85568392936826020 | HiddenFromAllServerLists, Blocked |
 | 85568392936826021 | HiddenFromAllServerLists, Blocked |
 | 85568392936826022 | HiddenFromAllServerLists, Blocked |
