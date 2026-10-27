@@ -9,10 +9,6 @@
 | 15.204.133.203  | HiddenFromInternetServerList      |
 | 155.117.255.21  | QueryPingWarning                  |
 | 120.220.76.83   | HiddenFromInternetServerList      |
-| 89.108.81.88    | HiddenFromAllServerLists, Blocked |
-| 37.230.162.223  | HiddenFromAllServerLists, Blocked |
-| 92.242.60.208   | HiddenFromAllServerLists, Blocked |
-| 94.228.166.245  | HiddenFromAllServerLists, Blocked |
 | 169.254.114.72  | HiddenFromAllServerLists, Blocked |
 | 151.248.116.141 | HiddenFromAllServerLists, Blocked |
 | 151.248.116.22  | HiddenFromAllServerLists, Blocked |
@@ -43,6 +39,10 @@
 | 95.163.229.126  | HiddenFromAllServerLists, Blocked |
 | 95.163.228.150  | HiddenFromAllServerLists, Blocked |
 | 91.197.99.110   | HiddenFromAllServerLists, Blocked |
+| 89.108.81.88    | HiddenFromAllServerLists, Blocked |
+| 37.230.162.223  | HiddenFromAllServerLists, Blocked |
+| 92.242.60.208   | HiddenFromAllServerLists, Blocked |
+| 94.228.166.245  | HiddenFromAllServerLists, Blocked |
 | 79.174.86.156   | HiddenFromAllServerLists, Blocked |
 | 79.174.83.20    | HiddenFromAllServerLists, Blocked |
 | 95.163.229.228  | HiddenFromAllServerLists, Blocked |
@@ -55,6 +55,7 @@
 | 194.58.126.226  | HiddenFromAllServerLists, Blocked |
 | 89.108.81.69    | HiddenFromAllServerLists, Blocked |
 | 95.163.230.198  | HiddenFromAllServerLists, Blocked |
+| 130.49.149.9    | HiddenFromAllServerLists, Blocked |
 
 ## Name filters
 | Regex                                                                                                                       | BanFlags                          |
@@ -183,6 +184,7 @@
 | 85568392936879333 | HiddenFromAllServerLists, Blocked |
 | 85568392936879368 | HiddenFromAllServerLists, Blocked |
 | 85568392936897851 | HiddenFromAllServerLists, Blocked |
+| 85568392936898246 | HiddenFromAllServerLists, Blocked |
 | 85568392936879679 | HiddenFromAllServerLists, Blocked |
 | 85568392936882148 | HiddenFromAllServerLists, Blocked |
 | 85568392936882869 | HiddenFromAllServerLists, Blocked |
