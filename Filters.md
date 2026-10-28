@@ -11,6 +11,8 @@
 | 120.220.76.83   | HiddenFromInternetServerList      |
 | 120.220.76.203  | HiddenFromInternetServerList      |
 | 110.42.10.221   | HiddenFromInternetServerList      |
+| 110.42.10.214   | HiddenFromInternetServerList      |
+| 111.170.155.49  | HiddenFromInternetServerList      |
 | 169.254.70.107  | HiddenFromAllServerLists, Blocked |
 | 89.108.70.5     | HiddenFromAllServerLists, Blocked |
 | 151.248.116.208 | HiddenFromAllServerLists, Blocked |
@@ -37,6 +39,7 @@
 | 95.163.228.150  | HiddenFromAllServerLists, Blocked |
 | 91.197.99.110   | HiddenFromAllServerLists, Blocked |
 | 79.174.84.72    | HiddenFromAllServerLists, Blocked |
+| 130.49.149.192  | HiddenFromAllServerLists, Blocked |
 | 169.254.114.72  | HiddenFromAllServerLists, Blocked |
 | 151.248.116.141 | HiddenFromAllServerLists, Blocked |
 | 151.248.116.22  | HiddenFromAllServerLists, Blocked |
@@ -83,7 +86,9 @@
 | (?i)(QY酋源一服】)                                                                                                               | HiddenFromInternetServerList      |
 | (?i)(【QY酋源五服】)                                                                                                              | HiddenFromInternetServerList      |
 | (?i)(QQ群：194684295)                                                                                                         | HiddenFromInternetServerList      |
-| (?i)(\[冰与火\])                                                                                                               | HiddenFromInternetServerList      |
+| \[冰与火\]                                                                                                                     | HiddenFromInternetServerList      |
+| \[萌新の计划\]\&#124;冰与火                                                                                                         | HiddenFromInternetServerList      |
+| \[TCD\]逃离塔科夫                                                                                                                | HiddenFromInternetServerList      |
 | (?i)(?:[bƅƁΒВＢБᴮ฿Ⓑ]&#124;🄱)-?(?:[eеẹėéèＥЭ]&#124;🄴)-?(?:[bƅƁΒВＢБᴮ฿Ⓑ]&#124;🄱)?-?[rгᴦΓＲЯ]-?[iіíïＩⒾ]-?(?:[xхҳẋˣ×Ｘₓ]&#124;🅇) | HiddenFromAllServerLists, Blocked |
 | (?i)(🄱RIX)                                                                                                                 | HiddenFromAllServerLists, Blocked |
 | (?i)(🄱-RIX)                                                                                                                | HiddenFromAllServerLists, Blocked |
@@ -94,7 +99,7 @@
 | (?i)(?:[bƅƁΒВＢБᴮ฿Ⓑ]&#124;🄱)-?(?:[eеẹėéèＥЭ]&#124;🄴)-?(?:[bƅƁΒВＢБᴮ฿Ⓑ]&#124;🄱)-?[рp]-?[ийn]-?[КK]-?[СC]                     | HiddenFromAllServerLists, Blocked |
 | (?i)([Asia] 纯)                                                                                                              | HiddenFromAllServerLists, Blocked |
 | (?i)((ANA&#124;АNA&#124;АНЭ&#124;4НА)(RC&#124;ЯC)(HY)(\s*)\[KITS)                                                           | HiddenFromAllServerLists, Blocked |
-| (?i)[АA][♥-]?[НH][♥-]?[АAЭ][♥-]?[РPЛ][♥-]?(?:[xхҳẋˣ×Ｘₓ]&#124;🅇)[♥-]?[ИN][♥-]?[ЯR](\s*)\[KITS                               | HiddenFromAllServerLists, Blocked |
+| (?i)[АA][.+]?[НH][.+]?[АAЭ][.+]?[РPЛ][.+]?(?:[xхҳẋˣ×Ｘₓ]&#124;🅇)[.+]?[ИN][.+]?[ЯR](\s*)\[KITS                               | HiddenFromAllServerLists, Blocked |
 | (?i)(ТИШИНА UPGRADER)                                                                                                       | HiddenFromAllServerLists, Blocked |
 | (?i)(ТАЙЛЕР ДЕРДЕН)                                                                                                         | HiddenFromAllServerLists, Blocked |
 | (?i)(ТРОЛЛ \&#124; KITS)                                                                                                    | HiddenFromAllServerLists, Blocked |
@@ -109,6 +114,7 @@
 | Regex                                                          | BanFlags                          |
 | -------------------------------------------------------------- | --------------------------------- |
 | (?i)(nightmaresoft)                                            | HiddenFromInternetServerList      |
+| 欢迎加QQ群号942950895                                               | HiddenFromInternetServerList      |
 | (?i)[bƅƁΒВＢБ฿][eеẹėéèＥЭ][bƅƁΒВＢБ฿]?[rгᴦΓＲЯ][iіíïＩⒾ][xхҳẋˣ×Ｘ🅇] | HiddenFromAllServerLists, Blocked |
 | (?i)[УY][БB6][ИN][ВB][АA][ЙN] [БB6][ОO0][МM][ЖX][ЕE][ЙN]       | HiddenFromAllServerLists, Blocked |
 | (?i)(Бебри)                                                    | HiddenFromAllServerLists, Blocked |
@@ -149,6 +155,8 @@
 | 85568392936746042 | HiddenFromInternetServerList      |
 | 85568392936900568 | HiddenFromInternetServerList      |
 | 85568392936525711 | HiddenFromInternetServerList      |
+| 85568392936901513 | HiddenFromInternetServerList      |
+| 85568392936588504 | HiddenFromInternetServerList      |
 | 85568392936826020 | HiddenFromAllServerLists, Blocked |
 | 85568392936826021 | HiddenFromAllServerLists, Blocked |
 | 85568392936826022 | HiddenFromAllServerLists, Blocked |
@@ -195,6 +203,7 @@
 | 85568392936879368 | HiddenFromAllServerLists, Blocked |
 | 85568392936897851 | HiddenFromAllServerLists, Blocked |
 | 85568392936898246 | HiddenFromAllServerLists, Blocked |
+| 85568392936901537 | HiddenFromAllServerLists, Blocked |
 | 85568392936879679 | HiddenFromAllServerLists, Blocked |
 | 85568392936882148 | HiddenFromAllServerLists, Blocked |
 | 85568392936882869 | HiddenFromAllServerLists, Blocked |
