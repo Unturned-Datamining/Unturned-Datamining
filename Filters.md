@@ -21,7 +21,6 @@
 | 95.163.223.70   | HiddenFromAllServerLists, Blocked |
 | 91.197.98.0/24  | HiddenFromAllServerLists, Blocked |
 | 79.174.81.9     | HiddenFromAllServerLists, Blocked |
-| 95.163.220.222  | HiddenFromAllServerLists, Blocked |
 | 169.254.13.86   | HiddenFromAllServerLists, Blocked |
 | 31.31.207.133   | HiddenFromAllServerLists, Blocked |
 | 95.163.223.207  | HiddenFromAllServerLists, Blocked |
@@ -32,7 +31,6 @@
 | 91.197.97.26    | HiddenFromAllServerLists, Blocked |
 | 95.163.229.145  | HiddenFromAllServerLists, Blocked |
 | 79.174.86.13    | HiddenFromAllServerLists, Blocked |
-| 95.163.220.33   | HiddenFromAllServerLists, Blocked |
 | 79.174.78.223   | HiddenFromAllServerLists, Blocked |
 | 194.58.126.228  | HiddenFromAllServerLists, Blocked |
 | 95.163.229.126  | HiddenFromAllServerLists, Blocked |
@@ -41,7 +39,8 @@
 | 79.174.84.72    | HiddenFromAllServerLists, Blocked |
 | 130.49.149.192  | HiddenFromAllServerLists, Blocked |
 | 130.49.149.97   | HiddenFromAllServerLists, Blocked |
-| 95.163.220.234  | HiddenFromAllServerLists, Blocked |
+| 95.163.220.0/24 | HiddenFromAllServerLists, Blocked |
+| 79.174.80.211   | HiddenFromAllServerLists, Blocked |
 | 169.254.114.72  | HiddenFromAllServerLists, Blocked |
 | 151.248.116.141 | HiddenFromAllServerLists, Blocked |
 | 151.248.116.22  | HiddenFromAllServerLists, Blocked |
@@ -101,7 +100,7 @@
 | (?i)(?:[bƅƁΒВＢБᴮ฿Ⓑ]&#124;🄱)-?(?:[eеẹėéèＥЭ]&#124;🄴)-?(?:[bƅƁΒВＢБᴮ฿Ⓑ]&#124;🄱)-?[рp]-?[ийn]-?[КK]-?[СC]                     | HiddenFromAllServerLists, Blocked |
 | (?i)([Asia] 纯)                                                                                                              | HiddenFromAllServerLists, Blocked |
 | (?i)((ANA&#124;АNA&#124;АНЭ&#124;4НА)(RC&#124;ЯC)(HY)(\s*)\[KITS)                                                           | HiddenFromAllServerLists, Blocked |
-| (?i)[АA][.+]?[НH][.+]?[АAЭ][.+]?[РPЛ][.+]?(?:[xхҳẋˣ×Ｘₓ]&#124;🅇)[.+]?[ИN][.+]?[ЯR](\s*)\[KITS                               | HiddenFromAllServerLists, Blocked |
+| (?i)[АA](.*)[НH](.*)[АAЭ](.*)[РPЛ](.*)(?:[xхҳẋˣ×Ｘₓ]&#124;🅇)(.*)[ИN](.*)[ЯR](\s*)\[KITS                                     | HiddenFromAllServerLists, Blocked |
 | (?i)(ТИШИНА UPGRADER)                                                                                                       | HiddenFromAllServerLists, Blocked |
 | (?i)(ТАЙЛЕР ДЕРДЕН)                                                                                                         | HiddenFromAllServerLists, Blocked |
 | (?i)(ТРОЛЛ \&#124; KITS)                                                                                                    | HiddenFromAllServerLists, Blocked |
@@ -133,15 +132,16 @@
 | (?i)(discord.gg/FaMfByzqY2)                                    | HiddenFromAllServerLists, Blocked |
 
 ## Thumbnail filters
-| Regex                                            | IconPreview                                                                               | BanFlags                          |
-| ------------------------------------------------ | ----------------------------------------------------------------------------------------- | --------------------------------- |
-| (https://r.resimlink.com/GXZ0gP2.jpg)            | ![https://r.resimlink.com/GXZ0gP2.jpg](https://r.resimlink.com/GXZ0gP2.jpg)               | HiddenFromInternetServerList      |
-| (?i)(nightmaresoft)                              |                                                                                           | HiddenFromInternetServerList      |
-| (?i)(playhardline.com)                           |                                                                                           | HiddenFromInternetServerList      |
-| (https://i.imgur.com/3iedNHu.png)                | ![https://i.imgur.com/3iedNHu.png](https://i.imgur.com/3iedNHu.png)                       | HiddenFromInternetServerList      |
-| (?i)(bebrix.shop)                                |                                                                                           | HiddenFromAllServerLists, Blocked |
-| (?i)(https://i.ibb.co/Q3GhJVdf/e9156a0c7632.png) | ![https://i.ibb.co/Q3GhJVdf/e9156a0c7632.png](https://i.ibb.co/Q3GhJVdf/e9156a0c7632.png) | HiddenFromAllServerLists, Blocked |
-| https://i.ibb.co/FLXZgY8N/0a1b31f09ecf.png       | ![https://i.ibb.co/FLXZgY8N/0a1b31f09ecf.png](https://i.ibb.co/FLXZgY8N/0a1b31f09ecf.png) | HiddenFromAllServerLists, Blocked |
+| Regex                                      | IconPreview                                                                               | BanFlags                          |
+| ------------------------------------------ | ----------------------------------------------------------------------------------------- | --------------------------------- |
+| (https://r.resimlink.com/GXZ0gP2.jpg)      | ![https://r.resimlink.com/GXZ0gP2.jpg](https://r.resimlink.com/GXZ0gP2.jpg)               | HiddenFromInternetServerList      |
+| (?i)(nightmaresoft)                        |                                                                                           | HiddenFromInternetServerList      |
+| (?i)(playhardline.com)                     |                                                                                           | HiddenFromInternetServerList      |
+| (https://i.imgur.com/3iedNHu.png)          | ![https://i.imgur.com/3iedNHu.png](https://i.imgur.com/3iedNHu.png)                       | HiddenFromInternetServerList      |
+| (?i)(bebrix.shop)                          |                                                                                           | HiddenFromAllServerLists, Blocked |
+| https://i.ibb.co/Q3GhJVdf/e9156a0c7632.png | ![https://i.ibb.co/Q3GhJVdf/e9156a0c7632.png](https://i.ibb.co/Q3GhJVdf/e9156a0c7632.png) | HiddenFromAllServerLists, Blocked |
+| https://i.ibb.co/FLXZgY8N/0a1b31f09ecf.png | ![https://i.ibb.co/FLXZgY8N/0a1b31f09ecf.png](https://i.ibb.co/FLXZgY8N/0a1b31f09ecf.png) | HiddenFromAllServerLists, Blocked |
+| https://i.imgur.com/yokAx7O.png            | ![https://i.imgur.com/yokAx7O.png](https://i.imgur.com/yokAx7O.png)                       | HiddenFromAllServerLists, Blocked |
 
 ## SteamId filters
 | SteamId           | BanFlags                          |
