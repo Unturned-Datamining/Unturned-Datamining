@@ -40,6 +40,8 @@
 | 91.197.99.110   | HiddenFromAllServerLists, Blocked |
 | 79.174.84.72    | HiddenFromAllServerLists, Blocked |
 | 130.49.149.192  | HiddenFromAllServerLists, Blocked |
+| 130.49.149.97   | HiddenFromAllServerLists, Blocked |
+| 95.163.220.234  | HiddenFromAllServerLists, Blocked |
 | 169.254.114.72  | HiddenFromAllServerLists, Blocked |
 | 151.248.116.141 | HiddenFromAllServerLists, Blocked |
 | 151.248.116.22  | HiddenFromAllServerLists, Blocked |
@@ -115,6 +117,7 @@
 | -------------------------------------------------------------- | --------------------------------- |
 | (?i)(nightmaresoft)                                            | HiddenFromInternetServerList      |
 | 欢迎加QQ群号942950895                                               | HiddenFromInternetServerList      |
+| QQ群88126722                                                    | HiddenFromInternetServerList      |
 | (?i)[bƅƁΒВＢБ฿][eеẹėéèＥЭ][bƅƁΒВＢБ฿]?[rгᴦΓＲЯ][iіíïＩⒾ][xхҳẋˣ×Ｘ🅇] | HiddenFromAllServerLists, Blocked |
 | (?i)[УY][БB6][ИN][ВB][АA][ЙN] [БB6][ОO0][МM][ЖX][ЕE][ЙN]       | HiddenFromAllServerLists, Blocked |
 | (?i)(Бебри)                                                    | HiddenFromAllServerLists, Blocked |
@@ -204,6 +207,7 @@
 | 85568392936897851 | HiddenFromAllServerLists, Blocked |
 | 85568392936898246 | HiddenFromAllServerLists, Blocked |
 | 85568392936901537 | HiddenFromAllServerLists, Blocked |
+| 85568392936904630 | HiddenFromAllServerLists, Blocked |
 | 85568392936879679 | HiddenFromAllServerLists, Blocked |
 | 85568392936882148 | HiddenFromAllServerLists, Blocked |
 | 85568392936882869 | HiddenFromAllServerLists, Blocked |
