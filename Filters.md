@@ -10,8 +10,8 @@
 | 155.117.255.21  | QueryPingWarning                  |
 | 120.220.76.83   | HiddenFromInternetServerList      |
 | 120.220.76.203  | HiddenFromInternetServerList      |
-| 110.42.10.221   | HiddenFromInternetServerList      |
-| 110.42.10.214   | HiddenFromInternetServerList      |
+| 110.42.96.41    | HiddenFromInternetServerList      |
+| 110.42.10.0/24  | HiddenFromInternetServerList      |
 | 111.170.155.49  | HiddenFromInternetServerList      |
 | 169.254.70.107  | HiddenFromAllServerLists, Blocked |
 | 89.108.70.5     | HiddenFromAllServerLists, Blocked |
@@ -40,6 +40,7 @@
 | 130.49.149.0/24 | HiddenFromAllServerLists, Blocked |
 | 95.163.220.0/24 | HiddenFromAllServerLists, Blocked |
 | 79.174.80.0/24  | HiddenFromAllServerLists, Blocked |
+| 194.58.114.233  | HiddenFromAllServerLists, Blocked |
 | 169.254.114.72  | HiddenFromAllServerLists, Blocked |
 | 151.248.116.141 | HiddenFromAllServerLists, Blocked |
 | 151.248.116.22  | HiddenFromAllServerLists, Blocked |
@@ -86,6 +87,8 @@
 | (?i)(QY酋源一服】)                                                                                                                                        | HiddenFromInternetServerList      |
 | (?i)(【QY酋源五服】)                                                                                                                                       | HiddenFromInternetServerList      |
 | (?i)(QQ群：194684295)                                                                                                                                  | HiddenFromInternetServerList      |
+| (?i)(ZY_臭鱼)                                                                                                                                          | HiddenFromInternetServerList      |
+| 前锋一服\&#124;                                                                                                                                          | HiddenFromInternetServerList      |
 | \[冰与火\]                                                                                                                                              | HiddenFromInternetServerList      |
 | \[萌新の计划\]\&#124;冰与火                                                                                                                                  | HiddenFromInternetServerList      |
 | \[TCD\]逃离塔科夫                                                                                                                                         | HiddenFromInternetServerList      |
@@ -96,9 +99,11 @@
 | (?i)(Бе)[бb][rрp][иiaА]                                                                                                                              | HiddenFromAllServerLists, Blocked |
 | (?i)(Бeбpиks)                                                                                                                                        | HiddenFromAllServerLists, Blocked |
 | (?i)(Бебикс)                                                                                                                                         | HiddenFromAllServerLists, Blocked |
+| (?i)(ⒷЕБРИₓ)                                                                                                                                         | HiddenFromAllServerLists, Blocked |
 | (?i)(?:[bƅƁΒВＢБᴮ฿Ⓑ]&#124;🄱)-?(?:[eеẹėéèＥЭ]&#124;🄴)-?(?:[bƅƁΒВＢБᴮ฿Ⓑ]&#124;🄱)-?[рp]-?[ийn]-?[КK]-?[СC]                                              | HiddenFromAllServerLists, Blocked |
 | (?i)([Asia] 纯)                                                                                                                                       | HiddenFromAllServerLists, Blocked |
 | (?i)((ANA&#124;АNA&#124;АНЭ&#124;4НА)(RC&#124;ЯC)(HY)(\s*)\[KITS)                                                                                    | HiddenFromAllServerLists, Blocked |
+| (?i)(АНАЛ_ХуЯ \[KITS)                                                                                                                                | HiddenFromAllServerLists, Blocked |
 | (?i)[АA](.*)[НH](.*)[АAЭ](.*)[РPЛ](.*)(?:[xхҳẋˣ×Ｘₓ]&#124;🅇)(.*)[ИN](.*)[ЯR](\s*)\[KITS                                                              | HiddenFromAllServerLists, Blocked |
 | (?i)(ТИШИНА UPGRADER)                                                                                                                                | HiddenFromAllServerLists, Blocked |
 | (?i)(ТАЙЛЕР ДЕРДЕН)                                                                                                                                  | HiddenFromAllServerLists, Blocked |
@@ -114,6 +119,7 @@
 | Regex                                                          | BanFlags                          |
 | -------------------------------------------------------------- | --------------------------------- |
 | (?i)(nightmaresoft)                                            | HiddenFromInternetServerList      |
+| QQ群 194684295                                                  | HiddenFromInternetServerList      |
 | 欢迎加QQ群号942950895                                               | HiddenFromInternetServerList      |
 | QQ群88126722                                                    | HiddenFromInternetServerList      |
 | (?i)[bƅƁΒВＢБ฿][eеẹėéèＥЭ][bƅƁΒВＢБ฿]?[rгᴦΓＲЯ][iіíïＩⒾ][xхҳẋˣ×Ｘ🅇] | HiddenFromAllServerLists, Blocked |
@@ -141,6 +147,8 @@
 | https://i.ibb.co/Q3GhJVdf/e9156a0c7632.png | ![https://i.ibb.co/Q3GhJVdf/e9156a0c7632.png](https://i.ibb.co/Q3GhJVdf/e9156a0c7632.png) | HiddenFromAllServerLists, Blocked |
 | https://i.ibb.co/FLXZgY8N/0a1b31f09ecf.png | ![https://i.ibb.co/FLXZgY8N/0a1b31f09ecf.png](https://i.ibb.co/FLXZgY8N/0a1b31f09ecf.png) | HiddenFromAllServerLists, Blocked |
 | https://i.imgur.com/yokAx7O.png            | ![https://i.imgur.com/yokAx7O.png](https://i.imgur.com/yokAx7O.png)                       | HiddenFromAllServerLists, Blocked |
+| https://i.imgur.com/vQuhSo8.png            | ![https://i.imgur.com/vQuhSo8.png](https://i.imgur.com/vQuhSo8.png)                       | HiddenFromAllServerLists, Blocked |
+| https://i.ibb.co/zhP4H6yp/image.png        | ![https://i.ibb.co/zhP4H6yp/image.png](https://i.ibb.co/zhP4H6yp/image.png)               | HiddenFromAllServerLists, Blocked |
 
 ## SteamId filters
 | SteamId           | BanFlags                          |
@@ -156,8 +164,12 @@
 | 85568392936763985 | HiddenFromInternetServerList      |
 | 85568392936746042 | HiddenFromInternetServerList      |
 | 85568392936900568 | HiddenFromInternetServerList      |
+| 85568392936901446 | HiddenFromInternetServerList      |
+| 85568392936901447 | HiddenFromInternetServerList      |
+| 85568392936904765 | HiddenFromInternetServerList      |
 | 85568392936525711 | HiddenFromInternetServerList      |
 | 85568392936901513 | HiddenFromInternetServerList      |
+| 85568392936902096 | HiddenFromInternetServerList      |
 | 85568392936588504 | HiddenFromInternetServerList      |
 | 85568392936826020 | HiddenFromAllServerLists, Blocked |
 | 85568392936826021 | HiddenFromAllServerLists, Blocked |
