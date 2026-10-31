@@ -41,6 +41,7 @@
 | 95.163.220.0/24 | HiddenFromAllServerLists, Blocked |
 | 79.174.80.0/24  | HiddenFromAllServerLists, Blocked |
 | 194.58.114.233  | HiddenFromAllServerLists, Blocked |
+| 194.67.74.103   | HiddenFromAllServerLists, Blocked |
 | 169.254.114.72  | HiddenFromAllServerLists, Blocked |
 | 151.248.116.141 | HiddenFromAllServerLists, Blocked |
 | 151.248.116.22  | HiddenFromAllServerLists, Blocked |
@@ -111,6 +112,7 @@
 | (?i)(Russia \[UPGRADER\&#124;)                                                                                                                       | HiddenFromAllServerLists, Blocked |
 | (?i)[bƅƁΒВＢБᴮ฿🄱][ОO0][МMW]([JЖXЭ]&#124;\)\&#124;\()(\s*\&#124; KITS)                                                                                | HiddenFromAllServerLists, Blocked |
 | (?i)(БАМЖЭ \&#124; KITS)                                                                                                                             | HiddenFromAllServerLists, Blocked |
+| (?i)(UPG Optimized )(\d+)                                                                                                                            | HiddenFromAllServerLists, Blocked |
 | (?i)(БУМЖЭ\&#124; KITS)                                                                                                                              | HiddenFromAllServerLists, Blocked |
 | (?i)(БОМЭЖ\&#124; KITS)                                                                                                                              | HiddenFromAllServerLists, Blocked |
 | (?i)(Лех заходи)                                                                                                                                     | HiddenFromAllServerLists, Blocked |
@@ -219,6 +221,7 @@
 | 85568392936898246 | HiddenFromAllServerLists, Blocked |
 | 85568392936901537 | HiddenFromAllServerLists, Blocked |
 | 85568392936904630 | HiddenFromAllServerLists, Blocked |
+| 85568392936911639 | HiddenFromAllServerLists, Blocked |
 | 85568392936879679 | HiddenFromAllServerLists, Blocked |
 | 85568392936882148 | HiddenFromAllServerLists, Blocked |
 | 85568392936882869 | HiddenFromAllServerLists, Blocked |
