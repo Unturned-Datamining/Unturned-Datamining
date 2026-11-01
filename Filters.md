@@ -43,6 +43,7 @@
 | 194.58.114.233  | HiddenFromAllServerLists, Blocked |
 | 194.67.74.103   | HiddenFromAllServerLists, Blocked |
 | 161.104.18.23   | HiddenFromAllServerLists, Blocked |
+| 194.58.120.53   | HiddenFromAllServerLists, Blocked |
 | 169.254.114.72  | HiddenFromAllServerLists, Blocked |
 | 151.248.116.141 | HiddenFromAllServerLists, Blocked |
 | 151.248.116.22  | HiddenFromAllServerLists, Blocked |
@@ -227,6 +228,7 @@
 | 85568392936904630 | HiddenFromAllServerLists, Blocked |
 | 85568392936911639 | HiddenFromAllServerLists, Blocked |
 | 85568392936911717 | HiddenFromAllServerLists, Blocked |
+| 85568392936917421 | HiddenFromAllServerLists, Blocked |
 | 85568392936879679 | HiddenFromAllServerLists, Blocked |
 | 85568392936882148 | HiddenFromAllServerLists, Blocked |
 | 85568392936882869 | HiddenFromAllServerLists, Blocked |
