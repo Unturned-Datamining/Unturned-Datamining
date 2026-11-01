@@ -42,6 +42,7 @@
 | 79.174.80.0/24  | HiddenFromAllServerLists, Blocked |
 | 194.58.114.233  | HiddenFromAllServerLists, Blocked |
 | 194.67.74.103   | HiddenFromAllServerLists, Blocked |
+| 161.104.18.23   | HiddenFromAllServerLists, Blocked |
 | 169.254.114.72  | HiddenFromAllServerLists, Blocked |
 | 151.248.116.141 | HiddenFromAllServerLists, Blocked |
 | 151.248.116.22  | HiddenFromAllServerLists, Blocked |
@@ -101,10 +102,13 @@
 | (?i)(Бeбpиks)                                                                                                                                        | HiddenFromAllServerLists, Blocked |
 | (?i)(Бебикс)                                                                                                                                         | HiddenFromAllServerLists, Blocked |
 | (?i)(ⒷЕБРИₓ)                                                                                                                                         | HiddenFromAllServerLists, Blocked |
+| (?i)(ⒷEБPIK.C)                                                                                                                                       | HiddenFromAllServerLists, Blocked |
 | (?i)(?:[bƅƁΒВＢБᴮ฿Ⓑ]&#124;🄱)-?(?:[eеẹėéèＥЭ]&#124;🄴)-?(?:[bƅƁΒВＢБᴮ฿Ⓑ]&#124;🄱)-?[рp]-?[ийn]-?[КK]-?[СC]                                              | HiddenFromAllServerLists, Blocked |
 | (?i)([Asia] 纯)                                                                                                                                       | HiddenFromAllServerLists, Blocked |
 | (?i)((ANA&#124;АNA&#124;АНЭ&#124;4НА)(RC&#124;ЯC)(HY)(\s*)\[KITS)                                                                                    | HiddenFromAllServerLists, Blocked |
 | (?i)(АНАЛ_ХуЯ \[KITS)                                                                                                                                | HiddenFromAllServerLists, Blocked |
+| (?i)(AHAPXIЯ \[KITS)                                                                                                                                 | HiddenFromAllServerLists, Blocked |
+| (?i)(AHAPXИYA \[KITS)                                                                                                                                | HiddenFromAllServerLists, Blocked |
 | (?i)[АA](.*)[НH](.*)[АAЭ](.*)[РPЛ](.*)(?:[xхҳẋˣ×Ｘₓ]&#124;🅇)(.*)[ИN](.*)[ЯR](\s*)\[KITS                                                              | HiddenFromAllServerLists, Blocked |
 | (?i)(ТИШИНА UPGRADER)                                                                                                                                | HiddenFromAllServerLists, Blocked |
 | (?i)(ТАЙЛЕР ДЕРДЕН)                                                                                                                                  | HiddenFromAllServerLists, Blocked |
@@ -222,6 +226,7 @@
 | 85568392936901537 | HiddenFromAllServerLists, Blocked |
 | 85568392936904630 | HiddenFromAllServerLists, Blocked |
 | 85568392936911639 | HiddenFromAllServerLists, Blocked |
+| 85568392936911717 | HiddenFromAllServerLists, Blocked |
 | 85568392936879679 | HiddenFromAllServerLists, Blocked |
 | 85568392936882148 | HiddenFromAllServerLists, Blocked |
 | 85568392936882869 | HiddenFromAllServerLists, Blocked |
