@@ -102,8 +102,8 @@
 | (?i)(Бе)[бb][rрp][иiaА]                                                                                                                              | HiddenFromAllServerLists, Blocked |
 | (?i)(Бeбpиks)                                                                                                                                        | HiddenFromAllServerLists, Blocked |
 | (?i)(Бебикс)                                                                                                                                         | HiddenFromAllServerLists, Blocked |
-| (?i)(BEBRIKS)                                                                                                                                        | HiddenFromAllServerLists, Blocked |
-| (?i)(ВEВR1KS)                                                                                                                                        | HiddenFromAllServerLists, Blocked |
+| (?i)(BEBR.+KS)                                                                                                                                       | HiddenFromAllServerLists, Blocked |
+| (?i)(ВEВR.+KS)                                                                                                                                       | HiddenFromAllServerLists, Blocked |
 | (?i)(ⒷЕБРИₓ)                                                                                                                                         | HiddenFromAllServerLists, Blocked |
 | (?i)(ⒷEБPIK.C)                                                                                                                                       | HiddenFromAllServerLists, Blocked |
 | (?i)(?:[bƅƁΒВＢБᴮ฿Ⓑ]&#124;🄱)-?(?:[eеẹėéèＥЭ]&#124;🄴)-?(?:[bƅƁΒВＢБᴮ฿Ⓑ]&#124;🄱)-?[рp]-?[ийn]-?[КK]-?[СC]                                              | HiddenFromAllServerLists, Blocked |
