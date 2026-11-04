@@ -40,9 +40,8 @@
 | 194.58.114.233    | HiddenFromAllServerLists, Blocked                      |
 | 194.67.74.103     | HiddenFromAllServerLists, Blocked                      |
 | 161.104.18.23     | HiddenFromAllServerLists, Blocked                      |
-| 194.58.120.53     | HiddenFromAllServerLists, Blocked                      |
 | 194.67.125.37     | HiddenFromAllServerLists, Blocked                      |
-| 194.58.120.162    | HiddenFromAllServerLists, Blocked                      |
+| 194.58.120.0/24   | HiddenFromAllServerLists, Blocked                      |
 | 169.254.70.107    | HiddenFromAllServerLists, Blocked                      |
 | 89.108.70.5       | HiddenFromAllServerLists, Blocked                      |
 | 151.248.116.208   | HiddenFromAllServerLists, Blocked                      |
@@ -66,6 +65,7 @@
 | 194.58.126.226    | HiddenFromAllServerLists, Blocked                      |
 | 89.108.81.69      | HiddenFromAllServerLists, Blocked                      |
 | 95.163.230.198    | HiddenFromAllServerLists, Blocked                      |
+| 194.58.120.11     | HiddenFromAllServerLists, Blocked                      |
 | 16.5.6.53         | Blocked, WorkshopWarning, HiddenFromInternetServerList |
 | 16.5.6.44         | Blocked, WorkshopWarning, HiddenFromInternetServerList |
 
@@ -113,6 +113,7 @@
 | (?i)(AHAPXIЯ \[KITS)                                                                                                                                 | HiddenFromAllServerLists, Blocked |
 | (?i)(AHAPXИYA \[KITS)                                                                                                                                | HiddenFromAllServerLists, Blocked |
 | (?i)(АХАХАРХИЯ \[KITS)                                                                                                                               | HiddenFromAllServerLists, Blocked |
+| (?i)(АХАРХИЯ \[KITS)                                                                                                                                 | HiddenFromAllServerLists, Blocked |
 | (?i)[АA](.*)[НH](.*)[АAЭ](.*)[РPЛ](.*)(?:[xхҳẋˣ×Ｘₓ]&#124;🅇)(.*)[ИN](.*)[ЯR](\s*)\[KITS                                                              | HiddenFromAllServerLists, Blocked |
 | (?i)(ТИШИНА UPGRADER)                                                                                                                                | HiddenFromAllServerLists, Blocked |
 | (?i)(ТАЙЛЕР ДЕРДЕН)                                                                                                                                  | HiddenFromAllServerLists, Blocked |
