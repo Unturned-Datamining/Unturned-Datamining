@@ -3,7 +3,7 @@
 ## IPv4 filters
 | Address           | BanFlags                                               |
 | ----------------- | ------------------------------------------------------ |
-| 212.22.92.5:27111 | MonetizationWarning                                    |
+| 212.22.92.5:27111 | MonetizationWarning, HiddenFromInternetServerList      |
 | 216.173.70.154    | HiddenFromInternetServerList                           |
 | 216.57.106.76     | HiddenFromInternetServerList                           |
 | 82.97.246.13      | HiddenFromInternetServerList                           |
@@ -43,6 +43,7 @@
 | 194.67.125.37     | HiddenFromAllServerLists, Blocked                      |
 | 194.58.120.0/24   | HiddenFromAllServerLists, Blocked                      |
 | 161.104.29.51     | HiddenFromAllServerLists, Blocked                      |
+| 151.248.117.167   | HiddenFromAllServerLists, Blocked                      |
 | 169.254.70.107    | HiddenFromAllServerLists, Blocked                      |
 | 89.108.70.5       | HiddenFromAllServerLists, Blocked                      |
 | 151.248.116.208   | HiddenFromAllServerLists, Blocked                      |
@@ -107,6 +108,7 @@
 | (?i)(ВEВR.?KS)                                                                                                                                       | HiddenFromAllServerLists, Blocked |
 | (?i)(ⒷЕБРИₓ)                                                                                                                                         | HiddenFromAllServerLists, Blocked |
 | (?i)(ⒷEБPIK.C)                                                                                                                                       | HiddenFromAllServerLists, Blocked |
+| (?i)(BEBRA \[KITS)                                                                                                                                   | HiddenFromAllServerLists, Blocked |
 | (?i)(?:[bƅƁΒВＢБᴮ฿Ⓑ]&#124;🄱)-?(?:[eеẹėéèＥЭ]&#124;🄴)-?(?:[bƅƁΒВＢБᴮ฿Ⓑ]&#124;🄱)-?[рp]-?[ийn]-?[КK]-?[СC]                                              | HiddenFromAllServerLists, Blocked |
 | (?i)([Asia] 纯)                                                                                                                                       | HiddenFromAllServerLists, Blocked |
 | (?i)((ANA&#124;АNA&#124;АНЭ&#124;4НА)(RC&#124;ЯC)(HY)(\s*)\[KITS)                                                                                    | HiddenFromAllServerLists, Blocked |
@@ -116,6 +118,7 @@
 | (?i)(АХАХАРХИЯ \[KITS)                                                                                                                               | HiddenFromAllServerLists, Blocked |
 | (?i)(АХАРХИЯ \[KITS)                                                                                                                                 | HiddenFromAllServerLists, Blocked |
 | (?i)(АХАРХУЯ \[KITS)                                                                                                                                 | HiddenFromAllServerLists, Blocked |
+| (?i)(АНАРХИХИХИ \[KITS)                                                                                                                              | HiddenFromAllServerLists, Blocked |
 | (?i)[АA](.*)[НH](.*)[АAЭ](.*)[РPЛ](.*)(?:[xхҳẋˣ×Ｘₓ]&#124;🅇)(.*)[ИN](.*)[ЯR](\s*)\[KITS                                                              | HiddenFromAllServerLists, Blocked |
 | (?i)(ТИШИНА UPGRADER)                                                                                                                                | HiddenFromAllServerLists, Blocked |
 | (?i)(ТАЙЛЕР ДЕРДЕН)                                                                                                                                  | HiddenFromAllServerLists, Blocked |
@@ -167,7 +170,7 @@
 | SteamId           | BanFlags                                               |
 | ----------------- | ------------------------------------------------------ |
 | 85568392927283679 | HiddenFromInternetServerList                           |
-| 85568392936892330 | MonetizationWarning                                    |
+| 85568392936892330 | MonetizationWarning, HiddenFromInternetServerList      |
 | 85568392925961914 | HiddenFromInternetServerList                           |
 | 85568392935880681 | HiddenFromInternetServerList                           |
 | 85568392935919577 | HiddenFromInternetServerList                           |
@@ -235,6 +238,7 @@
 | 85568392936917421 | HiddenFromAllServerLists, Blocked                      |
 | 85568392936920655 | HiddenFromAllServerLists, Blocked                      |
 | 85568392936933768 | HiddenFromAllServerLists, Blocked                      |
+| 85568392936933897 | HiddenFromAllServerLists, Blocked                      |
 | 85568392936879679 | HiddenFromAllServerLists, Blocked                      |
 | 85568392936882148 | HiddenFromAllServerLists, Blocked                      |
 | 85568392936882869 | HiddenFromAllServerLists, Blocked                      |
