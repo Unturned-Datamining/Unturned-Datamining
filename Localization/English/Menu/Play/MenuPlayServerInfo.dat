@@ -34,7 +34,7 @@ QueryPing Ping: {0}ms
 Monetization_None Monetization: None
 Monetization_NonGameplay Monetization: Non-Gameplay
 Monetization_Monetized Monetization: Affects Gameplay
-HostBan_MonetizationWarning Warning: this server is breaking the monetization rules which took effect on June 11th 2021. Click here for more information.
+HostBan_MonetizationWarning Warning: this server is breaking the game's monetization rules. Click here for more information.
 HostBan_WorkshopWarning Warning: the workshop files used by this server have been banned.
 HostBan_QueryPingWarning Warning: this server uses an "anycast" proxy for DDoS protection, so in-game ping may be higher than shown.
 HostBan_IncorrectMonetizationTagWarning Warning: this server has the monetization tag incorrectly set. "None" is for unmonetized or donation-only servers, and "NonGameplay" is for servers with purchases that do not provide a gameplay advantage.

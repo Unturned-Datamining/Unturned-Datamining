@@ -81,6 +81,11 @@ public class MenuSurvivorsGroupUI
         Characters.ungroup();
     }
 
+    private static void OnPrivateProfileBannerClicked(ISleekElement button)
+    {
+        ConvenientSavedata.get().setFlag("Private_Profile_Group_Change_Seen");
+    }
+
     private static void onClickedBackButton(ISleekElement button)
     {
         MenuSurvivorsUI.open();
@@ -105,6 +110,39 @@ public class MenuSurvivorsGroupUI
         container.SizeScale_Y = 1f;
         MenuUI.container.AddChild(container);
         active = false;
+        if (!ConvenientSavedata.get().hasFlag("Private_Profile_Group_Change_Seen"))
+        {
+            SleekWebLinkButton sleekWebLinkButton = new SleekWebLinkButton();
+            sleekWebLinkButton.Url = "https://support.smartlydressedgames.com/hc/en-us/articles/54342213977364-Why-isn-t-the-Steam-Groups-feature-working";
+            sleekWebLinkButton.PositionOffset_X = 100f;
+            sleekWebLinkButton.SizeOffset_X = -200f;
+            sleekWebLinkButton.SizeOffset_Y = 60f;
+            sleekWebLinkButton.SizeScale_X = 1f;
+            sleekWebLinkButton.internalButton.OnClicked += OnPrivateProfileBannerClicked;
+            container.AddChild(sleekWebLinkButton);
+            ISleekLabel sleekLabel = Glazier.Get().CreateLabel();
+            sleekLabel.PositionOffset_X = 10f;
+            sleekLabel.SizeScale_X = 1f;
+            sleekLabel.SizeOffset_X = -20f;
+            sleekLabel.SizeOffset_Y = 30f;
+            sleekLabel.TextAlignment = TextAnchor.MiddleCenter;
+            sleekLabel.FontSize = ESleekFontSize.Medium;
+            sleekLabel.TextContrastContext = ETextContrastContext.ColorfulBackdrop;
+            sleekLabel.Text = localization.format("PrivateProfileChange_Header");
+            sleekLabel.TextColor = ESleekTint.BAD;
+            sleekWebLinkButton.AddChild(sleekLabel);
+            ISleekLabel sleekLabel2 = Glazier.Get().CreateLabel();
+            sleekLabel2.PositionOffset_X = 10f;
+            sleekLabel2.PositionOffset_Y = 30f;
+            sleekLabel2.SizeOffset_X = -20f;
+            sleekLabel2.SizeOffset_Y = -30f;
+            sleekLabel2.SizeScale_X = 1f;
+            sleekLabel2.SizeScale_Y = 1f;
+            sleekLabel2.TextAlignment = TextAnchor.MiddleCenter;
+            sleekLabel2.TextContrastContext = ETextContrastContext.ColorfulBackdrop;
+            sleekLabel2.Text = localization.format("PrivateProfileChange_Body");
+            sleekWebLinkButton.AddChild(sleekLabel2);
+        }
         groups = Provider.provider.communityService.getGroups();
         markerColorBox = Glazier.Get().CreateBox();
         markerColorBox.PositionOffset_X = -120f;

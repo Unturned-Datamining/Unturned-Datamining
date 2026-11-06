@@ -638,6 +638,10 @@ public class PlayerEquipment : PlayerCaller
 
     public bool checkSelection(byte page, byte x, byte y)
     {
+        if (page < PlayerInventory.SLOTS)
+        {
+            return page == equippedPage;
+        }
         if (page == equippedPage && x == equipped_x)
         {
             return y == equipped_y;

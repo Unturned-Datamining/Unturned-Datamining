@@ -2574,21 +2574,27 @@ public class BarricadeManager : SteamCaller
                         for (int j = 0; j < list.Count; j++)
                         {
                             LevelBuildableObject levelBuildableObject = list[j];
-                            if (levelBuildableObject != null && levelBuildableObject.asset is ItemBarricadeAsset itemBarricadeAsset)
+                            if (levelBuildableObject == null || !(levelBuildableObject.asset is ItemBarricadeAsset itemBarricadeAsset))
                             {
-                                Barricade barricade = new Barricade(itemBarricadeAsset);
-                                BarricadeData barricadeData = new BarricadeData(barricade, levelBuildableObject.point, levelBuildableObject.rotation, 0uL, 0uL, uint.MaxValue, ++instanceCount);
-                                NetId netId = NetIdRegistry.ClaimBlock(3u);
-                                if (manager.spawnBarricade(barricadeRegion2, barricade.asset.GUID, barricade.state, barricadeData.point, barricadeData.rotation, (byte)Mathf.RoundToInt((float)(int)barricade.health / (float)(int)itemBarricadeAsset.health * 100f), 0uL, 0uL, netId) != null)
+                                continue;
+                            }
+                            Barricade barricade = new Barricade(itemBarricadeAsset);
+                            BarricadeData barricadeData = new BarricadeData(barricade, levelBuildableObject.point, levelBuildableObject.rotation, 0uL, 0uL, uint.MaxValue, ++instanceCount);
+                            NetId netId = NetIdRegistry.ClaimBlock(3u);
+                            if (manager.spawnBarricade(barricadeRegion2, barricade.asset.GUID, barricade.state, barricadeData.point, barricadeData.rotation, (byte)Mathf.RoundToInt((float)(int)barricade.health / (float)(int)itemBarricadeAsset.health * 100f), 0uL, 0uL, netId) != null)
+                            {
+                                BarricadeDrop tail = barricadeRegion2.drops.GetTail();
+                                tail.serversideData = barricadeData;
+                                barricadeRegion2.barricades.Add(barricadeData);
+                                num5++;
+                                if (tail.interactable is IBarricadePlacedHandler barricadePlacedHandler)
                                 {
-                                    barricadeRegion2.drops.GetTail().serversideData = barricadeData;
-                                    barricadeRegion2.barricades.Add(barricadeData);
-                                    num5++;
+                                    barricadePlacedHandler.OnBarricadePlaced(barricadeRegion2, tail);
                                 }
-                                else
-                                {
-                                    UnturnedLog.warn($"Failed to spawn default barricade object {itemBarricadeAsset.name} at {levelBuildableObject.point}");
-                                }
+                            }
+                            else
+                            {
+                                UnturnedLog.warn($"Failed to spawn default barricade object {itemBarricadeAsset.name} at {levelBuildableObject.point}");
                             }
                         }
                     }

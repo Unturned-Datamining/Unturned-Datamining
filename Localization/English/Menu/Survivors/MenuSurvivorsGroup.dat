@@ -2,3 +2,6 @@ Nick_Field_Label Private Name
 Marker_Color_Box Marker Color
 Group_Box_Label Group
 Group_Box No Group
+
+PrivateProfileChange_Header September 2026: Private Steam Profiles
+PrivateProfileChange_Body As of September 2026, multiplayer servers are unable to verify your group membership if your profile is private. Valve have confirmed this is an intentional privacy-related fix. Click for workarounds and more info.

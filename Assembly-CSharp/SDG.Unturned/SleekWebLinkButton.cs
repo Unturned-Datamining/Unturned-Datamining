@@ -8,7 +8,7 @@ public class SleekWebLinkButton : SleekWrapper
 
     public bool useLinkFiltering = true;
 
-    private ISleekButton internalButton;
+    internal ISleekButton internalButton;
 
     public string Text
     {
