@@ -43,6 +43,7 @@
 | 194.226.112.67    | HiddenFromAllServerLists, Blocked                      |
 | 168.222.143.7     | HiddenFromAllServerLists, Blocked                      |
 | 91.229.11.62      | HiddenFromAllServerLists, Blocked                      |
+| 168.222.142.215   | HiddenFromAllServerLists, Blocked                      |
 | 16.5.6.53         | Blocked, WorkshopWarning, HiddenFromInternetServerList |
 | 16.5.6.44         | Blocked, WorkshopWarning, HiddenFromInternetServerList |
 
@@ -235,5 +236,6 @@
 | 85568392936990692 | HiddenFromAllServerLists, Blocked                      |
 | 85568392936990797 | HiddenFromAllServerLists, Blocked                      |
 | 85568392936990853 | HiddenFromAllServerLists, Blocked                      |
+| 85568392936993978 | HiddenFromAllServerLists, Blocked                      |
 | 85568392936881756 | Blocked, WorkshopWarning, HiddenFromInternetServerList |
 | 85568392936886100 | Blocked, WorkshopWarning, HiddenFromInternetServerList |
