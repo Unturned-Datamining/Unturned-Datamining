@@ -66,14 +66,15 @@
 | (?i)(🄱-RIX)                                                                                                                                         | HiddenFromAllServerLists, Blocked |
 | (?i)[УY][БB6][ИN][ВB][АA][ЙN] [БB6][ОO0][МM][ЖX][ЕE][ЙN]                                                                                             | HiddenFromAllServerLists, Blocked |
 | (?i)(Бе)[бb][rрp][иiaА]                                                                                                                              | HiddenFromAllServerLists, Blocked |
-| (?i)(Бeбpиks)                                                                                                                                        | HiddenFromAllServerLists, Blocked |
-| (?i)(Бебикс)                                                                                                                                         | HiddenFromAllServerLists, Blocked |
-| (?i)(BEBR.?KS)                                                                                                                                       | HiddenFromAllServerLists, Blocked |
-| (?i)(ВEВR.?KS)                                                                                                                                       | HiddenFromAllServerLists, Blocked |
+| (?i)Бeбpиks                                                                                                                                          | HiddenFromAllServerLists, Blocked |
+| (?i)Бебикс                                                                                                                                           | HiddenFromAllServerLists, Blocked |
+| (?i)BEBR.?KS                                                                                                                                         | HiddenFromAllServerLists, Blocked |
+| (?i)ВEВR.?KS                                                                                                                                         | HiddenFromAllServerLists, Blocked |
 | (?i)(ⒷЕБРИₓ)                                                                                                                                         | HiddenFromAllServerLists, Blocked |
 | (?i)(ⒷEБPIK.C)                                                                                                                                       | HiddenFromAllServerLists, Blocked |
-| (?i)(BEBRA \[KITS)                                                                                                                                   | HiddenFromAllServerLists, Blocked |
-| (?i)(BEBRА \[KITS)                                                                                                                                   | HiddenFromAllServerLists, Blocked |
+| (?i)BEBRA \[KITS                                                                                                                                     | HiddenFromAllServerLists, Blocked |
+| (?i)BEBRА \[KITS                                                                                                                                     | HiddenFromAllServerLists, Blocked |
+| (?i)BEARBRIKS                                                                                                                                        | HiddenFromAllServerLists, Blocked |
 | (?i)(?:[bƅƁΒВＢБᴮ฿Ⓑ]&#124;🄱)-?(?:[eеẹėéèＥЭ]&#124;🄴)-?(?:[bƅƁΒВＢБᴮ฿Ⓑ]&#124;🄱)-?[рp]-?[ийn]-?[КK]-?[СC]                                              | HiddenFromAllServerLists, Blocked |
 | (?i)((ANA&#124;АNA&#124;АНЭ&#124;4НА)(RC&#124;ЯC)(HY)(\s*)\[KITS)                                                                                    | HiddenFromAllServerLists, Blocked |
 | (?i)АНАЛ_ХуЯ \[KITS                                                                                                                                  | HiddenFromAllServerLists, Blocked |
@@ -84,6 +85,7 @@
 | (?i)АХАРХУЯ \[KITS                                                                                                                                   | HiddenFromAllServerLists, Blocked |
 | (?i)АНАРХИХИХИ \[KITS                                                                                                                                | HiddenFromAllServerLists, Blocked |
 | (?i)АНАРХИХХИ \[KITS                                                                                                                                 | HiddenFromAllServerLists, Blocked |
+| (?i)АРХИЯ \[KITS                                                                                                                                     | HiddenFromAllServerLists, Blocked |
 | (?i)[АA](.?)[НH](.?)[АAЭ](.?)[РPЛ](.?)(?:[xхҳẋˣ×Ｘₓ]&#124;🅇)(.?)[ИN](.?)[ЯR](\s*)\[KITS                                                              | HiddenFromAllServerLists, Blocked |
 | (?i)ТИШИНА UPGRADER                                                                                                                                  | HiddenFromAllServerLists, Blocked |
 | (?i)ТАЙЛЕР ДЕРДЕН                                                                                                                                    | HiddenFromAllServerLists, Blocked |
@@ -94,7 +96,6 @@
 | (?i)(UPG Optimized )(\d+)                                                                                                                            | HiddenFromAllServerLists, Blocked |
 | (?i)БУМЖЭ\&#124; KITS                                                                                                                                | HiddenFromAllServerLists, Blocked |
 | (?i)БОМЭЖ\&#124; KITS                                                                                                                                | HiddenFromAllServerLists, Blocked |
-| (?i)Лех заходи                                                                                                                                       | HiddenFromAllServerLists, Blocked |
 
 ## Description filters
 | Regex                                                          | BanFlags                          |
@@ -227,5 +228,6 @@
 | 85568392936993978 | HiddenFromAllServerLists, Blocked                      |
 | 85568392936996622 | HiddenFromAllServerLists, Blocked                      |
 | 85568392936996718 | HiddenFromAllServerLists, Blocked                      |
+| 85568392936999812 | HiddenFromAllServerLists, Blocked                      |
 | 85568392936881756 | Blocked, WorkshopWarning, HiddenFromInternetServerList |
 | 85568392936886100 | Blocked, WorkshopWarning, HiddenFromInternetServerList |
