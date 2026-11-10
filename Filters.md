@@ -15,27 +15,14 @@
 | 111.170.155.49    | HiddenFromInternetServerList                           |
 | 95.163.229.228    | HiddenFromAllServerLists, Blocked                      |
 | 91.197.98.0/24    | HiddenFromAllServerLists, Blocked                      |
-| 79.174.81.9       | HiddenFromAllServerLists, Blocked                      |
-| 169.254.13.86     | HiddenFromAllServerLists, Blocked                      |
-| 31.31.207.133     | HiddenFromAllServerLists, Blocked                      |
-| 95.163.223.207    | HiddenFromAllServerLists, Blocked                      |
-| 169.254.70.23     | HiddenFromAllServerLists, Blocked                      |
-| 169.254.10.227    | HiddenFromAllServerLists, Blocked                      |
-| 95.163.231.92     | HiddenFromAllServerLists, Blocked                      |
-| 95.163.223.243    | HiddenFromAllServerLists, Blocked                      |
-| 91.197.97.26      | HiddenFromAllServerLists, Blocked                      |
-| 95.163.229.145    | HiddenFromAllServerLists, Blocked                      |
-| 95.163.228.150    | HiddenFromAllServerLists, Blocked                      |
-| 91.197.99.110     | HiddenFromAllServerLists, Blocked                      |
-| 79.174.84.72      | HiddenFromAllServerLists, Blocked                      |
 | 130.49.149.0/24   | HiddenFromAllServerLists, Blocked                      |
 | 95.163.220.0/24   | HiddenFromAllServerLists, Blocked                      |
 | 79.174.80.0/24    | HiddenFromAllServerLists, Blocked                      |
+| 194.58.120.0/24   | HiddenFromAllServerLists, Blocked                      |
 | 194.58.114.233    | HiddenFromAllServerLists, Blocked                      |
 | 194.67.74.103     | HiddenFromAllServerLists, Blocked                      |
 | 161.104.18.23     | HiddenFromAllServerLists, Blocked                      |
 | 194.67.125.37     | HiddenFromAllServerLists, Blocked                      |
-| 194.58.120.0/24   | HiddenFromAllServerLists, Blocked                      |
 | 161.104.29.51     | HiddenFromAllServerLists, Blocked                      |
 | 151.248.117.167   | HiddenFromAllServerLists, Blocked                      |
 | 151.248.117.30    | HiddenFromAllServerLists, Blocked                      |
@@ -44,6 +31,7 @@
 | 168.222.143.7     | HiddenFromAllServerLists, Blocked                      |
 | 91.229.11.62      | HiddenFromAllServerLists, Blocked                      |
 | 168.222.142.215   | HiddenFromAllServerLists, Blocked                      |
+| 89.108.88.248     | HiddenFromAllServerLists, Blocked                      |
 | 16.5.6.53         | Blocked, WorkshopWarning, HiddenFromInternetServerList |
 | 16.5.6.44         | Blocked, WorkshopWarning, HiddenFromInternetServerList |
 
@@ -237,5 +225,7 @@
 | 85568392936990797 | HiddenFromAllServerLists, Blocked                      |
 | 85568392936990853 | HiddenFromAllServerLists, Blocked                      |
 | 85568392936993978 | HiddenFromAllServerLists, Blocked                      |
+| 85568392936996622 | HiddenFromAllServerLists, Blocked                      |
+| 85568392936996718 | HiddenFromAllServerLists, Blocked                      |
 | 85568392936881756 | Blocked, WorkshopWarning, HiddenFromInternetServerList |
 | 85568392936886100 | Blocked, WorkshopWarning, HiddenFromInternetServerList |
