@@ -75,6 +75,7 @@
 | (?i)BEBRA \[KITS                                                                                                                                     | HiddenFromAllServerLists, Blocked |
 | (?i)BEBRА \[KITS                                                                                                                                     | HiddenFromAllServerLists, Blocked |
 | (?i)BEARBRIKS                                                                                                                                        | HiddenFromAllServerLists, Blocked |
+| (?i)БЕБ-PIX                                                                                                                                          | HiddenFromAllServerLists, Blocked |
 | (?i)(?:[bƅƁΒВＢБᴮ฿Ⓑ]&#124;🄱)-?(?:[eеẹėéèＥЭ]&#124;🄴)-?(?:[bƅƁΒВＢБᴮ฿Ⓑ]&#124;🄱)-?[рp]-?[ийn]-?[КK]-?[СC]                                              | HiddenFromAllServerLists, Blocked |
 | (?i)((ANA&#124;АNA&#124;АНЭ&#124;4НА)(RC&#124;ЯC)(HY)(\s*)\[KITS)                                                                                    | HiddenFromAllServerLists, Blocked |
 | (?i)АНАЛ_ХуЯ \[KITS                                                                                                                                  | HiddenFromAllServerLists, Blocked |
@@ -229,5 +230,6 @@
 | 85568392936996622 | HiddenFromAllServerLists, Blocked                      |
 | 85568392936996718 | HiddenFromAllServerLists, Blocked                      |
 | 85568392936999812 | HiddenFromAllServerLists, Blocked                      |
+| 85568392937000062 | HiddenFromAllServerLists, Blocked                      |
 | 85568392936881756 | Blocked, WorkshopWarning, HiddenFromInternetServerList |
 | 85568392936886100 | Blocked, WorkshopWarning, HiddenFromInternetServerList |
