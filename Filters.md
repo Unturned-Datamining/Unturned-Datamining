@@ -76,6 +76,7 @@
 | (?i)BEBRА \[KITS                                                                                                                                     | HiddenFromAllServerLists, Blocked |
 | (?i)BEARBRIKS                                                                                                                                        | HiddenFromAllServerLists, Blocked |
 | (?i)БЕБ-PIX                                                                                                                                          | HiddenFromAllServerLists, Blocked |
+| (?i)БЕБ-IX \[KITS                                                                                                                                    | HiddenFromAllServerLists, Blocked |
 | (?i)(?:[bƅƁΒВＢБᴮ฿Ⓑ]&#124;🄱)-?(?:[eеẹėéèＥЭ]&#124;🄴)-?(?:[bƅƁΒВＢБᴮ฿Ⓑ]&#124;🄱)-?[рp]-?[ийn]-?[КK]-?[СC]                                              | HiddenFromAllServerLists, Blocked |
 | (?i)((ANA&#124;АNA&#124;АНЭ&#124;4НА)(RC&#124;ЯC)(HY)(\s*)\[KITS)                                                                                    | HiddenFromAllServerLists, Blocked |
 | (?i)АНАЛ_ХуЯ \[KITS                                                                                                                                  | HiddenFromAllServerLists, Blocked |
@@ -87,6 +88,7 @@
 | (?i)АНАРХИХИХИ \[KITS                                                                                                                                | HiddenFromAllServerLists, Blocked |
 | (?i)АНАРХИХХИ \[KITS                                                                                                                                 | HiddenFromAllServerLists, Blocked |
 | (?i)АРХИЯ \[KITS                                                                                                                                     | HiddenFromAllServerLists, Blocked |
+| (?i)АНРАХИЯ \[KITS                                                                                                                                   | HiddenFromAllServerLists, Blocked |
 | (?i)[АA](.?)[НH](.?)[АAЭ](.?)[РPЛ](.?)(?:[xхҳẋˣ×Ｘₓ]&#124;🅇)(.?)[ИN](.?)[ЯR](\s*)\[KITS                                                              | HiddenFromAllServerLists, Blocked |
 | (?i)ТИШИНА UPGRADER                                                                                                                                  | HiddenFromAllServerLists, Blocked |
 | (?i)ТАЙЛЕР ДЕРДЕН                                                                                                                                    | HiddenFromAllServerLists, Blocked |
