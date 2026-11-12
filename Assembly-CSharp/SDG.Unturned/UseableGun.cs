@@ -1910,7 +1910,7 @@ public class UseableGun : Useable
             if (index != byte.MaxValue)
             {
                 ItemJar item2 = base.player.inventory.getItem(page, index);
-                ItemCaliberAsset asset = item2.GetAsset<ItemCaliberAsset>();
+                ItemSightAsset asset = item2.GetAsset<ItemSightAsset>();
                 if (asset == null || (asset.shouldVerifyHash && !Hash.verifyHash(hash, asset.hash)))
                 {
                     return;
@@ -1990,7 +1990,7 @@ public class UseableGun : Useable
             if (index != byte.MaxValue)
             {
                 ItemJar item2 = base.player.inventory.getItem(page, index);
-                ItemCaliberAsset asset = item2.GetAsset<ItemCaliberAsset>();
+                ItemTacticalAsset asset = item2.GetAsset<ItemTacticalAsset>();
                 if (asset == null || (asset.shouldVerifyHash && !Hash.verifyHash(hash, asset.hash)))
                 {
                     return;
@@ -2070,7 +2070,7 @@ public class UseableGun : Useable
             if (index != byte.MaxValue)
             {
                 ItemJar item2 = base.player.inventory.getItem(page, index);
-                ItemCaliberAsset asset = item2.GetAsset<ItemCaliberAsset>();
+                ItemGripAsset asset = item2.GetAsset<ItemGripAsset>();
                 if (asset == null || (asset.shouldVerifyHash && !Hash.verifyHash(hash, asset.hash)))
                 {
                     return;
@@ -2150,7 +2150,7 @@ public class UseableGun : Useable
             if (index != byte.MaxValue)
             {
                 ItemJar item2 = base.player.inventory.getItem(page, index);
-                ItemCaliberAsset asset = item2.GetAsset<ItemCaliberAsset>();
+                ItemBarrelAsset asset = item2.GetAsset<ItemBarrelAsset>();
                 if (asset == null || (asset.shouldVerifyHash && !Hash.verifyHash(hash, asset.hash)))
                 {
                     return;
@@ -2234,7 +2234,7 @@ public class UseableGun : Useable
             if (index != byte.MaxValue)
             {
                 ItemJar item2 = base.player.inventory.getItem(page, index);
-                ItemCaliberAsset asset = item2.GetAsset<ItemCaliberAsset>();
+                ItemMagazineAsset asset = item2.GetAsset<ItemMagazineAsset>();
                 if (asset == null || (asset.shouldVerifyHash && !Hash.verifyHash(hash, asset.hash)))
                 {
                     return;
