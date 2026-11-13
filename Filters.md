@@ -78,6 +78,7 @@
 | (?i)БЕБ-PIX                                                                                                                                          | HiddenFromAllServerLists, Blocked |
 | (?i)БЕБ-IX \[KITS                                                                                                                                    | HiddenFromAllServerLists, Blocked |
 | (?i)BEB-IX \[KITS                                                                                                                                    | HiddenFromAllServerLists, Blocked |
+| (?i)БЕБИБРКС \[KITS                                                                                                                                  | HiddenFromAllServerLists, Blocked |
 | (?i)(?:[bƅƁΒВＢБᴮ฿Ⓑ]&#124;🄱)-?(?:[eеẹėéèＥЭ]&#124;🄴)-?(?:[bƅƁΒВＢБᴮ฿Ⓑ]&#124;🄱)-?[рp]-?[ийn]-?[КK]-?[СC]                                              | HiddenFromAllServerLists, Blocked |
 | (?i)((ANA&#124;АNA&#124;АНЭ&#124;4НА)(RC&#124;ЯC)(HY)(\s*)\[KITS)                                                                                    | HiddenFromAllServerLists, Blocked |
 | (?i)АНАЛ_ХуЯ \[KITS                                                                                                                                  | HiddenFromAllServerLists, Blocked |
@@ -86,19 +87,14 @@
 | (?i)АХАХАРХИЯ \[KITS                                                                                                                                 | HiddenFromAllServerLists, Blocked |
 | (?i)АХАРХИЯ \[KITS                                                                                                                                   | HiddenFromAllServerLists, Blocked |
 | (?i)АХАРХУЯ \[KITS                                                                                                                                   | HiddenFromAllServerLists, Blocked |
-| (?i)АНАРХИХИХИ \[KITS                                                                                                                                | HiddenFromAllServerLists, Blocked |
 | (?i)АНАРХИХ(.*) \[KITS                                                                                                                               | HiddenFromAllServerLists, Blocked |
 | (?i)АРХИЯ \[KITS                                                                                                                                     | HiddenFromAllServerLists, Blocked |
 | (?i)АНРАХИЯ \[KITS                                                                                                                                   | HiddenFromAllServerLists, Blocked |
 | (?i)ANARCHIY \[KITS                                                                                                                                  | HiddenFromAllServerLists, Blocked |
+| (?i)ANARXIYA \[KITS                                                                                                                                  | HiddenFromAllServerLists, Blocked |
 | (?i)[АA](.?)[НH](.?)[АAЭ](.?)[РPЛ](.?)(?:[xхҳẋˣ×Ｘₓ]&#124;🅇)(.?)[ИN](.?)[ЯR](\s*)\[KITS                                                              | HiddenFromAllServerLists, Blocked |
-| (?i)ТИШИНА UPGRADER                                                                                                                                  | HiddenFromAllServerLists, Blocked |
-| (?i)ТАЙЛЕР ДЕРДЕН                                                                                                                                    | HiddenFromAllServerLists, Blocked |
-| (?i)ТРОЛЛ \&#124; KITS                                                                                                                               | HiddenFromAllServerLists, Blocked |
-| (?i)Russia \[UPGRADER                                                                                                                                | HiddenFromAllServerLists, Blocked |
 | (?i)[bƅƁΒВＢБᴮ฿🄱][ОO0][МMW]([JЖXЭ]&#124;\)\&#124;\()(\s*\&#124; KITS)                                                                                | HiddenFromAllServerLists, Blocked |
 | (?i)БАМЖЭ \&#124; KITS                                                                                                                               | HiddenFromAllServerLists, Blocked |
-| (?i)(UPG Optimized )(\d+)                                                                                                                            | HiddenFromAllServerLists, Blocked |
 | (?i)БУМЖЭ\&#124; KITS                                                                                                                                | HiddenFromAllServerLists, Blocked |
 | (?i)БОМЭЖ\&#124; KITS                                                                                                                                | HiddenFromAllServerLists, Blocked |
 
@@ -156,51 +152,6 @@
 | 85568392936901447 | HiddenFromInternetServerList                           |
 | 85568392936904765 | HiddenFromInternetServerList                           |
 | 85568392936588504 | HiddenFromInternetServerList                           |
-| 85568392936826020 | HiddenFromAllServerLists, Blocked                      |
-| 85568392936826021 | HiddenFromAllServerLists, Blocked                      |
-| 85568392936826022 | HiddenFromAllServerLists, Blocked                      |
-| 85568392936826019 | HiddenFromAllServerLists, Blocked                      |
-| 85568392936806261 | HiddenFromAllServerLists, Blocked                      |
-| 85568392936806262 | HiddenFromAllServerLists, Blocked                      |
-| 85568392936806263 | HiddenFromAllServerLists, Blocked                      |
-| 85568392936834038 | HiddenFromAllServerLists, Blocked                      |
-| 85568392936834042 | HiddenFromAllServerLists, Blocked                      |
-| 85568392936834044 | HiddenFromAllServerLists, Blocked                      |
-| 85568392936837027 | HiddenFromAllServerLists, Blocked                      |
-| 85568392936837028 | HiddenFromAllServerLists, Blocked                      |
-| 85568392936837026 | HiddenFromAllServerLists, Blocked                      |
-| 85568392936834046 | HiddenFromAllServerLists, Blocked                      |
-| 85568392936837315 | HiddenFromAllServerLists, Blocked                      |
-| 85568392936837316 | HiddenFromAllServerLists, Blocked                      |
-| 85568392936837317 | HiddenFromAllServerLists, Blocked                      |
-| 85568392936837326 | HiddenFromAllServerLists, Blocked                      |
-| 85568392936837399 | HiddenFromAllServerLists, Blocked                      |
-| 85568392936837400 | HiddenFromAllServerLists, Blocked                      |
-| 85568392936842414 | HiddenFromAllServerLists, Blocked                      |
-| 85568392936845347 | HiddenFromAllServerLists, Blocked                      |
-| 85568392936845348 | HiddenFromAllServerLists, Blocked                      |
-| 85568392936845404 | HiddenFromAllServerLists, Blocked                      |
-| 85568392936845591 | HiddenFromAllServerLists, Blocked                      |
-| 85568392936845587 | HiddenFromAllServerLists, Blocked                      |
-| 85568392936848373 | HiddenFromAllServerLists, Blocked                      |
-| 85568392936848374 | HiddenFromAllServerLists, Blocked                      |
-| 85568392936848372 | HiddenFromAllServerLists, Blocked                      |
-| 85568392936848899 | HiddenFromAllServerLists, Blocked                      |
-| 85568392936848901 | HiddenFromAllServerLists, Blocked                      |
-| 85568392936850734 | HiddenFromAllServerLists, Blocked                      |
-| 85568392936850735 | HiddenFromAllServerLists, Blocked                      |
-| 85568392936853147 | HiddenFromAllServerLists, Blocked                      |
-| 85568392936853316 | HiddenFromAllServerLists, Blocked                      |
-| 85568392936853317 | HiddenFromAllServerLists, Blocked                      |
-| 85568392936853335 | HiddenFromAllServerLists, Blocked                      |
-| 85568392936853336 | HiddenFromAllServerLists, Blocked                      |
-| 85568392936864710 | HiddenFromAllServerLists, Blocked                      |
-| 85568392936872681 | HiddenFromAllServerLists, Blocked                      |
-| 85568392936879279 | HiddenFromAllServerLists, Blocked                      |
-| 85568392936879296 | HiddenFromAllServerLists, Blocked                      |
-| 85568392936879333 | HiddenFromAllServerLists, Blocked                      |
-| 85568392936879368 | HiddenFromAllServerLists, Blocked                      |
-| 85568392936897851 | HiddenFromAllServerLists, Blocked                      |
 | 85568392936898246 | HiddenFromAllServerLists, Blocked                      |
 | 85568392936901537 | HiddenFromAllServerLists, Blocked                      |
 | 85568392936904630 | HiddenFromAllServerLists, Blocked                      |
@@ -235,5 +186,6 @@
 | 85568392936996718 | HiddenFromAllServerLists, Blocked                      |
 | 85568392936999812 | HiddenFromAllServerLists, Blocked                      |
 | 85568392937000062 | HiddenFromAllServerLists, Blocked                      |
+| 85568392937005840 | HiddenFromAllServerLists, Blocked                      |
 | 85568392936881756 | Blocked, WorkshopWarning, HiddenFromInternetServerList |
 | 85568392936886100 | Blocked, WorkshopWarning, HiddenFromInternetServerList |
