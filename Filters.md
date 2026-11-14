@@ -70,6 +70,8 @@
 | (?i)Бебикс                                                                                                                                           | HiddenFromAllServerLists, Blocked |
 | (?i)BEBR.?KS                                                                                                                                         | HiddenFromAllServerLists, Blocked |
 | (?i)ВEВR.?KS                                                                                                                                         | HiddenFromAllServerLists, Blocked |
+| (?i)BEBR.?KZ \[KITS                                                                                                                                  | HiddenFromAllServerLists, Blocked |
+| (?i)BEBRIK3 \[KITS                                                                                                                                   | HiddenFromAllServerLists, Blocked |
 | (?i)ⒷЕБРИₓ                                                                                                                                           | HiddenFromAllServerLists, Blocked |
 | (?i)ⒷEБPIK                                                                                                                                           | HiddenFromAllServerLists, Blocked |
 | (?i)BEBRA \[KITS                                                                                                                                     | HiddenFromAllServerLists, Blocked |
@@ -79,7 +81,6 @@
 | (?i)БЕБ-IX \[KITS                                                                                                                                    | HiddenFromAllServerLists, Blocked |
 | (?i)BEB-IX \[KITS                                                                                                                                    | HiddenFromAllServerLists, Blocked |
 | (?i)БЕБИБРКС \[KITS                                                                                                                                  | HiddenFromAllServerLists, Blocked |
-| (?i)BEBRIKZ \[KITS                                                                                                                                   | HiddenFromAllServerLists, Blocked |
 | (?i)(?:[bƅƁΒВＢБᴮ฿Ⓑ]&#124;🄱)-?(?:[eеẹėéèＥЭ]&#124;🄴)-?(?:[bƅƁΒВＢБᴮ฿Ⓑ]&#124;🄱)-?[рp]-?[ийn]-?[КK]-?[СC]                                              | HiddenFromAllServerLists, Blocked |
 | (?i)((ANA&#124;АNA&#124;АНЭ&#124;4НА)(RC&#124;ЯC)(HY)(\s*)\[KITS)                                                                                    | HiddenFromAllServerLists, Blocked |
 | (?i)АНАЛ_ХуЯ \[KITS                                                                                                                                  | HiddenFromAllServerLists, Blocked |
@@ -93,6 +94,7 @@
 | (?i)АНРАХИЯ \[KITS                                                                                                                                   | HiddenFromAllServerLists, Blocked |
 | (?i)ANARCHIY \[KITS                                                                                                                                  | HiddenFromAllServerLists, Blocked |
 | (?i)ANARXIYA \[KITS                                                                                                                                  | HiddenFromAllServerLists, Blocked |
+| (?i)AHARXIYA \[KITS                                                                                                                                  | HiddenFromAllServerLists, Blocked |
 | (?i)[АA](.?)[НH](.?)[АAЭ](.?)[РPЛ](.?)(?:[xхҳẋˣ×Ｘₓ]&#124;🅇)(.?)[ИN](.?)[ЯR](\s*)\[KITS                                                              | HiddenFromAllServerLists, Blocked |
 | (?i)[bƅƁΒВＢБᴮ฿🄱][ОO0][МMW]([JЖXЭ]&#124;\)\&#124;\()(\s*\&#124; KITS)                                                                                | HiddenFromAllServerLists, Blocked |
 | (?i)БАМЖЭ \&#124; KITS                                                                                                                               | HiddenFromAllServerLists, Blocked |
@@ -188,5 +190,6 @@
 | 85568392936999812 | HiddenFromAllServerLists, Blocked                      |
 | 85568392937000062 | HiddenFromAllServerLists, Blocked                      |
 | 85568392937005840 | HiddenFromAllServerLists, Blocked                      |
+| 85568392937008941 | HiddenFromAllServerLists, Blocked                      |
 | 85568392936881756 | Blocked, WorkshopWarning, HiddenFromInternetServerList |
 | 85568392936886100 | Blocked, WorkshopWarning, HiddenFromInternetServerList |
