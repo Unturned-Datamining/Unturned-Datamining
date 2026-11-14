@@ -79,6 +79,7 @@
 | (?i)БЕБ-IX \[KITS                                                                                                                                    | HiddenFromAllServerLists, Blocked |
 | (?i)BEB-IX \[KITS                                                                                                                                    | HiddenFromAllServerLists, Blocked |
 | (?i)БЕБИБРКС \[KITS                                                                                                                                  | HiddenFromAllServerLists, Blocked |
+| (?i)BEBRIKZ \[KITS                                                                                                                                   | HiddenFromAllServerLists, Blocked |
 | (?i)(?:[bƅƁΒВＢБᴮ฿Ⓑ]&#124;🄱)-?(?:[eеẹėéèＥЭ]&#124;🄴)-?(?:[bƅƁΒВＢБᴮ฿Ⓑ]&#124;🄱)-?[рp]-?[ийn]-?[КK]-?[СC]                                              | HiddenFromAllServerLists, Blocked |
 | (?i)((ANA&#124;АNA&#124;АНЭ&#124;4НА)(RC&#124;ЯC)(HY)(\s*)\[KITS)                                                                                    | HiddenFromAllServerLists, Blocked |
 | (?i)АНАЛ_ХуЯ \[KITS                                                                                                                                  | HiddenFromAllServerLists, Blocked |
