@@ -68,10 +68,6 @@
 | (?i)(Бе)[бb][rрp][иiaА]                                                                                                                              | HiddenFromAllServerLists, Blocked |
 | (?i)Бeбpиks                                                                                                                                          | HiddenFromAllServerLists, Blocked |
 | (?i)Бебикс                                                                                                                                           | HiddenFromAllServerLists, Blocked |
-| (?i)BEBR.?KS                                                                                                                                         | HiddenFromAllServerLists, Blocked |
-| (?i)ВEВR.?KS                                                                                                                                         | HiddenFromAllServerLists, Blocked |
-| (?i)BEBR.?KZ \[KITS                                                                                                                                  | HiddenFromAllServerLists, Blocked |
-| (?i)BEBRIK3 \[KITS                                                                                                                                   | HiddenFromAllServerLists, Blocked |
 | (?i)ⒷЕБРИₓ                                                                                                                                           | HiddenFromAllServerLists, Blocked |
 | (?i)ⒷEБPIK                                                                                                                                           | HiddenFromAllServerLists, Blocked |
 | (?i)BEBRA \[KITS                                                                                                                                     | HiddenFromAllServerLists, Blocked |
@@ -81,6 +77,7 @@
 | (?i)БЕБ-IX \[KITS                                                                                                                                    | HiddenFromAllServerLists, Blocked |
 | (?i)BEB-IX \[KITS                                                                                                                                    | HiddenFromAllServerLists, Blocked |
 | (?i)БЕБИБРКС \[KITS                                                                                                                                  | HiddenFromAllServerLists, Blocked |
+| (?i)[BВБΒⒷ]+[\W_]*[EЕЭΕ3]+[\W_]*[BВБΒV]+[\W_]*[RРPΡ]+[\W_]*(?:.[\W_]*)?[KКΚ]+[\W_]*(?:[SЅС5]&#124;[ZЗ3])                                             | HiddenFromAllServerLists, Blocked |
 | (?i)(?:[bƅƁΒВＢБᴮ฿Ⓑ]&#124;🄱)-?(?:[eеẹėéèＥЭ]&#124;🄴)-?(?:[bƅƁΒВＢБᴮ฿Ⓑ]&#124;🄱)-?[рp]-?[ийn]-?[КK]-?[СC]                                              | HiddenFromAllServerLists, Blocked |
 | (?i)((ANA&#124;АNA&#124;АНЭ&#124;4НА)(RC&#124;ЯC)(HY)(\s*)\[KITS)                                                                                    | HiddenFromAllServerLists, Blocked |
 | (?i)АНАЛ_ХуЯ \[KITS                                                                                                                                  | HiddenFromAllServerLists, Blocked |
@@ -95,6 +92,7 @@
 | (?i)ANARCHIY \[KITS                                                                                                                                  | HiddenFromAllServerLists, Blocked |
 | (?i)ANARXIYA \[KITS                                                                                                                                  | HiddenFromAllServerLists, Blocked |
 | (?i)AHARXIYA \[KITS                                                                                                                                  | HiddenFromAllServerLists, Blocked |
+| (?i)AHARXIA \[KITS                                                                                                                                   | HiddenFromAllServerLists, Blocked |
 | (?i)[АA](.?)[НH](.?)[АAЭ](.?)[РPЛ](.?)(?:[xхҳẋˣ×Ｘₓ]&#124;🅇)(.?)[ИN](.?)[ЯR](\s*)\[KITS                                                              | HiddenFromAllServerLists, Blocked |
 | (?i)[bƅƁΒВＢБᴮ฿🄱][ОO0][МMW]([JЖXЭ]&#124;\)\&#124;\()(\s*\&#124; KITS)                                                                                | HiddenFromAllServerLists, Blocked |
 | (?i)БАМЖЭ \&#124; KITS                                                                                                                               | HiddenFromAllServerLists, Blocked |
