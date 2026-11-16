@@ -77,10 +77,12 @@
 | (?i)БЕБ-IX \[KITS                                                                                                                                    | HiddenFromAllServerLists, Blocked |
 | (?i)BEB-IX \[KITS                                                                                                                                    | HiddenFromAllServerLists, Blocked |
 | (?i)БЕБИБРКС \[KITS                                                                                                                                  | HiddenFromAllServerLists, Blocked |
+| (?i)BEBRС \[KITS                                                                                                                                     | HiddenFromAllServerLists, Blocked |
 | (?i)[BВБΒⒷ]+[\W_]*[EЕЭΕ3]+[\W_]*[BВБΒV]+[\W_]*[RРPΡ]+[\W_]*(?:.[\W_]*)?[KКΚ]+[\W_]*(?:[SЅС5]&#124;[ZЗ3])                                             | HiddenFromAllServerLists, Blocked |
 | (?i)(?:[bƅƁΒВＢБᴮ฿Ⓑ]&#124;🄱)-?(?:[eеẹėéèＥЭ]&#124;🄴)-?(?:[bƅƁΒВＢБᴮ฿Ⓑ]&#124;🄱)-?[рp]-?[ийn]-?[КK]-?[СC]                                              | HiddenFromAllServerLists, Blocked |
 | (?i)((ANA&#124;АNA&#124;АНЭ&#124;4НА)(RC&#124;ЯC)(HY)(\s*)\[KITS)                                                                                    | HiddenFromAllServerLists, Blocked |
 | (?i)АНАЛ_ХуЯ \[KITS                                                                                                                                  | HiddenFromAllServerLists, Blocked |
+| (?i)AHAR \[KITS                                                                                                                                      | HiddenFromAllServerLists, Blocked |
 | (?i)AHAPXIЯ \[KITS                                                                                                                                   | HiddenFromAllServerLists, Blocked |
 | (?i)AHAPXИYA \[KITS                                                                                                                                  | HiddenFromAllServerLists, Blocked |
 | (?i)АХАХАРХИЯ \[KITS                                                                                                                                 | HiddenFromAllServerLists, Blocked |
@@ -133,6 +135,13 @@
 | https://i.imgur.com/vQuhSo8.png            | ![https://i.imgur.com/vQuhSo8.png](https://i.imgur.com/vQuhSo8.png)                       | HiddenFromAllServerLists, Blocked |
 | https://i.ibb.co/zhP4H6yp/image.png        | ![https://i.ibb.co/zhP4H6yp/image.png](https://i.ibb.co/zhP4H6yp/image.png)               | HiddenFromAllServerLists, Blocked |
 | https://i.ibb.co/7NYZZTs9/97bb3d27ee65.png | ![https://i.ibb.co/7NYZZTs9/97bb3d27ee65.png](https://i.ibb.co/7NYZZTs9/97bb3d27ee65.png) | HiddenFromAllServerLists, Blocked |
+| (?i)(trycloudflare.com)                    |                                                                                           | HiddenFromInternetServerList      |
+| (?i)(ngrok-free.app)                       |                                                                                           | HiddenFromInternetServerList      |
+| (?i)(ngrok-free.dev)                       |                                                                                           | HiddenFromInternetServerList      |
+| (?i)(loca.lt)                              |                                                                                           | HiddenFromInternetServerList      |
+| (?i)(localtunnel.me)                       |                                                                                           | HiddenFromInternetServerList      |
+| (?i)(localhost.run)                        |                                                                                           | HiddenFromInternetServerList      |
+| (?i)(pinggy.link)                          |                                                                                           | HiddenFromInternetServerList      |
 
 ## SteamId filters
 | SteamId           | BanFlags                                               |
@@ -189,5 +198,8 @@
 | 85568392937000062 | HiddenFromAllServerLists, Blocked                      |
 | 85568392937005840 | HiddenFromAllServerLists, Blocked                      |
 | 85568392937008941 | HiddenFromAllServerLists, Blocked                      |
+| 85568392937017607 | HiddenFromAllServerLists, Blocked                      |
+| 85568392937017608 | HiddenFromAllServerLists, Blocked                      |
 | 85568392936881756 | Blocked, WorkshopWarning, HiddenFromInternetServerList |
 | 85568392936886100 | Blocked, WorkshopWarning, HiddenFromInternetServerList |
+| 85568392937002947 | HiddenFromInternetServerList                           |
