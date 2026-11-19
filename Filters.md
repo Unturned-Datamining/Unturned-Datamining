@@ -79,6 +79,7 @@
 | (?i)БЕБИБРКС \[KITS                                                                                                                                   | HiddenFromAllServerLists, Blocked |
 | (?i)BEBRС \[KITS                                                                                                                                      | HiddenFromAllServerLists, Blocked |
 | (?i)BEBRИКИ \[KITS                                                                                                                                    | HiddenFromAllServerLists, Blocked |
+| (?i)beber \[KITS                                                                                                                                      | HiddenFromAllServerLists, Blocked |
 | (?i)[BВБΒⒷ]+[\W_]*[EЕЭΕ3]+[\W_]*[BВБΒV]+[\W_]*[RРPΡ]+[\W_]*(?:.[\W_]*)?[KКΚ]+[\W_]*(?:[SЅС5]&#124;[ZЗ3])                                              | HiddenFromAllServerLists, Blocked |
 | (?i)(?:[bƅƁΒВＢБᴮ฿Ⓑ]&#124;🄱)-?(?:[eеẹėéèëＥЭ]&#124;🄴)-?(?:[bƅƁΒВＢБᴮ฿Ⓑ]&#124;🄱)-?[рp]-?[ийn]-?[КK]-?[СC]                                              | HiddenFromAllServerLists, Blocked |
 | (?i)((ANA&#124;АNA&#124;АНЭ&#124;4НА)(RC&#124;ЯC)(HY)(\s*)\[KITS)                                                                                     | HiddenFromAllServerLists, Blocked |
@@ -96,6 +97,7 @@
 | (?i)ANARXIYA \[KITS                                                                                                                                   | HiddenFromAllServerLists, Blocked |
 | (?i)AHARXIYA \[KITS                                                                                                                                   | HiddenFromAllServerLists, Blocked |
 | (?i)AHARXIA \[KITS                                                                                                                                    | HiddenFromAllServerLists, Blocked |
+| (?i)AHARХХИЯ \[KITS                                                                                                                                   | HiddenFromAllServerLists, Blocked |
 | (?i)AHAR АБДУЛ \[KITS                                                                                                                                 | HiddenFromAllServerLists, Blocked |
 | (?i)[АA](.?)[НH](.?)[АAЭ](.?)[РPЛ](.?)(?:[xхҳẋˣ×Ｘₓ]&#124;🅇)(.?)[ИN](.?)[ЯR](\s*)\[KITS                                                               | HiddenFromAllServerLists, Blocked |
 | (?i)[bƅƁΒВＢБᴮ฿🄱][ОO0][МMW]([JЖXЭ]&#124;\)\&#124;\()(\s*\&#124; KITS)                                                                                 | HiddenFromAllServerLists, Blocked |
@@ -203,6 +205,8 @@
 | 85568392937017607 | HiddenFromAllServerLists, Blocked                      |
 | 85568392937017608 | HiddenFromAllServerLists, Blocked                      |
 | 85568392937022305 | HiddenFromAllServerLists, Blocked                      |
+| 85568392937026101 | HiddenFromAllServerLists, Blocked                      |
+| 85568392937026103 | HiddenFromAllServerLists, Blocked                      |
 | 85568392936881756 | Blocked, WorkshopWarning, HiddenFromInternetServerList |
 | 85568392936886100 | Blocked, WorkshopWarning, HiddenFromInternetServerList |
 | 85568392937002947 | HiddenFromInternetServerList                           |
