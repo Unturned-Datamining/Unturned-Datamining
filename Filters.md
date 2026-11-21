@@ -80,6 +80,7 @@
 | (?i)BEBRИКИ \[KITS                                                                                                                                    | HiddenFromAllServerLists, Blocked |
 | (?i)beber \[KITS                                                                                                                                      | HiddenFromAllServerLists, Blocked |
 | (?i)BOBRIX \[KITS                                                                                                                                     | HiddenFromAllServerLists, Blocked |
+| (?i)BOOBRIX \[KITS                                                                                                                                    | HiddenFromAllServerLists, Blocked |
 | (?i)[BВБΒⒷ]+[\W_]*[EЕЭΕ3]+[\W_]*[BВБΒV]+[\W_]*[RРPΡ]+[\W_]*(?:.[\W_]*)?[KКΚ]+[\W_]*(?:[SЅС5]&#124;[ZЗ3])                                              | HiddenFromAllServerLists, Blocked |
 | (?i)(?:[bƅƁΒВＢБᴮ฿Ⓑ]&#124;🄱)-?(?:[eеẹėéèëＥЭ]&#124;🄴)-?(?:[bƅƁΒВＢБᴮ฿Ⓑ]&#124;🄱)-?[рp]-?[ийn]-?[КK]-?[СC]                                              | HiddenFromAllServerLists, Blocked |
 | (?i)((ANA&#124;АNA&#124;АНЭ&#124;4НА)(RC&#124;ЯC)(HY)(\s*)\[KITS)                                                                                     | HiddenFromAllServerLists, Blocked |
@@ -105,6 +106,7 @@
 | (?i)БАМЖЭ \&#124; KITS                                                                                                                                | HiddenFromAllServerLists, Blocked |
 | (?i)БУМЖЭ\&#124; KITS                                                                                                                                 | HiddenFromAllServerLists, Blocked |
 | (?i)БОМЭЖ\&#124; KITS                                                                                                                                 | HiddenFromAllServerLists, Blocked |
+| (?i)MINECRAFT \[KITS,TPA,HOME\] WIPED 21.11                                                                                                           | HiddenFromAllServerLists, Blocked |
 
 ## Description filters
 | Regex                                                           | BanFlags                          |
@@ -208,6 +210,7 @@
 | 85568392937022305 | HiddenFromAllServerLists, Blocked                      |
 | 85568392937026101 | HiddenFromAllServerLists, Blocked                      |
 | 85568392937026103 | HiddenFromAllServerLists, Blocked                      |
+| 85568392937033359 | HiddenFromAllServerLists, Blocked                      |
 | 85568392936881756 | Blocked, WorkshopWarning, HiddenFromInternetServerList |
 | 85568392936886100 | Blocked, WorkshopWarning, HiddenFromInternetServerList |
 | 85568392937002947 | HiddenFromInternetServerList                           |
