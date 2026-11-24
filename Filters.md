@@ -81,7 +81,9 @@
 | (?i)beber \[KITS                                                                                                                                      | HiddenFromAllServerLists, Blocked |
 | (?i)BOBRIX \[KITS                                                                                                                                     | HiddenFromAllServerLists, Blocked |
 | (?i)BOOBRIX \[KITS                                                                                                                                    | HiddenFromAllServerLists, Blocked |
+| (?i)BEEBRIX \[KITS                                                                                                                                    | HiddenFromAllServerLists, Blocked |
 | (?i)PEBRIX \[KITS                                                                                                                                     | HiddenFromAllServerLists, Blocked |
+| (?i)PEPBRIX \[KITS                                                                                                                                    | HiddenFromAllServerLists, Blocked |
 | (?i)[BВБΒⒷ]+[\W_]*[EЕЭΕ3]+[\W_]*[BВБΒV]+[\W_]*[RРPΡ]+[\W_]*(?:.[\W_]*)?[KКΚ]+[\W_]*(?:[SЅС5]&#124;[ZЗ3])                                              | HiddenFromAllServerLists, Blocked |
 | (?i)(?:[bƅƁΒВＢБᴮ฿Ⓑ]&#124;🄱)-?(?:[eеẹėéèëＥЭ]&#124;🄴)-?(?:[bƅƁΒВＢБᴮ฿Ⓑ]&#124;🄱)-?[рp]-?[ийn]-?[КK]-?[СC]                                              | HiddenFromAllServerLists, Blocked |
 | (?i)((ANA&#124;АNA&#124;АНЭ&#124;4НА)(RC&#124;ЯC)(HY)(\s*)\[KITS)                                                                                     | HiddenFromAllServerLists, Blocked |
@@ -102,6 +104,8 @@
 | (?i)AHARХХИЯ \[KITS                                                                                                                                   | HiddenFromAllServerLists, Blocked |
 | (?i)AHAPXYZ \[KITS                                                                                                                                    | HiddenFromAllServerLists, Blocked |
 | (?i)AHAPXИЯ \[KITS                                                                                                                                    | HiddenFromAllServerLists, Blocked |
+| (?i)AHAPXYK \[KITS                                                                                                                                    | HiddenFromAllServerLists, Blocked |
+| (?i)AHAPXIXIXI \[KITS                                                                                                                                 | HiddenFromAllServerLists, Blocked |
 | (?i)AHA P X I YA \[KITS                                                                                                                               | HiddenFromAllServerLists, Blocked |
 | (?i)AHAR АБДУЛ \[KITS                                                                                                                                 | HiddenFromAllServerLists, Blocked |
 | (?i)[АA](.?)[НH](.?)[АAЭ](.?)[РPЛ](.?)(?:[xхҳẋˣ×Ｘₓ]&#124;🅇)(.?)[ИN](.?)[ЯR](\s*)\[KITS                                                               | HiddenFromAllServerLists, Blocked |
