@@ -36,84 +36,86 @@
 | 16.5.6.44         | Blocked, WorkshopWarning, HiddenFromInternetServerList |
 
 ## Name filters
-| Regex                                                                                                                                                 | BanFlags                          |
-| ----------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------- |
-| (?i)(Auschwitz&#124;Nazi&#124;Nazista&#124;Anti-Negro&#124;Anti-Jew&#124;Anti-Judeus)                                                                 | HiddenFromAllServerLists, Blocked |
-| (?i)(nigger)                                                                                                                                          | HiddenFromAllServerLists, Blocked |
-| (?i)(cheat)                                                                                                                                           | HiddenFromAllServerLists, Blocked |
-| (?i)(hack)                                                                                                                                            | HiddenFromAllServerLists, Blocked |
-| (?i)(HypnoticClient)                                                                                                                                  | HiddenFromAllServerLists, Blocked |
-| (?i)(CHЕАТ)                                                                                                                                           | HiddenFromInternetServerList      |
-| (?i)(ЛУЧШИЙ БECПЛAТНЫЙ ЧИT)                                                                                                                           | HiddenFromInternetServerList      |
-| (?i)(no\s*-*\s*lag)                                                                                                                                   | HiddenFromInternetServerList      |
-| (?i)(Hardline)                                                                                                                                        | HiddenFromInternetServerList      |
-| (?i)(Hardӏine)                                                                                                                                        | HiddenFromInternetServerList      |
-| (?i)(Wasabi)                                                                                                                                          | QueryPingWarning                  |
-| (?i)(疯狂水世界)                                                                                                                                           | HiddenFromInternetServerList      |
-| (?i)(【ZY臭鱼】)                                                                                                                                          | HiddenFromInternetServerList      |
-| (?i)(【ZY臭鱼五服】)                                                                                                                                        | HiddenFromInternetServerList      |
-| (?i)(【ZY臭鱼二服】)                                                                                                                                        | HiddenFromInternetServerList      |
-| (?i)(【酋源一服】)                                                                                                                                          | HiddenFromInternetServerList      |
-| (?i)(QY酋源一服】)                                                                                                                                         | HiddenFromInternetServerList      |
-| (?i)(【QY酋源五服】)                                                                                                                                        | HiddenFromInternetServerList      |
-| (?i)(QQ群：194684295)                                                                                                                                   | HiddenFromInternetServerList      |
-| (?i)(ZY_臭鱼)                                                                                                                                           | HiddenFromInternetServerList      |
-| 前锋一服\&#124;                                                                                                                                           | HiddenFromInternetServerList      |
-| \[TCD\]逃离塔科夫                                                                                                                                          | HiddenFromInternetServerList      |
-| (?i)(?:[bƅƁΒВＢБᴮ฿Ⓑ]&#124;🄱)-?(\s*)(?:[eеẹėéèëＥЭ]&#124;🄴)-?(\s*)(?:[bƅƁΒВＢБᴮ฿Ⓑ]&#124;🄱)?-?(\s*)[rгᴦΓＲЯ]-?(\s*)[iіíïＩⒾ]-?(\s*)(?:[xхҳẋˣ×Ｘₓ]&#124;🅇) | HiddenFromAllServerLists, Blocked |
-| (?i)(🄱RIX)                                                                                                                                           | HiddenFromAllServerLists, Blocked |
-| (?i)(🄱-RIX)                                                                                                                                          | HiddenFromAllServerLists, Blocked |
-| (?i)[УY][БB6][ИN][ВB][АA][ЙN] [БB6][ОO0][МM][ЖX][ЕE][ЙN]                                                                                              | HiddenFromAllServerLists, Blocked |
-| (?i)(Бе)[бb][rрp][иiaА]                                                                                                                               | HiddenFromAllServerLists, Blocked |
-| (?i)Бeбpиks                                                                                                                                           | HiddenFromAllServerLists, Blocked |
-| (?i)Бебикс                                                                                                                                            | HiddenFromAllServerLists, Blocked |
-| (?i)ⒷЕБРИₓ                                                                                                                                            | HiddenFromAllServerLists, Blocked |
-| (?i)ⒷEБPIK                                                                                                                                            | HiddenFromAllServerLists, Blocked |
-| (?i)BEBRA \[KITS                                                                                                                                      | HiddenFromAllServerLists, Blocked |
-| (?i)BEBRА \[KITS                                                                                                                                      | HiddenFromAllServerLists, Blocked |
-| (?i)BEARBRIKS                                                                                                                                         | HiddenFromAllServerLists, Blocked |
-| (?i)БЕБ-PIX                                                                                                                                           | HiddenFromAllServerLists, Blocked |
-| (?i)БЕБ-IX \[KITS                                                                                                                                     | HiddenFromAllServerLists, Blocked |
-| (?i)BEB-IX \[KITS                                                                                                                                     | HiddenFromAllServerLists, Blocked |
-| (?i)БЕБИБРКС \[KITS                                                                                                                                   | HiddenFromAllServerLists, Blocked |
-| (?i)BEBRС \[KITS                                                                                                                                      | HiddenFromAllServerLists, Blocked |
-| (?i)BEBRИКИ \[KITS                                                                                                                                    | HiddenFromAllServerLists, Blocked |
-| (?i)beber \[KITS                                                                                                                                      | HiddenFromAllServerLists, Blocked |
-| (?i)BOBRIX \[KITS                                                                                                                                     | HiddenFromAllServerLists, Blocked |
-| (?i)BOOBRIX \[KITS                                                                                                                                    | HiddenFromAllServerLists, Blocked |
-| (?i)BEEBRIX \[KITS                                                                                                                                    | HiddenFromAllServerLists, Blocked |
-| (?i)PEBRIX \[KITS                                                                                                                                     | HiddenFromAllServerLists, Blocked |
-| (?i)PEPBRIX \[KITS                                                                                                                                    | HiddenFromAllServerLists, Blocked |
-| (?i)[BВБΒⒷ]+[\W_]*[EЕЭΕ3]+[\W_]*[BВБΒV]+[\W_]*[RРPΡ]+[\W_]*(?:.[\W_]*)?[KКΚ]+[\W_]*(?:[SЅС5]&#124;[ZЗ3])                                              | HiddenFromAllServerLists, Blocked |
-| (?i)(?:[bƅƁΒВＢБᴮ฿Ⓑ]&#124;🄱)-?(?:[eеẹėéèëＥЭ]&#124;🄴)-?(?:[bƅƁΒВＢБᴮ฿Ⓑ]&#124;🄱)-?[рp]-?[ийn]-?[КK]-?[СC]                                              | HiddenFromAllServerLists, Blocked |
-| (?i)((ANA&#124;АNA&#124;АНЭ&#124;4НА)(RC&#124;ЯC)(HY)(\s*)\[KITS)                                                                                     | HiddenFromAllServerLists, Blocked |
-| (?i)АНАЛ_ХуЯ \[KITS                                                                                                                                   | HiddenFromAllServerLists, Blocked |
-| (?i)AHAR \[KITS                                                                                                                                       | HiddenFromAllServerLists, Blocked |
-| (?i)AHAPXIЯ \[KITS                                                                                                                                    | HiddenFromAllServerLists, Blocked |
-| (?i)AHAPXИYA \[KITS                                                                                                                                   | HiddenFromAllServerLists, Blocked |
-| (?i)АХАХАРХИЯ \[KITS                                                                                                                                  | HiddenFromAllServerLists, Blocked |
-| (?i)АХАРХИЯ \[KITS                                                                                                                                    | HiddenFromAllServerLists, Blocked |
-| (?i)АХАРХУЯ \[KITS                                                                                                                                    | HiddenFromAllServerLists, Blocked |
-| (?i)АНАРХИХ(.*) \[KITS                                                                                                                                | HiddenFromAllServerLists, Blocked |
-| (?i)АРХИЯ \[KITS                                                                                                                                      | HiddenFromAllServerLists, Blocked |
-| (?i)АНРАХИЯ \[KITS                                                                                                                                    | HiddenFromAllServerLists, Blocked |
-| (?i)ANARCHIY \[KITS                                                                                                                                   | HiddenFromAllServerLists, Blocked |
-| (?i)ANARXIYA \[KITS                                                                                                                                   | HiddenFromAllServerLists, Blocked |
-| (?i)AHARXIYA \[KITS                                                                                                                                   | HiddenFromAllServerLists, Blocked |
-| (?i)AHARXIA \[KITS                                                                                                                                    | HiddenFromAllServerLists, Blocked |
-| (?i)AHARХХИЯ \[KITS                                                                                                                                   | HiddenFromAllServerLists, Blocked |
-| (?i)AHAPXYZ \[KITS                                                                                                                                    | HiddenFromAllServerLists, Blocked |
-| (?i)AHAPXИЯ \[KITS                                                                                                                                    | HiddenFromAllServerLists, Blocked |
-| (?i)AHAPXYK \[KITS                                                                                                                                    | HiddenFromAllServerLists, Blocked |
-| (?i)AHAPXIXIXI \[KITS                                                                                                                                 | HiddenFromAllServerLists, Blocked |
-| (?i)AHA P X I YA \[KITS                                                                                                                               | HiddenFromAllServerLists, Blocked |
-| (?i)AHAR АБДУЛ \[KITS                                                                                                                                 | HiddenFromAllServerLists, Blocked |
-| (?i)[АA](.?)[НH](.?)[АAЭ](.?)[РPЛ](.?)(?:[xхҳẋˣ×Ｘₓ]&#124;🅇)(.?)[ИN](.?)[ЯR](\s*)\[KITS                                                               | HiddenFromAllServerLists, Blocked |
-| (?i)[bƅƁΒВＢБᴮ฿🄱][ОO0][МMW]([JЖXЭ]&#124;\)\&#124;\()(\s*\&#124; KITS)                                                                                 | HiddenFromAllServerLists, Blocked |
-| (?i)БАМЖЭ \&#124; KITS                                                                                                                                | HiddenFromAllServerLists, Blocked |
-| (?i)БУМЖЭ\&#124; KITS                                                                                                                                 | HiddenFromAllServerLists, Blocked |
-| (?i)БОМЭЖ\&#124; KITS                                                                                                                                 | HiddenFromAllServerLists, Blocked |
-| (?i)MINECRAFT \[KITS,TPA,HOME\] WIPED 21.11                                                                                                           | HiddenFromAllServerLists, Blocked |
+| Regex                                                                                                                                                                   | BanFlags                          |
+| ----------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------- |
+| (?i)(Auschwitz&#124;Nazi&#124;Nazista&#124;Anti-Negro&#124;Anti-Jew&#124;Anti-Judeus)                                                                                   | HiddenFromAllServerLists, Blocked |
+| (?i)(nigger)                                                                                                                                                            | HiddenFromAllServerLists, Blocked |
+| (?i)(cheat)                                                                                                                                                             | HiddenFromAllServerLists, Blocked |
+| (?i)(hack)                                                                                                                                                              | HiddenFromAllServerLists, Blocked |
+| (?i)(HypnoticClient)                                                                                                                                                    | HiddenFromAllServerLists, Blocked |
+| (?i)(CHЕАТ)                                                                                                                                                             | HiddenFromInternetServerList      |
+| (?i)(ЛУЧШИЙ БECПЛAТНЫЙ ЧИT)                                                                                                                                             | HiddenFromInternetServerList      |
+| (?i)(no\s*-*\s*lag)                                                                                                                                                     | HiddenFromInternetServerList      |
+| (?i)(Hardline)                                                                                                                                                          | HiddenFromInternetServerList      |
+| (?i)(Hardӏine)                                                                                                                                                          | HiddenFromInternetServerList      |
+| (?i)(Wasabi)                                                                                                                                                            | QueryPingWarning                  |
+| (?i)(疯狂水世界)                                                                                                                                                             | HiddenFromInternetServerList      |
+| (?i)(【ZY臭鱼】)                                                                                                                                                            | HiddenFromInternetServerList      |
+| (?i)(【ZY臭鱼五服】)                                                                                                                                                          | HiddenFromInternetServerList      |
+| (?i)(【ZY臭鱼二服】)                                                                                                                                                          | HiddenFromInternetServerList      |
+| (?i)(【酋源一服】)                                                                                                                                                            | HiddenFromInternetServerList      |
+| (?i)(QY酋源一服】)                                                                                                                                                           | HiddenFromInternetServerList      |
+| (?i)(【QY酋源五服】)                                                                                                                                                          | HiddenFromInternetServerList      |
+| (?i)(QQ群：194684295)                                                                                                                                                     | HiddenFromInternetServerList      |
+| (?i)(ZY_臭鱼)                                                                                                                                                             | HiddenFromInternetServerList      |
+| 前锋一服\&#124;                                                                                                                                                             | HiddenFromInternetServerList      |
+| \[TCD\]逃离塔科夫                                                                                                                                                            | HiddenFromInternetServerList      |
+| (?i)(?:[bƅƁΒВＢБᴮ฿Ⓑ]&#124;🄱&#124;P)-?(\s*)(?:[eеẹėéèëＥЭ]&#124;🄴)-?(\s*)(?:[bƅƁΒВＢБᴮ฿Ⓑ]&#124;🄱&#124;P){0,2}-?(\s*)[rгᴦΓＲЯ]-?(\s*)[iіíïＩⒾ]-?(\s*)(?:[xхҳẋˣ×Ｘₓ]&#124;🅇) | HiddenFromAllServerLists, Blocked |
+| (?i)(🄱RIX)                                                                                                                                                             | HiddenFromAllServerLists, Blocked |
+| (?i)(🄱-RIX)                                                                                                                                                            | HiddenFromAllServerLists, Blocked |
+| (?i)[УY][БB6][ИN][ВB][АA][ЙN] [БB6][ОO0][МM][ЖX][ЕE][ЙN]                                                                                                                | HiddenFromAllServerLists, Blocked |
+| (?i)(Бе)[бb][rрp][иiaА]                                                                                                                                                 | HiddenFromAllServerLists, Blocked |
+| (?i)Бeбpиks                                                                                                                                                             | HiddenFromAllServerLists, Blocked |
+| (?i)Бебикс                                                                                                                                                              | HiddenFromAllServerLists, Blocked |
+| (?i)ⒷЕБРИₓ                                                                                                                                                              | HiddenFromAllServerLists, Blocked |
+| (?i)ⒷEБPIK                                                                                                                                                              | HiddenFromAllServerLists, Blocked |
+| (?i)BEBRA \[KITS                                                                                                                                                        | HiddenFromAllServerLists, Blocked |
+| (?i)BEBRА \[KITS                                                                                                                                                        | HiddenFromAllServerLists, Blocked |
+| (?i)BEARBRIKS                                                                                                                                                           | HiddenFromAllServerLists, Blocked |
+| (?i)БЕБ-PIX                                                                                                                                                             | HiddenFromAllServerLists, Blocked |
+| (?i)БЕБ-IX \[KITS                                                                                                                                                       | HiddenFromAllServerLists, Blocked |
+| (?i)BEB-IX \[KITS                                                                                                                                                       | HiddenFromAllServerLists, Blocked |
+| (?i)БЕБИБРКС \[KITS                                                                                                                                                     | HiddenFromAllServerLists, Blocked |
+| (?i)BEBRС \[KITS                                                                                                                                                        | HiddenFromAllServerLists, Blocked |
+| (?i)BEBRИКИ \[KITS                                                                                                                                                      | HiddenFromAllServerLists, Blocked |
+| (?i)beber \[KITS                                                                                                                                                        | HiddenFromAllServerLists, Blocked |
+| (?i)BOBRIX \[KITS                                                                                                                                                       | HiddenFromAllServerLists, Blocked |
+| (?i)BOOBRIX \[KITS                                                                                                                                                      | HiddenFromAllServerLists, Blocked |
+| (?i)BEEBRIX \[KITS                                                                                                                                                      | HiddenFromAllServerLists, Blocked |
+| (?i)PEBRIX \[KITS                                                                                                                                                       | HiddenFromAllServerLists, Blocked |
+| (?i)PEPBRIX \[KITS                                                                                                                                                      | HiddenFromAllServerLists, Blocked |
+| (?i)BEPBRIX \[KITS                                                                                                                                                      | HiddenFromAllServerLists, Blocked |
+| (?i)[BВБΒⒷ]+[\W_]*[EЕЭΕ3]+[\W_]*[BВБΒV]+[\W_]*[RРPΡ]+[\W_]*(?:.[\W_]*)?[KКΚ]+[\W_]*(?:[SЅС5]&#124;[ZЗ3])                                                                | HiddenFromAllServerLists, Blocked |
+| (?i)(?:[bƅƁΒВＢБᴮ฿Ⓑ]&#124;🄱)-?(?:[eеẹėéèëＥЭ]&#124;🄴)-?(?:[bƅƁΒВＢБᴮ฿Ⓑ]&#124;🄱)-?[рp]-?[ийn]-?[КK]-?[СC]                                                                | HiddenFromAllServerLists, Blocked |
+| (?i)((ANA&#124;АNA&#124;АНЭ&#124;4НА)(RC&#124;ЯC)(HY)(\s*)\[KITS)                                                                                                       | HiddenFromAllServerLists, Blocked |
+| (?i)АНАЛ_ХуЯ \[KITS                                                                                                                                                     | HiddenFromAllServerLists, Blocked |
+| (?i)AHAR \[KITS                                                                                                                                                         | HiddenFromAllServerLists, Blocked |
+| (?i)AHAPXIЯ \[KITS                                                                                                                                                      | HiddenFromAllServerLists, Blocked |
+| (?i)AHAPXИYA \[KITS                                                                                                                                                     | HiddenFromAllServerLists, Blocked |
+| (?i)АХАХАРХИЯ \[KITS                                                                                                                                                    | HiddenFromAllServerLists, Blocked |
+| (?i)АХАРХИЯ \[KITS                                                                                                                                                      | HiddenFromAllServerLists, Blocked |
+| (?i)АХАРХУЯ \[KITS                                                                                                                                                      | HiddenFromAllServerLists, Blocked |
+| (?i)АНАРХИХ(.*) \[KITS                                                                                                                                                  | HiddenFromAllServerLists, Blocked |
+| (?i)АРХИЯ \[KITS                                                                                                                                                        | HiddenFromAllServerLists, Blocked |
+| (?i)АНРАХИЯ \[KITS                                                                                                                                                      | HiddenFromAllServerLists, Blocked |
+| (?i)ANARCHIY \[KITS                                                                                                                                                     | HiddenFromAllServerLists, Blocked |
+| (?i)ANARXIYA \[KITS                                                                                                                                                     | HiddenFromAllServerLists, Blocked |
+| (?i)AHARXIYA \[KITS                                                                                                                                                     | HiddenFromAllServerLists, Blocked |
+| (?i)AHARXIA \[KITS                                                                                                                                                      | HiddenFromAllServerLists, Blocked |
+| (?i)AHARХХИЯ \[KITS                                                                                                                                                     | HiddenFromAllServerLists, Blocked |
+| (?i)AHAPXYZ \[KITS                                                                                                                                                      | HiddenFromAllServerLists, Blocked |
+| (?i)AHAPXИЯ \[KITS                                                                                                                                                      | HiddenFromAllServerLists, Blocked |
+| (?i)AHAPXYK \[KITS                                                                                                                                                      | HiddenFromAllServerLists, Blocked |
+| (?i)AHAPXIXIXI \[KITS                                                                                                                                                   | HiddenFromAllServerLists, Blocked |
+| (?i)AHAPXI.* \[KITS                                                                                                                                                     | HiddenFromAllServerLists, Blocked |
+| (?i)AHA P X I YA \[KITS                                                                                                                                                 | HiddenFromAllServerLists, Blocked |
+| (?i)AHAR АБДУЛ \[KITS                                                                                                                                                   | HiddenFromAllServerLists, Blocked |
+| (?i)[АA](.?)[НH](.?)[АAЭ](.?)[РPЛ](.?)(?:[xхҳẋˣ×Ｘₓ]&#124;🅇)(.?)[ИN](.?)[ЯR](\s*)\[KITS                                                                                 | HiddenFromAllServerLists, Blocked |
+| (?i)[bƅƁΒВＢБᴮ฿🄱][ОO0][МMW]([JЖXЭ]&#124;\)\&#124;\()(\s*\&#124; KITS)                                                                                                   | HiddenFromAllServerLists, Blocked |
+| (?i)БАМЖЭ \&#124; KITS                                                                                                                                                  | HiddenFromAllServerLists, Blocked |
+| (?i)БУМЖЭ\&#124; KITS                                                                                                                                                   | HiddenFromAllServerLists, Blocked |
+| (?i)БОМЭЖ\&#124; KITS                                                                                                                                                   | HiddenFromAllServerLists, Blocked |
+| (?i)MINECRAFT \[KITS,TPA,HOME\] WIPED 21.11                                                                                                                             | HiddenFromAllServerLists, Blocked |
 
 ## Description filters
 | Regex                                                           | BanFlags                          |
@@ -219,6 +221,7 @@
 | 85568392937026103 | HiddenFromAllServerLists, Blocked                      |
 | 85568392937033359 | HiddenFromAllServerLists, Blocked                      |
 | 85568392937039918 | HiddenFromAllServerLists, Blocked                      |
+| 85568392937045212 | HiddenFromAllServerLists, Blocked                      |
 | 85568392936881756 | Blocked, WorkshopWarning, HiddenFromInternetServerList |
 | 85568392936886100 | Blocked, WorkshopWarning, HiddenFromInternetServerList |
 | 85568392936895573 | MonetizationWarning                                    |
