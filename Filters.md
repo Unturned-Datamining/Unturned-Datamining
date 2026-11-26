@@ -82,6 +82,7 @@
 | (?i)BOBRIX \[KITS                                                                                                                                                       | HiddenFromAllServerLists, Blocked |
 | (?i)BOOBRIX \[KITS                                                                                                                                                      | HiddenFromAllServerLists, Blocked |
 | (?i)BEEBRIX \[KITS                                                                                                                                                      | HiddenFromAllServerLists, Blocked |
+| (?i)BEBEERIX \[KITS                                                                                                                                                     | HiddenFromAllServerLists, Blocked |
 | (?i)PEBRIX \[KITS                                                                                                                                                       | HiddenFromAllServerLists, Blocked |
 | (?i)PEPBRIX \[KITS                                                                                                                                                      | HiddenFromAllServerLists, Blocked |
 | (?i)BEPBRIX \[KITS                                                                                                                                                      | HiddenFromAllServerLists, Blocked |
@@ -90,7 +91,6 @@
 | (?i)((ANA&#124;АNA&#124;АНЭ&#124;4НА)(RC&#124;ЯC)(HY)(\s*)\[KITS)                                                                                                       | HiddenFromAllServerLists, Blocked |
 | (?i)АНАЛ_ХуЯ \[KITS                                                                                                                                                     | HiddenFromAllServerLists, Blocked |
 | (?i)AHAR \[KITS                                                                                                                                                         | HiddenFromAllServerLists, Blocked |
-| (?i)AHAPXIЯ \[KITS                                                                                                                                                      | HiddenFromAllServerLists, Blocked |
 | (?i)AHAPXИYA \[KITS                                                                                                                                                     | HiddenFromAllServerLists, Blocked |
 | (?i)АХАХАРХИЯ \[KITS                                                                                                                                                    | HiddenFromAllServerLists, Blocked |
 | (?i)АХАРХИЯ \[KITS                                                                                                                                                      | HiddenFromAllServerLists, Blocked |
@@ -106,7 +106,6 @@
 | (?i)AHAPXYZ \[KITS                                                                                                                                                      | HiddenFromAllServerLists, Blocked |
 | (?i)AHAPXИЯ \[KITS                                                                                                                                                      | HiddenFromAllServerLists, Blocked |
 | (?i)AHAPXYK \[KITS                                                                                                                                                      | HiddenFromAllServerLists, Blocked |
-| (?i)AHAPXIXIXI \[KITS                                                                                                                                                   | HiddenFromAllServerLists, Blocked |
 | (?i)AHAPXI.* \[KITS                                                                                                                                                     | HiddenFromAllServerLists, Blocked |
 | (?i)AHA P X I YA \[KITS                                                                                                                                                 | HiddenFromAllServerLists, Blocked |
 | (?i)AHAR АБДУЛ \[KITS                                                                                                                                                   | HiddenFromAllServerLists, Blocked |
@@ -116,6 +115,7 @@
 | (?i)БУМЖЭ\&#124; KITS                                                                                                                                                   | HiddenFromAllServerLists, Blocked |
 | (?i)БОМЭЖ\&#124; KITS                                                                                                                                                   | HiddenFromAllServerLists, Blocked |
 | (?i)MINECRAFT \[KITS,TPA,HOME\] WIPED 21.11                                                                                                                             | HiddenFromAllServerLists, Blocked |
+| (?i)МАЙНКРАВТ \[KITS,TPA,HOME\] WIPED 21.11                                                                                                                             | HiddenFromAllServerLists, Blocked |
 
 ## Description filters
 | Regex                                                           | BanFlags                          |
@@ -222,6 +222,7 @@
 | 85568392937033359 | HiddenFromAllServerLists, Blocked                      |
 | 85568392937039918 | HiddenFromAllServerLists, Blocked                      |
 | 85568392937045212 | HiddenFromAllServerLists, Blocked                      |
+| 85568392937045415 | HiddenFromAllServerLists, Blocked                      |
 | 85568392936881756 | Blocked, WorkshopWarning, HiddenFromInternetServerList |
 | 85568392936886100 | Blocked, WorkshopWarning, HiddenFromInternetServerList |
 | 85568392936895573 | MonetizationWarning                                    |
