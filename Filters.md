@@ -116,6 +116,8 @@
 | (?i)БОМЭЖ\&#124; KITS                                                                                                                                                   | HiddenFromAllServerLists, Blocked |
 | (?i)MINECRAFT \[KITS,TPA,HOME\] WIPED 21.11                                                                                                                             | HiddenFromAllServerLists, Blocked |
 | (?i)МАЙНКРАВТ \[KITS,TPA,HOME\] WIPED 21.11                                                                                                                             | HiddenFromAllServerLists, Blocked |
+| (?i)PEPE-LAND \[KITS                                                                                                                                                    | HiddenFromAllServerLists, Blocked |
+| (?i)РАЗДАЧА GTA 6 \[KITS                                                                                                                                                | HiddenFromAllServerLists, Blocked |
 
 ## Description filters
 | Regex                                                           | BanFlags                          |
@@ -223,6 +225,7 @@
 | 85568392937039918 | HiddenFromAllServerLists, Blocked                      |
 | 85568392937045212 | HiddenFromAllServerLists, Blocked                      |
 | 85568392937045415 | HiddenFromAllServerLists, Blocked                      |
+| 85568392937051199 | HiddenFromAllServerLists, Blocked                      |
 | 85568392936881756 | Blocked, WorkshopWarning, HiddenFromInternetServerList |
 | 85568392936886100 | Blocked, WorkshopWarning, HiddenFromInternetServerList |
 | 85568392936895573 | MonetizationWarning                                    |
