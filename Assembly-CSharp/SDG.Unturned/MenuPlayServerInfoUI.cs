@@ -252,6 +252,7 @@ public class MenuPlayServerInfoUI
                 stringBuilder.AppendLine($"{i}: {expectedWorkshopItems[i]}");
             }
         }
+        stringBuilder.AppendLine("Canonical Name: " + serverInfo.CanonicalName);
         return stringBuilder.ToString();
     }
 
@@ -286,7 +287,7 @@ public class MenuPlayServerInfoUI
             UnturnedLog.info($"{serverInfo.name} is not logged in ({serverInfo.steamID}) and IP ({pv4Address}) is WAN");
         }
         notLoggedInWarningButton.IsVisible = flag;
-        banFlags = HostBansManager.Get().MatchBasicDetails(pv4Address, serverInfo.queryPort, serverInfo.name, serverInfo.steamID.m_SteamID);
+        banFlags = HostBansManager.Get().MatchBasicDetails(pv4Address, serverInfo.queryPort, serverInfo.CanonicalName, serverInfo.steamID.m_SteamID);
         if (banFlags == EHostBanFlags.None)
         {
             banFlags = HostBansManager.Get().MatchExtendedDetails(serverInfo.descText, serverInfo.thumbnailURL);

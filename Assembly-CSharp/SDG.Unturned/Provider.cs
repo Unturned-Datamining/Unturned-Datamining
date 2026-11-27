@@ -1551,6 +1551,14 @@ public class Provider : MonoBehaviour
         maxPlayers = response.maxPlayers;
         isVacActive = response.isVACSecure;
         isThirdpartyAntiCheatActive = response.isThirdpartyAntiCheatEnabled;
+        IPv4Address pv4Address = new IPv4Address(response.ip);
+        EHostBanFlags eHostBanFlags = HostBansManager.Get().MatchBasicDetails(pv4Address, CurrentServerAdvertisement?.queryPort ?? 0, serverName.CanonicalizeId(), response.server.m_SteamID);
+        if (eHostBanFlags.HasFlag(EHostBanFlags.Blocked))
+        {
+            _connectionFailureInfo = ESteamConnectionFailureInfo.SHUTDOWN;
+            RequestDisconnect($"server is blocked ({eHostBanFlags})");
+            return;
+        }
         ServerBookmarkDetails serverBookmarkDetails = ServerBookmarksManager.FindBookmarkDetails(response.server);
         if (serverBookmarkDetails != null)
         {
@@ -3300,7 +3308,7 @@ public class Provider : MonoBehaviour
             _clientName = localization.format("Console");
             autoShutdownManager = steam.gameObject.AddComponent<BuiltinAutoShutdown>();
             SteamGameServer.GetPublicIP().TryGetIPv4Address(out var address);
-            EHostBanFlags eHostBanFlags = HostBansManager.Get().MatchBasicDetails(new IPv4Address(address), port, serverName, _server.m_SteamID);
+            EHostBanFlags eHostBanFlags = HostBansManager.Get().MatchBasicDetails(new IPv4Address(address), port, serverName.CanonicalizeId(), _server.m_SteamID);
             eHostBanFlags |= HostBansManager.Get().MatchExtendedDetails(configData.Browser.Desc_Server_List, configData.Browser.Thumbnail);
             if ((eHostBanFlags & EHostBanFlags.RecommendHostCheckWarningsList) != 0)
             {

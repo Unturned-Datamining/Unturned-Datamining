@@ -43,6 +43,11 @@ public struct IPv4Address : IEquatable<IPv4Address>, IComparable<IPv4Address>
         this.value = value;
     }
 
+    public IPv4Address(byte a, byte b, byte c, byte d)
+    {
+        value = (uint)((a << 24) | (b << 16) | (c << 8) | d);
+    }
+
     public IPv4Address(string input)
     {
         TryParse(input, out value);

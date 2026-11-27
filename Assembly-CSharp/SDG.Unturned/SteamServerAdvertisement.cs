@@ -116,6 +116,11 @@ public class SteamServerAdvertisement
 
     public string name => _name;
 
+    /// <summary>
+    /// Basic attempt to replace lookalike characters in name.
+    /// </summary>
+    public string CanonicalName { get; private set; }
+
     public string map => _map;
 
     public bool isPvP => _isPvP;
@@ -278,6 +283,7 @@ public class SteamServerAdvertisement
         queryPort = data.m_NetAdr.GetQueryPort();
         connectionPort = (ushort)(queryPort + 1);
         _name = data.GetServerName();
+        CanonicalName = _name.CanonicalizeId();
         ProfanityFilter.ApplyFilter(OptionsSettings.filter, ref _name);
         _map = data.GetMap();
         string gameTags = data.GetGameTags();

@@ -527,12 +527,6 @@ public class TempSteamworksMatchmaking
             UnturnedLog.info($"Ignoring server \"{serverDetails.GetServerName()}\" because it has a different AppID ({serverDetails.m_nAppID})");
             return;
         }
-        IPv4Address ip = new IPv4Address(serverDetails.m_NetAdr.GetIP());
-        EHostBanFlags eHostBanFlags = HostBansManager.Get().MatchBasicDetails(ip, serverDetails.m_NetAdr.GetQueryPort(), serverDetails.GetServerName(), serverDetails.m_steamID.m_SteamID);
-        if (eHostBanFlags.HasFlag(EHostBanFlags.HiddenFromAllServerLists) || eHostBanFlags.HasFlag(EHostBanFlags.Blocked) || (_currentList == ESteamServerList.INTERNET && eHostBanFlags.HasFlag(EHostBanFlags.HiddenFromInternetServerList)))
-        {
-            return;
-        }
         SteamServerAdvertisement steamServerAdvertisement = new SteamServerAdvertisement(serverDetails, _currentList switch
         {
             ESteamServerList.FRIENDS => SteamServerAdvertisement.EInfoSource.FriendServerList, 
@@ -541,6 +535,17 @@ public class TempSteamworksMatchmaking
             ESteamServerList.LAN => SteamServerAdvertisement.EInfoSource.LanServerList, 
             _ => SteamServerAdvertisement.EInfoSource.InternetServerList, 
         });
+        if (string.IsNullOrEmpty(steamServerAdvertisement.CanonicalName))
+        {
+            UnturnedLog.info("Ignoring server \"" + serverDetails.GetServerName() + "\" because it has an empty canonical name");
+            return;
+        }
+        IPv4Address ip = new IPv4Address(serverDetails.m_NetAdr.GetIP());
+        EHostBanFlags eHostBanFlags = HostBansManager.Get().MatchBasicDetails(ip, serverDetails.m_NetAdr.GetQueryPort(), steamServerAdvertisement.CanonicalName, serverDetails.m_steamID.m_SteamID);
+        if (eHostBanFlags.HasFlag(EHostBanFlags.HiddenFromAllServerLists) || eHostBanFlags.HasFlag(EHostBanFlags.Blocked) || (_currentList == ESteamServerList.INTERNET && eHostBanFlags.HasFlag(EHostBanFlags.HiddenFromInternetServerList)))
+        {
+            return;
+        }
         eHostBanFlags |= HostBansManager.Get().MatchExtendedDetails(steamServerAdvertisement.descText, steamServerAdvertisement.thumbnailURL);
         if (eHostBanFlags.HasFlag(EHostBanFlags.HiddenFromAllServerLists) || eHostBanFlags.HasFlag(EHostBanFlags.Blocked) || (_currentList == ESteamServerList.INTERNET && eHostBanFlags.HasFlag(EHostBanFlags.HiddenFromInternetServerList)))
         {

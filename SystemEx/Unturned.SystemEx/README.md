@@ -14,5 +14,6 @@
 - [IPv4SubnetMask.cs](IPv4SubnetMask.cs)
 - [ListEx.cs](ListEx.cs)
 - [PathEx.cs](PathEx.cs)
+- [StringConfuseables.cs](StringConfuseables.cs)
 - [StringExtension.cs](StringExtension.cs)
 - [TypeEx.cs](TypeEx.cs)

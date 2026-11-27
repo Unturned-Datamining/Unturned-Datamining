@@ -235,6 +235,7 @@ public class MenuDashboardUI
                 sleekWebImage.UseWidthLayoutOverride = true;
                 sleekWebImage.UseHeightLayoutOverride = true;
                 sleekWebImage.useImageDimensions = true;
+                sleekWebImage.isThirdParty = useLinkFiltering;
                 string url = item.widgetData.Replace("{STEAM_CLAN_IMAGE}", "https://clan.fastly.steamstatic.com/images/");
                 sleekWebImage.Refresh(url, shouldCache: false);
                 parent.AddChild(sleekWebImage);
@@ -521,6 +522,7 @@ public class MenuDashboardUI
             sleekWebImage.UseHeightLayoutOverride = true;
             sleekWebImage.maxImageDimensionsWidth = 960f;
             sleekWebImage.maxImageDimensionsHeight = 540f;
+            sleekWebImage.isThirdParty = false;
             workshopBox.AddChild(sleekWebImage);
             sleekWebImage.Refresh(pchURL, shouldCache: false);
         }
@@ -1037,6 +1039,7 @@ public class MenuDashboardUI
             alertWebImage.SizeOffset_X = 40f;
             alertWebImage.SizeOffset_Y = 40f;
             alertWebImage.IsVisible = false;
+            alertWebImage.isThirdParty = false;
             alertBox.AddChild(alertWebImage);
             alertHeaderLabel = Glazier.Get().CreateLabel();
             alertHeaderLabel.PositionOffset_X = 60f;

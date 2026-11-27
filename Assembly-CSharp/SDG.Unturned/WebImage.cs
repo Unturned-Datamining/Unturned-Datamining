@@ -61,7 +61,7 @@ public class WebImage : MonoBehaviour
         if (!(targetImage == null))
         {
             targetImage.enabled = false;
-            if (!string.IsNullOrEmpty(url))
+            if (!string.IsNullOrEmpty(url) && LiveConfig.Get().allowThirdPartyWebImages)
             {
                 Provider.refreshIcon(new Provider.IconQueryParams(url, onImageReady, shouldCache));
             }

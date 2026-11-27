@@ -234704,6 +234704,22 @@
       "creationTimeUtc": "2023-06-19T00:00:00Z",
       "isEligibleForPromotion": true
     },
+    "81700": {
+      "name": "Circus Nykorev",
+      "display_type": "Epic Workshop Nykorev Skin",
+      "description": "We've got tickets for two! Edit: Removed prior to crate release due to copyright/licensing issue.\n\n<color=#964bfa>Workshop Contributors:\nMia</color>\n\nWhen equipped this applies the <color=#964bfa>Circus</color> appearance to the Nykorev in-game.\n\nThis item is not tradable.\n\nSkin Details:\nLayered Attachments\nFallback Attachments\nNykorev Box Skin",
+      "name_color": "964bfa",
+      "itemdefid": 81700,
+      "marketable": false,
+      "scraps": 0,
+      "target_game_asset_guid": "cde96a85-b86b-4ea9-9389-a83eaa603a32",
+      "item_skin": 245,
+      "item_effect": 0,
+      "quality": 5,
+      "econ_type": 8,
+      "creationTimeUtc": "2023-06-19T00:00:00Z",
+      "isEligibleForPromotion": true
+    },
     "65700": {
       "name": "Clockwork Nykorev",
       "display_type": "Epic Nykorev Skin",
@@ -258560,12 +258576,12 @@
       "creationTimeUtc": "0001-01-01T00:00:00",
       "isEligibleForPromotion": false
     },
-    "81700": {
+    "81714": {
       "name": "Die Ente's Golden Butcher Knife",
       "display_type": "Achievement Butcher Knife Skin",
       "description": "Awarded for finishing first place in MapMania 2026.\n\nWhen equipped this applies the <color=#fa6419>Die Ente's Golden</color> appearance to the Butcher Knife in-game.\n\nSkin Details:\nLayered Attachments\nFallback Attachments",
       "name_color": "fa6419",
-      "itemdefid": 81700,
+      "itemdefid": 81714,
       "marketable": false,
       "scraps": 0,
       "target_game_asset_guid": "61ddb8bd-ddef-4aa0-93df-edcc48c78976",

@@ -18,6 +18,10 @@ public class LiveConfigData
 
     public bool shouldServersWithoutMonetizationTagBeVisibleInInternetServerList;
 
+    public bool allowServerListThumbnails = true;
+
+    public bool allowThirdPartyWebImages = true;
+
     public int playtimeGeneratorItemDefId;
 
     public int queryPingWarningOffsetMs = 200;
@@ -54,6 +58,8 @@ public class LiveConfigData
         }
         shouldAllowJoiningInternetServersWithoutGslt = data.ParseBool("ShouldAllowJoiningInternetServersWithoutGslt");
         shouldServersWithoutMonetizationTagBeVisibleInInternetServerList = data.ParseBool("ShouldServersWithoutMonetizationTagBeVisibleInInternetServerList");
+        allowServerListThumbnails = data.ParseBool("AllowServerListThumbnails", defaultValue: true);
+        allowThirdPartyWebImages = data.ParseBool("AllowThirdPartyWebImages", defaultValue: true);
         playtimeGeneratorItemDefId = data.ParseInt32("PlaytimeGeneratorItemDefId");
         queryPingWarningOffsetMs = data.ParseInt32("QueryPingWarningOffsetMs", 200);
         pingMismatchWarningThresholdMs = data.ParseInt32("PingMismatchWarningThresholdMs", 50);

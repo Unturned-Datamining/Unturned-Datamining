@@ -39,8 +39,6 @@ public class SleekServer : SleekWrapper
 
     private ISleekBox pluginsBox;
 
-    private SleekWebImage thumbnail;
-
     private ISleekLabel nameLabel;
 
     public ClickedServer onClickedServer;
@@ -271,10 +269,15 @@ public class SleekServer : SleekWrapper
         {
             button.BackgroundColor = new SleekColor(ESleekTint.BACKGROUND, 0.5f);
         }
+        int num = 40;
+        if (!LiveConfig.Get().allowServerListThumbnails)
+        {
+            num = 0;
+        }
         nameLabel = Glazier.Get().CreateLabel();
-        nameLabel.PositionOffset_X = 45f;
+        nameLabel.PositionOffset_X = num + 5;
         nameLabel.SizeScale_X = 1f;
-        nameLabel.SizeOffset_X = -45f;
+        nameLabel.SizeOffset_X = 0f - nameLabel.PositionOffset_X;
         nameLabel.TextAlignment = TextAnchor.MiddleLeft;
         nameLabel.Text = info.name;
         button.AddChild(nameLabel);
@@ -293,10 +296,10 @@ public class SleekServer : SleekWrapper
         if (!string.IsNullOrEmpty(info.descText))
         {
             ISleekLabel sleekLabel = Glazier.Get().CreateLabel();
-            sleekLabel.PositionOffset_X = 45f;
+            sleekLabel.PositionOffset_X = num + 5;
             sleekLabel.PositionOffset_Y = 15f;
             sleekLabel.SizeScale_X = 1f;
-            sleekLabel.SizeOffset_X = -50f;
+            sleekLabel.SizeOffset_X = 0f - sleekLabel.PositionOffset_X - 5f;
             sleekLabel.SizeOffset_Y = 30f;
             sleekLabel.FontSize = ESleekFontSize.Small;
             sleekLabel.AllowRichText = true;
@@ -316,10 +319,10 @@ public class SleekServer : SleekWrapper
         if (!string.IsNullOrEmpty(info.serverCurationLabels))
         {
             ISleekLabel sleekLabel2 = Glazier.Get().CreateLabel();
-            sleekLabel2.PositionOffset_X = 45f;
+            sleekLabel2.PositionOffset_X = num + 5;
             sleekLabel2.PositionOffset_Y = 15f;
             sleekLabel2.SizeScale_X = 1f;
-            sleekLabel2.SizeOffset_X = -50f;
+            sleekLabel2.SizeOffset_X = 0f - sleekLabel2.PositionOffset_X - 5f;
             sleekLabel2.SizeOffset_Y = 30f;
             sleekLabel2.FontSize = ESleekFontSize.Small;
             sleekLabel2.AllowRichText = true;
@@ -651,19 +654,19 @@ public class SleekServer : SleekWrapper
         AddChild(cheatsBox);
         AddChild(monetizationBox);
         AddChild(pluginsBox);
-        if (!string.IsNullOrEmpty(info.thumbnailURL))
+        if (!string.IsNullOrEmpty(info.thumbnailURL) && LiveConfig.Get().allowServerListThumbnails)
         {
-            thumbnail = new SleekWebImage();
-            thumbnail.PositionOffset_X = 4f;
-            thumbnail.PositionOffset_Y = 4f;
-            thumbnail.SizeOffset_X = 32f;
-            thumbnail.SizeOffset_Y = 32f;
-            thumbnail.Refresh(info.thumbnailURL);
+            SleekWebImage sleekWebImage = new SleekWebImage();
+            sleekWebImage.PositionOffset_X = 4f;
+            sleekWebImage.PositionOffset_Y = 4f;
+            sleekWebImage.SizeOffset_X = 32f;
+            sleekWebImage.SizeOffset_Y = 32f;
+            sleekWebImage.Refresh(info.thumbnailURL);
             if (info.isDeniedByServerCurationRule)
             {
-                thumbnail.color = new Color(1f, 1f, 1f, 0.5f);
+                sleekWebImage.color = new Color(1f, 1f, 1f, 0.5f);
             }
-            button.AddChild(thumbnail);
+            button.AddChild(sleekWebImage);
         }
         if (info.isPro && !Provider.isPro)
         {

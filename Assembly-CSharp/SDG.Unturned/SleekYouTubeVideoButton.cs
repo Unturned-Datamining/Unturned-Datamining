@@ -29,6 +29,7 @@ public class SleekYouTubeVideoButton : SleekWrapper
         webImage.PositionOffset_Y = 10f;
         webImage.SizeOffset_X = 960f;
         webImage.SizeOffset_Y = 540f;
+        webImage.isThirdParty = false;
         AddChild(webImage);
         ISleekImage sleekImage = Glazier.Get().CreateImage(icons.load<Texture2D>("PlayVideo"));
         sleekImage.PositionOffset_X = -32f;

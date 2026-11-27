@@ -1,4 +1,6 @@
 using System;
+using System.Globalization;
+using System.Text;
 
 namespace Unturned.SystemEx;
 
@@ -75,5 +77,58 @@ public static class StringExtension
     public static bool Contains(this string s, string value, StringComparison comparisonType)
     {
         return s.IndexOf(value, comparisonType) >= 0;
+    }
+
+    public static string CanonicalizeId(this string s)
+    {
+        try
+        {
+            s = s.Normalize(NormalizationForm.FormKC);
+            s = s.Normalize(NormalizationForm.FormD);
+            StringBuilder stringBuilder = new StringBuilder(s.Length);
+            for (int i = 0; i < s.Length; i++)
+            {
+                int num = char.ConvertToUtf32(s, i);
+                if (char.IsHighSurrogate(s[i]))
+                {
+                    i++;
+                }
+                if (StringConfuseables.CONFUSEABLES.TryGetValue(num, out var value))
+                {
+                    int[] array = value;
+                    foreach (int utf in array)
+                    {
+                        stringBuilder.Append(char.ConvertFromUtf32(utf));
+                    }
+                }
+                else
+                {
+                    stringBuilder.Append(char.ConvertFromUtf32(num));
+                }
+            }
+            s = stringBuilder.ToString();
+            s = s.Normalize(NormalizationForm.FormD);
+            stringBuilder.Clear();
+            for (int k = 0; k < s.Length; k++)
+            {
+                UnicodeCategory unicodeCategory = CharUnicodeInfo.GetUnicodeCategory(s, k);
+                int utf2 = char.ConvertToUtf32(s, k);
+                if (char.IsHighSurrogate(s[k]))
+                {
+                    k++;
+                }
+                if (unicodeCategory == UnicodeCategory.UppercaseLetter || unicodeCategory == UnicodeCategory.LowercaseLetter || unicodeCategory == UnicodeCategory.TitlecaseLetter || unicodeCategory == UnicodeCategory.OtherLetter || unicodeCategory == UnicodeCategory.DecimalDigitNumber)
+                {
+                    stringBuilder.Append(char.ConvertFromUtf32(utf2));
+                }
+            }
+            s = stringBuilder.ToString();
+            s = s.Normalize(NormalizationForm.FormC);
+            return s;
+        }
+        catch
+        {
+            return string.Empty;
+        }
     }
 }

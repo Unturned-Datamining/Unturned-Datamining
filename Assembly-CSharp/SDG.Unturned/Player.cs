@@ -1,10 +1,12 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using SDG.HostBans;
 using SDG.NetPak;
 using SDG.NetTransport;
 using Steamworks;
 using UnityEngine;
+using Unturned.SystemEx;
 
 namespace SDG.Unturned;
 
@@ -574,13 +576,22 @@ public class Player : MonoBehaviour, IDialogueTarget, IExplosionDamageable, IEqu
             {
                 throw new NotSupportedException($"IP: {Parser.getIPFromUInt32(ip)} Port: {port} Server Code: {serverCode}");
             }
-            MenuPlayConnectUI.hasPendingServerRelay = true;
-            MenuPlayConnectUI.serverRelayIP = ip;
-            MenuPlayConnectUI.serverRelayPort = port;
-            MenuPlayConnectUI.serverRelayServerCode = serverCode;
-            MenuPlayConnectUI.serverRelayPassword = password;
-            MenuPlayConnectUI.serverRelayWaitOnMenu = shouldShowMenu;
-            Provider.RequestDisconnect($"Relaying to IP: {Parser.getIPFromUInt32(ip)} Port: {port} Code: {serverCode}");
+            IPv4Address pv4Address = new IPv4Address(ip);
+            EHostBanFlags eHostBanFlags = HostBansManager.Get().MatchBasicDetails(pv4Address, port, string.Empty, serverCode.m_SteamID);
+            if (eHostBanFlags.HasFlag(EHostBanFlags.Blocked))
+            {
+                UnturnedLog.info($"Ignoring relay request to {pv4Address}:{port} ({serverCode}) because it has ban flags: {eHostBanFlags}");
+            }
+            else
+            {
+                MenuPlayConnectUI.hasPendingServerRelay = true;
+                MenuPlayConnectUI.serverRelayIP = ip;
+                MenuPlayConnectUI.serverRelayPort = port;
+                MenuPlayConnectUI.serverRelayServerCode = serverCode;
+                MenuPlayConnectUI.serverRelayPassword = password;
+                MenuPlayConnectUI.serverRelayWaitOnMenu = shouldShowMenu;
+                Provider.RequestDisconnect($"Relaying to IP: {Parser.getIPFromUInt32(ip)} Port: {port} Code: {serverCode}");
+            }
         }
     }
 

@@ -22,6 +22,8 @@ public class SleekWebImage : SleekWrapper
     /// </summary>
     public float maxImageDimensionsHeight = -1f;
 
+    public bool isThirdParty = true;
+
     internal ISleekImage internalImage;
 
     public SleekColor color
@@ -38,7 +40,10 @@ public class SleekWebImage : SleekWrapper
 
     public void Refresh(string url, bool shouldCache = true)
     {
-        Provider.refreshIcon(new Provider.IconQueryParams(url, OnImageReady, shouldCache));
+        if (!isThirdParty || LiveConfig.Get().allowThirdPartyWebImages)
+        {
+            Provider.refreshIcon(new Provider.IconQueryParams(url, OnImageReady, shouldCache));
+        }
     }
 
     public override void OnDestroy()
